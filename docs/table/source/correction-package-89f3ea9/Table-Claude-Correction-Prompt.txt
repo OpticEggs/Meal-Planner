@@ -1,0 +1,34 @@
+Continue coding Table. Do not start Stage 5, request hosting/Kroger credentials as prerequisites, or restart product design.
+
+Read the attached Table-Independent-Review-89f3ea9.md and Table-Claude-Correction-Handoff.md completely. They review the delivered bundle at:
+89f3ea9b5e057c5e57928e7978dda3d23ad4d750
+
+The architecture is worth retaining, but the claim that stages 1–4 are complete needs correction. The review executed narrow probes of actual source and found missed contract cases; it did NOT rerun your full PostgreSQL/Playwright suite. Use the attached evidence as reproduction leads, not as a replacement test report.
+
+First inspect your real Table workspace, current guidance, HEAD, working tree, and active work. Preserve newer work. If only the original bundle remains, restore with:
+git clone --branch main table-89f3ea9.bundle table
+
+The bundle does not have a portable advertised HEAD, so the explicit branch matters. Keep the CFP app and Vault entirely out of scope.
+
+Reproduce these cases in the real harness, add expected-correctness regressions, and then make scoped repairs:
+
+1. Whole-week admission: Use this week can adopt an unresolved draft, including seven open nights. Enforce complete-plan coverage and known hard requirements at the server boundary; unknown grocery prices remain a separate state.
+2. Dependency closure: a locked Thursday leftover can retain its label while adoption retires Wednesday's source. Moving Wednesday cooking to Friday can also leave a reserved Thursday lunch before its source. Preserve/protect dependencies or show and resolve the collision before acceptance.
+3. Current exclusions: placing a deferred dinner bypasses the exclusion check. Revalidate new scheduled choices without automatically replacing an existing dinner when new facts flag it.
+4. Order/batch reconciliation: once any order exists, projection.ts ignores every acknowledged/pending/uncertain batch. Later sends can become needed again, and confirming contents unknown can clear the uncertainty hold. Reconcile exact order-covered transfers versus later/uncertain work; do not double-count packages.
+5. Receipts/packages: an unvalidated substitution still suppresses original ingredient demand. Preserve actual or unknown product identity and compatible package quantities; validate substitution suitability and allow explicit factual corrections without rewriting history.
+6. Stale Have enough: the command records the current server demand as the amount reviewed, even when Alex saw a smaller requirement. Bind the observation to what was actually reviewed; a concurrent increase cannot enlarge it.
+7. Capture lifecycle: Also need is blocked until adoption and writes to the displayed week's cycle rather than a next open pickup. Complete pre-planning capture, next-cycle routing, already-ordered checks, and remembered repeat-product/usual-quantity behavior.
+8. Cross-week inputs: household-wide product/price changes recompute only one week. Reproduce with two accepted weeks and repair input scoping/invalidation so an old review cannot authorize obsolete purchasing information.
+
+The source probe script checks observed incorrect outcomes, so its passing is NOT a release pass. Translate the cases into real expected-correctness tests; retain T01–T22 and X01–X12 unchanged.
+
+Harden tests/mutation/run.sh: a test-runner startup failure currently produces “7 mutations killed” and exit 0 with no tests executed. Require the targeted tests and intended assertion failures, classify infrastructure errors as errors, and preserve full logs. Correct and test bundle restoration.
+
+The supplied full-page screenshot shows a header over meal rows. Reproduce at top-of-page and scrolled viewport positions before deciding whether this is a screenshot artifact or layout bug. The final formatter ALREADY shows “unknown — 12 unpriced,” so do not repair an obsolete $0 screenshot state.
+
+After these corrections, finish existing B3: suggestions favor applicable received goods and additional basket cost reflects genuine extra purchasing needs. Do not optimize against incorrect supply accounting.
+
+Continue through this bounded pass with durable checkpoints, without routine milestone approvals. Use the simulated retailer. No real cart write, checkout, paid service, remote creation/push, or deployment is authorized.
+
+Finish with the full verification on an identified implementation commit, preserved original tests plus new regressions, complete logs, accurate remaining limits, updated status/backlog/acceptance records, and a restorable Git bundle with SHA-256. Report each finding as reproduced/resolved/open with exact tests, and distinguish independently measured behavior from prior reported results. Begin with reproduction, then code.

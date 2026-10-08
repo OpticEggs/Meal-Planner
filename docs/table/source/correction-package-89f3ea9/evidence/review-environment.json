@@ -1,0 +1,23 @@
+{
+  "bundle": "table-89f3ea9.bundle",
+  "bundle_sha256": "21109a7166ba81b71583188a5cf933634a7903c5c448fb2cbef821c0be7956d5",
+  "head": "89f3ea9b5e057c5e57928e7978dda3d23ad4d750",
+  "recorded_test_commit": "b1dcc803d155c1591fab1ea869e402fa5417c008",
+  "reachable_commit_count": 6,
+  "head_delta_from_recorded_test_commit": [
+    "docs/table/IMPLEMENTATION-STATUS.md",
+    "docs/table/evidence/2026-10-08-full-run-a519be0-parent.md",
+    "docs/table/evidence/2026-10-08-full-run.md"
+  ],
+  "working_tree_porcelain": "",
+  "node": "v22.16.0",
+  "full_suite_rerun": false,
+  "limits": [
+    "npm ci could not resolve registry.npmjs.org (EAI_AGAIN); terminated with 143 after diagnosis.",
+    "PostgreSQL binaries are not installed in this review environment.",
+    "No Next.js browser run, Safari or physical-device test, real-store request, deployment, or remote operation.",
+    "Isolated source probes use recording SQL doubles and no decimal arithmetic; not database/Playwright tests."
+  ],
+  "input_screenshot_sha256": "bf4119837d526edeab817edbda67214ff1bbd273001734ae3af2e52972620f77",
+  "matching_bundled_screenshot": "docs/table/evidence/screens/2-adopted-week.png"
+}

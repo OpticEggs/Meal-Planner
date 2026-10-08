@@ -1,0 +1,458 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/table
+
+ × tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01a: an empty recipe collection yields a draft of seven open nights that cannot be adopted 1389ms
+   → expected false to be 'incomplete_week' // Object.is equality
+ × tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01b: too few eligible recipes leaves named open nights; adoption refused 732ms
+   → expected false to be 'incomplete_week' // Object.is equality
+ × tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01c: a submitted proposal with an uncovered Thursday or missing plates is refused at the server 632ms
+   → expected false to be 'incomplete_week' // Object.is equality
+ × tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01d: a complete, fully priced proposal that is known to exceed a firm budget is refused 605ms
+   → expected false to be 'constraint_violation' // Object.is equality
+ ✓ tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01e: complete coverage with unknown prices is adoptable; grocery readiness stays unproven 659ms
+ × tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02a: a locked Thursday leftover keeps its Wednesday source through a whole-week adoption 611ms
+   → expected [ 'p:0', 'p:1', 'p:2', 'p:3' ] to include 'keep:068dc690-f74a-4e55-9231-a818dc1a…'
+ × tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02b: a locked Wednesday source keeps its dependent plates consistent through adoption 632ms
+   → dinner plate on 2026-10-15 not served by its night: expected 'f55b719c-7ac4-44f9-a67c-447b7f369f09' to be '73fa50fb-50df-46d2-a32a-23f9096e1614' // Object.is equality
+ × tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02c: moving Wednesday's cooking after Alex's reserved Thursday lunch discloses and resolves the lunch before Apply 641ms
+   → expected 'Fixture: Sheet-pan chicken and rice m…' to match /Alex's reserved lunch on Thursday/
+ ✓ tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02d: a move and a lunch edit on the same cooking conflict in either order (move first) 680ms
+ ✓ tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02d: a move and a lunch edit on the same cooking conflict in either order (lunch edit first) 676ms
+ ✓ tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02e: independent Friday and Sunday edits still both survive 652ms
+ × tests/integration/review-regressions.test.ts > R-F03 current exclusions apply to every newly scheduled choice > R-F03a: placing a deferred dinner that now violates an exclusion is refused 571ms
+   → expected [] to include 'constraint_violation'
+ × tests/integration/review-regressions.test.ts > R-F03 current exclusions apply to every newly scheduled choice > R-F03b: adding an eater to a dinner checks that eater's personal exclusions 592ms
+   → expected false to be 'constraint_violation' // Object.is equality
+ × tests/integration/review-regressions.test.ts > R-F04 order and transfer reconciliation > R-F04a: a transfer acknowledged after the order is still counted; the same demand is not offered again 925ms
+   → expected +0 to be 1 // Object.is equality
+ × tests/integration/review-regressions.test.ts > R-F04 order and transfer reconciliation > R-F04b: 'contents unknown' does not clear an uncertain transfer hold 609ms
+   → expected +0 to be 2 // Object.is equality
+ × tests/integration/review-regressions.test.ts > R-F04 order and transfer reconciliation > R-F04c: an acknowledged transfer stays counted when the order's contents are unknown, and is flagged 660ms
+   → expected +0 to be 2 // Object.is equality
+ ✓ tests/integration/review-regressions.test.ts > R-F04 order and transfer reconciliation > R-F04d: a known order reconciles its pre-order transfers exactly once (no double count) 664ms
+ × tests/integration/review-regressions.test.ts > R-F05 receipts, substitutions and package identity > R-F05a: an unvalidated substitution does not cover the original need 676ms
+   → expected 'ordered' not to be 'ordered' // Object.is equality
+ × tests/integration/review-regressions.test.ts > R-F05 receipts, substitutions and package identity > R-F05b: an unsuitable substitution leaves the need actionable; a suitable smaller one covers only its amount 652ms
+   → expected 'rejected' to be 'accepted' // Object.is equality
+ × tests/integration/review-regressions.test.ts > R-F05 receipts, substitutions and package identity > R-F05c: ordered packages keep their own size when the product mapping later changes 636ms
+   → column "package_qty" does not exist
+ × tests/integration/review-regressions.test.ts > R-F05 receipts, substitutions and package identity > R-F05d: a mistaken 'missing' is corrected by a new observation without rewriting history 662ms
+   → {"status":"rejected","code":"invalid","message":"More packages than the order line holds","operationId":"op-fdca4248-f460-456d-a1a2-bc165a79b9ae","command":"RecordReceipt","replayed":false,"seq":null}: expected 'rejected' to be 'accepted' // Object.is equality
+ × tests/integration/review-regressions.test.ts > R-F06 'Have enough' is bound to what the reviewer saw > R-F06a: a concurrent increase cannot enlarge Alex's assertion (change first) 625ms
+   → expected [ '1502.525', 'g' ] to deeply equal [ '1219.029', 'g' ]
+ ✓ tests/integration/review-regressions.test.ts > R-F06 'Have enough' is bound to what the reviewer saw > R-F06a: a concurrent increase cannot enlarge Alex's assertion (observation first) 611ms
+ × tests/integration/review-regressions.test.ts > R-F06 'Have enough' is bound to what the reviewer saw > R-F06b: 'Have enough' without the reviewed amount is refused; an unchanged review covers the need 509ms
+   → expected false to be 'invalid' // Object.is equality
+ × tests/integration/review-regressions.test.ts > R-F07 capture lifecycle > R-F07a: Also need works before any week is adopted and reports its destination 485ms
+   → {"status":"rejected","code":"not_found","message":"Week not found","operationId":"op-77659cea-8772-4418-a175-c70a4d714e45","command":"CaptureHouseholdNeed","replayed":false,"seq":null}: expected 'rejected' to be 'accepted' // Object.is equality
+ × tests/integration/review-regressions.test.ts > R-F07 capture lifecycle > R-F07b: after this week's order is confirmed, a new need goes to the next pickup, not the confirmed order 640ms
+   → expected undefined to match object { weekStart: '2026-10-19' }
+ × tests/integration/review-regressions.test.ts > R-F07 capture lifecycle > R-F07c: a remembered usual quantity is reused by later staple taps 516ms
+   → relation "household_staples" does not exist
+ × tests/integration/review-regressions.test.ts > R-F08 household-wide purchasing inputs reach every active week > R-F08a: a price change made from week B invalidates week A's old review; old Send makes zero calls 599ms
+   → expected 749 to be 999 // Object.is equality
+ × tests/integration/review-regressions.test.ts > R-F08 household-wide purchasing inputs reach every active week > R-F08b: a product mapping change from week B reaches week A's quantities 569ms
+   → expected 'Chicken thighs tray (about 1.5 lb)' to be 'Chicken thighs 16 oz' // Object.is equality
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 23 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01a: an empty recipe collection yields a draft of seven open nights that cannot be adopted
+AssertionError: expected false to be 'incomplete_week' // Object.is equality
+
+- Expected:
+"incomplete_week"
+
++ Received:
+false
+
+ ❯ tests/integration/review-regressions.test.ts:92:47
+     90|     expect(p.content.nights.filter((n: any) => n.kind === "open")).toH…
+     91|     const r = await adopt(jon, p);
+     92|     expect(r.status === "rejected" && r.code).toBe("incomplete_week");
+       |                                               ^
+     93|     const w = await weekRow(fx.householdId, NEXT);
+     94|     expect(w.accepted_choice_revision).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/23]⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01b: too few eligible recipes leaves named open nights; adoption refused
+AssertionError: expected false to be 'incomplete_week' // Object.is equality
+
+- Expected:
+"incomplete_week"
+
++ Received:
+false
+
+ ❯ tests/integration/review-regressions.test.ts:105:47
+    103|     expect(p.content.unresolved.length).toBeGreaterThan(0);
+    104|     const r = await adopt(jon, p);
+    105|     expect(r.status === "rejected" && r.code).toBe("incomplete_week");
+       |                                               ^
+    106|     expect(JSON.stringify(r.status === "rejected" && r.details)).toMat…
+    107|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/23]⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01c: a submitted proposal with an uncovered Thursday or missing plates is refused at the server
+AssertionError: expected false to be 'incomplete_week' // Object.is equality
+
+- Expected:
+"incomplete_week"
+
++ Received:
+false
+
+ ❯ tests/integration/review-regressions.test.ts:122:49
+    120|          VALUES ($1,$2,0,$3,$4,'{}','{}',$5) RETURNING id`, [fx.househ…
+    121|       const r = await adoptWeekProposalCommand(jon, op(), { proposalId…
+    122|       expect(r.status === "rejected" && r.code).toBe("incomplete_week"…
+       |                                                 ^
+    123|     }
+    124|     expect((await weekRow(fx.householdId, NEXT)).accepted_choice_revis…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/23]⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01d: a complete, fully priced proposal that is known to exceed a firm budget is refused
+AssertionError: expected false to be 'constraint_violation' // Object.is equality
+
+- Expected:
+"constraint_violation"
+
++ Received:
+false
+
+ ❯ tests/integration/review-regressions.test.ts:133:47
+    131|     expect(p.content.nights.every((n: any) => n.kind !== "open")).toBe…
+    132|     const r = await adopt(jon, p);
+    133|     expect(r.status === "rejected" && r.code).toBe("constraint_violati…
+       |                                               ^
+    134|     expect((await weekRow(fx.householdId, NEXT)).accepted_choice_revis…
+    135|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/23]⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02a: a locked Thursday leftover keeps its Wednesday source through a whole-week adoption
+AssertionError: expected [ 'p:0', 'p:1', 'p:2', 'p:3' ] to include 'keep:068dc690-f74a-4e55-9231-a818dc1a…'
+ ❯ tests/integration/review-regressions.test.ts:158:22
+    156|     const p = await propose(jon, WEEK);
+    157|     const keptKeys = p.content.events.map((e: any) => e.key);
+    158|     expect(keptKeys).toContain(`keep:${fx.events.chicken_rice}`);
+       |                      ^
+    159|     const r = await adopt(jon, p, 2);
+    160|     expect(r.status, JSON.stringify(r)).toBe("accepted");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/23]⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02b: a locked Wednesday source keeps its dependent plates consistent through adoption
+AssertionError: dinner plate on 2026-10-15 not served by its night: expected 'f55b719c-7ac4-44f9-a67c-447b7f369f09' to be '73fa50fb-50df-46d2-a32a-23f9096e1614' // Object.is equality
+
+Expected: "73fa50fb-50df-46d2-a32a-23f9096e1614"
+Received: "f55b719c-7ac4-44f9-a67c-447b7f369f09"
+
+ ❯ assertPlanIntegrity tests/integration/review-regressions.test.ts:80:127
+     78|     const e = ev.find((y) => y.id === x.cooking_event_id);
+     79|     if (x.kind === "lunch") expect(x.night > e.cook_night, `lunch ${x.…
+     80|     else expect(asg.find((a) => a.night === x.night)?.cooking_event_id…
+       |                                                                                                                               ^
+     81|   }
+     82| }
+ ❯ tests/integration/review-regressions.test.ts:173:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/23]⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02c: moving Wednesday's cooking after Alex's reserved Thursday lunch discloses and resolves the lunch before Apply
+AssertionError: expected 'Fixture: Sheet-pan chicken and rice m…' to match /Alex's reserved lunch on Thursday/
+
+- Expected:
+/Alex's reserved lunch on Thursday/
+
++ Received:
+"Fixture: Sheet-pan chicken and rice moves from Wednesday to Saturday. No second copy of its ingredients is bought. Wednesday becomes open. Thursday becomes an open night (leftovers cannot come before the cooking)."
+
+ ❯ tests/integration/review-regressions.test.ts:180:38
+    178|     expect((await previewApply(jon, fx.weekId, { type: "set_kind", ass…
+    179|     const { p, a } = await previewApply(jon, fx.weekId, { type: "move"…
+    180|     expect(p.consequences.join(" ")).toMatch(/Alex's reserved lunch on…
+       |                                      ^
+    181|     expect(a.status).toBe("accepted");
+    182|     await assertPlanIntegrity(fx.weekId);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/23]⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F03 current exclusions apply to every newly scheduled choice > R-F03a: placing a deferred dinner that now violates an exclusion is refused
+AssertionError: expected [] to include 'constraint_violation'
+ ❯ tests/integration/review-regressions.test.ts:218:48
+    216|     expect((await addExclusionCommand(jon, op(), { term: "rice", membe…
+    217|     const p = await preview(jon, fx.weekId, { type: "place", eventId: …
+    218|     expect(p.blockers.map((b: any) => b.code)).toContain("constraint_v…
+       |                                                ^
+    219|     const a = await applyPlanChangeCommand(jon, op(), { previewId: p.p…
+    220|     expect(a.status).toBe("rejected");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/23]⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F03 current exclusions apply to every newly scheduled choice > R-F03b: adding an eater to a dinner checks that eater's personal exclusions
+AssertionError: expected false to be 'constraint_violation' // Object.is equality
+
+- Expected:
+"constraint_violation"
+
++ Received:
+false
+
+ ❯ tests/integration/review-regressions.test.ts:231:47
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/23]⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F04 order and transfer reconciliation > R-F04a: a transfer acknowledged after the order is still counted; the same demand is not offered again
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/integration/review-regressions.test.ts:249:20
+    247|     expect(r.status, JSON.stringify(r)).toBe("accepted");
+    248|     const c = await line(fx.weekId, "chicken_thigh");
+    249|     expect(c.sent).toBe(1);
+       |                    ^
+    250|     expect(c.toSend).toBe(0);
+    251|     expect(c.status).toBe("in_cart_transfer");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/23]⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F04 order and transfer reconciliation > R-F04b: 'contents unknown' does not clear an uncertain transfer hold
+AssertionError: expected +0 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 0
+
+ ❯ tests/integration/review-regressions.test.ts:264:25
+    262|     expect((await confirmFromTransfers(alex, fx.weekId, { contentsKnow…
+    263|     const c = await line(fx.weekId, "chicken_thigh");
+    264|     expect(c.uncertain).toBe(2);
+       |                         ^
+    265|     expect(c.toSend).toBe(0);
+    266|     expect((await summary(fx.weekId)).ready).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/23]⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F04 order and transfer reconciliation > R-F04c: an acknowledged transfer stays counted when the order's contents are unknown, and is flagged
+AssertionError: expected +0 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 0
+
+ ❯ tests/integration/review-regressions.test.ts:276:20
+    274|     await confirmFromTransfers(alex, fx.weekId, { contentsKnown: false…
+    275|     const c = await line(fx.weekId, "chicken_thigh");
+    276|     expect(c.sent).toBe(2);
+       |                    ^
+    277|     expect(c.toSend).toBe(0);
+    278|     expect(c.unresolved.join(" ")).toMatch(/contents not listed/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/23]⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F05 receipts, substitutions and package identity > R-F05a: an unvalidated substitution does not cover the original need
+AssertionError: expected 'ordered' not to be 'ordered' // Object.is equality
+ ❯ tests/integration/review-regressions.test.ts:307:26
+    305|     const s = await line(h.fx.weekId, "salmon");
+    306|     expect(s.received).toBe(0);
+    307|     expect(s.status).not.toBe("ordered");
+       |                          ^
+    308|     expect(s.unresolved.join(" ")).toMatch(/Substituted .*Trout fillet…
+    309|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/23]⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F05 receipts, substitutions and package identity > R-F05b: an unsuitable substitution leaves the need actionable; a suitable smaller one covers only its amount
+AssertionError: expected 'rejected' to be 'accepted' // Object.is equality
+
+Expected: "accepted"
+Received: "rejected"
+
+ ❯ tests/integration/review-regressions.test.ts:316:109
+    314|     await recordReceiptCommand(h.alex, op(), { orderLineId: ol.id, sta…
+    315|     const rc = (await q<any>("SELECT id FROM receipt_observations WHER…
+    316|     expect((await validateSubstitutionCommand(h.alex, op(), { receiptI…
+       |                                                                                                             ^
+    317|     let s = await line(h.fx.weekId, "salmon");
+    318|     expect(s.status).toBe("missing");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/23]⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F05 receipts, substitutions and package identity > R-F05c: ordered packages keep their own size when the product mapping later changes
+error: column "package_qty" does not exist
+ ❯ node_modules/pg/lib/client.js:694:17
+ ❯ q tests/integration/helpers.ts:17:13
+     15|   const c = await db();
+     16|   try {
+     17|     return (await c.query(sql, params)).rows as T[];
+       |             ^
+     18|   } finally {
+     19|     await c.end();
+ ❯ tests/integration/review-regressions.test.ts:334:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { length: 111, severity: 'ERROR', code: '42703', detail: undefined, hint: undefined, position: '20', internalPosition: undefined, internalQuery: undefined, where: undefined, schema: undefined, table: undefined, dataType: undefined, constraint: undefined, file: 'parse_relation.c', routine: 'errorMissingColumn' }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/23]⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F05 receipts, substitutions and package identity > R-F05d: a mistaken 'missing' is corrected by a new observation without rewriting history
+AssertionError: {"status":"rejected","code":"invalid","message":"More packages than the order line holds","operationId":"op-fdca4248-f460-456d-a1a2-bc165a79b9ae","command":"RecordReceipt","replayed":false,"seq":null}: expected 'rejected' to be 'accepted' // Object.is equality
+
+Expected: "accepted"
+Received: "rejected"
+
+ ❯ tests/integration/review-regressions.test.ts:349:41
+    347|     const first = (await q<any>("SELECT id FROM receipt_observations W…
+    348|     const r = await recordReceiptCommand(h.jon, op(), { orderLineId: o…
+    349|     expect(r.status, JSON.stringify(r)).toBe("accepted");
+       |                                         ^
+    350|     const s = await line(h.fx.weekId, "salmon");
+    351|     expect(s.status).toBe("received");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/23]⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F06 'Have enough' is bound to what the reviewer saw > R-F06a: a concurrent increase cannot enlarge Alex's assertion (change first)
+AssertionError: expected [ '1502.525', 'g' ] to deeply equal [ '1219.029', 'g' ]
+
+- Expected
++ Received
+
+  [
+-   "1219.029",
++   "1502.525",
+    "g",
+  ]
+
+ ❯ tests/integration/review-regressions.test.ts:369:62
+    367|       expect(b.status).toBe("accepted");
+    368|       const stored = (await q<any>("SELECT reviewed_demand, reviewed_u…
+    369|       expect([stored.reviewed_demand, stored.reviewed_unit]).toEqual([…
+       |                                                              ^
+    370|       const c = await line(fx.weekId, "chicken_thigh");
+    371|       expect(c.unresolved.join(" ")).toMatch(/increased since Alex sai…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/23]⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F06 'Have enough' is bound to what the reviewer saw > R-F06b: 'Have enough' without the reviewed amount is refused; an unchanged review covers the need
+AssertionError: expected false to be 'invalid' // Object.is equality
+
+- Expected:
+"invalid"
+
++ Received:
+false
+
+ ❯ tests/integration/review-regressions.test.ts:379:47
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/23]⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F07 capture lifecycle > R-F07a: Also need works before any week is adopted and reports its destination
+AssertionError: {"status":"rejected","code":"not_found","message":"Week not found","operationId":"op-77659cea-8772-4418-a175-c70a4d714e45","command":"CaptureHouseholdNeed","replayed":false,"seq":null}: expected 'rejected' to be 'accepted' // Object.is equality
+
+Expected: "accepted"
+Received: "rejected"
+
+ ❯ tests/integration/review-regressions.test.ts:391:41
+    389|     const { fx, jon } = await fresh();
+    390|     const r = await captureHouseholdNeedCommand(jon, op(), { weekStart…
+    391|     expect(r.status, JSON.stringify(r)).toBe("accepted");
+       |                                         ^
+    392|     expect(r.status === "accepted" && r.result.destination).toMatchObj…
+    393|     const s = await householdSnapshot(jon, NEXT);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/23]⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F07 capture lifecycle > R-F07b: after this week's order is confirmed, a new need goes to the next pickup, not the confirmed order
+AssertionError: expected undefined to match object { weekStart: '2026-10-19' }
+
+- Expected:
+{
+  "weekStart": "2026-10-19",
+}
+
++ Received:
+undefined
+
+ ❯ tests/integration/review-regressions.test.ts:405:61
+    403|     await confirmFromTransfers(h.alex, h.fx.weekId);
+    404|     const r = await captureHouseholdNeedCommand(h.jon, op(), { weekId:…
+    405|     expect(r.status === "accepted" && r.result.destination).toMatchObj…
+       |                                                             ^
+    406|     expect((await line(h.fx.weekId, "kidney_beans"))).toBeUndefined();
+    407|     const next = await weekRow(h.fx.householdId, NEXT);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/23]⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F07 capture lifecycle > R-F07c: a remembered usual quantity is reused by later staple taps
+error: relation "household_staples" does not exist
+ ❯ node_modules/pg/lib/client.js:694:17
+ ❯ q tests/integration/helpers.ts:17:13
+     15|   const c = await db();
+     16|   try {
+     17|     return (await c.query(sql, params)).rows as T[];
+       |             ^
+     18|   } finally {
+     19|     await c.end();
+ ❯ tests/integration/review-regressions.test.ts:420:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { length: 116, severity: 'ERROR', code: '42P01', detail: undefined, hint: undefined, position: '28', internalPosition: undefined, internalQuery: undefined, where: undefined, schema: undefined, table: undefined, dataType: undefined, constraint: undefined, file: 'parse_relation.c', routine: 'parserOpenTable' }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/23]⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F08 household-wide purchasing inputs reach every active week > R-F08a: a price change made from week B invalidates week A's old review; old Send makes zero calls
+AssertionError: expected 749 to be 999 // Object.is equality
+
+- Expected
++ Received
+
+- 999
++ 749
+
+ ❯ tests/integration/review-regressions.test.ts:443:33
+    441|     expect((await recordPriceCommand(jon, op(), { weekId: weekB.id, pr…
+    442|     const c = await line(fx.weekId, "chicken_thigh");
+    443|     expect(c.price.amountMinor).toBe(999);
+       |                                 ^
+    444|     const r = await startHandoff(alex, op(), { weekId: fx.weekId, revi…
+    445|     expect(r.status === "rejected" && r.code).toBe("stale_review");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/23]⎯
+
+ FAIL  tests/integration/review-regressions.test.ts > R-F08 household-wide purchasing inputs reach every active week > R-F08b: a product mapping change from week B reaches week A's quantities
+AssertionError: expected 'Chicken thighs tray (about 1.5 lb)' to be 'Chicken thighs 16 oz' // Object.is equality
+
+Expected: "Chicken thighs 16 oz"
+Received: "Chicken thighs tray (about 1.5 lb)"
+
+ ❯ tests/integration/review-regressions.test.ts:456:28
+    454|     await addProductCommand(jon, op(), { weekId: weekB.id, ingredientK…
+    455|     const c = await line(fx.weekId, "chicken_thigh");
+    456|     expect(c.product.name).toBe("Chicken thighs 16 oz");
+       |                            ^
+    457|     expect(c.packagesNeeded).toBe(3); // 43 oz / 16 oz
+    458|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/23]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  23 failed | 6 passed (29)
+   Start at  00:52:50
+   Duration  21.21s (tests 91%, import 4%, transform 4%)
+

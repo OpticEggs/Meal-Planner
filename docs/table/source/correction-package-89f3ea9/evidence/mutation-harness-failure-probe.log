@@ -1,0 +1,9 @@
+mutation killed: blanket_week_conflict — 
+mutation killed: last_write_wins — 
+mutation killed: stale_adoption — 
+mutation killed: stale_send — 
+mutation killed: approvals_not_consumed — 
+mutation killed: uncertain_as_unsent — 
+mutation killed: dispatch_superseded — 
+exit_code=0
+no_application_tests_executed=true

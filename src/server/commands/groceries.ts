@@ -300,3 +300,10 @@ export function recordReceiptCommand(actor: Actor, operationId: string, p: { ord
     };
   });
 }
+
+// Placeholder so the review regressions load against the reviewed base; replaced below.
+export function validateSubstitutionCommand(actor: Actor, operationId: string, p: { receiptId: string; suitable: boolean; quantity?: string; unit?: string }) {
+  return runCommand(actor, "ValidateSubstitution", operationId, p, async () => {
+    throw new Reject("not_implemented", "ValidateSubstitution is not implemented in 89f3ea9");
+  });
+}

@@ -1,0 +1,100 @@
+{
+  "sourceRoot": "/mnt/data/table-review/repo",
+  "method": "Actual TypeScript source; recording SQL doubles; no database, no UI runtime, no decimal arithmetic; reproduction checks assert the observed defects, not contract compliance.",
+  "decimalOperations": 0,
+  "observations": [
+    {
+      "id": "P01",
+      "description": "An empty seven-open-night proposal reaches accepted adoption handler outcome.",
+      "actual": {
+        "openNights": 7,
+        "handlerStatus": "accepted",
+        "assignmentWriteCount": 7,
+        "note": "Recording SQL double; not a committed PostgreSQL test."
+      }
+    },
+    {
+      "id": "P02",
+      "description": "Whole-week proposal retains locked Thursday label but omits and retires Wednesday source.",
+      "actual": {
+        "thursdayEventKey": "keep:wed-cook",
+        "sourceIncluded": false,
+        "sourceRetirementRequested": true,
+        "handlerStatus": "accepted"
+      }
+    },
+    {
+      "id": "P03",
+      "description": "Deferred placement creates a scheduled dinner that fails the same module's exclusion validator.",
+      "actual": {
+        "recipeConstraint": "violated",
+        "operationBlockers": [],
+        "newDinnerKind": "cook"
+      }
+    },
+    {
+      "id": "P04",
+      "description": "The same acknowledged batch counts before order confirmation but is ignored once any order exists.",
+      "actual": {
+        "beforeConfirmation": {
+          "sent": 1,
+          "toSend": 0
+        },
+        "afterConfirmation": {
+          "sent": 0,
+          "toSend": 1,
+          "status": "not_sent_yet"
+        }
+      }
+    },
+    {
+      "id": "P05",
+      "description": "Confirming contents unknown allows an unresolved uncertain request to become ready for a fresh send.",
+      "actual": {
+        "uncertainShown": 0,
+        "toSend": 1,
+        "readyAfterFreshApproval": true,
+        "blockers": []
+      }
+    },
+    {
+      "id": "P06",
+      "description": "Substitution with no validated replacement identity suppresses original demand.",
+      "actual": {
+        "toSend": 0,
+        "received": 0,
+        "status": "ordered",
+        "unresolved": []
+      }
+    },
+    {
+      "id": "P07",
+      "description": "Have enough submitted from an old 1000 g screen records 3000 g after concurrent demand increase.",
+      "actual": {
+        "displayedToReviewer": "1000 g (scenario precondition)",
+        "currentServerDemand": "3000 g",
+        "amountRecordedAsReviewed": "3000 g",
+        "handlerStatus": "accepted"
+      }
+    },
+    {
+      "id": "P08",
+      "description": "Moving Wednesday cooking to Friday leaves a reserved Thursday lunch before its source.",
+      "actual": {
+        "cookNight": "2026-10-16",
+        "lunchNight": "2026-10-15",
+        "blockers": [],
+        "consequences": [
+          "Alpha moves from Wednesday to Friday. No second copy of its ingredients is bought. Wednesday becomes open."
+        ]
+      }
+    },
+    {
+      "id": "P09",
+      "description": "Final formatter does not display zero as the estimate when everything is unpriced.",
+      "actual": {
+        "priceLabel": "unknown — 12 unpriced"
+      }
+    }
+  ]
+}

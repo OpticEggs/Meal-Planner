@@ -1,0 +1,14 @@
+/mnt/data/table-89f3ea9.bundle is okay
+The bundle contains this ref:
+89f3ea9b5e057c5e57928e7978dda3d23ad4d750 refs/heads/main
+The bundle records a complete history.
+The bundle uses this hash algorithm: sha1
+89f3ea9b5e057c5e57928e7978dda3d23ad4d750 Final verification evidence for b1dcc80
+b1dcc803d155c1591fab1ea869e402fa5417c008 Expected supply respects pickup timing (plan 6.4); acceptance register with verbatim T01-T22
+a519be058a7e8a07157a4a984aabc62c0a401ac3 Full verification evidence; backup runbook (pg_dump check); sample recipe loader; status/backlog/decisions records
+76dd8f4683894e72f03550ebb8adb1c045dc834f Stage 3-4: journey and X-check browser suites, restart/crash recovery, X12 export/restore, household tests, docs
+95292497852082b3a25a99739fb8ae46738c41e6 Stage 3 contract tests (T05, T13-T20, X03-X05, X09) and purchasing mutation checks; first-slice browser evidence
+d60fd1efb407202d65d357d45a349053a4c200a6 Table: stage 1-2 foundation — schema, auth, domain, commands, UI, contract tests (checkpoint)
+docs/table/IMPLEMENTATION-STATUS.md
+docs/table/evidence/2026-10-08-full-run-a519be0-parent.md
+docs/table/evidence/2026-10-08-full-run.md
