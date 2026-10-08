@@ -16,8 +16,10 @@ interface Store {
   weekStart: string | null;
   setWeekStart: (w: string | null) => void;
   refresh: () => Promise<void>;
-  loadLibrary: () => Promise<void>;
-  command: (name: string, payload: unknown) => Promise<any>;
+  /** Loads the library and also returns it (null if it couldn't be loaded). */
+  loadLibrary: () => Promise<any>;
+  /** Runs a command (POST /api/commands/<name>, or `path` for a server route that wraps one) and refreshes. */
+  command: (name: string, payload: unknown, path?: string) => Promise<any>;
   lastChange: { seq: number; text: string | null; actorId: string | null } | null;
   /** Accepted-plan writes and handoffs are allowed only while the view is known current. */
   writesAllowed: boolean;
@@ -73,7 +75,10 @@ export function HouseholdProvider({ me, children }: { me: Store["me"]; children:
   const loadLibrary = useCallback(async () => {
     libraryWanted.current = true;
     const r = await fetch("/api/library", { cache: "no-store" });
-    if (r.ok) setLibrary(await r.json());
+    if (!r.ok) return null;
+    const lib = await r.json();
+    setLibrary(lib);
+    return lib;
   }, []);
 
   const refresh = useCallback(async () => {
@@ -167,11 +172,11 @@ export function HouseholdProvider({ me, children }: { me: Store["me"]; children:
   }, [refresh]);
 
   const command = useCallback(
-    async (name: string, payload: unknown) => {
+    async (name: string, payload: unknown, path?: string) => {
       const operationId = `${name}-${crypto.randomUUID()}`;
       let res: any;
       try {
-        const r = await fetch(`/api/commands/${name}`, {
+        const r = await fetch(path ?? `/api/commands/${name}`, {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ operationId, payload }),

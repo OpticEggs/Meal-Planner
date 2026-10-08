@@ -123,7 +123,18 @@ export function assertTestDatabase(url: string) {
 /** Wipes the disposable test database (TRUNCATE does not run row triggers). */
 export async function resetTestDatabase(c: pg.Client | pg.PoolClient) {
   const r = await c.query("SELECT tablename FROM pg_tables WHERE schemaname='public' AND tablename <> 'schema_migrations'");
-  await c.query(`TRUNCATE ${r.rows.map((x) => `"${x.tablename}"`).join(", ")} RESTART IDENTITY CASCADE`);
+  // A browser test's last read (a live refresh still in flight when its page closed) can hold table
+  // locks while this TRUNCATE takes them in another order; PostgreSQL then aborts one side as a
+  // deadlock victim. Only the reset is retried, and only for that error code.
+  for (let attempt = 1; ; attempt++) {
+    try {
+      await c.query(`TRUNCATE ${r.rows.map((x) => `"${x.tablename}"`).join(", ")} RESTART IDENTITY CASCADE`);
+      return;
+    } catch (e) {
+      if ((e as { code?: string }).code !== "40P01" || attempt >= 5) throw e;
+      await new Promise((res) => setTimeout(res, 100 * attempt));
+    }
+  }
 }
 
 export async function seedFixture(url: string, opts: { unpricedCheese?: boolean } = {}): Promise<Fixture> {

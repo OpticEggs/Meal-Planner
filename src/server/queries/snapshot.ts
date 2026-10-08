@@ -328,6 +328,7 @@ function recipeSummary(r: import("@/domain/types").RecipeVersion) {
     id: r.id, recipeId: r.recipeId, versionNo: r.versionNo, title: r.title, cuisine: r.cuisine, summary: r.summary, effortMinutes: r.effortMinutes,
     effortLevel: r.effortLevel, leftoverFriendly: r.leftoverFriendly, instructions: r.instructions, reheatInstructions: r.reheatInstructions,
     provenance: r.provenance, estimate: r.estimate, sourceLabel: r.sourceLabel, components: r.components,
+    sourceUrl: r.sourceUrl ?? null, sourceAuthor: r.sourceAuthor ?? null, sourceSiteName: r.sourceSiteName ?? null, imageId: r.imageId ?? null,
   };
 }
 

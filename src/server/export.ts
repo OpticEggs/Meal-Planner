@@ -19,6 +19,7 @@ export const EXPORT_TABLES: Spec[] = [
   { table: "ingredients", where: "household_id=$1" },
   { table: "nutrition_matches", where: "household_id=$1" }, // B7 append-only nutrition decisions (no key is ever stored)
   { table: "ingredient_nutrition", where: "household_id=$1" },
+  { table: "recipe_images", where: "household_id=$1" }, // photos kept under a recorded permission (bytes as base64)
   { table: "recipes", where: "household_id=$1" },
   { table: "recipe_versions", where: "household_id=$1" },
   { table: "recipe_components", where: "recipe_version_id IN (SELECT id FROM recipe_versions WHERE household_id=$1)" },
@@ -86,6 +87,7 @@ export async function exportHousehold(c: pg.PoolClient | pg.Client, householdId:
     tables[s.table] = r.rows.map((row) => {
       const o: Record<string, unknown> = { ...row };
       for (const k of s.omit ?? []) delete o[k];
+      for (const [k, v] of Object.entries(o)) if (Buffer.isBuffer(v)) o[k] = v.toString("base64"); // bytea
       return o;
     });
   }
@@ -129,7 +131,10 @@ export async function restoreHousehold(c: pg.PoolClient | pg.Client, data: House
         }
         const cols = Object.keys(o);
         const types = await columnTypes(c, s.table);
-        const vals = cols.map((k) => (types.get(k) === "jsonb" && o[k] !== null ? JSON.stringify(o[k]) : o[k]));
+        const vals = cols.map((k) =>
+          types.get(k) === "jsonb" && o[k] !== null ? JSON.stringify(o[k])
+            : types.get(k) === "bytea" && typeof o[k] === "string" ? Buffer.from(o[k] as string, "base64")
+              : o[k]);
         await c.query(
           `INSERT INTO ${s.table} (${cols.map((k) => `"${k}"`).join(",")}) VALUES (${cols.map((_, i) => `$${i + 1}`).join(",")})`,
           vals,

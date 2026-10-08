@@ -1,6 +1,6 @@
 /**
  * JSON-LD Recipe extraction over synthetic pages (tests/fixtures/recipe-pages, see its README).
- * Only plain text leaves the extractor; instructions and nutrition are presence flags only.
+ * Only plain text and validated links leave the extractor; nutrition is a presence flag only.
  */
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -17,7 +17,7 @@ const one = (html: string): RecipeCandidate => {
 
 /** No markup-ish output anywhere in a candidate. */
 function expectPlain(c: RecipeCandidate) {
-  for (const s of [c.name, c.yield, c.author, ...c.ingredients]) {
+  for (const s of [c.name, c.yield, c.author, c.description, c.siteName, c.category, c.cuisine, ...c.ingredients, ...c.instructions.flatMap((i) => [i.section, i.text])]) {
     if (s === null) continue;
     expect(s).not.toMatch(/<[A-Za-z/!?]/);
     expect(s).not.toMatch(/javascript:/i);
@@ -43,10 +43,17 @@ describe("extractRecipes fixtures", () => {
         hasNutrition: true,
         sourceUrl: "https://recipes.example.com/lentil-soup/",
         author: "Test Cook",
+        description: null,
+        instructions: [{ section: null, text: "Synthetic step one." }],
+        images: [],
+        siteName: null,
+        category: null,
+        cuisine: null,
+        source: "json_ld",
       },
     ]);
-    // never the method text or nutrition values
-    expect(JSON.stringify(candidates)).not.toMatch(/Synthetic step one|999 kcal/);
+    // never the nutrition values
+    expect(JSON.stringify(candidates)).not.toMatch(/999 kcal/);
   });
 
   it("@graph with WebPage + Recipe, case-varied script tag, non-JSON-LD scripts ignored", () => {
@@ -54,7 +61,7 @@ describe("extractRecipes fixtures", () => {
     expect(problems).toEqual([]);
     expect(candidates.map((c) => c.name)).toEqual(["Synthetic Bean Chili"]);
     expect(candidates[0]).toMatchObject({ servings: 6, yield: "6", hasInstructions: true, author: "A. Tester, B. Tester", ingredients: ["2 cans beans", "1 onion"] });
-    expect(JSON.stringify(candidates)).not.toContain("Synthetic method text");
+    expect(candidates[0].instructions).toEqual([{ section: null, text: "Synthetic method text." }]);
   });
 
   it("@type arrays, full schema.org IRIs, single-quoted type and mainEntity nesting", () => {
@@ -72,7 +79,12 @@ describe("extractRecipes fixtures", () => {
   });
 
   it("unrelated JSON-LD only (and a wrong-case type) yields nothing", () => {
-    expect(extractRecipes(fixture("unrelated.html"))).toEqual({ candidates: [], problems: [] });
+    expect(extractRecipes(fixture("unrelated.html"))).toEqual({
+      candidates: [],
+      problems: [],
+      meta: { title: null, siteName: null, image: null },
+      stats: { jsonLdBlocks: 2, recipeNodes: 0, microdata: false },
+    });
   });
 
   it("malformed JSON is a problem and the next block (comment-wrapped) still counts", () => {
@@ -210,7 +222,12 @@ describe("extractRecipes scanner edge cases", () => {
   });
 
   it("tolerates non-string input", () => {
-    expect(extractRecipes(undefined as unknown as string)).toEqual({ candidates: [], problems: ["no page text"] });
+    expect(extractRecipes(undefined as unknown as string)).toEqual({
+      candidates: [],
+      problems: ["no page text"],
+      meta: { title: null, siteName: null, image: null },
+      stats: { jsonLdBlocks: 0, recipeNodes: 0, microdata: false },
+    });
   });
 });
 

@@ -25,6 +25,63 @@ function savedBy(b: any): string {
   return names.length ? `Saved by ${names.join(" and ")}` : `Saved by ${b.createdBy}`;
 }
 
+/**
+ * The normal way to add a recipe: paste its link. Table saves the link for both members and reads the
+ * page's structured recipe data (when page reading is on), then opens the review. Whatever stops the
+ * read, the link stays saved and the review offers to paste the ingredients instead.
+ */
+export function AddFromLinkForm({ onOpen }: { onOpen: (b: any, el: HTMLElement, result?: any) => void }) {
+  const { loadLibrary, announce } = useStore();
+  const [url, setUrl] = useState("");
+  const [errors, setErrors] = useState<Errors>({});
+  const [busy, setBusy] = useState(false);
+  const [done, setDone] = useState<{ recipeId: string; message: string } | null>(null);
+  const urlRef = useRef<HTMLInputElement>(null);
+  const urlId = "add-link-url";
+  return (
+    <form className="stack" aria-label="Add a recipe from a link" data-testid="add-from-link"
+      onSubmit={async (e) => {
+        e.preventDefault();
+        setDone(null);
+        if (!url.trim()) {
+          setErrors({ [urlId]: "Paste the link to a recipe page." });
+          urlRef.current?.focus();
+          return;
+        }
+        setBusy(true);
+        const r = await fetch("/api/imports", {
+          method: "POST", headers: { "content-type": "application/json" },
+          body: JSON.stringify({ url, operationId: `add-${crypto.randomUUID()}` }),
+        }).then((x) => x.json(), () => ({ kind: "not_read", status: "rejected", reason: "network", message: "Table couldn't be reached. Nothing changed." }));
+        const lib = await loadLibrary();
+        setBusy(false);
+        if (r.kind === "not_read" && r.status === "rejected" && !r.bookmarkId) {
+          setErrors({ [urlId]: r.message });
+          urlRef.current?.focus();
+          return;
+        }
+        setErrors({});
+        setUrl("");
+        if (r.kind === "not_read" && r.status === "already_imported" && r.recipeId) {
+          setDone({ recipeId: r.recipeId, message: r.message });
+          announce(r.message);
+          return;
+        }
+        const b = (lib ?? undefined)?.bookmarks?.find((x: any) => x.id === r.bookmarkId) ?? { id: r.bookmarkId, url, sourceLabel: "", saves: [] };
+        onOpen(b, urlRef.current ?? (e.currentTarget as HTMLElement), r);
+      }}>
+      <label htmlFor={urlId}><strong>Add a recipe from a link</strong></label>
+      <div className="row" style={{ flexWrap: "nowrap" }}>
+        <input ref={urlRef} className="grow" type="url" inputMode="url" autoComplete="off" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Paste a recipe page link: https://…" {...fieldProps(urlId, errors)} />
+        <button className="btn primary" type="submit" disabled={busy} data-testid="add-from-link-submit">{busy ? "Reading…" : "Add recipe"}</button>
+      </div>
+      <FieldError id={urlId} errors={errors} />
+      <span className="faint small">Table reads the page&apos;s recipe details for you to check. Nothing becomes a recipe until you confirm it.</span>
+      {done && <p role="status" className="small" data-testid="add-from-link-done">{done.message} <Link href={`/recipes/${done.recipeId}`}>Open the recipe</Link></p>}
+    </form>
+  );
+}
+
 /** Paste a link and save it for both members. Saving never opens or reads the page. */
 export function SaveLinkForm({ idPrefix = "save-link", source }: { idPrefix?: string; source?: string }) {
   const { command, announce } = useStore();

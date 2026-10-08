@@ -52,8 +52,8 @@ describe("parseIngredientLine parsed lines", () => {
     ["1 L water", "1", "l", "water"],
     ["1 litre water", "1", "l", "water"],
     ["2 eggs", "2", "each", "eggs"],
-    ["3 large eggs", "3", "each", "large eggs"],
-    ["1 onion, diced", "1", "each", "onion, diced"],
+    ["3 large eggs", "3", "each", "eggs"], // "large" moves to the note
+    ["1 onion, diced", "1", "each", "onion"], // "diced" moves to the note
     ["4 each tortillas", "4", "each", "tortillas"],
     ["2 cups of flour", "2", "cup", "flour"],
     ["- 2 cups flour", "2", "cup", "flour"],
@@ -142,7 +142,7 @@ describe("parseIngredientLine review lines", () => {
   });
 
   it("keeps the unit word in the name when the unit is unsupported", () => {
-    expect(parseIngredientLine("3 cloves garlic, minced").name).toBe("cloves garlic, minced");
+    expect(parseIngredientLine("3 cloves garlic, minced")).toMatchObject({ name: "cloves garlic", note: "minced" });
   });
 
   it("an unsupported unit alongside another reason drops the quantity too", () => {

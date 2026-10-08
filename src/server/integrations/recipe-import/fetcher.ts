@@ -49,7 +49,7 @@ export type FailedCode =
   | "unsupported_content_type" | "unsupported_charset" | "unsupported_encoding" | "bad_encoding" | "too_large";
 
 export type FetchOutcome =
-  | { kind: "ok"; finalUrl: string; contentType: string; text: string }
+  | { kind: "ok"; finalUrl: string; contentType: string; text: string; bytes?: Uint8Array }
   | { kind: "refused"; code: RefusedCode; message: string }
   | { kind: "failed"; code: FailedCode; message: string; status?: number };
 
@@ -60,6 +60,24 @@ export const REQUEST_HEADERS: Readonly<Record<string, string>> = Object.freeze({
 });
 
 const ACCEPTED_TYPES = new Set(["text/html", "application/xhtml+xml", "application/ld+json", "application/json"]);
+/** Photographs (only when a content permission allows keeping one); the bytes are sniffed again before storing. */
+export const IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
+export const IMAGE_LIMITS: Partial<FetchLimits> = { maxBytes: 5 * 1024 * 1024, maxCompressedBytes: 5 * 1024 * 1024 };
+const IMAGE_HEADERS: Readonly<Record<string, string>> = Object.freeze({
+  "User-Agent": "TableRecipeImport/1.0 (private household recipe app; one photo per recipe)",
+  Accept: "image/jpeg,image/png,image/webp,image/gif",
+  "Accept-Encoding": "identity",
+});
+
+/** The image type from the bytes themselves (never from a header or a file name); null = not one we keep. */
+export function sniffImage(b: Uint8Array): "image/jpeg" | "image/png" | "image/webp" | "image/gif" | null {
+  const at = (i: number, ...xs: number[]) => xs.every((x, k) => b[i + k] === x);
+  if (b.length >= 3 && at(0, 0xff, 0xd8, 0xff)) return "image/jpeg";
+  if (b.length >= 8 && at(0, 0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a)) return "image/png";
+  if (b.length >= 6 && (at(0, 0x47, 0x49, 0x46, 0x38, 0x37, 0x61) || at(0, 0x47, 0x49, 0x46, 0x38, 0x39, 0x61))) return "image/gif";
+  if (b.length >= 12 && at(0, 0x52, 0x49, 0x46, 0x46) && at(8, 0x57, 0x45, 0x42, 0x50)) return "image/webp";
+  return null;
+}
 const ACCEPTED_CHARSETS = new Set(["utf-8", "utf8", "us-ascii"]);
 const REDIRECTS = new Set([301, 302, 303, 307, 308]);
 
@@ -77,8 +95,12 @@ class Stop extends Error {
 const fail = (code: FailedCode, message: string, status?: number) => new Stop(status === undefined ? { kind: "failed", code, message } : { kind: "failed", code, message, status });
 const refuse = (code: RefusedCode, message: string) => new Stop({ kind: "refused", code, message });
 
-export async function safeFetch(rawUrl: string, deps: { resolve: Resolver; transport: Transport; now?: () => number }, limits: Partial<FetchLimits> = {}): Promise<FetchOutcome> {
-  const lim = { ...DEFAULT_LIMITS, ...limits };
+export async function safeFetch(
+  rawUrl: string, deps: { resolve: Resolver; transport: Transport; now?: () => number }, limits: Partial<FetchLimits> = {},
+  opts: { accept?: "page" | "image" } = {},
+): Promise<FetchOutcome> {
+  const image = opts.accept === "image";
+  const lim = { ...DEFAULT_LIMITS, ...(image ? IMAGE_LIMITS : {}), ...limits };
   const first = checkImportUrl(rawUrl);
   if (!first.ok) return { kind: "refused", code: first.code, message: first.message };
   if (inFlight >= MAX_IN_FLIGHT) return { kind: "failed", code: "busy", message: "another import is in progress; try again in a moment" };
@@ -102,7 +124,7 @@ export async function safeFetch(rawUrl: string, deps: { resolve: Resolver; trans
       const ip = await pinnedAddress(url.hostname, deps.resolve, lim, bounded);
       let res: TransportResponse;
       try {
-        res = await bounded(() => deps.transport({ ip, port: 443, hostname: url.hostname, path: url.pathname + url.search, headers: { ...REQUEST_HEADERS }, signal: ac.signal }));
+        res = await bounded(() => deps.transport({ ip, port: 443, hostname: url.hostname, path: url.pathname + url.search, headers: { ...(image ? IMAGE_HEADERS : REQUEST_HEADERS) }, signal: ac.signal }));
       } catch (e) {
         if (e instanceof Stop) throw e;
         throw fail("connect_failed", "the site could not be reached");
@@ -129,6 +151,14 @@ export async function safeFetch(rawUrl: string, deps: { resolve: Resolver; trans
         throw fail("http_status", `the site answered with HTTP ${res.status}`, res.status);
       }
       const ct = parseContentType(headers["content-type"]);
+      if (image) {
+        if (!ct || !IMAGE_TYPES.has(ct.type)) {
+          discard(res.body);
+          throw fail("unsupported_content_type", `not a photo Table keeps (${ct?.type ?? "no content type"})`);
+        }
+        const bytes = await readBody(res.body, (headers["content-encoding"] ?? "identity").trim().toLowerCase(), lim, bounded);
+        return { kind: "ok", finalUrl: url.href, contentType: ct.type, text: "", bytes };
+      }
       if (!ct || !ACCEPTED_TYPES.has(ct.type)) {
         discard(res.body);
         throw fail("unsupported_content_type", `not a web page (${ct?.type ?? "no content type"})`);
@@ -264,14 +294,15 @@ async function readBody(body: AsyncIterable<Uint8Array>, encoding: string, lim: 
   }
 }
 
-// --- Production wiring (not exercised by tests: tests inject fakes) ----------------------------
+// --- Production wiring (tested against a local TLS server: tests/unit/recipe-import-live-transport) --
 
 /**
  * HTTPS over node:https. The socket connects to the pinned address only (`lookup` returns it and
  * nothing else), the certificate is verified against `hostname` (SNI + Host), no shared agent,
  * no redirects followed here, no proxy, no cookies. The response body streams to the fetcher.
+ * `ca` exists for tests against a local TLS server; production uses the system roots.
  */
-export function nodeTransport(): Transport {
+export function nodeTransport(opts: { ca?: string | Buffer } = {}): Transport {
   return (req) =>
     new Promise<TransportResponse>((resolve, reject) => {
       const family = isIP(req.ip);
@@ -292,6 +323,7 @@ export function nodeTransport(): Transport {
           family,
           agent: false,
           rejectUnauthorized: true,
+          ...(opts.ca ? { ca: opts.ca } : {}),
           signal: req.signal,
           maxHeaderSize: 16 * 1024,
         },

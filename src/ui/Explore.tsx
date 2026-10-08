@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useStore } from "./store";
 import { money, nutrient } from "./format";
 import { PlaceholderTile } from "./Tile";
-import { BUDGET_BYTES_INDEX, SaveLinkForm, SavedLinksList } from "./SavedLinks";
+import { AddFromLinkForm, BUDGET_BYTES_INDEX, SaveLinkForm, SavedLinksList } from "./SavedLinks";
+import { budgetBytesSearchUrl } from "@/domain/recipes/import";
 import { ImportReviewDialog } from "./ImportReview";
 import { focusFirst } from "./a11y";
 
@@ -31,7 +32,8 @@ export function ExploreScreen() {
   const [sort, setSort] = useState<SortKey>("title");
   const [msg, setMsg] = useState<string | null>(null);
   const [source, setSource] = useState<"" | "budget_bytes" | "links">("");
-  const [importing, setImporting] = useState<{ b: any; el: HTMLElement } | null>(null);
+  const [importing, setImporting] = useState<{ b: any; el: HTMLElement; result?: any } | null>(null);
+  const [bbTerm, setBbTerm] = useState("");
   useEffect(() => {
     void loadLibrary();
   }, [loadLibrary]);
@@ -81,8 +83,13 @@ export function ExploreScreen() {
       {source === "budget_bytes" && (
         <div className="card stack" data-testid="budget-bytes-lane">
           <h2 className="h3" style={{ margin: 0 }}>Budget Bytes</h2>
-          <p className="small" style={{ margin: 0 }}>Find recipes on the Budget Bytes site, then save the ones you want here. Table shows only the links you two saved — it doesn't copy Budget Bytes' recipes, photos or methods. Prices posted there are from when each recipe was published, not your store today.</p>
+          <p className="small" style={{ margin: 0 }}>Find a recipe on Budget Bytes, then paste its link below. Budget Bytes asks for permission before its recipes are reused, so Table keeps only the link and the ingredient lines you paste — not its method, photos or posted prices (those are from when each recipe was published, not your store today).</p>
+          <form className="row" style={{ flexWrap: "nowrap" }} onSubmit={(e) => { e.preventDefault(); if (bbTerm.trim()) window.open(budgetBytesSearchUrl(bbTerm), "_blank", "noopener,noreferrer"); }} data-testid="bb-search">
+            <input className="grow" type="search" aria-label="Search Budget Bytes (opens the Budget Bytes site)" placeholder="e.g. chicken, lentils, meal prep" value={bbTerm} onChange={(e) => setBbTerm(e.target.value)} />
+            <button className="btn line small" disabled={!bbTerm.trim()}>Search on Budget Bytes ↗</button>
+          </form>
           <a className="btn line" href={BUDGET_BYTES_INDEX} target="_blank" rel="noopener noreferrer" data-testid="browse-budget-bytes">Browse Budget Bytes ↗</a>
+          <AddFromLinkForm onOpen={(b, el, result) => setImporting({ b, el, result })} />
           <SaveLinkForm idPrefix="bb-save-link" source="Budget Bytes" />
         </div>
       )}
@@ -94,7 +101,7 @@ export function ExploreScreen() {
           {source === "budget_bytes" && <div className="section-label">Budget Bytes recipes in Our Recipes</div>}
         </>
       )}
-      {importing && <ImportReviewDialog bookmark={importing.b} onClose={() => { const el = importing.el; setImporting(null); focusFirst(el, () => document.querySelector<HTMLElement>('[data-testid="explore-source"]')); }} />}
+      {importing && <ImportReviewDialog bookmark={importing.b} initial={importing.result} onClose={() => { const el = importing.el; setImporting(null); focusFirst(el, () => document.querySelector<HTMLElement>('[data-testid="explore-source"]')); }} />}
       {msg && <p role="status" className="small">{msg}</p>}
       {!library && <p className="muted">Loading…</p>}
       <ul className="recipes" data-testid="explore-results">
@@ -113,7 +120,7 @@ export function ExploreScreen() {
 function RecipeCard({ r, onSave }: { r: any; onSave: () => void }) {
   return (
     <li className="card recipe" data-testid="recipe-card" data-title={r.version.title}>
-      <PlaceholderTile title={r.version.title} />
+      <PlaceholderTile title={r.version.title} imageId={r.version.imageId} />
       <div className="grow">
         <Link href={`/recipes/${r.recipeId}`}><strong>{r.version.title}</strong></Link>
         <div className="faint small">

@@ -198,7 +198,7 @@ function NextDinner({ night }: { night: any }) {
   return (
     <div className="tonight card" data-testid="next-dinner">
       <div className="row" style={{ alignItems: "flex-start", flexWrap: "nowrap" }}>
-        <PlaceholderTile title={night.recipe?.title} large />
+        <PlaceholderTile title={night.recipe?.title} large imageId={night.recipe?.imageId} />
         <div className="grow">
           <span className="chip">Next dinner · {night.dayName}</span>
           <h2>{label}</h2>
@@ -236,7 +236,7 @@ function NightRow({ n, open, onOpen, onClose }: { n: any; open: boolean; onOpen:
   }
   return (
     <li className={`night ${n.night === snapshot.clock.nextDinner ? "is-next" : ""}`} data-testid={`night-${n.night}`} data-kind={n.kind} data-revision={n.revision}>
-      <PlaceholderTile title={n.recipe?.title} />
+      <PlaceholderTile title={n.recipe?.title} imageId={n.recipe?.imageId} />
       <div className="grow">
         <div className="day" aria-hidden="true">{n.dayName.slice(0, 3)}</div>
         <span className="sr-only">{n.dayName}: </span>

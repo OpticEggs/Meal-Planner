@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { instacartConfigProblems } from "./integrations/instacart/config";
+import { recipeContentConfig } from "./env";
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { pool } from "./db/pool";
@@ -31,6 +32,13 @@ export function configProblems(env: Record<string, string | undefined> = process
   if (retailer !== "simulated" && retailer !== "kroger") p.push("TABLE_RETAILER_invalid");
   if ((env.KROGER_ACTIVATE ?? "").trim() && retailer !== "kroger") p.push("KROGER_ACTIVATE_without_kroger_retailer");
   p.push(...instacartConfigProblems({ ...env, TABLE_ENV: "production" }));
+  const fetch = env.TABLE_RECIPE_IMPORT_FETCH;
+  if (fetch && fetch !== "on" && fetch !== "off") p.push("TABLE_RECIPE_IMPORT_FETCH_invalid");
+  try {
+    recipeContentConfig(env);
+  } catch {
+    p.push("TABLE_RECIPE_CONTENT_invalid");
+  }
   return p;
 }
 

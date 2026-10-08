@@ -100,7 +100,10 @@ export function saveRecipeVersionCommand(actor: Actor, operationId: string, p: R
  *  An imported version records its source page and draft; later manual versions keep the source page. */
 export async function writeRecipeVersion(
   c: Db, actor: Actor, p: RecipeDraft,
-  origin: { provenance: "manual" | "imported"; sourceUrl?: string | null; importDraftId?: string | null } = { provenance: "manual" },
+  origin: {
+    provenance: "manual" | "imported"; sourceUrl?: string | null; importDraftId?: string | null;
+    imageId?: string | null; sourceAuthor?: string | null; sourceSiteName?: string | null;
+  } = { provenance: "manual" },
 ): Promise<HandlerOutcome> {
   {
     const title = String(p.title ?? "").trim().slice(0, 140);
@@ -163,18 +166,26 @@ export async function writeRecipeVersion(
       );
     }
     const vid = randomUUID();
+    // Where the recipe came from (page, author, site, a photo kept under permission) carries forward to later versions.
     let sourceUrl = origin.sourceUrl ?? null;
-    if (!sourceUrl && versionNo > 1) {
-      sourceUrl = (await c.query("SELECT source_url FROM recipe_versions WHERE recipe_id=$1 AND version_no=$2", [recipeId, versionNo - 1])).rows[0]?.source_url ?? null;
+    let imageId = origin.imageId ?? null;
+    let sourceAuthor = origin.sourceAuthor ?? null;
+    let sourceSiteName = origin.sourceSiteName ?? null;
+    if (versionNo > 1 && origin.provenance === "manual") {
+      const prev = (await c.query("SELECT source_url, image_id, source_author, source_site_name FROM recipe_versions WHERE recipe_id=$1 AND version_no=$2", [recipeId, versionNo - 1])).rows[0];
+      sourceUrl ??= prev?.source_url ?? null;
+      imageId ??= prev?.image_id ?? null;
+      sourceAuthor ??= prev?.source_author ?? null;
+      sourceSiteName ??= prev?.source_site_name ?? null;
     }
     await c.query(
       `INSERT INTO recipe_versions(id, recipe_id, household_id, version_no, title, cuisine, summary, effort_minutes, effort_level, leftover_friendly,
-         instructions, reheat_instructions, provenance, source_label, estimate, created_by, source_url, import_draft_id)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,true,$15,$16,$17)`,
+         instructions, reheat_instructions, provenance, source_label, estimate, created_by, source_url, import_draft_id, image_id, source_author, source_site_name)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,true,$15,$16,$17,$18,$19,$20)`,
       [
         vid, recipeId, actor.householdId, versionNo, title, p.cuisine ?? null, p.summary ?? null, p.effortMinutes ?? null, p.effortLevel ?? null,
         !!p.leftoverFriendly, String(p.instructions ?? "").slice(0, 10000), String(p.reheatInstructions ?? "").slice(0, 4000), origin.provenance, p.sourceLabel ?? null, actor.memberId,
-        sourceUrl, origin.importDraftId ?? null,
+        sourceUrl, origin.importDraftId ?? null, imageId, sourceAuthor?.slice(0, 200) ?? null, sourceSiteName?.slice(0, 120) ?? null,
       ],
     );
     for (const cmp of components) {

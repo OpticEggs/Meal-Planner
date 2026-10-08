@@ -36,6 +36,9 @@ const REBASE = "tests/unit/recipe-rebase.test.ts";
 const B9 = "tests/integration/b9.dispatch-overlap.test.ts";
 const B9R = "tests/integration/b9.account-recovery.test.ts";
 const COOK = "tests/integration/cook-records.test.ts";
+const U2C = "tests/integration/u2c-url-import.test.ts";
+const KM = "tests/integration/u2c-kroger-mapping.test.ts";
+const LT = "tests/unit/recipe-import-live-transport.test.ts";
 const THEME = "tests/unit/theme-contrast.test.ts";
 const B2122 = "tests/integration/b21-b22.test.ts";
 const MSS = "tests/integration/ms-sources.test.ts";
@@ -216,6 +219,29 @@ MUTATIONS.push(
     edits: [["  await ctx.internalAdapter.deleteUserSessions(userId);", "  // (mutated) sessions kept"]] },
   { name: "B9_reset_any_account", file: "src/server/provision.ts", suite: B9R, pattern: "B9", expect: [/non-member account/],
     edits: [["  if (!userId || !member?.rowCount) throw", "  if (!userId) throw"]] },
+);
+// URL-to-cart (2026-10-08): content kept only under permission, photos sniffed, suggestions never
+// applied by themselves, passing problems not recorded; Kroger matching re-reads, never guesses a
+// package, records a promotion as such, needs the Kroger store, and stays bound to what was seen.
+MUTATIONS.push(
+  { name: "U2C_content_kept_without_permission", file: "src/server/integrations/recipe-import/content-policy.ts", suite: U2C, pattern: "U-01", expect: [/U-01/],
+    edits: [["  return NOTHING_KEPT;\n}", "  return { instructions: true, photos: true, basis: \"(mutated)\" };\n}"]] },
+  { name: "U2C_photo_not_sniffed", file: "src/server/recipe-import-service.ts", suite: U2C, pattern: "U-04", expect: [/U-04/],
+    edits: [["const type = sniffImage(got.bytes);", "const type = sniffImage(got.bytes) ?? \"image/png\";"]] },
+  { name: "U2C_suggestion_applied_unreviewed", file: "src/server/commands/imports.ts", suite: U2C, pattern: "U-10", expect: [/U-10/],
+    edits: [["return { raw: String(raw).slice(0, 500), parsed: p, decision: initialDecision(p) };", "return { raw: String(raw).slice(0, 500), parsed: p, decision: initialDecision(p) ?? p.suggestion ?? null };"]] },
+  { name: "U2C_passing_problem_recorded", file: "src/server/recipe-import-service.ts", suite: U2C, pattern: "U-06", expect: [/U-06/],
+    edits: [["      return h.transient\n", "      return false\n"]] },
+  { name: "LT_certificate_not_verified", file: "src/server/integrations/recipe-import/fetcher.ts", suite: LT, pattern: "LT-02", expect: [/LT-02/],
+    edits: [["          rejectUnauthorized: true,", "          rejectUnauthorized: false,"]] },
+  { name: "KM_package_guessed", file: "src/server/commands/groceries.ts", suite: KM, pattern: "KM-06", expect: [/KM-06/],
+    edits: [["    let pack = k.package;", "    let pack = k.package ?? { quantity: \"1\", unit: \"each\" };"]] },
+  { name: "KM_promo_recorded_as_regular", file: "src/server/commands/groceries.ts", suite: KM, pattern: "KM-04", expect: [/KM-04/],
+    edits: [["    const usePromo = promo !== null && promo > 0 && (regular === null || promo < regular);", "    const usePromo = false;"]] },
+  { name: "KM_simulated_store_searches_kroger", file: "src/server/kroger-mapping-service.ts", suite: KM, pattern: "KM-01", expect: [/KM-01/],
+    edits: [["  if (retailerMode() !== \"kroger\") return", "  if (false) return"]] },
+  { name: "KM_choice_not_bound_to_seen", file: "src/server/commands/groceries.ts", suite: KM, pattern: "KM-08", expect: [/KM-08/],
+    edits: [["    }\n    await checkSeenProduct(c, actor.householdId, p.weekId, p.ingredientKey, p);\n    const name = [k.description", "    }\n    const name = [k.description"]] },
 );
 // A harmless change that MUST be classified SURVIVED (proves the classifier can say so).
 const CONTROLS_LIST = [

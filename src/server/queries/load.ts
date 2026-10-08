@@ -105,6 +105,7 @@ export async function loadRecipeVersions(c: Db, householdId: string, ids: string
       id: v.id, recipeId: v.recipe_id, versionNo: v.version_no, title: v.title, cuisine: v.cuisine, summary: v.summary,
       effortMinutes: v.effort_minutes, effortLevel: v.effort_level, leftoverFriendly: v.leftover_friendly, instructions: v.instructions,
       reheatInstructions: v.reheat_instructions, provenance: v.provenance, sourceLabel: v.source_label, sourceUrl: v.source_url ?? null, estimate: v.estimate,
+      sourceAuthor: v.source_author ?? null, sourceSiteName: v.source_site_name ?? null, imageId: v.image_id ?? null,
       components: comps.rows.filter((x) => x.recipe_version_id === v.id).map((x) => ({ key: x.key, name: x.name, sort: x.sort })),
       ingredients: ings.rows
         .filter((x) => x.recipe_version_id === v.id)

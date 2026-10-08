@@ -170,3 +170,30 @@ export function recipeFetchMode(): { mode: "off" } | { mode: "fixtures"; manifes
   if (live && live !== "on" && live !== "off") throw new Error(`TABLE_RECIPE_IMPORT_FETCH must be on or off (got ${live})`);
   return live === "on" ? { mode: "live" } : { mode: "off" };
 }
+
+/**
+ * What of a recipe page's own content (its method text, its photographs) an import may KEEP.
+ * Off by default: only facts are kept (ingredient lines, servings, times, attribution) and the recipe
+ * links to the original. Each setting is an owner decision (OWNER-INPUTS C1/C2), never a default:
+ *  - TABLE_RECIPE_CONTENT=household_private — keep the method and one photo of any readable page,
+ *    for the two members only (never exported elsewhere, attribution kept);
+ *  - TABLE_RECIPE_CONTENT_GRANTS="example.com=instructions+photos;other.org=photos" — keep only what a
+ *    named site has permitted (a licence or written permission recorded in OWNER-INPUTS).
+ * Budget Bytes pages are never read whatever these say (D90).
+ */
+export interface RecipeContentConfig {
+  householdPrivate: boolean;
+  grants: { domain: string; instructions: boolean; photos: boolean }[];
+}
+export function recipeContentConfig(env: Record<string, string | undefined> = process.env): RecipeContentConfig {
+  const mode = env.TABLE_RECIPE_CONTENT ?? "off";
+  if (mode !== "off" && mode !== "household_private") throw new Error(`TABLE_RECIPE_CONTENT must be off or household_private (got ${mode})`);
+  const grants: RecipeContentConfig["grants"] = [];
+  for (const part of (env.TABLE_RECIPE_CONTENT_GRANTS ?? "").split(";").map((s) => s.trim()).filter(Boolean)) {
+    const m = /^([a-z0-9.-]+\.[a-z]{2,})=((?:instructions|photos)(?:\+(?:instructions|photos))?)$/.exec(part.toLowerCase());
+    if (!m) throw new Error(`TABLE_RECIPE_CONTENT_GRANTS entry not understood: ${part} (expected domain=instructions+photos)`);
+    const what = m[2].split("+");
+    grants.push({ domain: m[1].replace(/^www\./, ""), instructions: what.includes("instructions"), photos: what.includes("photos") });
+  }
+  return { householdPrivate: mode === "household_private", grants };
+}

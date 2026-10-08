@@ -34,6 +34,11 @@ export interface RecipeVersion {
   sourceLabel: string | null;
   /** The page an imported recipe came from (kept on later versions); null for manual/fixture recipes. */
   sourceUrl?: string | null;
+  /** Attribution read from the page (kept on later versions). */
+  sourceAuthor?: string | null;
+  sourceSiteName?: string | null;
+  /** A photo kept under a recorded content permission (served only to the household). */
+  imageId?: string | null;
   estimate: boolean;
   components: RecipeComponent[];
   ingredients: RecipeIngredient[];

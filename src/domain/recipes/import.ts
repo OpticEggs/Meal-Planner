@@ -14,6 +14,12 @@ export interface ParsedLine {
   form: "raw" | "cooked" | null;
   status: "parsed" | "requires_review";
   reasons: string[];
+  /** Preparation text split off the name ("diced", "large"). Absent on drafts made before import 2. */
+  note?: string | null;
+  /** For a line that needs review: what the reader proposes (never applied until a member accepts it). */
+  suggestion?: LineDecision | null;
+  /** What the proposal did, in words ("2 cans × 14.5 oz"). */
+  suggestionNote?: string | null;
 }
 
 export type LineDecision =
@@ -30,6 +36,15 @@ export interface DraftLine {
 export function initialDecision(p: ParsedLine): LineDecision | null {
   if (p.status !== "parsed" || !p.quantity || !p.unit || !p.name) return null;
   return { use: true, name: p.name, quantity: p.quantity, unit: p.unit, form: p.form ?? "raw" };
+}
+
+/** A suggestion a member may accept with one action — only if it would itself be a valid decision. */
+export function suggestedDecision(p: ParsedLine): LineDecision | null {
+  const s = p.suggestion;
+  if (!s || p.status !== "requires_review") return null;
+  if (!s.use) return { use: false };
+  const d: LineDecision = { use: true, name: s.name, quantity: s.quantity, unit: s.unit, form: s.form === "cooked" ? "cooked" : "raw" };
+  return decisionProblem(d) ? null : d;
 }
 
 const QTY = /^\d+(\.\d+)?$/;
@@ -75,4 +90,24 @@ export function perPortion(quantity: string, servings: number): { value: string;
   const exact = new D(quantity).div(servings);
   const four = exact.toDecimalPlaces(4);
   return { value: four.toString(), rounded: !four.eq(exact) };
+}
+
+/** A starting name for a recipe from its link's last path segment ("/easy-one-pot-chili/" → "Easy one pot chili").
+ *  Derived from the address only — the page is not read. Null when the path says nothing useful. */
+export function titleFromUrl(url: string): string | null {
+  let seg: string;
+  try {
+    seg = new URL(url).pathname.split("/").filter(Boolean).pop() ?? "";
+    seg = decodeURIComponent(seg);
+  } catch {
+    return null;
+  }
+  const words = seg.replace(/\.(html?|php|aspx?)$/i, "").replace(/[-_+]+/g, " ").replace(/\s+/g, " ").trim();
+  if (!/[a-z]{3}/i.test(words) || /^\d+$/.test(words) || words.length > 120) return null;
+  return words.charAt(0).toUpperCase() + words.slice(1).toLowerCase();
+}
+
+/** Budget Bytes' own site search (WordPress `?s=`): the member's browser opens it; Table never reads it. */
+export function budgetBytesSearchUrl(term: string): string {
+  return `https://www.budgetbytes.com/?s=${encodeURIComponent(term.trim().slice(0, 80))}`;
 }

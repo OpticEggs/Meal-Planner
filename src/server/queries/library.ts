@@ -104,6 +104,7 @@ export async function librarySnapshot(actor: Actor) {
           id: rv.id, versionNo: rv.versionNo, title: rv.title, cuisine: rv.cuisine, summary: rv.summary, effortMinutes: rv.effortMinutes, effortLevel: rv.effortLevel,
           leftoverFriendly: rv.leftoverFriendly, instructions: rv.instructions, reheatInstructions: rv.reheatInstructions, provenance: rv.provenance,
           sourceLabel: rv.sourceLabel, sourceUrl: rv.sourceUrl ?? null, sourceDomain: domainOf(rv.sourceUrl), estimate: rv.estimate, components: rv.components,
+          sourceAuthor: rv.sourceAuthor ?? null, sourceSiteName: rv.sourceSiteName ?? null, imageId: rv.imageId ?? null,
           ingredients: rv.ingredients.map((i) => ({ ...i, name: ingredients.get(i.ingredientKey)?.name ?? i.ingredientKey })),
         },
         versions: versionsQ.rows.filter((v) => v.recipe_id === r.id).map((v) => ({ id: v.id, versionNo: v.version_no, title: v.title, createdAt: v.created_at.toISOString(), by: v.display_name })),
@@ -160,7 +161,10 @@ async function loadBookmarks(c: import("../db/pool").Db, householdId: string) {
               d.id AS draft_id, d.revision AS draft_revision, d.method AS draft_method, d.title AS draft_title, d.yield_text AS draft_yield,
               d.servings AS draft_servings, d.effort_minutes AS draft_effort, d.lines AS draft_lines, d.problems AS draft_problems,
               d.household_instructions AS draft_instructions, d.source_has_instructions AS draft_has_instructions,
-              d.source_has_nutrition AS draft_has_nutrition, d.fetched_url AS draft_fetched_url
+              d.source_has_nutrition AS draft_has_nutrition, d.fetched_url AS draft_fetched_url,
+              d.description AS draft_description, d.source_author AS draft_author, d.site_name AS draft_site_name,
+              d.source_step_count AS draft_step_count, d.source_image_count AS draft_image_count, d.source_steps IS NOT NULL AS draft_steps_kept,
+              d.image_id AS draft_image_id, d.content_policy AS draft_policy
        FROM recipe_bookmarks b JOIN members m ON m.id=b.created_by
        LEFT JOIN recipe_import_drafts d ON d.bookmark_id=b.id AND d.status='open'
        WHERE b.household_id=$1 ORDER BY b.created_at DESC, b.id`,
@@ -192,6 +196,8 @@ async function loadBookmarks(c: import("../db/pool").Db, householdId: string) {
           id: b.draft_id, revision: b.draft_revision, method: b.draft_method, title: b.draft_title, yieldText: b.draft_yield, servings: b.draft_servings,
           effortMinutes: b.draft_effort, lines: b.draft_lines, problems: b.draft_problems, householdInstructions: b.draft_instructions,
           sourceHasInstructions: b.draft_has_instructions, sourceHasNutrition: b.draft_has_nutrition, fetchedUrl: b.draft_fetched_url,
+          description: b.draft_description, author: b.draft_author, siteName: b.draft_site_name, stepCount: b.draft_step_count,
+          imageCount: b.draft_image_count, stepsKept: b.draft_steps_kept, imageId: b.draft_image_id, policy: b.draft_policy,
         }
       : null,
     saves: saves.filter((s) => s.bookmark_id === b.id).map((s) => ({ by: s.display_name, at: s.saved_at.toISOString(), note: s.note })),

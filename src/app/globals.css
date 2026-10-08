@@ -121,6 +121,7 @@ legend { font-weight: 600; margin-bottom: 6px; }
 /* Designed placeholder (no photographs exist): the recipe's initial on a soft tile. */
 .tile { width: 56px; height: 56px; border-radius: 14px; background: var(--card-2); border: 1px solid var(--line); display: grid; place-items: center; font-family: Georgia, "Iowan Old Style", serif; font-size: 1.5rem; color: var(--amber); flex: none; }
 .tile.large { width: 72px; height: 72px; font-size: 2rem; border-radius: 18px; }
+.tile.photo { object-fit: cover; padding: 0; }
 .weekchips { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0 2px; }
 .weekchips .chip-btn[aria-current="true"] { border-color: var(--text); font-weight: 650; }
 .estimate-total { font-size: 2.2rem; font-weight: 750; letter-spacing: -0.02em; line-height: 1.1; margin: 4px 0 2px; overflow-wrap: anywhere; }

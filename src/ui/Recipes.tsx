@@ -5,8 +5,8 @@ import { useStore } from "./store";
 import { money, nutrient } from "./format";
 import { focusFirst, tabKeyTarget } from "./a11y";
 import { RecipeEditorDialog } from "./RecipeEditor";
-import { PlaceholderTile } from "./Tile";
-import { SaveLinkForm, SavedLinksList } from "./SavedLinks";
+import { PlaceholderTile, SourceLine } from "./Tile";
+import { AddFromLinkForm, SaveLinkForm, SavedLinksList } from "./SavedLinks";
 import { ImportReviewDialog } from "./ImportReview";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -22,7 +22,7 @@ const PREFS = [
 export function RecipesScreen() {
   const { library, loadLibrary, me, command } = useStore();
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("all");
-  const [importing, setImporting] = useState<{ b: any; el: HTMLElement } | null>(null);
+  const [importing, setImporting] = useState<{ b: any; el: HTMLElement; result?: any } | null>(null);
   const [creating, setCreating] = useState<HTMLElement | null>(null);
   const tabs = useRef<Record<string, HTMLButtonElement | null>>({});
   useEffect(() => {
@@ -53,10 +53,12 @@ export function RecipesScreen() {
         </div>
         <button className="btn line small" aria-haspopup="dialog" onClick={(e) => setCreating(e.currentTarget)} data-testid="new-recipe">New recipe</button>
       </div>
+      <div className="card"><AddFromLinkForm onOpen={(b, el, result) => setImporting({ b, el, result })} /></div>
       {creating && (
         <RecipeEditorDialog recipeId={null} onClose={() => setCreating(null)}
           returnFocus={() => focusFirst(creating, () => document.querySelector<HTMLElement>('[data-testid="new-recipe"]'))} />
       )}
+      {importing && <ImportReviewDialog bookmark={importing.b} initial={importing.result} onClose={() => { const el = importing.el; setImporting(null); focusFirst(el, () => document.querySelector<HTMLElement>("#add-link-url")); }} />}
       <div role="tabpanel" id="recipe-panel" aria-labelledby={`rtab-${filter}`}>
       {filter === "links" ? (
         <div className="stack">
@@ -68,7 +70,6 @@ export function RecipesScreen() {
               <SavedLinksList links={library.bookmarks.filter((b: any) => b.archived)} empty="" />
             </details>
           )}
-          {importing && <ImportReviewDialog bookmark={importing.b} onClose={() => { const el = importing.el; setImporting(null); focusFirst(el, () => document.querySelector<HTMLElement>("#rtab-links")); }} />}
         </div>
       ) : (<>
       {filter === "sounds_good" && <p className="faint small">Shared near-term ideas. Saving one does not schedule it.</p>}
@@ -76,7 +77,7 @@ export function RecipesScreen() {
       <ul className="recipes" data-testid="recipe-list">
         {list.map((r: any) => (
           <li key={r.recipeId} className="card recipe" data-testid="recipe-row" data-title={r.version.title}>
-            <PlaceholderTile title={r.version.title} />
+            <PlaceholderTile title={r.version.title} imageId={r.version.imageId} />
             <div className="grow">
               <Link href={`/recipes/${r.recipeId}`}><strong>{r.version.title}</strong></Link>
               <div className="faint small">
@@ -114,9 +115,10 @@ export function RecipeDetail({ recipeId }: { recipeId: string }) {
     <article className="stack" data-testid="recipe-detail">
       <Link href="/recipes" className="small">‹ Our Recipes</Link>
       <div className="row" style={{ alignItems: "flex-start", flexWrap: "nowrap" }}>
-        <PlaceholderTile title={v.title} large />
+        <PlaceholderTile title={v.title} large imageId={v.imageId} />
         <h2 className="page-title grow" data-testid="recipe-title">{v.title}</h2>
       </div>
+      <SourceLine v={v} />
       <p className="faint small">
         Version {v.versionNo} · {v.provenance === "fixture" ? "test fixture" : v.provenance}{v.sourceLabel ? ` · ${v.sourceLabel}` : ""}{v.estimate ? " · amounts/times are estimates" : ""}
       </p>
@@ -167,7 +169,7 @@ export function RecipeDetail({ recipeId }: { recipeId: string }) {
         ))}
       </ul>
       <div className="section-label">Steps</div>
-      <Steps text={v.instructions} />
+      <Steps text={v.instructions} sourceUrl={v.sourceUrl} />
       {v.reheatInstructions && (<><div className="section-label">Reheat</div><Steps text={v.reheatInstructions} /></>)}
       <div className="section-label">Notes</div>
       <ul className="small" data-testid="notes">{r.notes.map((n: any) => <li key={n.id}>{n.body} <span className="faint">— {n.by}</span></li>)}</ul>
@@ -200,8 +202,15 @@ export function RecipeDetail({ recipeId }: { recipeId: string }) {
 }
 
 /** Steps as a numbered list when the text has several lines; otherwise the text as written. */
-export function Steps({ text, testId }: { text: string | null | undefined; testId?: string }) {
+export function Steps({ text, testId, sourceUrl }: { text: string | null | undefined; testId?: string; sourceUrl?: string | null }) {
   const lines = (text ?? "").split(/\n+/).map((x) => x.trim()).filter(Boolean);
+  if (!lines.length && sourceUrl) {
+    return (
+      <p className="small" data-testid={testId ?? "method-link"}>
+        The method is on the original page. <a href={sourceUrl} target="_blank" rel="noopener noreferrer nofollow">Open the method ↗</a>
+      </p>
+    );
+  }
   if (!lines.length) return <p className="faint small" data-testid={testId}>No steps recorded.</p>;
   if (lines.length === 1) return <p style={{ margin: 0, whiteSpace: "pre-wrap" }} data-testid={testId}>{lines[0]}</p>;
   // Steps written as "1. …" are shown in the numbered list without repeating their own number.

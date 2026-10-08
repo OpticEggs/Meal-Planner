@@ -6,7 +6,7 @@ import { AlsoNeed } from "./AlsoNeed";
 import { ModalSheet, focusFirst } from "./a11y";
 import { FormAlert } from "./forms";
 import { Steps } from "./Recipes";
-import { PlaceholderTile } from "./Tile";
+import { PlaceholderTile, SourceLine } from "./Tile";
 
 /** Cook / reheat-and-serve. Opening this records nothing; "Mark cooked" is explicit. */
 export function CookScreen({ night }: { night: string }) {
@@ -24,9 +24,10 @@ export function CookScreen({ night }: { night: string }) {
       <Link href="/" className="small">‹ Week</Link>
       <span className="chip">{n.dayName} · {isCook ? "Cook" : "Reheat and serve"}</span>
       <div className="row" style={{ alignItems: "flex-start", flexWrap: "nowrap" }}>
-        <PlaceholderTile title={n.recipe.title} large />
+        <PlaceholderTile title={n.recipe.title} large imageId={n.recipe.imageId} />
         <h2 className="page-title grow" data-testid="cook-title">{n.recipe.title}</h2>
       </div>
+      <SourceLine v={n.recipe} />
       <p className="faint small">Recipe version {n.recipe.versionNo} (pinned to this dinner){n.recipe.estimate ? " · times and amounts are estimates" : ""} · {n.recipe.provenance === "fixture" ? "test fixture recipe" : n.recipe.sourceLabel ?? n.recipe.provenance}</p>
       {isCook ? (
         <>
@@ -57,7 +58,7 @@ export function CookScreen({ night }: { night: string }) {
             ))}
           </ul>
           <div className="section-label">Steps</div>
-          <Steps text={n.recipe.instructions} />
+          <Steps text={n.recipe.instructions} sourceUrl={n.recipe.sourceUrl} />
           {n.event.cooked ? (
             <div className="card stack" data-testid="cooked-state">
               <p style={{ margin: 0 }}><strong>Cooked</strong> · recorded by {n.event.cooked.by}, {new Date(n.event.cooked.at).toLocaleString([], { weekday: "short", hour: "numeric", minute: "2-digit" })}</p>

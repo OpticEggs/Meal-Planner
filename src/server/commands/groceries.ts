@@ -339,6 +339,88 @@ export function chooseProductCommand(actor: Actor, operationId: string, p: { wee
   });
 }
 
+/** A Kroger product as Table re-read it from Kroger's product API on the server (never as a client sent it). */
+export interface VerifiedKrogerProduct {
+  productId: string;
+  upc: string | null;
+  description: string | null;
+  brand: string | null;
+  sizeText: string | null;
+  soldBy: string | null;
+  package: { quantity: string; unit: string } | null;
+  locationId: string | null;
+  price: { regularMinor: number | null; promoMinor: number | null } | null;
+}
+
+/**
+ * Server-side only (not a client command; the Kroger mapping route calls it after re-reading the
+ * product from Kroger): a member matches an ingredient to an actual Kroger product. Records the
+ * product (UPC — what a cart transfer names), its package size (from Kroger's size text, or as the
+ * member states it when Kroger's text is not one Table reads — never guessed), the store price Kroger
+ * reported (with store and time; none → unknown, never zero), and the household's mapping. Like
+ * ChooseProduct it is bound to the product the member saw (B15) and changes purchasing inputs, so a
+ * reviewed transfer for that line goes stale. It sends nothing to Kroger and adds nothing to a cart.
+ */
+export function chooseKrogerProductCommand(
+  actor: Actor, operationId: string,
+  p: { weekId: string; ingredientKey: string; expectedProductId?: string | null; product: VerifiedKrogerProduct; packageQty?: string | null; packageUnit?: string | null },
+) {
+  return runCommand(actor, "ChooseKrogerProduct", operationId, p, async (c) => {
+    if (retailer().mode !== "kroger") throw new Reject("product_unavailable", "The household's store is not Kroger here, so a Kroger product can't be chosen.");
+    const ing = await c.query("SELECT name FROM ingredients WHERE household_id=$1 AND key=$2", [actor.householdId, p.ingredientKey]);
+    if (!ing.rowCount) throw new Reject("not_found", "Unknown ingredient");
+    const k = p.product;
+    if (!k?.productId || !k.upc || !/^\d{8,14}$/.test(k.upc)) throw new Reject("invalid", "Kroger didn't give this product a UPC, so it can't go into a cart. Choose another.");
+    let pack = k.package;
+    if (!pack) {
+      const qty = p.packageQty == null ? "" : String(p.packageQty).trim();
+      const unit = p.packageUnit ? normalizeUnit(String(p.packageUnit)) : "";
+      if (!qty && !unit) {
+        throw new Reject("package_needed", `Kroger describes the package as "${k.sizeText ?? "no size"}", which Table can't read as an amount. Enter the package size you'll buy.`, { sizeText: k.sizeText, field: "packageQty" });
+      }
+      if (!/^\d+(\.\d+)?$/.test(qty) || Number(qty) <= 0) throw new Reject("invalid", "Package size must be a positive number", { field: "packageQty" });
+      if (!KNOWN_UNITS.includes(unit)) throw new Reject("invalid", `Package unit must be one of ${KNOWN_UNITS.join(", ")}`, { field: "packageUnit" });
+      pack = { quantity: qty, unit };
+    }
+    await checkSeenProduct(c, actor.householdId, p.weekId, p.ingredientKey, p);
+    const name = [k.description ?? k.brand ?? `Kroger ${k.upc}`, k.sizeText].filter(Boolean).join(", ").slice(0, 120);
+    const existing = await c.query(
+      `SELECT id FROM products WHERE household_id=$1 AND retailer='kroger' AND product_ref=$2 AND ingredient_key=$3 AND package_qty=$4 AND package_unit=$5 ORDER BY created_at LIMIT 1`,
+      [actor.householdId, k.upc, p.ingredientKey, pack.quantity, pack.unit],
+    );
+    const productId: string = existing.rowCount
+      ? existing.rows[0].id
+      : (await c.query(
+          `INSERT INTO products(household_id, retailer, product_ref, name, ingredient_key, package_qty, package_unit, variable_weight)
+           VALUES ($1,'kroger',$2,$3,$4,$5,$6,false) RETURNING id`,
+          [actor.householdId, k.upc, name, p.ingredientKey, pack.quantity, pack.unit],
+        )).rows[0].id;
+    // The price Kroger reported for the household's store, now. A promotion is recorded as such.
+    const regular = k.price?.regularMinor ?? null;
+    const promo = k.price?.promoMinor ?? null;
+    const usePromo = promo !== null && promo > 0 && (regular === null || promo < regular);
+    const amount = usePromo ? promo : regular !== null && regular > 0 ? regular : null;
+    if (amount !== null && k.locationId) {
+      await c.query(
+        "INSERT INTO price_observations(household_id, product_id, amount_minor, price_kind, source, store_label, observed_at) VALUES ($1,$2,$3,$4,'kroger',$5,$6)",
+        [actor.householdId, productId, amount, usePromo ? "promo" : "regular", `Kroger store ${k.locationId}`, nowInstant()],
+      );
+    }
+    await c.query(
+      `INSERT INTO product_mappings(household_id, ingredient_key, product_id, decided_by) VALUES ($1,$2,$3,$4)
+       ON CONFLICT (household_id, ingredient_key) DO UPDATE SET product_id=EXCLUDED.product_id, decided_by=EXCLUDED.decided_by, decided_at=now(), suitable=true`,
+      [actor.householdId, p.ingredientKey, productId, actor.memberId],
+    );
+    await setPickupIntent(c, actor.householdId, p.weekId, p.ingredientKey, productId);
+    return {
+      status: "accepted",
+      result: { productId, priced: amount !== null && !!k.locationId, package: pack },
+      change: { weekId: p.weekId, summary: { type: "product", text: `${actor.displayName} matched ${ing.rows[0].name} to ${name} at Kroger` } },
+      purchasingInputsChanged: true,
+    };
+  });
+}
+
 /** Choosing a product for this pickup also re-points this pickup's requests that named a product, so the line shows what was chosen. It does not change the remembered staple product;
  *  that is the separate, explicit ApproveStapleProduct decision. */
 async function setPickupIntent(c: Db, householdId: string, weekId: string | null | undefined, key: string, productId: string) {

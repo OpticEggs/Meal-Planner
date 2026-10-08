@@ -5,7 +5,7 @@ import { AlsoNeed } from "./AlsoNeed";
 import { budgetText, costView, money, qty } from "./format";
 import { focusFirst } from "./a11y";
 import {
-  CartCheckDialog, ConfirmOrderDialog, CorrectReceiptDialog, ProductDialog, RemoveRequestDialog, SubstituteDialog, ValidateSubstituteDialog,
+  CartCheckDialog, ConfirmOrderDialog, CorrectReceiptDialog, KrogerMatchDialog, ProductDialog, RemoveRequestDialog, SubstituteDialog, ValidateSubstituteDialog,
   type GroceryDialog,
 } from "./GroceryDialogs";
 import { InstacartPanel, ShoppingListCard, WhereToShop, destinationLabel } from "./WhereToShop";
@@ -180,6 +180,9 @@ export function GroceriesScreen() {
       <div className="section-label">Also need</div>
       <AlsoNeed from="groceries" />
       <div className="section-label">This week’s list</div>
+      {storeCart && snapshot.retailer.mode === "kroger" && g.lines.some((l: any) => l.ingredientKey && !l.product) && (
+        <button className="btn line small" aria-haspopup="dialog" data-testid="kroger-match" onClick={(e) => open({ kind: "kroger-match" }, e)}>Match products at Kroger…</button>
+      )}
       <ul className="lines">
         {g.lines.map((l: any) => <Line key={l.key} l={l} open={open} />)}
       </ul>
@@ -200,6 +203,7 @@ function DialogFor({ d, onClose, returnFocus }: { d: GroceryDialog; onClose: () 
     case "validate": return <ValidateSubstituteDialog receiptId={d.receiptId} {...common} />;
     case "correct": return <CorrectReceiptDialog receiptId={d.receiptId} {...common} />;
     case "cart-check": return <CartCheckDialog batchId={d.batchId} {...common} />;
+    case "kroger-match": return <KrogerMatchDialog {...common} />;
   }
 }
 

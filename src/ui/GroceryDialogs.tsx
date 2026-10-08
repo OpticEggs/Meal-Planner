@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { useStore } from "./store";
 import { ModalSheet } from "./a11y";
 import { FieldError, FormAlert, fieldProps, focusFirstInvalid, isDecimal, isWhole, type Errors } from "./forms";
+import { money } from "./format";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -21,7 +22,8 @@ export type GroceryDialog =
   | { kind: "substitute"; orderLineId: string }
   | { kind: "validate"; receiptId: string }
   | { kind: "correct"; receiptId: string }
-  | { kind: "cart-check"; batchId: string };
+  | { kind: "cart-check"; batchId: string }
+  | { kind: "kroger-match" };
 
 export const UNIT_CHOICES = ["each", "oz", "lb", "g", "kg", "fl_oz", "ml", "l", "cup", "tbsp", "tsp"];
 
@@ -142,7 +144,11 @@ export function ProductDialog({ itemKey, onClose, returnFocus }: Common & { item
         <button type="button" className="btn primary" disabled={busy || gone || conflict || !writesAllowed || !choice || choice === current} onClick={choose}>
           Use for this pickup
         </button>
-        <form className="stack small" onSubmit={addProduct} noValidate aria-labelledby="pd-add-h">
+        {mode === "kroger" && (
+          <KrogerSearch itemKey={itemKey} label={label} expectedProductId={seen.id} disabled={busy || gone || conflict || !writesAllowed}
+            onChosen={(name) => { announce(`${name} chosen for this pickup.${approved ? " Its earlier approval no longer applies; approve it again." : ""}`); onClose(); }} />
+        )}
+        {mode !== "kroger" && <form className="stack small" onSubmit={addProduct} noValidate aria-labelledby="pd-add-h">
           <h3 id="pd-add-h" className="section-label">Or record another product (simulated store)</h3>
           <label htmlFor="pd-name">Product name</label>
           <input {...fieldProps("pd-name", errors)} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />
@@ -167,7 +173,7 @@ export function ProductDialog({ itemKey, onClose, returnFocus }: Common & { item
           </div>
           <p className="faint">Recorded for the simulated retailer only; nothing here is a verified store product.</p>
           <button className="btn line small" disabled={busy || gone || conflict || !writesAllowed}>Save product</button>
-        </form>
+        </form>}
       </div>
     </ModalSheet>
   );
@@ -499,6 +505,145 @@ export function CartCheckDialog({ batchId, onClose, returnFocus }: Common & { ba
         announce(seen === "in_cart" ? "Recorded: the items are in the cart." : "Recorded: the items are not in the cart; they can be sent again after review.");
         onClose();
       }}>Record what I saw</button>
+    </ModalSheet>
+  );
+}
+
+// -------------------------------------------------------------------------------------------
+// Kroger products (store = Kroger and the products capability on): search at the household's
+// store and choose one. The server re-reads the chosen product from Kroger before recording it;
+// nothing here touches the household's Kroger account or a cart.
+
+function candidateText(c: any): string {
+  const price = c.promoMinor && (!c.regularMinor || c.promoMinor < c.regularMinor)
+    ? `${money(c.promoMinor)} on sale (regular ${c.regularMinor ? money(c.regularMinor) : "unknown"})`
+    : c.regularMinor ? money(c.regularMinor) : "price unknown";
+  const size = c.package ? `${c.package.quantity} ${c.package.unit}` : c.sizeText ? `"${c.sizeText}" (size not readable)` : "size unknown";
+  const pickup = c.pickup === true ? "pickup" : c.pickup === false ? "no pickup" : "pickup unknown";
+  return [c.description ?? c.productId, size, price, pickup, c.stockLevel ? c.stockLevel.toLowerCase().replaceAll("_", " ") : null].filter(Boolean).join(" · ");
+}
+
+function ChooseCandidate({ c, itemKey, expectedProductId, disabled, onChosen, idPrefix }: {
+  c: any; itemKey: string; expectedProductId: string | null; disabled: boolean; onChosen: (name: string) => void; idPrefix: string;
+}) {
+  const { snapshot, command } = useStore();
+  const [pack, setPack] = useState({ qty: "", unit: "oz" });
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const needsSize = !c.package;
+  const qtyId = `${idPrefix}-qty`;
+  return (
+    <li className="card stack" data-testid="kroger-candidate" data-product-id={c.productId}>
+      <span className="small">{candidateText(c)}</span>
+      {!c.choosable && <span className="small warn">Kroger gave no UPC for this product, so it can't go into a cart.</span>}
+      {c.choosable && needsSize && (
+        <div className="row small">
+          <label htmlFor={qtyId}>Package size</label>
+          <input id={qtyId} className="tiny" inputMode="decimal" value={pack.qty} onChange={(e) => setPack({ ...pack, qty: e.target.value })} aria-invalid={error ? true : undefined} />
+          <select aria-label="Package unit" value={pack.unit} onChange={(e) => setPack({ ...pack, unit: e.target.value })}>
+            {UNIT_CHOICES.map((u) => <option key={u} value={u}>{u}</option>)}
+          </select>
+        </div>
+      )}
+      {error && <p className="field-error small" role="alert">{error}</p>}
+      {c.choosable && (
+        <button type="button" className="btn line small" disabled={disabled || busy} aria-label={`Use ${c.description ?? c.productId} for this pickup`}
+          onClick={async () => {
+            if (needsSize && (!isDecimal(pack.qty) || Number(pack.qty) <= 0)) {
+              setError("Enter the package size you'll buy (Kroger's size text isn't one Table can read).");
+              return;
+            }
+            setBusy(true);
+            const r = await command("ChooseKrogerProduct", {
+              weekId: snapshot.week.id, ingredientKey: itemKey, productId: c.productId, expectedProductId,
+              packageQty: needsSize ? pack.qty : null, packageUnit: needsSize ? pack.unit : null,
+            }, "/api/kroger/choose");
+            setBusy(false);
+            if (r.status === "accepted") onChosen(c.description ?? c.productId);
+            else setError(r.message);
+          }}>
+          Use this
+        </button>
+      )}
+    </li>
+  );
+}
+
+function KrogerSearch({ itemKey, label, expectedProductId, disabled, onChosen }: {
+  itemKey: string; label: string; expectedProductId: string | null; disabled: boolean; onChosen: (name: string) => void;
+}) {
+  const [term, setTerm] = useState(label);
+  const [result, setResult] = useState<any>(null);
+  const [busy, setBusy] = useState(false);
+  const search = async () => {
+    setBusy(true);
+    const r = await fetch(`/api/kroger/products?term=${encodeURIComponent(term)}`, { cache: "no-store" })
+      .then((x) => x.json(), () => ({ ok: false, reason: "Table couldn't be reached." }));
+    setBusy(false);
+    setResult(r);
+  };
+  return (
+    <section className="stack small" aria-labelledby="pd-kroger-h" data-testid="kroger-search">
+      <h3 id="pd-kroger-h" className="section-label">Find it at Kroger</h3>
+      <form className="row" style={{ flexWrap: "nowrap" }} onSubmit={(e) => { e.preventDefault(); void search(); }}>
+        <input className="grow" aria-label={`Search Kroger for ${label}`} value={term} onChange={(e) => setTerm(e.target.value)} />
+        <button className="btn line small" disabled={busy || term.trim().length < 2}>{busy ? "Searching…" : "Search"}</button>
+      </form>
+      {result && !result.ok && <p role="status" className="warn" data-testid="kroger-search-refused">{result.reason}</p>}
+      {result?.ok && result.candidates.length === 0 && <p role="status" className="faint">No Kroger products found for "{term}" at your store.</p>}
+      {result?.ok && result.candidates.length > 0 && (
+        <ul className="plain stack" aria-label={`Kroger products for ${label}`}>
+          {result.candidates.map((c: any, i: number) => (
+            <ChooseCandidate key={`${c.productId}-${i}`} c={c} itemKey={itemKey} expectedProductId={expectedProductId} disabled={disabled} onChosen={onChosen} idPrefix={`kc-${i}`} />
+          ))}
+        </ul>
+      )}
+      <p className="faint">Prices and pickup availability are what Kroger reports for your store now; they're recorded with the time. Nothing is added to a cart here.</p>
+    </section>
+  );
+}
+
+/** Several lines at once: Kroger suggestions for each line that has no product yet; the member chooses each one. */
+export function KrogerMatchDialog({ onClose, returnFocus }: Common) {
+  const { snapshot, announce } = useStore();
+  const [result, setResult] = useState<any>(null);
+  const [chosen, setChosen] = useState<Record<string, string>>({});
+  const todo = (snapshot.groceries?.lines ?? []).filter((l: any) => l.ingredientKey && !l.product);
+  const [lines] = useState(() => todo.map((l: any) => ({ key: l.key, term: l.name })));
+  const load = async () => {
+    const r = await fetch("/api/kroger/products", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ lines }) })
+      .then((x) => x.json(), () => ({ ok: false, reason: "Table couldn't be reached." }));
+    setResult(r);
+  };
+  return (
+    <ModalSheet title="Match products at Kroger" subtitle={`${lines.length} ${lines.length === 1 ? "item has" : "items have"} no product yet`} closeLabel="Close Kroger matching"
+      onClose={onClose} returnFocus={returnFocus} testId="kroger-match-dialog">
+      <div className="stack">
+        {!result && (
+          <>
+            <p className="small">Table searches Kroger at your store for each item below (up to 12 at a time) and shows a few products for each. You choose; nothing is chosen for you and nothing goes into a cart.</p>
+            <ul className="small">{lines.map((l: any) => <li key={l.key}>{l.term}</li>)}</ul>
+            <button type="button" className="btn primary" data-autofocus="" disabled={!lines.length} onClick={load} data-testid="kroger-match-start">Search Kroger</button>
+          </>
+        )}
+        {result && !result.ok && <p role="status" className="warn" data-testid="kroger-match-refused">{result.reason}</p>}
+        {result?.ok && result.lines.map((l: any) => (
+          <section key={l.key} className="stack" aria-label={`Kroger products for ${l.term}`} data-testid="kroger-match-line">
+            <h3 className="section-label">{l.term}{chosen[l.key] ? ` — chose ${chosen[l.key]}` : ""}</h3>
+            {!l.ok && <p className="small warn">{l.reason}</p>}
+            {l.ok && !l.candidates.length && <p className="small faint">No products found. Open the item's product dialog to search with other words.</p>}
+            {!chosen[l.key] && l.candidates.length > 0 && (
+              <ul className="plain stack">
+                {l.candidates.map((c: any, i: number) => (
+                  <ChooseCandidate key={`${c.productId}-${i}`} c={c} itemKey={l.key} expectedProductId={null} disabled={false} idPrefix={`km-${l.key}-${i}`}
+                    onChosen={(name) => { setChosen((x) => ({ ...x, [l.key]: name })); announce(`${name} chosen for ${l.term}.`); }} />
+                ))}
+              </ul>
+            )}
+          </section>
+        ))}
+        {result?.capped && <p className="small faint">Only the first 12 items were searched; run it again for the rest.</p>}
+      </div>
     </ModalSheet>
   );
 }

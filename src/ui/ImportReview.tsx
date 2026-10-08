@@ -4,7 +4,8 @@ import { useStore } from "./store";
 import { ModalSheet } from "./a11y";
 import { FormAlert } from "./forms";
 import { KNOWN_UNITS } from "@/domain/units";
-import { draftProblems, perPortion, type DraftLine, type LineDecision } from "@/domain/recipes/import";
+import { draftProblems, perPortion, suggestedDecision, titleFromUrl, type DraftLine, type LineDecision } from "@/domain/recipes/import";
+import { PlaceholderTile } from "./Tile";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -21,10 +22,10 @@ const fromDraft = (d: any): Edit => ({
  * ingredient line next to what was read from it, decides it (amount + unit, or leave it out), enters
  * servings, and only a complete review is confirmed. The source's method stays on its site.
  */
-export function ImportReviewDialog({ bookmark, onClose }: { bookmark: any; onClose: () => void }) {
+export function ImportReviewDialog({ bookmark, onClose, initial }: { bookmark: any; onClose: () => void; initial?: any }) {
   const { library } = useStore();
   const live = library?.bookmarks?.find((b: any) => b.id === bookmark.id) ?? bookmark;
-  const label = live.title ?? live.sourceLabel;
+  const label = live.draft?.title ?? live.title ?? live.sourceLabel ?? live.domain;
   return (
     <ModalSheet title={live.draft ? "Review the import" : "Import ingredients"} subtitle={label} closeLabel="Close import" onClose={onClose} returnFocus={() => undefined} testId="import-dialog">
       {live.recipeId ? (
@@ -32,18 +33,20 @@ export function ImportReviewDialog({ bookmark, onClose }: { bookmark: any; onClo
       ) : live.draft ? (
         <DraftReview b={live} onDone={onClose} />
       ) : (
-        <StartImport b={live} />
+        <StartImport b={live} initial={initial?.kind === "draft" ? null : initial} />
       )}
     </ModalSheet>
   );
 }
 
-function StartImport({ b }: { b: any }) {
+const SOCIAL = /^Posts on this site can't be imported/;
+
+function StartImport({ b, initial }: { b: any; initial?: any }) {
   const { command, loadLibrary } = useStore();
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<any>(initial ?? null);
   const [busy, setBusy] = useState(false);
   const [paste, setPaste] = useState("");
-  const [title, setTitle] = useState(b.title ?? "");
+  const [title, setTitle] = useState(b.title ?? (b.url ? titleFromUrl(b.url) : null) ?? "");
   const [error, setError] = useState<string | null>(null);
   const read = async (candidate?: number) => {
     setBusy(true);
@@ -56,15 +59,16 @@ function StartImport({ b }: { b: any }) {
     setResult(r);
     await loadLibrary();
   };
-  const canRead = b.status !== "unsupported" && b.status !== "permission_blocked";
+  // A page that had no recipe data can be read again (sites change); a social post or a site that asks permission is never read.
+  const canRead = b.status !== "permission_blocked" && !(b.status === "unsupported" && SOCIAL.test(b.statusDetail ?? ""));
   return (
     <div className="stack">
       <FormAlert message={error} testId="import-error" />
       {canRead && (
         <section className="stack" aria-labelledby="import-read-h">
           <h3 id="import-read-h" className="h3" style={{ margin: 0 }}>Read the recipe page</h3>
-          <p className="small" style={{ margin: 0 }}>Table looks only for the page&apos;s structured ingredient list, servings and time. It doesn&apos;t copy the method or photos, and nothing becomes a recipe until you confirm it.</p>
-          <button type="button" className="btn line" data-autofocus="" disabled={busy} onClick={() => read()} data-testid="import-read">Read ingredients from the page</button>
+          <p className="small" style={{ margin: 0 }}>Table reads the page&apos;s structured recipe data: ingredients, servings, time and who published it. The method and photo are kept only where a permission allows; otherwise the recipe links to the original. Nothing becomes a recipe until you confirm it.</p>
+          <button type="button" className="btn line" data-autofocus="" disabled={busy} onClick={() => read()} data-testid="import-read">{result || b.status !== "saved" ? "Try reading the page again" : "Read ingredients from the page"}</button>
         </section>
       )}
       {result?.kind === "choose" && (
@@ -109,6 +113,7 @@ function DraftReview({ b, onDone }: { b: any; onDone: () => void }) {
   const servings = /^\d+$/.test(edit.servings) ? Number(edit.servings) : null;
   const live = draftProblems({ title: edit.title, servings, lines: edit.lines });
   const setDecision = (i: number, dec: LineDecision | null) => setEdit((e) => ({ ...e, lines: e.lines.map((l, k) => (k === i ? { ...l, decision: dec } : l)) }));
+  const open = edit.lines.map((l, i) => ({ i, s: l.decision ? null : suggestedDecision(l.parsed) })).filter((x) => x.s);
   const save = async (): Promise<number | null> => {
     const r = await command("UpdateImportDraft", {
       draftId: d.id, expectedRevision: base, title: edit.title, servings, effortMinutes: /^\d+$/.test(edit.effort) ? Number(edit.effort) : null,
@@ -131,12 +136,7 @@ function DraftReview({ b, onDone }: { b: any; onDone: () => void }) {
           <button type="button" className="btn line small" onClick={() => { setEdit(fromDraft(d)); setBase(d.revision); setError(null); }}>Load the current version</button>
         </div>
       )}
-      <p className="small faint" style={{ margin: 0 }}>
-        {d.method === "json_ld" ? "Read from the page's structured recipe data." : "From the lines you pasted."}
-        {d.sourceHasInstructions ? " The method stays on the source site." : ""}
-        {d.sourceHasNutrition ? " The page's nutrition claims are not used." : ""}
-        {d.yieldText ? ` The page says it makes: ${d.yieldText}.` : ""}
-      </p>
+      <DraftSource b={b} d={d} />
       <label htmlFor="draft-title">Recipe name</label>
       <input id="draft-title" data-autofocus="" value={edit.title} onChange={(e) => setEdit({ ...edit, title: e.target.value })} />
       <div className="grid4">
@@ -145,14 +145,23 @@ function DraftReview({ b, onDone }: { b: any; onDone: () => void }) {
       </div>
       <fieldset className="stack">
         <legend>Ingredients</legend>
+        {open.length > 0 && (
+          <div className="row small" data-testid="draft-suggestions">
+            <span className="grow">{open.length} {open.length === 1 ? "line has" : "lines have"} a suggestion below. Check them, then:</span>
+            <button type="button" className="btn line small" data-testid="accept-suggestions"
+              onClick={() => setEdit((e) => ({ ...e, lines: e.lines.map((l) => (l.decision ? l : { ...l, decision: suggestedDecision(l.parsed) ?? null })) }))}>
+              Use all {open.length} suggestions
+            </button>
+          </div>
+        )}
         <ol className="plain" data-testid="draft-lines">
           {edit.lines.map((l, i) => (
             <LineRow key={i} i={i} line={l} servings={servings} onChange={(dec) => setDecision(i, dec)} />
           ))}
         </ol>
       </fieldset>
-      <label htmlFor="draft-instructions">Your own notes on how you make it (optional)</label>
-      <textarea id="draft-instructions" rows={3} value={edit.instructions} onChange={(e) => setEdit({ ...edit, instructions: e.target.value })} />
+      <label htmlFor="draft-instructions">{d.stepsKept ? `Method (kept from ${d.siteName ?? b.sourceLabel}; edit as you like)` : "Your own notes on how you make it (optional)"}</label>
+      <textarea id="draft-instructions" rows={d.stepsKept ? 8 : 3} value={edit.instructions} onChange={(e) => setEdit({ ...edit, instructions: e.target.value })} />
       {(live.length > 0 || problems.length > 0) && (
         <ul className="small warn" data-testid="draft-problems" aria-label="Before this can become a recipe">
           {(problems.length ? problems : live).map((p) => <li key={p}>{p}</li>)}
@@ -186,14 +195,21 @@ function DraftReview({ b, onDone }: { b: any; onDone: () => void }) {
 
 function LineRow({ i, line, servings, onChange }: { i: number; line: DraftLine; servings: number | null; onChange: (d: LineDecision | null) => void }) {
   const dec = line.decision;
+  const sug = suggestedDecision(line.parsed);
   const use = dec?.use ? dec : null;
-  const proposal = { name: line.parsed.name, quantity: line.parsed.quantity ?? "", unit: line.parsed.unit ?? "", form: line.parsed.form ?? "raw" };
+  const proposal = sug?.use ? sug : { name: line.parsed.name, quantity: line.parsed.quantity ?? "", unit: line.parsed.unit ?? "", form: line.parsed.form ?? "raw" };
   const each = use && servings && /^\d+(\.\d+)?$/.test(use.quantity) ? perPortion(use.quantity, servings) : null;
   const name = `line-${i}`;
   return (
     <li className="card stack" data-testid="draft-line" data-raw={line.raw}>
       <div className="small"><span className="faint">Source line:</span> {line.raw}</div>
       {line.parsed.status === "requires_review" && <div className="small warn">Needs your review: {line.parsed.reasons.join("; ") || "Table couldn't read an amount and unit."}</div>}
+      {!dec && sug && (
+        <div className="row small" data-testid="line-suggestion">
+          <span className="grow">Suggested: <strong>{sug.use ? `${sug.quantity} ${sug.unit} ${sug.name}` : "leave out of groceries"}</strong>{line.parsed.suggestionNote ? ` (${line.parsed.suggestionNote})` : ""}</span>
+          <button type="button" className="btn line small" onClick={() => onChange(sug)} aria-label={`Use the suggestion for line ${i + 1}: ${line.raw}`}>Use suggestion</button>
+        </div>
+      )}
       <div className="seg" role="radiogroup" aria-label={`Line ${i + 1}: ${line.raw}`}>
         <label className="btn line small"><input type="radio" name={name} checked={!!use} onChange={() => onChange({ use: true, name: proposal.name, quantity: proposal.quantity, unit: proposal.unit, form: proposal.form as "raw" | "cooked" })} /> Use</label>
         <label className="btn line small"><input type="radio" name={name} checked={dec?.use === false} onChange={() => onChange({ use: false })} /> Leave out of groceries</label>
@@ -213,5 +229,33 @@ function LineRow({ i, line, servings, onChange }: { i: number; line: DraftLine; 
       )}
       {each && <div className="small faint">{each.value} {use!.unit} per serving{each.rounded ? " (rounded to 4 decimal places)" : ""}</div>}
     </li>
+  );
+}
+
+/** What was read and from where: site, author, description, and what of the page's own content was kept. */
+function DraftSource({ b, d }: { b: any; d: any }) {
+  const site = d.siteName ?? b.sourceLabel ?? b.domain;
+  const kept = d.policy ?? { instructions: false, photos: false, basis: null };
+  return (
+    <div className="stack" data-testid="draft-source" style={{ gap: 4 }}>
+      <div className="row" style={{ alignItems: "flex-start", flexWrap: "nowrap" }}>
+        <PlaceholderTile title={d.title ?? site} imageId={d.imageId} />
+        <p className="small grow" style={{ margin: 0 }}>
+          {d.method === "user_pasted" ? "From the lines you pasted" : `Read from ${site}`}
+          {d.author ? ` · by ${d.author}` : ""} ·{" "}
+          <a href={b.url} target="_blank" rel="noopener noreferrer nofollow">Open the original ↗</a>
+          {d.description ? <><br /><span className="faint">{d.description}</span></> : null}
+        </p>
+      </div>
+      <p className="small faint" style={{ margin: 0 }} data-testid="draft-kept">
+        {d.method === "microdata" ? "Read from the page's older recipe markup. " : ""}
+        {d.stepsKept
+          ? `The page's method (${d.stepCount} ${d.stepCount === 1 ? "step" : "steps"}) was kept (${kept.basis}); edit it below. `
+          : d.stepCount > 0 || d.sourceHasInstructions ? `The method stays on the source site. The recipe links to it${d.stepCount > 0 ? ` (${d.stepCount} ${d.stepCount === 1 ? "step" : "steps"})` : ""}. ` : ""}
+        {d.imageId ? `Its photo was kept (${kept.basis}). ` : d.imageCount > 0 ? "Its photo isn't kept (no permission recorded). " : ""}
+        {d.sourceHasNutrition ? "The page's nutrition claims are not used. " : ""}
+        {d.yieldText ? `The page says it makes: ${d.yieldText}.` : ""}
+      </p>
+    </div>
   );
 }
