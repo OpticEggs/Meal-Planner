@@ -56,7 +56,11 @@ One effective "cooked" record per cooking event: a second press — by either me
 is answered "already recorded by …" and writes nothing (D78). The Cook page shows "Cooked · recorded by
 …" instead of the button. "Correct this: it wasn't cooked" appends a correction; nothing is deleted,
 history and "new to you" ignore the corrected record, and cooking can be recorded again (D79).
-Duplicates created before the fix are kept, marked and shown once (D80). Migration 008.
+Duplicates created before the fix are kept, marked and shown once (D80). Migration 008. The guarantee
+is the command's (check + household lock); the database index refuses only a repeated generation, so a
+database-wide invariant is open (B21), as is whether a dinner no longer scheduled may be marked cooked
+(B22) — both from the independent recheck of `bcb74ed`, which closed B19/B20 for the command path and
+Chromium-tested presentation.
 
 ## Integration-preparation pass
 
@@ -136,7 +140,8 @@ Backup/restore: `scripts/backup.sh dump|restore|check` (dumps include auth table
 
 ## Evidence
 
-Current: `docs/table/evidence/2026-10-08-verify-f22f9d5/` (see Verification above). History:
+Current: `docs/table/evidence/2026-10-08-verify-f22f9d5/` (see Verification above), rechecked independently
+in `2026-10-08-independent-recheck-bcb74ed/` (records and hashes; no rerun). History:
 `2026-10-08-verify-02a3b1a/` (cook-record fix), `2026-10-08-verify-c19bd5a/` (integration preparation), `2026-10-08-verify-abdd5a2/` (B17 correction, B18), `2026-10-08-independent-recheck-639c103/`, `2026-10-08-verify-972e368/` (B17), `2026-10-08-verify-5f7b72f/` (B15/B16), `2026-10-08-verify-0804381/` (B14/B12, with sheet
 screenshots), `2026-10-08-verify-2c56267/` (correction pass), `2026-10-08-full-run*.md`,
 `2026-10-08-first-slice-e2e.md`. See ACCEPTANCE.md for per-test status.
@@ -153,5 +158,6 @@ screenshots), `2026-10-08-verify-2c56267/` (correction pass), `2026-10-08-full-r
 None without owner input. Owner gates, all in `OWNER-INPUTS.md`: hosting approval and provisioning
 (H1–H7), the household's FDC key (N1–N2), Kroger registration, provider validation, data-retention
 decision and a bounded cart test (K1–K7), device runs (P1–P2). The approved visual update
-is delivered (B20). Kroger data retention (K6) is to
+is delivered (B20). Open decisions from the recheck: B21 (database-wide cook-record invariant) and B22
+(cooking recorded for a dinner no longer scheduled). Kroger data retention (K6) is to
 be clarified with Kroger developer support or counsel before any live cart addition (delivery review).

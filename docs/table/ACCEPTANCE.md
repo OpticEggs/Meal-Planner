@@ -290,7 +290,7 @@ Restore order: with an immediate `duplicate_of` reference the restore test faile
 
 | ID | What is checked | Tests | Status |
 |---|---|---|---|
-| COOK-01 One record per event | A second press by the same member (new operation id) adds nothing and names who recorded it; the same operation id replays the receipt; both members at once, in both orders → exactly one record, by the first, the other told "already recorded"; the database refuses a second effective record if a command were bypassed | integration cook-records (5) | PASS |
+| COOK-01 One record per event | A second press by the same member (new operation id) adds nothing and names who recorded it; the same operation id replays the receipt; both members at once, in both orders → exactly one record, by the first, the other told "already recorded"; the database refuses a repeated insert of the current record if a command were bypassed (same generation only — see D78 scope; a raw insert under a new generation is not refused, B21) | integration cook-records (5) | PASS (command path; database backstop partial) |
 | COOK-02 Cooked state shown | The snapshot carries who recorded the night and when; the Cook page shows "Cooked · recorded by …" instead of the button, live for the other member; a press from a stale page is answered "already recorded" and adds nothing | integration cook-records; e2e cook-records | PASS (Chromium) |
 | COOK-03 Correction | "This wasn't cooked" appends a correction (nothing deleted); history, "new to you" and the Cook page ignore the corrected record; cooking can be recorded again, once; refusals for another household (`not_found`), unknown reason (`invalid`), already corrected (`stale`) write nothing; the dialog opens on "Keep the record", Escape keeps it, focus returns | integration cook-records; e2e cook-records | PASS (Chromium) |
 | COOK-04 Existing duplicates and restore | Duplicates are kept and marked, shown once; export/restore keeps records, duplicates and corrections in the worst row order; upgrade of a populated 007 database holding duplicates (only `schema_migrations` differs over pre-existing tables; 2 effective, 2 marked) | integration cook-records "export and restore"; scripted upgrade check (`upgrade-008/`) | PASS (local) |
@@ -328,3 +328,8 @@ assertion; disclosed below). After the fixes those 31 passed (`dev/pw-rerun-31-p
 this dinner is not recorded as cooked.")` → the same text inside `getByTestId("cook-view")`. The page-wide
 lookup also matches the polite announcer whenever both hold the text, so whether it passed depended on
 timing. The assertion (the visible message is shown) is unchanged. No test was skipped, deleted or weakened.
+
+**Independent recheck of `bcb74ed`** (`evidence/2026-10-08-independent-recheck-bcb74ed/`): bundle hash,
+refs, evidence counts and both tracked-file hashes matched; no rerun of tests. B19 and B20 closed for
+the command path and Chromium-tested presentation. COOK-01's database clause narrowed above; open items
+B21 (database-wide invariant) and B22 (cooking recorded for a dinner no longer scheduled) await a decision.
