@@ -3,8 +3,8 @@ import { defineConfig, devices } from "@playwright/test";
 const PORT = 3100;
 export const TEST_ENV = {
   TABLE_ENV: "test",
-  NODE_ENV: "production",
-  DATABASE_URL: process.env.TEST_DATABASE_URL ?? "postgres://table@127.0.0.1:54329/table_test",
+  NODE_ENV: "production" as const,
+  DATABASE_URL: process.env.E2E_DATABASE_URL ?? "postgres://table@127.0.0.1:54329/table_e2e",
   TABLE_FIXED_NOW: "2026-10-12T19:00:00Z",
   TABLE_RETAILER: "simulated",
   BETTER_AUTH_URL: `http://127.0.0.1:${PORT}`,

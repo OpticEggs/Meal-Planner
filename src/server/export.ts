@@ -95,7 +95,6 @@ export async function restoreHousehold(c: pg.PoolClient | pg.Client, data: House
   const counts: Record<string, number> = {};
   await c.query("BEGIN");
   try {
-    await c.query("SET LOCAL table.allow_fixture_reset = 'on'");
     await c.query("SET CONSTRAINTS ALL DEFERRED");
     for (const s of EXPORT_TABLES) {
       const rows = data.tables[s.table] ?? [];

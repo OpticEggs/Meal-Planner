@@ -117,7 +117,7 @@ export interface Fixture {
 }
 
 export function assertTestDatabase(url: string) {
-  if (!/\/table_test(\?|$)/.test(url)) throw new Error(`refusing to reset a non-test database: ${url}`);
+  if (!/\/table_(test|e2e)(\?|$)/.test(url)) throw new Error(`refusing to reset a non-test database: ${url}`);
 }
 
 /** Wipes the disposable test database (TRUNCATE does not run row triggers). */

@@ -22,7 +22,7 @@ case "$cmd" in
     if ! as_pg "$PGBIN/pg_ctl" -D "$DATA" status >/dev/null 2>&1; then
       as_pg "$PGBIN/pg_ctl" -D "$DATA" -l "$LOG" -o "-p $PORT -k /tmp -c listen_addresses=127.0.0.1" -w start >/dev/null
     fi
-    for db in table_dev table_test table_restore_check; do
+    for db in table_dev table_test table_e2e table_restore_check; do
       "$PGBIN/psql" -h 127.0.0.1 -p "$PORT" -U table -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname='$db'" | grep -q 1 \
         || "$PGBIN/createdb" -h 127.0.0.1 -p "$PORT" -U table "$db"
     done

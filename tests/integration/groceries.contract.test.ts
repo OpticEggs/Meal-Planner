@@ -133,7 +133,7 @@ describe("T14 replacement after order confirmation", () => {
     expect(await retailerCalls()).toBe(1);
     // The store confirmed contents that DIFFER from the transfer: broccoli was not included.
     const transferred = (await summary(fx.weekId)) && (await q<{ payload: any[] }>("SELECT payload FROM handoff_batches"))[0].payload;
-    const confirmed = transferred.filter((i) => i.ingredientKey !== "broccoli").map((i) => ({ ingredientKey: i.ingredientKey, name: i.ingredientKey, packages: i.packages }));
+    const confirmed = transferred.filter((i: any) => i.ingredientKey !== "broccoli").map((i: any) => ({ ingredientKey: i.ingredientKey, name: i.ingredientKey, packages: i.packages }));
     const o = await confirmOrderCommand(alex, op(), { weekId: fx.weekId, contentsKnown: true, lines: confirmed, pickupAt: "2026-10-13T22:00:00Z" });
     expect(o.status).toBe("accepted");
     const orderBefore = await q("SELECT * FROM order_lines ORDER BY name");

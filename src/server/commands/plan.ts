@@ -181,7 +181,12 @@ export function generateProposalCommand(actor: Actor, operationId: string, p: Ge
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING id`,
       [actor.householdId, week.id, week.acceptedChoiceRevision, gen.content, gen.contentHash, inputs, explanation, actor.memberId],
     );
-    return { status: "accepted", result: { proposalId: ins.rows[0].id, contentHash: gen.contentHash, weekId: week.id, baseAcceptedChoiceRevision: week.acceptedChoiceRevision } };
+    return {
+      status: "accepted",
+      result: { proposalId: ins.rows[0].id, contentHash: gen.contentHash, weekId: week.id, baseAcceptedChoiceRevision: week.acceptedChoiceRevision },
+      // A shared draft: delivered to both members, but it changes no accepted choice.
+      change: { weekId: week.id, summary: { type: "proposal", text: `${actor.displayName} proposed a week` } },
+    };
   });
 }
 

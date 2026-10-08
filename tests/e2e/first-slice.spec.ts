@@ -213,3 +213,42 @@ test("Reload preserves accepted state, previews and stale status (persistence, n
   await jon.context.close();
   await alex.context.close();
 });
+
+for (const order of ["Wednesday first", "Thursday first"] as const) {
+  test(`T22: Wednesday and Thursday edits interact through the leftover source — ${order}`, async ({ browser }) => {
+    const fx = await seed();
+    const jon = await member(browser, "jon");
+    const alex = await member(browser, "alex");
+    await previewReplace(jon.page, NIGHT.wed, "Fixture: Chicken penne"); // penne is leftover-friendly: Thursday follows it
+    await expect(jon.page.getByTestId("preview")).toContainText("Thursday becomes leftovers of Fixture: Chicken penne");
+    await previewReplace(alex.page, NIGHT.thu, "Fixture: Black bean tacos");
+    const hold = await holdHousehold(fx.householdId);
+    const [first, second] = order === "Wednesday first" ? [jon, alex] : [alex, jon];
+    await first.page.getByTestId("apply").click();
+    await waitForLockWaiters(1);
+    await second.page.getByTestId("apply").click();
+    await waitForLockWaiters(2);
+    await hold.release();
+    await expect(second.page.getByTestId("preview")).toHaveAttribute("data-stale", "true");
+    await expect(second.page.getByTestId("apply")).toBeDisabled();
+    const thu = await nightTitle(fx.weekId, NIGHT.thu);
+    if (order === "Wednesday first") expect(thu).toMatchObject({ kind: "leftover", title: "Fixture: Chicken penne" });
+    else expect(thu).toMatchObject({ kind: "cook", title: "Fixture: Black bean tacos" });
+    expect((await q("SELECT accepted_choice_revision FROM weeks WHERE id=$1", [fx.weekId]))[0].accepted_choice_revision).toBe(2);
+    await jon.context.close();
+    await alex.context.close();
+  });
+}
+
+test("T15: a double-clicked Apply records one change", async ({ browser }) => {
+  const fx = await seed();
+  const jon = await member(browser, "jon");
+  await previewReplace(jon.page, NIGHT.fri, "Fixture: Chicken penne");
+  await jon.page.getByTestId("apply").dblclick();
+  await expect(jon.page.getByTestId(`night-title-${NIGHT.fri}`)).toHaveText("Fixture: Chicken penne");
+  await jon.page.waitForTimeout(500);
+  expect((await q("SELECT accepted_choice_revision FROM weeks WHERE id=$1", [fx.weekId]))[0].accepted_choice_revision).toBe(2);
+  expect((await q("SELECT count(*)::int n FROM command_receipts WHERE command='ApplyPlanChange' AND status='accepted'"))[0].n).toBe(1);
+  expect((await nightTitle(fx.weekId, NIGHT.fri)).revision).toBe(2);
+  await jon.context.close();
+});
