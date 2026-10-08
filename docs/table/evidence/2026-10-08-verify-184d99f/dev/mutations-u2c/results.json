@@ -1,0 +1,40 @@
+{
+  "when": "2026-10-08T21:09:20.779Z",
+  "head": "9623de40786aa337724036729e9976f77b13c89f",
+  "restored": true,
+  "pass": true,
+  "results": [
+    {
+      "name": "U2C_content_kept_without_permission",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/4 failed by assertion: U-01: pasting a link saves it and reads it at once; attribution, description and counts are kept, the method and photo are not (default) | U-03: a per-site grant keeps only what that site permitted; another site's grant keeps nothing"
+    },
+    {
+      "name": "U2C_photo_not_sniffed",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/4 failed by assertion: U-04: a 'photo' that isn't one (HTML served as image/png) is not stored; the draft still opens and says so"
+    },
+    {
+      "name": "U2C_suggestion_applied_unreviewed",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: U-10: lines the reader is unsure of carry a suggestion but no decision; nothing becomes a recipe until each line is decided"
+    },
+    {
+      "name": "U2C_passing_problem_recorded",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: U-06: 404 is recorded on the link; 429 and 500 are passing problems (not recorded; retry allowed); a page without recipe data says so"
+    }
+  ]
+}

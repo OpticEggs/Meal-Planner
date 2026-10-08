@@ -1,0 +1,10 @@
+$ npx vitest run tests/integration/b5.kroger-connection.test.ts -t "B5 authorization callback"
+exit 1 signal 
+--- stdout
+JSON report written to /tmp/table-verify-184d99f-20261008T215442Z/mutation/mutation-B5_replayed_state_accepted.json
+
+--- stderr
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+

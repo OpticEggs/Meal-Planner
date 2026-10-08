@@ -25,7 +25,7 @@ requests (below).
 | Capability | Requires | What turning it on allows | Gate |
 |---|---|---|---|
 | `connect` | client id/secret, redirect URI, `TABLE_TOKEN_KEY`, `KROGER_CUSTOMER_SCOPES` | a member connects the household's Kroger account (token exchange, refresh) | owner directive for B5(b) |
-| `products` | client credentials, `KROGER_PRODUCT_SCOPES` (and `KROGER_LOCATION_SCOPES` for store search) | read-only product and store lookups | owner directive for B5(b) |
+| `products` | client credentials, `KROGER_PRODUCT_SCOPES` (and `KROGER_LOCATION_SCOPES` for store search) | read-only product and store lookups; ingredient → product matching in Groceries (search, bulk match, `ChooseKrogerProduct` re-reads the product and records UPC, package, store price, mapping — D100, fixture-tested) | owner directive for B5(b) |
 | `cart` | `connect`, a connection, a store, **and a documented `modality`** | one `PUT /v1/cart/add` per approved batch | separate written approval naming account, products and quantities (B6) |
 
 Production refuses `KROGER_ACTIVATE` unless `TABLE_RETAILER=kroger` (and `/api/health` reports
@@ -98,7 +98,9 @@ Research Service. FoodData Central".
 | Capability | Status |
 |---|---|
 | Shared saved links: validation, normalization/de-duplication, attribution, notes, archive/restore, export/restore | implemented, tested (unit, real-PostgreSQL integration, two-member browser) |
-| Page reading for import (`safeFetch`: SSRF checks, pinned connection, redirects re-validated, size/time/decompression limits) | implemented, **fixture-tested only** — the production transport (`nodeTransport`, `systemResolver`) is written but **not exercised**; real page reading is **OFF** (`TABLE_RECIPE_IMPORT_FETCH` unset). Before enabling: review that Node's connection path cannot re-resolve names (`autoSelectFamily`), that no proxy environment applies, and the source-policy list |
+| Page reading for import (`safeFetch`: SSRF checks, pinned connection, redirects re-validated, size/time/decompression limits) | implemented; the production transport and resolver are **tested against a local TLS server** (certificate/host verification, gzip, caps, refused redirects, photo mode — unit LT-01..04); real page reading is **OFF** (`TABLE_RECIPE_IMPORT_FETCH` unset, owner gate R1). Large sites may refuse automated reads (budgetbytes.com answered 403 to one check on 2026-10-08) — Table reports that in words and offers paste |
+| What of a page's own content is kept | `TABLE_RECIPE_CONTENT` (`off` default, `household_private` = owner gate C1) and `TABLE_RECIPE_CONTENT_GRANTS` (per-site, C2); Budget Bytes never. Kept photos: sniffed bytes ≤5 MB in `recipe_images`, member-only route, export/restore (D95, D96) |
+| Extraction of instructions, photos, description, author, site name (JSON-LD with `@id` resolution, microdata and Open Graph fallbacks); suggestions for uncertain ingredient lines, applied only by a member (D94, D97) | implemented, tested with synthetic real-world-shaped pages |
 | JSON-LD Recipe extraction, conservative ingredient-line parsing, reviewed drafts, confirmation into an imported recipe version with source provenance | implemented, tested with **synthetic** pages only (no real site's content) |
 | Paste-the-ingredients import (any link, including link-only sites) | implemented, tested |
 | Budget Bytes | **link-only**: official index link, saved links and household-confirmed recipes. Pages are never read; no photos, methods or posted prices are copied. Any broader use needs Budget Bytes' permission (their FAQ: reuse on other sites is evaluated case by case; commercial use needs a license) |

@@ -430,3 +430,41 @@ destination, destination revision ignored, stale Instacart list requested). A fi
 
 **Existing tests changed:** `tests/e2e/ui-screens.spec.ts` also captures the Saved links tab (addition only).
 No test was skipped, deleted or weakened.
+
+## URL to cart (product priority 2026-10-08, `URL-TO-CART.md`) — added 2026-10-08
+
+Base `9623de4`; implementation `184d99f` (extractor and line suggestions by a worker, merged into the same
+commit); verified at `184d99f` — `docs/table/evidence/2026-10-08-verify-184d99f/summary.md` (vitest 1095/1095, Playwright 131/131,
+83 mutations killed, 0 survived, 0 error). Chromium only. Every page, photo and Kroger answer is a local fixture (synthetic pages in
+`tests/fixtures/import-site` and `recipe-pages`, a generated 2×2 PNG, the Kroger recording fake); the live
+transport runs only against a local TLS server with a throwaway certificate. No request reached any website or
+Kroger. **Red before green:** on `9623de4` the new files fail (`red/u2c-red-on-9623de4.log`: 14 failed — the
+new behaviours don't exist; two files fail at import), recorded as such; behaviour is proven by 9 new
+mutations, each killed by an assertion.
+
+| ID | What | Tests | Status |
+|---|---|---|---|
+| U-01 | Paste a link → saved and read in one step; attribution, description, step/photo counts kept; method and photo **not** kept by default; no photo request | integration u2c-url-import; e2e U2C-E1; mutation U2C_content_kept_without_permission | PASS |
+| U-02 | Household-private setting: method kept as editable steps, one photo stored (sniffed, hashed, permission recorded); confirm carries photo, author, site; later versions keep them | integration | PASS |
+| U-03 | Per-site grants keep only what that site permitted | integration; unit CP-03 | PASS |
+| U-04 | A "photo" that isn't one is not stored; the draft opens and says so | integration; unit photo sniffing; mutation U2C_photo_not_sniffed | PASS |
+| U-05 | Budget Bytes never read, even with the household-private setting | integration; e2e U2C-E3, BB-01/02 | PASS |
+| U-06 | 404 recorded; 429/500 passing (not recorded, retry); no recipe data says so; re-read allowed | integration; e2e U2C-E2; mutation U2C_passing_problem_recorded | PASS |
+| U-07 | Microdata-only page → draft marked as older markup | integration; unit extract-details | PASS |
+| U-08 | Same link again → the open review (no second read); after confirm → the recipe | integration | PASS |
+| U-09 | Reading off → link saved, paste offered; invalid link → nothing saved | integration; e2e U2C-E2 | PASS |
+| U-10 | Unsure lines carry suggestions, never decisions; confirm refused until each is decided | integration; unit ingredient-suggest (property loop); e2e U2C-E1; mutation U2C_suggestion_applied_unreviewed | PASS |
+| U-11 | Kept photos export as base64 and restore byte-identical | integration | PASS |
+| LT-01..04 | Live reader on local TLS: certificate/host verified, cookies dropped, gzip, caps, refused redirects, photo mode; resolver answers from the OS, private answers refused | unit recipe-import-live-transport; mutation LT_certificate_not_verified | PASS |
+| CP-01..04 | Content policy defaults, grants, Budget Bytes, malformed settings refused in production | unit u2c-content-policy | PASS |
+| KM-01..02 | Kroger matching needs the Kroger store, the `products` capability and a store; otherwise zero requests | integration u2c-kroger-mapping; mutation KM_simulated_store_searches_kroger | PASS |
+| KM-03..05 | Search at the store; choice re-reads by id; UPC, package, store price (promo as promo), mapping recorded; client-sent price/package ignored | integration; mutation KM_promo_recorded_as_regular | PASS |
+| KM-06..07 | Unreadable size → member states it; no UPC / gone / unknown ingredient → refused, nothing written | integration; mutation KM_package_guessed | PASS |
+| KM-08..10 | Bound to what was seen (B15), a new choice withdraws the approval; replay writes once; bulk match capped at 12 and chooses nothing; no cart call anywhere | integration; mutation KM_choice_not_bound_to_seen | PASS |
+| — | Kroger matching UI (product dialog search, "Match products at Kroger") | typecheck and build only — **no browser test** (the e2e server can't script the in-process Kroger fake) | NOT BROWSER-TESTED |
+| — | Real pages, real photos, real Kroger, WebKit/Safari/VoiceOver/devices | — | BLOCKED (R1, C1/C2, K1–K7, B8) |
+
+Defects found by these tests before the commit: on Our Recipes the add-from-link result was dropped, so a page
+that couldn't be read showed no reason (e2e U2C-E2; fixed); a browser test's closing page could leave a live
+refresh holding locks while the next test's reset ran, and PostgreSQL chose the reset as deadlock victim (test
+reset now retries only on `40P01`).

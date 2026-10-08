@@ -3,6 +3,11 @@
 Bounded items, in the order they should be taken. Stage 1–4 items already delivered are listed
 in IMPLEMENTATION-STATUS.md; this file holds only open work.
 
+**Priority from 2026-10-08 (owner): URL → recipe → dinner → groceries → Kroger products → pickup cart** (`URL-TO-CART.md`).
+Order now: **B25** (done: URL-to-recipe, permitted content, Kroger mapping) → **R1** live page reading → **C1/C2** content permission →
+**B5(b)** Kroger products (K1–K5) → **B6** cart (K6/K7, modality) → B9 hosting (H1/H3) → B8 devices → B24 (R2, Instacart). Manual recipe
+entry and typed ingredient lines are fallbacks; no further visual polish is queued.
+
 | ID | Outcome | Allowed scope | Depends on | Tests | Done when |
 |---|---|---|---|---|---|
 | B1 | ~~Repository destination~~ — done 2026-10-08: pushed to `https://github.com/OpticEggs/Meal-Planner` (`main`). | — | — | — | — | — |
@@ -30,6 +35,9 @@ in IMPLEMENTATION-STATUS.md; this file holds only open work.
 | B22 | ~~Cooking recorded for a dinner no longer scheduled~~ — done 2026-10-08 (`5250e62`): `RecordCooked` refuses an event not cooked on a night of its accepted week (`stale_event`); past dinners still on the plan can be recorded (DECISIONS D85). | — | — | — | — |
 | B23 | ~~Multi-source handoff~~ — done 2026-10-08 (`c1bf933`, `99c3b99`, `2b9d83a`, `68f4549`), fixture-only: shared recipe links, SSRF-checked reviewed import (page reading off), Budget Bytes link lane, where to shop with a copyable list, Instacart shopping-list link (off). DECISIONS D86–D92; ACCEPTANCE "Multi-source handoff". | — | — | — | — |
 | B24 | **Live provider activation for the multi-source features** — each a separate gate: page reading in the deployed app (R1), Budget Bytes permission beyond links (R2), Instacart developer access, provider validation and data retention (I1–I3). | env + host secret store | OWNER-INPUTS §6 | provider-read evidence, then live | Not started — owner gates. |
+| B25 | ~~URL → recipe → Kroger product (credential-independent part)~~ — done 2026-10-08 (`184d99f`): one-step add-from-link, extraction of usable details (JSON-LD with `@id`, microdata, Open Graph), content kept only under a recorded permission (off), permitted photos, attribution and method link, suggestions for uncertain lines, failure reasons, live reader tested on local TLS; Budget Bytes lane search + add-from-link; Kroger search / bulk match / `ChooseKrogerProduct` (fake transport). DECISIONS D93–D101; ACCEPTANCE "URL to cart". | — | — | — | — | — |
+| B26 | **Live page reading** (R1) and **content permission** (C1 or C2), then one owner-chosen real page imported on the deployed app | env + host | OWNER-INPUTS R1, C1/C2; B9(c) | redacted read log | A real recipe page becomes a reviewed recipe on the deployed app |
+| B27 | **Kroger products live** (B5(b) with `KROGER_ACTIVATE=products`): search and choose real products at the household's store | env + host secret store | OWNER-INPUTS K1–K5 | redacted provider-read evidence | A real ingredient maps to a real Kroger product with a store price |
 
 **No open-ended polish work is queued.** The visual update (`docs/table/UI-VISUAL-UPDATE-PROPOSAL.md` §5) is delivered as B20; its exclusions (pantry, cheapest-week mode, other retailers, rating counts, photos) stay out. After B18 the remaining items are owner-gated (B5/B6 Kroger,
 B7 FDC key, B8 devices, B9 hosting) or optional on request (B10, B11, B13).

@@ -63,6 +63,9 @@ Result values: PASS · FAIL (describe what happened) · BLOCKED (why) · NOT RUN
 | D24 | Our Recipes → Saved links on both phones: paste a recipe link copied from Safari, add a note | It appears once on the other phone, attributed; "Open source" opens the page; a pasted link with tracking parameters doesn't duplicate it | ms-sources e2e (category A) | NOT RUN | |
 | D25 | Import review with VoiceOver at the largest text size: paste three lines (one with "to taste") | Each line's radio group ("Use" / "Leave out of groceries") is read with the original line; "Create recipe" stays unavailable until every line is decided and servings entered; focus stays in the dialog | ms-sources e2e (category A) | NOT RUN | |
 | D26 | Groceries → Where to shop: switch to "Another store", then Copy grocery list | Both phones show the new choice; Send disappears; the copied text pastes into Notes with the "list only" line; nothing is ordered | ms-groceries e2e (category A) | NOT RUN | |
+| D27 | Our Recipes → **Add a recipe from a link**: paste a link copied from Safari (after R1) | The review opens with the site and author; unsure lines show a suggestion; nothing is a recipe until **Create recipe**; the recipe shows "From … · Open the original" | u2c-url-to-recipe e2e U2C-E1/E2 | NOT RUN | |
+| D28 | Explore → Source → Budget Bytes: type a word and **Search on Budget Bytes** | Budget Bytes' own search opens in a new tab with that word (URL pattern not verified from this environment) | u2c-url-to-recipe e2e U2C-E3 | NOT RUN | |
+| D29 | Groceries with the Kroger store (after K1–K5): **Match products at Kroger…** with VoiceOver | Each item lists products with size, price and pickup; choosing one is announced; nothing is added to a cart | integration u2c-kroger-mapping (no browser test) | NOT RUN | |
 
 ## WebKit automation
 

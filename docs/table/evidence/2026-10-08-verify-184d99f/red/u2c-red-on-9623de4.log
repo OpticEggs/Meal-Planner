@@ -1,0 +1,244 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /tmp/table-red
+
+ ❯ tests/integration/u2c-url-import.test.ts (11 tests | 11 failed) 10940ms
+   ❯ one step from a link (U-01..U-04) (4)
+     × U-01: pasting a link saves it and reads it at once; attribution, description and counts are kept, the method and photo are not (default) 1218ms
+     × U-02: with the household-private setting, the method is kept as editable steps and one photo is stored (type sniffed, hash recorded); confirming carries both and the attribution 1549ms
+     × U-03: a per-site grant keeps only what that site permitted; another site's grant keeps nothing 1061ms
+     × U-04: a 'photo' that isn't one (HTML served as image/png) is not stored; the draft still opens and says so 1039ms
+   ❯ what stops a read, in words (U-05..U-08) (5)
+     × U-05: Budget Bytes is never read, even with the household-private setting; the link stays and paste is offered 882ms
+     × U-06: 404 is recorded on the link; 429 and 500 are passing problems (not recorded; retry allowed); a page without recipe data says so 897ms
+     × U-07: an older-markup (microdata) page becomes a draft marked as such 988ms
+     × U-08: adding the same link again opens the review in progress (no second read); once confirmed it points at the recipe 816ms
+     × U-09: with page reading off, the link is saved and paste is offered; an invalid link saves nothing 840ms
+   ❯ human review of uncertain lines (U-10) (1)
+     × U-10: lines the reader is unsure of carry a suggestion but no decision; nothing becomes a recipe until each line is decided 813ms
+   ❯ export and restore keep kept photos (U-11) (1)
+     × U-11: a stored photo round-trips through the household export as base64 and restores byte-identical 835ms
+ ❯ tests/integration/u2c-kroger-mapping.test.ts (0 test)
+ ❯ tests/unit/recipe-import-live-transport.test.ts (5 tests | 3 failed) 230ms
+   ❯ live transport against a local TLS server (4)
+     × LT-01: verifies the certificate for the host name, sends SNI/Host, drops cookies, and safeFetch decodes the gzip page 42ms
+     × LT-03: size cap, HTTP status, refused redirect target and photo mode all hold on the real transport 11ms
+   ❯ photo sniffing (1)
+     × knows JPEG, PNG, GIF and WebP by their bytes, and nothing else 1ms
+ ❯ tests/unit/u2c-content-policy.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/u2c-kroger-mapping.test.ts [ tests/integration/u2c-kroger-mapping.test.ts ]
+Error: Cannot find package '@/server/kroger-mapping-service' imported from /tmp/table-red/tests/integration/u2c-kroger-mapping.test.ts
+ ❯ tests/integration/u2c-kroger-mapping.test.ts:13:1
+     11| import { setKrogerLocationCommand } from "@/server/commands/kroger";
+     12| import { approvePurchaseLinesCommand, chooseKrogerProductCommand } fro…
+     13| import { chooseKrogerProduct, matchKrogerLines, searchKrogerForIngredi…
+       | ^
+     14| import { recomputeProjection } from "@/server/groceries/recompute";
+     15| import { inTransaction } from "@/server/db/pool";
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/16]⎯
+
+ FAIL  tests/unit/u2c-content-policy.test.ts [ tests/unit/u2c-content-policy.test.ts ]
+Error: Cannot find package '@/server/integrations/recipe-import/content-policy' imported from /tmp/table-red/tests/unit/u2c-content-policy.test.ts
+ ❯ tests/unit/u2c-content-policy.test.ts:8:1
+      6| import { recipeContentConfig } from "@/server/env";
+      7| import { configProblems } from "@/server/deploy";
+      8| import { contentUse, NOTHING_KEPT } from "@/server/integrations/recipe…
+       | ^
+      9| import { budgetBytesSearchUrl, suggestedDecision, titleFromUrl, type P…
+     10|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/16]⎯
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 14 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/u2c-url-import.test.ts > one step from a link (U-01..U-04) > U-01: pasting a link saves it and reads it at once; attribution, description and counts are kept, the method and photo are not (default)
+TypeError: addRecipeFromLink is not a function
+ ❯ tests/integration/u2c-url-import.test.ts:38:26
+     36|     const { jon } = await fresh();
+     37|     const calls: { ip: string; hostname: string; path: string }[] = [];
+     38|     const r: any = await addRecipeFromLink(jon, { url: `${WPRM}?utm_so…
+       |                          ^
+     39|     expect(r).toMatchObject({ kind: "draft" });
+     40|     expect(calls.map((c) => c.path)).toEqual(["/skillet-taco-rice/"]);…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/16]⎯
+
+ FAIL  tests/integration/u2c-url-import.test.ts > one step from a link (U-01..U-04) > U-02: with the household-private setting, the method is kept as editable steps and one photo is stored (type sniffed, hash recorded); confirming carries both and the attribution
+TypeError: addRecipeFromLink is not a function
+ ❯ tests/integration/u2c-url-import.test.ts:55:26
+     53|   it("U-02: with the household-private setting, the method is kept as …
+     54|     const { jon } = await fresh();
+     55|     const r: any = await addRecipeFromLink(jon, { url: WPRM, operation…
+       |                          ^
+     56|     const d = await draftRow(r.draftId);
+     57|     expect(d.content_policy).toEqual({ instructions: true, photos: tru…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/16]⎯
+
+ FAIL  tests/integration/u2c-url-import.test.ts > one step from a link (U-01..U-04) > U-03: a per-site grant keeps only what that site permitted; another site's grant keeps nothing
+TypeError: addRecipeFromLink is not a function
+ ❯ tests/integration/u2c-url-import.test.ts:89:30
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/16]⎯
+
+ FAIL  tests/integration/u2c-url-import.test.ts > one step from a link (U-01..U-04) > U-04: a 'photo' that isn't one (HTML served as image/png) is not stored; the draft still opens and says so
+TypeError: addRecipeFromLink is not a function
+ ❯ tests/integration/u2c-url-import.test.ts:101:26
+     99|   it("U-04: a 'photo' that isn't one (HTML served as image/png) is not…
+    100|     const { jon } = await fresh();
+    101|     const r: any = await addRecipeFromLink(jon, { url: "https://fakeph…
+       |                          ^
+    102|     const d = await draftRow(r.draftId);
+    103|     expect(d.image_id).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/16]⎯
+
+ FAIL  tests/integration/u2c-url-import.test.ts > what stops a read, in words (U-05..U-08) > U-05: Budget Bytes is never read, even with the household-private setting; the link stays and paste is offered
+TypeError: addRecipeFromLink is not a function
+ ❯ tests/integration/u2c-url-import.test.ts:113:26
+    111|     const { jon } = await fresh();
+    112|     const calls: { ip: string; hostname: string; path: string }[] = [];
+    113|     const r: any = await addRecipeFromLink(jon, { url: "https://www.bu…
+       |                          ^
+    114|     expect(r).toMatchObject({ kind: "not_read", status: "permission_bl…
+    115|     expect(r.bookmarkId).toBeTruthy();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/16]⎯
+
+ FAIL  tests/integration/u2c-url-import.test.ts > what stops a read, in words (U-05..U-08) > U-06: 404 is recorded on the link; 429 and 500 are passing problems (not recorded; retry allowed); a page without recipe data says so
+TypeError: addRecipeFromLink is not a function
+ ❯ tests/integration/u2c-url-import.test.ts:121:29
+    119|   it("U-06: 404 is recorded on the link; 429 and 500 are passing probl…
+    120|     const { jon } = await fresh();
+    121|     const gone: any = await addRecipeFromLink(jon, { url: "https://gon…
+       |                             ^
+    122|     expect(gone).toMatchObject({ kind: "not_read", status: "unavailabl…
+    123|     expect(gone.message).toMatch(/doesn't exist/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/16]⎯
+
+ FAIL  tests/integration/u2c-url-import.test.ts > what stops a read, in words (U-05..U-08) > U-07: an older-markup (microdata) page becomes a draft marked as such
+TypeError: addRecipeFromLink is not a function
+ ❯ tests/integration/u2c-url-import.test.ts:140:26
+    138|   it("U-07: an older-markup (microdata) page becomes a draft marked as…
+    139|     const { jon } = await fresh();
+    140|     const r: any = await addRecipeFromLink(jon, { url: "https://micro.…
+       |                          ^
+    141|     expect(r.kind).toBe("draft");
+    142|     const d = await draftRow(r.draftId);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/16]⎯
+
+ FAIL  tests/integration/u2c-url-import.test.ts > what stops a read, in words (U-05..U-08) > U-08: adding the same link again opens the review in progress (no second read); once confirmed it points at the recipe
+TypeError: addRecipeFromLink is not a function
+ ❯ tests/integration/u2c-url-import.test.ts:150:30
+    148|   it("U-08: adding the same link again opens the review in progress (n…
+    149|     const { jon, alex } = await fresh();
+    150|     const first: any = await addRecipeFromLink(jon, { url: WPRM, opera…
+       |                              ^
+    151|     const calls: { ip: string; hostname: string; path: string }[] = [];
+    152|     const second: any = await addRecipeFromLink(alex, { url: "https://…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/16]⎯
+
+ FAIL  tests/integration/u2c-url-import.test.ts > what stops a read, in words (U-05..U-08) > U-09: with page reading off, the link is saved and paste is offered; an invalid link saves nothing
+TypeError: addRecipeFromLink is not a function
+ ❯ tests/integration/u2c-url-import.test.ts:165:18
+    163|   it("U-09: with page reading off, the link is saved and paste is offe…
+    164|     const { jon } = await fresh();
+    165|     expect(await addRecipeFromLink(jon, { url: WPRM, operationId: op()…
+       |                  ^
+    166|     expect(await count("recipe_bookmarks")).toBe(1);
+    167|     const bad: any = await addRecipeFromLink(jon, { url: "http://127.0…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/16]⎯
+
+ FAIL  tests/integration/u2c-url-import.test.ts > human review of uncertain lines (U-10) > U-10: lines the reader is unsure of carry a suggestion but no decision; nothing becomes a recipe until each line is decided
+TypeError: addRecipeFromLink is not a function
+ ❯ tests/integration/u2c-url-import.test.ts:177:26
+    175|   it("U-10: lines the reader is unsure of carry a suggestion but no de…
+    176|     const { jon } = await fresh();
+    177|     const r: any = await addRecipeFromLink(jon, { url: WPRM, operation…
+       |                          ^
+    178|     const d = await draftRow(r.draftId);
+    179|     const byRaw = Object.fromEntries((d.lines as DraftLine[]).map((l) …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/16]⎯
+
+ FAIL  tests/integration/u2c-url-import.test.ts > export and restore keep kept photos (U-11) > U-11: a stored photo round-trips through the household export as base64 and restores byte-identical
+TypeError: addRecipeFromLink is not a function
+ ❯ tests/integration/u2c-url-import.test.ts:202:26
+    200|   it("U-11: a stored photo round-trips through the household export as…
+    201|     const { jon, fx } = await fresh();
+    202|     const r: any = await addRecipeFromLink(jon, { url: WPRM, operation…
+       |                          ^
+    203|     const d = await draftRow(r.draftId);
+    204|     const src = new pg.Client({ connectionString: process.env.DATABASE…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/16]⎯
+
+ FAIL  tests/unit/recipe-import-live-transport.test.ts > live transport against a local TLS server > LT-01: verifies the certificate for the host name, sends SNI/Host, drops cookies, and safeFetch decodes the gzip page
+AssertionError: expected 'failed' to be 'ok' // Object.is equality
+
+Expected: "ok"
+Received: "failed"
+
+ ❯ tests/unit/recipe-import-live-transport.test.ts:71:22
+     69|   it("LT-01: verifies the certificate for the host name, sends SNI/Hos…
+     70|     const out = await safeFetch(`https://${HOST}/soup`, { resolve: pub…
+     71|     expect(out.kind).toBe("ok");
+       |                      ^
+     72|     if (out.kind !== "ok") return;
+     73|     expect(lastHost).toBe(`${HOST}:${port}`); // the port appears only…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/16]⎯
+
+ FAIL  tests/unit/recipe-import-live-transport.test.ts > live transport against a local TLS server > LT-03: size cap, HTTP status, refused redirect target and photo mode all hold on the real transport
+AssertionError: expected { kind: 'failed', …(2) } to match object { kind: 'failed', code: 'too_large' }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "code": "too_large",
++   "code": "connect_failed",
+    "kind": "failed",
+  }
+
+ ❯ tests/unit/recipe-import-live-transport.test.ts:89:141
+     87|   it("LT-03: size cap, HTTP status, refused redirect target and photo …
+     88|     const t = local(nodeTransport({ ca }));
+     89|     expect(await safeFetch(`https://${HOST}/big`, { resolve: publicRes…
+       |                                                                                                                                             ^
+     90|     expect(await safeFetch(`https://${HOST}/nothing`, { resolve: publi…
+     91|     expect(await safeFetch(`https://${HOST}/moved`, { resolve: publicR…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/16]⎯
+
+ FAIL  tests/unit/recipe-import-live-transport.test.ts > photo sniffing > knows JPEG, PNG, GIF and WebP by their bytes, and nothing else
+TypeError: sniffImage is not a function
+ ❯ tests/unit/recipe-import-live-transport.test.ts:109:12
+    107| describe("photo sniffing", () => {
+    108|   it("knows JPEG, PNG, GIF and WebP by their bytes, and nothing else",…
+    109|     expect(sniffImage(Uint8Array.from([0xff, 0xd8, 0xff, 0xe0]))).toBe…
+       |            ^
+    110|     expect(sniffImage(PNG)).toBe("image/png");
+    111|     expect(sniffImage(Buffer.from("GIF89a...."))).toBe("image/gif");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/16]⎯
+
+
+ Test Files  4 failed (4)
+      Tests  14 failed | 2 passed (16)
+   Start at  21:09:30
+   Duration  15.51s (tests 82%, transform 12%, import 6%)
+

@@ -1,0 +1,60 @@
+
+Running 21 tests using 1 worker
+
+  ✓   1 [chromium] › tests/e2e/ms-sources.spec.ts:16:1 › URL-01/02: a link saved by Jon appears once for Alex, attributed, with a working source link; nothing else changes (4.7s)
+  ✓   2 [chromium] › tests/e2e/ms-sources.spec.ts:52:1 › URL-12: Jon reads a recipe page, decides the unclear lines, and only then creates the recipe; the source stays linked (3.3s)
+  ✓   3 [chromium] › tests/e2e/ms-sources.spec.ts:88:1 › BB-01/02: the Budget Bytes lane links to the official index, lists only what you saved, and never reads the page (3.7s)
+  ✓   4 [chromium] › tests/e2e/ms-sources.spec.ts:118:1 › E2E-03: Saved links and the import dialog fit 320 px at 200% text with no horizontal scroll (2.1s)
+  ✓   5 [chromium] › tests/e2e/u2c-url-to-recipe.spec.ts:13:1 › U2C-E1: paste a link on Our Recipes → review with source and suggestions → recipe with attribution and a link to the method (2.9s)
+  ✓   6 [chromium] › tests/e2e/u2c-url-to-recipe.spec.ts:45:1 › U2C-E2: a page that can't be read says why, keeps the link, and offers paste with a starting name (2.1s)
+  ✘   7 [chromium] › tests/e2e/u2c-url-to-recipe.spec.ts:66:1 › U2C-E3: Budget Bytes lane — search opens Budget Bytes; a pasted link is saved, never read, and paste starts with a name from the link (1.0s)
+  ✓   8 [chromium] › tests/e2e/ms-sources.spec.ts:16:1 › URL-01/02: a link saved by Jon appears once for Alex, attributed, with a working source link; nothing else changes (4.4s)
+  ✓   9 [chromium] › tests/e2e/ms-sources.spec.ts:52:1 › URL-12: Jon reads a recipe page, decides the unclear lines, and only then creates the recipe; the source stays linked (3.3s)
+  ✓  10 [chromium] › tests/e2e/ms-sources.spec.ts:88:1 › BB-01/02: the Budget Bytes lane links to the official index, lists only what you saved, and never reads the page (3.8s)
+  ✓  11 [chromium] › tests/e2e/ms-sources.spec.ts:118:1 › E2E-03: Saved links and the import dialog fit 320 px at 200% text with no horizontal scroll (2.1s)
+  ✓  12 [chromium] › tests/e2e/u2c-url-to-recipe.spec.ts:13:1 › U2C-E1: paste a link on Our Recipes → review with source and suggestions → recipe with attribution and a link to the method (3.0s)
+  ✓  13 [chromium] › tests/e2e/u2c-url-to-recipe.spec.ts:45:1 › U2C-E2: a page that can't be read says why, keeps the link, and offers paste with a starting name (2.5s)
+  ✓  14 [chromium] › tests/e2e/u2c-url-to-recipe.spec.ts:66:1 › U2C-E3: Budget Bytes lane — search opens Budget Bytes; a pasted link is saved, never read, and paste starts with a name from the link (2.4s)
+  ✓  15 [chromium] › tests/e2e/ms-sources.spec.ts:16:1 › URL-01/02: a link saved by Jon appears once for Alex, attributed, with a working source link; nothing else changes (4.6s)
+  ✓  16 [chromium] › tests/e2e/ms-sources.spec.ts:52:1 › URL-12: Jon reads a recipe page, decides the unclear lines, and only then creates the recipe; the source stays linked (3.3s)
+  ✓  17 [chromium] › tests/e2e/ms-sources.spec.ts:88:1 › BB-01/02: the Budget Bytes lane links to the official index, lists only what you saved, and never reads the page (3.7s)
+  ✓  18 [chromium] › tests/e2e/ms-sources.spec.ts:118:1 › E2E-03: Saved links and the import dialog fit 320 px at 200% text with no horizontal scroll (2.0s)
+  ✓  19 [chromium] › tests/e2e/u2c-url-to-recipe.spec.ts:13:1 › U2C-E1: paste a link on Our Recipes → review with source and suggestions → recipe with attribution and a link to the method (2.9s)
+  ✓  20 [chromium] › tests/e2e/u2c-url-to-recipe.spec.ts:45:1 › U2C-E2: a page that can't be read says why, keeps the link, and offers paste with a starting name (2.4s)
+  ✓  21 [chromium] › tests/e2e/u2c-url-to-recipe.spec.ts:66:1 › U2C-E3: Budget Bytes lane — search opens Budget Bytes; a pasted link is saved, never read, and paste starts with a name from the link (2.4s)
+
+
+  1) [chromium] › tests/e2e/u2c-url-to-recipe.spec.ts:66:1 › U2C-E3: Budget Bytes lane — search opens Budget Bytes; a pasted link is saved, never read, and paste starts with a name from the link 
+
+    error: deadlock detected
+
+       at ../fixtures/household.ts:126
+
+      124 | export async function resetTestDatabase(c: pg.Client | pg.PoolClient) {
+      125 |   const r = await c.query("SELECT tablename FROM pg_tables WHERE schemaname='public' AND tablename <> 'schema_migrations'");
+    > 126 |   await c.query(`TRUNCATE ${r.rows.map((x) => `"${x.tablename}"`).join(", ")} RESTART IDENTITY CASCADE`);
+          |   ^
+      127 | }
+      128 |
+      129 | export async function seedFixture(url: string, opts: { unpricedCheese?: boolean } = {}): Promise<Fixture> {
+        at /home/user/table/node_modules/pg/lib/client.js:694:17
+        at resetTestDatabase (/home/user/table/tests/fixtures/household.ts:126:3)
+        at seedFixture (/home/user/table/tests/fixtures/household.ts:135:5)
+        at /home/user/table/tests/e2e/u2c-url-to-recipe.spec.ts:67:3
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/u2c-url-to-recipe-U2C-E3-B-70a5b-s-with-a-name-from-the-link-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/u2c-url-to-recipe-U2C-E3-B-70a5b-s-with-a-name-from-the-link-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests/e2e/u2c-url-to-recipe.spec.ts:66:1 › U2C-E3: Budget Bytes lane — search opens Budget Bytes; a pasted link is saved, never read, and paste starts with a name from the link 
+  20 passed (1.2m)
+
+To open last HTML report run:
+
+  npx playwright show-report
+

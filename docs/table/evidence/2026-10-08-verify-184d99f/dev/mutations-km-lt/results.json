@@ -1,0 +1,48 @@
+{
+  "when": "2026-10-08T20:55:29.338Z",
+  "head": "9623de40786aa337724036729e9976f77b13c89f",
+  "restored": true,
+  "pass": true,
+  "results": [
+    {
+      "name": "LT_certificate_not_verified",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: LT-02: refuses a certificate that isn't for the host, and one not signed by a trusted root (the system roots, as in production)"
+    },
+    {
+      "name": "KM_package_guessed",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: KM-06: a size Kroger states in words needs the member's package size; nothing is written until it is given"
+    },
+    {
+      "name": "KM_promo_recorded_as_regular",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: KM-04: choosing re-reads the product by id and records product (UPC), package, the store price (promo as promo) and the mapping"
+    },
+    {
+      "name": "KM_simulated_store_searches_kroger",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: KM-01: with the simulated store, or the products capability off, nothing is requested"
+    },
+    {
+      "name": "KM_choice_not_bound_to_seen",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: KM-08: a choice made against an outdated view of the line is refused (B15), and a new choice withdraws the line's approval"
+    }
+  ]
+}

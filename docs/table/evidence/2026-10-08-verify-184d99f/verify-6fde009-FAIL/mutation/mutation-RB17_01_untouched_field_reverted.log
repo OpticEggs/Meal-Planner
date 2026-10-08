@@ -1,0 +1,10 @@
+$ npx vitest run tests/unit/recipe-rebase.test.ts -t "RB17"
+exit 1 signal 
+--- stdout
+JSON report written to /tmp/table-verify-6fde009-20261008T212506Z/mutation/mutation-RB17_01_untouched_field_reverted.json
+
+--- stderr
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+

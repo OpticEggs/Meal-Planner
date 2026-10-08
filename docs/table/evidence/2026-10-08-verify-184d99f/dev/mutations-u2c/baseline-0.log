@@ -1,0 +1,10 @@
+$ npx vitest run tests/integration/u2c-url-import.test.ts -t "U-01"
+exit 0 signal 
+--- stdout
+JSON report written to /tmp/claude-0/-home-user/ae3f20b4-8e59-5d3c-9e16-8b697724019c/scratchpad/u2c-mut-u/baseline-0.json
+
+--- stderr
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+

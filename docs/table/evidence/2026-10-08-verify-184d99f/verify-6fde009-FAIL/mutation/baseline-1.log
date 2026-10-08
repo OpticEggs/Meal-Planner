@@ -1,0 +1,10 @@
+$ npx vitest run tests/integration/plan.contract.test.ts -t "T08|T11|T22"
+exit 0 signal 
+--- stdout
+JSON report written to /tmp/table-verify-6fde009-20261008T212506Z/mutation/baseline-1.json
+
+--- stderr
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
