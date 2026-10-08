@@ -547,8 +547,9 @@ test("B16 Household: add, rename, change amount and product, remove and restore 
   await expect.poll(async () => (await focused(p)).name).toBe("Restore Breakfast yogurt to usual items");
   expect(await q<any>("SELECT state FROM household_requests WHERE ingredient_key='greek_yogurt'")).toEqual([{ state: "active" }]);
   await p.getByRole("link", { name: "Week" }).click();
+  await expect(p.getByTestId("alsoneed-week")).toBeVisible(); // (wait for the Week page before asserting absence)
   await expect(p.getByTestId("alsoneed-week").getByRole("button", { name: /^Breakfast yogurt/ })).toHaveCount(0);
-  await p.getByRole("link", { name: "Household" }).click();
+  await p.getByTestId("nav-household").click();
   await p.getByRole("button", { name: "Restore Breakfast yogurt to usual items" }).click();
   await expect(p.getByTestId("staple-row-greek_yogurt")).toContainText("Last changed by Jon (restored)");
   await expect(alex.page.getByTestId("staple-row-greek_yogurt")).toContainText("Last changed by Jon (restored)");

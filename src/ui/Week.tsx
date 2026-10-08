@@ -608,6 +608,19 @@ function PreviewCard({ p, onApplied, onCanceled }: { p: any; onApplied: (announc
 function Deferred() {
   const { snapshot, command } = useStore();
   const [to, setTo] = useState<Record<string, string>>({});
+  const [msgs, setMsgs] = useState<Record<string, string>>({});
+  const [focusPreview, setFocusPreview] = useState<{ id: string; from: Element | null } | null>(null);
+  // A placement preview appears with the open drafts; it takes focus so it is read next — unless
+  // the member has moved focus elsewhere while it was being made (as in the Change sheet, D41).
+  useEffect(() => {
+    if (!focusPreview) return;
+    const el = document.getElementById(`preview-h-${focusPreview.id}`);
+    if (el) {
+      const active = document.activeElement;
+      if (!active || active === document.body || active === focusPreview.from) el.focus();
+      setFocusPreview(null);
+    }
+  }, [focusPreview, snapshot]);
   const free = snapshot.week.nights.filter((n: any) => (n.kind === "open" || n.kind === "out") && !n.locked);
   return (
     <div className="card stack" aria-label="Deferred dinners">
@@ -616,12 +629,22 @@ function Deferred() {
         <div key={d.id} className="row between">
           <span>{d.recipe?.title}</span>
           <span className="row">
-            <select value={to[d.id] ?? ""} onChange={(e) => setTo({ ...to, [d.id]: e.target.value })} aria-label="Place on night">
+            <select value={to[d.id] ?? ""} onChange={(e) => setTo({ ...to, [d.id]: e.target.value })} aria-label={`Place ${d.recipe?.title} on a night`}
+              aria-invalid={msgs[d.id] ? true : undefined} aria-describedby={msgs[d.id] ? `deferred-msg-${d.id}` : undefined}>
               <option value="">Place on…</option>
               {free.map((n: any) => <option key={n.night} value={n.night}>{n.dayName}</option>)}
             </select>
-            <button className="btn line small" disabled={!to[d.id]} onClick={() => command("CreatePreview", { weekId: snapshot.week.id, operation: { type: "place", eventId: d.id, toNight: to[d.id] } })}>Preview</button>
+            <button className="btn line small" disabled={!to[d.id]} aria-label={`Preview placing ${d.recipe?.title}`} onClick={async (e) => {
+              const from = e.currentTarget;
+              const r = await command("CreatePreview", { weekId: snapshot.week.id, operation: { type: "place", eventId: d.id, toNight: to[d.id] } });
+              if (r.status !== "accepted") setMsgs({ ...msgs, [d.id]: r.message });
+              else {
+                setMsgs({ ...msgs, [d.id]: "" });
+                setFocusPreview({ id: r.result.previewId, from });
+              }
+            }}>Preview</button>
           </span>
+          {msgs[d.id] && <p role="alert" className="field-error full-row" id={`deferred-msg-${d.id}`}>{msgs[d.id]}</p>}
         </div>
       ))}
     </div>

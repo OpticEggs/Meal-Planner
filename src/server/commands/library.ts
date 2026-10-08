@@ -82,7 +82,10 @@ export interface RecipeDraft {
   reheatInstructions?: string;
   sourceLabel?: string | null;
   components: { key: string; name: string }[];
-  ingredients: { componentKey: string; ingredientKey?: string | null; ingredientName: string; quantity: string; unit: string; form?: string }[];
+  ingredients: { componentKey: string; ingredientKey?: string | null; ingredientName: string; quantity: string; unit: string; form?: string; note?: string | null }[];
+  /** B17: the version the member edited. A newer version saved meanwhile is refused (named), never
+   *  silently stacked over. Omitted = no check (as before). */
+  expectedVersionNo?: number;
 }
 
 function slug(s: string): string {
@@ -113,14 +116,29 @@ export function saveRecipeVersionCommand(actor: Actor, operationId: string, p: R
       const name = String(ing.ingredientName ?? "").trim().slice(0, 80);
       const key = ing.ingredientKey ? String(ing.ingredientKey) : slug(name);
       if (!key) throw new Reject("invalid", "Ingredient name required");
-      return { componentKey, ingredientKey: key, name, quantity: String(ing.quantity), unit, form: ing.form ?? "raw", sort: i };
+      return { componentKey, ingredientKey: key, name, quantity: String(ing.quantity), unit, form: ing.form ?? "raw", note: ing.note ? String(ing.note).slice(0, 200) : null, sort: i };
     });
     let recipeId = p.recipeId ?? null;
     let versionNo = 1;
     if (recipeId) {
       await recipeInHousehold(c, actor.householdId, recipeId);
       const v = await c.query("SELECT max(version_no) AS n FROM recipe_versions WHERE recipe_id=$1", [recipeId]);
-      versionNo = (v.rows[0].n ?? 0) + 1;
+      const current = v.rows[0].n ?? 0;
+      if (p.expectedVersionNo !== undefined) {
+        if (!Number.isInteger(p.expectedVersionNo)) throw new Reject("invalid", "Say which version you edited");
+        if (current !== p.expectedVersionNo) {
+          const last = await c.query(
+            "SELECT v.title, m.display_name FROM recipe_versions v LEFT JOIN members m ON m.id=v.created_by WHERE v.recipe_id=$1 AND v.version_no=$2",
+            [recipeId, current],
+          );
+          throw new Reject(
+            "stale_version",
+            `${last.rows[0]?.display_name ?? "Someone"} saved version ${current} (${last.rows[0]?.title ?? "untitled"}) while you were editing. Your changes were not saved; review that version, then save again.`,
+            { current: { versionNo: current } },
+          );
+        }
+      }
+      versionNo = current + 1;
     } else {
       recipeId = randomUUID();
       await c.query("INSERT INTO recipes(id, household_id, created_by) VALUES ($1,$2,$3)", [recipeId, actor.householdId, actor.memberId]);
@@ -147,8 +165,8 @@ export function saveRecipeVersionCommand(actor: Actor, operationId: string, p: R
     }
     for (const ing of ings) {
       await c.query(
-        "INSERT INTO recipe_ingredients(recipe_version_id, component_key, ingredient_key, quantity, unit, form, sort) VALUES ($1,$2,$3,$4,$5,$6,$7)",
-        [vid, ing.componentKey, ing.ingredientKey, ing.quantity, ing.unit, ing.form, ing.sort],
+        "INSERT INTO recipe_ingredients(recipe_version_id, component_key, ingredient_key, quantity, unit, form, note, sort) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)",
+        [vid, ing.componentKey, ing.ingredientKey, ing.quantity, ing.unit, ing.form, ing.note, ing.sort],
       );
     }
     await c.query("UPDATE recipes SET current_version_id=$2 WHERE id=$1", [recipeId, vid]);

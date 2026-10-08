@@ -59,6 +59,14 @@ export async function householdSnapshot(actor: Actor, weekStartParam?: string | 
       clock: { instant: instant.toISOString(), today, nextDinner, currentWeekStart, weekStart, prevWeekStart: addDays(weekStart, -7), nextWeekStart: addDays(weekStart, 7) },
       retailer: retailerSummary(),
       settings,
+      // Who last saved household inputs (from the change log), so a conflict can name them (B17).
+      settingsUpdatedBy: (
+        await c.query(
+          `SELECT m.display_name FROM change_events ce JOIN members m ON m.id=ce.actor_member_id
+           WHERE ce.household_id=$1 AND ce.command='UpdateSettings' ORDER BY ce.seq DESC LIMIT 1`,
+          [actor.householdId],
+        )
+      ).rows[0]?.display_name ?? null,
       targets: await targets(c, actor.householdId),
       exclusions,
       ingredients: [...ingredients.values()],

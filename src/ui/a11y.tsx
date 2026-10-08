@@ -24,6 +24,16 @@ export function focusFirst(...candidates: (HTMLElement | null | undefined | (() 
   return null;
 }
 
+/** Roving-tab key handling: the tab an arrow / Home / End key moves to, or null. */
+export function tabKeyTarget<T>(items: readonly T[], current: T, key: string): T | null {
+  const i = items.indexOf(current);
+  if (key === "ArrowRight") return items[(i + 1) % items.length];
+  if (key === "ArrowLeft") return items[(i + items.length - 1) % items.length];
+  if (key === "Home") return items[0];
+  if (key === "End") return items[items.length - 1];
+  return null;
+}
+
 /** Where focus goes when a night's own control is gone: that night's Change control (it may have
  *  been re-created), then any night's Change control, then the week heading. */
 export function nightFallback(night: string | null): HTMLElement | null {

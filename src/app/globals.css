@@ -133,3 +133,7 @@ legend { font-weight: 600; margin-bottom: 6px; }
 details summary { cursor: pointer; }
 .wrap { flex-wrap: wrap; }
 .chip-btn { background: var(--card-2); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; min-height: 36px; cursor: pointer; font-size: 0.85rem; }
+/* B17 recipe editor rows */
+.ingredient-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: flex-start; border-top: 1px solid var(--line); padding-top: 8px; }
+.ingredient-row > .grow { flex: 1 1 10em; min-width: 0; }
+.ingredient-row > .stack { min-width: 0; }

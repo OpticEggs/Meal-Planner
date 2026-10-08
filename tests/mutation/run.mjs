@@ -31,6 +31,7 @@ const GROC = "tests/integration/groceries.contract.test.ts";
 const REV = "tests/integration/review-regressions.test.ts";
 const B12 = "tests/integration/b12.staple-products.test.ts";
 const B16 = "tests/integration/b16.staple-management.test.ts";
+const B17 = "tests/integration/b17.recipes.test.ts";
 
 /** expect: regexes over failing test full names; at least one must fail by assertion. */
 const MUTATIONS = [
@@ -102,6 +103,9 @@ const MUTATIONS = [
     edits: [["  if (!(await weekById(c, householdId, weekId))) throw new Reject(\"not_found\", \"Week not found\");", "  void weekById;"]] },
   { name: "B15_substitution_decision_overwritten", file: "src/server/commands/groceries.ts", suite: B16, pattern: "substitution decision", expect: [/substitution decision made against an older view/],
     edits: [["      if ((v.rows[0]?.id ?? null) !== (p.expectedValidationId ?? null)) {", "      if (false) {"]] },
+  // B17: recipe edits name the version they were made from.
+  { name: "B17_stale_recipe_version_stacked", file: "src/server/commands/library.ts", suite: B17, pattern: "B17", expect: [/two edits made from the same version/],
+    edits: [["        if (current !== p.expectedVersionNo) {", "        if (false) {"]] },
   { name: "B15_stale_product_choice_applied", file: "src/server/commands/groceries.ts", suite: B16, pattern: "Scenario B/E", expect: [/two product choices for the same pickup line/],
     edits: [["  if ((now?.id ?? null) !== (p.expectedProductId ?? null)) {", "  if (false) {"]] },
 ];

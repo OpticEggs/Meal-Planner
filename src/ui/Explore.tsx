@@ -74,7 +74,7 @@ export function ExploreScreen() {
       {unknown.length > 0 && (
         <>
           <div className="section-label" data-testid="unknown-group">Value unknown for this sort</div>
-          <ul className="recipes">{unknown.map((r: any) => <RecipeCard key={r.recipeId} r={r} onSave={async () => { await command("SaveInterest", { recipeId: r.recipeId }); }} />)}</ul>
+          <ul className="recipes">{unknown.map((r: any) => <RecipeCard key={r.recipeId} r={r} onSave={async () => { const x = await command("SaveInterest", { recipeId: r.recipeId }); setMsg(x.status === "accepted" ? `Saved ${r.version.title} to Sounds good.` : x.message); }} />)}</ul>
         </>
       )}
     </section>
@@ -95,7 +95,7 @@ function RecipeCard({ r, onSave }: { r: any; onSave: () => void }) {
           {r.constraint.status !== "ok" && <span className="warn"> · {r.constraint.status === "violated" ? "conflicts with an exclusion" : "ingredient info unknown"}</span>}
         </div>
       </div>
-      <button className="btn line small" onClick={onSave} disabled={!!r.interest}>{r.interest ? "In Sounds good" : "Sounds good"}</button>
+      <button className="btn line small" onClick={onSave} disabled={!!r.interest} aria-label={`${r.interest ? "In Sounds good" : "Sounds good"}: ${r.version.title}`}>{r.interest ? "In Sounds good" : "Sounds good"}</button>
     </li>
   );
 }
