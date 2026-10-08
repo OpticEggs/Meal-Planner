@@ -1,10 +1,11 @@
 import { pool } from "../db/pool";
-import { isTestEnv, retailerMode, tableEnv } from "../env";
+import { isTestEnv, krogerActivation, retailerMode, tableEnv } from "../env";
+import { krogerRetailer } from "./kroger/adapter";
 
 /**
  * One retailer interface. The recording fake ("Simulated retailer") is the default and
- * is always labeled. The Kroger adapter fails closed: no network code is enabled until
- * the capability is verified and a live write is explicitly authorized (Stage 5).
+ * is always labeled. The Kroger adapter fails closed: its network code runs only for an
+ * activated capability, and cart writes stay not-ready until verified and authorized (Stage 5).
  */
 
 export interface CartItem {
@@ -22,6 +23,9 @@ export interface RetailerAdapter {
   label: string;
   live: boolean;
   status(): { ready: boolean; reason: string };
+  /** Optional per-household readiness (Kroger: a valid connection and a store location). A caller
+   *  that has a household should prefer it over status(); it never touches the network. */
+  readiness?(householdId: string): Promise<{ ready: boolean; reason: string }>;
   addToCart(req: { householdId: string; batchId: string; dispatchId: string; items: CartItem[] }): Promise<AddOutcome>;
 }
 
@@ -77,22 +81,15 @@ export const simulatedRetailer: RetailerAdapter = {
   },
 };
 
-export const krogerRetailer: RetailerAdapter = {
-  mode: "kroger",
-  label: "Kroger",
-  live: true,
-  status() {
-    const missing = ["KROGER_CLIENT_ID", "KROGER_CLIENT_SECRET", "KROGER_REDIRECT_URI", "KROGER_LOCATION_ID"].filter((k) => !process.env[k]);
-    if (missing.length) return { ready: false, reason: `Kroger is not configured (missing ${missing.join(", ")}). No transfer is possible.` };
-    return { ready: false, reason: "Kroger cart transfer is not verified or authorized yet (Stage 5). No transfer is possible." };
-  },
-  async addToCart() {
-    throw new Error("Kroger adapter is disabled until verified and authorized");
-  },
-};
+/** Kroger lives in ./kroger (B5): staged activation, customer connection, fake-transport tests.
+ *  It reports not-ready unless the cart capability is activated, configured and its `modality`
+ *  is settled; a household additionally needs a valid connection and a store location. */
+export { krogerRetailer };
 
 export function retailer(): RetailerAdapter {
-  return retailerMode() === "kroger" ? krogerRetailer : simulatedRetailer;
+  if (retailerMode() === "kroger") return krogerRetailer;
+  krogerActivation(); // production refuses KROGER_ACTIVATE unless TABLE_RETAILER=kroger (throws)
+  return simulatedRetailer;
 }
 
 /** Test barrier: waits until a named barrier is released. Only honored when TABLE_ENV=test. */

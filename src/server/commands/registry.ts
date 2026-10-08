@@ -14,6 +14,7 @@ import {
   setFavoriteCommand, setRecipePreferenceCommand,
 } from "./library";
 import { addExclusionCommand, removeExclusionCommand, setTargetsCommand, updateSettingsCommand } from "./household";
+import { disconnectKrogerCommand, setKrogerLocationCommand } from "./kroger";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Handler = (actor: Actor, operationId: string, payload: any) => Promise<CommandReceipt>;
@@ -57,4 +58,6 @@ export const COMMANDS: Record<string, Handler> = {
   SetTargets: setTargetsCommand,
   AddExclusion: addExclusionCommand,
   RemoveExclusion: removeExclusionCommand,
+  DisconnectKroger: disconnectKrogerCommand,
+  SetKrogerLocation: setKrogerLocationCommand,
 };

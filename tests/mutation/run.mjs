@@ -35,6 +35,8 @@ const B17 = "tests/integration/b17.recipes.test.ts";
 const REBASE = "tests/unit/recipe-rebase.test.ts";
 const B9 = "tests/integration/b9.dispatch-overlap.test.ts";
 const B9R = "tests/integration/b9.account-recovery.test.ts";
+const B5C = "tests/integration/b5.kroger-connection.test.ts";
+const B5D = "tests/integration/b5.kroger-dispatch.test.ts";
 
 /** expect: regexes over failing test full names; at least one must fail by assertion. */
 const MUTATIONS = [
@@ -128,6 +130,20 @@ const MUTATIONS = [
     edits: [["r.ingredientKey || slug(r.ingredientName.trim()), decimalKey(r.quantity), normalizeUnit(r.unit)", "r.ingredientKey ?? r.ingredientName, r.quantity, r.unit"]] },
   { name: "B15_stale_product_choice_applied", file: "src/server/commands/groceries.ts", suite: B16, pattern: "Scenario B/E", expect: [/two product choices for the same pickup line/],
     edits: [["  if ((now?.id ?? null) !== (p.expectedProductId ?? null)) {", "  if (false) {"]] },
+  // B5: Kroger adapter behind the closed live gate (recording fake transport).
+  { name: "B5_replayed_state_accepted", file: "src/server/integrations/kroger/connection.ts", suite: B5C, pattern: "B5 authorization callback", expect: [/replayed state is refused/],
+    edits: [["AND redirect_uri=$4 AND consumed_at IS NULL AND expires_at", "AND redirect_uri=$4 AND expires_at"]] },
+  { name: "B5_ack_recorded_per_line", file: "src/server/integrations/kroger/cart.ts", suite: B5D, pattern: "204", expect: [/204: one PUT/],
+    edits: [["evidence: { ...base, httpStatus: 204, granularity: \"batch\", meaning: ACK_MEANING }", "evidence: { ...base, httpStatus: 204, granularity: \"line\", lines: \"every line added\", meaning: ACK_MEANING }"]] },
+  { name: "B5_timeout_recorded_as_failed", file: "src/server/integrations/kroger/adapter.ts", suite: B5D, pattern: "never replayed", expect: [/timeout is uncertain/],
+    edits: [["      outcome = { kind: \"uncertain\", evidence: { provider: \"kroger\"", "      outcome = { kind: \"failed\", evidence: { provider: \"kroger\""]] },
+  { name: "B5_ready_without_activation", file: "src/server/integrations/kroger/config.ts", suite: B5D, pattern: "readiness", expect: [/stays false with full credentials/],
+    edits: [["  if (!active.has(cap)) return no(", "  if (false) return no("]] },
+  { name: "B5_token_stored_in_plaintext", file: "src/server/integrations/kroger/connection.ts", suite: B5C, pattern: "B5 authorization callback", expect: [/stores tokens sealed/],
+    edits: [["householdId, seal(cfg.key!, t.accessToken, aad(\"access\", householdId)), t.refreshToken ? seal(cfg.key!, t.refreshToken, aad(\"refresh\", householdId)) : null,\n        t.expiresInSeconds,",
+      "householdId, t.accessToken, t.refreshToken,\n        t.expiresInSeconds,"]] },
+  { name: "B5_refresh_not_coordinated", file: "src/server/integrations/kroger/connection.ts", suite: B5C, pattern: "refresh coordination", expect: [/exactly one refresh|marks needs_reauthorization once and never loops/],
+    edits: [["AND token_revision=$3 AND (refresh_lease_until IS NULL OR refresh_lease_until <= clock_timestamp())", "AND token_revision=$3"]] },
 ];
 MUTATIONS.push(
   { name: "B9_late_outcome_overwrites_uncertain", file: "src/server/commands/purchasing.ts", suite: B9, pattern: "B9", expect: [/never overwrites it|later answer does not change it/],

@@ -74,3 +74,60 @@ export function dispatchRecoveryAfterMs(): number {
 export function recoverySweepIntervalMs(): number {
   return Math.min(30_000, Math.max(250, Math.floor(dispatchRecoveryAfterMs() / 2)));
 }
+
+// ---------------------------------------------------------------------------------------------
+// Kroger (B5). Server-side configuration and staged activation. Every value is read from the
+// server environment only; nothing here is ever sent to a client bundle.
+
+export type KrogerCapability = "connect" | "products" | "cart";
+export const KROGER_CAPABILITIES: readonly KrogerCapability[] = ["connect", "products", "cart"];
+
+/** Raw Kroger settings. Empty strings count as absent. */
+export function krogerEnv() {
+  const v = (k: string) => {
+    const x = process.env[k];
+    return x && x.trim() ? x.trim() : null;
+  };
+  return {
+    clientId: v("KROGER_CLIENT_ID"),
+    clientSecret: v("KROGER_CLIENT_SECRET"),
+    redirectUri: v("KROGER_REDIRECT_URI"),
+    locationId: v("KROGER_LOCATION_ID"),
+    tokenKey: v("TABLE_TOKEN_KEY"),
+    // Scope names are assigned to an app at registration and conflict across Kroger's public
+    // pages, so they are owner-supplied and have NO default.
+    customerScopes: v("KROGER_CUSTOMER_SCOPES"),
+    productScopes: v("KROGER_PRODUCT_SCOPES"),
+    locationScopes: v("KROGER_LOCATION_SCOPES"),
+  };
+}
+
+/**
+ * Staged activation: KROGER_ACTIVATE is a comma list of connect, products, cart (absent = none).
+ * An unknown name is a configuration error (fail loudly, never guess). Production refuses any
+ * activation unless TABLE_RETAILER=kroger.
+ */
+export function krogerActivation(): Set<KrogerCapability> {
+  const raw = process.env.KROGER_ACTIVATE ?? "";
+  const names = raw.split(",").map((s) => s.trim()).filter(Boolean);
+  const out = new Set<KrogerCapability>();
+  for (const n of names) {
+    if (!(KROGER_CAPABILITIES as readonly string[]).includes(n)) {
+      throw new Error(`KROGER_ACTIVATE accepts only connect, products, cart (got ${n})`);
+    }
+    out.add(n as KrogerCapability);
+  }
+  if (out.size && tableEnv() === "production" && retailerMode() !== "kroger") {
+    throw new Error("KROGER_ACTIVATE is refused in production unless TABLE_RETAILER=kroger");
+  }
+  return out;
+}
+
+/** Test-only: TABLE_KROGER_FAKE_TRANSPORT routes Kroger HTTP to the in-process recording fake.
+ *  Refused (throws) outside TABLE_ENV=test. */
+export function krogerFakeTransportEnabled(): boolean {
+  const v = process.env.TABLE_KROGER_FAKE_TRANSPORT;
+  if (!v) return false;
+  if (!isTestEnv()) throw new Error("TABLE_KROGER_FAKE_TRANSPORT is a test-only setting and is refused outside TABLE_ENV=test");
+  return v === "1" || v === "true";
+}

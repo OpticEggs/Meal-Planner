@@ -54,12 +54,15 @@ export const EXPORT_TABLES: Spec[] = [
   { table: "receipt_observations", where: "household_id=$1" },
   { table: "substitution_validations", where: "household_id=$1" },
   { table: "change_events", where: "household_id=$1" },
+  // Non-secret history of the household's Kroger connection (B5).
+  { table: "kroger_connection_events", where: "household_id=$1" },
 ];
 
-/** Household-scoped tables deliberately NOT exported: operational idempotency records and the
- *  test-only simulated-retailer recorder. Every other table with a household_id must be in
- *  EXPORT_TABLES (checked by the X12 test). */
-export const NOT_EXPORTED = ["command_receipts", "fake_retailer_calls", "fake_retailer_script"];
+/** Household-scoped tables deliberately NOT exported: operational idempotency records, the
+ *  test-only simulated-retailer recorder, and the Kroger credential stores (sealed access/refresh
+ *  tokens, PKCE verifiers and authorization states must NEVER be exported). Every other table with
+ *  a household_id must be in EXPORT_TABLES (checked by the X12 test). */
+export const NOT_EXPORTED = ["command_receipts", "fake_retailer_calls", "fake_retailer_script", "kroger_connections", "kroger_auth_states"];
 
 export interface HouseholdExport {
   format: "table-household-export";
