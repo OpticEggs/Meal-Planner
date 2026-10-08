@@ -1,0 +1,102 @@
+# Red-before-green: B7 tests run against 639c103 (git archive of 639c103 + only the new B7 test files and tests/fixtures/fdc; local-only DB name edits to vitest.config.ts / tests/fixtures/household.ts so it runs on table_test_b7)
+# date: 2026-10-08T12:50:25Z
+$ npx vitest run tests/unit/fdc-normalize.test.ts tests/unit/fdc-client.test.ts tests/integration/b7.nutrition.test.ts
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /tmp/claude-0/-home-user/ae3f20b4-8e59-5d3c-9e16-8b697724019c/scratchpad/b7/red-639c103
+
+ ❯ tests/integration/b7.nutrition.test.ts (0 test)
+ ❯ tests/unit/fdc-normalize.test.ts (0 test)
+ ❯ tests/unit/fdc-client.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/b7.nutrition.test.ts [ tests/integration/b7.nutrition.test.ts ]
+Error: Cannot find package '@/server/commands/nutrition' imported from /tmp/claude-0/-home-user/ae3f20b4-8e59-5d3c-9e16-8b697724019c/scratchpad/b7/red-639c103/tests/integration/b7.nutrition.test.ts
+ ❯ tests/integration/b7.nutrition.test.ts:11:1
+      9| import { fresh, op, protectedState, q, race } from "./helpers";
+     10| import { NIGHT } from "../fixtures/household";
+     11| import { clearNutritionMatchCommand, confirmNutritionMatchCommand } fr…
+       | ^
+     12| import { setTargetsCommand } from "@/server/commands/household";
+     13| import { candidateView, createFdcClient, fixtureTransport, httpTranspo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/unit/fdc-client.test.ts [ tests/unit/fdc-client.test.ts ]
+Error: Cannot find package '@/server/integrations/fdc' imported from /tmp/claude-0/-home-user/ae3f20b4-8e59-5d3c-9e16-8b697724019c/scratchpad/b7/red-639c103/tests/unit/fdc-client.test.ts
+ ❯ tests/unit/fdc-client.test.ts:9:1
+      7| import path from "node:path";
+      8| import { afterEach, beforeEach, describe, expect, it, vi } from "vites…
+      9| import { createFdcClient, fixtureTransport, httpTransport } from "@/se…
+       | ^
+     10| import type { FdcTransport } from "@/server/integrations/fdc/transport…
+     11| import { fdcApiKey, fdcStatus } from "@/server/env";
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/unit/fdc-normalize.test.ts [ tests/unit/fdc-normalize.test.ts ]
+Error: Cannot find package '@/domain/nutrition/fdc' imported from /tmp/claude-0/-home-user/ae3f20b4-8e59-5d3c-9e16-8b697724019c/scratchpad/b7/red-639c103/tests/unit/fdc-normalize.test.ts
+ ❯ tests/unit/fdc-normalize.test.ts:9:1
+      7| import path from "node:path";
+      8| import { describe, expect, it } from "vitest";
+      9| import { effectiveFacts, formHintOf, normalizeFood, normalizeForm, nor…
+       | ^
+     10| import { plateNutrition } from "@/domain/recipes/plate";
+     11| import type { NutritionFacts, RecipeVersion } from "@/domain/types";
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  no tests
+   Start at  12:50:26
+   Duration  2.57s (worker 97%, environment 3%)
+
+    Isolate  3 workers spawned · ~223ms startup each (spawn + environment, per file)
+             at least ~446ms faster with isolate: false — reuses workers across files instead of one per file
+
+exit 1
+
+# Behavior probe: the form-applicability test copied verbatim into tests/unit/fdc-red-probe.test.ts (only plateNutrition/types imports, which exist at 639c103)
+$ npx vitest run tests/unit/fdc-red-probe.test.ts
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /tmp/claude-0/-home-user/ae3f20b4-8e59-5d3c-9e16-8b697724019c/scratchpad/b7/red-639c103
+
+ ❯ tests/unit/fdc-red-probe.test.ts (1 test | 1 failed) 20ms
+   ❯ B7 review digest and form (1)
+     × values for another form than the recipe uses are not applicable (unknown), not converted 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/fdc-red-probe.test.ts > B7 review digest and form > values for another form than the recipe uses are not applicable (unknown), not converted
+AssertionError: expected '240' to be null
+
+- Expected:
+null
+
++ Received:
+"240"
+
+ ❯ tests/unit/fdc-red-probe.test.ts:17:32
+     15|       new Map([["chicken", { ingredientKey: "chicken", basisQty: "100"…
+     16|     const raw = plateNutrition(recipe, { main: "1" }, facts("raw"));
+     17|     expect(raw.calories.value).toBeNull();
+       |                                ^
+     18|     expect(raw.calories.missing).toEqual(["chicken"]);
+     19|     expect(raw.calories.formMismatch).toEqual(["chicken"]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  12:50:42
+   Duration  476ms (transform 71%, import 17%, tests 9%, worker 3%)
+
+exit 1

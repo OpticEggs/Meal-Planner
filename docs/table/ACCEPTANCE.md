@@ -230,3 +230,43 @@ regression test, not a demonstrated failure.
   b17-correction test "'Start over' in a conflict…".
 
 No test was skipped, deleted or weakened.
+
+## Integration preparation (B9 candidate, B7 nutrition, B5 Kroger adapter) — added 2026-10-08
+
+New IDs; no earlier row renumbered. Start `639c103` (plus the docs-only recheck receipt `0712ccb`);
+implementation commits `a871af9` (B9), `c974507` (B5, worker), `668b00e` (B5 integration),
+`f20a7ab` (B7, worker), `4d0e822` (integration), `c19bd5a` (background fix); verified at `c19bd5a`.
+Evidence `docs/table/evidence/2026-10-08-verify-c19bd5a/summary.md` (vitest 284/284, Playwright
+116/116, 57 mutations killed, 0 survived, 0 error). A first full run on `4d0e822` FAILED (T09, see
+INT-10) and is kept in the same folder as `verify-4d0e822-FAIL/`.
+
+**Red before green.** B9: on the pre-fix code all 7 dispatch-overlap integration tests failed (6 by
+assertion, 1 by a missing function — `b9-overlap-red-on-0712ccb-v2.log`), the two-process e2e failed by
+assertion ("uncertain" instead of "dispatch_started"; run as a variant waiting on `/login` because
+`/api/health` did not exist yet — `b9-overlap-e2e-red-on-0712ccb.log`), the recovery tests failed by
+assertion (`b9-recovery-red-on-2e6d8ae.log`). B5/B7: the new test files fail at import on `639c103`
+(modules absent — not assertion failures); B7's one runnable behavior test failed by assertion
+(`b7/red-on-639c103.log`, `b5/red-on-639c103.log`). The per-household readiness test failed before
+its change (observed in-session; log not saved). INT-10: red on `4d0e822` (`background-currency-red-on-4d0e822.log`).
+
+| ID | What is checked | Tests | Status |
+|---|---|---|---|
+| INT-01 Overlap-safe recovery | A process starting while another sends leaves it alone; a stalled send becomes uncertain within the bound while running; the running sweep marks an abandoned send without restart; a late answer never overwrites uncertain or a member's cart check; a timeout is not a rejection (packages not re-offered, new send refused); recovery is repeatable; nothing is replayed | integration b9.dispatch-overlap (7); e2e b9-overlap (two real processes); X05 | PASS |
+| INT-02 Health and production config | 503 with codes only for weak/missing secret, non-https or path-bearing auth URL, missing DB, test-only settings, `KROGER_ACTIVATE` without the Kroger retailer, unreachable DB, pending/changed migrations; 200 otherwise | integration b9.deploy-health; local production-mode check | PASS |
+| INT-03 Account recovery | Operator reset replaces the password, ends that member's sessions, leaves the other member alone; refuses unknown, non-member and short | integration b9.account-recovery | PASS |
+| INT-04 Upgrade of a populated database | 006+007 on a populated schema-005 database: every pre-existing table identical over its original columns; app serves it; pre-existing credential signs in | scripted check (`upgrade-check/`) | PASS (local) |
+| INT-05 Nutrition adapter and normalization | Search/detail mapping for every data type; per-100 g basis; energy fallback recorded; missing/bad units unknown; serving ≠ 100 g; ml ≠ g; incompatible form; no matches; invalid key; 429; timeout; malformed; schema mismatch; no key in errors/logs | unit fdc-normalize, fdc-client | PASS |
+| INT-06 Match review | Persistence and history; household isolation; competing changes (both orders, stale refused, nothing written); changed since review refused; accepted dinners, recipe versions, targets and allergen fields unchanged; export without key | integration b7.nutrition; e2e b7-nutrition (incl. 320 px at 150%/200%) | PASS |
+| INT-07 Kroger connection | State single-use, expiry, member/household/redirect binding, replay refused; denied access; tokens sealed and household-bound; coordinated refresh (one refresh for two callers; failure → re-authorization once); absent config/activation stores nothing; no secrets in logs or export | unit kroger-security/mapping/lookup; integration b5.kroger-connection; e2e b5-kroger | PASS |
+| INT-08 Kroger dispatch | Readiness false with credentials and no activation, and with `connect,products`; cart not ready without a documented `modality`; household not ready → refused before freezing; stale review → zero calls; 204 → one PUT equal to the frozen bytes, batch-level only, no order; timeout/network/500/undocumented → uncertain, never replayed; 400 → failed; 401 → failed, no retried write; refresh before PUT; refresh failure → failed, nothing sent; household isolation | integration b5.kroger-dispatch | PASS (fake transport only) |
+| INT-09 Kroger card | Capabilities with evidence ("not live-verified"); connect disabled while not activated; refused sign-in announced and focused; store id validated and saved; 320 px at 200% text | e2e b5-kroger | PASS (Chromium) |
+| INT-10 Background refresh | A refresh completing while the app is hidden never marks it up to date; return re-establishes | e2e background-currency | PASS |
+| INT mutations | B9 ×6, B5 ×6, B7 ×6 | `tests/mutation/run.mjs` | PASS — all KILLED by assertion |
+| Live providers | Kroger (any request), FDC with the household's key, hosted deployment, WebKit/Safari/VoiceOver/devices | — | **BLOCKED** (not authorized / not available); FDC: 3 demo reads only |
+
+**Existing test changed (disclosed):** **X05** (`tests/e2e/x-checks.spec.ts`) — recovery now waits until
+a send is older than the dispatch bound (INT-01), so the restarted server runs with a short test-only
+bound (`TABLE_DISPATCH_TIMEOUT_MS=1000`) and the test polls for the result; it now also asserts the
+uncertain status came from crash recovery. Its assertions (uncertain, never retried, shown as uncertain)
+are unchanged. `startServer` in that spec takes optional extra environment. No test was skipped,
+deleted or weakened.

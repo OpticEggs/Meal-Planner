@@ -1,0 +1,47 @@
+
+Running 1 test using 1 worker
+
+  ✘  1 [chromium] › tests/e2e/background-currency.spec.ts:11:1 › a refresh that completes while the app is in the background never marks it up to date; returning re-establishes first (13.8s)
+
+
+  1) [chromium] › tests/e2e/background-currency.spec.ts:11:1 › a refresh that completes while the app is in the background never marks it up to date; returning re-establishes first 
+
+    Error: expect(locator).not.toHaveAttribute(expected) failed
+
+    Locator:  getByTestId('currency')
+    Expected: not "current"
+    Received: "current"
+    Timeout:  10000ms
+
+    Call log:
+      - Expect "not toHaveAttribute" with timeout 10000ms
+      - waiting for getByTestId('currency')
+        14 × locator resolved to <div data-testid="currency" data-currency="current" class="currency current">Up to date</div>
+           - unexpected value "current"
+
+
+      32 |   release(); // the in-flight refresh now completes successfully, while hidden
+      33 |   await p.waitForTimeout(1000);
+    > 34 |   await expect(p.getByTestId("currency")).not.toHaveAttribute("data-currency", "current");
+         |                                               ^
+      35 |   // Return: re-established, then up to date.
+      36 |   await p.evaluate(() => {
+      37 |     Object.defineProperty(document, "visibilityState", { configurable: true, get: () => "visible" });
+        at /home/user/table/tests/e2e/background-currency.spec.ts:34:47
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/background-currency-a-refr-f9387-urning-re-establishes-first-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/background-currency-a-refr-f9387-urning-re-establishes-first-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/background-currency-a-refr-f9387-urning-re-establishes-first-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/background-currency-a-refr-f9387-urning-re-establishes-first-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests/e2e/background-currency.spec.ts:11:1 › a refresh that completes while the app is in the background never marks it up to date; returning re-establishes first 

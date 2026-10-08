@@ -1,0 +1,40 @@
+
+Running 1 test using 1 worker
+
+  ✘  1 [chromium] › tests/e2e/b9-overlap.spec.ts:27:1 › B9: a server process starting during another's in-flight send does not mark it uncertain; the first process records the answer (9.2s)
+
+
+  1) [chromium] › tests/e2e/b9-overlap.spec.ts:27:1 › B9: a server process starting during another's in-flight send does not mark it uncertain; the first process records the answer 
+
+    Error: the new process must not mark a live send uncertain
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "dispatch_started"
+    Received: "uncertain"
+
+      45 |   await expect.poll(() => reachable(`${BASE_B}/login`), { timeout: 30_000 }).toBe(true); // startup recovery has run
+      46 |   await new Promise((r) => setTimeout(r, 1500));
+    > 47 |   expect(await last(), "the new process must not mark a live send uncertain").toBe("dispatch_started");
+         |                                                                               ^
+      48 |
+      49 |   // The store answers the first process; it records the acknowledgment (batch-level), nothing is resent.
+      50 |   await q("UPDATE test_barriers SET released_at=now() WHERE name='deploy-overlap'");
+        at /tmp/table-red-b9e/tests/e2e/b9-overlap.spec.ts:47:79
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b9-overlap-B9-a-server-pro-59e38--process-records-the-answer-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b9-overlap-B9-a-server-pro-59e38--process-records-the-answer-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b9-overlap-B9-a-server-pro-59e38--process-records-the-answer-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b9-overlap-B9-a-server-pro-59e38--process-records-the-answer-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests/e2e/b9-overlap.spec.ts:27:1 › B9: a server process starting during another's in-flight send does not mark it uncertain; the first process records the answer 

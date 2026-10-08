@@ -1,0 +1,10 @@
+$ npx vitest run tests/integration/b17.recipes.test.ts -t "B17"
+exit 1 signal 
+--- stdout
+JSON report written to /tmp/table-verify-4d0e822-20261008T134441Z/mutation/mutation-B17_stale_recipe_version_stacked.json
+
+--- stderr
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+

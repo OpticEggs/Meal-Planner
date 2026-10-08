@@ -1,0 +1,47 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/table
+
+ ❯ tests/integration/b9.account-recovery.test.ts (2 tests | 2 failed) 2318ms
+   ❯ B9 operator password reset (2)
+     × replaces the member's password, ends that member's sessions, and leaves the other member alone 1245ms
+     × refuses an unknown address, a non-member account and a short password, changing nothing 1068ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/b9.account-recovery.test.ts > B9 operator password reset > replaces the member's password, ends that member's sessions, and leaves the other member alone
+AssertionError: an operator password reset must exist: expected 'undefined' to be 'function' // Object.is equality
+
+Expected: "function"
+Received: "undefined"
+
+ ❯ tests/integration/b9.account-recovery.test.ts:28:67
+     26|     await fresh();
+     27|     const reset = (provision as any).resetMemberPassword as ((c: unkno…
+     28|     expect(typeof reset, "an operator password reset must exist").toBe…
+       |                                                                   ^
+     29|     expect(await signIn(USERS.jon.email, USERS.jon.password)).toBe(tru…
+     30|     expect(await signIn(USERS.alex.email, USERS.alex.password)).toBe(t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/integration/b9.account-recovery.test.ts > B9 operator password reset > refuses an unknown address, a non-member account and a short password, changing nothing
+TypeError: reset is not a function
+ ❯ tests/integration/b9.account-recovery.test.ts:50:20
+     48|     const c = await db();
+     49|     try {
+     50|       await expect(reset(c, "nobody@nowhere.test", "a-new-long-passwor…
+       |                    ^
+     51|       await expect(reset(c, USERS.jon.email, "short")).rejects.toThrow…
+     52|       // An auth user with no household membership is not resettable t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  12:36:35
+   Duration  5.03s (tests 53%, import 26%, transform 21%)
+

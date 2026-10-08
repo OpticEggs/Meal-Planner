@@ -1,50 +1,94 @@
 # Table — Integration capabilities
 
 Status legend: **documented** (official text read) · **implemented** (code exists) ·
-**fixture-tested** (passes against the recording fake / recorded fixtures) ·
-**live-verified** (exercised against the real provider with authorization) · **blocked**.
+**fixture-tested** (passes against recorded, official-example or synthetic fixtures through an
+injected transport) · **provider-read** (a real read-only response from the provider was captured) ·
+**live-verified** (exercised against the real provider in this household's configuration with
+authorization) · **blocked**.
 
-Nothing in this file is live-verified. No Kroger account, app registration,
-token, product lookup, cart write, order or pickup reservation was made.
+**Nothing in this file is live-verified.** No Kroger account, app registration, token, product lookup,
+location lookup, cart write, order or pickup reservation was made, and no request of any kind was sent
+to a Kroger API host. The only provider responses captured are three read-only FoodData Central demo
+requests (below).
 
 ## Retailer adapters in this build
 
-| Adapter | Mode value | What it does | Status |
+| Adapter | Mode | What it does | Status |
 |---|---|---|---|
-| Recording fake ("Simulated retailer") | `TABLE_RETAILER=simulated` | Records exact request bodies, call counts and dispatch IDs in `fake_retailer_calls`; behaviors: ack, reject, accept-then-timeout, delay-until-barrier, batch-only. Every screen that shows a transfer labels it **Simulated retailer — nothing was sent to a store**. | implemented, fixture-tested (see ACCEPTANCE.md) |
-| Kroger | `TABLE_RETAILER=kroger` | Fails closed: reports "not configured / not verified" and refuses handoff. No network code is enabled. | documented only; live **blocked** (no credentials, no authorization) |
+| Recording fake ("Simulated retailer") | `TABLE_RETAILER=simulated` (default) | Records exact request bodies, call counts and dispatch IDs; behaviors ack, reject, accept-then-timeout, delay-until-barrier. Every transfer screen says **Simulated retailer — nothing is sent to a store**. | implemented, fixture-tested |
+| Kroger | `TABLE_RETAILER=kroger` + `KROGER_ACTIVATE` | `src/server/integrations/kroger/`: customer authorization (authorization code + PKCE S256, single-use hashed `state` bound to household, member and redirect URI, 10-minute expiry), tokens sealed with AES-256-GCM (`TABLE_TOKEN_KEY`, household-bound), coordinated single-use refresh, product/location mapping (unknown stays unknown), cart payload from the frozen batch with batch-level outcomes. Every Kroger call goes through a transport that refuses to touch the network unless that capability is activated. | **connect / products / cart: documented, implemented, fixture-tested; not live-verified. Cart is not ready even when activated** (`modality` undocumented). Live **blocked**: no app registration, credentials, store or authorization. |
 
-## Kroger Public API — documentation read on 2026-10-07
+### Staged activation (all OFF in this build and in the deployment templates)
 
-Source method: developer.kroger.com renders its pages client-side; the prose was read from the
-site's unauthenticated content files `https://developer.kroger.com/api/v1/developer/content/<pageId>.json`
-and from Kroger's official Postman collection
-`https://www.postman.com/collections/4833726-924df556-59ab-452d-92a3-ffa8e3dca405`.
-The formal OpenAPI reference (`/api-products/api/*-api-public`) loads from endpoints that
-returned 401 without a developer token, so **no machine-readable schema was read**.
+`KROGER_ACTIVATE` is a comma list of `connect`, `products`, `cart` (absent = none):
 
-| Operation | Documented facts (official text) | Status in Table |
-|---|---|---|
-| OAuth2 client credentials | `POST https://api.kroger.com/v1/connect/oauth2/token`, Basic auth (client_id:secret), form body `grant_type=client_credentials&scope=...` | documented; not implemented |
-| OAuth2 customer authorization | `GET https://api.kroger.com/v1/connect/oauth2/authorize` with `scope`, `response_type=code`, `client_id`, `redirect_uri`, PKCE `S256`; token exchange `grant_type=authorization_code`. Access token documented as 30 min (`expires_in: 1800`) — older tutorials show 172800 (conflict, unverified). Refresh tokens: auth-code grant only, ~6 months, single use. | documented; not implemented |
-| Scopes | Postman: `product.compact` (client credentials), `cart.basic:write` and `profile.compact` (auth code). Apps get only scopes assigned at registration. | documented; scopes for Table's app unknown (no registration) |
-| Product search | `GET /v1/products` (`filter.term`, `filter.locationId`, `filter.brand`, `filter.productId`, `filter.fulfillment`, `filter.start`, `filter.limit`); `GET /v1/products/{id}` (productId or UPC). Price and fulfillment only returned with `filter.locationId`. Item fields include `size`, `soldBy`, `price.regular`/`price.promo`, `nationalPrice`, fulfillment booleans, `inventory.stockLevel`. Inventory "only confirmed once the user proceeds to Kroger Checkout." | documented; not implemented |
-| Locations | `GET /v1/locations` with `filter.zipCode.near`, `filter.latLong.near`, `filter.radiusInMiles`, `filter.limit`, `filter.chain`; official pages disagree on default limit. | documented; not implemented |
-| Add to cart | `PUT /v1/cart/add`, body `{"items":[{"upc":"...","quantity":1,"modality":"..."}]}`; responses 204/400/401/500. **Batch-level 204 with no per-line result** — Table must not invent per-line success. `modality` values/requiredness not stated publicly. | documented; adapter not implemented; live **blocked** |
-| Cart read / remove / delete | Not documented for the public tier (exists only in the separate Partner Carts API). | unverified — Table never claims cart removal |
-| Orders, checkout, pickup slots | Not documented for the public tier. | unverified — checkout and pickup stay a user handoff at kroger.com |
-| Identity | `GET /v1/identity/profile`, scope `profile.compact`, returns `data.id`. | documented; not implemented |
-| Rate limits | Per endpoint per day: Products 10,000; Cart 5,000; Identity 5,000; Locations 1,600 each. Missing scope → 403. | documented |
-| Certification env | `https://api-ce.kroger.com/v1/`; Cart and Identity have no customer accounts there and must be tested in production. | documented — implies any cart test is a real-account write needing explicit approval |
+| Capability | Requires | What turning it on allows | Gate |
+|---|---|---|---|
+| `connect` | client id/secret, redirect URI, `TABLE_TOKEN_KEY`, `KROGER_CUSTOMER_SCOPES` | a member connects the household's Kroger account (token exchange, refresh) | owner directive for B5(b) |
+| `products` | client credentials, `KROGER_PRODUCT_SCOPES` (and `KROGER_LOCATION_SCOPES` for store search) | read-only product and store lookups | owner directive for B5(b) |
+| `cart` | `connect`, a connection, a store, **and a documented `modality`** | one `PUT /v1/cart/add` per approved batch | separate written approval naming account, products and quantities (B6) |
 
-### Not verified (open)
-- Formal schema/required fields/enums/error bodies (OpenAPI reference not readable without a token).
-- `modality` values; Locations scope; token lifetime conflict; whether refresh needs Basic auth.
-- Page currency: most pages carry `last-full-review: 0`; Quick Start dated 2026-08-13.
-- Absence of undocumented cart read/order endpoints cannot be proven from documentation.
+Production refuses `KROGER_ACTIVATE` unless `TABLE_RETAILER=kroger` (and `/api/health` reports
+`KROGER_ACTIVATE_without_kroger_retailer`). Test-only routing to the in-process fake
+(`TABLE_KROGER_FAKE_TRANSPORT`) is refused outside `TABLE_ENV=test`. A household without a valid
+connection or store is refused **before** anything is frozen. Outcomes: 204 → acknowledged, batch-level
+only (never per line, never an order, never a pickup reservation); documented 400/403/404/409 →
+failed; 401 → failed and the connection needs authorization again (the write is not retried);
+5xx, timeout, network error or an undocumented response → uncertain, never replayed. Disconnect discards
+Table's tokens only (Kroger documents no revocation endpoint).
 
-### What enabling Stage 5 requires (owner actions)
-1. A Kroger developer app registration and its client ID/secret (server-side env only).
-2. The intended store `locationId` and the household's Kroger account authorization via the customer PKCE flow.
-3. Explicit written approval naming the account, the exact product(s) and quantity for one live add-to-cart test.
-Checkout and pickup remain at kroger.com regardless.
+### Kroger Public API — documentation re-read 2026-10-08
+
+Source method as before: developer.kroger.com content files (`/api/v1/developer/content/<pageId>.json`,
+base64 bodies decoded locally) and Kroger's public Postman collection. The formal OpenAPI reference
+needs a developer token and was not requested. Full table with URLs, retrieval times (12:26–12:27Z) and
+hashes: `evidence/2026-10-08-verify-c19bd5a/kroger-docs/kroger-docs-findings.md`.
+
+**Confirms** the 2026-10-07 notes: authorize/token endpoints with Basic client authentication; access
+token 30 min (`expires_in: 1800`) still conflicting with tutorials' 172800; refresh tokens only from the
+authorization-code grant, ~6 months, single use (reuse → 400); daily rate limits; certification has no
+customer accounts (Cart/Identity must be tested in production); price and fulfillment only with a
+`locationId`; cart add body `{items:[{upc,quantity,modality}]}` with 204/400/401/500 and a batch-level 204;
+no public cart read, order, checkout or pickup endpoints.
+
+**Changes:** PKCE S256 is now documented, including for confidential clients alongside Basic auth
+(implemented exactly so). The locations default-limit conflict is explicit (9999 vs 10 within 10 miles);
+Table always sends an explicit limit.
+
+**New:** error bodies `{errors:{timestamp,code,reason}}` and `{error,error_description}`; status codes
+200/201/204/400/401/403/404/409/500; `stockLevel` HIGH/LOW/TEMPORARILY_OUT_OF_STOCK; fulfillment filter
+codes ais/csp/dth/sth; decimal-dollar prices with `promo: 0` when not on sale; free-text `size`; locationId
+8 characters; no token revocation endpoint; credentials are locked to the environment chosen at
+registration; conflicting scope names across pages; **acceptable-use rules** (below).
+
+**Unsettled (left disabled or owner-configured, nothing guessed):** `modality` values/requiredness (cart
+stays not-ready); scope names for Table's app (`KROGER_*_SCOPES` required, no defaults); whether Kroger
+echoes `state` (Table requires it; absent → refused, nothing stored); token lifetime (the returned
+`expires_in` is used); Basic auth on refresh (sent, per the refresh tutorial and RFC 6749 §6); 401 body
+shape; `soldBy` values; currency (assumed USD, recorded as assumed); rate-limit response and retry policy
+(writes are never retried).
+
+### Kroger acceptable use — owner decision before any cart activation
+
+Kroger's Acceptable Use page prohibits, among other things: "tracking, sharing, or storing data derived
+from items added to a customer's cart" (only temporary display caching is allowed); storing data derived
+from customer searches or systematically building a database from responses; using the profile ID to
+store customer data; storing customer location data. Table already stores no search results, no profile
+id and only the store the household chose. **Open:** Table's append-only purchasing history keeps the
+frozen batch it sends and the acknowledgment evidence permanently, and recording a Kroger price into
+`price_observations` would be data derived from a search. Whether either is permitted is an owner/legal
+decision (OWNER-INPUTS K6) before `cart` or price recording is activated. Behavior is unchanged in this build.
+
+## Nutrition source — USDA FoodData Central (B7)
+
+| Item | Status |
+|---|---|
+| Search and food detail (`POST /v1/foods/search`, `GET /v1/food/{fdcId}`), server-side key, typed outcomes (ok, no matches, not configured, invalid key, rate limited, timeout, unavailable, malformed) | documented (API guide and OpenAPI spec read 2026-10-08), implemented, fixture-tested |
+| Normalization of Foundation, SR Legacy, Survey (FNDDS) and Branded shapes: per-100 g basis, energy 208 → 958 → 957 (kcal only, which number used is recorded), protein 203, fat 204, carbohydrate 205; missing or wrong-unit values stay unknown; a branded serving is never treated as 100 g and ml is never grams; portions only when a member picks one | implemented, fixture-tested |
+| Explicit match review: candidate values per basis with a review digest; the member chooses the form (raw, cooked, as sold); confirm re-fetches and refuses changed values or a stale revision; clear goes back to unknown; append-only history (`nutrition_matches`) with provenance (`fdc_api`, `fixture_fetched_demo`, `fixture_official_example`, `fixture_synthetic`, `manual_label`), retrieval time and a key-free source URL | implemented, fixture-tested (unit, real-PostgreSQL integration, two-member browser) |
+| Never treated as allergen clearance; never rewrites accepted dinners, recipe versions or targets; values for another form than the recipe uses are unknown | implemented, fixture-tested |
+| **Provider reads:** three read-only requests with the documented `DEMO_KEY` on 2026-10-08 — a search (200), a Foundation detail that returned a genuine **429 `OVER_RATE_LIMIT`**, and an SR Legacy detail (200). The demo key's limit header read 10 (shared by this environment's egress address), not the documented 30/hour. **3 of the 5 requests authorized for the whole pass; no further request was made**, the 429 was not retried. Stored byte-for-byte under `tests/fixtures/fdc/fetched-demo/` with hashes. | provider-read (demo access) — **not production validation** |
+| The household's own key (`FDC_API_KEY`) | **blocked** on the owner (free signup); a real key is ignored in the test environment |
+
+FDC data are CC0 public domain; the suggested citation is "U.S. Department of Agriculture, Agricultural
+Research Service. FoodData Central".

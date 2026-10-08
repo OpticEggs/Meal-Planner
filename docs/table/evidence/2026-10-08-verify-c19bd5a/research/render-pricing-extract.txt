@@ -1,0 +1,117 @@
+Free | $$0/month | 512 MB RAM | free
+Less than 1 CPU | $$7/month | 512 MB RAM | 0.5c-512mb
+1 CPU | $$25/month | 2 GB RAM | 1c-2g
+2 CPU | $$85/month | 4 GB RAM | 2c-4g
+2 CPU | $$135/month | 8 GB RAM | 2c-8g
+2 CPU | $$200/month | 16 GB RAM | 2c-16g
+4 CPU | $$175/month | 8 GB RAM | 4c-8g
+4 CPU | $$225/month | 16 GB RAM | 4c-16g
+4 CPU | $$350/month | 32 GB RAM | 4c-32g
+8 CPU | $$300/month | 16 GB RAM | 8c-16g
+8 CPU | $$450/month | 32 GB RAM | 8c-32g
+8 CPU | $$1,000/month | 64 GB RAM | 8c-64g
+12 CPU | $$450/month | 24 GB RAM | 12c-24g
+12 CPU | $$800/month | 48 GB RAM | 12c-48g
+12 CPU | $$1,500/month | 96 GB RAM | 12c-96g
+Instance Type | Pricing | RAM | CPU
+Free | $$0/month | 512 MB | 0.1
+Starter | $$7/month | 512 MB | 0.5
+Standard | $$25/month | 2 GB | 1
+Pro | $$85/month | 4 GB | 2
+Pro Plus | $$175/month | 8 GB | 4
+Pro Max | $$225/month | 16 GB | 4
+Pro Ultra | $$450/month | 32 GB | 8
+Custom | Contact sales | Up to 512 GB | Up to 64
+Free | $$0/month | 256 MB RAM | 100 connections | free
+Less than 1 CPU | $$6/month | 256 MB RAM | 100 connections | 0.1c-256mb
+Less than 1 CPU | $$19/month | 1 GB RAM | 100 connections | 0.5c-1g
+1 CPU | $$40/month | 2GB RAM | 100 connections | 1c-2g
+1 CPU | $$55/month | 4GB RAM | 100 connections | 1c-4g
+2 CPU | $$75/month | 4GB RAM | 100 connections | 2c-4g
+2 CPU | $$100/month | 8GB RAM | 200 connections | 2c-8g
+2 CPU | $$160/month | 16GB RAM | 400 connections | 2c-16g
+4 CPU | $$200/month | 16GB RAM | 400 connections | 4c-16g
+4 CPU | $$350/month | 32GB RAM | 500 connections | 4c-32g
+8 CPU | $$400/month | 32GB RAM | 500 connections | 8c-32g
+8 CPU | $$750/month | 64GB RAM | 500 connections | 8c-64g
+16 CPU | $$800/month | 64GB RAM | 500 connections | 16c-64g
+16 CPU | $$1,500/month | 128GB RAM | 500 connections | 16c-128g
+32 CPU | $$1,700/month | 128GB RAM | 500 connections | 32c-128g
+32 CPU | $$2,500/month | 256GB RAM | 500 connections | 32c-256g
+48 CPU | $$2,500/month | 192GB RAM | 500 connections | 48c-192g
+48 CPU | $$4,500/month | 384GB RAM | 500 connections | 48c-384g
+64 CPU | $$3,000/month | 256GB RAM | 500 connections | 64c-256g
+64 CPU | $$6,000/month | 512GB RAM | 500 connections | 64c-512g
+96 CPU | $$4,600/month | 384GB RAM | 500 connections | 96c-384g
+96 CPU | $$9,000/month | 768GB RAM | 500 connections | 96-768g
+128 CPU | $$6,200/month | 512GB RAM | 500 connections | 128c-512g
+128 CPU | $$11,000/month | 1024GB RAM | 500 connections | 128c-1024g
+Tier | Instance Type | Pricing | CPU | RAM | Connection Limit
+Free | Free | $$0 (30-day limit) | 0.1 | 256 MB | 100 connections
+Basic | Basic-256mb | $$6/month | 0.1 | 256 MB | 100 connections
+Basic | Basic-1gb | $$19/month | 0.5 | 1 GB | 100 connections
+Basic | Basic-4gb | $$75/month | 2 | 4 GB | 100 connections
+Pro | Pro-4gb | $$55/month | 1 | 4 GB | 100 connections
+Pro | Pro-8gb | $$100/month | 2 | 8 GB | 200 connections
+Pro | Pro-16gb | $$200/month | 4 | 16 GB | 400 connections
+Pro | Pro-32gb | $$400/month | 8 | 32 GB | 500 connections
+Pro | Pro-64gb | $$800/month | 16 | 64 GB | 500 connections
+Pro | Pro-128gb | $$1,700/month | 32 | 128 GB | 500 connections
+Pro | Pro-192gb | $$2,500/month | 48 | 192 GB | 500 connections
+Pro | Pro-256gb | $$3,000/month | 64 | 256 GB | 500 connections
+Pro | Pro-384gb | $$4,600/month | 96 | 384 GB | 500 connections
+Pro | Pro-512gb | $$6,200/month | 128 | 512 GB | 500 connections
+Accelerated | Accelerated-16gb | $$160/month | 2 | 16 GB | 400 connections
+Accelerated | Accelerated-32gb | $$350/month | 4 | 32 GB | 500 connections
+Accelerated | Accelerated-64gb | $$750/month | 8 | 64 GB | 500 connections
+Accelerated | Accelerated-128gb | $$1,500/month | 16 | 128 GB | 500 connections
+Accelerated | Accelerated-256gb | $$2,500/month | 32 | 256 GB | 500 connections
+Accelerated | Accelerated-384gb | $$4,500/month | 48 | 384 GB | 500 connections
+Accelerated | Accelerated-512gb | $$6,000/month | 64 | 512 GB | 500 connections
+Accelerated | Accelerated-768gb | $$9,000/month | 96 | 768 GB | 500 connections
+Accelerated | Accelerated-1024gb | $$11,000/month | 128 | 1024 GB | 500 connections
+Free | $$0/month | 25 MB RAM | -- | 50 connections | free
+Less than 1 CPU | $$10/month | 256 MB RAM | 256 MB storage | 200 connections | 256mb
+Less than 1 CPU | $$20/month | 1 GB RAM | 2.5 GB storage | 250 connections | 1g
+Less than 1 CPU | $$60/month | 3 GB RAM | 3 GB storage | 3000 connections | 3g
+Less than 1 CPU | $$100/month | 5 GB RAM | 5 GB storage | 5,000 connections | 5g
+2 CPU | $$200/month | 10 GB RAM | 10 GB storage | 10,000 connections | 10g
+2 CPU | $$350/month | 20 GB RAM | 20 GB storage | 20,000 connections | 20g
+4 CPU | $$600/month | 40 GB RAM | 40 GB storage | 40,000 connections | 40g
+4 CPU | $$750/month | 50 GB RAM | 50 GB storage | 50,000 connections | 50g
+Instance Type | Pricing | RAM | High CPU | Connection Limit | Persistence
+Free | $$0/month | 25 MB |  | 50 connections | x
+Starter | $$10/month | 256 MB |  | 250 connections | ✓
+Standard | $$32/month | 1 GB |  | 1,000 connections | ✓
+Pro | $$135/month | 5 GB |  | 5,000 connections | ✓
+Pro Plus | $$250/month | 10 GB |  | 10,000 connections | ✓
+Pro Max | $$550/month | 20 GB | ✓ | 20,000 connections | ✓
+Pro Ultra | $$1100/month | 40 GB | ✓ | 40,000 connections | ✓
+Custom | Contact sales | Up to 512 GB | ✓ | Contact sales | ✓
+Less than 1 CPU | $$0.00016/minute | 512 MB RAM | 0.5c-512mb
+1 CPU | $$0.00058/minute | 2 GB RAM | 1c-2g
+2 CPU | $$0.00197/minute | 4 GB RAM | 2c-4g
+2 CPU | $$0.00313/minute | 8 GB RAM | 2c-8g
+2 CPU | $$0.00463/minute | 16 GB RAM | 2c-16g
+4 CPU | $$0.00405/minute | 8 GB RAM | 4c-8g
+4 CPU | $$0.00521/minute | 16 GB RAM | 4c-16g
+4 CPU | $$0.00810/minute | 32 GB RAM | 4c-32g
+8 CPU | $$0.00694/minute | 16 GB RAM | 8c-16g
+8 CPU | $$0.01042/minute | 32 GB RAM | 8c-32g
+8 CPU | $$0.02315/minute | 64 GB RAM | 8c-64g
+Starter | $$0.00016/minute | 512 MB | 0.5
+Standard | $$0.00058/minute | 2 GB | 1
+Pro | $$0.00197/minute | 4 GB | 2
+Pro Plus | $$0.00405/minute | 8 GB | 4
+Custom | Contact sales |  Up to 512 GB | Up to 64
+Up to 1 CPU | $$0.20 / active CPU hour; $0.05 / active GB hour | Up to 4GB RAM | flex
+2 CPU | $$0.40/hour | 4 GB RAM | 2c-4g
+2 CPU | $$0.70/hour | 8 GB RAM | 2c-8g
+4 CPU | $$1.00/hour | 8 GB RAM | 4c-8g
+4 CPU | $$1.50/hour | 16 GB RAM | 4c-16g
+Task compute | $$/Hour | CPU | RAM | Billed for
+Flex | $$0.20 / active CPU hour; $0.05 / active GB hour | Up to 1 | Up to 4GB | Active compute
+2c-4g | $$0.40 | 2 | 4GB | Provisioned capacity
+2c-8g | $$0.70 | 2 | 8GB | Provisioned capacity
+4c-8g | $$1.00 | 4 | 8GB | Provisioned capacity
+4c-16g | $$1.50 | 4 | 16GB | Provisioned capacity

@@ -1,0 +1,226 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /tmp/table-red-b9
+
+ ❯ tests/integration/b9.dispatch-overlap.test.ts (7 tests | 7 failed) 18805ms
+   ❯ B9 overlapping server processes and interrupted-dispatch recovery (7)
+     × a process starting while another is still sending does not mark that transfer uncertain 1335ms
+     × an outcome that arrives after the transfer was marked uncertain never overwrites it 1699ms
+     × a store that never answers becomes uncertain within the dispatch bound, and a later answer does not change it 4243ms
+     × a member's check of the cart is never overwritten by a late answer from the store 1577ms
+     × a timeout is not a rejection: the send stays uncertain (packages not offered again), a new send is refused, nothing is replayed 4302ms
+     × recovery is repeatable: running it again changes nothing, sends nothing and rewrites no history 1215ms
+     × while the server keeps running, the periodic sweep marks a send whose process stopped, without a restart 4431ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > a process starting while another is still sending does not mark that transfer uncertain
+AssertionError: startup recovery must exist and only recover transfers past the dispatch bound: expected 'undefined' to be 'function' // Object.is equality
+
+Expected: "function"
+Received: "undefined"
+
+ ❯ tests/integration/b9.dispatch-overlap.test.ts:60:110
+     58|     const { batchId, release } = await slowTransfer();
+     59|     const startup = (purchasing as any).startupRecovery as (() => Prom…
+     60|     expect(typeof startup, "startup recovery must exist and only recov…
+       |                                                                                                              ^
+     61|     expect(await startup!()).toBe(0);
+     62|     expect((await statuses(batchId)).at(-1)).toBe("dispatch_started");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > an outcome that arrives after the transfer was marked uncertain never overwrites it
+AssertionError: expected [ 'authorized', …(3) ] to deeply equal [ 'authorized', …(2) ]
+
+- Expected
++ Received
+
+  [
+    "authorized",
+    "dispatch_started",
+    "uncertain",
++   "acknowledged",
+  ]
+
+ ❯ tests/integration/b9.dispatch-overlap.test.ts:75:37
+     73|     expect(before.at(-1)).toBe("uncertain");
+     74|     await release(); // the store's late "204" reaches the first proce…
+     75|     expect(await statuses(batchId)).toEqual(before); // no "acknowledg…
+       |                                     ^
+     76|     expect(await retailerCalls()).toBe(1); // and nothing resent
+     77|     // The late answer is not lost: it is reported to the household, l…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > a store that never answers becomes uncertain within the dispatch bound, and a later answer does not change it
+AssertionError: an unanswered send must become uncertain within the dispatch bound: expected 'dispatch_started' to be 'uncertain' // Object.is equality
+
+Expected: "uncertain"
+Received: "dispatch_started"
+
+ ❯ tests/integration/b9.dispatch-overlap.test.ts:91:96
+     89|     while ((await statuses(batchId)).at(-1) === "dispatch_started" && …
+     90|     const after = await statuses(batchId);
+     91|     expect(after.at(-1), "an unanswered send must become uncertain wit…
+       |                                                                                                ^
+     92|     const ev = await q<{ evidence: any }>("SELECT evidence FROM handof…
+     93|     expect(JSON.stringify(ev[0].evidence)).toMatch(/no response within…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > a member's check of the cart is never overwritten by a late answer from the store
+AssertionError: expected [ 'authorized', …(4) ] to deeply equal [ 'authorized', …(3) ]
+
+- Expected
++ Received
+
+  [
+    "authorized",
+    "dispatch_started",
+    "uncertain",
+    "failed",
++   "acknowledged",
+  ]
+
+ ❯ tests/integration/b9.dispatch-overlap.test.ts:108:37
+    106|     expect(resolved.slice(-2)).toEqual(["uncertain", "failed"]); // th…
+    107|     await release(); // the store's late "204" arrives after the membe…
+    108|     expect(await statuses(batchId)).toEqual(resolved);
+       |                                     ^
+    109|     const ev = await q<{ evidence: any }>("SELECT evidence FROM handof…
+    110|     expect(ev[0].evidence.source).toBe("member observation of the reta…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > a timeout is not a rejection: the send stays uncertain (packages not offered again), a new send is refused, nothing is replayed
+AssertionError: expected 'dispatch_started' to be 'uncertain' // Object.is equality
+
+Expected: "uncertain"
+Received: "dispatch_started"
+
+ ❯ tests/integration/b9.dispatch-overlap.test.ts:120:46
+    118|     const t = Date.now();
+    119|     while ((await statuses(batchId)).at(-1) === "dispatch_started" && …
+    120|     expect((await statuses(batchId)).at(-1)).toBe("uncertain");
+       |                                              ^
+    121|     const chicken = await line(fx.weekId, "chicken_thigh");
+    122|     expect([chicken.status, chicken.toSend]).toEqual(["uncertain", 0])…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > recovery is repeatable: running it again changes nothing, sends nothing and rewrites no history
+TypeError: startupRecovery is not a function
+ ❯ tests/integration/b9.dispatch-overlap.test.ts:136:29
+    134|     const changes = (await q("SELECT count(*)::int AS n FROM change_ev…
+    135|     for (let i = 0; i < 3; i++) expect(await purchasing.recoverInterru…
+    136|     expect(await purchasing.startupRecovery()).toBe(0);
+       |                             ^
+    137|     expect(await q("SELECT id, status, evidence FROM handoff_status_ev…
+    138|     expect((await q("SELECT count(*)::int AS n FROM change_events WHER…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > while the server keeps running, the periodic sweep marks a send whose process stopped, without a restart
+AssertionError: the running server's sweep must mark the abandoned send: expected 'dispatch_started' to be 'uncertain' // Object.is equality
+
+Expected: "uncertain"
+Received: "dispatch_started"
+
+ ❯ tests/integration/b9.dispatch-overlap.test.ts:164:107
+    162|       const t = Date.now();
+    163|       while ((await statuses(batchId)).at(-1) !== "uncertain" && Date.…
+    164|       expect((await statuses(batchId)).at(-1), "the running server's s…
+       |                                                                                                           ^
+    165|       expect(await retailerCalls()).toBe(0); // never replayed
+    166|     } finally {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 4 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+error: insert or update on table "handoff_status_events" violates foreign key constraint "handoff_status_events_batch_id_fkey"
+ ❯ node_modules/pg/lib/client.js:694:17
+ ❯ processTicksAndRejections node:internal/process/task_queues:105:5
+ ❯ src/server/commands/purchasing.ts:146:5
+
+ ❯ src/server/db/pool.ts:47:17
+ ❯ withClient src/server/db/pool.ts:22:12
+ ❯ dispatchBatch src/server/commands/purchasing.ts:144:3
+ ❯ Module.startHandoff src/server/commands/purchasing.ts:79:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { length: 354, severity: 'ERROR', code: '23503', detail: 'Key (batch_id)=(cc4b5b21-9e4d-4af8-805f-fdcb29ebaa45) is not present in table "handoff_batches".', hint: undefined, position: undefined, internalPosition: undefined, internalQuery: undefined, where: undefined, schema: 'public', table: 'handoff_status_events', dataType: undefined, constraint: 'handoff_status_events_batch_id_fkey', file: 'ri_triggers.c', routine: 'ri_ReportViolation' }
+This error originated in "tests/integration/b9.dispatch-overlap.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "an outcome that arrives after the transfer was marked uncertain never overwrites it". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+error: insert or update on table "handoff_status_events" violates foreign key constraint "handoff_status_events_batch_id_fkey"
+ ❯ node_modules/pg/lib/client.js:694:17
+ ❯ processTicksAndRejections node:internal/process/task_queues:105:5
+ ❯ src/server/commands/purchasing.ts:146:5
+
+ ❯ src/server/db/pool.ts:47:17
+ ❯ withClient src/server/db/pool.ts:22:12
+ ❯ dispatchBatch src/server/commands/purchasing.ts:144:3
+ ❯ Module.startHandoff src/server/commands/purchasing.ts:79:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { length: 354, severity: 'ERROR', code: '23503', detail: 'Key (batch_id)=(23ec428e-5699-4dc2-b38c-07abff8f0b1b) is not present in table "handoff_batches".', hint: undefined, position: undefined, internalPosition: undefined, internalQuery: undefined, where: undefined, schema: 'public', table: 'handoff_status_events', dataType: undefined, constraint: 'handoff_status_events_batch_id_fkey', file: 'ri_triggers.c', routine: 'ri_ReportViolation' }
+This error originated in "tests/integration/b9.dispatch-overlap.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "a member's check of the cart is never overwritten by a late answer from the store". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+error: insert or update on table "handoff_status_events" violates foreign key constraint "handoff_status_events_batch_id_fkey"
+ ❯ node_modules/pg/lib/client.js:694:17
+ ❯ processTicksAndRejections node:internal/process/task_queues:105:5
+ ❯ src/server/commands/purchasing.ts:146:5
+
+ ❯ src/server/db/pool.ts:47:17
+ ❯ withClient src/server/db/pool.ts:22:12
+ ❯ dispatchBatch src/server/commands/purchasing.ts:144:3
+ ❯ Module.startHandoff src/server/commands/purchasing.ts:79:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { length: 354, severity: 'ERROR', code: '23503', detail: 'Key (batch_id)=(4fc9d387-16a0-47e4-9759-86c5ac5cc3b5) is not present in table "handoff_batches".', hint: undefined, position: undefined, internalPosition: undefined, internalQuery: undefined, where: undefined, schema: 'public', table: 'handoff_status_events', dataType: undefined, constraint: 'handoff_status_events_batch_id_fkey', file: 'ri_triggers.c', routine: 'ri_ReportViolation' }
+This error originated in "tests/integration/b9.dispatch-overlap.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "recovery is repeatable: running it again changes nothing, sends nothing and rewrites no history". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+error: insert or update on table "handoff_status_events" violates foreign key constraint "handoff_status_events_batch_id_fkey"
+ ❯ node_modules/pg/lib/client.js:694:17
+ ❯ processTicksAndRejections node:internal/process/task_queues:105:5
+ ❯ src/server/commands/purchasing.ts:146:5
+
+ ❯ src/server/db/pool.ts:47:17
+ ❯ withClient src/server/db/pool.ts:22:12
+ ❯ dispatchBatch src/server/commands/purchasing.ts:144:3
+ ❯ Module.startHandoff src/server/commands/purchasing.ts:79:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { length: 354, severity: 'ERROR', code: '23503', detail: 'Key (batch_id)=(adfb62b6-5792-42f8-a63b-6207a87fbc0c) is not present in table "handoff_batches".', hint: undefined, position: undefined, internalPosition: undefined, internalQuery: undefined, where: undefined, schema: 'public', table: 'handoff_status_events', dataType: undefined, constraint: 'handoff_status_events_batch_id_fkey', file: 'ri_triggers.c', routine: 'ri_ReportViolation' }
+This error originated in "tests/integration/b9.dispatch-overlap.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "while the server keeps running, the periodic sweep marks a send whose process stopped, without a restart". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed (7)
+     Errors  4 errors
+   Start at  12:56:49
+   Duration  21.22s (tests 90%, transform 6%, import 4%)
+

@@ -1,0 +1,89 @@
+# Red-before-green: B5 tests run against the 639c103 sources (src/ and migrations/ stashed; tests from b5-kroger).
+# Run at 2026-10-08T12:58:19Z. Expected result: every file fails at import, because the modules under test (src/server/integrations/kroger/*, src/server/commands/kroger.ts, migration 007) do not exist at 639c103. This is an IMPORT failure, not an assertion failure, and is reported honestly as such.
+
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /tmp/table-w-b5
+
+ ❯ tests/integration/b5.kroger-connection.test.ts (0 test)
+ ❯ tests/integration/b5.kroger-dispatch.test.ts (0 test)
+ ❯ tests/unit/kroger-security.test.ts (0 test)
+ ❯ tests/unit/kroger-mapping.test.ts (0 test)
+ ❯ tests/unit/kroger-lookup.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/b5.kroger-connection.test.ts [ tests/integration/b5.kroger-connection.test.ts ]
+Error: Cannot find package '@/server/integrations/kroger/connection' imported from /tmp/table-w-b5/tests/fixtures/kroger/connect.ts
+ ❯ tests/fixtures/kroger/connect.ts:3:1
+      1| /** TEST-ONLY helpers to drive the Kroger connection through the recor…
+      2| import type { Actor } from "@/server/commands/framework";
+      3| import { completeAuthorization, startAuthorization } from "@/server/in…
+       | ^
+      4| import { krogerFake } from "@/server/integrations/kroger/transport";
+      5| import { json, tokenBody } from "./env";
+ ❯ tests/integration/b5.kroger-connection.test.ts:11:1
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/integration/b5.kroger-dispatch.test.ts [ tests/integration/b5.kroger-dispatch.test.ts ]
+Error: Cannot find package '@/server/integrations/kroger/connection' imported from /tmp/table-w-b5/tests/fixtures/kroger/connect.ts
+ ❯ tests/fixtures/kroger/connect.ts:3:1
+      1| /** TEST-ONLY helpers to drive the Kroger connection through the recor…
+      2| import type { Actor } from "@/server/commands/framework";
+      3| import { completeAuthorization, startAuthorization } from "@/server/in…
+       | ^
+      4| import { krogerFake } from "@/server/integrations/kroger/transport";
+      5| import { json, tokenBody } from "./env";
+ ❯ tests/integration/b5.kroger-dispatch.test.ts:8:1
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/unit/kroger-lookup.test.ts [ tests/unit/kroger-lookup.test.ts ]
+Error: Cannot find package '@/server/integrations/kroger/adapter' imported from /tmp/table-w-b5/tests/unit/kroger-lookup.test.ts
+ ❯ tests/unit/kroger-lookup.test.ts:6:1
+      4|  */
+      5| import { afterEach, beforeAll, beforeEach, describe, expect, it } from…
+      6| import { forgetAppTokens, searchKrogerLocations, searchKrogerProducts …
+       | ^
+      7| import { krogerFake } from "@/server/integrations/kroger/transport";
+      8| import { FAKE, forbidNetwork, json, krogerEnv, saveEnv } from "../fixt…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/unit/kroger-mapping.test.ts [ tests/unit/kroger-mapping.test.ts ]
+Error: Cannot find package '@/server/integrations/kroger/products' imported from /tmp/table-w-b5/tests/unit/kroger-mapping.test.ts
+ ❯ tests/unit/kroger-mapping.test.ts:5:1
+      3|  */
+      4| import { beforeAll, describe, expect, it } from "vitest";
+      5| import { dollarsToMinor, mapLocations, mapProducts, parsePackageSize }…
+       | ^
+      6| import { cartAddBody, cartAddRequest, mapCartResponse } from "@/server…
+      7| import { forbidNetwork } from "../fixtures/kroger/env";
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/unit/kroger-security.test.ts [ tests/unit/kroger-security.test.ts ]
+Error: Cannot find package '@/server/integrations/kroger/crypto' imported from /tmp/table-w-b5/tests/unit/kroger-security.test.ts
+ ❯ tests/unit/kroger-security.test.ts:7:1
+      5| import { createHash, randomBytes } from "node:crypto";
+      6| import { afterEach, beforeAll, describe, expect, it } from "vitest";
+      7| import { b64url, newState, parseTokenKey, pkcePair, s256, seal, stateH…
+       | ^
+      8| import { REDACTED, redactBody, redactHeaders, redactUrl, scrub } from …
+      9| import { authorizeUrl, codeExchangeRequest, parseTokenResponse, refres…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  5 failed (5)
+      Tests  no tests
+   Start at  12:58:09
+   Duration  4.15s (worker 90%, environment 10%)
+
+    Isolate  5 workers spawned · ~243ms startup each (spawn + environment, per file)
+             at least ~971ms faster with isolate: false — reuses workers across files instead of one per file
+
+vitest exit 1
