@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import type { Db } from "../db/pool";
 import { Reject, runCommand, type Actor } from "./framework";
 import { normalizeUnit } from "@/domain/units";
+import { slug } from "@/domain/recipes/rebase";
 
 // Preferences, interests, notes and recipe versions. None of these touch accepted
 // assignments, portions or requirements: they emit change events (so the other member
@@ -83,14 +84,11 @@ export interface RecipeDraft {
   sourceLabel?: string | null;
   components: { key: string; name: string }[];
   ingredients: { componentKey: string; ingredientKey?: string | null; ingredientName: string; quantity: string; unit: string; form?: string; note?: string | null }[];
-  /** B17: the version the member edited. A newer version saved meanwhile is refused (named), never
-   *  silently stacked over. Omitted = no check (as before). */
+  /** The version the member edited. REQUIRED when saving an existing recipe (RB17-03): a missing,
+   *  malformed or stale expectation is refused with no write. Not used when creating a recipe. */
   expectedVersionNo?: number;
 }
 
-function slug(s: string): string {
-  return s.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "").slice(0, 60);
-}
 
 /** Manual structured recipe entry/edit. Every save creates a NEW immutable version; accepted
  *  meals stay pinned to the version they were chosen with. Text is stored as data, never markup. */
@@ -124,8 +122,13 @@ export function saveRecipeVersionCommand(actor: Actor, operationId: string, p: R
       await recipeInHousehold(c, actor.householdId, recipeId);
       const v = await c.query("SELECT max(version_no) AS n FROM recipe_versions WHERE recipe_id=$1", [recipeId]);
       const current = v.rows[0].n ?? 0;
-      if (p.expectedVersionNo !== undefined) {
-        if (!Number.isInteger(p.expectedVersionNo)) throw new Reject("invalid", "Say which version you edited");
+      {
+        // RB17-03: an edit of an existing recipe must say which version it was made from; nothing
+        // is inferred for a caller that did not review the current version.
+        if (p.expectedVersionNo === undefined || p.expectedVersionNo === null) {
+          throw new Reject("version_required", "Say which version of this recipe you edited; nothing was saved.");
+        }
+        if (!Number.isInteger(p.expectedVersionNo) || p.expectedVersionNo < 1) throw new Reject("invalid", "Say which version you edited");
         if (current !== p.expectedVersionNo) {
           const last = await c.query(
             "SELECT v.title, m.display_name FROM recipe_versions v LEFT JOIN members m ON m.id=v.created_by WHERE v.recipe_id=$1 AND v.version_no=$2",

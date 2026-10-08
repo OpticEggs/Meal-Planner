@@ -292,7 +292,7 @@ describe("T21 edit a recipe in the library after adopting it", () => {
     const { fx, jon } = await fresh();
     const before = await protectedState(fx.weekId);
     const r = await saveRecipeVersionCommand(jon, op(), {
-      recipeId: fx.recipes.salmon.recipeId, title: "Salmon rice bowls (household version)", instructions: "Use more ginger.",
+      recipeId: fx.recipes.salmon.recipeId, expectedVersionNo: 1, title: "Salmon rice bowls (household version)", instructions: "Use more ginger.",
       components: [{ key: "protein", name: "Salmon" }, { key: "base", name: "Rice" }],
       ingredients: [{ componentKey: "protein", ingredientKey: "salmon", ingredientName: "Salmon fillet", quantity: "8", unit: "oz" }, { componentKey: "base", ingredientKey: "rice", ingredientName: "Jasmine rice", quantity: "90", unit: "g" }],
     });

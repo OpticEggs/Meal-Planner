@@ -13,6 +13,25 @@ export function tabbables(root: HTMLElement): HTMLElement[] {
   return [...root.querySelectorAll<HTMLElement>(FOCUSABLE)].filter((el) => el.getClientRects().length > 0 && !el.closest("[inert]"));
 }
 
+/** The sheet's Tab stops in one direction. A radio group is one stop, as the browser treats it:
+ *  its checked radio, or with none checked the first radio going forward / the last going back.
+ *  (Counting every radio made the trap miss its edge: Tab from the first radio of a group at the
+ *  end of a sheet skipped the rest of the group and left the page — found by the B18 sweep.) */
+function tabStops(root: HTMLElement, forward: boolean): HTMLElement[] {
+  const items = tabbables(root);
+  const group = (r: HTMLInputElement) => items.filter((x): x is HTMLInputElement => x instanceof HTMLInputElement && x.type === "radio" && x.name === r.name);
+  return items.filter((el) => {
+    if (!(el instanceof HTMLInputElement) || el.type !== "radio" || !el.name) return true;
+    const g = group(el);
+    return el === (g.find((x) => x.checked) ?? (forward ? g[0] : g[g.length - 1]));
+  });
+}
+/** Whether `active` is on the stop `stop` (any radio of a stop's group counts as that stop). */
+function onStop(active: Element | null, stop: HTMLElement): boolean {
+  if (active === stop) return true;
+  return active instanceof HTMLInputElement && stop instanceof HTMLInputElement && active.type === "radio" && stop.type === "radio" && !!active.name && active.name === stop.name;
+}
+
 /** Focus the first candidate that is still in the document and can take focus. */
 export function focusFirst(...candidates: (HTMLElement | null | undefined | (() => HTMLElement | null | undefined))[]): HTMLElement | null {
   for (const c of candidates) {
@@ -66,6 +85,7 @@ export function ModalSheet({
   children: React.ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const headRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
   const onCloseRef = useRef(onClose);
   const returnRef = useRef(returnFocus);
@@ -91,20 +111,20 @@ export function ModalSheet({
         return;
       }
       if (e.key !== "Tab") return;
-      const items = tabbables(dialog);
-      if (!items.length) {
+      const stops = tabStops(dialog, !e.shiftKey);
+      if (!stops.length) {
         e.preventDefault();
         dialog.focus();
         return;
       }
-      const first = items[0];
-      const last = items[items.length - 1];
+      const first = stops[0];
+      const last = stops[stops.length - 1];
       const active = document.activeElement;
       const inside = dialog.contains(active) && active !== dialog;
-      if (e.shiftKey && (!inside || active === first)) {
+      if (e.shiftKey && (!inside || onStop(active, first))) {
         e.preventDefault();
         last.focus();
-      } else if (!e.shiftKey && (!inside || active === last)) {
+      } else if (!e.shiftKey && (!inside || onStop(active, last))) {
         e.preventDefault();
         first.focus();
       }
@@ -120,12 +140,34 @@ export function ModalSheet({
     };
   }, []);
 
+  // Layout only (B18): the sheet's sticky title bar grows with text size and long titles; its real
+  // height is the sheet's scroll padding, so Tab never lands a control underneath it. A title bar
+  // that large text made too tall for the screen scrolls with the sheet instead of sticking.
+  useEffect(() => {
+    const dialog = ref.current;
+    const head = headRef.current;
+    if (!dialog || !head) return;
+    const measure = () => {
+      const h = head.offsetHeight;
+      dialog.style.setProperty("--sheet-head-h", `${h}px`);
+      dialog.dataset.head = h > window.innerHeight * 0.3 ? "static" : "sticky";
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(head);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
+
   if (typeof document === "undefined") return null;
   return createPortal(
     <div className="modal-layer">
       <div className="modal-backdrop" aria-hidden="true" onClick={() => onCloseRef.current()} />
       <div ref={ref} className="sheet-modal" role="dialog" aria-modal="true" aria-labelledby={titleId} tabIndex={-1} data-testid={testId}>
-        <div className="sheet-head">
+        <div className="sheet-head" ref={headRef}>
           <div>
             <h2 id={titleId} className="sheet-title">{title}</h2>
             {subtitle && <p className="faint small sheet-sub">{subtitle}</p>}

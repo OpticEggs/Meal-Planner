@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useLayoutEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { useStore } from "./store";
 import { LiveRegion, useChangeAnnouncer } from "./a11y";
@@ -17,8 +18,43 @@ const TABS = [
   { href: "/household", label: "Household" },
 ];
 
+/**
+ * Layout only (B18): the sticky header and the fixed nav change height with text size (labels
+ * wrap at large text), so their real heights are published as CSS variables that the page's
+ * scroll padding and bottom padding use; a focused or scrolled-to control then lands between
+ * them at any text size. When large text makes the header taller than a quarter of the screen, it
+ * scrolls away with the page instead of staying stuck over the content.
+ */
+function useBarMetrics(top: React.RefObject<HTMLElement | null>, nav: React.RefObject<HTMLElement | null>) {
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    const measure = () => {
+      const th = top.current?.offsetHeight ?? 0;
+      const nh = nav.current?.offsetHeight ?? 0;
+      root.style.setProperty("--top-h", `${th}px`);
+      root.style.setProperty("--nav-real-h", `${nh}px`);
+      root.dataset.header = th > window.innerHeight * 0.25 ? "static" : "sticky";
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (top.current) ro.observe(top.current);
+    if (nav.current) ro.observe(nav.current);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+      root.style.removeProperty("--top-h");
+      root.style.removeProperty("--nav-real-h");
+      delete root.dataset.header;
+    };
+  }, [top, nav]);
+}
+
 export function Shell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
+  const topRef = useRef<HTMLElement>(null);
+  const navRef = useRef<HTMLElement>(null);
+  useBarMetrics(topRef, navRef);
   const { snapshot, currency, me, error } = useStore();
   const retailer = snapshot?.retailer;
   useChangeAnnouncer();
@@ -26,7 +62,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
   return (
     <>
     <div className="app">
-      <header className="top">
+      <header className="top" ref={topRef}>
         <div className="brand">
           <div>
             <h1 className="brand-title">Table</h1>
@@ -48,7 +84,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
       <main className="screen">{children}</main>
-      <nav className="nav" aria-label="Main">
+      <nav className="nav" aria-label="Main" ref={navRef}>
         {TABS.map((t) => {
           const on = t.href === "/" ? path === "/" || path.startsWith("/cook") : path.startsWith(t.href);
           return (

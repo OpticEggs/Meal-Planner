@@ -137,7 +137,8 @@ for (const order of ["Jon saves first", "Alex saves first"] as const) {
     await expect(title2).toHaveValue("Turkey chili (second)");
     expect(await focused(second.page)).toMatchObject({ id: "re-title", inDialog: true });
     await expect(d2.getByRole("button", { name: "Save new version" })).toBeDisabled();
-    await d2.getByRole("button", { name: "Keep my edits (I’ve reviewed version 2)" }).click();
+    // (RB17-01 correction: a per-field decision replaces the single "reviewed" acknowledgement.)
+    await d2.getByTestId("recipe-conflict-title").getByRole("button", { name: "Keep my Title" }).click();
     await d2.getByRole("button", { name: "Save new version" }).click();
     await expect(d2).toHaveCount(0);
     expect((await q<any>("SELECT version_no, title FROM recipe_versions WHERE recipe_id=$1 ORDER BY version_no", [recipeId])).map((v) => `${v.version_no}:${v.title}`))
@@ -229,7 +230,7 @@ for (const width of [320, 390]) {
   });
 }
 
-test("B17 starting over from the other member's version replaces the draft with it and saves on top of it", async ({ browser }) => {
+test("B17 non-overlapping edits: the other member's added ingredient is brought into the draft and the member's title stands", async ({ browser }) => {
   await seed();
   const jon = await member(browser, "jon");
   const alex = await member(browser, "alex");
@@ -251,11 +252,12 @@ test("B17 starting over from the other member's version replaces the draft with 
   await da.getByRole("button", { name: "Save new version" }).click();
   await expect(da).toHaveCount(0);
   await expect(dj.getByTestId("recipe-conflict-changes")).toContainText("Added Cumin 1 tsp");
-  await dj.getByRole("button", { name: "Start over from version 2" }).click();
-  await expect(dj.getByLabel("Title", { exact: true })).toHaveValue("Fixture: Turkey chili");
+  // (RB17-01 correction: Jon changed only the title and Alex only the ingredients, so nothing
+  // conflicts — the cumin is brought into Jon's draft and shown, and his title stands. This test
+  // previously had to "start over" to keep Alex's ingredient; its final assertions are unchanged.)
   await expect(dj.getByTestId("recipe-conflict")).toHaveCount(0);
-  expect((await focused(jon.page)).id).toBe("re-title");
-  await dj.getByLabel("Title", { exact: true }).fill("Jon's chili");
+  await expect(dj.getByLabel("Title", { exact: true })).toHaveValue("Jon's chili");
+  await expect(dj.getByRole("group", { name: /^Ingredient \d+: Cumin$/ })).toHaveCount(1);
   await dj.getByRole("button", { name: "Save new version" }).click();
   await expect(dj).toHaveCount(0);
   // Version 3 keeps Alex's cumin and carries Jon's title.

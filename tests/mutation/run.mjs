@@ -32,6 +32,7 @@ const REV = "tests/integration/review-regressions.test.ts";
 const B12 = "tests/integration/b12.staple-products.test.ts";
 const B16 = "tests/integration/b16.staple-management.test.ts";
 const B17 = "tests/integration/b17.recipes.test.ts";
+const REBASE = "tests/unit/recipe-rebase.test.ts";
 
 /** expect: regexes over failing test full names; at least one must fail by assertion. */
 const MUTATIONS = [
@@ -106,6 +107,23 @@ const MUTATIONS = [
   // B17: recipe edits name the version they were made from.
   { name: "B17_stale_recipe_version_stacked", file: "src/server/commands/library.ts", suite: B17, pattern: "B17", expect: [/two edits made from the same version/],
     edits: [["        if (current !== p.expectedVersionNo) {", "        if (false) {"]] },
+  // B17 correction (independent review of 7220679).
+  { name: "RB17_03_version_optional_again", file: "src/server/commands/library.ts", suite: B17, pattern: "RB17-03", expect: [/RB17-03/],
+    edits: [["      {\n        // RB17-03:", "      if (p.expectedVersionNo !== undefined) {\n        // RB17-03:"]] },
+  { name: "RB17_01_untouched_field_reverted", file: "src/domain/recipes/rebase.ts", suite: REBASE, pattern: "RB17", expect: [/never reverts fields|takes the newer steps/],
+    edits: [["      merged = take(merged, current, k); // untouched by the member: the current value stands", "      // (mutated) the draft's stale value is kept"]] },
+  { name: "RB17_01_conflict_decided_silently", file: "src/domain/recipes/rebase.ts", suite: REBASE, pattern: "RB17", expect: [/does not decide for the member/],
+    edits: [["    } else conflicts.push(k);", "    } else { merged = take(merged, current, k); taken.push(k); }"]] },
+  { name: "RB17_02_occurrences_collapsed", file: "src/domain/recipes/rebase.ts", suite: REBASE, pattern: "RB17", expect: [/identical occurrences|first of two/],
+    edits: [["xs.reduce((m, x) => m.set(x.key, (m.get(x.key) ?? 0) + 1), new Map<string, number>())", "xs.reduce((m, x) => m.set(x.key, 1), new Map<string, number>())"]] },
+  { name: "RB17_01_undecided_field_dropped", file: "src/domain/recipes/rebase.ts", suite: REBASE, pattern: "RB17", expect: [/undecided field survives/],
+    edits: [["      const still = s.pending.filter((k) => ", "      const still = s.pending.filter((k) => false && "]] },
+  { name: "RB17_01_older_version_rebased", file: "src/domain/recipes/rebase.ts", suite: REBASE, pattern: "RB17", expect: [/not newer than the draft/],
+    edits: [["if (s.seen === null || a.version <= s.seen) return s;", "if (s.seen === null || a.version === s.seen) return s;"]] },
+  { name: "RB17_02_compared_by_display_name", file: "src/domain/recipes/rebase.ts", suite: REBASE, pattern: "RB17", expect: [/shared-list rename/],
+    edits: [["  if (k === \"ingredients\") return JSON.stringify({ c:", "  if (k === \"ingredients\") return display(f, k) || JSON.stringify({ c:"]] },
+  { name: "RB17_01_compared_unlike_stored", file: "src/domain/recipes/rebase.ts", suite: REBASE, pattern: "RB17", expect: [/store identically|comes back to the stored value/],
+    edits: [["r.ingredientKey || slug(r.ingredientName.trim()), decimalKey(r.quantity), normalizeUnit(r.unit)", "r.ingredientKey ?? r.ingredientName, r.quantity, r.unit"]] },
   { name: "B15_stale_product_choice_applied", file: "src/server/commands/groceries.ts", suite: B16, pattern: "Scenario B/E", expect: [/two product choices for the same pickup line/],
     edits: [["  if ((now?.id ?? null) !== (p.expectedProductId ?? null)) {", "  if (false) {"]] },
 ];

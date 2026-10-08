@@ -1,8 +1,9 @@
 "use client";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { useStore } from "./store";
 import { ModalSheet } from "./a11y";
 import { FieldError, FormAlert, fieldProps, focusFirstInvalid, isDecimal, type Errors } from "./forms";
+import { FIELD_LABEL, display, editorInit, editorReducer, isDirty, type EditorAction, type EditorState, type FieldKey, type RecipeFields } from "@/domain/recipes/rebase";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -10,23 +11,28 @@ import { FieldError, FormAlert, fieldProps, focusFirstInvalid, isDecimal, type E
  * B17 — recipe entry and editing as a dialog on the one modal system. Every row's controls are
  * named by their position and content; errors are attached to their fields; adding a row moves
  * focus into it and removing one moves focus to a survivor. Closing with unsaved changes asks
- * first ("Keep editing" focused); a new version saved by the other member while this is open is
- * shown, kept separate from what was typed, and must be reviewed before saving on top of it.
+ * first ("Keep editing" focused). A version saved by the other member while this is open is
+ * brought into the draft field by field (src/domain/recipes/rebase.ts): what the member did not
+ * change takes the new content (hidden fields included) and is shown in full; a field both
+ * changed is a conflict with both full contents shown, decided explicitly before Save.
  */
 
 type Comp = { id: number; key: string; name: string };
 type Row = { id: number; componentKey: string; ingredientName: string; ingredientKey: string | null; quantity: string; unit: string; form: string | null; note: string | null };
-type Fields = {
-  title: string; cuisine: string; minutes: string; level: string; leftovers: boolean; instructions: string; reheat: string;
-  summary: string | null; sourceLabel: string | null; components: Comp[]; rows: Row[];
-};
+type Fields = RecipeFields<Comp, Row>;
 
 let seq = 0;
 const nextId = () => ++seq;
 
 /** Editable fields from a stored version (fields the form doesn't show — summary, source label,
- *  ingredient form and note — are carried through unchanged). */
-function fieldsOf(v: any): Fields {
+ *  ingredient form and note — are carried through unchanged). Row and component ids are UI-only;
+ *  given the draft they reuse its ids by position, so a rebase does not remount (and unfocus) rows. */
+function fieldsOf(v: any, prev?: Fields): Fields {
+  const f = fieldsOfVersion(v);
+  if (!prev) return f;
+  return { ...f, components: f.components.map((c, i) => ({ ...c, id: prev.components[i]?.id ?? c.id })), rows: f.rows.map((r, i) => ({ ...r, id: prev.rows[i]?.id ?? r.id })) };
+}
+function fieldsOfVersion(v: any): Fields {
   return {
     title: v?.title ?? "", cuisine: v?.cuisine ?? "", minutes: v?.effortMinutes?.toString() ?? "", level: v?.effortLevel ?? "",
     leftovers: !!v?.leftoverFriendly, instructions: v?.instructions ?? "", reheat: v?.reheatInstructions ?? "",
@@ -38,36 +44,18 @@ function fieldsOf(v: any): Fields {
   };
 }
 
-/** What a newer version changed relative to the version this editor started from, in words. */
-function versionChanges(from: any, to: any): string[] {
-  if (!from || !to) return [];
-  const out: string[] = [];
-  const scalar: [string, string][] = [["title", "Title"], ["cuisine", "Cuisine"], ["effortMinutes", "Minutes"], ["effortLevel", "Effort"]];
-  for (const [k, label] of scalar) if ((from[k] ?? "") !== (to[k] ?? "")) out.push(`${label}: ${from[k] ?? "—"} → ${to[k] ?? "—"}`);
-  if (!!from.leftoverFriendly !== !!to.leftoverFriendly) out.push(`Leftover-friendly: ${to.leftoverFriendly ? "yes" : "no"}`);
-  const comp = (v: any, key: string) => v.components?.find((c: any) => c.key === key)?.name ?? key;
-  const ing = (v: any) => new Map<string, string>((v.ingredients ?? []).map((i: any) => [`${i.componentKey}/${i.ingredientKey}`, `${i.name} ${i.quantity} ${i.unit} (${comp(v, i.componentKey)})`]));
-  const a = ing(from);
-  const b = ing(to);
-  for (const [k, t] of b) if (!a.has(k)) out.push(`Added ${t}`);
-  for (const [k, t] of a) if (!b.has(k)) out.push(`Removed ${t}`);
-  for (const [k, t] of b) if (a.has(k) && a.get(k) !== t) out.push(`Changed ${a.get(k)} → ${t}`);
-  const names = (v: any) => (v.components ?? []).map((c: any) => c.name).join(", ");
-  if (names(from) !== names(to)) out.push(`Components: ${names(to)}`);
-  if ((from.instructions ?? "") !== (to.instructions ?? "")) out.push("Steps changed");
-  if ((from.reheatInstructions ?? "") !== (to.reheatInstructions ?? "")) out.push("Reheat instructions changed");
-  return out.length ? out : ["Nothing you can edit here changed."];
-}
-
 export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeId: string | null; onClose: () => void; returnFocus: () => void }) {
   const { library, command, announce, writesAllowed } = useStore();
   const live = recipeId ? library?.recipes.find((x: any) => x.recipeId === recipeId) : null;
-  const [initial, setInitial] = useState<Fields>(() => fieldsOf(live?.version));
-  const [f, setF] = useState<Fields>(initial);
+  // One reducer for the draft and its base: a newer version and the member's keystrokes are
+  // applied in order to the latest draft (src/domain/recipes/rebase.ts).
+  const [st, dispatch] = useReducer(
+    (s: EditorState<Fields>, a: EditorAction<Fields>) => editorReducer(s, a),
+    null,
+    () => editorInit(fieldsOf(live?.version), live?.version.versionNo ?? null),
+  );
+  const { f, base, seen: seenVersion, pending, rebased } = st;
   const [label] = useState<string>(live?.version.title ?? "");
-  const [seenVersion, setSeenVersion] = useState<number | null>(live?.version.versionNo ?? null);
-  // The content of the version this editor is based on, to say what a newer one changed.
-  const [seenContent, setSeenContent] = useState<any>(live?.version ?? null);
   const beforeConfirm = useRef<HTMLElement | null>(null);
   const [errors, setErrors] = useState<Errors>({});
   const [formError, setFormError] = useState<string | null>(null);
@@ -76,15 +64,46 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
   const [focusId, setFocusId] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const keepRef = useRef<HTMLButtonElement>(null);
-  const dirty = useMemo(() => JSON.stringify(f) !== JSON.stringify(initial), [f, initial]);
+  const dirty = isDirty(st);
   const currentVersion: number | null = live?.version.versionNo ?? null;
-  const conflict = !!recipeId && currentVersion !== null && currentVersion !== seenVersion;
+  const conflict = pending.length > 0;
+
+  // A newer version arrived: bring the draft up to it (never silently reverting what the member
+  // did not touch), and hold Save while any field both changed is undecided. The reducer ignores
+  // a version that is not newer than the one the draft is based on.
+  // Not while this member's own save is in flight: its version can reach the library before the
+  // command resolves, and is not "the other member's" change. A rejected save rebases afterwards.
+  useEffect(() => {
+    if (!recipeId || currentVersion === null || busy) return;
+    const by = live?.versions?.at(-1)?.by ?? "Someone";
+    dispatch({ type: "rebase", cur: fieldsOf(live?.version, st.f), version: currentVersion, by, title: live?.version.title ?? "" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentVersion, busy]);
+  const lastRebase = rebased.at(-1);
+  useEffect(() => {
+    if (!lastRebase) return;
+    const { by, version, taken, conflicts } = lastRebase;
+    announce(
+      `${by} saved version ${version} while you were editing.${taken.length ? ` Brought into your draft: ${taken.map((k) => FIELD_LABEL[k]).join(", ")}.` : ""}${conflicts.length ? ` Decide: ${conflicts.map((k) => FIELD_LABEL[k]).join(", ")}.` : ""}`,
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastRebase]);
+
+  function decide(k: FieldKey, choice: "theirs" | "mine") {
+    dispatch({ type: "decide", k, choice });
+    const rest = pending.filter((x) => x !== k);
+    // The decision block is about to disappear: focus the next decision, or Save.
+    setFocusId(rest.length ? `re-decide-${rest[0]}` : "re-save");
+  }
 
   useEffect(() => {
     if (!focusId) return;
-    document.getElementById(focusId)?.focus();
+    const el = document.getElementById(focusId) as HTMLButtonElement | null;
+    // A disabled target (Save while writes are paused) cannot take focus: fall back to the title.
+    if (el && !el.disabled) el.focus();
+    else document.getElementById("re-title")?.focus();
     setFocusId(null);
-  }, [focusId, f]);
+  }, [focusId, f, pending]);
   useEffect(() => {
     if (confirmDiscard) keepRef.current?.focus();
   }, [confirmDiscard]);
@@ -108,28 +127,27 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
     }, 0);
   }
   function startOver() {
-    const fresh = fieldsOf(live?.version);
-    setInitial(fresh);
-    setF(fresh);
-    setSeenVersion(currentVersion);
-    setSeenContent(live?.version ?? null);
+    dispatch({ type: "startOver", cur: fieldsOf(live?.version), version: currentVersion });
     setErrors({});
     setFormError(null);
     setFocusId("re-title");
   }
 
-  const set = (patch: Partial<typeof f>) => setF({ ...f, ...patch });
-  const setRow = (id: number, patch: Partial<Row>) => set({ rows: f.rows.map((r) => (r.id === id ? { ...r, ...patch } : r)) });
+  // Every edit is a function of the latest draft, never of the one this render saw.
+  const edit = (fn: (d: Fields) => Fields) => dispatch({ type: "edit", fn });
+  const set = (patch: Partial<Fields>) => edit((d) => ({ ...d, ...patch }));
+  const setRow = (id: number, patch: Partial<Row>) => edit((d) => ({ ...d, rows: d.rows.map((r) => (r.id === id ? { ...r, ...patch } : r)) }));
   const compLabel = (key: string) => f.components.find((c) => c.key === key)?.name || key;
 
   function addRow() {
     const id = nextId();
-    set({ rows: [...f.rows, { id, componentKey: f.components[0]?.key ?? "main", ingredientName: "", ingredientKey: null, quantity: "", unit: "g", form: null, note: null }] });
+    edit((d) => ({ ...d, rows: [...d.rows, { id, componentKey: d.components[0]?.key ?? "main", ingredientName: "", ingredientKey: null, quantity: "", unit: "g", form: null, note: null }] }));
     setFocusId(`re-n-${id}`);
   }
   function removeRow(i: number) {
+    const gone = f.rows[i].id;
+    edit((d) => ({ ...d, rows: d.rows.filter((r) => r.id !== gone) }));
     const rows = f.rows.filter((_, j) => j !== i);
-    set({ rows });
     const next = rows[i] ?? rows[i - 1];
     // A lone survivor's remove button is disabled, so its name field takes focus instead.
     setFocusId(next ? (rows.length > 1 ? `re-rm-${next.id}` : `re-n-${next.id}`) : "re-add-row");
@@ -137,24 +155,30 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
   function addComponent() {
     const id = nextId();
     // A key no existing component uses (saved recipes carry keys minted in earlier sessions).
-    const taken = new Set(f.components.map((c) => c.key));
-    let n = id;
-    while (taken.has(`c${n}`)) n++;
-    set({ components: [...f.components, { id, key: `c${n}`, name: "" }] });
+    edit((d) => {
+      const taken = new Set(d.components.map((c) => c.key));
+      let n = id;
+      while (taken.has(`c${n}`)) n++;
+      return { ...d, components: [...d.components, { id, key: `c${n}`, name: "" }] };
+    });
     setFocusId(`re-c-${id}`);
   }
   function removeComponent(i: number) {
     const removed = f.components[i];
+    edit((d) => {
+      const components = d.components.filter((c) => c.id !== removed.id);
+      // Rows (even empty ones) that pointed at it move to the first remaining component.
+      const rows = d.rows.map((r) => (r.componentKey === removed.key ? { ...r, componentKey: components[0]?.key ?? "main" } : r));
+      return { ...d, components, rows };
+    });
     const components = f.components.filter((_, j) => j !== i);
-    // Rows (even empty ones) that pointed at it move to the first remaining component.
-    const rows = f.rows.map((r) => (r.componentKey === removed.key ? { ...r, componentKey: components[0]?.key ?? "main" } : r));
-    set({ components, rows });
     const next = components[i] ?? components[i - 1];
     setFocusId(next ? `re-c-${next.id}` : "re-add-comp"); // a component's name field is never disabled
   }
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
+    if (pending.length) return; // undecided fields: Save is held regardless of the button's state
     const errs: Errors = {};
     if (!f.title.trim()) errs["re-title"] = "Give the recipe a title";
     else if (f.title.trim().length > 140) errs["re-title"] = "Title must be 140 characters or fewer";
@@ -185,7 +209,7 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
         componentKey: x.componentKey, ingredientName: x.ingredientName.trim(), ingredientKey: x.ingredientKey, quantity: x.quantity.trim(), unit: x.unit.trim(),
         ...(x.form ? { form: x.form } : {}), ...(x.note ? { note: x.note } : {}),
       })),
-      ...(recipeId ? { expectedVersionNo: seenVersion } : {}),
+      ...(recipeId ? { expectedVersionNo: seenVersion } : {}), // required by the server for an existing recipe
     });
     setBusy(false);
     if (r.status !== "accepted") return setFormError(r.message);
@@ -205,17 +229,35 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
           </div>
         </div>
       )}
-      {conflict && (
-        <div className="warnbox" data-testid="recipe-conflict">
-          <p>{live?.versions?.at(-1)?.by ?? "Someone"} saved version {currentVersion} ({live?.version.title}) while you were editing. Your changes are kept here and have not been saved. What version {currentVersion} changed:</p>
-          <ul className="small" data-testid="recipe-conflict-changes">{versionChanges(seenContent, live?.version).map((c) => <li key={c}>{c}</li>)}</ul>
-          <p className="small">Keeping your edits saves them as version {(currentVersion ?? 0) + 1}, replacing what version {currentVersion} changed where your edits differ.</p>
-          <div className="row">
-            <button type="button" className="btn line small" onClick={startOver}>Start over from version {currentVersion}</button>
-            <button type="button" className="btn line small" onClick={() => { setSeenVersion(currentVersion); setSeenContent(live?.version ?? null); setFormError(null); }}>
-              Keep my edits (I’ve reviewed version {currentVersion})
-            </button>
-          </div>
+      {rebased.length > 0 && (
+        <div className="warnbox stack" data-testid="recipe-rebased" style={{ overflowWrap: "anywhere", minWidth: 0 }}>
+          {rebased.map((r) => (
+            <div key={r.version}>
+              <p><strong>{r.by} saved version {r.version} ({r.title}) while you were editing.</strong> Nothing of yours has been saved yet.</p>
+              <ul className="small" data-testid="recipe-conflict-changes">
+                {r.changes.flatMap((c) => (c.details ?? [`${c.label}: ${c.from || "—"} → ${c.to || "—"}`]).map((t, i) => (
+                  <li key={`${c.key}-${i}`} style={{ whiteSpace: "pre-line" }}>{t}{r.taken.includes(c.key) ? " (brought into your draft — you hadn't changed this)" : ""}</li>
+                )))}
+              </ul>
+            </div>
+          ))}
+          {conflict && (
+            <div className="stack" data-testid="recipe-conflict">
+              <p>You and {rebased.at(-1)?.by} both changed {pending.map((k) => FIELD_LABEL[k]).join(", ")} ({rebased.at(-1)?.by} saved version {seenVersion} ({rebased.at(-1)?.title})). Choose what to keep for each before saving.</p>
+              {pending.map((k, i) => (
+                <div key={k} className="card stack" data-testid={`recipe-conflict-${k}`} role="group" aria-label={`${FIELD_LABEL[k]}: choose a version`}>
+                  <strong>{FIELD_LABEL[k]}</strong>
+                  <div className="small" style={{ whiteSpace: "pre-line" }}><em>Version {seenVersion} (current):</em> {display(base, k) || "—"}</div>
+                  <div className="small" style={{ whiteSpace: "pre-line" }}><em>Yours:</em> {display(f, k) || "—"}</div>
+                  <div className="row">
+                    <button type="button" id={`re-decide-${k}`} className="btn line small" onClick={() => decide(k, "theirs")}>Use version {seenVersion}'s {FIELD_LABEL[k]}</button>
+                    <button type="button" className="btn line small" onClick={() => decide(k, "mine")}>Keep my {FIELD_LABEL[k]}</button>
+                  </div>
+                </div>
+              ))}
+              <button type="button" className="link small" onClick={startOver}>Start over from version {seenVersion} (discard all my edits)</button>
+            </div>
+          )}
         </div>
       )}
       <FormAlert message={formError} testId="recipe-error" />
@@ -246,7 +288,7 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
               <div key={c.id} className="row">
                 <span className="stack grow">
                   <input {...fieldProps(`re-c-${c.id}`, errors)} aria-label={`Component ${i + 1} name`} value={c.name}
-                    onChange={(e) => set({ components: f.components.map((x) => (x.id === c.id ? { ...x, name: e.target.value, key: x.key || e.target.value.toLowerCase().replace(/\W+/g, "_") } : x)) })} />
+                    onChange={(e) => { const name = e.target.value; edit((d) => ({ ...d, components: d.components.map((x) => (x.id === c.id ? { ...x, name, key: x.key || name.toLowerCase().replace(/\W+/g, "_") } : x)) })); }} />
                   <FieldError id={`re-c-${c.id}`} errors={errors} />
                 </span>
                 <button type="button" className="link small" disabled={f.components.length < 2 || usedBy > 0}
@@ -292,7 +334,8 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
         <textarea id="re-steps" value={f.instructions} onChange={(e) => set({ instructions: e.target.value })} rows={5} />
         <label htmlFor="re-reheat">Reheat and serve</label>
         <textarea id="re-reheat" value={f.reheat} onChange={(e) => set({ reheat: e.target.value })} rows={2} />
-        <button className="btn primary" disabled={busy || conflict || !writesAllowed}>{recipeId ? "Save new version" : "Save recipe"}</button>
+        {conflict && <p className="small warn" id="re-save-held">Decide {pending.map((k) => FIELD_LABEL[k]).join(", ")} above before saving.</p>}
+        <button id="re-save" className="btn primary" disabled={busy || conflict || !writesAllowed} aria-describedby={conflict ? "re-save-held" : undefined}>{recipeId ? "Save new version" : "Save recipe"}</button>
       </form>
     </ModalSheet>
   );
