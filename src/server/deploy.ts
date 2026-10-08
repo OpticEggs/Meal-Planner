@@ -25,7 +25,7 @@ export function configProblems(env: Record<string, string | undefined> = process
   } catch {
     p.push("BETTER_AUTH_URL_missing");
   }
-  for (const k of ["TABLE_FIXED_NOW", "TABLE_DISPATCH_TIMEOUT_MS", "TABLE_FDC_FIXTURES", "TABLE_KROGER_FAKE_TRANSPORT", "TABLE_RECIPE_FETCH_FIXTURES", "TABLE_INSTACART_FAKE_TRANSPORT"]) {
+  for (const k of ["TABLE_FIXED_NOW", "TABLE_DISPATCH_TIMEOUT_MS", "TABLE_FDC_FIXTURES", "TABLE_KROGER_FAKE_TRANSPORT", "TABLE_RECIPE_FETCH_FIXTURES", "TABLE_INSTACART_FAKE_TRANSPORT", "TABLE_KROGER_FAKE_SCENARIO", "TABLE_KROGER_FAKE_LOG"]) {
     if (env[k]) p.push(`${k}_set_in_production`);
   }
   const retailer = env.TABLE_RETAILER ?? "simulated";

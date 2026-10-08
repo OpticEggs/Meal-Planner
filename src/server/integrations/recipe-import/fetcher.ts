@@ -43,14 +43,14 @@ export const MAX_IN_FLIGHT = 2;
 
 export type RefusedCode =
   | "invalid_url" | "unsupported_scheme" | "credentials_in_url" | "invalid_host" | "too_long" | "import_requires_https" | "nonstandard_port"
-  | "private_address" | "no_public_address" | "redirect_refused";
+  | "private_address" | "no_public_address" | "redirect_refused" | "source_blocked";
 export type FailedCode =
   | "busy" | "dns_failed" | "connect_failed" | "timeout" | "too_many_redirects" | "bad_redirect" | "http_status"
   | "unsupported_content_type" | "unsupported_charset" | "unsupported_encoding" | "bad_encoding" | "too_large";
 
 export type FetchOutcome =
   | { kind: "ok"; finalUrl: string; contentType: string; text: string; bytes?: Uint8Array }
-  | { kind: "refused"; code: RefusedCode; message: string }
+  | { kind: "refused"; code: RefusedCode; message: string; host?: string }
   | { kind: "failed"; code: FailedCode; message: string; status?: number };
 
 export const REQUEST_HEADERS: Readonly<Record<string, string>> = Object.freeze({
@@ -96,7 +96,14 @@ const fail = (code: FailedCode, message: string, status?: number) => new Stop(st
 const refuse = (code: RefusedCode, message: string) => new Stop({ kind: "refused", code, message });
 
 export async function safeFetch(
-  rawUrl: string, deps: { resolve: Resolver; transport: Transport; now?: () => number }, limits: Partial<FetchLimits> = {},
+  rawUrl: string,
+  deps: {
+    resolve: Resolver; transport: Transport; now?: () => number;
+    /** Source policy, separate from network safety: asked before EVERY request (the first address and
+     *  each redirect target, before resolving it). Non-null = that host must not be requested. */
+    allowHost?: (hostname: string) => { message: string } | null;
+  },
+  limits: Partial<FetchLimits> = {},
   opts: { accept?: "page" | "image" } = {},
 ): Promise<FetchOutcome> {
   const image = opts.accept === "image";
@@ -121,6 +128,8 @@ export async function safeFetch(
   try {
     let url = new URL(first.url);
     for (let hop = 0; ; hop++) {
+      const blocked = deps.allowHost?.(url.hostname) ?? null;
+      if (blocked) throw new Stop({ kind: "refused", code: "source_blocked", message: blocked.message, host: url.hostname });
       const ip = await pinnedAddress(url.hostname, deps.resolve, lim, bounded);
       let res: TransportResponse;
       try {

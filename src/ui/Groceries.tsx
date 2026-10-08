@@ -180,7 +180,7 @@ export function GroceriesScreen() {
       <div className="section-label">Also need</div>
       <AlsoNeed from="groceries" />
       <div className="section-label">This week’s list</div>
-      {storeCart && snapshot.retailer.mode === "kroger" && g.lines.some((l: any) => l.ingredientKey && !l.product) && (
+      {storeCart && snapshot.retailer.mode === "kroger" && g.lines.some((l: any) => l.ingredientKey && (!l.product || l.product.retailer !== snapshot.retailer.mode)) && (
         <button className="btn line small" aria-haspopup="dialog" data-testid="kroger-match" onClick={(e) => open({ kind: "kroger-match" }, e)}>Match products at Kroger…</button>
       )}
       <ul className="lines">

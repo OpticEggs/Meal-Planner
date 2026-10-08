@@ -39,6 +39,8 @@ const COOK = "tests/integration/cook-records.test.ts";
 const U2C = "tests/integration/u2c-url-import.test.ts";
 const KM = "tests/integration/u2c-kroger-mapping.test.ts";
 const LT = "tests/unit/recipe-import-live-transport.test.ts";
+const RUC1 = "tests/integration/ruc01-source-policy.test.ts";
+const RUC2 = "tests/integration/ruc02-purchase-basis.test.ts";
 const THEME = "tests/unit/theme-contrast.test.ts";
 const B2122 = "tests/integration/b21-b22.test.ts";
 const MSS = "tests/integration/ms-sources.test.ts";
@@ -242,6 +244,20 @@ MUTATIONS.push(
     edits: [["  if (retailerMode() !== \"kroger\") return", "  if (false) return"]] },
   { name: "KM_choice_not_bound_to_seen", file: "src/server/commands/groceries.ts", suite: KM, pattern: "KM-08", expect: [/KM-08/],
     edits: [["    }\n    await checkSeenProduct(c, actor.householdId, p.weekId, p.ingredientKey, p);\n    const name = [k.description", "    }\n    const name = [k.description"]] },
+);
+// RUC-01/RUC-02 (recheck of 988c4d1): the read policy holds on every hop, retention belongs to the
+// actual source, photos only from authorized hosts; weight-sold and unknown-basis products refused.
+MUTATIONS.push(
+  { name: "RUC01_redirect_skips_read_policy", file: "src/server/integrations/recipe-import/fetcher.ts", suite: RUC1, pattern: "R1-02", expect: [/R1-02/],
+    edits: [["      const blocked = deps.allowHost?.(url.hostname) ?? null;", "      const blocked = hop === 0 ? (deps.allowHost?.(url.hostname) ?? null) : null;"]] },
+  { name: "RUC01_grant_from_entry_url", file: "src/server/recipe-import-service.ts", suite: RUC1, pattern: "R1-04", expect: [/R1-04/],
+    edits: [["  const use = contentUse(sourceHost, cfg);", "  const use = contentUse(b.domain, cfg);"]] },
+  { name: "RUC01_photo_from_any_host", file: "src/server/integrations/recipe-import/content-policy.ts", suite: RUC1, pattern: "R1-07", expect: [/R1-07/],
+    edits: [["  if (sameSite(photoHost, sourceHost)) return true;", "  return true;"]] },
+  { name: "RUC02_weight_sold_accepted", file: "src/server/commands/groceries.ts", suite: RUC2, pattern: "R2-01", expect: [/R2-01/],
+    edits: [["    if (basis === \"weight\") {", "    if (false) {"]] },
+  { name: "RUC02_unknown_basis_accepted", file: "src/server/commands/groceries.ts", suite: RUC2, pattern: "R2-02", expect: [/R2-02/],
+    edits: [["    if (basis === \"unknown\") {", "    if (false) {"]] },
 );
 // A harmless change that MUST be classified SURVIVED (proves the classifier can say so).
 const CONTROLS_LIST = [

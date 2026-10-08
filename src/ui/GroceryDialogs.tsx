@@ -532,25 +532,35 @@ function ChooseCandidate({ c, itemKey, expectedProductId, disabled, onChosen, id
   const [busy, setBusy] = useState(false);
   const needsSize = !c.package;
   const qtyId = `${idPrefix}-qty`;
+  const errId = `${idPrefix}-error`;
+  const qtyRef = useRef<HTMLInputElement>(null);
+  const useRef_ = useRef<HTMLButtonElement>(null);
+  // An error is attached to what it is about and focused there (the size field, else the button).
+  const fail = (message: string, field: "size" | null) => {
+    setError(message);
+    requestAnimationFrame(() => (field === "size" && qtyRef.current ? qtyRef.current : useRef_.current)?.focus());
+  };
   return (
     <li className="card stack" data-testid="kroger-candidate" data-product-id={c.productId}>
       <span className="small">{candidateText(c)}</span>
-      {!c.choosable && <span className="small warn">Kroger gave no UPC for this product, so it can't go into a cart.</span>}
+      {!c.choosable && <span className="small warn" data-testid="kroger-not-choosable">{c.notChoosable ?? "This product can't be chosen."}</span>}
       {c.choosable && needsSize && (
         <div className="row small">
           <label htmlFor={qtyId}>Package size</label>
-          <input id={qtyId} className="tiny" inputMode="decimal" value={pack.qty} onChange={(e) => setPack({ ...pack, qty: e.target.value })} aria-invalid={error ? true : undefined} />
+          <input ref={qtyRef} id={qtyId} className="tiny" inputMode="decimal" value={pack.qty} onChange={(e) => setPack({ ...pack, qty: e.target.value })}
+            aria-invalid={error ? true : undefined} aria-describedby={error ? errId : undefined} />
           <select aria-label="Package unit" value={pack.unit} onChange={(e) => setPack({ ...pack, unit: e.target.value })}>
             {UNIT_CHOICES.map((u) => <option key={u} value={u}>{u}</option>)}
           </select>
         </div>
       )}
-      {error && <p className="field-error small" role="alert">{error}</p>}
+      {error && <p className="field-error small" role="alert" id={errId} data-testid="kroger-choose-error">{error}</p>}
       {c.choosable && (
-        <button type="button" className="btn line small" disabled={disabled || busy} aria-label={`Use ${c.description ?? c.productId} for this pickup`}
+        <button ref={useRef_} type="button" className="btn line small" disabled={disabled || busy} aria-label={`Use ${c.description ?? c.productId} for this pickup`}
+          aria-describedby={error && !needsSize ? errId : undefined}
           onClick={async () => {
             if (needsSize && (!isDecimal(pack.qty) || Number(pack.qty) <= 0)) {
-              setError("Enter the package size you'll buy (Kroger's size text isn't one Table can read).");
+              fail("Enter the package size you'll buy (Kroger's size text isn't one Table can read).", "size");
               return;
             }
             setBusy(true);
@@ -560,7 +570,7 @@ function ChooseCandidate({ c, itemKey, expectedProductId, disabled, onChosen, id
             }, "/api/kroger/choose");
             setBusy(false);
             if (r.status === "accepted") onChosen(c.description ?? c.productId);
-            else setError(r.message);
+            else fail(r.message, (r.details as any)?.field === "packageQty" || (r.details as any)?.field === "packageUnit" ? "size" : null);
           }}>
           Use this
         </button>
@@ -608,15 +618,18 @@ export function KrogerMatchDialog({ onClose, returnFocus }: Common) {
   const { snapshot, announce } = useStore();
   const [result, setResult] = useState<any>(null);
   const [chosen, setChosen] = useState<Record<string, string>>({});
-  const todo = (snapshot.groceries?.lines ?? []).filter((l: any) => l.ingredientKey && !l.product);
-  const [lines] = useState(() => todo.map((l: any) => ({ key: l.key, term: l.name })));
+  // Items with no product, or with one the Kroger store doesn't sell (e.g. recorded for the simulated store).
+  const todo = (snapshot.groceries?.lines ?? []).filter((l: any) => l.ingredientKey && (!l.product || l.product.retailer !== snapshot.retailer.mode));
+  // What each item showed when the dialog opened: a choice is bound to it (B15), like the product dialog.
+  const [lines] = useState(() => todo.map((l: any) => ({ key: l.key, term: l.name, seen: (l.product?.id as string | undefined) ?? null })));
+  const seenOf = (key: string) => lines.find((x: any) => x.key === key)?.seen ?? null;
   const load = async () => {
-    const r = await fetch("/api/kroger/products", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ lines }) })
+    const r = await fetch("/api/kroger/products", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ lines: lines.map(({ key, term }: any) => ({ key, term })) }) })
       .then((x) => x.json(), () => ({ ok: false, reason: "Table couldn't be reached." }));
     setResult(r);
   };
   return (
-    <ModalSheet title="Match products at Kroger" subtitle={`${lines.length} ${lines.length === 1 ? "item has" : "items have"} no product yet`} closeLabel="Close Kroger matching"
+    <ModalSheet title="Match products at Kroger" subtitle={`${lines.length} ${lines.length === 1 ? "item has" : "items have"} no Kroger product yet`} closeLabel="Close Kroger matching"
       onClose={onClose} returnFocus={returnFocus} testId="kroger-match-dialog">
       <div className="stack">
         {!result && (
@@ -635,7 +648,7 @@ export function KrogerMatchDialog({ onClose, returnFocus }: Common) {
             {!chosen[l.key] && l.candidates.length > 0 && (
               <ul className="plain stack">
                 {l.candidates.map((c: any, i: number) => (
-                  <ChooseCandidate key={`${c.productId}-${i}`} c={c} itemKey={l.key} expectedProductId={null} disabled={false} idPrefix={`km-${l.key}-${i}`}
+                  <ChooseCandidate key={`${c.productId}-${i}`} c={c} itemKey={l.key} expectedProductId={seenOf(l.key)} disabled={false} idPrefix={`km-${l.key}-${i}`}
                     onChosen={(name) => { setChosen((x) => ({ ...x, [l.key]: name })); announce(`${name} chosen for ${l.term}.`); }} />
                 ))}
               </ul>

@@ -8,6 +8,7 @@ import { nowInstant } from "../env";
 import type { RequirementLine } from "@/domain/groceries/projection";
 import { KNOWN_UNITS, convert, normalizeUnit } from "@/domain/units";
 import { retailer } from "../integrations/retailer";
+import { saleBasis } from "../integrations/kroger/products";
 import { usualFor } from "./staples";
 
 async function cycleFor(c: Db, householdId: string, weekId: string): Promise<string> {
@@ -371,6 +372,15 @@ export function chooseKrogerProductCommand(
     if (!ing.rowCount) throw new Reject("not_found", "Unknown ingredient");
     const k = p.product;
     if (!k?.productId || !k.upc || !/^\d{8,14}$/.test(k.upc)) throw new Reject("invalid", "Kroger didn't give this product a UPC, so it can't go into a cart. Choose another.");
+    // RUC-02: only a product Kroger sells by the unit becomes a fixed package with that price. A
+    // per-weight price, or one whose basis Kroger doesn't state, is refused — whatever amount is typed.
+    const basis = saleBasis(k.soldBy);
+    if (basis === "weight") {
+      throw new Reject("sold_by_weight", "Kroger sells this by weight, so its price is per pound (or similar), not for a package. Table can't price weight-sold items yet; choose a packaged product.", { soldBy: k.soldBy });
+    }
+    if (basis === "unknown") {
+      throw new Reject("sold_basis_unknown", `Kroger doesn't say this is sold by the unit${k.soldBy ? ` (it says "${k.soldBy}")` : ""}, so Table can't tell what its price covers. Choose another product.`, { soldBy: k.soldBy });
+    }
     let pack = k.package;
     if (!pack) {
       const qty = p.packageQty == null ? "" : String(p.packageQty).trim();

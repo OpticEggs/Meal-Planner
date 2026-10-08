@@ -184,6 +184,9 @@ export function recipeFetchMode(): { mode: "off" } | { mode: "fixtures"; manifes
 export interface RecipeContentConfig {
   householdPrivate: boolean;
   grants: { domain: string; instructions: boolean; photos: boolean }[];
+  /** Hosts other than the site itself that may serve its photos (a CDN), named per site by the owner:
+   *  TABLE_RECIPE_PHOTO_HOSTS="example.com=img.examplecdn.net+cdn2.example.org". Optional. */
+  photoHosts?: { domain: string; hosts: string[] }[];
 }
 export function recipeContentConfig(env: Record<string, string | undefined> = process.env): RecipeContentConfig {
   const mode = env.TABLE_RECIPE_CONTENT ?? "off";
@@ -195,5 +198,12 @@ export function recipeContentConfig(env: Record<string, string | undefined> = pr
     const what = m[2].split("+");
     grants.push({ domain: m[1].replace(/^www\./, ""), instructions: what.includes("instructions"), photos: what.includes("photos") });
   }
-  return { householdPrivate: mode === "household_private", grants };
+  const photoHosts: NonNullable<RecipeContentConfig["photoHosts"]> = [];
+  const HOST = "[a-z0-9-]+(?:\\.[a-z0-9-]+)*\\.[a-z]{2,}";
+  for (const part of (env.TABLE_RECIPE_PHOTO_HOSTS ?? "").split(";").map((s) => s.trim()).filter(Boolean)) {
+    const m = new RegExp(`^(${HOST})=(${HOST}(?:\\+${HOST})*)$`).exec(part.toLowerCase());
+    if (!m) throw new Error(`TABLE_RECIPE_PHOTO_HOSTS entry not understood: ${part} (expected site=photohost+photohost)`);
+    photoHosts.push({ domain: m[1].replace(/^www\./, ""), hosts: m[2].split("+") });
+  }
+  return { householdPrivate: mode === "household_private", grants, photoHosts };
 }

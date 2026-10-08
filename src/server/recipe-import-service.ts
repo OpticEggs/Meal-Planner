@@ -6,7 +6,7 @@ import { recipeContentConfig, recipeFetchMode, type RecipeContentConfig } from "
 import type { Actor } from "./commands/framework";
 import { createImportDraftFromPage, recordImportOutcome } from "./commands/imports";
 import { saveLinkCommand } from "./commands/sources";
-import { contentUse } from "./integrations/recipe-import/content-policy";
+import { contentUse, photoHostAllowed, readRefusal, sameSite } from "./integrations/recipe-import/content-policy";
 import { isBudgetBytes } from "./integrations/recipe-import/url";
 import { nodeTransport, safeFetch, sniffImage, systemResolver, type Resolver, type Transport } from "./integrations/recipe-import/fetcher";
 import { extractRecipes } from "./integrations/recipe-import/jsonld";
@@ -128,8 +128,13 @@ export async function importFromLink(
   }
   if (!deps) return { kind: "not_read", status: "fetch_off", reason: "fetch_off", message: "Reading recipe pages is turned off here. Paste the ingredient lines instead; the link stays saved." };
 
-  const fetched = await safeFetch(b.url, deps);
+  // The read policy is asked before every request — the link's own address and each redirect target.
+  const fetched = await safeFetch(b.url, { ...deps, allowHost: readRefusal });
   if (fetched.kind !== "ok") {
+    if (fetched.code === "source_blocked") {
+      return outcome("permission_blocked", "redirected_to_blocked_source",
+        `This link redirected to ${fetched.host ?? "a site"} — a site that asks for permission before its recipes are reused — so Table didn't read it. Paste or type the ingredients you use; the link stays.`);
+    }
     if (fetched.code === "http_status") {
       const h = httpMessage(fetched.status);
       return h.transient
@@ -156,23 +161,41 @@ export async function importFromLink(
     }
     chosen = usable[i];
   }
-  const use = contentUse(b.domain, (deps.content ?? recipeContentConfig)());
-  // A photograph is read only when a permission allows keeping it, outside any transaction, bounded like the page.
+  // What may be KEPT belongs to the site that supplied the content: the page's final address.
+  const sourceHost = new URL(fetched.finalUrl).hostname;
+  const cfg = (deps.content ?? recipeContentConfig)();
+  const use = contentUse(sourceHost, cfg);
+  const problems: string[] = [];
+  if (!sameSite(sourceHost, b.domain)) problems.push(`The link led to ${sourceHost}; the recipe's details and source come from there.`);
+  if (usable.length > 1) problems.push(`The page has ${usable.length} recipes; this is the one chosen.`);
+  if (chosen.source === "microdata") problems.push("Read from the page's older recipe markup; check the lines carefully.");
+  // A photograph is read only when retention allows it, only from the content's own site or a host the
+  // owner listed for it (checked before the request and before every redirect hop), outside any
+  // transaction, bounded like the page.
   let image: PageImage | null = null;
-  if (use.photos) {
+  if (use.photos && chosen.images.length) {
+    const photoPolicy = (host: string) => (photoHostAllowed(sourceHost, host, cfg) ? null : { message: `${host} is not ${sourceHost} or a photo host listed for it` });
+    let refusedHost: string | null = null;
     for (const src of chosen.images.slice(0, 2)) {
-      const got = await safeFetch(src, deps, {}, { accept: "image" });
+      const host = new URL(src).hostname;
+      if (photoPolicy(host)) {
+        refusedHost ??= host;
+        continue;
+      }
+      const got = await safeFetch(src, { ...deps, allowHost: photoPolicy }, {}, { accept: "image" });
+      if (got.kind === "refused" && got.code === "source_blocked") refusedHost ??= got.host ?? host;
       if (got.kind !== "ok" || !got.bytes) continue;
       const type = sniffImage(got.bytes);
       if (!type) continue;
       image = { bytes: Buffer.from(got.bytes), contentType: type, sourceUrl: got.finalUrl, sha256: createHash("sha256").update(got.bytes).digest("hex") };
       break;
     }
+    if (!image) {
+      problems.push(refusedHost
+        ? `The page's photo is on ${refusedHost}, which isn't covered by the setting for ${sourceHost}; it wasn't requested.`
+        : "The page's photo couldn't be kept (not readable as a photo).");
+    }
   }
-  const problems: string[] = [];
-  if (usable.length > 1) problems.push(`The page has ${usable.length} recipes; this is the one chosen.`);
-  if (chosen.source === "microdata") problems.push("Read from the page's older recipe markup; check the lines carefully.");
-  if (use.photos && chosen.images.length && !image) problems.push("The page's photo couldn't be kept (not readable as a photo).");
   const r = await createImportDraftFromPage(actor, p.operationId, {
     bookmarkId: b.id,
     method: chosen.source,

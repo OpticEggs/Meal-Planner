@@ -5,30 +5,31 @@
 import { describe, expect, it } from "vitest";
 import { recipeContentConfig } from "@/server/env";
 import { configProblems } from "@/server/deploy";
-import { contentUse, NOTHING_KEPT } from "@/server/integrations/recipe-import/content-policy";
+import { contentUse, NOTHING_KEPT, photoHostAllowed, readRefusal, sameSite } from "@/server/integrations/recipe-import/content-policy";
 import { budgetBytesSearchUrl, suggestedDecision, titleFromUrl, type ParsedLine } from "@/domain/recipes/import";
 
 describe("content policy", () => {
   it("CP-01: nothing is kept unless the owner turned it on", () => {
     const cfg = recipeContentConfig({});
-    expect(cfg).toEqual({ householdPrivate: false, grants: [] });
-    expect(contentUse("example.com", cfg)).toEqual(NOTHING_KEPT);
+    expect(cfg).toEqual({ householdPrivate: false, grants: [], photoHosts: [] });
+    expect(contentUse("example.com", cfg)).toEqual({ ...NOTHING_KEPT, source: "example.com" });
   });
 
   it("CP-02: the household-private setting keeps method and photo for any readable site — never Budget Bytes", () => {
     const cfg = recipeContentConfig({ TABLE_RECIPE_CONTENT: "household_private" });
-    expect(contentUse("www.example.com", cfg)).toEqual({ instructions: true, photos: true, basis: "household-private copy (owner setting)" });
-    expect(contentUse("www.budgetbytes.com", cfg)).toEqual(NOTHING_KEPT);
+    // RUC-01 labels: an owner-selected mode, not a publisher licence.
+    expect(contentUse("www.example.com", cfg)).toEqual({ instructions: true, photos: true, kind: "owner_mode", source: "www.example.com", basis: "owner-selected household-private mode (an owner setting, not a publisher licence)" });
+    expect(contentUse("www.budgetbytes.com", cfg)).toMatchObject({ instructions: false, photos: false, basis: null });
   });
 
   it("CP-03: per-site grants keep only what was granted, for that site and its subdomains only, and win over the general setting", () => {
     const cfg = recipeContentConfig({ TABLE_RECIPE_CONTENT_GRANTS: "Example.com=photos; other.org=instructions+photos" });
-    expect(contentUse("cdn.example.com", cfg)).toEqual({ instructions: false, photos: true, basis: "permission recorded for example.com" });
-    expect(contentUse("notexample.com", cfg)).toEqual(NOTHING_KEPT);
+    expect(contentUse("cdn.example.com", cfg)).toEqual({ instructions: false, photos: true, kind: "owner_recorded_grant", source: "cdn.example.com", basis: "owner-recorded grant for example.com" });
+    expect(contentUse("notexample.com", cfg)).toMatchObject({ instructions: false, photos: false, basis: null });
     expect(contentUse("other.org", cfg)).toMatchObject({ instructions: true, photos: true });
     const both = recipeContentConfig({ TABLE_RECIPE_CONTENT: "household_private", TABLE_RECIPE_CONTENT_GRANTS: "example.com=photos" });
     expect(contentUse("example.com", both)).toMatchObject({ instructions: false, photos: true });
-    expect(contentUse("budgetbytes.com", recipeContentConfig({ TABLE_RECIPE_CONTENT_GRANTS: "budgetbytes.com=instructions+photos" }))).toEqual(NOTHING_KEPT);
+    expect(contentUse("budgetbytes.com", recipeContentConfig({ TABLE_RECIPE_CONTENT_GRANTS: "budgetbytes.com=instructions+photos" }))).toMatchObject({ instructions: false, photos: false, basis: null });
   });
 
   it("CP-04: malformed settings are errors, and production reports them before start", () => {
@@ -39,6 +40,24 @@ describe("content policy", () => {
     expect(configProblems(base)).toEqual([]);
     expect(configProblems({ ...base, TABLE_RECIPE_CONTENT: "yes" })).toContain("TABLE_RECIPE_CONTENT_invalid");
     expect(configProblems({ ...base, TABLE_RECIPE_IMPORT_FETCH: "maybe" })).toContain("TABLE_RECIPE_IMPORT_FETCH_invalid");
+  });
+});
+
+describe("RUC-01 read policy and photo hosts", () => {
+  it("CP-05: reading is refused for Budget Bytes hosts only; photos come from the content's own site or a host the owner listed for it", () => {
+    expect(readRefusal("www.budgetbytes.com")).toMatchObject({ code: "source_blocked" });
+    expect(readRefusal("budgetbytes.com")).not.toBeNull();
+    expect(readRefusal("example.com")).toBeNull();
+    const cfg = recipeContentConfig({ TABLE_RECIPE_PHOTO_HOSTS: "example.com=img.examplecdn.net+cdn2.example.org" });
+    expect(cfg.photoHosts).toEqual([{ domain: "example.com", hosts: ["img.examplecdn.net", "cdn2.example.org"] }]);
+    expect(photoHostAllowed("www.example.com", "images.example.com", cfg)).toBe(true);
+    expect(photoHostAllowed("www.example.com", "img.examplecdn.net", cfg)).toBe(true);
+    expect(photoHostAllowed("www.example.com", "other.examplecdn.net", cfg)).toBe(false);
+    expect(photoHostAllowed("other.org", "img.examplecdn.net", cfg)).toBe(false); // listed for example.com only
+    expect(photoHostAllowed("www.example.com", "www.budgetbytes.com", cfg)).toBe(false);
+    expect(() => recipeContentConfig({ TABLE_RECIPE_PHOTO_HOSTS: "example.com" })).toThrow();
+    expect(sameSite("www.example.com", "example.com")).toBe(true);
+    expect(sameSite("notexample.com", "example.com")).toBe(false);
   });
 });
 

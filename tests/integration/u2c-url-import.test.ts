@@ -54,12 +54,13 @@ describe("one step from a link (U-01..U-04)", () => {
     const { jon } = await fresh();
     const r: any = await addRecipeFromLink(jon, { url: WPRM, operationId: op() }, deps(PRIVATE));
     const d = await draftRow(r.draftId);
-    expect(d.content_policy).toEqual({ instructions: true, photos: true, basis: "household-private copy (owner setting)" });
+    // RUC-01: provenance names the kind of setting and the source it applies to (was a bare "owner setting" basis).
+    expect(d.content_policy).toEqual({ instructions: true, photos: true, kind: "owner_mode", source: "wprm.example.com", basis: "owner-selected household-private mode (an owner setting, not a publisher licence)" });
     expect(d.source_steps).toHaveLength(3);
     expect(d.household_instructions).toBe("Cook:\nWarm the oil in a skillet and soften the onion (synthetic).\nAdd the rice, garlic and water; simmer covered (synthetic).\nFinish:\nFold in the beans and salsa (synthetic).");
     const [img] = await q<any>("SELECT * FROM recipe_images WHERE id=$1", [d.image_id]);
     const png = readFileSync(path.join(DIR, "photo.png"));
-    expect(img).toMatchObject({ content_type: "image/png", source_url: "https://wprm.example.com/img/taco-rice.png", page_url: WPRM, permission: "household-private copy (owner setting)" });
+    expect(img).toMatchObject({ content_type: "image/png", source_url: "https://wprm.example.com/img/taco-rice.png", page_url: WPRM, permission: "owner-selected household-private mode (an owner setting, not a publisher licence)" });
     expect(img.sha256).toBe(createHash("sha256").update(png).digest("hex"));
     expect(Buffer.compare(img.bytes, png)).toBe(0);
     // Decide every line (accept the suggestions), then confirm.
@@ -93,7 +94,8 @@ describe("one step from a link (U-01..U-04)", () => {
     const d = await draftRow(photos.draftId);
     expect(d.source_steps).toBeNull();
     expect(d.image_id).not.toBeNull();
-    expect(d.content_policy).toEqual({ instructions: false, photos: true, basis: "permission recorded for wprm.example.com" });
+    // RUC-01: an owner-entered grant is labelled as such (was "permission recorded for …").
+    expect(d.content_policy).toEqual({ instructions: false, photos: true, kind: "owner_recorded_grant", source: "wprm.example.com", basis: "owner-recorded grant for wprm.example.com" });
   });
 
   it("U-04: a 'photo' that isn't one (HTML served as image/png) is not stored; the draft still opens and says so", async () => {

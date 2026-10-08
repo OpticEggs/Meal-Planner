@@ -1,3 +1,4 @@
+import { appendFileSync, readFileSync } from "node:fs";
 import { krogerFakeTransportEnabled } from "../../env";
 
 /**
@@ -94,10 +95,50 @@ const recordingFake: KrogerTransport = {
     const s = fakeState();
     const call = { method, url, headers: { ...headers }, body, timeoutMs };
     s.calls.push(call);
-    if (!s.responder) throw new TransportError("network", "recording fake: no scripted response");
-    return s.responder(call);
+    logFakeCall(call);
+    const responder = s.responder ?? scenarioResponder();
+    if (!responder) throw new TransportError("network", "recording fake: no scripted response");
+    return responder(call);
   },
 };
+
+/**
+ * Test-only: a SEPARATE test server process (browser tests) can't be scripted from the test process,
+ * so it may read its answers from a fixture file and append each request to a log file the test reads:
+ *   TABLE_KROGER_FAKE_SCENARIO=<json: { products: [...] }>  TABLE_KROGER_FAKE_LOG=<jsonl path>
+ * Honoured only together with TABLE_KROGER_FAKE_TRANSPORT (TABLE_ENV=test); production refuses both
+ * (deploy.ts). No endpoint exposes or controls the fake. Answers: an app token, product searches over
+ * the fixture (term words or product ids); anything else — including any cart call — is a 404, and is
+ * logged so a test can prove it never happened.
+ */
+function scenarioResponder(): FakeResponder | null {
+  const file = process.env.TABLE_KROGER_FAKE_SCENARIO;
+  if (!file) return null;
+  assertFake();
+  const scenario = JSON.parse(readFileSync(file, "utf8")) as { products: { productId: string; description?: string }[] };
+  const json = (status: number, b: unknown): TransportResponse => ({ status, headers: { "content-type": "application/json" }, bodyText: JSON.stringify(b) });
+  return (call) => {
+    const u = new URL(call.url);
+    if (u.pathname.endsWith("/token")) return json(200, { access_token: "fake-scenario-app-token", expires_in: 1800, token_type: "bearer" });
+    if (u.pathname === "/v1/products" && call.method === "GET") {
+      const ids = u.searchParams.get("filter.productId");
+      const words = (u.searchParams.get("filter.term") ?? "").toLowerCase().split(/\s+/).filter(Boolean);
+      const data = ids
+        ? scenario.products.filter((p) => ids.split(",").includes(p.productId))
+        : scenario.products.filter((p) => words.some((w) => (p.description ?? "").toLowerCase().includes(w)));
+      return json(200, { data });
+    }
+    return json(404, { error: "not in the test scenario" });
+  };
+}
+
+function logFakeCall(call: RecordedCall) {
+  const file = process.env.TABLE_KROGER_FAKE_LOG;
+  if (!file) return;
+  const u = new URL(call.url);
+  // Method and path only — never headers (they would carry the fake token).
+  appendFileSync(file, `${JSON.stringify({ method: call.method, path: u.pathname, query: Object.fromEntries(u.searchParams) })}\n`);
+}
 
 /** Called ONLY after the capability gate has passed. */
 export function transportFor(): KrogerTransport {

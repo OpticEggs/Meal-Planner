@@ -45,6 +45,27 @@
     ],
     "fakephoto.example.com": [
       "93.184.215.14"
+    ],
+    "licensed.example.com": [
+      "93.184.215.14"
+    ],
+    "www.licensed.example.com": [
+      "93.184.215.14"
+    ],
+    "ungranted.example.com": [
+      "93.184.215.14"
+    ],
+    "www.budgetbytes.com": [
+      "93.184.215.14"
+    ],
+    "budgetbytes.com": [
+      "93.184.215.14"
+    ],
+    "img.licensed-cdn.example.net": [
+      "93.184.215.14"
+    ],
+    "elsewhere.example.org": [
+      "93.184.215.14"
     ]
   },
   "pages": {
@@ -137,6 +158,99 @@
         "content-type": "image/png"
       },
       "file": "not-a-photo.png"
+    },
+    "https://licensed.example.com/to-ungranted": {
+      "status": 302,
+      "headers": {
+        "location": "https://ungranted.example.com/recipe"
+      }
+    },
+    "https://licensed.example.com/to-budgetbytes": {
+      "status": 302,
+      "headers": {
+        "location": "https://www.budgetbytes.com/recipe"
+      }
+    },
+    "https://licensed.example.com/moved": {
+      "status": 301,
+      "headers": {
+        "location": "https://www.licensed.example.com/recipe"
+      }
+    },
+    "https://www.licensed.example.com/recipe": {
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8"
+      },
+      "file": "licensed.html"
+    },
+    "https://www.licensed.example.com/self-photo": {
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8"
+      },
+      "file": "licensed-selfphoto.html"
+    },
+    "https://www.licensed.example.com/bb-photo": {
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8"
+      },
+      "file": "licensed-bbphoto.html"
+    },
+    "https://www.licensed.example.com/img/moved-photo.png": {
+      "status": 302,
+      "headers": {
+        "location": "https://elsewhere.example.org/photo.png"
+      }
+    },
+    "https://www.licensed.example.com/img/to-bb.png": {
+      "status": 302,
+      "headers": {
+        "location": "https://www.budgetbytes.com/photo.png"
+      }
+    },
+    "https://ungranted.example.com/recipe": {
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8"
+      },
+      "file": "ungranted.html"
+    },
+    "https://ungranted.example.com/img/photo.png": {
+      "status": 200,
+      "headers": {
+        "content-type": "image/png"
+      },
+      "file": "photo.png"
+    },
+    "https://www.budgetbytes.com/recipe": {
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8"
+      },
+      "file": "bb-target.html"
+    },
+    "https://www.budgetbytes.com/photo.png": {
+      "status": 200,
+      "headers": {
+        "content-type": "image/png"
+      },
+      "file": "photo.png"
+    },
+    "https://img.licensed-cdn.example.net/photo.png": {
+      "status": 200,
+      "headers": {
+        "content-type": "image/png"
+      },
+      "file": "photo.png"
+    },
+    "https://elsewhere.example.org/photo.png": {
+      "status": 200,
+      "headers": {
+        "content-type": "image/png"
+      },
+      "file": "photo.png"
     }
   }
 }

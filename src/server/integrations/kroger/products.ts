@@ -82,6 +82,20 @@ export function parsePackageSize(text: string | null | undefined): PackageQuanti
   return { quantity: q.mul(u.factor).toString(), unit: u.unit };
 }
 
+/**
+ * What a Kroger price covers, from `soldBy` (values not documented publicly): "unit" — one item at a
+ * fixed price, the only basis Table turns into a package with a price; "weight" — a per-weight price
+ * for a variable amount; anything else, or nothing, is "unknown". RUC-02: a member's typed amount never
+ * changes the basis.
+ */
+export type SaleBasis = "unit" | "weight" | "unknown";
+export function saleBasis(soldBy: string | null | undefined): SaleBasis {
+  const v = typeof soldBy === "string" ? soldBy.trim().toLowerCase() : "";
+  if (v === "unit") return "unit";
+  if (v === "weight") return "weight";
+  return "unknown";
+}
+
 function soldByUnit(v: unknown): boolean {
   return v === undefined || v === null || (typeof v === "string" && v.trim().toLowerCase() === "unit");
 }

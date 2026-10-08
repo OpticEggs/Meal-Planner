@@ -1,6 +1,7 @@
 import { Reject, runCommand, type Actor } from "./framework";
 import type { Db } from "../db/pool";
 import { bookmarkInHousehold } from "./sources";
+import { validateLinkUrl } from "../integrations/recipe-import/url";
 import { writeRecipeVersion } from "./library";
 import { parseIngredientLine } from "../integrations/recipe-import/ingredient-line";
 import { draftProblems, initialDecision, perPortion, decisionProblem, type DraftLine, type LineDecision, type ParsedLine } from "@/domain/recipes/import";
@@ -117,7 +118,7 @@ export function createImportDraftFromPage(actor: Actor, operationId: string, p: 
       const ins = await c.query(
         `INSERT INTO recipe_images(household_id, content_type, bytes, sha256, source_url, page_url, permission, created_by)
          VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING id`,
-        [actor.householdId, image.contentType, image.bytes, image.sha256, image.sourceUrl, b.url, policy.basis, actor.memberId],
+        [actor.householdId, image.contentType, image.bytes, image.sha256, image.sourceUrl, p.fetchedUrl ?? b.url, policy.basis, actor.memberId],
       );
       imageId = ins.rows[0].id;
     }
@@ -210,6 +211,9 @@ export function confirmImportDraftCommand(actor: Actor, operationId: string, p: 
     const lines: DraftLine[] = d.lines;
     const problems = draftProblems({ title: d.title, servings: d.servings, lines });
     if (problems.length) throw new Reject("incomplete", "This import isn't complete yet, so no recipe was made. The link stays saved.", { problems });
+    // The recipe's source is the page its details came from (after any redirect), not just the link saved.
+    const read = d.fetched_url ? validateLinkUrl(d.fetched_url) : null;
+    const source = read?.ok ? { url: read.url, label: read.sourceLabel } : { url: b.url, label: b.source_label };
     const used = lines.filter((l) => l.decision?.use) as (DraftLine & { decision: Extract<LineDecision, { use: true }> })[];
     const left = lines.filter((l) => l.decision && !l.decision.use).map((l) => l.raw);
     const outcome = await writeRecipeVersion(
@@ -219,7 +223,7 @@ export function confirmImportDraftCommand(actor: Actor, operationId: string, p: 
         title: d.title,
         effortMinutes: d.effort_minutes,
         instructions: d.household_instructions,
-        sourceLabel: b.source_label,
+        sourceLabel: source.label,
         summary: left.length ? `Not counted in groceries: ${left.join("; ")}`.slice(0, 1000) : null,
         components: [{ key: "main", name: "Main" }],
         ingredients: used.map((l) => ({
@@ -227,7 +231,7 @@ export function confirmImportDraftCommand(actor: Actor, operationId: string, p: 
           unit: l.decision.unit, form: l.decision.form, note: `From: ${l.raw}`.slice(0, 200),
         })),
       },
-      { provenance: "imported", sourceUrl: b.url, importDraftId: d.id, imageId: d.image_id ?? null, sourceAuthor: d.source_author ?? null, sourceSiteName: d.site_name ?? null },
+      { provenance: "imported", sourceUrl: source.url, importDraftId: d.id, imageId: d.image_id ?? null, sourceAuthor: d.source_author ?? null, sourceSiteName: d.site_name ?? null },
     );
     const { recipeId, versionId } = outcome.result as { recipeId: string; versionId: string };
     await c.query("UPDATE recipe_import_drafts SET status='confirmed', confirmed_version_id=$2, revision=revision+1, updated_by=$3, updated_at=now() WHERE id=$1", [d.id, versionId, actor.memberId]);
@@ -235,7 +239,7 @@ export function confirmImportDraftCommand(actor: Actor, operationId: string, p: 
     return {
       status: "accepted",
       result: { recipeId, versionId },
-      change: { summary: { type: "recipe", text: `${actor.displayName} imported ${d.title} from ${b.source_label}` } },
+      change: { summary: { type: "recipe", text: `${actor.displayName} imported ${d.title} from ${source.label}` } },
     };
   });
 }

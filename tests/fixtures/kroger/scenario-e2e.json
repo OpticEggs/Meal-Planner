@@ -1,0 +1,10 @@
+{
+  "_note": "TEST-ONLY synthetic Kroger product answers for the browser tests (TABLE_KROGER_FAKE_SCENARIO). Every value is invented; no real product, price or store.",
+  "products": [
+    { "productId": "0003000000001", "upc": "0003000000001", "description": "Synthetic Jasmine Rice 2 lb bag", "items": [{ "size": "2 lb", "soldBy": "UNIT", "price": { "regular": 4.49, "promo": 3.99 }, "fulfillment": { "curbside": true } }] },
+    { "productId": "0003000000002", "upc": "0003000000002", "description": "Synthetic Rice Value Bag", "items": [{ "size": "1 bag", "soldBy": "UNIT", "price": { "regular": 9.99 }, "fulfillment": { "curbside": true } }] },
+    { "productId": "0003000000005", "upc": "0003000000005", "description": "Synthetic Rice No Basis", "items": [{ "size": "1 lb", "price": { "regular": 1.99 }, "fulfillment": { "curbside": true } }] },
+    { "productId": "0003000000003", "upc": "0003000000003", "description": "Synthetic Chicken Thighs by weight", "items": [{ "size": "per lb", "soldBy": "WEIGHT", "price": { "regular": 4.99 }, "fulfillment": { "curbside": true } }] },
+    { "productId": "0003000000004", "upc": "0003000000004", "description": "Synthetic Chicken Thighs Tray", "items": [{ "size": "1.5 lb", "soldBy": "UNIT", "price": { "regular": 7.29 }, "fulfillment": { "curbside": true } }] }
+  ]
+}

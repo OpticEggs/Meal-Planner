@@ -3,7 +3,7 @@ import type { Actor } from "./commands/framework";
 import { chooseKrogerProductCommand, type VerifiedKrogerProduct } from "./commands/groceries";
 import { searchKrogerProducts } from "./integrations/kroger/adapter";
 import { capabilityStatus, krogerConfig } from "./integrations/kroger/config";
-import type { ProductCandidate } from "./integrations/kroger/products";
+import { saleBasis, type ProductCandidate, type SaleBasis } from "./integrations/kroger/products";
 import { retailerMode } from "./env";
 
 /**
@@ -29,15 +29,27 @@ export interface CandidateView {
   promoMinor: number | null;
   pickup: boolean | null;
   stockLevel: string | null;
-  /** False when Kroger gave no UPC: such a product can't be named in a cart, so it can't be chosen. */
+  /** What Kroger's price covers (RUC-02): only "unit" products can be chosen. */
+  basis: SaleBasis;
+  /** False when Kroger gave no UPC (it can't be named in a cart) or the product isn't sold by the unit. */
   choosable: boolean;
+  /** Why it can't be chosen, in words; null when it can. */
+  notChoosable: string | null;
 }
 
-const view = (c: ProductCandidate): CandidateView => ({
-  productId: c.productId, upc: c.upc, description: c.description, brand: c.brand, sizeText: c.sizeText, soldBy: c.soldBy, package: c.package,
-  regularMinor: c.price?.regularMinor ?? null, promoMinor: c.price?.promoMinor ?? null, pickup: c.fulfillment?.curbside ?? null,
-  stockLevel: c.stockLevel, choosable: !!c.upc && /^\d{8,14}$/.test(c.upc),
-});
+const view = (c: ProductCandidate): CandidateView => {
+  const basis = saleBasis(c.soldBy);
+  const notChoosable = !c.upc || !/^\d{8,14}$/.test(c.upc)
+    ? "Kroger gave no UPC for this product, so it can't go into a cart."
+    : basis === "weight" ? "Sold by weight — Table can't price weight-sold items yet."
+      : basis === "unknown" ? "Kroger doesn't say this is sold by the unit, so its price basis is unknown." : null;
+  return {
+    productId: c.productId, upc: c.upc, description: c.description, brand: c.brand, sizeText: c.sizeText, soldBy: c.soldBy,
+    package: basis === "unit" ? c.package : null,
+    regularMinor: c.price?.regularMinor ?? null, promoMinor: c.price?.promoMinor ?? null, pickup: c.fulfillment?.curbside ?? null,
+    stockLevel: c.stockLevel, basis, choosable: notChoosable === null, notChoosable,
+  };
+};
 
 /** Whether matching can run for this household, and at which store. Makes no request. */
 export async function krogerMatching(householdId: string): Promise<{ ok: true; locationId: string } | MappingRefusal> {

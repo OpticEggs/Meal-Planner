@@ -188,6 +188,17 @@ describe("P3 search and choose", () => {
     expect(await counts()).toEqual({ products: 1, prices: 2 });
   });
 
+  it("KM-11: the store changed after the search — the choice is re-read and priced at the store current when it is made", async () => {
+    const { jon, fx } = await household();
+    expect((await searchKrogerForIngredient(jon, { term: "rice" })).ok).toBe(true);
+    expect((await setKrogerLocationCommand(jon, op(), { locationId: "TEST0002" })).status).toBe("accepted");
+    const r: any = await chooseKrogerProduct(jon, op(), { weekId: fx.weekId, ingredientKey: "rice", productId: "0001111041700" });
+    expect(r.status).toBe("accepted");
+    expect(new URL(productCalls().at(-1)!.url).searchParams.get("filter.locationId")).toBe("TEST0002");
+    expect((await q<any>("SELECT store_label FROM price_observations WHERE product_id=$1", [r.result.productId]))[0].store_label).toBe("Kroger store TEST0002");
+    expect(cartCalls()).toHaveLength(0);
+  });
+
   it("KM-10: matching several lines searches each (capped at 12) and chooses nothing by itself", async () => {
     const { jon, fx } = await household();
     const lines = Array.from({ length: 15 }, (_, i) => ({ key: `k${i}`, term: `item ${i}` }));
