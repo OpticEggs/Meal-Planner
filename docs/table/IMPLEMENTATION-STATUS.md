@@ -66,7 +66,13 @@ Backup/restore: `scripts/backup.sh dump|restore|check` (dumps include auth table
 
 ## Evidence
 
-See ACCEPTANCE.md for per-test status and `docs/table/evidence/` for raw run records.
+Final run: `docs/table/evidence/2026-10-08-full-run.md` — code `b1dcc80` (the only uncommitted
+change at run time was renaming the previous evidence file). Typecheck clean; vitest 60/60 passed
+(unit + real-PostgreSQL integration, 0 skipped); production build OK; Playwright 28/28 passed
+(Chromium, production server, two authenticated contexts, 0 skipped, 0 flaky); 7/7 mutation
+checks killed. Earlier runs: `2026-10-08-full-run-a519be0-parent.md`, `2026-10-08-first-slice-e2e.md`.
+Smoke screenshots of a non-fixture dev household: `evidence/screens/`.
+See ACCEPTANCE.md for per-test status.
 
 ## Blockers (genuine)
 
