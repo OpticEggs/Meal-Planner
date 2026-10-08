@@ -1,0 +1,435 @@
+
+Running 11 tests using 1 worker
+
+[1/11] [chromium] › tests/e2e/accessibility.spec.ts:47:1 › B14 keyboard only: Change opens a modal with focus inside, Tab is trapped, the page behind is inert, Escape closes without applying and focus returns
+  1) [chromium] › tests/e2e/accessibility.spec.ts:47:1 › B14 keyboard only: Change opens a modal with focus inside, Tab is trapped, the page behind is inert, Escape closes without applying and focus returns 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('dialog', { name: 'Change Friday dinner' })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for getByRole('dialog', { name: 'Change Friday dinner' })
+
+
+      56 |   await page.keyboard.press("Enter");
+      57 |   const dialog = page.getByRole("dialog", { name: "Change Friday dinner" });
+    > 58 |   await expect(dialog).toBeVisible();
+         |                        ^
+      59 |   await expect(dialog).toHaveAttribute("aria-modal", "true");
+      60 |   let f = await focused(page);
+      61 |   expect(f).toMatchObject({ role: "tab", inDialog: true });
+        at /tmp/table-pre/tests/e2e/accessibility.spec.ts:58:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-B14-keyboard-36985--applying-and-focus-returns-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/accessibility-B14-keyboard-36985--applying-and-focus-returns-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/accessibility-B14-keyboard-36985--applying-and-focus-returns-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/accessibility-B14-keyboard-36985--applying-and-focus-returns-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[2/11] [chromium] › tests/e2e/accessibility.spec.ts:117:1 › B14 closing never applies: Escape, Close and the backdrop discard typed facts; Apply and Cancel put focus somewhere sensible
+  2) [chromium] › tests/e2e/accessibility.spec.ts:117:1 › B14 closing never applies: Escape, Close and the backdrop discard typed facts; Apply and Cancel put focus somewhere sensible 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Test ended.
+    Call log:
+      - waiting for getByRole('dialog', { name: 'Change Wednesday dinner' }).getByRole('tab', { name: 'Less left' })
+
+
+      127 |     await page.getByTestId(`change-${NIGHT.wed}`).click();
+      128 |     const dialog = page.getByRole("dialog", { name: "Change Wednesday dinner" });
+    > 129 |     await dialog.getByRole("tab", { name: "Less left" }).click();
+          |                                                          ^
+      130 |     await expect(dialog.getByLabel("Portions left now")).toHaveValue("");
+      131 |     await dialog.getByLabel("Portions left now").fill("1");
+      132 |     if (how === "Escape") await page.keyboard.press("Escape");
+        at /tmp/table-pre/tests/e2e/accessibility.spec.ts:129:58
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-B14-closing--310aa-ut-focus-somewhere-sensible-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/accessibility-B14-closing--310aa-ut-focus-somewhere-sensible-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/accessibility-B14-closing--310aa-ut-focus-somewhere-sensible-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/accessibility-B14-closing--310aa-ut-focus-somewhere-sensible-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[3/11] [chromium] › tests/e2e/accessibility.spec.ts:166:1 › B14 if the opener is gone when the sheet closes, focus lands on a surviving control, never on <body>
+  3) [chromium] › tests/e2e/accessibility.spec.ts:166:1 › B14 if the opener is gone when the sheet closes, focus lands on a surviving control, never on <body> 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('dialog')
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for getByRole('dialog')
+
+
+      169 |   const page = jon.page;
+      170 |   await page.getByTestId(`change-${NIGHT.fri}`).click();
+    > 171 |   await expect(page.getByRole("dialog")).toBeVisible();
+          |                                          ^
+      172 |   await page.evaluate((id) => document.querySelector(`[data-testid="change-${id}"]`)!.remove(), NIGHT.fri);
+      173 |   await page.keyboard.press("Escape");
+      174 |   await expect(page.getByRole("dialog")).toHaveCount(0);
+        at /tmp/table-pre/tests/e2e/accessibility.spec.ts:171:42
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-B14-if-the-o-a6786-ving-control-never-on-body--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/accessibility-B14-if-the-o-a6786-ving-control-never-on-body--chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/accessibility-B14-if-the-o-a6786-ving-control-never-on-body--chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/accessibility-B14-if-the-o-a6786-ving-control-never-on-body--chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[4/11] [chromium] › tests/e2e/accessibility.spec.ts:183:1 › B14 names and states: each night's controls are distinct; plan status, stale previews, conflicts and outstanding groceries are identifiable
+  4) [chromium] › tests/e2e/accessibility.spec.ts:183:1 › B14 names and states: each night's controls are distinct; plan status, stale previews, conflicts and outstanding groceries are identifiable 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('button', { name: 'Change Monday dinner', exact: true })
+    Expected: 1
+    Received: 0
+    Timeout:  10000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 10000ms
+      - waiting for getByRole('button', { name: 'Change Monday dinner', exact: true })
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      188 |   const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+      189 |   for (const d of days) {
+    > 190 |     await expect(p.getByRole("button", { name: `Change ${d} dinner`, exact: true })).toHaveCount(1);
+          |                                                                                      ^
+      191 |     await expect(p.getByRole("button", { name: `Lock ${d}`, exact: true })).toHaveCount(1);
+      192 |   }
+      193 |   await p.getByRole("button", { name: "Lock Thursday", exact: true }).click();
+        at /tmp/table-pre/tests/e2e/accessibility.spec.ts:190:86
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-B14-names-an-8be88--groceries-are-identifiable-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-B14-names-an-8be88--groceries-are-identifiable-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/accessibility-B14-names-an-8be88--groceries-are-identifiable-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/accessibility-B14-names-an-8be88--groceries-are-identifiable-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/accessibility-B14-names-an-8be88--groceries-are-identifiable-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[5/11] [chromium] › tests/e2e/accessibility.spec.ts:222:1 › B14 announcements: one per real change; routine refetches, polls and own reads announce nothing; only one live region
+  5) [chromium] › tests/e2e/accessibility.spec.ts:222:1 › B14 announcements: one per real change; routine refetches, polls and own reads announce nothing; only one live region 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   "announcer",
+    +   "currency",
+      ]
+
+      227 |   // Exactly one ambient live region (the polite announcer); the currency badge is not live. (Next.js adds its own route announcer for page
+      228 |   // navigations; it is outside the app's markup and says nothing on a refetch.)
+    > 229 |   expect(await p.evaluate(() => [...document.querySelectorAll("[aria-live]")].map((e) => e.getAttribute("data-testid")))).toEqual(["announcer"]);
+          |                                                                                                                           ^
+      230 |   await expect(p.getByTestId("announcer")).toHaveAttribute("aria-live", "polite");
+      231 |   await expect(p.getByTestId("currency")).not.toHaveAttribute("aria-live", /.*/);
+      232 |   await expect(p.getByTestId("currency")).not.toHaveAttribute("role", /.*/);
+        at /tmp/table-pre/tests/e2e/accessibility.spec.ts:229:123
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-B14-announce-e7342-othing-only-one-live-region-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-B14-announce-e7342-othing-only-one-live-region-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/accessibility-B14-announce-e7342-othing-only-one-live-region-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/accessibility-B14-announce-e7342-othing-only-one-live-region-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/accessibility-B14-announce-e7342-othing-only-one-live-region-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[6/11] [chromium] › tests/e2e/accessibility.spec.ts:252:1 › B14 background and return with a stale preview open in the sheet: focus stays in the sheet, Apply stays disabled, discarding returns focus
+  6) [chromium] › tests/e2e/accessibility.spec.ts:252:1 › B14 background and return with a stale preview open in the sheet: focus stays in the sheet, Apply stays disabled, discarding returns focus 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.focus: Test ended.
+    Call log:
+      - waiting for getByRole('dialog', { name: 'Change Friday dinner' }).getByRole('button', { name: 'Apply Friday preview' })
+
+
+      257 |   await previewReplace(p, NIGHT.fri, "Fixture: Chicken penne");
+      258 |   const sheet = p.getByRole("dialog", { name: "Change Friday dinner" });
+    > 259 |   await sheet.getByRole("button", { name: "Apply Friday preview" }).focus();
+          |                                                                     ^
+      260 |   await background(jon.context, p);
+      261 |   await expect(sheet.getByTestId("apply")).toBeDisabled();
+      262 |   await previewReplace(alex.page, NIGHT.fri, "Fixture: Turkey chili");
+        at /tmp/table-pre/tests/e2e/accessibility.spec.ts:259:69
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-B14-backgrou-45b22-ed-discarding-returns-focus-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-B14-backgrou-45b22-ed-discarding-returns-focus-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/accessibility-B14-backgrou-45b22-ed-discarding-returns-focus-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/accessibility-B14-backgrou-45b22-ed-discarding-returns-focus-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/accessibility-B14-backgrou-45b22-ed-discarding-returns-focus-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[7/11] [chromium] › tests/e2e/accessibility.spec.ts:283:1 › B14 grocery review during a dinner change: the reviewer keeps focus, sees the delta, and hears it once
+  7) [chromium] › tests/e2e/accessibility.spec.ts:283:1 › B14 grocery review during a dinner change: the reviewer keeps focus, sees the delta, and hears it once 
+
+    Error: expect(received).toMatch(expected)
+
+    Expected pattern: /Jon: Friday.*approved grocery lines? needs? review again/
+    Received string:  ""
+
+    Call Log:
+    - Timeout 10000ms exceeded while waiting on the predicate
+
+      297 |   expect(await alex.page.evaluate(() => document.activeElement?.id)).toBe("an-groceries");
+      298 |   await expect(input).toHaveValue("lemons");
+    > 299 |   await expect.poll(async () => (await announced(alex.page)).join(" | ")).toMatch(/Jon: Friday.*approved grocery lines? needs? review again/);
+          |   ^
+      300 |   await alex.page.waitForTimeout(1500);
+      301 |   expect(await announced(alex.page)).toHaveLength(1);
+      302 |   await expect(alex.page.getByRole("link", { name: /^Groceries, \d+ lines? needs? attention$/ })).toHaveCount(1);
+        at /tmp/table-pre/tests/e2e/accessibility.spec.ts:299:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-B14-grocery--1e4c3-the-delta-and-hears-it-once-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-B14-grocery--1e4c3-the-delta-and-hears-it-once-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/accessibility-B14-grocery--1e4c3-the-delta-and-hears-it-once-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/accessibility-B14-grocery--1e4c3-the-delta-and-hears-it-once-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/accessibility-B14-grocery--1e4c3-the-delta-and-hears-it-once-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[8/11] [chromium] › tests/e2e/accessibility.spec.ts:308:3 › B14 sheet at 320px with 150% text: fits, scrolls inside itself, never under the nav or header
+  8) [chromium] › tests/e2e/accessibility.spec.ts:308:3 › B14 sheet at 320px with 150% text: fits, scrolls inside itself, never under the nav or header 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.evaluate: Test ended.
+    Call log:
+      - waiting for getByRole('dialog', { name: 'Change Sunday dinner' })
+
+
+      314 |     await previewReplace(p, NIGHT.sun, "Fixture: Chicken penne");
+      315 |     const sheet = p.getByRole("dialog", { name: "Change Sunday dinner" });
+    > 316 |     const box = await sheet.evaluate((d) => {
+          |                             ^
+      317 |       const r = d.getBoundingClientRect();
+      318 |       return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, sw: d.scrollWidth, cw: d.clientWidth, vw: innerWidth, vh: innerHeight };
+      319 |     });
+        at /tmp/table-pre/tests/e2e/accessibility.spec.ts:316:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-B14-sheet-at-a5704-ver-under-the-nav-or-header-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/accessibility-B14-sheet-at-a5704-ver-under-the-nav-or-header-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/accessibility-B14-sheet-at-a5704-ver-under-the-nav-or-header-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/accessibility-B14-sheet-at-a5704-ver-under-the-nav-or-header-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[9/11] [chromium] › tests/e2e/accessibility.spec.ts:308:3 › B14 sheet at 390px with 150% text: fits, scrolls inside itself, never under the nav or header
+  9) [chromium] › tests/e2e/accessibility.spec.ts:308:3 › B14 sheet at 390px with 150% text: fits, scrolls inside itself, never under the nav or header 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.evaluate: Test ended.
+    Call log:
+      - waiting for getByRole('dialog', { name: 'Change Sunday dinner' })
+
+
+      314 |     await previewReplace(p, NIGHT.sun, "Fixture: Chicken penne");
+      315 |     const sheet = p.getByRole("dialog", { name: "Change Sunday dinner" });
+    > 316 |     const box = await sheet.evaluate((d) => {
+          |                             ^
+      317 |       const r = d.getBoundingClientRect();
+      318 |       return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, sw: d.scrollWidth, cw: d.clientWidth, vw: innerWidth, vh: innerHeight };
+      319 |     });
+        at /tmp/table-pre/tests/e2e/accessibility.spec.ts:316:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-B14-sheet-at-b3566-ver-under-the-nav-or-header-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/accessibility-B14-sheet-at-b3566-ver-under-the-nav-or-header-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/accessibility-B14-sheet-at-b3566-ver-under-the-nav-or-header-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/accessibility-B14-sheet-at-b3566-ver-under-the-nav-or-header-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[10/11] [chromium] › tests/e2e/accessibility.spec.ts:342:1 › B14 reduced motion: the sheet does not animate when the member asks for reduced motion
+  10) [chromium] › tests/e2e/accessibility.spec.ts:342:1 › B14 reduced motion: the sheet does not animate when the member asks for reduced motion 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.evaluate: Test ended.
+    Call log:
+      - waiting for getByRole('dialog')
+
+
+      345 |     const jon = await member(browser, "jon", { reducedMotion: pref });
+      346 |     await jon.page.getByTestId(`change-${NIGHT.fri}`).click();
+    > 347 |     const anim = await jon.page.getByRole("dialog").evaluate((d) => getComputedStyle(d).animationName);
+          |                                                     ^
+      348 |     expect(anim, pref).toBe(expected);
+      349 |     await jon.context.close();
+      350 |   }
+        at /tmp/table-pre/tests/e2e/accessibility.spec.ts:347:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-B14-reduced--4c0a1-ber-asks-for-reduced-motion-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/accessibility-B14-reduced--4c0a1-ber-asks-for-reduced-motion-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/accessibility-B14-reduced--4c0a1-ber-asks-for-reduced-motion-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/accessibility-B14-reduced--4c0a1-ber-asks-for-reduced-motion-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[11/11] [chromium] › tests/e2e/b12.staples.spec.ts:8:1 › B12: Alex makes a different yogurt the usual; Jon sees it live; the purchase still needs its own approval
+  11) [chromium] › tests/e2e/b12.staples.spec.ts:8:1 › B12: Alex makes a different yogurt the usual; Jon sees it live; the purchase still needs its own approval 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('staple-greek_yogurt')
+    Expected substring: "Your usual: Plain Greek yogurt 32 oz tub"
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" with timeout 10000ms
+      - waiting for getByTestId('staple-greek_yogurt')
+
+
+      16 |   await expect(f.getByRole("status")).toContainText("Added");
+      17 |   await jon.page.getByRole("link", { name: "Groceries" }).click();
+    > 18 |   await expect(jon.page.getByTestId("staple-greek_yogurt")).toContainText("Your usual: Plain Greek yogurt 32 oz tub");
+         |                                                             ^
+      19 |
+      20 |   // Alex adds another product for this pickup, then explicitly makes it the usual.
+      21 |   await alex.page.getByRole("link", { name: "Groceries" }).click();
+        at /tmp/table-pre/tests/e2e/b12.staples.spec.ts:18:61
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b12.staples-B12-Alex-makes-89303-till-needs-its-own-approval-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b12.staples-B12-Alex-makes-89303-till-needs-its-own-approval-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b12.staples-B12-Alex-makes-89303-till-needs-its-own-approval-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b12.staples-B12-Alex-makes-89303-till-needs-its-own-approval-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b12.staples-B12-Alex-makes-89303-till-needs-its-own-approval-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  11 failed
+    [chromium] › tests/e2e/accessibility.spec.ts:47:1 › B14 keyboard only: Change opens a modal with focus inside, Tab is trapped, the page behind is inert, Escape closes without applying and focus returns 
+    [chromium] › tests/e2e/accessibility.spec.ts:117:1 › B14 closing never applies: Escape, Close and the backdrop discard typed facts; Apply and Cancel put focus somewhere sensible 
+    [chromium] › tests/e2e/accessibility.spec.ts:166:1 › B14 if the opener is gone when the sheet closes, focus lands on a surviving control, never on <body> 
+    [chromium] › tests/e2e/accessibility.spec.ts:183:1 › B14 names and states: each night's controls are distinct; plan status, stale previews, conflicts and outstanding groceries are identifiable 
+    [chromium] › tests/e2e/accessibility.spec.ts:222:1 › B14 announcements: one per real change; routine refetches, polls and own reads announce nothing; only one live region 
+    [chromium] › tests/e2e/accessibility.spec.ts:252:1 › B14 background and return with a stale preview open in the sheet: focus stays in the sheet, Apply stays disabled, discarding returns focus 
+    [chromium] › tests/e2e/accessibility.spec.ts:283:1 › B14 grocery review during a dinner change: the reviewer keeps focus, sees the delta, and hears it once 
+    [chromium] › tests/e2e/accessibility.spec.ts:308:3 › B14 sheet at 320px with 150% text: fits, scrolls inside itself, never under the nav or header 
+    [chromium] › tests/e2e/accessibility.spec.ts:308:3 › B14 sheet at 390px with 150% text: fits, scrolls inside itself, never under the nav or header 
+    [chromium] › tests/e2e/accessibility.spec.ts:342:1 › B14 reduced motion: the sheet does not animate when the member asks for reduced motion 
+    [chromium] › tests/e2e/b12.staples.spec.ts:8:1 › B12: Alex makes a different yogurt the usual; Jon sees it live; the purchase still needs its own approval 

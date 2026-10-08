@@ -2,7 +2,7 @@
 
 Status vocabulary: NOT IMPLEMENTED · IMPLEMENTED / NOT RUN · PASS · FAIL · BLOCKED.
 
-**Current evidence run:** `docs/table/evidence/2026-10-08-verify-2c56267/summary.md` (implementation commit `2c56267`, clean tree, source hash unchanged during the run). Earlier runs (`2026-10-08-full-run*.md`) are kept as history; they predate the review of 89f3ea9.
+**Current evidence run:** `docs/table/evidence/2026-10-08-verify-0804381/summary.md` (implementation commit `0804381`, B14 + B12; clean tree, source hash unchanged during the run): vitest 98/98, Playwright 43/43, 21 mutations killed. The previous run `2026-10-08-verify-2c56267/` (correction pass) and the earlier `2026-10-08-full-run*.md` are kept as history.
 Environment: real PostgreSQL 16.15, production `next start` server, two independently signed-in
 Chromium contexts, recording fake retailer (simulated; nothing reaches a store), fixed household clock
 2026-10-12 15:00 America/New_York. Concurrency orders are forced with database lock barriers.
@@ -86,3 +86,37 @@ These are additional regression IDs; no T/X row above was renumbered or replaced
 Original tests whose code changed (pass conditions unchanged): **X09** assertion now expects the
 "Add another" extra in the next open pickup (the old assertion encoded the F07 defect); **T19** passes
 the reviewed amount to "Have enough" (F06). No original test was skipped or weakened.
+
+## B14 accessibility & focus, B12 remembered staple products — added 2026-10-08
+
+New IDs; no T/X/R row above was renumbered or replaced. Implementation commit `0804381`; evidence
+`docs/table/evidence/2026-10-08-verify-0804381/summary.md`. Red-before-green: the 11 new browser tests
+were run against a production build of the starting commit `f4f92f8` and all 11 FAILED
+(`evidence/2026-10-08-verify-0804381/pre-b14-on-f4f92f8.log`); they pass on `0804381`.
+
+| ID | What is checked (actual focus / DB state, not only ARIA) | Tests | Status on 0804381 |
+|---|---|---|---|
+| B14-a Keyboard-only modal | Tab to Friday's Change, Enter; `document.activeElement` is the selected tab inside the dialog; 45 Tab + 45 Shift+Tab presses never leave it; `.app` is inert, `focus()` on a background control fails and a hit-test lands on the backdrop; arrow keys move between tabs; Enter on an option focuses the new preview; Escape closes, focus returns to the opener, the accepted rows are byte-identical and the draft is still `open` | e2e accessibility "B14 keyboard only" | PASS (Chromium) |
+| B14-b Closing never applies | Escape, Close and backdrop each discard a typed "less left" amount (zero `leftover_observations`, no unresolved Thursday, accepted rows unchanged) and return focus to the opener; Cancel keeps the sheet and focuses its tab; Apply by keyboard closes it, returns focus, announces "Applied." | e2e "B14 closing never applies" | PASS (Chromium) |
+| B14-c Opener gone | The opener is removed while the sheet is open; on Escape focus lands on another night's Change control, never `<body>` | e2e "B14 if the opener is gone" | PASS (Chromium) |
+| B14-d Names and states | 7 distinct "Change <day> dinner" / "Lock <day>" names (exact); Unlock state via `aria-pressed`; "Accepted plan status" heading; Groceries link named with its outstanding count; preview region named "draft, not applied" → "out of date" after Alex's change; the out-of-date announcement made exactly once | e2e "B14 names and states" | PASS (Chromium) |
+| B14-e Announcements not excessive | One ambient live region; currency badge not live; nothing live/alert in the app at rest; focus/online refetches and a full 16 s poll interval announce nothing; Alex's decision is announced exactly once to Jon and not repeated by later refetches | e2e "B14 announcements" | PASS (Chromium) |
+| B14-f Background/return, stale preview | Jon's sheet open with a preview, app backgrounded, Alex changes Friday; on return the sheet is still open, the preview is stale, Apply disabled, Tab stays in the sheet, the staleness is announced; Discard then Escape returns focus to the opener | e2e "B14 background and return" | PASS (Chromium) |
+| B14-g Grocery review during a dinner change | Alex mid-typing in Groceries keeps focus and her half-typed text while Jon's change lands; the delta is shown; one announcement names Jon's change and the approved lines needing review again | e2e "B14 grocery review during a dinner change" | PASS (Chromium) |
+| B14-h Narrow + large text + overlap | 320 and 390 px wide, 640 px tall, 150% text: sheet within the viewport, no sideways scroll, Close/Apply/Cancel hit-tested at their centres (not under the nav, header or sticky sheet header) | e2e "B14 sheet at 320px/390px" | PASS (Chromium) |
+| B14-i Reduced motion | `animation-name` is `none` under `prefers-reduced-motion: reduce` and `sheet-in` otherwise | e2e "B14 reduced motion" | PASS (Chromium) |
+| B14 WebKit / iPhone Safari / VoiceOver | Same checks on WebKit and a physical iPhone with VoiceOver | — | **BLOCKED** — only Chromium is installed (`/opt/pw-browsers`); browser downloads are not permitted; no device |
+| B12a Explicit decision, both members see it | Product, revision 1→2, `updated_by`, an append-only decision row; both members' snapshots show the new product; change event text; replay/reused-id behaviour | `tests/integration/b12.staple-products.test.ts` B12a | PASS |
+| B12b Future taps use it; no silent authorization | The outstanding line, its fingerprint, its approval, every purchase row and the review fingerprint are unchanged by the decision; the next one-tap request uses the new product and usual ×2 and needs review; choosing the product for this pickup invalidates the old approval, the old review's Send is `stale_review` with zero retailer calls; approving quantities never changes the remembered product | B12b | PASS |
+| B12c Orders and transfers unchanged | After send + confirmed order: batches, lines, status events, orders, order lines, approvals and retailer calls identical before/after the decision; the next "Add another" routes to the next pickup with the new product | B12c | PASS |
+| B12d Concurrent decisions, both orders | Database-barrier race: first wins, second is `stale_staple` naming who changed it and to what; one decision row; a deliberate retry against the new revision succeeds | B12d (Jon first / Alex first) | PASS |
+| B12e Unknown / unavailable stay unresolved | Random id, malformed id, another item's product, another household's product → `unknown_product`; a Kroger product while the simulated retailer is active → `product_unavailable`; staple unchanged. A remembered product the active store doesn't sell leaves the next line unresolved, unsendable and unapprovable (never swapped for the current mapping); a staple with no product shows "No product chosen" | B12e | PASS |
+| B12f Usual quantity ≠ product decision | Remembering ×3 keeps the approved product and revision | B12f | PASS |
+| B12 UI | Alex adds a product for this pickup and presses "Make this our usual"; Jon's open Groceries shows it without reload; the line still `needs_review`; no purchase approval exists; the Week chip names the remembered product | e2e `tests/e2e/b12.staples.spec.ts` | PASS (Chromium) |
+| B12 mutations | stale decision overwrites; tap ignores remembered product; decision swaps the outstanding purchase; unavailable product substituted; usual quantity overwrites product | `tests/mutation/run.mjs` (5 new) | PASS — all KILLED by assertion |
+
+Existing tests whose code changed in this pass (assertions unchanged): **T04** (e2e) now closes Wednesday's
+sheet with Escape before locking Thursday and reopens it — with a modal sheet the background Lock is
+correctly unreachable, which is exactly what B14 requires; **R-F07-UI** scopes its chip locator to the
+Week form because grocery-line controls now carry the item name in their accessible names. No test
+was skipped, deleted or weakened.

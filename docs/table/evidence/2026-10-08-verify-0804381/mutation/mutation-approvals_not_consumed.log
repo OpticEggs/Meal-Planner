@@ -1,0 +1,10 @@
+$ npx vitest run tests/integration/groceries.contract.test.ts -t "X03"
+exit 1 signal 
+--- stdout
+JSON report written to /tmp/table-verify-0804381/mutation/mutation-approvals_not_consumed.json
+
+--- stderr
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
