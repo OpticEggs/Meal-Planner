@@ -1,0 +1,64 @@
+
+Running 1 test using 1 worker
+
+[WebServer] ⨯ error: duplicate key value violates unique constraint "cook_records_one_per_event_generation"
+[WebServer]     at async (.next/server/chunks/_1ykh-ww._.js:29:807)
+[WebServer]     at async (.next/server/chunks/_1ykh-ww._.js:1:17255)
+[WebServer]     at async (.next/server/chunks/[root-of-the-server]__0vz2xaq._.js:3:5489)
+[WebServer]     at async s (.next/server/chunks/[root-of-the-server]__0vz2xaq._.js:3:5181)
+[WebServer]     at async s (.next/server/chunks/_1ykh-ww._.js:1:16571)
+[WebServer]     at async d (.next/server/chunks/_1ykh-ww._.js:1:728) {
+[WebServer]   length: 305,
+[WebServer]   severity: 'ERROR',
+[WebServer]   code: '23505',
+[WebServer]   detail: 'Key (cooking_event_id, generation)=(6633e08f-b92e-40b8-9786-6e36b7acb173, 1) already exists.',
+[WebServer]   hint: undefined,
+[WebServer]   position: undefined,
+[WebServer]   internalPosition: undefined,
+[WebServer]   internalQuery: undefined,
+[WebServer]   where: undefined,
+[WebServer]   schema: 'public',
+[WebServer]   table: 'cook_records',
+[WebServer]   column: undefined,
+[WebServer]   dataType: undefined,
+[WebServer]   constraint: 'cook_records_one_per_event_generation',
+[WebServer]   file: 'nbtinsert.c',
+[WebServer]   line: '666',
+[WebServer]   routine: '_bt_check_unique'
+[WebServer] }
+second press: {"httpStatus":500,"body":""}
+  ✘  1 [chromium] › tests/e2e/cook-records-red-variant.spec.ts:7:1 › red variant: one record per cooking event; the button is gone once recorded (2.8s)
+
+
+  1) [chromium] › tests/e2e/cook-records-red-variant.spec.ts:7:1 › red variant: one record per cooking event; the button is gone once recorded 
+
+    Error: expect(received).toContain(expected) // indexOf
+
+    Expected substring: "already_recorded"
+    Received string:    ""
+
+      17 |   console.log("second press:", JSON.stringify(second));
+      18 |   expect(await count(), "a second press must not add a record").toBe(1);
+    > 19 |   expect(second.body).toContain("already_recorded");
+         |                       ^
+      20 |   await expect(jon.page.getByRole("button", { name: "Mark cooked" })).toHaveCount(0);
+      21 |   await jon.context.close();
+      22 | });
+        at /tmp/table-red-cook/tests/e2e/cook-records-red-variant.spec.ts:19:23
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/cook-records-red-variant-r-3cb4a-utton-is-gone-once-recorded-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/cook-records-red-variant-r-3cb4a-utton-is-gone-once-recorded-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/cook-records-red-variant-r-3cb4a-utton-is-gone-once-recorded-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/cook-records-red-variant-r-3cb4a-utton-is-gone-once-recorded-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests/e2e/cook-records-red-variant.spec.ts:7:1 › red variant: one record per cooking event; the button is gone once recorded 

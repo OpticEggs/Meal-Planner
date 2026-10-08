@@ -1,0 +1,312 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/table
+
+ ✓ tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01a: an empty recipe collection yields a draft of seven open nights that cannot be adopted 786ms
+ ✓ tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01b: too few eligible recipes leaves named open nights; adoption refused 730ms
+ ✓ tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01c: a submitted proposal with an uncovered Thursday or missing plates is refused at the server 787ms
+ ✓ tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01d: a complete, fully priced proposal that is known to exceed a firm budget is refused 737ms
+ ✓ tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01e: complete coverage with unknown prices is adoptable; grocery readiness stays unproven 921ms
+ ✓ tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02a: a locked Thursday leftover keeps its Wednesday source through a whole-week adoption 831ms
+ ✓ tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02b: a locked Wednesday source keeps its dependent plates consistent through adoption 787ms
+ ✓ tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02c: moving Wednesday's cooking after Alex's reserved Thursday lunch discloses and resolves the lunch before Apply 821ms
+ ✓ tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02d: a move and a lunch edit on the same cooking conflict in either order (move first) 950ms
+ ✓ tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02d: a move and a lunch edit on the same cooking conflict in either order (lunch edit first) 848ms
+ ✓ tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02e: independent Friday and Sunday edits still both survive 887ms
+ ✓ tests/integration/review-regressions.test.ts > R-F03 current exclusions apply to every newly scheduled choice > R-F03a: placing a deferred dinner that now violates an exclusion is refused 861ms
+ ✓ tests/integration/review-regressions.test.ts > R-F03 current exclusions apply to every newly scheduled choice > R-F03b: adding an eater to a dinner checks that eater's personal exclusions 696ms
+ ✓ tests/integration/review-regressions.test.ts > R-F04 order and transfer reconciliation > R-F04a: a transfer acknowledged after the order is still counted; the same demand is not offered again 1101ms
+ ✓ tests/integration/review-regressions.test.ts > R-F04 order and transfer reconciliation > R-F04b: 'contents unknown' does not clear an uncertain transfer hold 840ms
+ ✓ tests/integration/review-regressions.test.ts > R-F04 order and transfer reconciliation > R-F04c: an acknowledged transfer stays counted when the order's contents are unknown, and is flagged 848ms
+ ✓ tests/integration/review-regressions.test.ts > R-F04 order and transfer reconciliation > R-F04d: a known order reconciles its pre-order transfers exactly once (no double count) 864ms
+ ✓ tests/integration/review-regressions.test.ts > R-F05 receipts, substitutions and package identity > R-F05a: an unvalidated substitution does not cover the original need 884ms
+ ✓ tests/integration/review-regressions.test.ts > R-F05 receipts, substitutions and package identity > R-F05b: an unsuitable substitution leaves the need actionable; a suitable smaller one covers only its amount 1741ms
+ ✓ tests/integration/review-regressions.test.ts > R-F05 receipts, substitutions and package identity > R-F05c: ordered packages keep their own size when the product mapping later changes 811ms
+ ✓ tests/integration/review-regressions.test.ts > R-F05 receipts, substitutions and package identity > R-F05d: a mistaken 'missing' is corrected by a new observation without rewriting history 903ms
+ ✓ tests/integration/review-regressions.test.ts > R-F06 'Have enough' is bound to what the reviewer saw > R-F06a: a concurrent increase cannot enlarge Alex's assertion (change first) 836ms
+ ✓ tests/integration/review-regressions.test.ts > R-F06 'Have enough' is bound to what the reviewer saw > R-F06a: a concurrent increase cannot enlarge Alex's assertion (observation first) 801ms
+ ✓ tests/integration/review-regressions.test.ts > R-F06 'Have enough' is bound to what the reviewer saw > R-F06b: 'Have enough' without the reviewed amount is refused; an unchanged review covers the need 705ms
+ ✓ tests/integration/review-regressions.test.ts > R-F07 capture lifecycle > R-F07a: Also need works before any week is adopted and reports its destination 709ms
+ ✓ tests/integration/review-regressions.test.ts > R-F07 capture lifecycle > R-F07b: after this week's order is confirmed, a new need goes to the next pickup, not the confirmed order 882ms
+ ✓ tests/integration/review-regressions.test.ts > R-F07 capture lifecycle > R-F07c: a remembered usual quantity is reused by later staple taps 787ms
+ ✓ tests/integration/review-regressions.test.ts > R-F08 household-wide purchasing inputs reach every active week > R-F08a: a price change made from week B invalidates week A's old review; old Send makes zero calls 924ms
+ ✓ tests/integration/review-regressions.test.ts > R-F08 household-wide purchasing inputs reach every active week > R-F08b: a product mapping change from week B reaches week A's quantities 730ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > B16a: add, view, rename and set a usual amount in packages or a measured unit; future taps use it 1025ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > B16b: adding validates the item and product; an explicit product is a recorded decision 868ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > B16c: removing hides the shortcut only; restore brings it back; a removed staple cannot be edited or re-pointed 847ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario A: concurrent edits of one staple — the first decision survives, the second sees a conflict with the current value — Jon first 752ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario A: an edit racing a removal — whichever commits second is refused — Jon first 759ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario A: concurrent edits of one staple — the first decision survives, the second sees a conflict with the current value — Alex first 830ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario A: an edit racing a removal — whichever commits second is refused — Alex first 787ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario B: staple changes during Alex's grocery review leave the reviewed purchase intact and sendable 1272ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario B: choosing the new product for this pickup withdraws only that line's approval; the old review cannot authorize Send 1160ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario B/E: two product choices for the same pickup line made against the same view — Jon first 952ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario B/E: two product choices for the same pickup line made against the same view — Alex first 819ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario C: removing a staple with outstanding demand removes its shortcut, not the grocery need 999ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario D: after an order is confirmed and received, staple changes leave product identities, quantities, receipts and transfers unchanged 1282ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > re-pointing a staple with a measured usual amount re-expresses it in the new product's packages, or refuses an unconvertible product 761ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > line product issues are explicit: none chosen, unavailable, conflicting 791ms
+ ✓ tests/integration/b16.staple-management.test.ts > B15/B16 review regressions > a product choice naming another household's week is refused without revealing that week's product 710ms
+ ✓ tests/integration/b16.staple-management.test.ts > B15/B16 review regressions > 'last changed by' includes product decisions 678ms
+ ✓ tests/integration/b16.staple-management.test.ts > B15/B16 review regressions > a substitution decision made against an older view is refused, not silently replaced 970ms
+ ✓ tests/integration/b16.staple-management.test.ts > B15/B16 review regressions > removing a request is refused when someone joined it after the confirmation was shown 755ms
+ ✓ tests/integration/b16.staple-management.test.ts > B15/B16 review regressions > the household export covers every household table (staples included) and restores them 706ms
+ ✓ tests/integration/plan.contract.test.ts > T01 preview Friday while the other member reviews groceries; cancel > leaves accepted week, portions and active requirements unchanged with no household edit or external call 1202ms
+ ✓ tests/integration/plan.contract.test.ts > T02 either member adopts the displayed week > creates one shared accepted plan and no order, cooking or consumption record 942ms
+ ✓ tests/integration/plan.contract.test.ts > T03 Sounds good and preference changes > persist without changing accepted assignments, portions or requirements 875ms
+ ✓ tests/integration/plan.contract.test.ts > T04 previews affecting leftovers or a locked night > shows consequences before Apply, cancellation changes nothing, protected dinners are not moved 1070ms
+ ✓ tests/integration/plan.contract.test.ts > T07 record less left than planned > makes the dependent night unresolved, keeps the selected dinner, proposes but does not apply recovery 786ms
+ ✓ tests/integration/plan.contract.test.ts > T08 (server boundary) other member changes Friday while a Friday preview is open > reports the current Friday and stale draft from the snapshot before Apply; the old draft cannot apply 803ms
+ ✓ tests/integration/plan.contract.test.ts > T10 concurrent independent Friday and Sunday replacements — Jon (Sunday) first > both survive, neither restores other nights, groceries are recalculated 989ms
+ ✓ tests/integration/plan.contract.test.ts > T10 concurrent independent Friday and Sunday replacements — Alex (Friday) first > both survive, neither restores other nights, groceries are recalculated 1050ms
+ ✓ tests/integration/plan.contract.test.ts > T11 concurrent replacements of the same target — Jon first > one commits; the other makes no accepted write and keeps its draft 795ms
+ ✓ tests/integration/plan.contract.test.ts > T11 concurrent replacements of the same target — Alex first > one commits; the other makes no accepted write and keeps its draft 829ms
+ ✓ tests/integration/plan.contract.test.ts > T12 adopt a whole proposal after a newer accepted change — adoption first > never restores an obsolete seven-day snapshot 815ms
+ ✓ tests/integration/plan.contract.test.ts > T12 adopt a whole proposal after a newer accepted change — Friday change first > never restores an obsolete seven-day snapshot 893ms
+ ✓ tests/integration/plan.contract.test.ts > T15 (plan commands) duplicate click or retry > returns the same recorded result with no duplicate edit; reused id with different payload is refused 844ms
+ ✓ tests/integration/plan.contract.test.ts > T21 edit a recipe in the library after adopting it > keeps the accepted assignment on its pinned recipe version 861ms
+ ✓ tests/integration/plan.contract.test.ts > T22 two night edits interacting through a real dependency > leftover source: conflict in either order (Wednesday first) 789ms
+ ✓ tests/integration/plan.contract.test.ts > T22 two night edits interacting through a real dependency > leftover source: conflict in either order (Thursday first) 944ms
+ ✓ tests/integration/plan.contract.test.ts > T22 two night edits interacting through a real dependency > destination lock: a move onto a night that was locked meanwhile is stopped, never overwritten 819ms
+ ✓ tests/integration/plan.contract.test.ts > T22 two night edits interacting through a real dependency > firm constraint: each change fits a firm budget alone, the combination does not, and is not silently relaxed 945ms
+ ✓ tests/integration/plan.contract.test.ts > X01 (commands) household isolation > another household cannot read or write plans, drafts or purchases by id substitution, with no side effects 865ms
+ ✓ tests/integration/plan.contract.test.ts > X03 (command identity) > same id + same payload returns the original; same id + different payload is rejected with no write 747ms
+ ✓ tests/integration/plan.contract.test.ts > Negative control: a stale target is rejected > a lock request bound to an old revision makes no write 802ms
+ ✓ tests/integration/groceries.contract.test.ts > Fixture arithmetic (explicit expected grocery lines) > computes the specified quantities and packages 906ms
+ ✓ tests/integration/groceries.contract.test.ts > T05 dinners covered, product/price unresolved > shows meals chosen without asserting grocery readiness or budget compliance 912ms
+ ✓ tests/integration/groceries.contract.test.ts > T13 accepted meal change while the other member's grocery review is open > shows the delta, keeps unaffected approvals, and stale Send makes zero outbound calls 1652ms
+ ✓ tests/integration/groceries.contract.test.ts > T14 replacement after order confirmation > changes current requirements but never the confirmed order; new chicken is not sent; stale Send makes zero calls 1439ms
+ ✓ tests/integration/groceries.contract.test.ts > T15 (handoff) duplicate click or retry > one batch and one outbound call for one operation id 951ms
+ ✓ tests/integration/groceries.contract.test.ts > X03 purchase deduplication across different operation ids > concurrent sends of the same review produce one transfer (first wins) 958ms
+ ✓ tests/integration/groceries.contract.test.ts > X03 purchase deduplication across different operation ids > concurrent sends of the same review produce one transfer (second wins) 948ms
+ ✓ tests/integration/groceries.contract.test.ts > T16 / X05 external transfer times out after possible acceptance > is uncertain and never replayed automatically; granularity stays batch-level 1413ms
+ ✓ tests/integration/groceries.contract.test.ts > T16 / X05 external transfer times out after possible acceptance > a process stop after dispatch-started becomes uncertain on recovery, with no replay 1003ms
+ ✓ tests/integration/groceries.contract.test.ts > T17 / X04 plan change after a valid batch has started sending > keeps the exact started payload; revised needs are a separate delta; nothing is reversed 1079ms
+ ✓ tests/integration/groceries.contract.test.ts > T17 / X04 plan change after a valid batch has started sending > superseded queued work is canceled before dispatch-started (other race order) 964ms
+ ✓ tests/integration/groceries.contract.test.ts > T18 repeated staple taps, overlapping recipe need, explicit extra > dedupes the usual request with names, keeps reasons, keeps the extra 978ms
+ ✓ tests/integration/groceries.contract.test.ts > T19 'Have some' without a quantity, or reviewed demand increases > never invents a pantry subtraction and reopens review visibly 849ms
+ ✓ tests/integration/groceries.contract.test.ts > T20 confirm an order, then receive one item and report another missing > confirmation does not imply receipt; received resolves; missing stays actionable 1656ms
+ ✓ tests/integration/groceries.contract.test.ts > X09 capture after confirmation > identifies a staple already in the confirmed order before creating a duplicate; Add another is an explicit extra 999ms
+ ✓ tests/integration/groceries.contract.test.ts > Expected supply respects pickup timing (plan §6.4) > ordered goods support only dinners on or after pickup; unknown pickup is unresolved, not proof 1887ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 authorization start > stores a single-use state bound to household, member and redirect URI — hash only, verifier sealed — and builds a PKCE S256 URL 954ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 authorization start > absent configuration or activation refuses to start and stores nothing 715ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 authorization callback > exchanges the code once with Basic auth and stores tokens sealed (raw columns hold no token) 795ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 authorization callback > a replayed state is refused with no exchange and nothing changed 750ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 authorization callback > an expired state is refused and nothing is stored 723ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 authorization callback > another member's or another household's state is refused without consuming it; unknown and missing states are refused 716ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 authorization callback > a different redirect URI configured at callback time does not match the bound state 670ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 authorization callback > denied access is recorded as not connected, with no exchange and no tokens 743ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 authorization callback > a callback while connect is not activated stores nothing and leaves the state unused 667ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 authorization callback > a failed exchange stores no tokens 721ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 token refresh coordination > two concurrent callers with an expired token cause exactly one refresh and share its result 1077ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 token refresh coordination > an unknown expiry is treated as expired: refresh before use 687ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 token refresh coordination > a failed refresh (400 invalid refresh token) marks needs_reauthorization once and never loops 857ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 token refresh coordination > a failed refresh (a timeout (the token may have been consumed)) marks needs_reauthorization once and never loops 843ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 token refresh coordination > a failed refresh (a 500) marks needs_reauthorization once and never loops 980ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 token refresh coordination > a refresh needs the connect capability: with it deactivated nothing is sent 760ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 household isolation, disconnect, location > one household's tokens can never be used for another, even if copied 766ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 household isolation, disconnect, location > disconnect discards the sealed tokens; location is per household and validated 751ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 export and logging never carry secrets > the household export excludes tokens, verifiers and states but keeps the non-secret history 797ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 export and logging never carry secrets > logs redact Authorization, tokens, codes, verifiers and the client secret 723ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 cart handoff readiness > stays false with full credentials present and no activation; zero calls, nothing frozen 1227ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 cart handoff readiness > per household: no connection or no store location means not ready and nothing sent 977ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 cart handoff readiness > a household that is not ready is refused before anything is frozen (integration: startHandoff asks the household's readiness) 1052ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 dispatch through startHandoff with the Kroger adapter > 204: one PUT built from the frozen batch bytes; approvals consumed once; batch-level acknowledgment only; no order 1242ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 dispatch through startHandoff with the Kroger adapter > a stale grocery review makes no transport call 1121ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 dispatch through startHandoff with the Kroger adapter > a timeout is uncertain at batch level and never replayed 1158ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 dispatch through startHandoff with the Kroger adapter > a network error after sending is uncertain at batch level and never replayed 1093ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 dispatch through startHandoff with the Kroger adapter > a 500 is uncertain at batch level and never replayed 1122ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 dispatch through startHandoff with the Kroger adapter > an undocumented 200 with a body is uncertain at batch level and never replayed 1092ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 dispatch through startHandoff with the Kroger adapter > a documented 400 is a definite failure of the whole batch 1096ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 dispatch through startHandoff with the Kroger adapter > a 401 fails without retrying the write and requires the household to connect again 1215ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 dispatch through startHandoff with the Kroger adapter > an expired access token is refreshed before the single PUT 975ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 dispatch through startHandoff with the Kroger adapter > a refresh failure at send time means nothing was sent: failed, not uncertain 1125ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 household isolation at the adapter > another household's send never uses this household's connection, tokens or location 905ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 persistence and history > a confirmed match writes history + the current row with provenance; a portion and a clear append; history is immutable 1142ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 persistence and history > values describing another form than the recipe uses become not applicable (unknown) 844ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 persistence and history > refusals write nothing: invalid input, unknown portion, an unusable basis, and every lookup failure 850ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 persistence and history > a replayed operation is answered from its receipt without contacting FoodData Central 675ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 household authorization > another household's ingredient is not_found, nothing is fetched, written or revealed 737ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 competing match changes (two members, both commit orders) > two matches made from the same revision: the first wins, the second is refused stale with nothing written (jon-first) 744ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 competing match changes (two members, both commit orders) > a clear racing a match from the same revision: one wins, the other is refused stale (jon-first) 801ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 competing match changes (two members, both commit orders) > two matches made from the same revision: the first wins, the second is refused stale with nothing written (alex-first) 800ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 competing match changes (two members, both commit orders) > a clear racing a match from the same revision: one wins, the other is refused stale (alex-first) 947ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 changed since review > values that differ from the reviewed ones are refused with nothing written; the new values can then be reviewed and used 870ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 nutrition never rewrites plans, recipes, targets or allergen information > accepted dinners, recipe versions and member targets are byte-identical; only calculated nutrition changes 1073ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 nutrition never rewrites plans, recipes, targets or allergen information > nutrition data is not allergen clearance: allergen flags, tags and exclusions are untouched 856ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 export > includes the match history and current rows, and never a key 904ms
+ ✓ tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > a process starting while another is still sending does not mark that transfer uncertain 1140ms
+ ✓ tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > an outcome that arrives after the transfer was marked uncertain never overwrites it 1085ms
+ ✓ tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > a store that never answers becomes uncertain within the dispatch bound, and a later answer does not change it 1583ms
+ ✓ tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > a member's check of the cart is never overwritten by a late answer from the store 999ms
+ ✓ tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > a timeout is not a rejection: the send stays uncertain (packages not offered again), a new send is refused, nothing is replayed 1422ms
+stdout | tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > while the server keeps running, the periodic sweep marks a send whose process stopped, without a restart
+{"at":"recovery-sweep","uncertainBatches":1}
+
+ ✓ tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > recovery is repeatable: running it again changes nothing, sends nothing and rewrites no history 1203ms
+ ✓ tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > while the server keeps running, the periodic sweep marks a send whose process stopped, without a restart 1055ms
+ ✓ tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > a second press by the same member (a new operation id) adds nothing and reports who recorded it and when 843ms
+ ✓ tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > replaying the same operation id returns the original receipt and adds nothing 751ms
+ ✓ tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > both members press at the same moment: exactly one record, the other is told it is already recorded — Jon first 771ms
+ ✓ tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > both members press at the same moment: exactly one record, the other is told it is already recorded — Alex first 789ms
+ ✓ tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > the household snapshot shows the night as already cooked, by whom 733ms
+ ✓ tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > a mistaken record is corrected by an appended correction; history and 'new to you' ignore it; cooking can then be recorded again 902ms
+ ✓ tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > a correction is refused for a record already corrected, another household's record, or an unknown reason — and writes nothing 727ms
+ ✓ tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > the database refuses a second effective record for one event even if a command were bypassed 747ms
+ ✓ tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > export and restore keep corrections and pre-existing duplicates, in any row order 1231ms
+ ✓ tests/integration/b12.staple-products.test.ts > B12 remembered staple products > B12a: approving a different product updates the remembered product and its revision, records the decision, and both members see it 1058ms
+ ✓ tests/integration/b12.staple-products.test.ts > B12 remembered staple products > B12b: future one-tap requests use the latest approved product and usual quantity; the outstanding purchase and its approval are untouched 1223ms
+ ✓ tests/integration/b12.staple-products.test.ts > B12 remembered staple products > B12c: confirmed orders and transfers stay unchanged; later needs route to the next pickup with the new product 1237ms
+ ✓ tests/integration/b12.staple-products.test.ts > B12 remembered staple products > B12d: concurrent approvals cannot silently overwrite a newer decision — Jon first 890ms
+ ✓ tests/integration/b12.staple-products.test.ts > B12 remembered staple products > B12d: concurrent approvals cannot silently overwrite a newer decision — Alex first 835ms
+ ✓ tests/integration/b12.staple-products.test.ts > B12 remembered staple products > B12e: unknown or unavailable products are refused, and a remembered product that is unavailable leaves the line unresolved 1029ms
+ ✓ tests/integration/b12.staple-products.test.ts > B12 remembered staple products > B12f: remembering a usual quantity never changes the remembered product 847ms
+ ✓ tests/integration/household.more.test.ts > Backup and deferred dinners > keeps the original as a deferred dinner, never stacked, and it can be placed deliberately later 1209ms
+ ✓ tests/integration/household.more.test.ts > Proposal controls > Fewer sessions and Different dinners revise open nights only and explain the actual change 862ms
+ ✓ tests/integration/household.more.test.ts > X08 new exclusion flags, never replaces > flags Friday's salmon after a fish exclusion and leaves the accepted dinner in place 829ms
+ ✓ tests/integration/household.more.test.ts > Separate per-person targets and portions > each member sets their own daily and dinner targets; plates show nutrition against the dinner target only 808ms
+ ✓ tests/integration/household.more.test.ts > Separate per-person targets and portions > settings are saved inputs with revision checks; nothing starts set 745ms
+ ✓ tests/integration/b17.recipes.test.ts > B17 recipe versions are edited against the version seen > two edits made from the same version: the first saves, the second is refused with who saved what — Jon first 920ms
+ ✓ tests/integration/b17.recipes.test.ts > B17 recipe versions are edited against the version seen > two edits made from the same version: the first saves, the second is refused with who saved what — Alex first 837ms
+ ✓ tests/integration/b17.recipes.test.ts > B17 recipe versions are edited against the version seen > RB17-03: an edit of an existing recipe must name its version; missing, malformed and stale ones write nothing 840ms
+ ✓ tests/integration/b17.recipes.test.ts > B17 recipe versions are edited against the version seen > RB17-02: repeated occurrences of one ingredient in a component are stored as separate rows, with their own form and note 834ms
+stderr | tests/integration/b9.account-recovery.test.ts > B9 operator password reset > replaces the member's password, ends that member's sessions, and leaves the other member alone
+[2m2026-10-08T15:20:42.197Z[0m [33mWARN[0m [1m[Better Auth]:[0m Invalid password
+
+ ✓ tests/integration/b9.account-recovery.test.ts > B9 operator password reset > replaces the member's password, ends that member's sessions, and leaves the other member alone 1831ms
+ ✓ tests/integration/b9.account-recovery.test.ts > B9 operator password reset > refuses an unknown address, a non-member account and a short password, changing nothing 821ms
+ ✓ tests/integration/x12.environment.test.ts > X12 test helpers are blocked outside the test environment > refuses a fixed clock, fixture seeding and test barriers in production 6ms
+ ✓ tests/integration/x12.environment.test.ts > X12 incomplete real retailer configuration never reports mock success as live > Kroger mode without configuration (or without verified authorization) refuses handoff with zero calls 907ms
+ ✓ tests/integration/x12.environment.test.ts > X12 export omits secrets and round-trips into an isolated database > exports household data without credentials and restores it faithfully 1256ms
+ ✓ tests/integration/b3.received-goods.test.ts > B3 received goods and genuine additional purchasing > labels and favors options that use received, unallocated goods; extra cost excludes goods already received 1713ms
+ ✓ tests/integration/b3.received-goods.test.ts > B3 received goods and genuine additional purchasing > with no purchasing history, additional basket cost equals the full extra purchase 698ms
+ ✓ tests/unit/fdc-client.test.ts > B7 adapter typed outcomes > ok: search and detail through the labeled fetched-demo records, with provenance and rate-limit headers 12ms
+ ✓ tests/unit/fdc-client.test.ts > B7 adapter typed outcomes > no_matches: an empty search, and a food id FDC does not have (404) 2ms
+ ✓ tests/unit/fdc-client.test.ts > B7 adapter typed outcomes > not_configured: no key means nothing is attempted 1ms
+ ✓ tests/unit/fdc-client.test.ts > B7 adapter typed outcomes > invalid_key: 403 API_KEY_INVALID / API_KEY_MISSING 2ms
+ ✓ tests/unit/fdc-client.test.ts > B7 adapter typed outcomes > rate_limited: the genuine 429 OVER_RATE_LIMIT record keeps its X-RateLimit values; no retry 2ms
+ ✓ tests/unit/fdc-client.test.ts > B7 adapter typed outcomes > timeout: the request is aborted after the bounded time, even if the transport ignores the signal 305ms
+ ✓ tests/unit/fdc-client.test.ts > B7 adapter typed outcomes > unavailable: 5xx and network failure 3ms
+ ✓ tests/unit/fdc-client.test.ts > B7 adapter typed outcomes > malformed: a body that is not JSON, valid JSON in the wrong shape, and the wrong food 3ms
+ ✓ tests/unit/fdc-client.test.ts > B7 live transport: server-side key, documented request shapes, nothing leaks > sends the key only as the api_key query parameter to api.nal.usda.gov/fdc 59ms
+ ✓ tests/unit/fdc-client.test.ts > B7 live transport: server-side key, documented request shapes, nothing leaks > errors and logs never carry the key or a keyed URL 1ms
+ ✓ tests/unit/fdc-client.test.ts > B7 configuration > the fixture switch is test-only; a real key is ignored in the test environment 1ms
+ ✓ tests/unit/fdc-client.test.ts > B7 configuration > fetched-demo records are byte-for-byte what the manifest hashes; every fixture directory is labeled 3ms
+ ✓ tests/unit/fdc-client.test.ts > B7 configuration > no browser module can reach the key: client components never import server code 2ms
+ ✓ tests/integration/b9.deploy-health.test.ts > B9 production configuration > a complete production configuration has no problems; development and test are not judged by it 3ms
+ ✓ tests/integration/b9.deploy-health.test.ts > B9 production configuration > refuses missing or weak secrets, a non-HTTPS or path-bearing auth URL, and every test convenience 3ms
+ ✓ tests/integration/b9.deploy-health.test.ts > B9 health route > reports ready when the database answers and every migration on disk is applied (test environment) 72ms
+ ✓ tests/unit/domain.test.ts > X06 portion, unit and nutrition arithmetic > component-only changes affect only that component's ingredients 5ms
+ ✓ tests/unit/domain.test.ts > X06 portion, unit and nutrition arithmetic > a leftover batch is counted once: plates on later nights draw from the same cooking 1ms
+ ✓ tests/unit/domain.test.ts > X06 portion, unit and nutrition arithmetic > rounds packages up exactly and never with binary floating point 1ms
+ ✓ tests/unit/domain.test.ts > X06 portion, unit and nutrition arithmetic > mass ounces are not fluid ounces; custom units only match themselves 1ms
+ ✓ tests/unit/domain.test.ts > X06 portion, unit and nutrition arithmetic > missing nutrition or conversion stays unknown, never zero 2ms
+ ✓ tests/unit/domain.test.ts > X07 cost scopes and unknowns > keeps dinner ingredient cost, pickup spending and unknown prices distinct 14ms
+ ✓ tests/unit/domain.test.ts > X07 cost scopes and unknowns > a firm budget cannot be proven by unknown prices, and a known excess is 'over' 4ms
+ ✓ tests/unit/domain.test.ts > X07 cost scopes and unknowns > usual replenishment is a minimum, shared with recipe demand; explicit extras add 1ms
+ ✓ tests/unit/domain.test.ts > X08 dates, DST, locks, exclusions > uses household-local dates across local midnight and daylight-saving transitions 13ms
+ ✓ tests/unit/domain.test.ts > X08 dates, DST, locks, exclusions > a new exclusion flags the current dinner without replacing it 1ms
+ ✓ tests/unit/domain.test.ts > X08 dates, DST, locks, exclusions > unknown ingredient information cannot pass a hard-exclusion check for a new choice 2ms
+ ✓ tests/unit/domain.test.ts > X08 dates, DST, locks, exclusions > locks are never overwritten; leftovers never precede their cooking 2ms
+ ✓ tests/unit/domain.test.ts > X08 dates, DST, locks, exclusions > closure staleness is per target: an unrelated night's revision does not stale a preview 1ms
+ ✓ tests/unit/domain.test.ts > Proposal engine (deterministic, explainable) > is deterministic and applies hard eligibility before preference 3ms
+ ✓ tests/unit/domain.test.ts > Proposal engine (deterministic, explainable) > keeps locked nights unchanged 2ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 FDC detail mapping per data type > SR Legacy (fetched demo r3): per 100 g, energy 208 kcal, macros with units, offered portions, raw hint 8ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 FDC detail mapping per data type > Foundation (official example 747448): portion from portionDescription; numeric modifier is not a unit; spec's example nutrient number 305 maps to nothing 2ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 FDC detail mapping per data type > SR Legacy and Survey official examples map; Survey's `datatype` spelling is accepted 1ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 FDC detail mapping per data type > Survey (synthetic): values per 100 g; portions described only by text become their own units 1ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 FDC detail mapping per data type > Branded (official example 534358): label values are per serving; never used as per-100 values 1ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 serving is not 100 g; ml is not grams > a 30 g label serving is offered as a portion; default values stay per 100 g 2ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 serving is not 100 g; ml is not grams > a serving in ml has no gram weight and leaves the per-100 basis unknown 3ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 energy, missing and bad units > no 208: energy from 958 (Atwater specific), and the number used is recorded; kJ is never converted 1ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 energy, missing and bad units > no 208 or 958: energy from 957; a missing nutrient is unknown, never zero; unit case is ignored 1ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 energy, missing and bad units > a non-kcal energy or non-g macro is bad_unit and unknown 1ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 portions > a chosen portion scales every known value exactly by its gram weight; unknown stays unknown 2ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 portions > a portion without a positive gram weight is never offered; an unknown portion id is refused 1ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 search mapping and schema mismatch > live search shape (fetched demo r1): items with data type and published date 2ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 search mapping and schema mismatch > the spec's array form is accepted; unsupported data types are left out; no foods is empty 1ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 search mapping and schema mismatch > wrong shapes are malformed, never partially used 1ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 review digest and form > the digest covers exactly the shown values 3ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 review digest and form > description words are only a hint 0ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 review digest and form > values for another form than the recipe uses are not applicable (unknown), not converted 1ms
+ ✓ tests/unit/kroger-security.test.ts > B5 sealing (AES-256-GCM) and key handling > round-trips, binds to its associated data, and never contains the plaintext 9ms
+ ✓ tests/unit/kroger-security.test.ts > B5 sealing (AES-256-GCM) and key handling > accepts only 32 random bytes in base64 1ms
+ ✓ tests/unit/kroger-security.test.ts > B5 PKCE (S256, as documented) and state > derives the challenge from the verifier with SHA-256 / base64url (S256 = base64url(SHA-256(verifier))) 2ms
+ ✓ tests/unit/kroger-security.test.ts > B5 PKCE (S256, as documented) and state > state is random and only its hash is meant for storage 1ms
+ ✓ tests/unit/kroger-security.test.ts > B5 PKCE (S256, as documented) and state > authorize URL carries exactly the documented parameters plus state 2ms
+ ✓ tests/unit/kroger-security.test.ts > B5 PKCE (S256, as documented) and state > token requests use Basic auth and form bodies; the code exchange sends the verifier 2ms
+ ✓ tests/unit/kroger-security.test.ts > B5 PKCE (S256, as documented) and state > parses token responses; a missing expires_in is unknown, not a default 2ms
+ ✓ tests/unit/kroger-security.test.ts > B5 redaction > removes Authorization, tokens, codes, verifiers, state and the client secret 2ms
+ ✓ tests/unit/kroger-security.test.ts > B5 staged activation matrix > absent activation = nothing active; full credentials are not enough 3ms
+ ✓ tests/unit/kroger-security.test.ts > B5 staged activation matrix > each capability is independent: connect alone never enables products or cart writes 1ms
+ ✓ tests/unit/kroger-security.test.ts > B5 staged activation matrix > cart stays not-ready while modality is unsettled, even fully activated and configured 1ms
+ ✓ tests/unit/kroger-security.test.ts > B5 staged activation matrix > missing configuration is named per capability 1ms
+ ✓ tests/unit/kroger-security.test.ts > B5 staged activation matrix > the retailer must be kroger for any capability to be active 0ms
+ ✓ tests/unit/kroger-security.test.ts > B5 staged activation matrix > status never claims live-verified 1ms
+ ✓ tests/unit/kroger-security.test.ts > B5 staged activation matrix > unknown activation names fail loudly 0ms
+ ✓ tests/unit/kroger-security.test.ts > B5 staged activation matrix > production refuses activation unless TABLE_RETAILER=kroger, and refuses the test fake 1ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 products mapping > maps documented fields with a location; unknown stays null, never zero 6ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 products mapping > without a locationId, price, fulfillment and stock are not claimed even if present 1ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 products mapping > product details (single object) and junk are handled without inventing data 1ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 products mapping > dollars become exact integer cents only when unambiguous 1ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 products mapping > maps locations from the documented shape 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "1 gal" -> 3785.411784 ml 1ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "1/2 Gallon" -> 1892.705892 ml 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "2 lb" -> 2 lb 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "12 fl oz" -> 12 fl_oz 1ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "16 FL. OZ." -> 16 fl_oz 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "500 ml" -> 500 ml 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "1.5 l" -> 1.5 l 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "454 g" -> 454 g 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "each" -> 1 each 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "10 ct" -> 10 each 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "1 qt" -> 946.352946 ml 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "16 oz" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "6 ct / 12 oz" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "about 1.5 lb" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "per lb" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "1.5 lb avg" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "2-3 lb" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "12 oz pack" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "0 lb" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "1/0 gal" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "Family Size" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "2 x 8 oz" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "1 bunch" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 cart add request and outcome mapping > builds PUT /v1/cart/add from exactly the given lines 1ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 cart add request and outcome mapping > 204 is a batch-level acknowledgment only — no per-line result, no order 1ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 cart add request and outcome mapping > documented 4xx -> failed; 401 -> failed needing reauthorization, never retried 1ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 cart add request and outcome mapping > 5xx, undocumented statuses and unreadable responses are uncertain 1ms
+ ✓ tests/unit/kroger-lookup.test.ts > B5 product and location lookup > not activated (or retailer simulated): answers not_activated with zero transport calls 7ms
+ ✓ tests/unit/kroger-lookup.test.ts > B5 product and location lookup > activated: client-credentials token with the configured scopes, then GET /products with the location; candidates mapped 6ms
+ ✓ tests/unit/kroger-lookup.test.ts > B5 product and location lookup > locations need their own (undocumented) scope configured; invalid inputs never reach the network 1ms
+ ✓ tests/unit/kroger-lookup.test.ts > B5 product and location lookup > a token or search failure is reported, not turned into an empty result 2ms
+ ✓ tests/unit/recipe-rebase.test.ts > rebase: a draft brought up to a newer version (RB17-01) > takes the newer steps and reheat text for fields the member did not touch, and keeps the member's title 4ms
+ ✓ tests/unit/recipe-rebase.test.ts > rebase: a draft brought up to a newer version (RB17-01) > never reverts fields the editor does not show: summary, source label, ingredient form and note 1ms
+ ✓ tests/unit/recipe-rebase.test.ts > rebase: a draft brought up to a newer version (RB17-01) > does not decide for the member when both changed the same field; the explicit choice is applied as made 1ms
+ ✓ tests/unit/recipe-rebase.test.ts > rebase: a draft brought up to a newer version (RB17-01) > is not a conflict when both reached the same value, and nothing is taken when the other version changed nothing 1ms
+ ✓ tests/unit/recipe-rebase.test.ts > rebase: a draft brought up to a newer version (RB17-01) > a third version rebases again from the second: changes since the second are taken, earlier choices stand 1ms
+ ✓ tests/unit/recipe-rebase.test.ts > ingredient comparison by occurrence (RB17-02) > a change to the first of two occurrences is reported, not lost 1ms
+ ✓ tests/unit/recipe-rebase.test.ts > ingredient comparison by occurrence (RB17-02) > units, forms and notes of one occurrence are compared 1ms
+ ✓ tests/unit/recipe-rebase.test.ts > ingredient comparison by occurrence (RB17-02) > adding or removing one of several identical occurrences is counted 0ms
+ ✓ tests/unit/recipe-rebase.test.ts > ingredient comparison by occurrence (RB17-02) > a reorder is reported as a reorder 1ms
+ ✓ tests/unit/recipe-rebase.test.ts > ingredient comparison by occurrence (RB17-02) > rebase keeps both occurrences when the member did not touch the ingredients 0ms
+ ✓ tests/unit/recipe-rebase.test.ts > ingredient comparison by occurrence (RB17-02) > blank scaffolding rows in a draft are not a change 1ms
+ ✓ tests/unit/recipe-rebase.test.ts > comparison by identity, not display name (RB17-02) > a shared-list rename of an ingredient (same key) is not a recipe change; a different ingredient key is 1ms
+ ✓ tests/unit/recipe-rebase.test.ts > comparison by identity, not display name (RB17-02) > moving an occurrence to a different component with the same name is a change 0ms
+ ✓ tests/unit/recipe-rebase.test.ts > editor state: rebases and keystrokes in order (RB17-01) > a keystroke after a rebase applies to the merged draft and never restores the replaced content 1ms
+ ✓ tests/unit/recipe-rebase.test.ts > editor state: rebases and keystrokes in order (RB17-01) > an undecided field survives a later version that changes something else; Save stays held 1ms
+ ✓ tests/unit/recipe-rebase.test.ts > editor state: rebases and keystrokes in order (RB17-01) > a version that is not newer than the draft's base is ignored (late or out-of-order responses) 0ms
+ ✓ tests/unit/recipe-rebase.test.ts > editor state: rebases and keystrokes in order (RB17-01) > start over discards edits, decisions and the record of rebases; unsaved changes are measured by content 1ms
+ ✓ tests/unit/recipe-rebase.test.ts > compared as a save would store it (RB17-01) > values a save would store identically are not changes: re-typed names, whitespace, unit spellings, number forms 2ms
+ ✓ tests/unit/recipe-rebase.test.ts > compared as a save would store it (RB17-01) > an edit that comes back to the stored value is not unsaved, and does not turn the other member's change into a conflict 1ms
+
+ Test Files  23 passed (23)
+      Tests  293 passed (293)
+   Start at  15:17:55
+   Duration  176.26s (tests 94%, import 5%, transform 1%)
+
+JSON report written to /tmp/table-verify-02a3b1a-20261008T151748Z/vitest.json

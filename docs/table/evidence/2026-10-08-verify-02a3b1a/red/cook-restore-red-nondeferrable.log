@@ -1,0 +1,40 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/table
+
+ ❯ tests/integration/cook-records.test.ts (9 tests | 1 failed | 8 skipped) 1354ms
+   ❯ cook-record idempotency: one effective record per cooking event (9)
+     × export and restore keep corrections and pre-existing duplicates, in any row order 1352ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > export and restore keep corrections and pre-existing duplicates, in any row order
+AssertionError: expected 'threw: insert or update on table "coo…' to match object { cook_records: 3, …(1) }
+
+- Expected:
+{
+  "cook_record_corrections": 1,
+  "cook_records": 3,
+}
+
++ Received:
+"threw: insert or update on table \"cook_records\" violates foreign key constraint \"cook_records_duplicate_of_fkey\""
+
+ ❯ tests/integration/cook-records.test.ts:157:24
+    155|       await dst.query(`TRUNCATE ${tables.map((t) => `"${t.tablename}"`…
+    156|       const restored = await restoreHousehold(dst, JSON.parse(JSON.str…
+    157|       expect(restored).toMatchObject({ cook_records: 3, cook_record_co…
+       |                        ^
+    158|       const eff = (await dst.query("SELECT cooking_event_id FROM cook_…
+    159|       expect(eff).toEqual([fx.events.salmon]); // the duplicate and th…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 skipped (9)
+   Start at  15:12:11
+   Duration  3.03s (tests 48%, transform 33%, import 19%)
+

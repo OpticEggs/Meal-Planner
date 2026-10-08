@@ -59,6 +59,7 @@ Result values: PASS · FAIL (describe what happened) · BLOCKED (why) · NOT RUN
 | D20 | Android Chrome (if a device is available): D01–D03, D12, D14 with TalkBack | As above | — | NOT RUN | |
 | D21 | Household → an ingredient → **Find nutrition…** with no FDC key installed | The status line and the dialog say lookup is not configured; nothing pretends to search. With a key installed (after OWNER-INPUTS N1): search, open a candidate, choose the form, "Use these values"; unknown values read as "unknown"; VoiceOver reads the values with their units | b7-nutrition e2e (category A) | NOT RUN | BLOCKED for the keyed part until N1 |
 | D22 | Household → Connections → Kroger card at the largest text size and with VoiceOver | Each capability is read with its evidence ("not live-verified"); "Connect Kroger account" is announced as unavailable; the store id error is read with its field | b5-kroger e2e (category A) | NOT RUN | |
+| D23 | Cook page on both phones: one member taps **Mark cooked**; the other has the same dinner open | The other phone shows "Cooked · recorded by …" without a reload; a second tap anywhere adds nothing and says who recorded it. **Correct this: it wasn't cooked** opens a dialog whose first focus is "Keep the record"; VoiceOver reads the title and both choices; "It wasn't cooked" announces the correction and **Mark cooked** returns | cook-records e2e (category A) | NOT RUN | |
 
 ## WebKit automation
 

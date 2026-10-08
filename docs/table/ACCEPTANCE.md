@@ -2,7 +2,7 @@
 
 Status vocabulary: NOT IMPLEMENTED · IMPLEMENTED / NOT RUN · PASS · FAIL · BLOCKED.
 
-**Current evidence run:** `docs/table/evidence/2026-10-08-verify-972e368/summary.md` (implementation commit `972e368`, B17; clean tree, source hash unchanged during the run): vitest 121/121, Playwright 72/72, 31 mutations killed. Earlier runs are kept as history: `2026-10-08-verify-5f7b72f/` (B15/B16), `2026-10-08-verify-0804381/` (B14/B12), `2026-10-08-verify-2c56267/` (correction pass), `2026-10-08-full-run*.md`.
+**Current evidence run:** `docs/table/evidence/2026-10-08-verify-02a3b1a/summary.md` (implementation commit `02a3b1a`, cook-record idempotency; clean tree, source hash unchanged during the run): vitest 293/293, Playwright 117/117, 62 mutations killed, 0 survived, 0 error. Earlier runs are kept as history under `docs/table/evidence/` (latest before this: `2026-10-08-verify-c19bd5a/`, integration preparation).
 Environment: real PostgreSQL 16.15, production `next start` server, two independently signed-in
 Chromium contexts, recording fake retailer (simulated; nothing reaches a store), fixed household clock
 2026-10-12 15:00 America/New_York. Concurrency orders are forced with database lock barriers.
@@ -270,3 +270,31 @@ bound (`TABLE_DISPATCH_TIMEOUT_MS=1000`) and the test polls for the result; it n
 uncertain status came from crash recovery. Its assertions (uncertain, never retried, shown as uncertain)
 are unchanged. `startServer` in that spec takes optional extra environment. No test was skipped,
 deleted or weakened.
+
+## Cook-record idempotency (delivery review of fb4d771, gate 2) — added 2026-10-08
+
+New IDs; no earlier row renumbered. Start `fb4d771`; implementation commit `02a3b1a`; verified at
+`02a3b1a`. Evidence `docs/table/evidence/2026-10-08-verify-02a3b1a/summary.md` (vitest 293/293, Playwright 117/117, 62 mutations killed, 0 survived, 0 error).
+
+**Red before green** (all in the same folder, `red/`). Integration: on `fb4d771` 7 of 8 failed by
+assertion; the operation-id replay passed, as the review predicted (`cook-records-red-on-fb4d771.log`).
+Browser: the new spec fails on `fb4d771` because the cooked state does not exist (element not found —
+`cook-records-e2e-red-on-fb4d771.log`, not an assertion about behavior), so a behavior variant was run
+on `fb4d771` that presses "Mark cooked" twice through the old UI and counts rows: it failed by assertion,
+"a second press must not add a record — expected 1, received 2"
+(`cook-records-e2e-red-variant-on-fb4d771.log`, spec saved beside it). A first attempt at that variant is
+kept as `INVALID-cook-records-e2e-red-variant-schema-008.log`: it ran the old code against a database
+already migrated to 008, so the second press was refused by the new index (HTTP 500) — not a valid red.
+Restore order: with an immediate `duplicate_of` reference the restore test failed by assertion
+(`cook-restore-red-nondeferrable.log`).
+
+| ID | What is checked | Tests | Status |
+|---|---|---|---|
+| COOK-01 One record per event | A second press by the same member (new operation id) adds nothing and names who recorded it; the same operation id replays the receipt; both members at once, in both orders → exactly one record, by the first, the other told "already recorded"; the database refuses a second effective record if a command were bypassed | integration cook-records (5) | PASS |
+| COOK-02 Cooked state shown | The snapshot carries who recorded the night and when; the Cook page shows "Cooked · recorded by …" instead of the button, live for the other member; a press from a stale page is answered "already recorded" and adds nothing | integration cook-records; e2e cook-records | PASS (Chromium) |
+| COOK-03 Correction | "This wasn't cooked" appends a correction (nothing deleted); history, "new to you" and the Cook page ignore the corrected record; cooking can be recorded again, once; refusals for another household (`not_found`), unknown reason (`invalid`), already corrected (`stale`) write nothing; the dialog opens on "Keep the record", Escape keeps it, focus returns | integration cook-records; e2e cook-records | PASS (Chromium) |
+| COOK-04 Existing duplicates and restore | Duplicates are kept and marked, shown once; export/restore keeps records, duplicates and corrections in the worst row order; upgrade of a populated 007 database holding duplicates (only `schema_migrations` differs over pre-existing tables; 2 effective, 2 marked) | integration cook-records "export and restore"; scripted upgrade check (`upgrade-008/`) | PASS (local) |
+| COOK mutations | second record added, correction applied twice, history counts a corrected record, "new to you" counts a corrected record, snapshot ignores the record | `tests/mutation/run.mjs` | PASS — all KILLED by assertion |
+| Devices | Cook page cooked state and correction dialog on iPhone Safari/VoiceOver | DEVICE-CHECKLIST D-row added | **NOT RUN** (B8) |
+
+**Existing tests changed:** none. T06 (cook mode records cooking) passes unchanged.

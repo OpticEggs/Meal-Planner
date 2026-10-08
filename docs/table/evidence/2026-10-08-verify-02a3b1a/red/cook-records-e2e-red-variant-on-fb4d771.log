@@ -1,0 +1,41 @@
+
+Running 1 test using 1 worker
+
+second press: {"httpStatus":200,"body":"{\"status\":\"accepted\",\"result\":{\"recorded\":true},\"operationId\":\"again-119f0f96-1a35-4086-964a-519b0d3ef6cc\",\"command\":\"RecordCooked\",\"replayed\":false,\"seq\":2,\"acceptedChoiceRevision\":1}"}
+  ✘  1 [chromium] › tests/e2e/cook-records-red-variant.spec.ts:7:1 › red variant: one record per cooking event; the button is gone once recorded (2.8s)
+
+
+  1) [chromium] › tests/e2e/cook-records-red-variant.spec.ts:7:1 › red variant: one record per cooking event; the button is gone once recorded 
+
+    Error: a second press must not add a record
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 2
+
+      16 |   }, fx.events.stirfry);
+      17 |   console.log("second press:", JSON.stringify(second));
+    > 18 |   expect(await count(), "a second press must not add a record").toBe(1);
+         |                                                                 ^
+      19 |   expect(second.body).toContain("already_recorded");
+      20 |   await expect(jon.page.getByRole("button", { name: "Mark cooked" })).toHaveCount(0);
+      21 |   await jon.context.close();
+        at /tmp/table-red-cook/tests/e2e/cook-records-red-variant.spec.ts:18:65
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/cook-records-red-variant-r-3cb4a-utton-is-gone-once-recorded-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/cook-records-red-variant-r-3cb4a-utton-is-gone-once-recorded-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/cook-records-red-variant-r-3cb4a-utton-is-gone-once-recorded-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/cook-records-red-variant-r-3cb4a-utton-is-gone-once-recorded-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests/e2e/cook-records-red-variant.spec.ts:7:1 › red variant: one record per cooking event; the button is gone once recorded 

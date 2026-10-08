@@ -1,21 +1,29 @@
 # Table — Implementation status
 
-_Last updated 2026-10-08 (UTC), after the integration-preparation pass (B9 deployment candidate, B7
-nutrition, B5 Kroger adapter, B8 checklist)._
+_Last updated 2026-10-08 (UTC), after the cook-record idempotency fix (delivery review of fb4d771,
+gate 2), which followed the integration-preparation pass (B9 deployment candidate, B7 nutrition, B5
+Kroger adapter, B8 checklist)._
 
 ## Code identity
 
 | What | Identity |
 |---|---|
-| Starting point of this pass | `639c103fc822f7567bdbf9092606328174bb0d6c` (independently rechecked), then the docs-only recheck receipt `0712ccb` |
-| Implementation commits | `a871af9` B9 · `c974507` B5 (worker) · `668b00e` B5 integration · `f20a7ab` B7 (worker) · `4d0e822` integration · `c19bd5a` background-refresh fix |
-| Implementation commit verified | `c19bd5a64047dab8aa935e48570940b5e831ad62` (clean tree; tracked-file hash `295c631b…e88e` unchanged during the run) |
-| Documentation/evidence commits | the commits after c19bd5a on `main` (docs only — `git diff --stat c19bd5a..HEAD`), the last one the separate visual-update proposal |
+| Latest code commit | `02a3b1a1d5177442b7fec3c3f45b39e8ac921c0a` — cook-record idempotency (B19), on top of `fb4d771` (the reviewed delivery) |
+| Implementation commit verified | `02a3b1a` (clean tree; tracked-file hash `1425a99b…bc60` unchanged during the run) |
+| Integration-preparation pass | start `639c103` (+ docs-only `0712ccb`); `a871af9` B9 · `c974507` B5 (worker) · `668b00e` B5 integration · `f20a7ab` B7 (worker) · `4d0e822` integration · `c19bd5a` background-refresh fix (verified at `c19bd5a`) |
+| Documentation/evidence commits | the commits after each verified code commit on `main` (docs only — e.g. `git diff --stat 02a3b1a..HEAD`) |
 | Remote | `https://github.com/OpticEggs/Meal-Planner`, branch `main` |
 | Restore | `git clone --branch main <bundle> table` or `git clone <bundle> table` |
-| Migrations | `001`–`007`: `006_nutrition_sources.sql` (B7), `007_kroger.sql` (B5); upgrade from a populated 005 database checked |
+| Migrations | `001`–`008`: `006_nutrition_sources.sql` (B7), `007_kroger.sql` (B5), `008_cook_record_corrections.sql` (B19); upgrades from a populated 005 database (to 007) and a populated 007 database holding duplicate cook records (to 008) checked |
 
-## Verification (measured on c19bd5a)
+## Verification (measured on 02a3b1a)
+
+`scripts/verify-all.sh` → `docs/table/evidence/2026-10-08-verify-02a3b1a/summary.md`: typecheck PASS ·
+vitest 293/293 · production build PASS · Playwright 117/117 (Chromium, 0 skipped, 0 flaky) · mutation
+self-test PASS · 62 mutations killed / 0 survived / 0 error, sources restored. Red-before-green on
+`fb4d771` and the 008 upgrade check are in the same folder.
+
+### Previous run (c19bd5a, integration preparation)
 
 `scripts/verify-all.sh` → `docs/table/evidence/2026-10-08-verify-c19bd5a/summary.md` (complete logs + JSON):
 typecheck PASS · vitest 284/284 (real PostgreSQL) · production build PASS · Playwright 116/116 (Chromium,
@@ -25,7 +33,15 @@ browser test (T09) — root-caused to a client race and fixed in `c19bd5a` (D77)
 `verify-4d0e822-FAIL/`. Red-before-green, the local production-mode check and the upgrade check are in
 the same folder (see ACCEPTANCE "Integration preparation").
 
-## This pass
+## Cook-record idempotency (B19, after the delivery review of fb4d771)
+
+One effective "cooked" record per cooking event: a second press — by either member, at once or later —
+is answered "already recorded by …" and writes nothing (D78). The Cook page shows "Cooked · recorded by
+…" instead of the button. "Correct this: it wasn't cooked" appends a correction; nothing is deleted,
+history and "new to you" ignore the corrected record, and cooking can be recorded again (D79).
+Duplicates created before the fix are kept, marked and shown once (D80). Migration 008.
+
+## Integration-preparation pass
 
 **What is implemented and fixture-tested.** B9: overlap-safe dispatch recovery (bounded sends, a
 running sweep, late answers never overwrite uncertainty — D67), `/api/health` with production
@@ -103,8 +119,8 @@ Backup/restore: `scripts/backup.sh dump|restore|check` (dumps include auth table
 
 ## Evidence
 
-Current: `docs/table/evidence/2026-10-08-verify-c19bd5a/` (see Verification above). History:
-`2026-10-08-verify-abdd5a2/` (B17 correction, B18), `2026-10-08-independent-recheck-639c103/`, `2026-10-08-verify-972e368/` (B17), `2026-10-08-verify-5f7b72f/` (B15/B16), `2026-10-08-verify-0804381/` (B14/B12, with sheet
+Current: `docs/table/evidence/2026-10-08-verify-02a3b1a/` (see Verification above). History:
+`2026-10-08-verify-c19bd5a/` (integration preparation), `2026-10-08-verify-abdd5a2/` (B17 correction, B18), `2026-10-08-independent-recheck-639c103/`, `2026-10-08-verify-972e368/` (B17), `2026-10-08-verify-5f7b72f/` (B15/B16), `2026-10-08-verify-0804381/` (B14/B12, with sheet
 screenshots), `2026-10-08-verify-2c56267/` (correction pass), `2026-10-08-full-run*.md`,
 `2026-10-08-first-slice-e2e.md`. See ACCEPTANCE.md for per-test status.
 
@@ -119,5 +135,7 @@ screenshots), `2026-10-08-verify-2c56267/` (correction pass), `2026-10-08-full-r
 
 None without owner input. Owner gates, all in `OWNER-INPUTS.md`: hosting approval and provisioning
 (H1–H7), the household's FDC key (N1–N2), Kroger registration, provider validation, data-retention
-decision and a bounded cart test (K1–K7), device runs (P1–P2). A visual update is proposed in
-`UI-VISUAL-UPDATE-PROPOSAL.md` and waits for approval; it is not implemented.
+decision and a bounded cart test (K1–K7), device runs (P1–P2). The visual update in
+`UI-VISUAL-UPDATE-PROPOSAL.md` §5 was approved (presentation scope only) after the cook-record fix and is
+being implemented; it is not delivered until its own verification run. Kroger data retention (K6) is to
+be clarified with Kroger developer support or counsel before any live cart addition (delivery review).

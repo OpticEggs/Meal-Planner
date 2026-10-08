@@ -1,0 +1,6 @@
+First upgrade attempt of migration 008 (DEFERRABLE duplicate_of, before SET CONSTRAINTS IMMEDIATE) on a
+database at 007 holding duplicate cook records (3 for one event, 1 for another):
+  Error: migration 008_cook_record_corrections.sql failed: cannot CREATE INDEX "cook_records" because it has pending trigger events
+The migration ran in one transaction and rolled back completely (schema_migrations stayed at 007, 4 cook
+records unchanged). Fixed by checking the constraint immediately inside the migration; re-run: PASS
+(upgrade-008-diff.txt: only schema_migrations differs).

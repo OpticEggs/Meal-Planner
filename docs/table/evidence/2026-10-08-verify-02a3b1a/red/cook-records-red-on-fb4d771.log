@@ -1,0 +1,135 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/table
+
+ ❯ tests/integration/cook-records.test.ts (8 tests | 7 failed) 6502ms
+   ❯ cook-record idempotency: one effective record per cooking event (8)
+     × a second press by the same member (a new operation id) adds nothing and reports who recorded it and when 1554ms
+     × both members press at the same moment: exactly one record, the other is told it is already recorded — Jon first 833ms
+     × both members press at the same moment: exactly one record, the other is told it is already recorded — Alex first 773ms
+     × the household snapshot shows the night as already cooked, by whom 719ms
+     × a mistaken record is corrected by an appended correction; history and 'new to you' ignore it; cooking can then be recorded again 637ms
+     × a correction is refused for a record already corrected, another household's record, or an unknown reason — and writes nothing 675ms
+     × the database refuses a second effective record for one event even if a command were bypassed 628ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > a second press by the same member (a new operation id) adds nothing and reports who recorded it and when
+AssertionError: expected false to be 'already_recorded' // Object.is equality
+
+- Expected:
+"already_recorded"
+
++ Received:
+false
+
+ ❯ tests/integration/cook-records.test.ts:23:57
+     21|     expect(first.status).toBe("accepted");
+     22|     const second = await plan.recordCookedCommand(jon, op(), { eventId…
+     23|     expect(second.status === "rejected" && second.code).toBe("already_…
+       |                                                         ^
+     24|     expect((second as any).message).toMatch(/Jon/);
+     25|     expect(await records(fx.events.salmon)).toHaveLength(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > both members press at the same moment: exactly one record, the other is told it is already recorded — Jon first
+ FAIL  tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > both members press at the same moment: exactly one record, the other is told it is already recorded — Alex first
+AssertionError: expected false to be 'already_recorded' // Object.is equality
+
+- Expected:
+"already_recorded"
+
++ Received:
+false
+
+ ❯ tests/integration/cook-records.test.ts:44:49
+     42|       const [x, y] = order === "Jon first" ? await race(fx.householdId…
+     43|       expect(x.status).toBe("accepted");
+     44|       expect(y.status === "rejected" && y.code).toBe("already_recorded…
+       |                                                 ^
+     45|       const rows = await records(fx.events.salmon);
+     46|       expect(rows).toHaveLength(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > the household snapshot shows the night as already cooked, by whom
+AssertionError: expected undefined to match object { by: 'Jon' }
+
+- Expected:
+{
+  "by": "Jon",
+}
+
++ Received:
+undefined
+
+ ❯ tests/integration/cook-records.test.ts:56:30
+     54|     const s: any = await snapshot.householdSnapshot(alex);
+     55|     const fri = s.week.nights.find((n: any) => n.event?.id === fx.even…
+     56|     expect(fri.event.cooked).toMatchObject({ by: "Jon" });
+       |                              ^
+     57|     expect(typeof fri.event.cooked.recordId).toBe("string");
+     58|     const tue = s.week.nights.find((n: any) => n.event?.id === fx.even…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > a mistaken record is corrected by an appended correction; history and 'new to you' ignore it; cooking can then be recorded again
+AssertionError: a correction command must exist: expected 'undefined' to be 'function' // Object.is equality
+
+Expected: "function"
+Received: "undefined"
+
+ ❯ tests/integration/cook-records.test.ts:65:63
+     63|     const { fx, jon, alex } = await fresh();
+     64|     const correct = cmd("correctCookRecordCommand");
+     65|     expect(typeof correct, "a correction command must exist").toBe("fu…
+       |                                                               ^
+     66|     await plan.recordCookedCommand(jon, op(), { eventId: fx.events.sal…
+     67|     const [rec] = await records(fx.events.salmon);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > a correction is refused for a record already corrected, another household's record, or an unknown reason — and writes nothing
+AssertionError: expected 'undefined' to be 'function' // Object.is equality
+
+Expected: "function"
+Received: "undefined"
+
+ ❯ tests/integration/cook-records.test.ts:93:28
+     91|     const { fx, jon, alex, other } = await fresh();
+     92|     const correct = cmd("correctCookRecordCommand");
+     93|     expect(typeof correct).toBe("function");
+       |                            ^
+     94|     await plan.recordCookedCommand(jon, op(), { eventId: fx.events.sal…
+     95|     const [rec] = await records(fx.events.salmon);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > the database refuses a second effective record for one event even if a command were bypassed
+AssertionError: expected 'inserted' to match /duplicate key|unique/i
+
+- Expected:
+/duplicate key|unique/i
+
++ Received:
+"inserted"
+
+ ❯ tests/integration/cook-records.test.ts:114:26
+    112|       [fx.events.salmon],
+    113|     ).then(() => "inserted", (e: Error) => e.message);
+    114|     expect(await insert).toMatch(/duplicate key|unique/i);
+       |                          ^
+    115|     expect(await records(fx.events.salmon)).toHaveLength(1);
+    116|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 1 passed (8)
+   Start at  15:01:45
+   Duration  8.55s (tests 78%, transform 13%, import 10%)
+

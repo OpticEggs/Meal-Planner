@@ -1,0 +1,504 @@
+{
+  "when": "2026-10-08T15:40:57.688Z",
+  "head": "02a3b1a1d5177442b7fec3c3f45b39e8ac921c0a",
+  "restored": true,
+  "pass": true,
+  "results": [
+    {
+      "name": "blanket_week_conflict",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/2 failed by assertion: both survive, neither restores other nights, groceries are recalculated | both survive, neither restores other nights, groceries are recalculated"
+    },
+    {
+      "name": "last_write_wins",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "5/7 failed by assertion: reports the current Friday and stale draft from the snapshot before Apply; the old draft cannot apply | one commits; the other makes no accepted write and keeps its draft | one commits; the other makes no accepted write and keeps its draft"
+    },
+    {
+      "name": "stale_adoption",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/2 failed by assertion: never restores an obsolete seven-day snapshot"
+    },
+    {
+      "name": "stale_send",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/2 failed by assertion: shows the delta, keeps unaffected approvals, and stale Send makes zero outbound calls | changes current requirements but never the confirmed order; new chicken is not sent; stale Send makes zero calls"
+    },
+    {
+      "name": "approvals_not_consumed",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/2 failed by assertion: concurrent sends of the same review produce one transfer (first wins) | concurrent sends of the same review produce one transfer (second wins)"
+    },
+    {
+      "name": "uncertain_as_unsent",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/2 failed by assertion: is uncertain and never replayed automatically; granularity stays batch-level"
+    },
+    {
+      "name": "dispatch_superseded",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/2 failed by assertion: superseded queued work is canceled before dispatch-started (other race order)"
+    },
+    {
+      "name": "F01_admission_skipped",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "3/5 failed by assertion: R-F01a: an empty recipe collection yields a draft of seven open nights that cannot be adopted | R-F01b: too few eligible recipes leaves named open nights; adoption refused | R-F01c: a submitted proposal with an uncovered Thursday or missing plates is refused at the server"
+    },
+    {
+      "name": "F02_locked_group_dropped",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/6 failed by assertion: R-F02a: a locked Thursday leftover keeps its Wednesday source through a whole-week adoption"
+    },
+    {
+      "name": "F03_place_skips_exclusions",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/2 failed by assertion: R-F03a: placing a deferred dinner that now violates an exclusion is refused"
+    },
+    {
+      "name": "F04_order_hides_transfers",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "3/4 failed by assertion: R-F04a: a transfer acknowledged after the order is still counted; the same demand is not offered again | R-F04b: 'contents unknown' does not clear an uncertain transfer hold | R-F04c: an acknowledged transfer stays counted when the order's contents are unknown, and is flagged"
+    },
+    {
+      "name": "F05_substitute_counts_as_original",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/4 failed by assertion: R-F05a: an unvalidated substitution does not cover the original need | R-F05b: an unsuitable substitution leaves the need actionable; a suitable smaller one covers only its amount"
+    },
+    {
+      "name": "F06_enough_uses_current_demand",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/3 failed by assertion: R-F06a: a concurrent increase cannot enlarge Alex's assertion (change first)"
+    },
+    {
+      "name": "F07_capture_into_confirmed_pickup",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/3 failed by assertion: R-F07b: after this week's order is confirmed, a new need goes to the next pickup, not the confirmed order"
+    },
+    {
+      "name": "F08_single_week_recompute",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/2 failed by assertion: R-F08a: a price change made from week B invalidates week A's old review; old Send makes zero calls | R-F08b: a product mapping change from week B reaches week A's quantities"
+    },
+    {
+      "name": "B3_extra_cost_reprices_history",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/2 failed by assertion: labels and favors options that use received, unallocated goods; extra cost excludes goods already received"
+    },
+    {
+      "name": "B12_stale_staple_overwrites",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/2 failed by assertion: B12d: concurrent approvals cannot silently overwrite a newer decision — Jon first | B12d: concurrent approvals cannot silently overwrite a newer decision — Alex first"
+    },
+    {
+      "name": "B12_tap_ignores_remembered_product",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "3/7 failed by assertion: B12b: future one-tap requests use the latest approved product and usual quantity; the outstanding purchase and its approval are untouched | B12c: confirmed orders and transfers stay unchanged; later needs route to the next pickup with the new product"
+    },
+    {
+      "name": "B12_decision_swaps_outstanding_purchase",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: B12b: future one-tap requests use the latest approved product and usual quantity; the outstanding purchase and its approval are untouched"
+    },
+    {
+      "name": "B12_unavailable_product_substituted",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: B12e: unknown or unavailable products are refused, and a remembered product that is unavailable leaves the line unresolved"
+    },
+    {
+      "name": "B12_usual_quantity_overwrites_product",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: B12f: remembering a usual quantity never changes the remembered product"
+    },
+    {
+      "name": "B16_stale_edit_applied",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "3/4 failed by assertion: Scenario A: concurrent edits of one staple — the first decision survives, the second sees a conflict with the current value — Jon first | Scenario A: concurrent edits of one staple — the first decision survives, the second sees a conflict with the current value — Alex first"
+    },
+    {
+      "name": "B16_stale_removal_applied",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/4 failed by assertion: Scenario A: an edit racing a removal — whichever commits second is refused — Jon first"
+    },
+    {
+      "name": "B16_removed_staple_still_a_shortcut",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: B16c: removing hides the shortcut only; restore brings it back; a removed staple cannot be edited or re-pointed"
+    },
+    {
+      "name": "B16_removal_drops_grocery_need",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: Scenario C: removing a staple with outstanding demand removes its shortcut, not the grocery need"
+    },
+    {
+      "name": "B16_measured_amount_rounds_down",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: B16a: add, view, rename and set a usual amount in packages or a measured unit; future taps use it"
+    },
+    {
+      "name": "B16_repoint_keeps_old_package_count",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: re-pointing a staple with a measured usual amount re-expresses it in the new product's packages, or refuses an unconvertible product"
+    },
+    {
+      "name": "B15_product_choice_any_household_week",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: a product choice naming another household's week is refused without revealing that week's product"
+    },
+    {
+      "name": "B15_substitution_decision_overwritten",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: a substitution decision made against an older view is refused, not silently replaced"
+    },
+    {
+      "name": "B17_stale_recipe_version_stacked",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "3/4 failed by assertion: two edits made from the same version: the first saves, the second is refused with who saved what — Jon first | two edits made from the same version: the first saves, the second is refused with who saved what — Alex first"
+    },
+    {
+      "name": "RB17_03_version_optional_again",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: RB17-03: an edit of an existing recipe must name its version; missing, malformed and stale ones write nothing"
+    },
+    {
+      "name": "RB17_01_untouched_field_reverted",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "7/19 failed by assertion: takes the newer steps and reheat text for fields the member did not touch, and keeps the member's title | never reverts fields the editor does not show: summary, source label, ingredient form and note"
+    },
+    {
+      "name": "RB17_01_conflict_decided_silently",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "4/19 failed by assertion: does not decide for the member when both changed the same field; the explicit choice is applied as made"
+    },
+    {
+      "name": "RB17_02_occurrences_collapsed",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/19 failed by assertion: adding or removing one of several identical occurrences is counted"
+    },
+    {
+      "name": "RB17_01_undecided_field_dropped",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/19 failed by assertion: an undecided field survives a later version that changes something else; Save stays held"
+    },
+    {
+      "name": "RB17_01_older_version_rebased",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/19 failed by assertion: a version that is not newer than the draft's base is ignored (late or out-of-order responses)"
+    },
+    {
+      "name": "RB17_02_compared_by_display_name",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/19 failed by assertion: a shared-list rename of an ingredient (same key) is not a recipe change; a different ingredient key is"
+    },
+    {
+      "name": "RB17_01_compared_unlike_stored",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/19 failed by assertion: values a save would store identically are not changes: re-typed names, whitespace, unit spellings, number forms | an edit that comes back to the stored value is not unsaved, and does not turn the other member's change into a conflict"
+    },
+    {
+      "name": "B15_stale_product_choice_applied",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/2 failed by assertion: Scenario B/E: two product choices for the same pickup line made against the same view — Jon first | Scenario B/E: two product choices for the same pickup line made against the same view — Alex first"
+    },
+    {
+      "name": "B5_replayed_state_accepted",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/8 failed by assertion: a replayed state is refused with no exchange and nothing changed"
+    },
+    {
+      "name": "B5_ack_recorded_per_line",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: 204: one PUT built from the frozen batch bytes; approvals consumed once; batch-level acknowledgment only; no order"
+    },
+    {
+      "name": "B5_timeout_recorded_as_failed",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/4 failed by assertion: a timeout is uncertain at batch level and never replayed"
+    },
+    {
+      "name": "B5_ready_without_activation",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/3 failed by assertion: stays false with full credentials present and no activation; zero calls, nothing frozen"
+    },
+    {
+      "name": "B5_token_stored_in_plaintext",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/8 failed by assertion: exchanges the code once with Basic auth and stores tokens sealed (raw columns hold no token)"
+    },
+    {
+      "name": "B5_refresh_not_coordinated",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "3/6 failed by assertion: a failed refresh (400 invalid refresh token) marks needs_reauthorization once and never loops | a failed refresh (a timeout (the token may have been consumed)) marks needs_reauthorization once and never loops | a failed refresh (a 500) marks needs_reauthorization once and never loops"
+    },
+    {
+      "name": "B7_missing_kcal_becomes_zero",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "5/18 failed by assertion: no 208 or 958: energy from 957; a missing nutrient is unknown, never zero; unit case is ignored"
+    },
+    {
+      "name": "B7_serving_treated_as_100g",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/18 failed by assertion: a 30 g label serving is offered as a portion; default values stay per 100 g"
+    },
+    {
+      "name": "B7_ml_serving_as_grams",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/18 failed by assertion: a serving in ml has no gram weight and leaves the per-100 basis unknown"
+    },
+    {
+      "name": "B7_digest_not_checked",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: values that differ from the reviewed ones are refused with nothing written; the new values can then be reviewed and used"
+    },
+    {
+      "name": "B7_stale_revision_accepted",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "4/4 failed by assertion: two matches made from the same revision: the first wins, the second is refused stale with nothing written (jon-first) | a clear racing a match from the same revision: one wins, the other is refused stale (jon-first) | two matches made from the same revision: the first wins, the second is refused stale with nothing written (alex-first)"
+    },
+    {
+      "name": "B7_allergen_flag_set_from_fdc",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/2 failed by assertion: nutrition data is not allergen clearance: allergen flags, tags and exclusions are untouched"
+    },
+    {
+      "name": "B9_late_outcome_overwrites_uncertain",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/7 failed by assertion: an outcome that arrives after the transfer was marked uncertain never overwrites it"
+    },
+    {
+      "name": "B9_startup_recovers_live_sends",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/7 failed by assertion: a process starting while another is still sending does not mark that transfer uncertain"
+    },
+    {
+      "name": "B9_dispatch_unbounded",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/7 failed by assertion: a store that never answers becomes uncertain within the dispatch bound, and a later answer does not change it"
+    },
+    {
+      "name": "B9_no_running_sweep",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/7 failed by assertion: while the server keeps running, the periodic sweep marks a send whose process stopped, without a restart"
+    },
+    {
+      "name": "COOK_second_record_added",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "4/9 failed by assertion: a second press by the same member (a new operation id) adds nothing and reports who recorded it and when | both members press at the same moment: exactly one record, the other is told it is already recorded — Jon first | both members press at the same moment: exactly one record, the other is told it is already recorded — Alex first"
+    },
+    {
+      "name": "COOK_correction_applied_twice",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/9 failed by assertion: a correction is refused for a record already corrected, another household's record, or an unknown reason — and writes nothing"
+    },
+    {
+      "name": "COOK_history_counts_corrected",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/9 failed by assertion: a mistaken record is corrected by an appended correction; history and 'new to you' ignore it; cooking can then be recorded again"
+    },
+    {
+      "name": "COOK_new_to_you_counts_corrected",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/9 failed by assertion: a mistaken record is corrected by an appended correction; history and 'new to you' ignore it; cooking can then be recorded again"
+    },
+    {
+      "name": "COOK_snapshot_ignores_record",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/9 failed by assertion: the household snapshot shows the night as already cooked, by whom"
+    },
+    {
+      "name": "B9_reset_keeps_sessions",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/2 failed by assertion: replaces the member's password, ends that member's sessions, and leaves the other member alone"
+    },
+    {
+      "name": "B9_reset_any_account",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/2 failed by assertion: refuses an unknown address, a non-member account and a short password, changing nothing"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+
+Running 1 test using 1 worker
+
+  ✘  1 [chromium] › tests/e2e/cook-records.spec.ts:13:1 › Mark cooked records once; both members see who recorded it; a stale second press adds nothing; a correction is deliberate and reversible by recording again (13.6s)
+
+
+  1) [chromium] › tests/e2e/cook-records.spec.ts:13:1 › Mark cooked records once; both members see who recorded it; a stale second press adds nothing; a correction is deliberate and reversible by recording again 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByTestId('mark-cooked')
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for getByTestId('mark-cooked')
+
+
+      16 |   const alex = await member(browser, "alex");
+      17 |   for (const m of [jon, alex]) await m.page.goto(`/cook/${NIGHT.mon}`);
+    > 18 |   await expect(alex.page.getByTestId("mark-cooked")).toBeVisible();
+         |                                                      ^
+      19 |
+      20 |   await jon.page.getByRole("button", { name: "Mark cooked" }).click();
+      21 |   await expect(jon.page.getByText("Recorded as cooked.")).toBeVisible();
+        at /tmp/table-red-cook/tests/e2e/cook-records.spec.ts:18:54
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/cook-records-Mark-cooked-r-491b9-versible-by-recording-again-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/cook-records-Mark-cooked-r-491b9-versible-by-recording-again-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/cook-records-Mark-cooked-r-491b9-versible-by-recording-again-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/cook-records-Mark-cooked-r-491b9-versible-by-recording-again-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/cook-records-Mark-cooked-r-491b9-versible-by-recording-again-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests/e2e/cook-records.spec.ts:13:1 › Mark cooked records once; both members see who recorded it; a stale second press adds nothing; a correction is deliberate and reversible by recording again 
