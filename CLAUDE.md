@@ -45,4 +45,4 @@ Local app: see `docs/table/IMPLEMENTATION-STATUS.md` → "Run it locally".
 `src/domain` pure calculations (planning, recipes, groceries) · `src/server/commands` the only
 mutation path (`framework.ts` = lock, idempotency, receipts, change events) · `src/server/queries`
 coherent snapshots · `src/server/integrations/retailer.ts` simulated + fail-closed Kroger ·
-`src/ui` client screens (`a11y.tsx` = modal sheet, focus helpers, the one live region) · `migrations/` explicit SQL · `tests/{unit,integration,e2e,mutation}`.
+`src/ui` client screens (`a11y.tsx` = the one modal system, focus helpers, the one live region; `forms.tsx` = attached field errors; `GroceryDialogs.tsx`, `Staples.tsx`) · `src/server/commands/staples.ts` staple management (revision-bound) · `migrations/` explicit SQL · `tests/{unit,integration,e2e,mutation}`.

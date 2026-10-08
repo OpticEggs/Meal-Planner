@@ -2,7 +2,7 @@
 
 Status vocabulary: NOT IMPLEMENTED · IMPLEMENTED / NOT RUN · PASS · FAIL · BLOCKED.
 
-**Current evidence run:** `docs/table/evidence/2026-10-08-verify-0804381/summary.md` (implementation commit `0804381`, B14 + B12; clean tree, source hash unchanged during the run): vitest 98/98, Playwright 43/43, 21 mutations killed. The previous run `2026-10-08-verify-2c56267/` (correction pass) and the earlier `2026-10-08-full-run*.md` are kept as history.
+**Current evidence run:** `docs/table/evidence/2026-10-08-verify-5f7b72f/summary.md` (implementation commit `5f7b72f`, B15 + B16; clean tree, source hash unchanged during the run): vitest 118/118, Playwright 57/57, 30 mutations killed. Earlier runs are kept as history: `2026-10-08-verify-0804381/` (B14/B12), `2026-10-08-verify-2c56267/` (correction pass), `2026-10-08-full-run*.md`.
 Environment: real PostgreSQL 16.15, production `next start` server, two independently signed-in
 Chromium contexts, recording fake retailer (simulated; nothing reaches a store), fixed household clock
 2026-10-12 15:00 America/New_York. Concurrency orders are forced with database lock barriers.
@@ -120,3 +120,37 @@ sheet with Escape before locking Thursday and reopens it — with a modal sheet 
 correctly unreachable, which is exactly what B14 requires; **R-F07-UI** scopes its chip locator to the
 Week form because grocery-line controls now carry the item name in their accessible names. No test
 was skipped, deleted or weakened.
+
+## B15 Groceries accessibility, B16 staple management, scenarios A–E — added 2026-10-08
+
+New IDs; no earlier row was renumbered or replaced. Implementation commit `5f7b72f`; evidence
+`docs/table/evidence/2026-10-08-verify-5f7b72f/summary.md`. Red-before-green: all 14 tests of
+`tests/e2e/b15-b16.spec.ts` were run against a production build of `b8fa763` (isolated worktree,
+database and port) and all 14 FAILED at the missing feature, none passed
+(`evidence/2026-10-08-verify-5f7b72f/pre-b15-on-b8fa763.log`; the spec copied was the working-tree
+version just before the remove-conflict step was added to test 5, which already failed earlier on
+b8fa763 at its first focus check).
+
+| ID | What is checked (actual focus / database state) | Tests | Status on 5f7b72f |
+|---|---|---|---|
+| B15-a Product dialog | Keyboard open; focus on the current product's radio; 30 Tab + 30 Shift+Tab stay inside; typed product then Escape → no product row, approval intact, focus back on the opener; empty name + bad size → errors attached (`aria-invalid`, accessible description) and the name field focused; Arrow-key choice → approval withdrawn, said so once, focus back on the opener | e2e b15-b16 "B15 product dialog" | PASS (Chromium) |
+| B15-b Order confirmation | Two deliberate steps; per-field errors focused; review heading focused; Escape and Back save nothing (zero orders); "Yes, record this order" records exactly one; focus lands in the new order card (opener gone), never `<body>`; headings say "Sent to cart" then "Ordered" | "B15 order confirmation" | PASS (Chromium) |
+| B15-c Receipts | No native `prompt()`/`confirm()` (a native dialog fails the test); substitute, "does it work?" and correction dialogs with required, attached field errors; Escape records nothing; results are append-only rows (correction alongside the original) | "B15 receipts" | PASS (Chromium) |
+| B15-d Uncertain transfer | Worded state; the cart check has no default choice, Escape records no status event, "not in the cart" warns about double-adding; recording never resends (1 retailer call) | "B15 uncertain transfer" | PASS (Chromium) |
+| B15-e Remove a request | "Keep it" has focus and Enter keeps the request; a member joining while the confirmation is open holds it until reviewed; removing leaves the dinner's own need on the list | "B15 removing a request" | PASS (Chromium) |
+| B15-f States for screen readers | Line headings named "<item>: <status>, <product issue>, Unresolved"; unavailable product disabled in the dialog with its reason | "B15 unavailable and unresolved lines" + B15-b/d | PASS (Chromium) |
+| B15-g 320/390 px, 150% text, reduced motion | Dialogs inside the viewport, no sideways scroll, buttons hit-tested; all five nav tabs on-screen and hittable (caught and fixed a B14 nav regression); `animation-name: none` under reduced motion | "B15 dialogs at 320px/390px" | PASS (Chromium) |
+| B15 stale review | A product change during review withdraws only that line's approval; the old review's Send is `stale_review` with zero retailer calls; unaffected approvals stay valid | integration "Scenario B: choosing the new product…" | PASS |
+| B16a–c Staples | Add (item, display name, amount in packages or measured unit, explicit or default product), rename, amount, remove/restore, inactive rules, field-tagged refusals, append-only change log | `tests/integration/b16.staple-management.test.ts` B16a–c; e2e "B16 Household" | PASS (e2e Chromium) |
+| Scenario A | Concurrent edits (both orders): first survives, second `stale_staple` with the current values, deliberate resubmit succeeds; edit vs removal (both orders); in the browser (both orders) the second dialog shows the conflict live, keeps typed values, holds Save until reviewed | integration Scenario A ×4; e2e Scenario A ×2 | PASS |
+| Scenario B | Staple product/amount changes during Alex's review leave her reviewed purchase sendable unchanged (Send accepted with the old product ref); choosing the new product for this pickup withdraws only that line's approval and the old review cannot Send | integration Scenario B ×2, Scenario B/E ×2 (both orders) | PASS |
+| Scenario C | Removing a staple with a usual request and recipe demand leaves the line, requests and every purchasing row unchanged; later typed capture merges | integration Scenario C; e2e B16 Household | PASS |
+| Scenario D | After send, confirmed order, substitution + validation and a receipt: product change, amount change and removal leave transfers, order lines, receipts, validations and requests identical | integration Scenario D | PASS |
+| Scenario E | Both orders in the browser: product dialog open during the other member's choice keeps typed name, selection and focus (`pd-name`), shows the conflict, holds saving until reviewed; a stale choice sent anyway is `product_changed` | e2e Scenario E ×2 + server-side | PASS (Chromium) |
+| Review regressions | Cross-household week refused without disclosure; last-change attribution; stale substitution decision refused; stale removal refused; export covers every household table and staples | integration "B15/B16 review regressions" | PASS |
+| B15/B16 mutations | 10 new (stale edit/removal applied, removed staple still a shortcut, removal drops need, amount rounds down, re-point keeps old count, stale product choice applied, any-household week, substitution overwritten) + B12 anchors updated | `tests/mutation/run.mjs` | PASS — all KILLED by assertion (30 killed, 0 survived, 0 error in the evidence run) |
+| WebKit / iPhone Safari / VoiceOver | Same checks on WebKit and devices | — | **BLOCKED** — only Chromium is installed; downloads not permitted; no device |
+
+Existing tests whose code changed (assertions unchanged): **T14** (e2e) adds the second
+confirmation click "Yes, record this order"; **b12.staples.spec** opens the product dialog
+instead of the inline form. No test was skipped, deleted or weakened.

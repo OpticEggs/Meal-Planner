@@ -1,0 +1,532 @@
+
+Running 14 tests using 1 worker
+
+[1/14] [chromium] › tests/e2e/b15-b16.spec.ts:55:1 › B15 product dialog: keyboard, trapped focus, Escape saves nothing, field errors are attached, a new choice withdraws the approval
+  1) [chromium] › tests/e2e/b15-b16.spec.ts:55:1 › B15 product dialog: keyboard, trapped focus, Escape saves nothing, field errors are attached, a new choice withdraws the approval 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.focus: Test ended.
+    Call log:
+      - waiting for getByRole('button', { name: 'Change product for Broccoli' })
+
+
+      65 |
+      66 |   const opener = p.getByRole("button", { name: "Change product for Broccoli" });
+    > 67 |   await opener.focus();
+         |                ^
+      68 |   await p.keyboard.press("Enter");
+      69 |   const dialog = p.getByRole("dialog", { name: "Product for Broccoli" });
+      70 |   await expect(dialog).toBeVisible();
+        at /tmp/table-pre-b15/tests/e2e/b15-b16.spec.ts:67:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b15-b16-B15-product-dialog-d7bf5-oice-withdraws-the-approval-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b15-b16-B15-product-dialog-d7bf5-oice-withdraws-the-approval-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b15-b16-B15-product-dialog-d7bf5-oice-withdraws-the-approval-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b15-b16-B15-product-dialog-d7bf5-oice-withdraws-the-approval-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[2/14] [chromium] › tests/e2e/b15-b16.spec.ts:106:1 › B15 order confirmation is two deliberate steps; Escape and Back save nothing; field errors are attached; focus lands on the new order
+  2) [chromium] › tests/e2e/b15-b16.spec.ts:106:1 › B15 order confirmation is two deliberate steps; Escape and Back save nothing; field errors are attached; focus lands on the new order 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('heading', { name: /^Broccoli: Sent to cart/ })
+    Expected: 1
+    Received: 0
+    Timeout:  10000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 10000ms
+      - waiting for getByRole('heading', { name: /^Broccoli: Sent to cart/ })
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      114 |   await expect(p.getByTestId("batch")).toHaveAttribute("data-status", "acknowledged");
+      115 |   // Sent lines say so in words for a screen reader.
+    > 116 |   await expect(p.getByRole("heading", { name: /^Broccoli: Sent to cart/ })).toHaveCount(1);
+          |                                                                             ^
+      117 |   await expect(p.getByTestId("batch")).toContainText("Sent to cart — the store acknowledged the transfer");
+      118 |
+      119 |   const opener = p.getByRole("button", { name: "Confirm order contents…" });
+        at /tmp/table-pre-b15/tests/e2e/b15-b16.spec.ts:116:77
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b15-b16-B15-order-confirma-f9424-ocus-lands-on-the-new-order-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b15-b16-B15-order-confirma-f9424-ocus-lands-on-the-new-order-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b15-b16-B15-order-confirma-f9424-ocus-lands-on-the-new-order-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b15-b16-B15-order-confirma-f9424-ocus-lands-on-the-new-order-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[3/14] [chromium] › tests/e2e/b15-b16.spec.ts:161:1 › B15 receipts: substitute, 'does it work', and corrections are labelled dialogs (no prompt()), with field errors and append-only results
+  3) [chromium] › tests/e2e/b15-b16.spec.ts:161:1 › B15 receipts: substitute, 'does it work', and corrections are labelled dialogs (no prompt()), with field errors and append-only results 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Test ended.
+    Call log:
+      - waiting for getByRole('dialog', { name: 'Confirm order contents' }).getByRole('button', { name: 'Confirm order…' })
+
+
+      170 |   await p.getByRole("button", { name: "Confirm order contents…" }).click();
+      171 |   const co = p.getByRole("dialog", { name: "Confirm order contents" });
+    > 172 |   await co.getByRole("button", { name: "Confirm order…" }).click();
+          |                                                            ^
+      173 |   await co.getByRole("button", { name: "Yes, record this order" }).click();
+      174 |   await expect(p.getByTestId("order")).toBeVisible();
+      175 |
+        at /tmp/table-pre-b15/tests/e2e/b15-b16.spec.ts:172:60
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b15-b16-B15-receipts-subst-ab362-ors-and-append-only-results-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b15-b16-B15-receipts-subst-ab362-ors-and-append-only-results-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b15-b16-B15-receipts-subst-ab362-ors-and-append-only-results-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b15-b16-B15-receipts-subst-ab362-ors-and-append-only-results-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[4/14] [chromium] › tests/e2e/b15-b16.spec.ts:224:1 › B15 uncertain transfer: the cart check needs a deliberate choice, Escape records nothing, and states are worded
+  4) [chromium] › tests/e2e/b15-b16.spec.ts:224:1 › B15 uncertain transfer: the cart check needs a deliberate choice, Escape records nothing, and states are worded 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('batch')
+    Expected substring: "Uncertain — check the cart"
+    Received string:    "uncertain · approved by Alex · black_beans ×1, broccoli ×2, cheese ×1, chicken_thigh ×2, cucumber ×2, greek_yogurt ×1, olive_oil ×1, pita ×1, rice ×1, salmon ×1, soy_sauce ×1, tofu ×1, tortillas ×1authorized → dispatch_started → uncertainOutcome unknown. Check the cart; Table will not resend automatically.Items are in the cartItems are not there"
+    Timeout: 10000ms
+
+    Call log:
+      - Expect "toContainText" with timeout 10000ms
+      - waiting for getByTestId('batch')
+        14 × locator resolved to <div class="small" data-testid="batch" data-status="uncertain">…</div>
+           - unexpected value "uncertain · approved by Alex · black_beans ×1, broccoli ×2, cheese ×1, chicken_thigh ×2, cucumber ×2, greek_yogurt ×1, olive_oil ×1, pita ×1, rice ×1, salmon ×1, soy_sauce ×1, tofu ×1, tortillas ×1authorized → dispatch_started → uncertainOutcome unknown. Check the cart; Table will not resend automatically.Items are in the cartItems are not there"
+
+
+      231 |   await p.getByTestId("send").click();
+      232 |   await expect(p.getByTestId("batch")).toHaveAttribute("data-status", "uncertain");
+    > 233 |   await expect(p.getByTestId("batch")).toContainText("Uncertain — check the cart");
+          |                                        ^
+      234 |   await expect(p.getByRole("heading", { name: /^Broccoli: Uncertain — check cart/ })).toHaveCount(1);
+      235 |   const events = async () => (await q("SELECT count(*)::int n FROM handoff_status_events"))[0];
+      236 |   const before = await events();
+        at /tmp/table-pre-b15/tests/e2e/b15-b16.spec.ts:233:40
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b15-b16-B15-uncertain-tran-fb536-thing-and-states-are-worded-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b15-b16-B15-uncertain-tran-fb536-thing-and-states-are-worded-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b15-b16-B15-uncertain-tran-fb536-thing-and-states-are-worded-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b15-b16-B15-uncertain-tran-fb536-thing-and-states-are-worded-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[5/14] [chromium] › tests/e2e/b15-b16.spec.ts:259:1 › B15 removing a request needs confirmation, and the safe choice has focus
+  5) [chromium] › tests/e2e/b15-b16.spec.ts:259:1 › B15 removing a request needs confirmation, and the safe choice has focus 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Keep it"
+    Received: "Remove usual request for Plain Greek yogurt"
+
+      269 |   await opener.click();
+      270 |   const dialog = p.getByRole("dialog", { name: "Remove the usual request for Plain Greek yogurt?" });
+    > 271 |   expect((await focused(p)).name).toBe("Keep it");
+          |                                   ^
+      272 |   await p.keyboard.press("Enter"); // the default does not remove
+      273 |   await expect(dialog).toHaveCount(0);
+      274 |   await expect.poll(async () => (await focused(p)).name).toBe("Remove usual request for Plain Greek yogurt");
+        at /tmp/table-pre-b15/tests/e2e/b15-b16.spec.ts:271:35
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b15-b16-B15-removing-a-req-57166-d-the-safe-choice-has-focus-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b15-b16-B15-removing-a-req-57166-d-the-safe-choice-has-focus-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b15-b16-B15-removing-a-req-57166-d-the-safe-choice-has-focus-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b15-b16-B15-removing-a-req-57166-d-the-safe-choice-has-focus-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[6/14] [chromium] › tests/e2e/b15-b16.spec.ts:286:1 › B15 unavailable and unresolved lines are named as such to a screen reader
+  6) [chromium] › tests/e2e/b15-b16.spec.ts:286:1 › B15 unavailable and unresolved lines are named as such to a screen reader 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('heading', { name: /^Plain Greek yogurt: Needs review, Product unavailable at this store, Unresolved$/ })
+    Expected: 1
+    Received: 0
+    Timeout:  10000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 10000ms
+      - waiting for getByRole('heading', { name: /^Plain Greek yogurt: Needs review, Product unavailable at this store, Unresolved$/ })
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      304 |   });
+      305 |   await p.reload();
+    > 306 |   await expect(p.getByRole("heading", { name: /^Plain Greek yogurt: Needs review, Product unavailable at this store, Unresolved$/ })).toHaveCount(1);
+          |                                                                                                                                       ^
+      307 |   await p.getByRole("button", { name: /^(Change product|Choose a product) for Plain Greek yogurt$/ }).click();
+      308 |   const dialog = p.getByRole("dialog", { name: "Product for Plain Greek yogurt" });
+      309 |   await expect(dialog.getByRole("radio", { name: /Kroger Greek yogurt 32 oz.*not available from this store/ })).toBeDisabled();
+        at /tmp/table-pre-b15/tests/e2e/b15-b16.spec.ts:306:135
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b15-b16-B15-unavailable-an-13ae0--as-such-to-a-screen-reader-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b15-b16-B15-unavailable-an-13ae0--as-such-to-a-screen-reader-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b15-b16-B15-unavailable-an-13ae0--as-such-to-a-screen-reader-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b15-b16-B15-unavailable-an-13ae0--as-such-to-a-screen-reader-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[7/14] [chromium] › tests/e2e/b15-b16.spec.ts:314:3 › B15 dialogs at 320px with 150% text fit, scroll themselves, and stay clear of the nav; reduced motion is respected
+  7) [chromium] › tests/e2e/b15-b16.spec.ts:314:3 › B15 dialogs at 320px with 150% text fit, scroll themselves, and stay clear of the nav; reduced motion is respected 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Test ended.
+    Call log:
+      - waiting for getByRole('button', { name: 'Change product for Broccoli' })
+
+
+      318 |     await p.getByRole("link", { name: "Groceries" }).click();
+      319 |     await p.addStyleTag({ content: "html { font-size: 150% !important; }" });
+    > 320 |     await p.getByRole("button", { name: "Change product for Broccoli" }).click();
+          |                                                                          ^
+      321 |     const dialog = p.getByRole("dialog", { name: "Product for Broccoli" });
+      322 |     const box = await dialog.evaluate((d) => {
+      323 |       const r = d.getBoundingClientRect();
+        at /tmp/table-pre-b15/tests/e2e/b15-b16.spec.ts:320:74
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b15-b16-B15-dialogs-at-320-77a86-reduced-motion-is-respected-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b15-b16-B15-dialogs-at-320-77a86-reduced-motion-is-respected-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b15-b16-B15-dialogs-at-320-77a86-reduced-motion-is-respected-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b15-b16-B15-dialogs-at-320-77a86-reduced-motion-is-respected-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[8/14] [chromium] › tests/e2e/b15-b16.spec.ts:314:3 › B15 dialogs at 390px with 150% text fit, scroll themselves, and stay clear of the nav; reduced motion is respected
+  8) [chromium] › tests/e2e/b15-b16.spec.ts:314:3 › B15 dialogs at 390px with 150% text fit, scroll themselves, and stay clear of the nav; reduced motion is respected 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Test ended.
+    Call log:
+      - waiting for getByRole('button', { name: 'Change product for Broccoli' })
+
+
+      318 |     await p.getByRole("link", { name: "Groceries" }).click();
+      319 |     await p.addStyleTag({ content: "html { font-size: 150% !important; }" });
+    > 320 |     await p.getByRole("button", { name: "Change product for Broccoli" }).click();
+          |                                                                          ^
+      321 |     const dialog = p.getByRole("dialog", { name: "Product for Broccoli" });
+      322 |     const box = await dialog.evaluate((d) => {
+      323 |       const r = d.getBoundingClientRect();
+        at /tmp/table-pre-b15/tests/e2e/b15-b16.spec.ts:320:74
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b15-b16-B15-dialogs-at-390-60d84-reduced-motion-is-respected-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b15-b16-B15-dialogs-at-390-60d84-reduced-motion-is-respected-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b15-b16-B15-dialogs-at-390-60d84-reduced-motion-is-respected-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b15-b16-B15-dialogs-at-390-60d84-reduced-motion-is-respected-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[9/14] [chromium] › tests/e2e/b15-b16.spec.ts:366:3 › Scenario E: a product dialog open during the other member's change keeps typed work and focus, and shows the conflict — Jon changes first
+  9) [chromium] › tests/e2e/b15-b16.spec.ts:366:3 › Scenario E: a product dialog open during the other member's change keeps typed work and focus, and shows the conflict — Jon changes first 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Test ended.
+    Call log:
+      - waiting for getByRole('button', { name: 'Change product for Broccoli' })
+
+
+      372 |     for (const m of [jon, alex]) {
+      373 |       await m.page.getByRole("link", { name: "Groceries" }).click();
+    > 374 |       await m.page.getByRole("button", { name: "Change product for Broccoli" }).click();
+          |                                                                                 ^
+      375 |     }
+      376 |     const [first, second] = order === "Jon changes first" ? [jon, alex] : [alex, jon];
+      377 |     const firstPick = order === "Jon changes first" ? "Organic broccoli 1 lb" : "Frozen broccoli 1 lb";
+        at /tmp/table-pre-b15/tests/e2e/b15-b16.spec.ts:374:81
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b15-b16-Scenario-E-a-produ-24335-onflict-—-Jon-changes-first-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b15-b16-Scenario-E-a-produ-24335-onflict-—-Jon-changes-first-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b15-b16-Scenario-E-a-produ-24335-onflict-—-Jon-changes-first-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b15-b16-Scenario-E-a-produ-24335-onflict-—-Jon-changes-first-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b15-b16-Scenario-E-a-produ-24335-onflict-—-Jon-changes-first-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[10/14] [chromium] › tests/e2e/b15-b16.spec.ts:366:3 › Scenario E: a product dialog open during the other member's change keeps typed work and focus, and shows the conflict — Alex changes first
+  10) [chromium] › tests/e2e/b15-b16.spec.ts:366:3 › Scenario E: a product dialog open during the other member's change keeps typed work and focus, and shows the conflict — Alex changes first 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Test ended.
+    Call log:
+      - waiting for getByRole('button', { name: 'Change product for Broccoli' })
+
+
+      372 |     for (const m of [jon, alex]) {
+      373 |       await m.page.getByRole("link", { name: "Groceries" }).click();
+    > 374 |       await m.page.getByRole("button", { name: "Change product for Broccoli" }).click();
+          |                                                                                 ^
+      375 |     }
+      376 |     const [first, second] = order === "Jon changes first" ? [jon, alex] : [alex, jon];
+      377 |     const firstPick = order === "Jon changes first" ? "Organic broccoli 1 lb" : "Frozen broccoli 1 lb";
+        at /tmp/table-pre-b15/tests/e2e/b15-b16.spec.ts:374:81
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b15-b16-Scenario-E-a-produ-888d5-nflict-—-Alex-changes-first-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b15-b16-Scenario-E-a-produ-888d5-nflict-—-Alex-changes-first-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b15-b16-Scenario-E-a-produ-888d5-nflict-—-Alex-changes-first-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b15-b16-Scenario-E-a-produ-888d5-nflict-—-Alex-changes-first-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b15-b16-Scenario-E-a-produ-888d5-nflict-—-Alex-changes-first-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[11/14] [chromium] › tests/e2e/b15-b16.spec.ts:409:1 › Scenario E (server side): a stale product choice sent anyway is refused with the current product
+  11) [chromium] › tests/e2e/b15-b16.spec.ts:409:1 › Scenario E (server side): a stale product choice sent anyway is refused with the current product 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "product_changed"
+    Received: undefined
+
+      416 |     return { stale: await post("00000000-0000-0000-0000-000000000000"), ok: await post(original) };
+      417 |   }, { organic, original: fx.products.broccoli });
+    > 418 |   expect(r.stale.code).toBe("product_changed");
+          |                        ^
+      419 |   expect(r.ok.status).toBe("accepted");
+      420 |   await alex.context.close();
+      421 | });
+        at /tmp/table-pre-b15/tests/e2e/b15-b16.spec.ts:418:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b15-b16-Scenario-E-server--18c52-ed-with-the-current-product-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b15-b16-Scenario-E-server--18c52-ed-with-the-current-product-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b15-b16-Scenario-E-server--18c52-ed-with-the-current-product-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b15-b16-Scenario-E-server--18c52-ed-with-the-current-product-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[12/14] [chromium] › tests/e2e/b15-b16.spec.ts:424:3 › Scenario A: both members edit the same staple; the first save survives, the second sees the conflict and the current value, then resubmits — Jon saves first
+  12) [chromium] › tests/e2e/b15-b16.spec.ts:424:3 › Scenario A: both members edit the same staple; the first save survives, the second sees the conflict and the current value, then resubmits — Jon saves first 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Test ended.
+    Call log:
+      - waiting for getByTestId('add-staple')
+
+
+      428 |     // Jon makes yogurt a usual item from Household.
+      429 |     await jon.page.getByRole("link", { name: "Household" }).click();
+    > 430 |     await jon.page.getByTestId("add-staple").click();
+          |                                              ^
+      431 |     const add = jon.page.getByRole("dialog", { name: "Add a usual item" });
+      432 |     await add.getByLabel("Item").selectOption({ label: "Plain Greek yogurt" });
+      433 |     await add.getByRole("button", { name: "Add usual item" }).click();
+        at /tmp/table-pre-b15/tests/e2e/b15-b16.spec.ts:430:46
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b15-b16-Scenario-A-both-me-38b5b-resubmits-—-Jon-saves-first-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b15-b16-Scenario-A-both-me-38b5b-resubmits-—-Jon-saves-first-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b15-b16-Scenario-A-both-me-38b5b-resubmits-—-Jon-saves-first-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b15-b16-Scenario-A-both-me-38b5b-resubmits-—-Jon-saves-first-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b15-b16-Scenario-A-both-me-38b5b-resubmits-—-Jon-saves-first-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[13/14] [chromium] › tests/e2e/b15-b16.spec.ts:424:3 › Scenario A: both members edit the same staple; the first save survives, the second sees the conflict and the current value, then resubmits — Alex saves first
+  13) [chromium] › tests/e2e/b15-b16.spec.ts:424:3 › Scenario A: both members edit the same staple; the first save survives, the second sees the conflict and the current value, then resubmits — Alex saves first 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Test ended.
+    Call log:
+      - waiting for getByTestId('add-staple')
+
+
+      428 |     // Jon makes yogurt a usual item from Household.
+      429 |     await jon.page.getByRole("link", { name: "Household" }).click();
+    > 430 |     await jon.page.getByTestId("add-staple").click();
+          |                                              ^
+      431 |     const add = jon.page.getByRole("dialog", { name: "Add a usual item" });
+      432 |     await add.getByLabel("Item").selectOption({ label: "Plain Greek yogurt" });
+      433 |     await add.getByRole("button", { name: "Add usual item" }).click();
+        at /tmp/table-pre-b15/tests/e2e/b15-b16.spec.ts:430:46
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b15-b16-Scenario-A-both-me-7ad48-esubmits-—-Alex-saves-first-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b15-b16-Scenario-A-both-me-7ad48-esubmits-—-Alex-saves-first-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b15-b16-Scenario-A-both-me-7ad48-esubmits-—-Alex-saves-first-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b15-b16-Scenario-A-both-me-7ad48-esubmits-—-Alex-saves-first-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b15-b16-Scenario-A-both-me-7ad48-esubmits-—-Alex-saves-first-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[14/14] [chromium] › tests/e2e/b15-b16.spec.ts:463:1 › B16 Household: add, rename, change amount and product, remove and restore by keyboard; availability shown; both members see it; the shortcut follows
+  14) [chromium] › tests/e2e/b15-b16.spec.ts:463:1 › B16 Household: add, rename, change amount and product, remove and restore by keyboard; availability shown; both members see it; the shortcut follows 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.focus: Test ended.
+    Call log:
+      - waiting for getByTestId('add-staple')
+
+
+      471 |   await p.getByRole("link", { name: "Household" }).click();
+      472 |   // Add by keyboard.
+    > 473 |   await p.getByTestId("add-staple").focus();
+          |                                     ^
+      474 |   await p.keyboard.press("Enter");
+      475 |   const add = p.getByRole("dialog", { name: "Add a usual item" });
+      476 |   expect(await focused(p)).toMatchObject({ inDialog: true, id: "st-item" });
+        at /tmp/table-pre-b15/tests/e2e/b15-b16.spec.ts:473:37
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b15-b16-B16-Household-add--d317c-see-it-the-shortcut-follows-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b15-b16-B16-Household-add--d317c-see-it-the-shortcut-follows-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b15-b16-B16-Household-add--d317c-see-it-the-shortcut-follows-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b15-b16-B16-Household-add--d317c-see-it-the-shortcut-follows-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b15-b16-B16-Household-add--d317c-see-it-the-shortcut-follows-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  14 failed
+    [chromium] › tests/e2e/b15-b16.spec.ts:55:1 › B15 product dialog: keyboard, trapped focus, Escape saves nothing, field errors are attached, a new choice withdraws the approval 
+    [chromium] › tests/e2e/b15-b16.spec.ts:106:1 › B15 order confirmation is two deliberate steps; Escape and Back save nothing; field errors are attached; focus lands on the new order 
+    [chromium] › tests/e2e/b15-b16.spec.ts:161:1 › B15 receipts: substitute, 'does it work', and corrections are labelled dialogs (no prompt()), with field errors and append-only results 
+    [chromium] › tests/e2e/b15-b16.spec.ts:224:1 › B15 uncertain transfer: the cart check needs a deliberate choice, Escape records nothing, and states are worded 
+    [chromium] › tests/e2e/b15-b16.spec.ts:259:1 › B15 removing a request needs confirmation, and the safe choice has focus 
+    [chromium] › tests/e2e/b15-b16.spec.ts:286:1 › B15 unavailable and unresolved lines are named as such to a screen reader 
+    [chromium] › tests/e2e/b15-b16.spec.ts:314:3 › B15 dialogs at 320px with 150% text fit, scroll themselves, and stay clear of the nav; reduced motion is respected 
+    [chromium] › tests/e2e/b15-b16.spec.ts:314:3 › B15 dialogs at 390px with 150% text fit, scroll themselves, and stay clear of the nav; reduced motion is respected 
+    [chromium] › tests/e2e/b15-b16.spec.ts:366:3 › Scenario E: a product dialog open during the other member's change keeps typed work and focus, and shows the conflict — Jon changes first 
+    [chromium] › tests/e2e/b15-b16.spec.ts:366:3 › Scenario E: a product dialog open during the other member's change keeps typed work and focus, and shows the conflict — Alex changes first 
+    [chromium] › tests/e2e/b15-b16.spec.ts:409:1 › Scenario E (server side): a stale product choice sent anyway is refused with the current product 
+    [chromium] › tests/e2e/b15-b16.spec.ts:424:3 › Scenario A: both members edit the same staple; the first save survives, the second sees the conflict and the current value, then resubmits — Jon saves first 
+    [chromium] › tests/e2e/b15-b16.spec.ts:424:3 › Scenario A: both members edit the same staple; the first save survives, the second sees the conflict and the current value, then resubmits — Alex saves first 
+    [chromium] › tests/e2e/b15-b16.spec.ts:463:1 › B16 Household: add, rename, change amount and product, remove and restore by keyboard; availability shown; both members see it; the shortcut follows 
+exit=1

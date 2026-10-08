@@ -1,50 +1,49 @@
 # Table — Implementation status
 
-_Last updated 2026-10-08 (UTC), after B14 (accessibility and focus) and B12 (remembered staple products)._
+_Last updated 2026-10-08 (UTC), after B15 (Groceries accessibility) and B16 (household staple management)._
 
 ## Code identity
 
 | What | Identity |
 |---|---|
-| Starting point of this pass | `f4f92f8208e0d35210c2237e8aa38558bd3e15d2` (baseline verify-all PASS before any edit: vitest 91/91, Playwright 32/32, 16 mutations killed) |
-| Implementation commit verified | `0804381880f9104dfe23ab35f50ccf8fbe74d05b` (clean tree; tracked-file hash `52a44bee…f669` unchanged during the run) |
-| Documentation/evidence commit | the commit after 0804381 on `main` (docs only — `git diff --stat 0804381..HEAD`) |
+| Starting point of this pass | `b8fa763abdf42059a11446f054c2aa0a9b71af78` (baseline verify-all PASS before any edit: vitest 98/98, Playwright 43/43, 21 mutations killed) |
+| Implementation commit verified | `5f7b72f4ff30792249a9ef1e0d025cb5fac8befa` (clean tree; tracked-file hash `ec6d3f15…0a6e` unchanged during the run) |
+| Documentation/evidence commit | the commit after 5f7b72f on `main` (docs only — `git diff --stat 5f7b72f..HEAD`) |
 | Remote | `https://github.com/OpticEggs/Meal-Planner`, branch `main` |
 | Restore | `git clone --branch main <bundle> table` or `git clone <bundle> table` |
-| Migrations | `001_auth`, `002_table`, `003_reconciliation`, `004_staple_products` (new) |
+| Migrations | `001_auth` … `004_staple_products`, `005_staple_management` (new; additive: columns with defaults + one new append-only table, applied by `npm run db:migrate`; existing staples become active, revision 1, usual amount in packages) |
 
-## Verification (independently measured on 0804381)
+## Verification (independently measured on 5f7b72f)
 
-`scripts/verify-all.sh` → `docs/table/evidence/2026-10-08-verify-0804381/summary.md` (complete logs + JSON):
-typecheck PASS · vitest 98/98 (unit + real-PostgreSQL integration, 0 skipped) · production build PASS ·
-Playwright 43/43 (Chromium, production server, two authenticated contexts, 0 skipped, 0 flaky) ·
-mutation self-test PASS · mutation checks 21 killed / 0 survived / 0 error, sources restored.
-Red-before-green: the 11 new browser tests all FAIL against a build of `f4f92f8`
-(`pre-b14-on-f4f92f8.log` in the same folder). Earlier runs are kept in `docs/table/evidence/` as history.
+`scripts/verify-all.sh` → `docs/table/evidence/2026-10-08-verify-5f7b72f/summary.md` (complete logs + JSON):
+typecheck PASS · vitest 118/118 (unit + real-PostgreSQL integration, 0 skipped) · production build PASS ·
+Playwright 57/57 (Chromium, production server, two authenticated contexts, 0 skipped, 0 flaky) ·
+mutation self-test PASS · mutation checks 30 killed / 0 survived / 0 error, sources restored.
+Red-before-green: the 14 new browser tests all FAIL against a build of `b8fa763` (isolated worktree,
+database and port; `pre-b15-on-b8fa763.log` in the same folder). An independent read-only review of
+the diff before verification found seven defects; all were fixed with regressions (DECISIONS D55).
 
 ## This pass
 
-(The earlier correction pass for the independent review of 89f3ea9 is recorded in `CORRECTIONS-89f3ea9.md`; its F01–F08, V01–V02 and B3 regressions all still pass on 0804381.)
+**B15 — Groceries accessibility (Chromium-verified).** Every Groceries interaction uses the one modal
+system from B14: product for this pickup (choose or record another), remove a request, confirm order
+contents (edit → review → record), record a substitute, judge a substitute, correct a receipt, check
+the cart for an uncertain transfer. Each is named by its title, takes focus, traps Tab, closes on
+Escape without saving, and returns focus to its opener or a surviving neighbour. Field errors are
+attached to their fields and focused; irreversible or destructive steps need a deliberate second
+action with the safe choice focused; lines, transfers and the order state their status in words
+(sent, uncertain, failed, ordered, unresolved, product unavailable). Dialogs keep typed work during
+live updates and show the other member's change as a conflict to review (server checks:
+`expectedProductId`, `expectedValidationId`, `expectedContributorIds`). Works at 320 px with 150%
+text (this pass also fixed a B14 nav overflow) and under reduced motion.
 
-**B14 — accessibility and focus (Chromium-verified).** Change is a modal sheet (`src/ui/a11y.tsx`):
-the page behind is `inert`; focus starts on the selected tab, Tab/Shift+Tab wrap inside, Escape /
-Close / backdrop close it and apply nothing (drafts stay drafts, typed facts are dropped); focus
-returns to the opener or a surviving Change control. Tablist with arrow keys. Each night's Change /
-Lock and each grocery line's controls have distinct names; previews are named regions ("draft, not
-applied" / "out of date"); an "Accepted plan status" heading; the Groceries link names its count of
-lines needing attention. One polite live region announces other members' decisions, newly stale
-previews, approvals needing review again and offline/online — once each; refetches and polls are
-silent. The sheet fits 320 px at 150% text, scrolls above the fixed nav, and does not animate under
-reduced motion. WebKit / iPhone Safari / VoiceOver: **BLOCKED** (not installed; no device).
-
-**B12 — remembered staple products.** `ApproveStapleProduct` is an explicit product-suitability
-decision bound to the staple's `product_revision` (stale → `stale_staple`, both commit orders
-tested), recorded append-only in `staple_product_decisions`. It never touches requests already
-captured, purchase approvals, transfers or orders. Later one-tap requests (and extras of a staple)
-carry the remembered product as their product intent with the usual quantity; the projection uses
-that intent, and an unknown or unavailable (not sold by the active retailer) product leaves the line
-unresolved rather than substituted. Groceries shows "Your usual: …" and "Make this our usual"; both
-members see changes live.
+**B16 — Household staple management.** Household → Usual items: add (item, shortcut name, usual
+amount in packages or a measured unit, remembered product), rename, change amount, change product
+(explicit B12 decision), remove and restore, availability at the active store, and who changed it
+last. Detail edits bind to `details_revision`, product changes to `product_revision`; stale edits
+are refused with the current values. Removing a staple removes only its shortcut. Nothing here
+approves a purchase or touches existing requests, orders, transfers or receipts (scenarios A–E).
+The household export now includes the staple tables and substitution judgements.
 
 ## Stage reached
 
@@ -58,7 +57,7 @@ repository named above (owner-requested); nothing was deployed or sent to a real
 | 1 Executable contract & fixtures | Done — pinned stack, migrations, Better Auth, deterministic fixture, recording fake retailer, two-user harness |
 | 2 Persistent shared plan & concurrency | Done — first slice evidence `evidence/2026-10-08-first-slice-e2e.md` |
 | 3 Quantities & honest grocery state | Done for the simulated retailer, including the F04–F06 corrections (explicit order/transfer reconciliation, physical package basis, substitution validation, receipt corrections, bound \"Have enough\") and B3 |
-| 4 Household experience | Done for the mock workflow, including F01–F03 and F07 corrections, B14 accessibility/focus and B12 remembered staple products; Chromium-only validation (WebKit/devices BLOCKED, B8) |
+| 4 Household experience | Done for the mock workflow, including F01–F03 and F07 corrections, B14/B15 accessibility, B12 remembered staple products and B16 staple management; Chromium-only validation (WebKit/devices BLOCKED, B8) |
 | 5 Verified Kroger integration | BLOCKED — capability documented in INTEGRATION-CAPABILITIES.md; adapter fails closed |
 | 6 Household release | Not started (needs hosting decision; no paid provisioning authorized) |
 
@@ -82,7 +81,7 @@ repository named above (owner-requested); nothing was deployed or sent to a real
 - Our Recipes / Explore: search (focus-stable), filters, sorts by real values with an
   "unknown" group, Sounds good, per-member preferences, favorites, notes, explicit cooking
   history, structured manual recipe entry/edit creating immutable versions.
-- Household: saved inputs (all start unset), separate daily/dinner targets per member,
+- Household: usual items (staples) — add, rename, usual amount, remembered product, remove/restore, availability, last change; saved inputs (all start unset), separate daily/dinner targets per member,
   exclusions, ingredient review, connection status, JSON export.
 
 ## Run it locally
@@ -103,9 +102,9 @@ Backup/restore: `scripts/backup.sh dump|restore|check` (dumps include auth table
 
 ## Evidence
 
-Current: `docs/table/evidence/2026-10-08-verify-0804381/` (see Verification above), including
-sheet screenshots at 320 and 390 px (`screens/`). History: `2026-10-08-verify-2c56267/` (correction
-pass), `2026-10-08-full-run*.md` and `2026-10-08-first-slice-e2e.md` (before the review of 89f3ea9).
+Current: `docs/table/evidence/2026-10-08-verify-5f7b72f/` (see Verification above). History:
+`2026-10-08-verify-0804381/` (B14/B12, with sheet screenshots), `2026-10-08-verify-2c56267/`
+(correction pass), `2026-10-08-full-run*.md` and `2026-10-08-first-slice-e2e.md`.
 See ACCEPTANCE.md for per-test status.
 
 ## Blockers (genuine)
@@ -117,7 +116,6 @@ See ACCEPTANCE.md for per-test status.
 
 ## Next executable task
 
-**B15 — grocery-screen keyboard pass** (inline product and order-confirmation forms get the B14 focus
-handling; the substitution `prompt()` becomes an inline form), then **B16** staple management in
-Household. No owner input needed. Owner-gated: B5/B6 Kroger, B8 devices (incl. WebKit/VoiceOver for
-B14), B9 hosting.
+No owner-free item of the size of B15/B16 remains. **B17** (keyboard pass over the remaining inline
+plan/recipe forms) is the next bounded, owner-free task. Owner-gated: B5/B6 Kroger, B8 devices
+(WebKit, iPhone Safari, VoiceOver for B14/B15), B9 hosting.
