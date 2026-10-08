@@ -67,9 +67,14 @@ test("T04: a Wednesday preview shows Thursday's leftover consequence; a locked T
   await expect(jon.page.getByTestId("preview")).toContainText("Thursday becomes an open night");
   await jon.page.getByTestId("cancel-preview").click();
   expect(await protectedRows(fx.weekId)).toEqual(before);
+  // B14: the Change sheet is modal, so Thursday's Lock is unreachable behind it. Close the sheet
+  // (closing applies nothing), lock Thursday, and reopen Wednesday's sheet.
+  await jon.page.keyboard.press("Escape");
+  await expect(jon.page.getByTestId(`sheet-${NIGHT.wed}`)).toHaveCount(0);
   await jon.page.getByTestId(`night-${NIGHT.thu}`).getByRole("button", { name: "Lock" }).click();
   await expect(jon.page.getByTestId(`night-${NIGHT.thu}`)).toContainText("Locked");
-  await jon.page.getByTestId("option-Fixture: Chicken penne").click(); // Wednesday's sheet is still open
+  await jon.page.getByTestId(`change-${NIGHT.wed}`).click();
+  await jon.page.getByTestId("option-Fixture: Chicken penne").click();
   await expect(jon.page.getByTestId("preview")).toBeVisible();
   await expect(jon.page.getByTestId("preview")).toContainText("is locked and depends on Wednesday");
   await expect(jon.page.getByTestId("apply")).toBeDisabled();

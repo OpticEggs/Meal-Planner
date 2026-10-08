@@ -7,6 +7,7 @@ import { addDays, localDate, weekStartOf } from "@/domain/dates";
 import { nowInstant } from "../env";
 import type { RequirementLine } from "@/domain/groceries/projection";
 import { KNOWN_UNITS, convert, normalizeUnit } from "@/domain/units";
+import { retailer } from "../integrations/retailer";
 
 async function cycleFor(c: Db, householdId: string, weekId: string): Promise<string> {
   const w = await weekById(c, householdId, weekId);
@@ -93,25 +94,28 @@ export function captureHouseholdNeedCommand(actor: Actor, operationId: string, p
       routed = true;
     }
 
-    // Remembered staple: usual amount (and the product chosen for the ingredient).
-    if (key && kind === "usual") {
-      const staple = await c.query("SELECT usual_packages FROM household_staples WHERE household_id=$1 AND ingredient_key=$2", [actor.householdId, key]);
-      if (p.rememberUsual && packages) {
-        await c.query(
-          `INSERT INTO household_staples(household_id, ingredient_key, usual_packages, product_id, updated_by)
-           VALUES ($1,$2,$3,(SELECT product_id FROM product_mappings WHERE household_id=$1 AND ingredient_key=$2),$4)
-           ON CONFLICT (household_id, ingredient_key) DO UPDATE SET usual_packages=EXCLUDED.usual_packages, product_id=EXCLUDED.product_id,
-             updated_by=EXCLUDED.updated_by, updated_at=now()`,
-          [actor.householdId, key, packages, actor.memberId],
-        );
-      } else if (staple.rowCount) {
-        packages = packages ?? staple.rows[0].usual_packages;
+    // Remembered staple: the usual amount and the last approved package. A new request records
+    // that package as its product intent. The remembered product itself changes only through
+    // ApproveStapleProduct; remembering a usual quantity never changes it.
+    // An explicit extra of a staple ("Add another", Extra) asks for the same remembered package.
+    let productIntent: string | null = null;
+    const staple = key ? await c.query("SELECT usual_packages, product_id FROM household_staples WHERE household_id=$1 AND ingredient_key=$2", [actor.householdId, key]) : null;
+    if (staple?.rowCount) productIntent = staple.rows[0].product_id;
+    if (key && kind === "usual" && staple) {
+      if (staple.rowCount) {
+        if (p.rememberUsual && packages) {
+          await c.query("UPDATE household_staples SET usual_packages=$3, updated_by=$4, updated_at=now() WHERE household_id=$1 AND ingredient_key=$2", [
+            actor.householdId, key, packages, actor.memberId,
+          ]);
+        } else packages = packages ?? staple.rows[0].usual_packages;
       } else {
-        await c.query(
+        // First usual capture of a known item: remember it with the household's current product choice.
+        const ins = await c.query(
           `INSERT INTO household_staples(household_id, ingredient_key, usual_packages, product_id, updated_by)
-           VALUES ($1,$2,$3,(SELECT product_id FROM product_mappings WHERE household_id=$1 AND ingredient_key=$2),$4) ON CONFLICT DO NOTHING`,
+           VALUES ($1,$2,$3,(SELECT product_id FROM product_mappings WHERE household_id=$1 AND ingredient_key=$2),$4) RETURNING product_id`,
           [actor.householdId, key, packages ?? 1, actor.memberId],
         );
+        productIntent = ins.rows[0].product_id;
       }
     }
 
@@ -124,15 +128,15 @@ export function captureHouseholdNeedCommand(actor: Actor, operationId: string, p
         merged = true;
       } else {
         const ins = await c.query(
-          "INSERT INTO household_requests(household_id, cycle_id, ingredient_key, text, kind, packages, captured_from) VALUES ($1,$2,$3,$4,'usual',$5,$6) RETURNING id",
-          [actor.householdId, destCycle, key, text, packages, p.from],
+          "INSERT INTO household_requests(household_id, cycle_id, ingredient_key, text, kind, packages, captured_from, product_id) VALUES ($1,$2,$3,$4,'usual',$5,$6,$7) RETURNING id",
+          [actor.householdId, destCycle, key, text, packages, p.from, productIntent],
         );
         requestId = ins.rows[0].id;
       }
     } else {
       const ins = await c.query(
-        "INSERT INTO household_requests(household_id, cycle_id, ingredient_key, text, kind, packages, captured_from) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING id",
-        [actor.householdId, destCycle, key, text, kind, kind === "extra" ? packages ?? 1 : packages, p.from],
+        "INSERT INTO household_requests(household_id, cycle_id, ingredient_key, text, kind, packages, captured_from, product_id) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING id",
+        [actor.householdId, destCycle, key, text, kind, kind === "extra" ? packages ?? 1 : packages, p.from, key ? productIntent : null],
       );
       requestId = ins.rows[0].id;
     }
@@ -144,7 +148,7 @@ export function captureHouseholdNeedCommand(actor: Actor, operationId: string, p
     return {
       status: "accepted",
       result: {
-        requestId, merged, matchedIngredient: key, kind,
+        requestId, merged, matchedIngredient: key, kind, productIntent,
         destination: { weekId: dest.id, weekStart: dest.weekStart, reason: routed ? "next_pickup" : "this_pickup" },
       },
       change: { weekId: dest.id, summary: { type: "request", text: `${actor.displayName} added ${text}${kind === "extra" ? " (extra)" : ""}${routed ? " to the next pickup" : ""}` } },
@@ -260,6 +264,7 @@ export function addProductCommand(
        ON CONFLICT (household_id, ingredient_key) DO UPDATE SET product_id=EXCLUDED.product_id, decided_by=EXCLUDED.decided_by, decided_at=now(), suitable=true`,
       [actor.householdId, p.ingredientKey, productId, actor.memberId],
     );
+    await setPickupIntent(c, actor.householdId, p.weekId, p.ingredientKey, productId);
     return {
       status: "accepted", result: { productId, unitKnown: unit ? KNOWN_UNITS.includes(unit) : null },
       change: { weekId: p.weekId, summary: { type: "product", text: `${actor.displayName} chose ${name}` } },
@@ -277,7 +282,74 @@ export function chooseProductCommand(actor: Actor, operationId: string, p: { wee
        ON CONFLICT (household_id, ingredient_key) DO UPDATE SET product_id=EXCLUDED.product_id, decided_by=EXCLUDED.decided_by, decided_at=now(), suitable=true`,
       [actor.householdId, p.ingredientKey, p.productId, actor.memberId],
     );
+    await setPickupIntent(c, actor.householdId, p.weekId, p.ingredientKey, p.productId);
     return { status: "accepted", result: {}, change: { weekId: p.weekId, summary: { type: "product", text: `${actor.displayName} chose ${pr.rows[0].name}` } }, purchasingInputsChanged: true };
+  });
+}
+
+/** Choosing a product for this pickup also re-points this pickup's requests that named a product, so the line shows what was chosen. It does not change the remembered staple product;
+ *  that is the separate, explicit ApproveStapleProduct decision. */
+async function setPickupIntent(c: Db, householdId: string, weekId: string | null | undefined, key: string, productId: string) {
+  if (!weekId) return;
+  await c.query(
+    `UPDATE household_requests r SET product_id=$4 FROM grocery_cycles g
+     WHERE g.id=r.cycle_id AND g.week_id=$2 AND r.household_id=$1 AND r.ingredient_key=$3 AND r.state='active' AND r.product_id IS NOT NULL`,
+    [householdId, weekId, key, productId],
+  );
+}
+
+/**
+ * B12 — approve a product as the household's usual package for a staple. A product-suitability
+ * decision, separate from approving a purchase quantity:
+ *  - it names the remembered-product revision it was decided against; a stale one is refused
+ *    (a concurrent approval never silently overwrites a newer household decision);
+ *  - the product must be known for that item and sold by the active retailer, else nothing changes;
+ *  - it changes what future one-tap requests ask for. It does not touch outstanding requests,
+ *    purchase approvals, transfers or orders, so it can never authorize a purchase.
+ */
+export function approveStapleProductCommand(actor: Actor, operationId: string, p: { ingredientKey: string; productId: string; expectedRevision: number }) {
+  return runCommand(actor, "ApproveStapleProduct", operationId, p, async (c) => {
+    if (!Number.isInteger(p.expectedRevision) || p.expectedRevision < 1) throw new Reject("invalid", "Say which remembered product this replaces");
+    const st = await c.query(
+      `SELECT s.product_id, s.product_revision, i.name, pp.name AS product_name, m.display_name AS updated_by
+       FROM household_staples s JOIN ingredients i ON i.household_id=s.household_id AND i.key=s.ingredient_key
+       LEFT JOIN products pp ON pp.id=s.product_id LEFT JOIN members m ON m.id=s.updated_by
+       WHERE s.household_id=$1 AND s.ingredient_key=$2`,
+      [actor.householdId, p.ingredientKey],
+    );
+    if (!st.rowCount) throw new Reject("not_found", "That item is not one of your usual items");
+    const s = st.rows[0];
+    const pr = await c.query("SELECT id, name, retailer FROM products WHERE id=$1 AND household_id=$2 AND ingredient_key=$3", [
+      typeof p.productId === "string" && /^[0-9a-f-]{36}$/i.test(p.productId) ? p.productId : null, actor.householdId, p.ingredientKey,
+    ]);
+    if (!pr.rowCount) throw new Reject("unknown_product", `That product is not known for ${s.name}. Your usual ${s.name} is unchanged.`);
+    if (pr.rows[0].retailer !== retailer().mode) {
+      throw new Reject("product_unavailable", `${pr.rows[0].name} is not available from the active store. Your usual ${s.name} is unchanged.`);
+    }
+    if (s.product_revision !== p.expectedRevision) {
+      throw new Reject("stale_staple", `${s.updated_by ?? "Someone"} already changed your usual ${s.name} to ${s.product_name ?? "no product"}. Review it and decide again.`, {
+        current: { productId: s.product_id, productName: s.product_name, revision: s.product_revision },
+      });
+    }
+    if (s.product_id === pr.rows[0].id) {
+      return { status: "accepted", result: { ingredientKey: p.ingredientKey, productId: s.product_id, revision: s.product_revision, unchanged: true } };
+    }
+    const up = await c.query(
+      `UPDATE household_staples SET product_id=$3, product_revision=product_revision+1, updated_by=$4, updated_at=now()
+       WHERE household_id=$1 AND ingredient_key=$2 AND product_revision=$5 RETURNING product_revision`,
+      [actor.householdId, p.ingredientKey, pr.rows[0].id, actor.memberId, p.expectedRevision],
+    );
+    const revision = up.rows[0].product_revision;
+    await c.query(
+      `INSERT INTO staple_product_decisions(household_id, ingredient_key, product_id, previous_product_id, staple_revision, decided_by)
+       VALUES ($1,$2,$3,$4,$5,$6)`,
+      [actor.householdId, p.ingredientKey, pr.rows[0].id, s.product_id, revision, actor.memberId],
+    );
+    return {
+      status: "accepted",
+      result: { ingredientKey: p.ingredientKey, productId: pr.rows[0].id, revision },
+      change: { weekId: null, summary: { type: "staple", text: `${actor.displayName} made ${pr.rows[0].name} your usual ${s.name}` } },
+    };
   });
 }
 

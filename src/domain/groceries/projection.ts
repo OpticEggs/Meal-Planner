@@ -26,6 +26,8 @@ export interface RequestInput {
   kind: "usual" | "extra";
   packages: number | null;
   contributors: { memberId: string; name: string; taps: number }[];
+  /** Product intent recorded at capture (a staple's remembered product); null = none. */
+  productId?: string | null;
 }
 
 export interface AvailabilityInput {
@@ -102,6 +104,8 @@ export interface ProjectionInput {
   requests: RequestInput[];
   availability: AvailabilityInput[]; // latest per ingredient
   products: Map<string, { product: ProductInput; price: PriceInput | null }>; // by ingredientKey
+  /** Products named by request intents, by product id; `available` = sold by the active retailer. */
+  intentProducts?: Map<string, { product: ProductInput; price: PriceInput | null; available: boolean }>;
   batches: BatchInput[];
   order: OrderInput | null;
   approvals: ApprovalInput[];
@@ -127,7 +131,7 @@ export interface RequirementLine {
   name: string;
   meal: { quantity: string; unit: string; sources: { eventId: string; cookNight: string; recipeTitle: string; quantity: string; unit: string }[] } | null;
   mealUnitConflict: string[] | null;
-  requests: { id: string; kind: "usual" | "extra"; packages: number | null; text: string; contributors: { memberId: string; name: string; taps: number }[] }[];
+  requests: { id: string; kind: "usual" | "extra"; packages: number | null; text: string; contributors: { memberId: string; name: string; taps: number }[]; productId?: string | null }[];
   availability: AvailabilityInput | null;
   homeSupply: string | null;
   product: ProductInput | null;
@@ -222,11 +226,24 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
         [[mealUnit, mealQty]] = [...m.byUnit.entries()];
       }
     }
-    const prodEntry = ingredientKey ? input.products.get(ingredientKey) : undefined;
+    // Product: a request's product intent (the staple's remembered package at capture) decides;
+    // otherwise the household's product choice for the ingredient. An intent that is
+    // unknown or not sold by the active retailer leaves the line unresolved — never a silent
+    // substitute.
+    let prodEntry: { product: ProductInput; price: PriceInput | null } | undefined = ingredientKey ? input.products.get(ingredientKey) : undefined;
+    const intents = [...new Set(reqs.filter((r) => r.productId).map((r) => r.productId as string))];
+    if (ingredientKey && intents.length) {
+      const intent = intents.length === 1 ? input.intentProducts?.get(intents[0]) : undefined;
+      prodEntry = undefined;
+      if (intents.length > 1) unresolved.push("Requests for this item name different products — choose one for this pickup");
+      else if (!intent) unresolved.push("Your usual product is no longer known — choose a product for this pickup");
+      else if (!intent.available) unresolved.push(`Your usual product (${intent.product.name}) is not available from the active store — choose a product for this pickup`);
+      else prodEntry = intent;
+    }
     const product = prodEntry?.product ?? null;
     const price = prodEntry?.price ?? null;
     if (!ingredientKey) unresolved.push("Needs review: match this request to an ingredient and product");
-    else if (!product) unresolved.push("No product chosen for this ingredient");
+    else if (!product && !intents.length) unresolved.push("No product chosen for this ingredient");
 
     // 2. Home supply (availability observation for this cycle).
     const avail = ingredientKey ? input.availability.find((a) => a.ingredientKey === ingredientKey) ?? null : null;
@@ -379,7 +396,7 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
       key,
       meal: mealQty ? [mealQty.toDecimalPlaces(6).toString(), mealUnit] : null,
       mealUnitConflict,
-      requests: reqs.map((r) => [r.id, r.kind, r.packages]).sort(),
+      requests: reqs.map((r) => (r.productId ? [r.id, r.kind, r.packages, r.productId] : [r.id, r.kind, r.packages])).sort(),
       availability: avail ? avail.id : null,
       product: product ? [product.id, product.packageQty, product.packageUnit] : null,
       packagesNeeded,
@@ -423,7 +440,7 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
       name: ing?.name ?? reqs[0]?.text ?? key,
       meal: mealQty && mealUnit ? { quantity: mealQty.toDecimalPlaces(3).toString(), unit: normalizeUnit(mealUnit), sources: m!.sources } : null,
       mealUnitConflict,
-      requests: reqs.map((r) => ({ id: r.id, kind: r.kind, packages: r.packages, text: r.text, contributors: r.contributors })),
+      requests: reqs.map((r) => ({ id: r.id, kind: r.kind, packages: r.packages, text: r.text, contributors: r.contributors, productId: r.productId ?? null })),
       availability: avail,
       homeSupply: homeSupply ? homeSupply.toDecimalPlaces(3).toString() : null,
       product,

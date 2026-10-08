@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useStore } from "./store";
+import { ModalSheet, focusFirst, nightFallback } from "./a11y";
 import { AlsoNeed } from "./AlsoNeed";
 import { costView, dateLabel, money, nutrient } from "./format";
 
@@ -15,7 +16,7 @@ export function WeekScreen() {
     <div>
       <div className="weeknav">
         <button className="btn line small" onClick={() => setWeekStart(clock.prevWeekStart)} aria-label="Previous week">‹</button>
-        <h2 className="h2" data-testid="week-title">Week of {dateLabel(clock.weekStart)}</h2>
+        <h2 className="h2" data-testid="week-title" tabIndex={-1}>Week of {dateLabel(clock.weekStart)}</h2>
         <button className="btn line small" onClick={() => setWeekStart(clock.nextWeekStart)} aria-label="Next week">›</button>
       </div>
       {snapshot.week?.adopted ? <AdoptedWeek /> : <ProposalView />}
@@ -147,6 +148,7 @@ function AdoptedWeek() {
   const [openNight, setOpenNight] = useState<string | null>(null);
   return (
     <section aria-label="Accepted week">
+      <h2 className="sr-only" id="plan-status">Accepted plan status</h2>
       <p className="status-line" data-testid="status-sentence">{week.statusSentence}</p>
       {next && <NextDinner night={next} />}
       <div className="stats">
@@ -154,11 +156,11 @@ function AdoptedWeek() {
         <div className="stat"><span>Dinner ingredients</span><strong>{costView(g?.summary?.dinnerIngredientCost)}</strong></div>
         <div className="stat"><span>Budget</span><strong>{budgetLabel(g?.summary?.budget)}</strong></div>
       </div>
-      <OpenPreviews />
+      <OpenPreviews exceptNight={openNight} />
       <div className="section-label">This week · accepted revision <span data-testid="accepted-revision">{week.acceptedChoiceRevision}</span></div>
       <ol className="nights" aria-label="Accepted dinners">
         {week.nights.map((n: any) => (
-          <NightRow key={n.night} n={n} open={openNight === n.night} onToggle={() => setOpenNight(openNight === n.night ? null : n.night)} />
+          <NightRow key={n.night} n={n} open={openNight === n.night} onOpen={() => setOpenNight(n.night)} onClose={() => setOpenNight((o) => (o === n.night ? null : o))} />
         ))}
       </ol>
       {snapshot.deferred.length > 0 && <Deferred />}
@@ -200,18 +202,21 @@ function coverageText(c: any) {
   return c.status === "covered" ? "Covered" : c.status === "out" ? "Out" : c.status === "uncovered" ? "No dinner" : "Unresolved";
 }
 
-function NightRow({ n, open, onToggle }: { n: any; open: boolean; onToggle: () => void }) {
-  const { command, writesAllowed, snapshot } = useStore();
+function NightRow({ n, open, onOpen, onClose }: { n: any; open: boolean; onOpen: () => void; onClose: () => void }) {
+  const { command, writesAllowed, snapshot, announce } = useStore();
   const [msg, setMsg] = useState<string | null>(null);
+  const opener = useRef<HTMLButtonElement>(null);
   const title = n.kind === "cook" ? n.recipe?.title : n.kind === "leftover" ? `Leftovers: ${n.recipe?.title}` : n.kind === "out" ? "Out" : "Open";
   async function lock() {
     const r = await command("SetNightLock", { assignmentId: n.assignmentId, expectedRevision: n.revision, locked: !n.locked });
     setMsg(r.status === "accepted" ? null : r.message);
+    if (r.status === "accepted") announce(`${n.dayName} ${n.locked ? "unlocked" : "locked"}.`);
   }
   return (
     <li className={`night ${n.night === snapshot.clock.nextDinner ? "is-next" : ""}`} data-testid={`night-${n.night}`} data-kind={n.kind} data-revision={n.revision}>
-      <span className="day">{n.dayName.slice(0, 3)}</span>
+      <span className="day" aria-hidden="true">{n.dayName.slice(0, 3)}</span>
       <div className="grow">
+        <span className="sr-only">{n.dayName}: </span>
         <strong data-testid={`night-title-${n.night}`}>{title}</strong>
         <div className="faint small">
           <span className={`badge cov-${n.coverage.status}`}>{coverageText(n.coverage)}</span>
@@ -223,21 +228,43 @@ function NightRow({ n, open, onToggle }: { n: any; open: boolean; onToggle: () =
         {n.constraint.status !== "ok" && <div className="warn small">{n.constraint.reasons.join("; ")} (text match, not allergen certification)</div>}
       </div>
       <div className="col">
-        <button className="btn line small" onClick={onToggle} aria-expanded={open} data-testid={`change-${n.night}`}>{open ? "Close" : "Change"}</button>
-        <button className="btn line small" onClick={lock} disabled={!writesAllowed} aria-pressed={n.locked}>{n.locked ? "Unlock" : "Lock"}</button>
+        <button
+          ref={opener}
+          className="btn line small"
+          onClick={onOpen}
+          aria-haspopup="dialog"
+          aria-expanded={open}
+          aria-label={`Change ${n.dayName} dinner`}
+          data-testid={`change-${n.night}`}
+        >
+          Change
+        </button>
+        <button className="btn line small" onClick={lock} disabled={!writesAllowed} aria-pressed={n.locked} aria-label={`${n.locked ? "Unlock" : "Lock"} ${n.dayName}`} data-testid={`lock-${n.night}`}>
+          {n.locked ? "Unlock" : "Lock"}
+        </button>
       </div>
       {msg && <p role="alert" className="warnbox full-row">{msg}</p>}
-      {open && <ChangeSheet n={n} />}
+      {open && <ChangeSheet n={n} onClose={onClose} returnFocus={() => focusFirst(opener.current) ?? nightFallback(n.night)} />}
     </li>
   );
 }
 
-function ChangeSheet({ n }: { n: any }) {
-  const { snapshot, library, loadLibrary, command, writesAllowed, me } = useStore();
-  const [mode, setMode] = useState<"replace" | "move" | "backup" | "plates" | "facts">("replace");
+type SheetMode = "replace" | "move" | "backup" | "plates" | "facts";
+const MODES: SheetMode[] = ["replace", "move", "backup", "plates", "facts"];
+const MODE_LABEL: Record<SheetMode, string> = { replace: "Replace", move: "Move", backup: "Backup", plates: "Plates", facts: "Less left" };
+
+/** Per-night Change sheet: a dismissible modal. It only creates private previews (and records the
+ *  explicit facts its own buttons say); closing it — Escape, Close, backdrop — applies nothing. */
+function ChangeSheet({ n, onClose, returnFocus }: { n: any; onClose: () => void; returnFocus: () => void }) {
+  const { snapshot, library, loadLibrary, command, writesAllowed, me, announce } = useStore();
+  const [mode, setMode] = useState<SheetMode>("replace");
   const [msg, setMsg] = useState<string | null>(null);
   const [toNight, setToNight] = useState("");
   const [remaining, setRemaining] = useState("");
+  const [focusPreview, setFocusPreview] = useState<{ id: string; from: Element | null } | null>(null);
+  const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const msgRef = useRef<HTMLParagraphElement>(null);
+  const uid = `sheet-${n.night}`;
   useEffect(() => {
     if (!library) void loadLibrary();
   }, [library, loadLibrary]);
@@ -250,94 +277,168 @@ function ChangeSheet({ n }: { n: any }) {
     const unknown = list.filter((r: any) => !r.additionalBasketCost.known).sort((a: any, b: any) => a.version.title.localeCompare(b.version.title));
     return { known, unknown };
   }, [library, n.recipe?.id]);
+  const previews = snapshot.previews.filter((p: any) => p.targetNights.includes(n.night));
+  // A new preview takes focus, so a screen reader reads its consequences next — unless the
+  // member has already moved focus somewhere else while it was being made.
+  useEffect(() => {
+    if (!focusPreview) return;
+    const el = document.getElementById(`preview-h-${focusPreview.id}`);
+    if (el) {
+      const active = document.activeElement;
+      if (active === focusPreview.from || active === document.body || !active) el.focus();
+      setFocusPreview(null);
+    }
+  }, [focusPreview, previews]);
+  useEffect(() => {
+    if (msg) msgRef.current?.focus();
+  }, [msg]);
   async function preview(operation: any) {
     setMsg(null);
+    const from = document.activeElement;
     const r = await command("CreatePreview", { weekId: snapshot.week.id, operation });
     if (r.status !== "accepted") setMsg(r.message);
+    else setFocusPreview({ id: r.result.previewId, from });
+  }
+  function selectTab(m: SheetMode, focus = false) {
+    setMode(m);
+    if (focus) tabRefs.current[m]?.focus();
+  }
+  function onTabKey(e: React.KeyboardEvent, m: SheetMode) {
+    const i = MODES.indexOf(m);
+    const to = e.key === "ArrowRight" ? MODES[(i + 1) % MODES.length] : e.key === "ArrowLeft" ? MODES[(i + MODES.length - 1) % MODES.length] : e.key === "Home" ? MODES[0] : e.key === "End" ? MODES[MODES.length - 1] : null;
+    if (to) {
+      e.preventDefault();
+      selectTab(to, true);
+    }
   }
   const otherNights = snapshot.week.nights.filter((x: any) => x.night !== n.night);
+  const current = n.kind === "cook" ? n.recipe?.title : n.kind === "leftover" ? `Leftovers: ${n.recipe?.title}` : n.kind === "out" ? "Out" : "Open — no dinner chosen";
   return (
-    <div className="sheet full-row" data-testid={`sheet-${n.night}`}>
-      <div className="tabs" role="tablist">
-        {(["replace", "move", "backup", "plates", "facts"] as const).map((m) => (
-          <button key={m} role="tab" aria-selected={mode === m} className={mode === m ? "on" : ""} onClick={() => setMode(m)}>
-            {{ replace: "Replace", move: "Move", backup: "Backup", plates: "Plates", facts: "Less left" }[m]}
+    <ModalSheet
+      title={`Change ${n.dayName} dinner`}
+      subtitle={`Now: ${current}${n.locked ? " · locked" : ""}`}
+      closeLabel={`Close ${n.dayName} changes`}
+      onClose={onClose}
+      returnFocus={returnFocus}
+      testId={`sheet-${n.night}`}
+    >
+      <div className="tabs" role="tablist" aria-label={`Ways to change ${n.dayName}`}>
+        {MODES.map((m) => (
+          <button
+            key={m}
+            ref={(el) => {
+              tabRefs.current[m] = el;
+            }}
+            type="button"
+            role="tab"
+            id={`${uid}-tab-${m}`}
+            aria-selected={mode === m}
+            aria-controls={`${uid}-panel`}
+            tabIndex={mode === m ? 0 : -1}
+            data-autofocus={mode === m ? "" : undefined}
+            className={mode === m ? "on" : ""}
+            onClick={() => selectTab(m)}
+            onKeyDown={(e) => onTabKey(e, m)}
+          >
+            {MODE_LABEL[m]}
           </button>
         ))}
       </div>
-      {msg && <p role="alert" className="warnbox">{msg}</p>}
-      {(mode === "replace" || mode === "backup") && (
-        <div className="stack">
-          <p className="faint small">
-            {mode === "replace" ? "Choose a dinner to preview. Nothing changes until you press Apply." : "Choose a backup; the original stays as a deferred dinner instead of being discarded."} Dinners that use groceries you already received come first, then by what you would still have to buy; unpriced options are listed separately.
-          </p>
-          {!library && <p className="muted">Loading recipes…</p>}
-          {[...options.known, ...options.unknown].map((r: any, i: number) => (
-            <div key={r.recipeId}>
-              {i === options.known.length && options.unknown.length > 0 && <div className="section-label">Cost unknown</div>}
-              <button
-                className="option"
-                data-testid={`option-${r.version.title}`}
-                disabled={mode === "backup" && n.kind !== "cook"}
-                onClick={() => preview(mode === "replace" ? { type: "replace", assignmentId: n.assignmentId, recipeVersionId: r.version.id } : { type: "backup", assignmentId: n.assignmentId, recipeVersionId: r.version.id })}
-              >
-                <span>{r.version.title}</span>
-                <span className="faint small">
-                  {r.usesReceived?.length ? `Uses received ${r.usesReceived.join(", ")} · ` : ""}
-                  {r.additionalBasketCost.known ? `${r.additionalBasketCost.minor >= 0 ? "+" : ""}${money(r.additionalBasketCost.minor)}` : "unknown"}{r.constraint.status !== "ok" ? " · fails exclusions" : ""}
-                </span>
-              </button>
+      {msg && <p role="alert" className="warnbox" tabIndex={-1} ref={msgRef}>{msg}</p>}
+      <div role="tabpanel" id={`${uid}-panel`} aria-labelledby={`${uid}-tab-${mode}`} className="stack">
+        {(mode === "replace" || mode === "backup") && (
+          <div className="stack">
+            <p className="faint small">
+              {mode === "replace" ? "Choose a dinner to preview. Nothing changes until you press Apply." : "Choose a backup; the original stays as a deferred dinner instead of being discarded."} Dinners that use groceries you already received come first, then by what you would still have to buy; unpriced options are listed separately.
+            </p>
+            {!library && <p className="muted">Loading recipes…</p>}
+            {[...options.known, ...options.unknown].map((r: any, i: number) => (
+              <div key={r.recipeId}>
+                {i === options.known.length && options.unknown.length > 0 && <div className="section-label">Cost unknown</div>}
+                <button
+                  type="button"
+                  className="option"
+                  data-testid={`option-${r.version.title}`}
+                  disabled={mode === "backup" && n.kind !== "cook"}
+                  onClick={() => preview(mode === "replace" ? { type: "replace", assignmentId: n.assignmentId, recipeVersionId: r.version.id } : { type: "backup", assignmentId: n.assignmentId, recipeVersionId: r.version.id })}
+                >
+                  <span>{r.version.title}</span>
+                  <span className="faint small">
+                    {r.usesReceived?.length ? `Uses received ${r.usesReceived.join(", ")} · ` : ""}
+                    {r.additionalBasketCost.known ? `${r.additionalBasketCost.minor >= 0 ? "+" : ""}${money(r.additionalBasketCost.minor)}` : "unknown"}{r.constraint.status !== "ok" ? " · fails exclusions" : ""}
+                  </span>
+                </button>
+              </div>
+            ))}
+            <div className="row">
+              <button type="button" className="btn line small" onClick={() => preview({ type: "set_kind", assignmentId: n.assignmentId, kind: "out" })}>Preview: night out</button>
+              <button type="button" className="btn line small" onClick={() => preview({ type: "set_kind", assignmentId: n.assignmentId, kind: "open" })}>Preview: leave open</button>
             </div>
-          ))}
-          <div className="row">
-            <button className="btn line small" onClick={() => preview({ type: "set_kind", assignmentId: n.assignmentId, kind: "out" })}>Preview: night out</button>
-            <button className="btn line small" onClick={() => preview({ type: "set_kind", assignmentId: n.assignmentId, kind: "open" })}>Preview: leave open</button>
           </div>
+        )}
+        {mode === "move" && (
+          <div className="stack">
+            {n.kind !== "cook" ? (
+              <p className="faint small">Only a cooking night can be moved.</p>
+            ) : (
+              <>
+                <label>Move {n.recipe?.title} to
+                  <select value={toNight} onChange={(e) => setToNight(e.target.value)}>
+                    <option value="">Choose a night</option>
+                    {otherNights.map((x: any) => <option key={x.night} value={x.night}>{x.dayName} — {x.kind === "cook" ? x.recipe?.title : x.kind}{x.locked ? " (locked)" : ""}</option>)}
+                  </select>
+                </label>
+                <button type="button" className="btn line" disabled={!toNight} onClick={() => preview({ type: "move", assignmentId: n.assignmentId, toNight })}>Preview move</button>
+              </>
+            )}
+          </div>
+        )}
+        {mode === "plates" && <PlateEditor n={n} />}
+        {mode === "facts" && (
+          <div className="stack">
+            {n.event ? (
+              <>
+                <p className="faint small">Record what is actually left. This is a fact: selected dinners stay as they are; affected nights become unresolved and you decide any recovery. Closing this sheet records nothing.</p>
+                <label>Portions left now<input inputMode="decimal" value={remaining} onChange={(e) => setRemaining(e.target.value)} /></label>
+                <button
+                  type="button"
+                  className="btn line"
+                  disabled={!remaining}
+                  onClick={async () => {
+                    const r = await command("RecordLeftoverShortfall", { eventId: n.event.id, portionsRemaining: remaining });
+                    setMsg(r.status === "accepted" ? r.result.recovery : r.message);
+                  }}
+                >
+                  Record less left than planned
+                </button>
+              </>
+            ) : (
+              <p className="faint small">No cooking linked to this night.</p>
+            )}
+          </div>
+        )}
+      </div>
+      {previews.length > 0 && (
+        <div className="stack" aria-label={`Your ${n.dayName} previews`} role="group">
+          {previews.map((p: any) => (
+            <PreviewCard
+              key={p.id}
+              p={p}
+              onApplied={(text) => {
+                announce(text);
+                onClose();
+              }}
+              onCanceled={() => {
+                announce("Preview discarded. Nothing changed.");
+                tabRefs.current[mode]?.focus();
+              }}
+            />
+          ))}
         </div>
       )}
-      {mode === "move" && (
-        <div className="stack">
-          {n.kind !== "cook" ? (
-            <p className="faint small">Only a cooking night can be moved.</p>
-          ) : (
-            <>
-              <label>Move {n.recipe?.title} to
-                <select value={toNight} onChange={(e) => setToNight(e.target.value)}>
-                  <option value="">Choose a night</option>
-                  {otherNights.map((x: any) => <option key={x.night} value={x.night}>{x.dayName} — {x.kind === "cook" ? x.recipe?.title : x.kind}{x.locked ? " (locked)" : ""}</option>)}
-                </select>
-              </label>
-              <button className="btn line" disabled={!toNight} onClick={() => preview({ type: "move", assignmentId: n.assignmentId, toNight })}>Preview move</button>
-            </>
-          )}
-        </div>
-      )}
-      {mode === "plates" && <PlateEditor n={n} />}
-      {mode === "facts" && (
-        <div className="stack">
-          {n.event ? (
-            <>
-              <p className="faint small">Record what is actually left. This is a fact: selected dinners stay as they are; affected nights become unresolved and you decide any recovery.</p>
-              <label>Portions left now<input inputMode="decimal" value={remaining} onChange={(e) => setRemaining(e.target.value)} /></label>
-              <button
-                className="btn line"
-                disabled={!remaining}
-                onClick={async () => {
-                  const r = await command("RecordLeftoverShortfall", { eventId: n.event.id, portionsRemaining: remaining });
-                  setMsg(r.status === "accepted" ? r.result.recovery : r.message);
-                }}
-              >
-                Record less left than planned
-              </button>
-            </>
-          ) : (
-            <p className="faint small">No cooking linked to this night.</p>
-          )}
-        </div>
-      )}
-      <p className="faint small">Signed in as {me.displayName}. Previews are private drafts until applied.</p>
+      <p className="faint small">Signed in as {me.displayName}. Previews are private drafts until applied; closing this sheet keeps any draft and applies nothing.</p>
       {!writesAllowed && <p className="warn small">Checking for newer decisions — changes are paused until this view is current.</p>}
-    </div>
+    </ModalSheet>
   );
 }
 
@@ -407,60 +508,99 @@ function PlateEditor({ n }: { n: any }) {
   );
 }
 
-function OpenPreviews() {
-  const { snapshot, command, writesAllowed, currency } = useStore();
-  const [msgs, setMsgs] = useState<Record<string, string>>({});
-  if (!snapshot.previews.length) return null;
+/** Open drafts not shown inside an open Change sheet. */
+function OpenPreviews({ exceptNight }: { exceptNight: string | null }) {
+  const { snapshot, announce } = useStore();
+  const list = snapshot.previews.filter((p: any) => !(exceptNight && p.targetNights.includes(exceptNight)));
+  if (!list.length) return null;
   return (
-    <div aria-label="Your open previews">
-      {snapshot.previews.map((p: any) => {
-        const target = p.targetNights.map((d: string) => snapshot.week.nights.find((x: any) => x.night === d)?.dayName).filter(Boolean).join(", ");
-        const blocked = p.consequence.blockers?.length > 0;
-        return (
-          <div key={p.id} className={`card preview ${p.stale ? "stale" : ""}`} data-testid="preview" data-stale={p.stale ? "true" : "false"}>
-            <div className="row between">
-              <strong>Preview · {target}</strong>
-              {p.stale ? <span className="badge con-violated" data-testid="stale-badge">⚠ Out of date</span> : <span className="badge">Draft — not applied</span>}
-            </div>
-            {p.stale && (
-              <p className="warnbox" role="alert" data-testid="stale-message">
-                {p.staleChanges.length
-                  ? p.staleChanges.map((c: any) => `${c.by ?? "Someone"} changed ${c.dayName} to ${c.now}.`).join(" ")
-                  : "A newer decision changed what this preview depends on."}{" "}
-                This preview can’t be applied as reviewed. Review the current week and make a new choice.
-              </p>
-            )}
-            <ul className="small">{p.consequence.lines.map((l: string) => <li key={l}>{l}</li>)}</ul>
-            {p.consequence.groceryDelta?.length > 0 && (
-              <div className="small">
-                <div className="section-label">Grocery change if applied</div>
-                <ul>{p.consequence.groceryDelta.map((d: any) => <li key={d.name}>{d.name}: {d.change}{d.before && d.after ? ` (${d.before} → ${d.after})` : ""}</li>)}</ul>
-                <div>Additional basket cost vs {p.consequence.baseline}: {p.consequence.additionalBasketCost.known ? money(p.consequence.additionalBasketCost.minor) : "unknown (unpriced items)"}</div>
-              </div>
-            )}
-            {blocked && <p className="warnbox">{p.consequence.blockers.map((b: any) => b.message).join(" ")}</p>}
-            {p.consequence.budgetBlock && <p className="warnbox">{p.consequence.budgetBlock}</p>}
-            {msgs[p.id] && <p role="alert" className="warnbox">{msgs[p.id]}</p>}
-            <div className="row">
-              <button
-                className="btn primary"
-                data-testid="apply"
-                disabled={p.stale || blocked || !writesAllowed}
-                title={!writesAllowed ? (currency === "offline" ? "Offline" : "Checking for newer decisions") : undefined}
-                onClick={async () => {
-                  const r = await command("ApplyPlanChange", { previewId: p.id, reviewedHash: p.contentHash });
-                  if (r.status !== "accepted") setMsgs({ ...msgs, [p.id]: r.message });
-                }}
-              >
-                Apply
-              </button>
-              <button className="btn line" data-testid="cancel-preview" onClick={() => command("CancelPreview", { previewId: p.id })}>
-                {p.stale ? "Discard draft" : "Cancel"}
-              </button>
-            </div>
-          </div>
-        );
-      })}
+    <div role="group" aria-label="Your open previews">
+      {list.map((p: any) => (
+        <PreviewCard
+          key={p.id}
+          p={p}
+          onApplied={(text) => {
+            announce(text);
+            nightFallback(p.targetNights[0] ?? null);
+          }}
+          onCanceled={() => {
+            announce("Preview discarded. Nothing changed.");
+            nightFallback(p.targetNights[0] ?? null);
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function PreviewCard({ p, onApplied, onCanceled }: { p: any; onApplied: (announcement: string) => void; onCanceled: () => void }) {
+  const { snapshot, command, writesAllowed, currency } = useStore();
+  const [msg, setMsg] = useState<string | null>(null);
+  const msgRef = useRef<HTMLParagraphElement>(null);
+  useEffect(() => {
+    if (msg) msgRef.current?.focus();
+  }, [msg]);
+  const target = p.targetNights.map((d: string) => snapshot.week.nights.find((x: any) => x.night === d)?.dayName).filter(Boolean).join(", ");
+  const blocked = p.consequence.blockers?.length > 0;
+  const state = p.stale ? "out of date" : "draft, not applied";
+  return (
+    <div className={`card preview ${p.stale ? "stale" : ""}`} data-testid="preview" data-stale={p.stale ? "true" : "false"} role="region" aria-labelledby={`preview-h-${p.id}`}>
+      <div className="row between">
+        <h3 className="preview-title" id={`preview-h-${p.id}`} tabIndex={-1}>
+          Preview · {target}<span className="sr-only"> — {state}</span>
+        </h3>
+        {p.stale ? <span className="badge con-violated" data-testid="stale-badge"><span aria-hidden="true">⚠ </span>Out of date</span> : <span className="badge" aria-hidden="true">Draft — not applied</span>}
+      </div>
+      {p.stale && (
+        // Announced once by the announcer when it becomes stale; here it is readable text.
+        <p className="warnbox" data-testid="stale-message">
+          {p.staleChanges.length
+            ? p.staleChanges.map((c: any) => `${c.by ?? "Someone"} changed ${c.dayName} to ${c.now}.`).join(" ")
+            : "A newer decision changed what this preview depends on."}{" "}
+          This preview can’t be applied as reviewed. Review the current week and make a new choice.
+        </p>
+      )}
+      <ul className="small">{p.consequence.lines.map((l: string) => <li key={l}>{l}</li>)}</ul>
+      {p.consequence.groceryDelta?.length > 0 && (
+        <div className="small">
+          <div className="section-label">Grocery change if applied</div>
+          <ul>{p.consequence.groceryDelta.map((d: any) => <li key={d.name}>{d.name}: {d.change}{d.before && d.after ? ` (${d.before} → ${d.after})` : ""}</li>)}</ul>
+          <div>Additional basket cost vs {p.consequence.baseline}: {p.consequence.additionalBasketCost.known ? money(p.consequence.additionalBasketCost.minor) : "unknown (unpriced items)"}</div>
+        </div>
+      )}
+      {blocked && <p className="warnbox">{p.consequence.blockers.map((b: any) => b.message).join(" ")}</p>}
+      {p.consequence.budgetBlock && <p className="warnbox">{p.consequence.budgetBlock}</p>}
+      {msg && <p role="alert" className="warnbox" tabIndex={-1} ref={msgRef}>{msg}</p>}
+      <div className="row">
+        <button
+          type="button"
+          className="btn primary"
+          data-testid="apply"
+          disabled={p.stale || blocked || !writesAllowed}
+          aria-label={`Apply ${target} preview`}
+          title={!writesAllowed ? (currency === "offline" ? "Offline" : "Checking for newer decisions") : undefined}
+          onClick={async () => {
+            const r = await command("ApplyPlanChange", { previewId: p.id, reviewedHash: p.contentHash });
+            if (r.status !== "accepted") setMsg(r.message);
+            else onApplied(`Applied. ${p.consequence.lines[0] ?? `${target} changed.`}`);
+          }}
+        >
+          Apply
+        </button>
+        <button
+          type="button"
+          className="btn line"
+          data-testid="cancel-preview"
+          aria-label={`${p.stale ? "Discard" : "Cancel"} ${target} preview`}
+          onClick={async () => {
+            const r = await command("CancelPreview", { previewId: p.id });
+            if (r.status === "accepted") onCanceled();
+            else setMsg(r.message);
+          }}
+        >
+          {p.stale ? "Discard draft" : "Cancel"}
+        </button>
+      </div>
     </div>
   );
 }

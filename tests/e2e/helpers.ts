@@ -19,8 +19,16 @@ export async function seed(opts?: Parameters<typeof seedFixture>[1]): Promise<Fi
 }
 
 /** A genuinely separate member: its own browser context (cookies/storage) and its own sign-in. */
-export async function member(browser: Browser, who: "jon" | "alex" | "other", opts: { viewport?: { width: number; height: number } } = {}) {
-  const context = await browser.newContext(opts.viewport ? { viewport: opts.viewport } : {});
+export async function member(
+  browser: Browser,
+  who: "jon" | "alex" | "other",
+  opts: { viewport?: { width: number; height: number }; reducedMotion?: "reduce" | "no-preference"; init?: () => void } = {},
+) {
+  const context = await browser.newContext({
+    ...(opts.viewport ? { viewport: opts.viewport } : {}),
+    ...(opts.reducedMotion ? { reducedMotion: opts.reducedMotion } : {}),
+  });
+  if (opts.init) await context.addInitScript(opts.init);
   const page = await context.newPage();
   await page.goto("/login");
   await page.getByLabel("Email").fill(USERS[who].email);

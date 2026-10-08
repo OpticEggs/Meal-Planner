@@ -80,7 +80,9 @@ export function GroceriesScreen() {
   return (
     <section aria-label="Groceries" data-testid="groceries" data-projection-revision={g.projectionRevision}>
       {delta && (
-        <div className="warnbox" role="alert" data-testid="grocery-delta">
+        // Not a live region: the announcer says once that approved lines need review again; this
+        // is the readable detail, and it never takes focus from what the member is doing.
+        <div className="warnbox" role="group" aria-label="Changed since you started reviewing" data-testid="grocery-delta">
           {delta.text && <strong>{delta.text}. </strong>}
           {delta.lines.join(" ")}
           <button className="btn line small" onClick={() => setDelta(null)}>Got it</button>
@@ -93,7 +95,7 @@ export function GroceriesScreen() {
         <div className="stat"><span>Budget</span><strong>{s.budget.status === "unset" ? "not set" : `${s.budget.status}${s.budget.limitMinor !== null ? ` · ${money(s.budget.limitMinor)}` : ""}`}</strong><em>{s.budget.scope ?? ""}{s.budget.firm ? " · firm" : ""}</em></div>
       </div>
       <p className="faint small">Prices are estimates from recorded observations, not a guaranteed checkout total; the store may change final charges.</p>
-      <div className={`card ${s.ready ? "ok" : ""}`} data-testid="readiness">
+      <div className={`card ${s.ready ? "ok" : ""}`} data-testid="readiness" role="group" aria-label="Grocery readiness">
         {s.ready ? <strong>Groceries ready to send.</strong> : (
           <>
             <strong>Not ready yet</strong>
@@ -122,11 +124,12 @@ export function GroceriesScreen() {
 }
 
 function Line({ l }: { l: any }) {
-  const { snapshot, command, writesAllowed } = useStore();
+  const { snapshot, command, writesAllowed, announce } = useStore();
   const [some, setSome] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
   const products = snapshot.groceries.products.filter((p: any) => p.ingredientKey === l.ingredientKey);
+  const staple = l.ingredientKey ? snapshot.staples?.find((st: any) => st.ingredientKey === l.ingredientKey) : null;
   async function run(name: string, payload: any) {
     const r = await command(name, payload);
     setMsg(r.status === "accepted" ? null : r.message);
@@ -148,7 +151,7 @@ function Line({ l }: { l: any }) {
         {l.requests.map((r: any) => (
           <div key={r.id}>
             {r.kind === "usual" ? "Usual amount" : `Extra ×${r.packages ?? 1}`} — requested by {r.contributors.map((c: any) => `${c.name}${c.taps > 1 ? ` ×${c.taps}` : ""}`).join(", ")}
-            <button className="link small" onClick={() => run("RemoveRequest", { requestId: r.id })}>remove</button>
+            <button className="link small" aria-label={`Remove ${r.kind === "usual" ? "usual" : "extra"} request for ${l.name}`} onClick={() => run("RemoveRequest", { requestId: r.id })}>remove</button>
           </div>
         ))}
         {l.product ? (
@@ -156,25 +159,51 @@ function Line({ l }: { l: any }) {
             {l.product.name} · {l.packagesNeeded ?? "?"} pkg needed{l.estimate ? " (variable weight — estimate)" : ""} · {l.price ? `${money(l.price.amountMinor)} each (${l.price.source}${l.product.fixture ? ", fixture" : ""})` : "price unknown"}
           </div>
         ) : null}
+        {staple && (
+          <div data-testid={`staple-${l.key}`}>
+            Your usual: {staple.productName ?? "no product remembered"}
+            {staple.productAvailable === false ? " (not available from this store)" : ""}
+            {staple.usualPackages > 1 ? ` ×${staple.usualPackages}` : ""}
+            {staple.updatedBy ? ` · last set by ${staple.updatedBy}` : ""}
+            {l.product && staple.productId !== l.product.id && (
+              <>
+                {" "}
+                <button
+                  className="link small"
+                  disabled={!writesAllowed}
+                  aria-label={`Make ${l.product.name} your usual ${staple.name}`}
+                  data-testid={`make-usual-${l.key}`}
+                  onClick={async () => {
+                    const r = await command("ApproveStapleProduct", { ingredientKey: l.ingredientKey, productId: l.product.id, expectedRevision: staple.productRevision });
+                    setMsg(r.status === "accepted" ? null : r.message);
+                    if (r.status === "accepted") announce(`${l.product.name} is now your usual ${staple.name}. Future one-tap requests use it; nothing was approved for purchase.`);
+                  }}
+                >
+                  Make this our usual
+                </button>
+              </>
+            )}
+          </div>
+        )}
         {(l.ordered > 0 || l.sent > 0 || l.uncertain > 0) && (
           <div>History: {l.sent > 0 ? `${l.sent} sent to cart · ` : ""}{l.uncertain > 0 ? `${l.uncertain} uncertain · ` : ""}{l.ordered > 0 ? `${l.ordered} ordered · ` : ""}{l.received > 0 ? `${l.received} received · ` : ""}{l.missing > 0 ? `${l.missing} missing` : ""}</div>
         )}
         {l.toSend !== null && l.toSend > 0 && <div data-testid={`tosend-${l.key}`}>To send: {l.toSend} package(s){snapshot.groceries.order ? " — Not sent yet" : ""}</div>}
-        {l.leftAfterMeal && <div>About {qty(l.leftAfterMeal.quantity, l.leftAfterMeal.unit)} left after dinners. <button className="link small" onClick={() => run("CaptureHouseholdNeed", { weekId, text: l.name, ingredientKey: l.ingredientKey, kind: "extra", packages: 1, from: "groceries" })}>Keep an extra</button></div>}
+        {l.leftAfterMeal && <div>About {qty(l.leftAfterMeal.quantity, l.leftAfterMeal.unit)} left after dinners. <button className="link small" aria-label={`Keep an extra ${l.name}`} onClick={() => run("CaptureHouseholdNeed", { weekId, text: l.name, ingredientKey: l.ingredientKey, kind: "extra", packages: 1, from: "groceries" })}>Keep an extra</button></div>}
         {l.unresolved.map((u: string) => <div key={u} className="warn">{u}</div>)}
         {l.availability && <div className="faint">{l.availability.memberName}: {{ enough: "Have enough", some: `Have some${l.availability.quantity ? ` (${l.availability.quantity} ${l.availability.unit})` : ""}`, need: "Need" }[l.availability.state as string]}</div>}
       </div>
       {l.ingredientKey && l.meal && (
         <div className="row small" aria-label={`Availability for ${l.name}`}>
-          <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "enough", reviewed: { quantity: l.meal.quantity, unit: l.meal.unit, fingerprint: l.fingerprint } })}>Have enough</button>
-          <input className="tiny" placeholder="amt" value={some} onChange={(e) => setSome(e.target.value)} aria-label="Amount on hand" />
-          <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "some", quantity: some || null, unit: some ? l.meal.unit : null })}>Have some</button>
-          <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "need" })}>Need</button>
+          <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "enough", reviewed: { quantity: l.meal.quantity, unit: l.meal.unit, fingerprint: l.fingerprint } })} aria-label={`Have enough ${l.name}`}>Have enough</button>
+          <input className="tiny" placeholder="amt" value={some} onChange={(e) => setSome(e.target.value)} aria-label={`Amount of ${l.name} on hand`} />
+          <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "some", quantity: some || null, unit: some ? l.meal.unit : null })} aria-label={`Have some ${l.name}`}>Have some</button>
+          <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "need" })} aria-label={`Need ${l.name}`}>Need</button>
         </div>
       )}
       {!l.ingredientKey && (
         <div className="row small">
-          <select aria-label="Match to ingredient" onChange={(e) => e.target.value && run("MapRequest", { requestId: l.requests[0].id, ingredientKey: e.target.value })} defaultValue="">
+          <select aria-label={`Match "${l.name}" to an item`} onChange={(e) => e.target.value && run("MapRequest", { requestId: l.requests[0].id, ingredientKey: e.target.value })} defaultValue="">
             <option value="">Match to an item…</option>
             {snapshot.ingredients.map((i: any) => <option key={i.key} value={i.key}>{i.name}</option>)}
           </select>
@@ -183,15 +212,15 @@ function Line({ l }: { l: any }) {
       {l.ingredientKey && (
         <div className="row small">
           {products.length > 1 && (
-            <select aria-label="Product" value={l.product?.id ?? ""} onChange={(e) => run("ChooseProduct", { weekId, ingredientKey: l.ingredientKey, productId: e.target.value })}>
+            <select aria-label={`Product for ${l.name}`} value={l.product?.id ?? ""} onChange={(e) => run("ChooseProduct", { weekId, ingredientKey: l.ingredientKey, productId: e.target.value })}>
               {products.map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
           )}
-          <button className="link small" onClick={() => setAdding(!adding)}>{adding ? "close" : l.product ? "other product / price" : "choose product"}</button>
+          <button className="link small" aria-expanded={adding} aria-label={`${adding ? "Close product form" : l.product ? "Other product or price" : "Choose product"} for ${l.name}`} onClick={() => setAdding(!adding)}>{adding ? "close" : l.product ? "other product / price" : "choose product"}</button>
           {l.toSend > 0 && l.product && l.price && l.unresolved.length === 0 && (
             l.approval?.valid
               ? <span className="badge">Approved ×{l.approval.packages}</span>
-              : <button className="btn line small" disabled={!writesAllowed} onClick={() => run("ApprovePurchaseLines", { weekId, lines: [{ key: l.key, fingerprint: l.fingerprint, packages: l.toSend }] })}>Approve ×{l.toSend}</button>
+              : <button className="btn line small" disabled={!writesAllowed} onClick={() => run("ApprovePurchaseLines", { weekId, lines: [{ key: l.key, fingerprint: l.fingerprint, packages: l.toSend }] })} aria-label={`Approve ${l.toSend} package${l.toSend === 1 ? "" : "s"} of ${l.name}`}>Approve ×{l.toSend}</button>
           )}
         </div>
       )}

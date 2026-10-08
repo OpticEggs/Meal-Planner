@@ -51,7 +51,8 @@ export function AlsoNeed({ from, ingredientKey, label }: { from: "week" | "groce
       {snapshot.staples?.length > 0 && (
         <div className="row full-row" aria-label="Usual items">
           {snapshot.staples.map((st: any) => (
-            <button key={st.ingredientKey} type="button" className="chip-btn" onClick={() => capture(st.name, "usual", st.ingredientKey)} title={st.productName ?? undefined}>
+            <button key={st.ingredientKey} type="button" className="chip-btn" onClick={() => capture(st.name, "usual", st.ingredientKey)} title={st.productName ?? undefined}
+              aria-label={`${st.name}${st.usualPackages > 1 ? ` ×${st.usualPackages}` : ""} — your usual (${st.productName ?? "no product remembered"}${st.productAvailable === false ? ", not available from this store" : ""})`}>
               {st.name}{st.usualPackages > 1 ? ` ×${st.usualPackages}` : ""}
             </button>
           ))}

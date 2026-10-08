@@ -18,9 +18,12 @@ interface Store {
   refresh: () => Promise<void>;
   loadLibrary: () => Promise<void>;
   command: (name: string, payload: unknown) => Promise<any>;
-  lastChange: { seq: number; text: string | null } | null;
+  lastChange: { seq: number; text: string | null; actorId: string | null } | null;
   /** Accepted-plan writes and handoffs are allowed only while the view is known current. */
   writesAllowed: boolean;
+  /** One polite screen-reader announcement at a time (see LiveRegion). */
+  announcement: { id: number; text: string } | null;
+  announce: (text: string) => void;
 }
 
 const Ctx = createContext<Store | null>(null);
@@ -40,6 +43,8 @@ export function HouseholdProvider({ me, children }: { me: Store["me"]; children:
   const [error, setError] = useState<string | null>(null);
   const [weekStart, setWeekStartState] = useState<string | null>(null);
   const [lastChange, setLastChange] = useState<Store["lastChange"]>(null);
+  const [announcement, setAnnouncement] = useState<Store["announcement"]>(null);
+  const announce = useCallback((text: string) => setAnnouncement((a) => ({ id: (a?.id ?? 0) + 1, text })), []);
   const seqRef = useRef(0);
   const weekRef = useRef<string | null>(null);
   const inflight = useRef<Promise<void> | null>(null);
@@ -138,7 +143,7 @@ export function HouseholdProvider({ me, children }: { me: Store["me"]; children:
       es.addEventListener("change", (ev) => {
         const d = JSON.parse((ev as MessageEvent).data);
         if (d.seq <= seqRef.current) return; // duplicate or already reflected
-        setLastChange({ seq: d.seq, text: d.text });
+        setLastChange({ seq: d.seq, text: d.text, actorId: d.actor ?? null });
         void refresh();
       });
       es.onerror = () => {
@@ -178,9 +183,9 @@ export function HouseholdProvider({ me, children }: { me: Store["me"]; children:
   const value = useMemo<Store>(
     () => ({
       me, snapshot, library, currency, error, weekStart, setWeekStart, refresh, loadLibrary, command, lastChange,
-      writesAllowed: currency === "current",
+      writesAllowed: currency === "current", announcement, announce,
     }),
-    [me, snapshot, library, currency, error, weekStart, setWeekStart, refresh, loadLibrary, command, lastChange],
+    [me, snapshot, library, currency, error, weekStart, setWeekStart, refresh, loadLibrary, command, lastChange, announcement, announce],
   );
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

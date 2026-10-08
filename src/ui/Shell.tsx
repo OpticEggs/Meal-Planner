@@ -2,6 +2,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useStore } from "./store";
+import { LiveRegion, useChangeAnnouncer } from "./a11y";
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/** Grocery lines that still need someone: review, sending, an uncertain transfer, a missing item. */
+const OUTSTANDING = new Set(["needs_review", "not_sent_yet", "uncertain", "missing"]);
 
 const TABS = [
   { href: "/", label: "Week" },
@@ -15,7 +21,10 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const { snapshot, currency, me, error } = useStore();
   const retailer = snapshot?.retailer;
+  useChangeAnnouncer();
+  const outstanding = (snapshot?.groceries?.lines ?? []).filter((l: any) => OUTSTANDING.has(l.status)).length;
   return (
+    <>
     <div className="app">
       <header className="top">
         <div className="brand">
@@ -32,7 +41,9 @@ export function Shell({ children }: { children: React.ReactNode }) {
             </span>
           )}
         </div>
-        <div role="status" aria-live="polite" data-testid="currency" data-currency={currency} className={`currency ${currency}`}>
+        {/* Not a live region: routine refetches flip this every poll. Going offline and coming
+            back are announced once by the announcer instead. */}
+        <div data-testid="currency" data-currency={currency} className={`currency ${currency}`}>
           {currency === "current" ? "Up to date" : currency === "refreshing" ? "Checking for newer decisions…" : `Offline — showing last synced view; changes are paused${error ? ` (${error})` : ""}`}
         </div>
       </header>
@@ -41,12 +52,19 @@ export function Shell({ children }: { children: React.ReactNode }) {
         {TABS.map((t) => {
           const on = t.href === "/" ? path === "/" || path.startsWith("/cook") : path.startsWith(t.href);
           return (
-            <Link key={t.href} href={t.href} className={on ? "on" : ""} aria-current={on ? "page" : undefined}>
+            <Link key={t.href} href={t.href} className={on ? "on" : ""} aria-current={on ? "page" : undefined}
+              aria-label={t.href === "/groceries" && outstanding > 0 ? `Groceries, ${outstanding} ${outstanding === 1 ? "line needs" : "lines need"} attention` : undefined}
+              data-testid={`nav-${t.href === "/" ? "week" : t.href.slice(1)}`}>
               {t.label}
+              {t.href === "/groceries" && outstanding > 0 && (
+                <span className="nav-count" aria-hidden="true">{outstanding}</span>
+              )}
             </Link>
           );
         })}
       </nav>
     </div>
+    <LiveRegion />
+    </>
   );
 }

@@ -27,12 +27,12 @@ export async function GET(req: Request) {
       while (!closed) {
         try {
           const r = await pool().query(
-            "SELECT seq, command, summary FROM change_events WHERE household_id=$1 AND seq > $2 ORDER BY seq LIMIT 50",
+            "SELECT seq, command, summary, actor_member_id FROM change_events WHERE household_id=$1 AND seq > $2 ORDER BY seq LIMIT 50",
             [actor.householdId, after],
           );
           for (const row of r.rows) {
             after = row.seq;
-            send(`id: ${row.seq}\nevent: change\ndata: ${JSON.stringify({ seq: row.seq, command: row.command, text: row.summary.text ?? null })}\n\n`);
+            send(`id: ${row.seq}\nevent: change\ndata: ${JSON.stringify({ seq: row.seq, command: row.command, text: row.summary.text ?? null, actor: row.actor_member_id ?? null })}\n\n`);
           }
           if (++ticks % 20 === 0) send(`: keepalive\n\n`);
         } catch {

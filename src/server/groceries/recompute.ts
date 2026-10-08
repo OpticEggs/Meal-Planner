@@ -4,6 +4,7 @@ import type { Db } from "../db/pool";
 import { loadHousehold, loadIngredients, loadPlanState, loadRecipeVersions, loadSettings, weekById } from "../queries/load";
 import { localDate } from "@/domain/dates";
 import { nowInstant } from "../env";
+import { retailer } from "../integrations/retailer";
 
 export async function ensureCycle(c: Db, householdId: string, weekId: string): Promise<string> {
   const r = await c.query(
@@ -79,6 +80,32 @@ export async function projectionInput(
     ]),
   );
 
+  // Products named by request intents (a staple's remembered package), with whether the active
+  // retailer sells them. A product from another retailer is unavailable, never swapped.
+  const intentIds = [...new Set((reqs.rows as Record<string, unknown>[]).map((r) => r.product_id as string | null).filter((x): x is string => !!x))];
+  const intentProducts: NonNullable<ProjectionInput["intentProducts"]> = new Map();
+  if (intentIds.length) {
+    const ip = await c.query(
+      `SELECT p.*, pr.id AS price_id, pr.amount_minor, pr.currency, pr.price_kind, pr.source AS price_source, pr.observed_at AS price_observed_at
+       FROM products p LEFT JOIN LATERAL (SELECT * FROM price_observations po WHERE po.product_id=p.id ORDER BY po.observed_at DESC, po.id DESC LIMIT 1) pr ON true
+       WHERE p.household_id=$1 AND p.id = ANY($2::uuid[])`,
+      [householdId, intentIds],
+    );
+    const mode = retailer().mode;
+    for (const p of ip.rows) {
+      intentProducts.set(p.id, {
+        product: {
+          id: p.id, ref: p.product_ref, name: p.name, ingredientKey: p.ingredient_key, packageQty: p.package_qty, packageUnit: p.package_unit,
+          variableWeight: p.variable_weight, fixture: p.fixture, retailer: p.retailer,
+        },
+        price: p.price_id
+          ? { id: p.price_id, amountMinor: p.amount_minor, currency: p.currency, kind: p.price_kind, source: p.price_source, observedAt: p.price_observed_at.toISOString() }
+          : null,
+        available: p.retailer === mode,
+      });
+    }
+  }
+
   let batches: BatchInput[] = [];
   let order: ProjectionInput["order"] = null;
   let approvals: ProjectionInput["approvals"] = [];
@@ -131,12 +158,14 @@ export async function projectionInput(
       requests: (reqs.rows as Record<string, unknown>[]).map((r) => ({
         id: r.id as string, ingredientKey: r.ingredient_key as string | null, text: r.text as string, kind: r.kind as "usual" | "extra",
         packages: r.packages as number | null, contributors: r.contributors as { memberId: string; name: string; taps: number }[],
+        productId: (r.product_id as string | null) ?? null,
       })),
       availability: (avail.rows as Record<string, unknown>[]).map((a) => ({
         id: a.id as string, ingredientKey: a.ingredient_key as string, state: a.state as "enough" | "some" | "need", quantity: a.quantity as string | null,
         unit: a.unit as string | null, reviewedDemand: a.reviewed_demand as string | null, reviewedUnit: a.reviewed_unit as string | null, memberName: a.display_name as string,
       })),
       products,
+      intentProducts,
       batches,
       order,
       approvals,

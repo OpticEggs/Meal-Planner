@@ -64,12 +64,20 @@ export async function householdSnapshot(actor: Actor, weekStartParam?: string | 
       ingredients: [...ingredients.values()],
       staples: (
         await c.query(
-          `SELECT s.ingredient_key, s.usual_packages, i.name, p.name AS product_name FROM household_staples s
+          `SELECT s.ingredient_key, s.usual_packages, s.product_id, s.product_revision, s.updated_at, i.name, p.name AS product_name, p.retailer,
+             m.display_name AS updated_by
+           FROM household_staples s
            JOIN ingredients i ON i.household_id=s.household_id AND i.key=s.ingredient_key LEFT JOIN products p ON p.id=s.product_id
+           LEFT JOIN members m ON m.id=s.updated_by
            WHERE s.household_id=$1 ORDER BY i.name`,
           [actor.householdId],
         )
-      ).rows.map((r) => ({ ingredientKey: r.ingredient_key, name: r.name, usualPackages: r.usual_packages, productName: r.product_name })),
+      ).rows.map((r) => ({
+        ingredientKey: r.ingredient_key, name: r.name, usualPackages: r.usual_packages, productId: r.product_id, productName: r.product_name,
+        // Unknown (no remembered product) and unavailable (not sold by the active retailer) stay explicit.
+        productAvailable: r.product_id ? r.retailer === retailerSummary().mode : null,
+        productRevision: r.product_revision, updatedBy: r.updated_by,
+      })),
     };
 
     const proposalsQ = week

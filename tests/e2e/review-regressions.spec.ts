@@ -42,7 +42,8 @@ test("R-F07-UI: Also need works before next week's dinners are chosen, and both 
   await expect(alex.page.getByTestId("line-greek_yogurt")).toContainText("Usual amount — requested by Jon");
   // The staple is remembered and offered as a one-tap chip.
   await alex.page.getByRole("link", { name: "Week" }).click();
-  await expect(alex.page.getByRole("button", { name: "Plain Greek yogurt" })).toBeVisible();
+  // (Scoped to the Week page's chips: since B14 the grocery-line controls carry the item name too.)
+  await expect(alex.page.getByTestId("alsoneed-week").getByRole("button", { name: "Plain Greek yogurt" })).toBeVisible();
   await jon.context.close();
   await alex.context.close();
 });

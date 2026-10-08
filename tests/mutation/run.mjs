@@ -29,6 +29,7 @@ mkdirSync(OUT, { recursive: true });
 const PLAN = "tests/integration/plan.contract.test.ts";
 const GROC = "tests/integration/groceries.contract.test.ts";
 const REV = "tests/integration/review-regressions.test.ts";
+const B12 = "tests/integration/b12.staple-products.test.ts";
 
 /** expect: regexes over failing test full names; at least one must fail by assertion. */
 const MUTATIONS = [
@@ -69,6 +70,19 @@ const MUTATIONS = [
   { name: "B3_extra_cost_reprices_history", file: "src/server/commands/plan.ts", suite: "tests/integration/b3.received-goods.test.ts", pattern: "B3", expect: [/labels and favors/],
     edits: [["current.outstandingPurchase.complete && next.outstandingPurchase.complete\n      ? { known: true, minor: next.outstandingPurchase.knownMinor - current.outstandingPurchase.knownMinor }",
       "current.pickupSpending.complete && next.pickupSpending.complete\n      ? { known: true, minor: next.pickupSpending.knownMinor - current.pickupSpending.knownMinor }"]] },
+  // B12: remembered staple products.
+  { name: "B12_stale_staple_overwrites", file: "src/server/commands/groceries.ts", suite: B12, pattern: "B12d", expect: [/B12d/],
+    edits: [["    if (s.product_revision !== p.expectedRevision) {", "    if (false) {"], ["WHERE household_id=$1 AND ingredient_key=$2 AND product_revision=$5 RETURNING", "WHERE household_id=$1 AND ingredient_key=$2 AND $5::int IS NOT NULL RETURNING"]] },
+  { name: "B12_tap_ignores_remembered_product", file: "src/server/commands/groceries.ts", suite: B12, pattern: "B12", expect: [/B12b|B12c/],
+    edits: [["    if (staple?.rowCount) productIntent = staple.rows[0].product_id;", "    if (false) productIntent = staple!.rows[0].product_id;"]] },
+  { name: "B12_decision_swaps_outstanding_purchase", file: "src/server/commands/groceries.ts", suite: B12, pattern: "B12b", expect: [/B12b/],
+    edits: [["    const revision = up.rows[0].product_revision;",
+      "    const revision = up.rows[0].product_revision;\n    await c.query(\"UPDATE household_requests SET product_id=$2 WHERE household_id=$1 AND ingredient_key=$3 AND state='active' AND product_id IS NOT NULL\", [actor.householdId, pr.rows[0].id, p.ingredientKey]);"],
+      ["      change: { weekId: null, summary: { type: \"staple\",", "      purchasingInputsChanged: true,\n      change: { weekId: null, summary: { type: \"staple\","]] },
+  { name: "B12_unavailable_product_substituted", file: "src/domain/groceries/projection.ts", suite: B12, pattern: "B12e", expect: [/B12e/],
+    edits: [["      else if (!intent.available) unresolved.push(", "      else if (false) unresolved.push("]] },
+  { name: "B12_usual_quantity_overwrites_product", file: "src/server/commands/groceries.ts", suite: B12, pattern: "B12f", expect: [/B12f/],
+    edits: [["\"UPDATE household_staples SET usual_packages=$3, updated_by=$4,", "\"UPDATE household_staples SET usual_packages=$3, product_id=(SELECT product_id FROM product_mappings m WHERE m.household_id=$1 AND m.ingredient_key=$2), updated_by=$4,"]] },
 ];
 // A harmless change that MUST be classified SURVIVED (proves the classifier can say so).
 const CONTROLS_LIST = [
