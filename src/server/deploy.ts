@@ -28,6 +28,7 @@ export function configProblems(env: Record<string, string | undefined> = process
   }
   const retailer = env.TABLE_RETAILER ?? "simulated";
   if (retailer !== "simulated" && retailer !== "kroger") p.push("TABLE_RETAILER_invalid");
+  if ((env.KROGER_ACTIVATE ?? "").trim() && retailer !== "kroger") p.push("KROGER_ACTIVATE_without_kroger_retailer");
   return p;
 }
 

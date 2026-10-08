@@ -95,6 +95,17 @@ describe("B5 cart handoff readiness", () => {
     await q("UPDATE kroger_connections SET location_id=NULL WHERE household_id=$1", [fx.householdId]);
     expect(await krogerCartReadiness(fx.householdId)).toMatchObject({ ready: false, reason: expect.stringMatching(/store/) });
   });
+  it("a household that is not ready is refused before anything is frozen (integration: startHandoff asks the household's readiness)", async () => {
+    const { fx, jon } = await krogerHousehold();
+    await approveAll(jon, fx.weekId);
+    krogerEnv("connect,products,cart", { fake: true });
+    await q("UPDATE kroger_connections SET location_id=NULL WHERE household_id=$1", [fx.householdId]);
+    const r = await send(jon, fx.weekId);
+    expect(r.status === "rejected" && r.code).toBe("retailer_not_ready");
+    expect(r.message).toMatch(/store/);
+    expect(await batches()).toHaveLength(0); // no frozen batch that could only fail later
+    expect(krogerFake.calls()).toHaveLength(0);
+  });
 });
 
 describe("B5 dispatch through startHandoff with the Kroger adapter", () => {

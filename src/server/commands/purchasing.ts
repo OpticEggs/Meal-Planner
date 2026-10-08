@@ -28,7 +28,9 @@ export interface StartHandoffPayload {
 export async function startHandoff(actor: Actor, operationId: string, p: StartHandoffPayload): Promise<CommandReceipt & { dispatch?: unknown }> {
   const adapter = retailer();
   const receipt = await runCommand(actor, "StartHandoff", operationId, p, async (c) => {
-    const st = adapter.status();
+    // Per-household readiness (Kroger: a valid connection and a store) is checked before anything is
+    // frozen, so a household that cannot send never gets a batch that could only fail later.
+    const st = adapter.readiness ? await adapter.readiness(actor.householdId) : adapter.status();
     if (!st.ready) throw new Reject("retailer_not_ready", st.reason);
     const cycleId = await ensureCycle(c, actor.householdId, p.weekId);
     const w = await c.query("SELECT 1 FROM weeks WHERE id=$1 AND household_id=$2", [p.weekId, actor.householdId]);

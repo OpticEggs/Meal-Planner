@@ -27,6 +27,8 @@ describe("B9 production configuration", () => {
       expect(configProblems({ ...good, [k]: "1" })).toContain(`${k}_set_in_production`);
     }
     expect(configProblems({ ...good, TABLE_RETAILER: "kroger-live" })).toContain("TABLE_RETAILER_invalid");
+    expect(configProblems({ ...good, KROGER_ACTIVATE: "connect" })).toContain("KROGER_ACTIVATE_without_kroger_retailer");
+    expect(configProblems({ ...good, TABLE_RETAILER: "kroger", KROGER_ACTIVATE: "connect" })).not.toContain("KROGER_ACTIVATE_without_kroger_retailer");
     // Problems are codes: no configured value is ever echoed.
     expect(JSON.stringify(configProblems({ ...good, BETTER_AUTH_SECRET: "short-secret-value" }))).not.toContain("short-secret-value");
   });
