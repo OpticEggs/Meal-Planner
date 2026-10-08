@@ -15,6 +15,9 @@ import * as library from "@/server/queries/library";
 
 const records = async (eventId: string) =>
   q<{ id: string; recorded_by: string }>("SELECT id, recorded_by FROM cook_records WHERE cooking_event_id=$1 ORDER BY recorded_at, id", [eventId]);
+/** A command's result with a thrown error captured as a value: since migration 009 the database itself
+ *  refuses a second effective record, so a command defect surfaces as an error the assertion must see. */
+const outcomeOf = (p: Promise<unknown>): Promise<any> => p.then((r) => r, (e: Error) => ({ status: "threw", code: `threw: ${e.message}`, message: e.message }));
 const cmd = (name: string) => (plan as any)[name] as ((a: unknown, o: string, p: unknown) => Promise<any>) | undefined;
 
 describe("cook-record idempotency: one effective record per cooking event", () => {
@@ -22,7 +25,7 @@ describe("cook-record idempotency: one effective record per cooking event", () =
     const { fx, jon } = await fresh();
     const first = await plan.recordCookedCommand(jon, op(), { eventId: fx.events.salmon });
     expect(first.status).toBe("accepted");
-    const second = await plan.recordCookedCommand(jon, op(), { eventId: fx.events.salmon });
+    const second = await outcomeOf(plan.recordCookedCommand(jon, op(), { eventId: fx.events.salmon }));
     expect(second.status === "rejected" && second.code).toBe("already_recorded");
     expect((second as any).message).toMatch(/Jon/);
     expect(await records(fx.events.salmon)).toHaveLength(1);
@@ -40,8 +43,8 @@ describe("cook-record idempotency: one effective record per cooking event", () =
   for (const order of ["Jon first", "Alex first"] as const) {
     it(`both members press at the same moment: exactly one record, the other is told it is already recorded — ${order}`, async () => {
       const { fx, jon, alex } = await fresh();
-      const j = () => plan.recordCookedCommand(jon, op(), { eventId: fx.events.salmon });
-      const a = () => plan.recordCookedCommand(alex, op(), { eventId: fx.events.salmon });
+      const j = () => outcomeOf(plan.recordCookedCommand(jon, op(), { eventId: fx.events.salmon }));
+      const a = () => outcomeOf(plan.recordCookedCommand(alex, op(), { eventId: fx.events.salmon }));
       const [x, y] = order === "Jon first" ? await race(fx.householdId, j, a) : await race(fx.householdId, a, j);
       expect(x.status).toBe("accepted");
       expect(y.status === "rejected" && y.code).toBe("already_recorded");
@@ -81,12 +84,12 @@ describe("cook-record idempotency: one effective record per cooking event", () =
     const s: any = await snapshot.householdSnapshot(jon);
     expect(s.week.nights.find((n: any) => n.event?.id === fx.events.salmon && n.kind === "cook").event.cooked).toBeNull();
 
-    const again = await plan.recordCookedCommand(alex, op(), { eventId: fx.events.salmon });
+    const again = await outcomeOf(plan.recordCookedCommand(alex, op(), { eventId: fx.events.salmon }));
     expect(again.status).toBe("accepted");
     expect(await records(fx.events.salmon)).toHaveLength(2);
     const lib2: any = await library.librarySnapshot(jon);
     expect(lib2.recipes.find((x: any) => x.recipeId === fx.recipes.salmon.recipeId).cooked).toEqual([expect.objectContaining({ by: "Alex" })]);
-    const third = await plan.recordCookedCommand(jon, op(), { eventId: fx.events.salmon });
+    const third = await outcomeOf(plan.recordCookedCommand(jon, op(), { eventId: fx.events.salmon }));
     expect(third.status === "rejected" && third.code).toBe("already_recorded");
   });
 
