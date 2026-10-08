@@ -1,0 +1,37 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/table
+
+ ❯ tests/integration/b17.recipes.test.ts (4 tests | 1 failed | 2 skipped) 1161ms
+   ❯ B17 recipe versions are edited against the version seen (4)
+     × RB17-03: an edit of an existing recipe must name its version; missing, malformed and stale ones write nothing 610ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/b17.recipes.test.ts > B17 recipe versions are edited against the version seen > RB17-03: an edit of an existing recipe must name its version; missing, malformed and stale ones write nothing
+AssertionError: expected false to be 'version_required' // Object.is equality
+
+- Expected:
+"version_required"
+
++ Received:
+false
+
+ ❯ tests/integration/b17.recipes.test.ts:55:84
+     53|       if (expectedVersionNo !== undefined) d.expectedVersionNo = expec…
+     54|       const r = await saveRecipeVersionCommand(jon, op(), d);
+     55|       expect(r.status === "rejected" && r.code, JSON.stringify(expecte…
+       |                                                                                    ^
+     56|     }
+     57|     expect({ versions: await versions(recipeId), pointer: await pointe…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 2 passed | 22 skipped (25)
+   Start at  04:58:45
+   Duration  3.46s (tests 60%, import 21%, transform 18%)
+

@@ -1,0 +1,346 @@
+
+Running 8 tests using 1 worker
+
+[1/8] [chromium] › tests/e2e/b17-correction.spec.ts:54:3 › RB17-01: the other member's new steps and reheat text are shown and kept; only the title edit is applied — Jon wins
+  1) [chromium] › tests/e2e/b17-correction.spec.ts:54:3 › RB17-01: the other member's new steps and reheat text are shown and kept; only the title edit is applied — Jon wins 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog', { name: 'Edit Fixture: Turkey chili — new version' }).getByTestId('recipe-rebased')
+    Expected substring: "Jon saved version 2"
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" with timeout 10000ms
+      - waiting for getByRole('dialog', { name: 'Edit Fixture: Turkey chili — new version' }).getByTestId('recipe-rebased')
+
+
+      73 |     // The loser sees WHAT changed, with the actual new text, and the draft now holds it.
+      74 |     const note = dl.getByTestId("recipe-rebased");
+    > 75 |     await expect(note).toContainText(`${winnerName} saved version 2`);
+         |                        ^
+      76 |     await expect(note).toContainText("Brown the turkey. Add beans. Simmer 40 minutes.");
+      77 |     await expect(note).toContainText("Reheat covered, stirring once.");
+      78 |     await expect(dl.getByLabel("Steps")).toHaveValue("Brown the turkey. Add beans. Simmer 40 minutes.");
+        at /home/user/table/tests/e2e/b17-correction.spec.ts:75:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-the-81a7c--edit-is-applied-—-Jon-wins-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-the-81a7c--edit-is-applied-—-Jon-wins-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-correction-RB17-01-the-81a7c--edit-is-applied-—-Jon-wins-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-the-81a7c--edit-is-applied-—-Jon-wins-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-correction-RB17-01-the-81a7c--edit-is-applied-—-Jon-wins-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[2/8] [chromium] › tests/e2e/b17-correction.spec.ts:54:3 › RB17-01: the other member's new steps and reheat text are shown and kept; only the title edit is applied — Alex wins
+  2) [chromium] › tests/e2e/b17-correction.spec.ts:54:3 › RB17-01: the other member's new steps and reheat text are shown and kept; only the title edit is applied — Alex wins 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog', { name: 'Edit Fixture: Turkey chili — new version' }).getByTestId('recipe-rebased')
+    Expected substring: "Alex saved version 2"
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" with timeout 10000ms
+      - waiting for getByRole('dialog', { name: 'Edit Fixture: Turkey chili — new version' }).getByTestId('recipe-rebased')
+
+
+      73 |     // The loser sees WHAT changed, with the actual new text, and the draft now holds it.
+      74 |     const note = dl.getByTestId("recipe-rebased");
+    > 75 |     await expect(note).toContainText(`${winnerName} saved version 2`);
+         |                        ^
+      76 |     await expect(note).toContainText("Brown the turkey. Add beans. Simmer 40 minutes.");
+      77 |     await expect(note).toContainText("Reheat covered, stirring once.");
+      78 |     await expect(dl.getByLabel("Steps")).toHaveValue("Brown the turkey. Add beans. Simmer 40 minutes.");
+        at /home/user/table/tests/e2e/b17-correction.spec.ts:75:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-the-422a4-edit-is-applied-—-Alex-wins-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-the-422a4-edit-is-applied-—-Alex-wins-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-correction-RB17-01-the-422a4-edit-is-applied-—-Alex-wins-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-the-422a4-edit-is-applied-—-Alex-wins-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-correction-RB17-01-the-422a4-edit-is-applied-—-Alex-wins-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[3/8] [chromium] › tests/e2e/b17-correction.spec.ts:91:1 › RB17-01: fields the editor does not show (summary, source, ingredient form/note) changed by a newer version survive a title-only save
+  3) [chromium] › tests/e2e/b17-correction.spec.ts:91:1 › RB17-01: fields the editor does not show (summary, source, ingredient form/note) changed by a newer version survive a title-only save 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog', { name: 'Edit Fixture: Turkey chili — new version' }).getByTestId('recipe-rebased')
+    Expected substring: "Smoky weeknight chili"
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" with timeout 10000ms
+      - waiting for getByRole('dialog', { name: 'Edit Fixture: Turkey chili — new version' }).getByTestId('recipe-rebased')
+
+
+      106 |   expect(r.status, JSON.stringify(r)).toBe("accepted");
+      107 |   const note = dj.getByTestId("recipe-rebased");
+    > 108 |   await expect(note).toContainText("Smoky weeknight chili");
+          |                      ^
+      109 |   await expect(note).toContainText("Alex's notebook");
+      110 |   await expect(note).toContainText("cooked; drained");
+      111 |   await dj.getByRole("button", { name: "Save new version" }).click();
+        at /home/user/table/tests/e2e/b17-correction.spec.ts:108:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-fie-1a7e7-n-survive-a-title-only-save-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-fie-1a7e7-n-survive-a-title-only-save-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-correction-RB17-01-fie-1a7e7-n-survive-a-title-only-save-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-fie-1a7e7-n-survive-a-title-only-save-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-correction-RB17-01-fie-1a7e7-n-survive-a-title-only-save-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[4/8] [chromium] › tests/e2e/b17-correction.spec.ts:122:3 › RB17-01: when both changed the steps, both full texts are shown and nothing is chosen for the member — keep mine
+  4) [chromium] › tests/e2e/b17-correction.spec.ts:122:3 › RB17-01: when both changed the steps, both full texts are shown and nothing is chosen for the member — keep mine 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog', { name: 'Edit Fixture: Turkey chili — new version' }).getByTestId('recipe-conflict-instructions')
+    Expected substring: "Alex's method: stovetop 40 minutes."
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" with timeout 10000ms
+      - waiting for getByRole('dialog', { name: 'Edit Fixture: Turkey chili — new version' }).getByTestId('recipe-conflict-instructions')
+
+
+      131 |     expect((await saveVia(alex.page, id, (d: any) => { d.instructions = "Alex's method: stovetop 40 minutes."; })).status).toBe("accepted");
+      132 |     const block = dj.getByTestId("recipe-conflict-instructions");
+    > 133 |     await expect(block).toContainText("Alex's method: stovetop 40 minutes.");
+          |                         ^
+      134 |     await expect(block).toContainText("Jon's method: slow cooker 6 hours.");
+      135 |     await expect(dj.getByLabel("Steps")).toHaveValue("Jon's method: slow cooker 6 hours."); // not decided for him
+      136 |     await expect(dj.getByRole("button", { name: "Save new version" })).toBeDisabled();
+        at /home/user/table/tests/e2e/b17-correction.spec.ts:133:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-whe-6fb58--for-the-member-—-keep-mine-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-whe-6fb58--for-the-member-—-keep-mine-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-correction-RB17-01-whe-6fb58--for-the-member-—-keep-mine-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-whe-6fb58--for-the-member-—-keep-mine-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-correction-RB17-01-whe-6fb58--for-the-member-—-keep-mine-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[5/8] [chromium] › tests/e2e/b17-correction.spec.ts:122:3 › RB17-01: when both changed the steps, both full texts are shown and nothing is chosen for the member — use theirs
+  5) [chromium] › tests/e2e/b17-correction.spec.ts:122:3 › RB17-01: when both changed the steps, both full texts are shown and nothing is chosen for the member — use theirs 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog', { name: 'Edit Fixture: Turkey chili — new version' }).getByTestId('recipe-conflict-instructions')
+    Expected substring: "Alex's method: stovetop 40 minutes."
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" with timeout 10000ms
+      - waiting for getByRole('dialog', { name: 'Edit Fixture: Turkey chili — new version' }).getByTestId('recipe-conflict-instructions')
+
+
+      131 |     expect((await saveVia(alex.page, id, (d: any) => { d.instructions = "Alex's method: stovetop 40 minutes."; })).status).toBe("accepted");
+      132 |     const block = dj.getByTestId("recipe-conflict-instructions");
+    > 133 |     await expect(block).toContainText("Alex's method: stovetop 40 minutes.");
+          |                         ^
+      134 |     await expect(block).toContainText("Jon's method: slow cooker 6 hours.");
+      135 |     await expect(dj.getByLabel("Steps")).toHaveValue("Jon's method: slow cooker 6 hours."); // not decided for him
+      136 |     await expect(dj.getByRole("button", { name: "Save new version" })).toBeDisabled();
+        at /home/user/table/tests/e2e/b17-correction.spec.ts:133:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-whe-5f470-for-the-member-—-use-theirs-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-whe-5f470-for-the-member-—-use-theirs-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-correction-RB17-01-whe-5f470-for-the-member-—-use-theirs-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-whe-5f470-for-the-member-—-use-theirs-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-correction-RB17-01-whe-5f470-for-the-member-—-use-theirs-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[6/8] [chromium] › tests/e2e/b17-correction.spec.ts:151:1 › RB17-01: a third version after the member's decision is brought in again before Save; a stale decision cannot authorize the save
+  6) [chromium] › tests/e2e/b17-correction.spec.ts:151:1 › RB17-01: a third version after the member's decision is brought in again before Save; a stale decision cannot authorize the save 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Test ended.
+    Call log:
+      - waiting for getByRole('dialog', { name: 'Edit Fixture: Turkey chili — new version' }).getByTestId('recipe-conflict-title').getByRole('button', { name: 'Keep my Title' })
+
+
+      159 |   await dj.getByLabel("Title", { exact: true }).fill("Jon's chili");
+      160 |   expect((await saveVia(alex.page, id, (d: any) => { d.title = "Alex's chili"; })).status).toBe("accepted");
+    > 161 |   await dj.getByTestId("recipe-conflict-title").getByRole("button", { name: "Keep my Title" }).click();
+          |                                                                                                ^
+      162 |   // Version 3 arrives before Jon saves: new steps are brought in; his title decision still stands.
+      163 |   expect((await saveVia(alex.page, id, (d: any) => { d.instructions = "Third version steps."; })).status).toBe("accepted");
+      164 |   await expect(dj.getByTestId("recipe-rebased")).toContainText("Alex saved version 3");
+        at /home/user/table/tests/e2e/b17-correction.spec.ts:161:96
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-a-t-e50c2-n-cannot-authorize-the-save-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-a-t-e50c2-n-cannot-authorize-the-save-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-correction-RB17-01-a-t-e50c2-n-cannot-authorize-the-save-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-a-t-e50c2-n-cannot-authorize-the-save-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-correction-RB17-01-a-t-e50c2-n-cannot-authorize-the-save-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[7/8] [chromium] › tests/e2e/b17-correction.spec.ts:179:1 › RB17-02: two occurrences of one ingredient stay distinct; a change to the first is shown and both rows survive
+  7) [chromium] › tests/e2e/b17-correction.spec.ts:179:1 › RB17-02: two occurrences of one ingredient stay distinct; a change to the first is shown and both rows survive 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog', { name: 'Edit Fixture: Turkey chili — new version' }).getByTestId('recipe-rebased')
+    Expected substring: "Removed Ground turkey 10 g"
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" with timeout 10000ms
+      - waiting for getByRole('dialog', { name: 'Edit Fixture: Turkey chili — new version' }).getByTestId('recipe-rebased')
+
+
+      195 |   expect((await saveVia(jon.page, id, (d: any) => { d.ingredients[0].quantity = "20"; })).status).toBe("accepted");
+      196 |   const note = da.getByTestId("recipe-rebased");
+    > 197 |   await expect(note).toContainText("Removed Ground turkey 10 g");
+          |                      ^
+      198 |   await expect(note).toContainText("Added Ground turkey 20 g");
+      199 |   await expect(da.getByRole("textbox", { name: "Ingredient 1 amount" })).toHaveValue("20");
+      200 |   await expect(da.getByRole("textbox", { name: "Ingredient 2 amount" })).toHaveValue("100");
+        at /home/user/table/tests/e2e/b17-correction.spec.ts:197:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-02-two-4905c-shown-and-both-rows-survive-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-02-two-4905c-shown-and-both-rows-survive-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-correction-RB17-02-two-4905c-shown-and-both-rows-survive-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-02-two-4905c-shown-and-both-rows-survive-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-correction-RB17-02-two-4905c-shown-and-both-rows-survive-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[8/8] [chromium] › tests/e2e/b17-correction.spec.ts:210:1 › RB17-01: 'Start over' in a conflict replaces the whole draft with the current version and moves focus to the title
+  8) [chromium] › tests/e2e/b17-correction.spec.ts:210:1 › RB17-01: 'Start over' in a conflict replaces the whole draft with the current version and moves focus to the title 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Test ended.
+    Call log:
+      - waiting for getByRole('dialog', { name: 'Edit Fixture: Turkey chili — new version' }).getByRole('button', { name: 'Start over from version 2 (discard all my edits)' })
+
+
+      218 |   await dj.getByLabel("Title", { exact: true }).fill("Jon's chili");
+      219 |   expect((await saveVia(alex.page, id, (d: any) => { d.title = "Alex's chili"; })).status).toBe("accepted");
+    > 220 |   await dj.getByRole("button", { name: "Start over from version 2 (discard all my edits)" }).click();
+          |                                                                                              ^
+      221 |   await expect(dj.getByLabel("Title", { exact: true })).toHaveValue("Alex's chili");
+      222 |   await expect(dj.getByTestId("recipe-conflict")).toHaveCount(0);
+      223 |   await expect.poll(async () => (await focused(jon.page)).id).toBe("re-title");
+        at /home/user/table/tests/e2e/b17-correction.spec.ts:220:94
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-Sta-8e37e-nd-moves-focus-to-the-title-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-Sta-8e37e-nd-moves-focus-to-the-title-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-correction-RB17-01-Sta-8e37e-nd-moves-focus-to-the-title-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-Sta-8e37e-nd-moves-focus-to-the-title-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-correction-RB17-01-Sta-8e37e-nd-moves-focus-to-the-title-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  8 failed
+    [chromium] › tests/e2e/b17-correction.spec.ts:54:3 › RB17-01: the other member's new steps and reheat text are shown and kept; only the title edit is applied — Jon wins 
+    [chromium] › tests/e2e/b17-correction.spec.ts:54:3 › RB17-01: the other member's new steps and reheat text are shown and kept; only the title edit is applied — Alex wins 
+    [chromium] › tests/e2e/b17-correction.spec.ts:91:1 › RB17-01: fields the editor does not show (summary, source, ingredient form/note) changed by a newer version survive a title-only save 
+    [chromium] › tests/e2e/b17-correction.spec.ts:122:3 › RB17-01: when both changed the steps, both full texts are shown and nothing is chosen for the member — keep mine 
+    [chromium] › tests/e2e/b17-correction.spec.ts:122:3 › RB17-01: when both changed the steps, both full texts are shown and nothing is chosen for the member — use theirs 
+    [chromium] › tests/e2e/b17-correction.spec.ts:151:1 › RB17-01: a third version after the member's decision is brought in again before Save; a stale decision cannot authorize the save 
+    [chromium] › tests/e2e/b17-correction.spec.ts:179:1 › RB17-02: two occurrences of one ingredient stay distinct; a change to the first is shown and both rows survive 
+    [chromium] › tests/e2e/b17-correction.spec.ts:210:1 › RB17-01: 'Start over' in a conflict replaces the whole draft with the current version and moves focus to the title 

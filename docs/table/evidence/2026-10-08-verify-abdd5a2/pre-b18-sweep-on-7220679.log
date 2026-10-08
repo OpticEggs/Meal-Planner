@@ -1,0 +1,2058 @@
+
+Running 16 tests using 1 worker
+
+[WebServer] 2026-10-08T05:54:09.024Z WARN [Better Auth]: User not found
+  ✓   1 [chromium] › tests/e2e/b18-text-scaling.spec.ts:315:5 › B18 at 320 px with 150% text › login, signed out (150%) (1.5s)
+Internal error: step id not found: fixture@373
+  ✘   2 [chromium] › tests/e2e/b18-text-scaling.spec.ts:331:5 › B18 at 320 px with 150% text › Week, Change sheet, proposal, Cook and Reheat (150%) (7.1s)
+Internal error: step id not found: fixture@340
+  ✘   3 [chromium] › tests/e2e/b18-text-scaling.spec.ts:371:5 › B18 at 320 px with 150% text › Explore, Our Recipes and recipe detail (150%) (5.3s)
+  ✓   4 [chromium] › tests/e2e/b18-text-scaling.spec.ts:404:5 › B18 at 320 px with 150% text › recipe editor dialog, plain state (150%) (2.1s)
+Internal error: step id not found: fixture@998
+  ✘   5 [chromium] › tests/e2e/b18-text-scaling.spec.ts:414:5 › B18 at 320 px with 150% text › Groceries: lines, product, removal, order, receipts (150%) (13.2s)
+Internal error: step id not found: fixture@255
+  ✘   6 [chromium] › tests/e2e/b18-text-scaling.spec.ts:488:5 › B18 at 320 px with 150% text › Groceries: uncertain transfer and the cart check (150%) (5.2s)
+Internal error: step id not found: fixture@633Internal error: step id not found: fixture@633
+  ✘   7 [chromium] › tests/e2e/b18-text-scaling.spec.ts:509:5 › B18 at 320 px with 150% text › Household: settings, conflict, targets, exclusions, ingredient review (150%) (8.8s)
+Internal error: step id not found: fixture@226Internal error: step id not found: fixture@226
+  ✘   8 [chromium] › tests/e2e/b18-text-scaling.spec.ts:554:5 › B18 at 320 px with 150% text › Household: usual items and their dialogs, with a staple conflict (150%) (6.6s)
+[WebServer] 2026-10-08T05:55:10.638Z WARN [Better Auth]: User not found
+  ✓   9 [chromium] › tests/e2e/b18-text-scaling.spec.ts:315:5 › B18 at 320 px with 200% text › login, signed out (200%) (1.5s)
+  ✘  10 [chromium] › tests/e2e/b18-text-scaling.spec.ts:331:5 › B18 at 320 px with 200% text › Week, Change sheet, proposal, Cook and Reheat (200%) (16.3s)
+  ✘  11 [chromium] › tests/e2e/b18-text-scaling.spec.ts:371:5 › B18 at 320 px with 200% text › Explore, Our Recipes and recipe detail (200%) (20.1s)
+  ✘  12 [chromium] › tests/e2e/b18-text-scaling.spec.ts:404:5 › B18 at 320 px with 200% text › recipe editor dialog, plain state (200%) (16.3s)
+  ✘  13 [chromium] › tests/e2e/b18-text-scaling.spec.ts:414:5 › B18 at 320 px with 200% text › Groceries: lines, product, removal, order, receipts (200%) (16.6s)
+  ✘  14 [chromium] › tests/e2e/b18-text-scaling.spec.ts:488:5 › B18 at 320 px with 200% text › Groceries: uncertain transfer and the cart check (200%) (16.4s)
+  ✘  15 [chromium] › tests/e2e/b18-text-scaling.spec.ts:509:5 › B18 at 320 px with 200% text › Household: settings, conflict, targets, exclusions, ingredient review (200%) (18.5s)
+  ✘  16 [chromium] › tests/e2e/b18-text-scaling.spec.ts:554:5 › B18 at 320 px with 200% text › Household: usual items and their dialogs, with a staple conflict (200%) (16.5s)
+
+
+  1) [chromium] › tests/e2e/b18-text-scaling.spec.ts:331:5 › B18 at 320 px with 150% text › Week, Change sheet, proposal, Cook and Reheat (150%) 
+
+    Error: Week (adopted) @ 150%: probe p[status-sentence].status-line "Every dinner is covered. Grocery review remains." 15.2px → 22.8px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 7
+
+    - Array []
+    + Array [
+    +   "page scrolls sideways: scrollWidth 359 > clientWidth 320",
+    +   "text overflows its box: span \"Dinner ingredients\" scrollWidth 123 > clientWidth 118",
+    +   "text off-screen: strong[night-title-2026-10-17] \"Fixture: Grandmother’s slow-braised chicken thig\" x 81–359 of 320",
+    +   "target covered: button.btn.line.small \"Previous week\" — the point hits p.muted.small \"Signed in as Jon · test household\"",
+    +   "target covered: button.btn.line.small \"Next week\" — the point hits div.brand \"TableSigned in as Jon · test householdSimulated \"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:341:7
+
+    Error: Change sheet with a preview @ 150%: probe p.faint.small "Choose a dinner to preview. Nothing changes unti" 13.6px → 20.4px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 8
+
+    - Array []
+    + Array [
+    +   "text overflows its box: span.faint.small \"+$3.99\" scrollWidth 14 > clientWidth 10",
+    +   "target covered: button#sheet-2026-10-16-tab-replace.on \"Replace\" — the point hits h2#_r_1_.sheet-title \"Change Friday dinner\"",
+    +   "target covered: button#sheet-2026-10-16-tab-move \"Move\" — the point hits h2#_r_1_.sheet-title \"Change Friday dinner\"",
+    +   "target covered: button#sheet-2026-10-16-tab-backup \"Backup\" — the point hits h2#_r_1_.sheet-title \"Change Friday dinner\"",
+    +   "target covered: button#sheet-2026-10-16-tab-plates \"Plates\" — the point hits h2#_r_1_.sheet-title \"Change Friday dinner\"",
+    +   "target covered: button#sheet-2026-10-16-tab-facts \"Less left\" — the point hits p.faint.small.sheet-sub \"Now: Fixture: Salmon rice bowls\"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:347:7
+
+    Error: Week with an open draft @ 150%: probe p[status-sentence].status-line "Every dinner is covered. Grocery review remains." 15.2px → 22.8px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 8
+
+    - Array []
+    + Array [
+    +   "page scrolls sideways: scrollWidth 359 > clientWidth 320",
+    +   "text overflows its box: span \"Dinner ingredients\" scrollWidth 123 > clientWidth 118",
+    +   "text overflows its box: li \"Friday: Fixture: Salmon rice bowls → Fixture: Gr\" scrollWidth 226 > clientWidth 220",
+    +   "text off-screen: strong[night-title-2026-10-17] \"Fixture: Grandmother’s slow-braised chicken thig\" x 81–359 of 320",
+    +   "target covered: button.btn.line.small \"Previous week\" — the point hits p.muted.small \"Signed in as Jon · test household\"",
+    +   "target covered: button.btn.line.small \"Next week\" — the point hits div.brand \"TableSigned in as Jon · test householdSimulated \"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:354:7
+
+    Error: Cook @ 150%: probe p.faint.small "Recipe version 1 (pinned to this dinner) · times" 13.6px → 20.4px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 24
+
+    - Array []
+    + Array [
+    +   "Tab: Tab #0 a.small \"‹ Week\" (16,229 322×30) is outside the viewport",
+    +   "Tab: Tab #1 button.btn.line.small \"Also need Chicken thighs\" (96,300 242×73) is outside the viewport",
+    +   "Tab: Tab #3 button.btn.line.small \"Also need Jasmine rice\" (96,479 242×73) is outside the viewport",
+    +   "Tab: Tab #4 button.btn.primary \"Mark cooked\" (16,378 322×55) is outside the viewport",
+    +   "page scrolls sideways: scrollWidth 338 > clientWidth 320",
+    +   "text off-screen: a.small \"‹ Week\" x 16–338 of 320",
+    +   "text off-screen: h2[cook-title].h2 \"Fixture: Grandmother’s slow-braised chicken thig\" x 16–338 of 320",
+    +   "text off-screen: p.faint.small \"Recipe version 1 (pinned to this dinner) · times\" x 16–338 of 320",
+    +   "text off-screen: div.section-label \"This cooking covers\" x 18–336 of 320",
+    +   "text off-screen: li \"2026-10-17 dinner: 2 plate(s)\" x 56–338 of 320",
+    +   "text off-screen: div.section-label \"Amounts for the whole batch\" x 18–336 of 320",
+    +   "text off-screen: strong \"Chicken thighs braised with preserved lemon and \" x 56–332 of 320",
+    +   "text off-screen: button.btn.line.small \"Also need Chicken thighs\" x 96–338 of 320",
+    +   "text off-screen: button.btn.line.small \"Also need Jasmine rice\" x 96–338 of 320",
+    +   "text off-screen: div.section-label \"Plates tonight\" x 18–336 of 320",
+    +   "text off-screen: li \"Alex: Chicken thighs braised with preserved lemo\" x 56–338 of 320",
+    +   "text off-screen: li \"Jon: Chicken thighs braised with preserved lemon\" x 56–338 of 320",
+    +   "text off-screen: div.section-label \"Steps\" x 18–336 of 320",
+    +   "text off-screen: pre.instructions \"1. Brown the chicken thighs well on both sides i\" x 16–338 of 320",
+    +   "text off-screen: button.btn.primary \"Mark cooked\" x 16–338 of 320",
+    +   "text off-screen: p.faint.small \"Opening this page does not record cooking or eat\" x 16–338 of 320",
+    +   "target covered: a.small \"‹ Week\" — the point hits p.muted.small \"Signed in as Jon · test household\"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:358:7
+
+    Error: Proposal (next week) @ 150%: probe p.muted.small "Table proposes one complete week. Nothing is ado" 13.6px → 20.4px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 4
+
+    - Array []
+    + Array [
+    +   "target covered: button.btn.line.small \"Previous week\" — the point hits p.muted.small \"Signed in as Jon · test household\"",
+    +   "target covered: button.btn.line.small \"Next week\" — the point hits div.brand \"TableSigned in as Jon · test householdSimulated \"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:367:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-a1503-oposal-Cook-and-Reheat-150--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b18-text-scaling-B18-at-32-a1503-oposal-Cook-and-Reheat-150--chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-a1503-oposal-Cook-and-Reheat-150--chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b18-text-scaling-B18-at-32-a1503-oposal-Cook-and-Reheat-150--chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › tests/e2e/b18-text-scaling.spec.ts:371:5 › B18 at 320 px with 150% text › Explore, Our Recipes and recipe detail (150%) 
+
+    Error: Explore @ 150%: probe p.faint.small "Costs use recorded package prices (simulated sto" 13.6px → 20.4px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 40
+
+    - Array []
+    + Array [
+    +   "Tab: Tab #6 a \"Fixture: Black bean tacos\" (83,305 160×64) is covered by div.grow \"Fixture: Black bean tacosMexican · 20 min (est.)\"",
+    +   "Tab: Tab #7 button.btn.line.small \"Sounds good: Fixture: Black bean tacos\" (316,404 152×44) is outside the viewport",
+    +   "Tab: Tab #8 a \"Fixture: Chicken penne\" (83,305 192×64) is covered by div.grow \"Fixture: Chicken penneItalian-American · 30 min \"",
+    +   "Tab: Tab #9 button.btn.line.small \"Sounds good: Fixture: Chicken penne\" (316,419 152×44) is outside the viewport",
+    +   "Tab: Tab #10 a \"Fixture: Chicken shawarma bowls\" (83,304 198×64) is covered by div.grow \"Fixture: Chicken shawarma bowlsMiddle Eastern · \"",
+    +   "Tab: Tab #11 button.btn.line.small \"Sounds good: Fixture: Chicken shawarma bowls\" (316,419 152×44) is outside the viewport",
+    +   "Tab: Tab #12 a \"Fixture: Grandmother’s slow-braised chicken thig\" (83,148 278×377) is outside the viewport",
+    +   "Tab: Tab #13 a \"Fixture: Pesto pasta\" (83,304 162×64) is covered by div.grow \"Fixture: Pesto pastaItalian · 15 min (est.) · un\"",
+    +   "Tab: Tab #14 button.btn.line.small \"Sounds good: Fixture: Pesto pasta\" (316,403 152×44) is outside the viewport",
+    +   "Tab: Tab #15 a \"Fixture: Salmon rice bowls\" (83,304 183×64) is covered by div.grow \"Fixture: Salmon rice bowlsJapanese-inspired · 25\"",
+    +   "Tab: Tab #16 button.btn.line.small \"Sounds good: Fixture: Salmon rice bowls\" (316,389 152×44) is outside the viewport",
+    +   "Tab: Tab #17 a \"Fixture: Sheet-pan chicken and rice\" (83,304 219×64) is covered by div.grow \"Fixture: Sheet-pan chicken and riceAmerican · 40\"",
+    +   "Tab: Tab #18 button.btn.line.small \"Sounds good: Fixture: Sheet-pan chicken and rice\" (316,389 152×44) is outside the viewport",
+    +   "Tab: Tab #19 a \"Fixture: Tofu veggie stir-fry\" (83,304 168×64) is covered by div.grow \"Fixture: Tofu veggie stir-fryChinese-American · \"",
+    +   "Tab: Tab #20 button.btn.line.small \"Sounds good: Fixture: Tofu veggie stir-fry\" (316,418 152×44) is outside the viewport",
+    +   "Tab: Tab #21 a \"Fixture: Turkey chili\" (83,304 177×64) is covered by div.grow \"Fixture: Turkey chiliAmerican · 50 min (est.) · \"",
+    +   "Tab: Tab #22 button.btn.line.small \"Sounds good: Fixture: Turkey chili\" (316,404 152×44) is outside the viewport",
+    +   "page scrolls sideways: scrollWidth 481 > clientWidth 320",
+    +   "text off-screen: button.btn.line.small \"Sounds good: Fixture: Black bean tacos\" x 316–468 of 320",
+    +   "text off-screen: button.btn.line.small \"Sounds good: Fixture: Chicken penne\" x 316–468 of 320",
+    +   "text off-screen: button.btn.line.small \"Sounds good: Fixture: Chicken shawarma bowls\" x 316–468 of 320",
+    +   "text off-screen: strong \"Fixture: Grandmother’s slow-braised chicken thig\" x 83–361 of 320",
+    +   "text off-screen: button.btn.line.small \"In Sounds good: Fixture: Grandmother’s slow-brai\" x 293–468 of 320",
+    +   "text off-screen: button.btn.line.small \"Sounds good: Fixture: Pesto pasta\" x 316–468 of 320",
+    +   "text off-screen: button.btn.line.small \"Sounds good: Fixture: Salmon rice bowls\" x 316–468 of 320",
+    +   "text off-screen: button.btn.line.small \"Sounds good: Fixture: Sheet-pan chicken and rice\" x 316–468 of 320",
+    +   "text off-screen: button.btn.line.small \"Sounds good: Fixture: Tofu veggie stir-fry\" x 316–468 of 320",
+    +   "text off-screen: button.btn.line.small \"Sounds good: Fixture: Turkey chili\" x 316–468 of 320",
+    +   "target covered: input[explore-search] \"\" — the point hits p.muted.small \"Signed in as Jon · test household\"",
+    +   "target covered: input \"\" — the point hits a[nav-week] \"Week\"",
+    +   "target covered: a \"Fixture: Black bean tacos\" — the point hits div.grow \"Fixture: Black bean tacosMexican · 20 min (est.)\"",
+    +   "target covered: a \"Fixture: Chicken penne\" — the point hits div.grow \"Fixture: Chicken penneItalian-American · 30 min \"",
+    +   "target covered: a \"Fixture: Chicken shawarma bowls\" — the point hits div.grow \"Fixture: Chicken shawarma bowlsMiddle Eastern · \"",
+    +   "target covered: a \"Fixture: Pesto pasta\" — the point hits div.grow \"Fixture: Pesto pastaItalian · 15 min (est.) · un\"",
+    +   "target covered: a \"Fixture: Salmon rice bowls\" — the point hits div.grow \"Fixture: Salmon rice bowlsJapanese-inspired · 25\"",
+    +   "target covered: a \"Fixture: Sheet-pan chicken and rice\" — the point hits div.grow \"Fixture: Sheet-pan chicken and riceAmerican · 40\"",
+    +   "target covered: a \"Fixture: Tofu veggie stir-fry\" — the point hits div.grow \"Fixture: Tofu veggie stir-fryChinese-American · \"",
+    +   "target covered: a \"Fixture: Turkey chili\" — the point hits div.grow \"Fixture: Turkey chiliAmerican · 50 min (est.) · \"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:379:7
+
+    Error: Explore sorted, with an unknown group @ 150%: probe p.faint.small "Costs use recorded package prices (simulated sto" 13.6px → 20.4px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 32
+
+    - Array []
+    + Array [
+    +   "Tab: Tab #6 a \"Fixture: Grandmother’s slow-braised chicken thig\" (83,148 278×377) is outside the viewport",
+    +   "Tab: Tab #7 a \"Fixture: Salmon rice bowls\" (83,304 183×64) is covered by div.grow \"Fixture: Salmon rice bowlsJapanese-inspired · 25\"",
+    +   "Tab: Tab #8 button.btn.line.small \"Sounds good: Fixture: Salmon rice bowls\" (316,389 152×44) is outside the viewport",
+    +   "Tab: Tab #9 a \"Fixture: Sheet-pan chicken and rice\" (83,304 219×64) is covered by div.grow \"Fixture: Sheet-pan chicken and riceAmerican · 40\"",
+    +   "Tab: Tab #10 button.btn.line.small \"Sounds good: Fixture: Sheet-pan chicken and rice\" (316,389 152×44) is outside the viewport",
+    +   "Tab: Tab #11 a \"Fixture: Black bean tacos\" (83,270 90×133) is covered by div.grow \"Fixture: Black bean tacosMexican · 20 min (est.)\"",
+    +   "Tab: Tab #15 a \"Fixture: Chicken shawarma bowls\" (83,269 122×133) is covered by div.grow \"Fixture: Chicken shawarma bowlsMiddle Eastern · \"",
+    +   "page scrolls sideways: scrollWidth 481 > clientWidth 320",
+    +   "text off-screen: strong \"Fixture: Grandmother’s slow-braised chicken thig\" x 83–361 of 320",
+    +   "text off-screen: button.btn.line.small \"In Sounds good: Fixture: Grandmother’s slow-brai\" x 293–468 of 320",
+    +   "text off-screen: button.btn.line.small \"Sounds good: Fixture: Salmon rice bowls\" x 316–468 of 320",
+    +   "text off-screen: button.btn.line.small \"Sounds good: Fixture: Sheet-pan chicken and rice\" x 316–468 of 320",
+    +   "text overflows its box: div.faint.small \"Mexican · 20 min (est.) · unknown (≥ 0 kcal know\" scrollWidth 88 > clientWidth 67",
+    +   "text overflows its box: div.faint.small \"Serving $1.88 · Adds $4.08 to this week’s basket\" scrollWidth 74 > clientWidth 67",
+    +   "text overflows its box: div.faint.small \"Italian-American · 30 min (est.) · unknown (≥ 25\" scrollWidth 92 > clientWidth 67",
+    +   "text overflows its box: div.faint.small \"Serving $2.44 · Adds $12.57 to this week’s baske\" scrollWidth 74 > clientWidth 67",
+    +   "text overflows its box: div.faint.small \"Middle Eastern · 45 min (est.) · unknown (≥ 273.\" scrollWidth 88 > clientWidth 67",
+    +   "text overflows its box: div.faint.small \"Serving $3.06 · Adds $8.28 to this week’s basket\" scrollWidth 74 > clientWidth 67",
+    +   "text overflows its box: div.faint.small \"Italian · 15 min (est.) · unknown (≥ 0 kcal know\" scrollWidth 88 > clientWidth 67",
+    +   "text overflows its box: div.faint.small \"Serving unknown · Adds unknown to this week’s ba\" scrollWidth 88 > clientWidth 67",
+    +   "text overflows its box: div.faint.small \"Chinese-American · 25 min (est.) · unknown (≥ 48\" scrollWidth 92 > clientWidth 67",
+    +   "text overflows its box: div.faint.small \"Serving $1.71 · Adds $2.29 to this week’s basket\" scrollWidth 74 > clientWidth 67",
+    +   "text overflows its box: div.faint.small \"American · 50 min (est.) · unknown (≥ 0 kcal kno\" scrollWidth 92 > clientWidth 67",
+    +   "text overflows its box: div.faint.small \"Serving $2.59 · Adds $10.37 to this week’s baske\" scrollWidth 74 > clientWidth 67",
+    +   "target covered: input[explore-search] \"\" — the point hits p.muted.small \"Signed in as Jon · test household\"",
+    +   "target covered: input \"\" — the point hits a[nav-week] \"Week\"",
+    +   "target covered: a \"Fixture: Salmon rice bowls\" — the point hits div.grow \"Fixture: Salmon rice bowlsJapanese-inspired · 25\"",
+    +   "target covered: a \"Fixture: Sheet-pan chicken and rice\" — the point hits div.grow \"Fixture: Sheet-pan chicken and riceAmerican · 40\"",
+    +   "target covered: a \"Fixture: Black bean tacos\" — the point hits div.grow \"Fixture: Black bean tacosMexican · 20 min (est.)\"",
+    +   "target covered: a \"Fixture: Chicken shawarma bowls\" — the point hits div.grow \"Fixture: Chicken shawarma bowlsMiddle Eastern · \"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:382:7
+
+    Error: Our Recipes — All @ 150%: probe h1.brand-title "Table" 28px → 42px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 42
+
+    - Array []
+    + Array [
+    +   "Tab: Tab #2 a \"Fixture: Tofu veggie stir-fry\" (29,405 323×29) is outside the viewport",
+    +   "Tab: Tab #4 a \"Fixture: Sheet-pan chicken and rice\" (-167,488 317×64) is outside the viewport",
+    +   "Tab: Tab #6 a \"Fixture: Salmon rice bowls\" (-167,322 310×29) is outside the viewport",
+    +   "Tab: Tab #8 a \"Fixture: Black bean tacos\" (-167,435 295×29) is outside the viewport",
+    +   "Tab: Tab #10 a \"Fixture: Chicken shawarma bowls\" (-167,488 320×64) is outside the viewport",
+    +   "Tab: Tab #12 a \"Fixture: Chicken penne\" (-167,321 271×29) is outside the viewport",
+    +   "Tab: Tab #14 a \"Fixture: Turkey chili\" (-167,435 231×29) is outside the viewport",
+    +   "Tab: Tab #16 a \"Fixture: Pesto pasta\" (-167,523 233×29) is outside the viewport",
+    +   "Tab: Tab #18 a \"Fixture: Grandmother’s slow-braised chicken thig\" (-167,164 278×342) is outside the viewport",
+    +   "page scrolls sideways: scrollWidth 516 > clientWidth 320",
+    +   "text off-screen: h1.brand-title \"Table\" x -180–-10 of 320",
+    +   "text off-screen: p.muted.small \"Signed in as Jon · test household\" x -180–-10 of 320",
+    +   "text off-screen: strong[me] \"Jon\" x -57–-20 of 320",
+    +   "text off-screen: div[currency].currency.current \"Up to date\" x -180–-72 of 320",
+    +   "text off-screen: button#rtab-all.on \"All\" x -180–-126 of 320",
+    +   "text off-screen: button#rtab-favorites \"My favorites\" x -122–45 of 320",
+    +   "text off-screen: button#rtab-sounds_good \"Sounds good\" x -180–-4 of 320",
+    +   "text off-screen: button[new-recipe].btn.line.small \"New recipe\" x -180–-47 of 320",
+    +   "text off-screen: strong \"Fixture: Tofu veggie stir-fry\" x -167–156 of 320",
+    +   "text off-screen: div.faint.small \"v1 · fixture · you: no feedback yet\" x -167–196 of 320",
+    +   "text off-screen: strong \"Fixture: Sheet-pan chicken and rice\" x -167–150 of 320",
+    +   "text off-screen: strong \"Fixture: Salmon rice bowls\" x -167–143 of 320",
+    +   "text off-screen: strong \"Fixture: Black bean tacos\" x -167–128 of 320",
+    +   "text off-screen: strong \"Fixture: Chicken shawarma bowls\" x -167–153 of 320",
+    +   "text off-screen: strong \"Fixture: Chicken penne\" x -167–104 of 320",
+    +   "text off-screen: strong \"Fixture: Turkey chili\" x -167–64 of 320",
+    +   "text off-screen: strong \"Fixture: Pesto pasta\" x -167–66 of 320",
+    +   "text off-screen: strong \"Fixture: Grandmother’s slow-braised chicken thig\" x -167–111 of 320",
+    +   "text off-screen: div.faint.small \"v1 · fixture · Sounds good (Jon) · you: no feedb\" x -167–64 of 320",
+    +   "target covered: button#rtab-all.on \"All\" — the point hits p.muted.small \"Signed in as Jon · test household\"",
+    +   "target covered: button#rtab-favorites \"My favorites\" — the point hits p.muted.small \"Signed in as Jon · test household\"",
+    +   "target covered: button#rtab-sounds_good \"Sounds good\" — the point hits div[currency].currency.current \"Up to date\"",
+    +   "target covered: a \"Fixture: Sheet-pan chicken and rice\" — the point hits div.grow \"Fixture: Sheet-pan chicken and ricev1 · fixture \"",
+    +   "target covered: a \"Fixture: Salmon rice bowls\" — the point hits nav.nav \"Main\"",
+    +   "target covered: a \"Fixture: Black bean tacos\" — the point hits nav.nav \"Main\"",
+    +   "target covered: a \"Fixture: Chicken shawarma bowls\" — the point hits div.grow \"Fixture: Chicken shawarma bowlsv1 · fixture · yo\"",
+    +   "target covered: a \"Fixture: Chicken penne\" — the point hits nav.nav \"Main\"",
+    +   "target covered: a \"Fixture: Turkey chili\" — the point hits nav.nav \"Main\"",
+    +   "target covered: a \"Fixture: Pesto pasta\" — the point hits nav.nav \"Main\"",
+    +   "target covered: a \"Fixture: Grandmother’s slow-braised chicken thig\" — the point hits div.grow \"Fixture: Grandmother’s slow-braised chicken thig\"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:388:7
+
+    Error: Our Recipes — My favorites @ 150%: probe h1.brand-title "Table" 28px → 42px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 19
+
+    - Array []
+    + Array [
+    +   "Tab: Tab #2 a \"Fixture: Grandmother’s slow-braised chicken thig\" (29,210 278×342) is covered by div.grow \"Fixture: Grandmother’s slow-braised chicken thig\"",
+    +   "Tab: Tab #3 button.btn.line.small \"Clear the idea Fixture: Grandmother’s slow-brais\" (270,405 122×44) is outside the viewport",
+    +   "page scrolls sideways: scrollWidth 516 > clientWidth 320",
+    +   "text off-screen: h1.brand-title \"Table\" x -180–-10 of 320",
+    +   "text off-screen: p.muted.small \"Signed in as Jon · test household\" x -180–-10 of 320",
+    +   "text off-screen: strong[me] \"Jon\" x -57–-20 of 320",
+    +   "text off-screen: div[currency].currency.current \"Up to date\" x -180–-72 of 320",
+    +   "text off-screen: button#rtab-all \"All\" x -180–-126 of 320",
+    +   "text off-screen: button#rtab-favorites.on \"My favorites\" x -122–45 of 320",
+    +   "text off-screen: button#rtab-sounds_good \"Sounds good\" x -180–-4 of 320",
+    +   "text off-screen: button[new-recipe].btn.line.small \"New recipe\" x -180–-47 of 320",
+    +   "text off-screen: strong \"Fixture: Grandmother’s slow-braised chicken thig\" x -167–111 of 320",
+    +   "text off-screen: div.faint.small \"v1 · fixture · Sounds good (Jon) · you: no feedb\" x -167–64 of 320",
+    +   "target covered: button#rtab-all \"All\" — the point hits p.muted.small \"Signed in as Jon · test household\"",
+    +   "target covered: button#rtab-favorites.on \"My favorites\" — the point hits p.muted.small \"Signed in as Jon · test household\"",
+    +   "target covered: button#rtab-sounds_good \"Sounds good\" — the point hits div[currency].currency.current \"Up to date\"",
+    +   "target covered: a \"Fixture: Grandmother’s slow-braised chicken thig\" — the point hits div.grow \"Fixture: Grandmother’s slow-braised chicken thig\"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:391:7
+
+    Error: Our Recipes — Sounds good @ 150%: probe p.faint.small "Shared near-term ideas. Saving one does not sche" 13.6px → 20.4px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 20
+
+    - Array []
+    + Array [
+    +   "Tab: Tab #2 a \"Fixture: Grandmother’s slow-braised chicken thig\" (29,210 278×342) is covered by div.grow \"Fixture: Grandmother’s slow-braised chicken thig\"",
+    +   "Tab: Tab #3 button.btn.line.small \"Clear the idea Fixture: Grandmother’s slow-brais\" (270,404 122×44) is outside the viewport",
+    +   "page scrolls sideways: scrollWidth 516 > clientWidth 320",
+    +   "text off-screen: h1.brand-title \"Table\" x -180–-10 of 320",
+    +   "text off-screen: p.muted.small \"Signed in as Jon · test household\" x -180–-10 of 320",
+    +   "text off-screen: strong[me] \"Jon\" x -57–-20 of 320",
+    +   "text off-screen: div[currency].currency.current \"Up to date\" x -180–-72 of 320",
+    +   "text off-screen: button#rtab-all \"All\" x -180–-126 of 320",
+    +   "text off-screen: button#rtab-favorites \"My favorites\" x -122–45 of 320",
+    +   "text off-screen: button#rtab-sounds_good.on \"Sounds good\" x -180–-4 of 320",
+    +   "text off-screen: button[new-recipe].btn.line.small \"New recipe\" x -180–-47 of 320",
+    +   "text off-screen: p.faint.small \"Shared near-term ideas. Saving one does not sche\" x -180–108 of 320",
+    +   "text off-screen: strong \"Fixture: Grandmother’s slow-braised chicken thig\" x -167–111 of 320",
+    +   "text off-screen: div.faint.small \"v1 · fixture · Sounds good (Jon) · you: no feedb\" x -167–64 of 320",
+    +   "target covered: button#rtab-all \"All\" — the point hits p.muted.small \"Signed in as Jon · test household\"",
+    +   "target covered: button#rtab-favorites \"My favorites\" — the point hits p.muted.small \"Signed in as Jon · test household\"",
+    +   "target covered: button#rtab-sounds_good.on \"Sounds good\" — the point hits div[currency].currency.current \"Up to date\"",
+    +   "target covered: a \"Fixture: Grandmother’s slow-braised chicken thig\" — the point hits div.grow \"Fixture: Grandmother’s slow-braised chicken thig\"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:394:7
+
+    Error: Recipe detail (with a note error) @ 150%: probe p.faint.small "Version 1 · test fixture · Test fixture — not a " 13.6px → 20.4px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 19
+
+    - Array []
+    + Array [
+    +   "Tab: Tab #0 a.small \"‹ Our Recipes\" (16,229 322×30) is outside the viewport",
+    +   "Tab: Tab #6 input#new-note \"New note\" (0,309 322×55) is outside the viewport",
+    +   "page scrolls sideways: scrollWidth 338 > clientWidth 320",
+    +   "text off-screen: a.small \"‹ Our Recipes\" x 0–322 of 320",
+    +   "text off-screen: h2[recipe-title].h2 \"Fixture: Grandmother’s slow-braised chicken thig\" x 0–322 of 320",
+    +   "text off-screen: p.faint.small \"Version 1 · test fixture · Test fixture — not a \" x 0–322 of 320",
+    +   "text off-screen: p.small \"Jon: unknown · Alex: unknown\" x 0–322 of 320",
+    +   "text off-screen: p.faint.small \"Nutrition uses synthetic test values.\" x 0–322 of 320",
+    +   "text off-screen: li \"Chicken thighs braised with preserved lemon and \" x 40–322 of 320",
+    +   "text off-screen: li \"Herbed rice: 75 g Jasmine rice\" x 40–322 of 320",
+    +   "text off-screen: pre.instructions \"1. Brown the chicken thighs well on both sides i\" x 0–322 of 320",
+    +   "text off-screen: pre.instructions \"Reheat covered at 350°F for 20 minutes, or micro\" x 0–322 of 320",
+    +   "text off-screen: p#new-note-error.field-error \"Write the note first\" x 0–322 of 320",
+    +   "text off-screen: li.faint \"Nothing recorded.\" x 40–322 of 320",
+    +   "text off-screen: li \"v1 Fixture: Grandmother’s slow-braised chicken t\" x 40–322 of 320",
+    +   "text off-screen: p.faint.small \"Editing creates a new version. Dinners already a\" x 0–322 of 320",
+    +   "target covered: a.small \"‹ Our Recipes\" — the point hits p.muted.small \"Signed in as Jon · test household\"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:400:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-c8001-ipes-and-recipe-detail-150--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b18-text-scaling-B18-at-32-c8001-ipes-and-recipe-detail-150--chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-c8001-ipes-and-recipe-detail-150--chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b18-text-scaling-B18-at-32-c8001-ipes-and-recipe-detail-150--chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chromium] › tests/e2e/b18-text-scaling.spec.ts:414:5 › B18 at 320 px with 150% text › Groceries: lines, product, removal, order, receipts (150%) 
+
+    Error: Groceries lines @ 150%: probe p.faint.small "Prices are estimates from recorded observations," 13.6px → 20.4px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 23
+
+    - Array []
+    + Array [
+    +   "Tab: Tab #41 button[product-greek_yogurt].link.small \"Change product for Plain Greek yogurt\" (27,517 178×34) is covered by nav.nav \"Main\"",
+    +   "from [data-testid=\"line-greek_yogurt\"] button:not([disabled]): Tab #6 button[product-greek_yogurt].link.small \"Change product for Plain Greek yogurt\" (27,517 178×34) is covered by nav.nav \"Main\"",
+    +   "text overflows its box: span \"Dinner ingredients\" scrollWidth 123 > clientWidth 118",
+    +   "target covered: button[approve-all].btn.line \"Approve 13 reviewable\" — the point hits p.muted.small \"Signed in as Alex · test household\"",
+    +   "target covered: button[product-black_beans].link.small \"Change product for Black beans (canned)\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-broccoli].link.small \"Change product for Broccoli\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-cheese].link.small \"Change product for Cheddar cheese\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-chicken_thigh].link.small \"Change product for Chicken thighs\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-cucumber].link.small \"Change product for Cucumber\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button.link.small \"Remove usual request for Plain Greek yogurt\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button.link.small \"Keep an extra Plain Greek yogurt\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-greek_yogurt].link.small \"Change product for Plain Greek yogurt\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-olive_oil].link.small \"Change product for Olive oil\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-pita].link.small \"Change product for Pita bread\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-rice].link.small \"Change product for Jasmine rice\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button.link.small \"Remove usual request for Salmon fillet\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button.link.small \"Keep an extra Salmon fillet\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-salmon].link.small \"Change product for Salmon fillet\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-soy_sauce].link.small \"Change product for Soy sauce\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-tofu].link.small \"Change product for Firm tofu\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-tortillas].link.small \"Change product for Corn tortillas\" — the point hits nav.nav \"Main\"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:434:7
+
+    Error: Groceries after sending @ 150%: probe p.faint.small "Prices are estimates from recorded observations," 13.6px → 20.4px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 4
+
+    - Array []
+    + Array [
+    +   "text overflows its box: span \"Dinner ingredients\" scrollWidth 123 > clientWidth 118",
+    +   "target covered: button[approve-all].btn.line \"Approve 0 reviewable\" — the point hits p.muted.small \"Signed in as Alex · test household\"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:447:7
+
+    Error: Confirm-order dialog (edit) @ 150%: probe p.faint "List what the store confirmed. A transfer to the" 13.6px → 20.4px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 5
+
+    - Array []
+    + Array [
+    +   "target covered: input \"\" — the point hits div.sheet-head \"Confirm order contentsWhat the store confirmed a\"",
+    +   "target covered: input#co-name-0 \"Item 1\" — the point hits p.faint.small.sheet-sub \"What the store confirmed after checkout\"",
+    +   "target covered: input#co-pk-0.tiny \"Packages of Broccoli\" — the point hits p.faint.small.sheet-sub \"What the store confirmed after checkout\"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:452:7
+
+    Error: Correct-receipt dialog @ 150%: probe legend "What actually happened" 13.6px → 20.4px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "target covered: input \"\" — the point hits p.faint.small.sheet-sub \"Recorded: 2 received\"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:481:7
+
+    Error: Groceries with a confirmed order @ 150%: probe p.faint.small "Prices are estimates from recorded observations," 13.6px → 20.4px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 23
+
+    - Array []
+    + Array [
+    +   "text overflows its box: span \"Dinner ingredients\" scrollWidth 123 > clientWidth 118",
+    +   "target covered: button[approve-all].btn.line \"Approve 0 reviewable\" — the point hits p.muted.small \"Signed in as Alex · test household\"",
+    +   "target covered: button[product-black_beans].link.small \"Change product for Black beans (canned)\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-broccoli].link.small \"Change product for Broccoli\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-cheese].link.small \"Change product for Cheddar cheese\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-chicken_thigh].link.small \"Change product for Chicken thighs\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-cucumber].link.small \"Change product for Cucumber\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button.link.small \"Remove usual request for Plain Greek yogurt\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button.link.small \"Keep an extra Plain Greek yogurt\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-greek_yogurt].link.small \"Change product for Plain Greek yogurt\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-olive_oil].link.small \"Change product for Olive oil\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-pita].link.small \"Change product for Pita bread\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-rice].link.small \"Change product for Jasmine rice\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button.link.small \"Remove usual request for Salmon fillet\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button.link.small \"Keep an extra Salmon fillet\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-salmon].link.small \"Change product for Salmon fillet\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-soy_sauce].link.small \"Change product for Soy sauce\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-tofu].link.small \"Change product for Firm tofu\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-tortillas].link.small \"Change product for Corn tortillas\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button.link.small \"Correct the receipt for Chicken thighs (2 receiv\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button.link.small \"Correct the receipt for Salmon fillet (1 substit\" — the point hits nav.nav \"Main\"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:484:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-4ffd9-removal-order-receipts-150--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b18-text-scaling-B18-at-32-4ffd9-removal-order-receipts-150--chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-4ffd9-removal-order-receipts-150--chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b18-text-scaling-B18-at-32-4ffd9-removal-order-receipts-150--chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [chromium] › tests/e2e/b18-text-scaling.spec.ts:488:5 › B18 at 320 px with 150% text › Groceries: uncertain transfer and the cart check (150%) 
+
+    Error: Groceries with an uncertain transfer @ 150%: probe p.faint.small "Prices are estimates from recorded observations," 13.6px → 20.4px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 20
+
+    - Array []
+    + Array [
+    +   "from [data-testid=\"transfers\"] button:not([disabled]): Tab #0 button.btn.line.small \"Check the cart for transfer 1\" (29,120 186×44) is covered by p.muted.small \"Signed in as Alex · test household\"",
+    +   "text overflows its box: span \"Dinner ingredients\" scrollWidth 123 > clientWidth 118",
+    +   "target covered: button[approve-all].btn.line \"Approve 0 reviewable\" — the point hits p.muted.small \"Signed in as Alex · test household\"",
+    +   "target covered: button[product-black_beans].link.small \"Change product for Black beans (canned)\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-broccoli].link.small \"Change product for Broccoli\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-cheese].link.small \"Change product for Cheddar cheese\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-chicken_thigh].link.small \"Change product for Chicken thighs\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-cucumber].link.small \"Change product for Cucumber\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-greek_yogurt].link.small \"Change product for Plain Greek yogurt\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-olive_oil].link.small \"Change product for Olive oil\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-pita].link.small \"Change product for Pita bread\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-rice].link.small \"Change product for Jasmine rice\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button.link.small \"Remove usual request for Salmon fillet\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button.link.small \"Keep an extra Salmon fillet\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-salmon].link.small \"Change product for Salmon fillet\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-soy_sauce].link.small \"Change product for Soy sauce\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-tofu].link.small \"Change product for Firm tofu\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button[product-tortillas].link.small \"Change product for Corn tortillas\" — the point hits nav.nav \"Main\"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:497:7
+
+    Error: Cart-check dialog @ 150%: probe p.small "Look at the cart on the store’s site. Table neve" 13.6px → 20.4px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "Tab: Tab #1 left focus on <body>",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:501:7
+
+    Error: Cart-check dialog with the warning @ 150%: probe p.small "Look at the cart on the store’s site. Table neve" 13.6px → 20.4px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "target covered: input \"\" — the point hits p.faint.small.sheet-sub \"Uncertain transfer: black_beans ×1, broccoli ×2,\"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:504:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-20a4e-fer-and-the-cart-check-150--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b18-text-scaling-B18-at-32-20a4e-fer-and-the-cart-check-150--chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-20a4e-fer-and-the-cart-check-150--chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b18-text-scaling-B18-at-32-20a4e-fer-and-the-cart-check-150--chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [chromium] › tests/e2e/b18-text-scaling.spec.ts:509:5 › B18 at 320 px with 150% text › Household: settings, conflict, targets, exclusions, ingredient review (150%) 
+
+    Error: Household @ 150%: probe p.small.muted "Members: Jon, Alex · timezone America/New_York" 13.6px → 20.4px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 5
+
+    - Array []
+    + Array [
+    +   "target covered: input#set-store \"\" — the point hits p.muted.small \"Signed in as Jon · test household\"",
+    +   "target covered: button.link \"Remove exclusion extraordinarily_long_ingredient\" — the point hits nav.nav \"Main\"",
+    +   "target covered: input#rv-pesto-none \"\" — the point hits a[nav-week] \"Week\"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:516:7
+
+    Error: Household with field errors @ 150%: probe p.small.muted "Members: Jon, Alex · timezone America/New_York" 13.6px → 20.4px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 5
+
+    - Array []
+    + Array [
+    +   "target covered: input#set-store \"\" — the point hits p.muted.small \"Signed in as Jon · test household\"",
+    +   "target covered: button.link \"Remove exclusion extraordinarily_long_ingredient\" — the point hits nav.nav \"Main\"",
+    +   "target covered: input#rv-pesto-none \"\" — the point hits a[nav-week] \"Week\"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:532:7
+
+    Error: Household settings conflict @ 150%: probe p.small.muted "Members: Jon, Alex · timezone America/New_York" 13.6px → 20.4px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 6
+
+    - Array []
+    + Array [
+    +   "target covered: button.btn.line.small \"I’ve reviewed the current settings\" — the point hits div \"TableSigned in as Jon · test household\"",
+    +   "target covered: input#set-firm \"\" — the point hits a[nav-week] \"Week\"",
+    +   "target covered: button.link \"Remove exclusion extraordinarily_long_ingredient\" — the point hits nav.nav \"Main\"",
+    +   "target covered: input#rv-pesto-none \"\" — the point hits a[nav-week] \"Week\"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:542:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-87eb2-ions-ingredient-review-150--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-87eb2-ions-ingredient-review-150--chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b18-text-scaling-B18-at-32-87eb2-ions-ingredient-review-150--chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-87eb2-ions-ingredient-review-150--chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b18-text-scaling-B18-at-32-87eb2-ions-ingredient-review-150--chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [chromium] › tests/e2e/b18-text-scaling.spec.ts:554:5 › B18 at 320 px with 150% text › Household: usual items and their dialogs, with a staple conflict (150%) 
+
+    Error: Usual items @ 150%: probe p.small.muted "Members: Jon, Alex · timezone America/New_York" 13.6px → 20.4px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 6
+
+    - Array []
+    + Array [
+    +   "from [data-testid=\"staples\"] button:not([disabled]): Tab #0 button.btn.line.small \"Edit Breakfast yogurt: the big plain unsweetened\" (40,192 79×44) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "from [data-testid=\"staples\"] button:not([disabled]): Tab #1 button.btn.line.small \"Change product for Breakfast yogurt: the big pla\" (127,192 119×44) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "target covered: input#set-store \"\" — the point hits p.muted.small \"Signed in as Jon · test household\"",
+    +   "target covered: input#rv-pesto-none \"\" — the point hits a[nav-week] \"Week\"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:572:7
+
+    Error: Edit usual item dialog @ 150%: probe label "Name on the shortcut (optional)" 13.6px → 20.4px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 5
+
+    - Array []
+    + Array [
+    +   "target covered: input#st-name \"\" — the point hits h2#_r_1_.sheet-title \"Edit Breakfast yogurt: the big plain unsweetened\"",
+    +   "target covered: input#st-qty \"\" — the point hits div.sheet-head \"Edit Breakfast yogurt: the big plain unsweetened\"",
+    +   "target covered: select#st-unit \"packagesgkgozlb\" — the point hits div.sheet-head \"Edit Breakfast yogurt: the big plain unsweetened\"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:577:7
+
+    Error: Edit usual item dialog with a conflict @ 150%: probe p "Alex changed this usual item while this was open" 16px → 24px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 9
+
+    - Array []
+    + Array [
+    +   "Tab: Tab #1 input#st-qty \"\" (17,353 139×50) is covered by p.faint.small.sheet-sub \"Item: Plain Greek yogurt\"",
+    +   "Tab: Tab #2 select#st-unit \"packagesgkgozlb\" (164,355 139×48) is covered by div.sheet-head \"Edit Breakfast yogurt: the big plain unsweetened\"",
+    +   "Tab: Tab #4 button.btn.line.small \"I’ve reviewed the current values\" (28,83 264×73) is covered by h2#_r_1_.sheet-title \"Edit Breakfast yogurt: the big plain unsweetened\"",
+    +   "target covered: button.btn.line.small \"I’ve reviewed the current values\" — the point hits h2#_r_1_.sheet-title \"Edit Breakfast yogurt: the big plain unsweetened\"",
+    +   "target covered: input#st-name \"\" — the point hits h2#_r_1_.sheet-title \"Edit Breakfast yogurt: the big plain unsweetened\"",
+    +   "target covered: input#st-qty \"\" — the point hits p.faint.small.sheet-sub \"Item: Plain Greek yogurt\"",
+    +   "target covered: select#st-unit \"packagesgkgozlb\" — the point hits div.sheet-head \"Edit Breakfast yogurt: the big plain unsweetened\"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:587:7
+
+    Error: Usual item product dialog @ 150%: probe legend "Which product should a one-tap request ask for?" 16px → 24px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "Tab: Tab #1 left focus on <body>",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:595:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-76f6f-with-a-staple-conflict-150--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-76f6f-with-a-staple-conflict-150--chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b18-text-scaling-B18-at-32-76f6f-with-a-staple-conflict-150--chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-76f6f-with-a-staple-conflict-150--chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b18-text-scaling-B18-at-32-76f6f-with-a-staple-conflict-150--chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [chromium] › tests/e2e/b18-text-scaling.spec.ts:331:5 › B18 at 320 px with 200% text › Week, Change sheet, proposal, Cook and Reheat (200%) 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for getByTestId('change-2026-10-17')
+        - locator resolved to <button aria-expanded="false" class="btn line small" aria-haspopup="dialog" data-testid="change-2026-10-17" aria-label="Change Saturday dinner">Change</button>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <header class="top">…</header> intercepts pointer events
+      - retrying click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <a class="" href="/groceries" data-testid="nav-groceries" aria-label="Groceries, 13 lines need attention">…</a> from <nav class="nav" aria-label="Main">…</nav> subtree intercepts pointer events
+      - retrying click action
+        - waiting 20ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <header class="top">…</header> intercepts pointer events
+      2 × retrying click action
+          - waiting 100ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <span class="pill sim" data-testid="retailer-mode" title="Simulated retailer: transfers are recorded locally and never reach a store.">Simulated retailer</span> from <header class="top">…</header> subtree intercepts pointer events
+      7 × retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <a class="" href="/groceries" data-testid="nav-groceries" aria-label="Groceries, 13 lines need attention">…</a> from <nav class="nav" aria-label="Main">…</nav> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <header class="top">…</header> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <span class="pill sim" data-testid="retailer-mode" title="Simulated retailer: transfers are recorded locally and never reach a store.">Simulated retailer</span> from <header class="top">…</header> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <span class="pill sim" data-testid="retailer-mode" title="Simulated retailer: transfers are recorded locally and never reach a store.">Simulated retailer</span> from <header class="top">…</header> subtree intercepts pointer events
+      - retrying click action
+        - waiting 500ms
+
+
+      334 |       const { page, context } = await scaledMember(browser, "jon", scale);
+      335 |       // Saturday becomes the long-titled dinner (applied through the sheet, at this text size).
+    > 336 |       await page.getByTestId(`change-${NIGHT.sat}`).click();
+          |                                                     ^
+      337 |       await page.getByTestId(`option-${LONG_RECIPE}`).click();
+      338 |       await expect(page.getByTestId("preview")).toBeVisible();
+      339 |       await page.getByTestId("apply").click();
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:336:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-a5cef-oposal-Cook-and-Reheat-200--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b18-text-scaling-B18-at-32-a5cef-oposal-Cook-and-Reheat-200--chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-a5cef-oposal-Cook-and-Reheat-200--chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b18-text-scaling-B18-at-32-a5cef-oposal-Cook-and-Reheat-200--chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [chromium] › tests/e2e/b18-text-scaling.spec.ts:371:5 › B18 at 320 px with 200% text › Explore, Our Recipes and recipe detail (200%) 
+
+    Error: Explore @ 200%: probe p.faint.small "Costs use recorded package prices (simulated sto" 13.6px → 27.2px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 84
+
+    - Array []
+    + Array [
+    +   "Tab: Tab #0 input[explore-search] \"\" (29,493 262×59) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "Tab: Tab #1 select \"AnyAmericanChinese-AmericanItalianItalian-Americ\" (29,309 262×55) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "Tab: Tab #3 input \"\" (29,493 262×59) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "Tab: Tab #4 select[explore-sort] \"NameEffort (minutes)Calories per plateProtein pe\" (29,309 262×55) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "Tab: Tab #6 a \"Fixture: Black bean tacos\" (83,293 214×85) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "Tab: Tab #8 a \"Fixture: Chicken penne\" (-195,293 256×85) is outside the viewport",
+    +   "Tab: Tab #10 a \"Fixture: Chicken shawarma bowls\" (-195,293 264×85) is outside the viewport",
+    +   "Tab: Tab #12 a \"Fixture: Grandmother’s slow-braised chicken thig\" (-195,85 371×503) is outside the viewport",
+    +   "Tab: Tab #13 a \"Fixture: Pesto pasta\" (-195,293 216×85) is outside the viewport",
+    +   "Tab: Tab #15 a \"Fixture: Salmon rice bowls\" (-195,294 245×85) is outside the viewport",
+    +   "Tab: Tab #17 a \"Fixture: Sheet-pan chicken and rice\" (-195,294 292×85) is outside the viewport",
+    +   "Tab: Tab #19 a \"Fixture: Tofu veggie stir-fry\" (-195,294 224×85) is outside the viewport",
+    +   "Tab: Tab #21 a \"Fixture: Turkey chili\" (-195,294 236×85) is outside the viewport",
+    +   "page scrolls sideways: scrollWidth 598 > clientWidth 320",
+    +   "text off-screen: h1.brand-title \"Table\" x -262–-120 of 320",
+    +   "text off-screen: p.muted.small \"Signed in as Jon · test household\" x -262–-120 of 320",
+    +   "text off-screen: strong[me] \"Jon\" x -225–-175 of 320",
+    +   "text off-screen: span[retailer-mode].pill.sim \"Simulated retailer\" x -108–26 of 320",
+    +   "text off-screen: div[currency].currency.current \"Up to date\" x -262–-123 of 320",
+    +   "text off-screen: label \"Search recipes, cuisines and ingredients\" x -249–13 of 320",
+    +   "text off-screen: label \"CuisineAnyAmericanChinese-AmericanItalianItalian\" x -249–13 of 320",
+    +   "text off-screen: label \"EffortAnyeasymediuminvolved\" x -249–13 of 320",
+    +   "text off-screen: label \"Includes ingredient\" x -249–13 of 320",
+    +   "text off-screen: label \"Sort byNameEffort (minutes)Calories per platePro\" x -249–13 of 320",
+    +   "text off-screen: label.row.small \"Only recipes that pass our exclusions\" x -249–13 of 320",
+    +   "text off-screen: p.faint.small \"Costs use recorded package prices (simulated sto\" x -249–13 of 320",
+    +   "text overflows its box: p.small \"Saved Fixture: Grandmother’s slow-braised chicke\" scrollWidth 301 > clientWidth 288",
+    +   "text off-screen: p.small \"Saved Fixture: Grandmother’s slow-braised chicke\" x -262–26 of 320",
+    +   "text off-screen: div.thumb \"B\" x -249–-205 of 320",
+    +   "text off-screen: strong \"Fixture: Black bean tacos\" x -195–19 of 320",
+    +   "text off-screen: div.faint.small \"Mexican · 20 min (est.) · unknown (≥ 0 kcal know\" x -195–102 of 320",
+    +   "text off-screen: div.faint.small \"Serving $1.88 · Adds $4.08 to this week’s basket\" x -195–102 of 320",
+    +   "text off-screen: div.thumb \"C\" x -249–-205 of 320",
+    +   "text off-screen: strong \"Fixture: Chicken penne\" x -195–61 of 320",
+    +   "text off-screen: div.faint.small \"Italian-American · 30 min (est.) · unknown (≥ 25\" x -195–102 of 320",
+    +   "text off-screen: div.faint.small \"Serving $2.44 · Adds $12.57 to this week’s baske\" x -195–102 of 320",
+    +   "text off-screen: strong \"Fixture: Chicken shawarma bowls\" x -195–69 of 320",
+    +   "text off-screen: div.faint.small \"Middle Eastern · 45 min (est.) · unknown (≥ 273.\" x -195–102 of 320",
+    +   "text off-screen: div.faint.small \"Serving $3.06 · Adds $8.28 to this week’s basket\" x -195–102 of 320",
+    +   "text off-screen: div.thumb \"G\" x -249–-205 of 320",
+    +   "text off-screen: strong \"Fixture: Grandmother’s slow-braised chicken thig\" x -195–176 of 320",
+    +   "text off-screen: div.faint.small \"North African-inspired home cooking · 55 min (es\" x -195–71 of 320",
+    +   "text off-screen: div.faint.small \"Serving $2.16 · Adds $7.49 to this week’s basket\" x -195–71 of 320",
+    +   "text off-screen: div.thumb \"P\" x -249–-205 of 320",
+    +   "text off-screen: strong \"Fixture: Pesto pasta\" x -195–21 of 320",
+    +   "text off-screen: div.faint.small \"Italian · 15 min (est.) · unknown (≥ 0 kcal know\" x -195–102 of 320",
+    +   "text off-screen: div.faint.small \"Serving unknown · Adds unknown to this week’s ba\" x -195–102 of 320",
+    +   "text off-screen: div.thumb \"S\" x -249–-205 of 320",
+    +   "text off-screen: strong \"Fixture: Salmon rice bowls\" x -195–50 of 320",
+    +   "text off-screen: div.faint.small \"Japanese-inspired · 25 min (est.) · 650.1 kcal\" x -195–102 of 320",
+    +   "text off-screen: div.faint.small \"Serving $6.22 · Adds $11.78 to this week’s baske\" x -195–102 of 320",
+    +   "text off-screen: strong \"Fixture: Sheet-pan chicken and rice\" x -195–97 of 320",
+    +   "text off-screen: div.faint.small \"American · 40 min (est.) · 727.1 kcal\" x -195–102 of 320",
+    +   "text off-screen: div.faint.small \"Serving $3.02 · Adds $7.49 to this week’s basket\" x -195–102 of 320",
+    +   "text off-screen: div.thumb \"T\" x -249–-205 of 320",
+    +   "text off-screen: strong \"Fixture: Tofu veggie stir-fry\" x -195–29 of 320",
+    +   "text off-screen: div.faint.small \"Chinese-American · 25 min (est.) · unknown (≥ 48\" x -195–102 of 320",
+    +   "text off-screen: div.faint.small \"Serving $1.71 · Adds $2.29 to this week’s basket\" x -195–102 of 320",
+    +   "text off-screen: strong \"Fixture: Turkey chili\" x -195–41 of 320",
+    +   "text off-screen: div.faint.small \"American · 50 min (est.) · unknown (≥ 0 kcal kno\" x -195–102 of 320",
+    +   "text off-screen: div.faint.small \"Serving $2.59 · Adds $10.37 to this week’s baske\" x -195–102 of 320",
+    +   "target covered: input[explore-search] \"\" — the point hits div.brand \"TableSigned in as Jon · test householdSimulated \"",
+    +   "target covered: select \"AnyAmericanChinese-AmericanItalianItalian-Americ\" — the point hits div.brand \"TableSigned in as Jon · test householdSimulated \"",
+    +   "target covered: select[explore-sort] \"NameEffort (minutes)Calories per plateProtein pe\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: input \"\" — the point hits a[nav-week] \"Week\"",
+    +   "target covered: a \"Fixture: Black bean tacos\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: button.btn.line.small \"Sounds good: Fixture: Black bean tacos\" — the point hits a[nav-groceries] \"Groceries, 13 lines need attention\"",
+    +   "target covered: a \"Fixture: Chicken penne\" — the point hits a[nav-explore].on \"Explore\"",
+    +   "target covered: button.btn.line.small \"Sounds good: Fixture: Chicken penne\" — the point hits a[nav-groceries] \"Groceries, 13 lines need attention\"",
+    +   "target covered: a \"Fixture: Chicken shawarma bowls\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: button.btn.line.small \"Sounds good: Fixture: Chicken shawarma bowls\" — the point hits a[nav-groceries] \"Groceries, 13 lines need attention\"",
+    +   "target covered: button.btn.line.small \"In Sounds good: Fixture: Grandmother’s slow-brai\" — the point hits a[nav-groceries] \"Groceries, 13 lines need attention\"",
+    +   "target covered: a \"Fixture: Pesto pasta\" — the point hits a[nav-explore].on \"Explore\"",
+    +   "target covered: button.btn.line.small \"Sounds good: Fixture: Pesto pasta\" — the point hits a[nav-groceries] \"Groceries, 13 lines need attention\"",
+    +   "target covered: a \"Fixture: Salmon rice bowls\" — the point hits a[nav-explore].on \"Explore\"",
+    +   "target covered: button.btn.line.small \"Sounds good: Fixture: Salmon rice bowls\" — the point hits a[nav-groceries] \"Groceries, 13 lines need attention\"",
+    +   "target covered: a \"Fixture: Sheet-pan chicken and rice\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: button.btn.line.small \"Sounds good: Fixture: Sheet-pan chicken and rice\" — the point hits a[nav-groceries] \"Groceries, 13 lines need attention\"",
+    +   "target covered: a \"Fixture: Tofu veggie stir-fry\" — the point hits a[nav-explore].on \"Explore\"",
+    +   "target covered: button.btn.line.small \"Sounds good: Fixture: Tofu veggie stir-fry\" — the point hits a[nav-groceries] \"Groceries, 13 lines need attention\"",
+    +   "target covered: a \"Fixture: Turkey chili\" — the point hits a[nav-explore].on \"Explore\"",
+    +   "target covered: button.btn.line.small \"Sounds good: Fixture: Turkey chili\" — the point hits a[nav-groceries] \"Groceries, 13 lines need attention\"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:379:7
+
+    Error: Explore sorted, with an unknown group @ 200%: probe p.faint.small "Costs use recorded package prices (simulated sto" 13.6px → 27.2px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 73
+
+    - Array []
+    + Array [
+    +   "Tab: Tab #0 input[explore-search] \"\" (29,493 262×59) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "Tab: Tab #1 select \"AnyAmericanChinese-AmericanItalianItalian-Americ\" (29,309 262×55) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "Tab: Tab #3 input \"\" (29,493 262×59) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "Tab: Tab #4 select[explore-sort] \"NameEffort (minutes)Calories per plateProtein pe\" (29,309 262×55) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "Tab: Tab #6 a \"Fixture: Grandmother’s slow-braised chicken thig\" (83,85 371×503) is outside the viewport",
+    +   "Tab: Tab #7 a \"Fixture: Salmon rice bowls\" (83,293 245×85) is outside the viewport",
+    +   "Tab: Tab #9 a \"Fixture: Sheet-pan chicken and rice\" (-195,293 292×85) is outside the viewport",
+    +   "Tab: Tab #11 a \"Fixture: Black bean tacos\" (83,247 120×178) is covered by div[currency].currency.current \"Up to date\"",
+    +   "Tab: Tab #12 button.btn.line.small \"Sounds good: Fixture: Black bean tacos\" (182,309 195×53) is outside the viewport",
+    +   "Tab: Tab #13 a \"Fixture: Chicken penne\" (83,270 128×132) is covered by div[currency].currency.current \"Up to date\"",
+    +   "Tab: Tab #14 button.btn.line.small \"Sounds good: Fixture: Chicken penne\" (182,309 195×53) is outside the viewport",
+    +   "Tab: Tab #15 a \"Fixture: Chicken shawarma bowls\" (83,247 163×178) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "Tab: Tab #16 button.btn.line.small \"Sounds good: Fixture: Chicken shawarma bowls\" (182,309 195×53) is outside the viewport",
+    +   "Tab: Tab #17 a \"Fixture: Pesto pasta\" (83,270 120×132) is covered by div[currency].currency.current \"Up to date\"",
+    +   "Tab: Tab #18 button.btn.line.small \"Sounds good: Fixture: Pesto pasta\" (182,309 195×53) is outside the viewport",
+    +   "Tab: Tab #19 a \"Fixture: Tofu veggie stir-fry\" (83,224 120×225) is covered by div[currency].currency.current \"Up to date\"",
+    +   "Tab: Tab #20 button.btn.line.small \"Sounds good: Fixture: Tofu veggie stir-fry\" (182,310 195×53) is outside the viewport",
+    +   "Tab: Tab #21 a \"Fixture: Turkey chili\" (83,270 120×132) is covered by div[currency].currency.current \"Up to date\"",
+    +   "Tab: Tab #22 button.btn.line.small \"Sounds good: Fixture: Turkey chili\" (182,309 195×53) is outside the viewport",
+    +   "page scrolls sideways: scrollWidth 598 > clientWidth 320",
+    +   "text overflows its box: p.small \"Saved Fixture: Grandmother’s slow-braised chicke\" scrollWidth 301 > clientWidth 288",
+    +   "text off-screen: strong \"Fixture: Grandmother’s slow-braised chicken thig\" x 83–454 of 320",
+    +   "text off-screen: div.faint.small \"North African-inspired home cooking · 55 min (es\" x 83–349 of 320",
+    +   "text off-screen: div.faint.small \"Serving $2.16 · Adds $7.49 to this week’s basket\" x 83–349 of 320",
+    +   "text off-screen: button.btn.line.small \"In Sounds good: Fixture: Grandmother’s slow-brai\" x 359–585 of 320",
+    +   "text off-screen: strong \"Fixture: Salmon rice bowls\" x 83–328 of 320",
+    +   "text off-screen: div.faint.small \"Japanese-inspired · 25 min (est.) · 650.1 kcal\" x 83–380 of 320",
+    +   "text off-screen: div.faint.small \"Serving $6.22 · Adds $11.78 to this week’s baske\" x 83–380 of 320",
+    +   "text off-screen: button.btn.line.small \"Sounds good: Fixture: Salmon rice bowls\" x 390–585 of 320",
+    +   "text off-screen: strong \"Fixture: Sheet-pan chicken and rice\" x 83–375 of 320",
+    +   "text off-screen: div.faint.small \"American · 40 min (est.) · 727.1 kcal\" x 83–380 of 320",
+    +   "text off-screen: div.faint.small \"Serving $3.02 · Adds $7.49 to this week’s basket\" x 83–380 of 320",
+    +   "text off-screen: button.btn.line.small \"Sounds good: Fixture: Sheet-pan chicken and rice\" x 390–585 of 320",
+    +   "text overflows its box: div.faint.small \"Mexican · 20 min (est.) · unknown (≥ 0 kcal know\" scrollWidth 117 > clientWidth 89",
+    +   "text overflows its box: div.faint.small \"Serving $1.88 · Adds $4.08 to this week’s basket\" scrollWidth 99 > clientWidth 89",
+    +   "text off-screen: button.btn.line.small \"Sounds good: Fixture: Black bean tacos\" x 182–378 of 320",
+    +   "text overflows its box: div.faint.small \"Italian-American · 30 min (est.) · unknown (≥ 25\" scrollWidth 123 > clientWidth 89",
+    +   "text overflows its box: div.faint.small \"Serving $2.44 · Adds $12.57 to this week’s baske\" scrollWidth 99 > clientWidth 89",
+    +   "text off-screen: button.btn.line.small \"Sounds good: Fixture: Chicken penne\" x 182–378 of 320",
+    +   "text overflows its box: div.faint.small \"Middle Eastern · 45 min (est.) · unknown (≥ 273.\" scrollWidth 117 > clientWidth 89",
+    +   "text overflows its box: div.faint.small \"Serving $3.06 · Adds $8.28 to this week’s basket\" scrollWidth 99 > clientWidth 89",
+    +   "text off-screen: button.btn.line.small \"Sounds good: Fixture: Chicken shawarma bowls\" x 182–378 of 320",
+    +   "text overflows its box: div.faint.small \"Italian · 15 min (est.) · unknown (≥ 0 kcal know\" scrollWidth 117 > clientWidth 89",
+    +   "text overflows its box: div.faint.small \"Serving unknown · Adds unknown to this week’s ba\" scrollWidth 117 > clientWidth 89",
+    +   "text off-screen: button.btn.line.small \"Sounds good: Fixture: Pesto pasta\" x 182–378 of 320",
+    +   "text overflows its box: div.faint.small \"Chinese-American · 25 min (est.) · unknown (≥ 48\" scrollWidth 123 > clientWidth 89",
+    +   "text overflows its box: div.faint.small \"Serving $1.71 · Adds $2.29 to this week’s basket\" scrollWidth 99 > clientWidth 89",
+    +   "text off-screen: button.btn.line.small \"Sounds good: Fixture: Tofu veggie stir-fry\" x 182–378 of 320",
+    +   "text overflows its box: div.faint.small \"American · 50 min (est.) · unknown (≥ 0 kcal kno\" scrollWidth 123 > clientWidth 89",
+    +   "text overflows its box: div.faint.small \"Serving $2.59 · Adds $10.37 to this week’s baske\" scrollWidth 99 > clientWidth 89",
+    +   "text off-screen: button.btn.line.small \"Sounds good: Fixture: Turkey chili\" x 182–378 of 320",
+    +   "target covered: input[explore-search] \"\" — the point hits div.brand \"TableSigned in as Jon · test householdSimulated \"",
+    +   "target covered: select \"AnyAmericanChinese-AmericanItalianItalian-Americ\" — the point hits div.brand \"TableSigned in as Jon · test householdSimulated \"",
+    +   "target covered: select[explore-sort] \"NameEffort (minutes)Calories per plateProtein pe\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: input \"\" — the point hits a[nav-week] \"Week\"",
+    +   "target covered: button.btn.line.small \"In Sounds good: Fixture: Grandmother’s slow-brai\" — the point hits a[nav-groceries] \"Groceries, 13 lines need attention\"",
+    +   "target covered: a \"Fixture: Salmon rice bowls\" — the point hits a[nav-explore].on \"Explore\"",
+    +   "target covered: button.btn.line.small \"Sounds good: Fixture: Salmon rice bowls\" — the point hits a[nav-groceries] \"Groceries, 13 lines need attention\"",
+    +   "target covered: a \"Fixture: Sheet-pan chicken and rice\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: button.btn.line.small \"Sounds good: Fixture: Sheet-pan chicken and rice\" — the point hits a[nav-groceries] \"Groceries, 13 lines need attention\"",
+    +   "target covered: a \"Fixture: Black bean tacos\" — the point hits div.grow \"Fixture: Black bean tacosMexican · 20 min (est.)\"",
+    +   "target covered: button.btn.line.small \"Sounds good: Fixture: Black bean tacos\" — the point hits a[nav-groceries] \"Groceries, 13 lines need attention\"",
+    +   "target covered: a \"Fixture: Chicken penne\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button.btn.line.small \"Sounds good: Fixture: Chicken penne\" — the point hits a[nav-groceries] \"Groceries, 13 lines need attention\"",
+    +   "target covered: a \"Fixture: Chicken shawarma bowls\" — the point hits div.grow \"Fixture: Chicken shawarma bowlsMiddle Eastern · \"",
+    +   "target covered: button.btn.line.small \"Sounds good: Fixture: Chicken shawarma bowls\" — the point hits a[nav-groceries] \"Groceries, 13 lines need attention\"",
+    +   "target covered: a \"Fixture: Pesto pasta\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button.btn.line.small \"Sounds good: Fixture: Pesto pasta\" — the point hits a[nav-groceries] \"Groceries, 13 lines need attention\"",
+    +   "target covered: button.btn.line.small \"Sounds good: Fixture: Tofu veggie stir-fry\" — the point hits a[nav-groceries] \"Groceries, 13 lines need attention\"",
+    +   "target covered: a \"Fixture: Turkey chili\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button.btn.line.small \"Sounds good: Fixture: Turkey chili\" — the point hits a[nav-groceries] \"Groceries, 13 lines need attention\"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:382:7
+
+    Error: Our Recipes — All @ 200%: probe h1.brand-title "Table" 28px → 56px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 57
+
+    - Array []
+    + Array [
+    +   "Tab: Tab #1 button[new-recipe].btn.line.small \"New recipe\" (16,498 170×53) is covered by a[nav-explore] \"Explore\"",
+    +   "Tab: Tab #2 a \"Fixture: Tofu veggie stir-fry\" (29,316 431×39) is outside the viewport",
+    +   "Tab: Tab #4 a \"Fixture: Sheet-pan chicken and rice\" (-304,443 422×85) is outside the viewport",
+    +   "Tab: Tab #5 button.btn.line.small \"Favorite Fixture: Sheet-pan chicken and rice\" (179,453 128×99) is covered by a[nav-groceries] \"Groceries, 13 lines need attention\"",
+    +   "Tab: Tab #6 a \"Fixture: Salmon rice bowls\" (-304,317 413×39) is outside the viewport",
+    +   "Tab: Tab #8 a \"Fixture: Black bean tacos\" (-304,449 394×39) is outside the viewport",
+    +   "Tab: Tab #9 button.btn.line.small \"Favorite Fixture: Black bean tacos\" (179,440 128×99) is covered by a[nav-groceries] \"Groceries, 13 lines need attention\"",
+    +   "Tab: Tab #10 a \"Fixture: Chicken shawarma bowls\" (-304,294 426×85) is outside the viewport",
+    +   "Tab: Tab #12 a \"Fixture: Chicken penne\" (-304,467 361×39) is outside the viewport",
+    +   "Tab: Tab #13 button.btn.line.small \"Favorite Fixture: Chicken penne\" (179,453 128×99) is covered by a[nav-groceries] \"Groceries, 13 lines need attention\"",
+    +   "Tab: Tab #14 a \"Fixture: Turkey chili\" (-304,316 308×39) is outside the viewport",
+    +   "Tab: Tab #16 a \"Fixture: Pesto pasta\" (-304,449 311×39) is outside the viewport",
+    +   "Tab: Tab #17 button.btn.line.small \"Favorite Fixture: Pesto pasta\" (179,440 128×99) is covered by a[nav-groceries] \"Groceries, 13 lines need attention\"",
+    +   "Tab: Tab #18 a \"Fixture: Grandmother’s slow-braised chicken thig\" (-304,108 371×457) is outside the viewport",
+    +   "page scrolls sideways: scrollWidth 653 > clientWidth 320",
+    +   "text off-screen: h1.brand-title \"Table\" x -317–-175 of 320",
+    +   "text off-screen: p.muted.small \"Signed in as Jon · test household\" x -317–-175 of 320",
+    +   "text off-screen: strong[me] \"Jon\" x -280–-230 of 320",
+    +   "text off-screen: span[retailer-mode].pill.sim \"Simulated retailer\" x -163–-29 of 320",
+    +   "text off-screen: div[currency].currency.current \"Up to date\" x -317–-178 of 320",
+    +   "text off-screen: button#rtab-all.on \"All\" x -317–-253 of 320",
+    +   "text off-screen: button#rtab-favorites \"My favorites\" x -249–-36 of 320",
+    +   "text off-screen: button#rtab-sounds_good \"Sounds good\" x -317–-90 of 320",
+    +   "text off-screen: button[new-recipe].btn.line.small \"New recipe\" x -317–-147 of 320",
+    +   "text off-screen: strong \"Fixture: Tofu veggie stir-fry\" x -304–127 of 320",
+    +   "text off-screen: div.faint.small \"v1 · fixture · you: no feedback yet\" x -304–169 of 320",
+    +   "text off-screen: strong \"Fixture: Sheet-pan chicken and rice\" x -304–118 of 320",
+    +   "text off-screen: strong \"Fixture: Salmon rice bowls\" x -304–109 of 320",
+    +   "text off-screen: strong \"Fixture: Black bean tacos\" x -304–90 of 320",
+    +   "text off-screen: strong \"Fixture: Chicken shawarma bowls\" x -304–122 of 320",
+    +   "text off-screen: strong \"Fixture: Chicken penne\" x -304–57 of 320",
+    +   "text off-screen: strong \"Fixture: Turkey chili\" x -304–4 of 320",
+    +   "text off-screen: strong \"Fixture: Pesto pasta\" x -304–7 of 320",
+    +   "text off-screen: strong \"Fixture: Grandmother’s slow-braised chicken thig\" x -304–67 of 320",
+    +   "text off-screen: div.faint.small \"v1 · fixture · Sounds good (Jon) · you: no feedb\" x -304–4 of 320",
+    +   "target covered: button#rtab-all.on \"All\" — the point hits p.muted.small \"Signed in as Jon · test household\"",
+    +   "target covered: button#rtab-favorites \"My favorites\" — the point hits span[retailer-mode].pill.sim \"Simulated retailer\"",
+    +   "target covered: button#rtab-sounds_good \"Sounds good\" — the point hits p.muted.small \"Signed in as Jon · test household\"",
+    +   "target covered: button[new-recipe].btn.line.small \"New recipe\" — the point hits div \"TableSigned in as Jon · test household\"",
+    +   "target covered: a \"Fixture: Tofu veggie stir-fry\" — the point hits header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "target covered: a \"Fixture: Sheet-pan chicken and rice\" — the point hits a[nav-explore] \"Explore\"",
+    +   "target covered: button.btn.line.small \"Favorite Fixture: Sheet-pan chicken and rice\" — the point hits a[nav-household] \"Household\"",
+    +   "target covered: a \"Fixture: Salmon rice bowls\" — the point hits a[nav-explore] \"Explore\"",
+    +   "target covered: button.btn.line.small \"Favorite Fixture: Salmon rice bowls\" — the point hits a[nav-household] \"Household\"",
+    +   "target covered: a \"Fixture: Black bean tacos\" — the point hits a[nav-explore] \"Explore\"",
+    +   "target covered: button.btn.line.small \"Favorite Fixture: Black bean tacos\" — the point hits a[nav-household] \"Household\"",
+    +   "target covered: a \"Fixture: Chicken shawarma bowls\" — the point hits a[nav-explore] \"Explore\"",
+    +   "target covered: button.btn.line.small \"Favorite Fixture: Chicken shawarma bowls\" — the point hits a[nav-household] \"Household\"",
+    +   "target covered: a \"Fixture: Chicken penne\" — the point hits a[nav-recipes].on \"Our Recipes\"",
+    +   "target covered: button.btn.line.small \"Favorite Fixture: Chicken penne\" — the point hits a[nav-household] \"Household\"",
+    +   "target covered: a \"Fixture: Turkey chili\" — the point hits a[nav-recipes].on \"Our Recipes\"",
+    +   "target covered: button.btn.line.small \"Favorite Fixture: Turkey chili\" — the point hits a[nav-household] \"Household\"",
+    +   "target covered: a \"Fixture: Pesto pasta\" — the point hits a[nav-recipes].on \"Our Recipes\"",
+    +   "target covered: button.btn.line.small \"Favorite Fixture: Pesto pasta\" — the point hits a[nav-household] \"Household\"",
+    +   "target covered: a \"Fixture: Grandmother’s slow-braised chicken thig\" — the point hits header.top \"TableSigned in as Jon · test householdSimulated \"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:388:7
+
+    Error: Our Recipes — My favorites @ 200%: probe h1.brand-title "Table" 28px → 56px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 24
+
+    - Array []
+    + Array [
+    +   "Tab: Tab #1 button[new-recipe].btn.line.small \"New recipe\" (16,498 170×53) is covered by a[nav-explore] \"Explore\"",
+    +   "Tab: Tab #2 a \"Fixture: Grandmother’s slow-braised chicken thig\" (29,108 371×457) is outside the viewport",
+    +   "Tab: Tab #4 button.btn.line.small \"Favorite Fixture: Grandmother’s slow-braised chi\" (247,347 128×99) is outside the viewport",
+    +   "page scrolls sideways: scrollWidth 653 > clientWidth 320",
+    +   "text off-screen: h1.brand-title \"Table\" x -249–-107 of 320",
+    +   "text off-screen: p.muted.small \"Signed in as Jon · test household\" x -249–-107 of 320",
+    +   "text off-screen: strong[me] \"Jon\" x -212–-162 of 320",
+    +   "text off-screen: span[retailer-mode].pill.sim \"Simulated retailer\" x -95–39 of 320",
+    +   "text off-screen: div[currency].currency.current \"Up to date\" x -249–-110 of 320",
+    +   "text off-screen: button#rtab-all \"All\" x -249–-185 of 320",
+    +   "text off-screen: button#rtab-favorites.on \"My favorites\" x -181–32 of 320",
+    +   "text off-screen: button#rtab-sounds_good \"Sounds good\" x -249–-22 of 320",
+    +   "text off-screen: button[new-recipe].btn.line.small \"New recipe\" x -249–-79 of 320",
+    +   "text off-screen: strong \"Fixture: Grandmother’s slow-braised chicken thig\" x -236–135 of 320",
+    +   "text off-screen: div.faint.small \"v1 · fixture · Sounds good (Jon) · you: no feedb\" x -236–72 of 320",
+    +   "text off-screen: button.btn.line.small \"Favorite Fixture: Grandmother’s slow-braised chi\" x 247–375 of 320",
+    +   "text off-screen: span \"★\" x 258–364 of 320",
+    +   "target covered: button#rtab-all \"All\" — the point hits p.muted.small \"Signed in as Jon · test household\"",
+    +   "target covered: button#rtab-favorites.on \"My favorites\" — the point hits span[retailer-mode].pill.sim \"Simulated retailer\"",
+    +   "target covered: button#rtab-sounds_good \"Sounds good\" — the point hits p.muted.small \"Signed in as Jon · test household\"",
+    +   "target covered: button[new-recipe].btn.line.small \"New recipe\" — the point hits div \"TableSigned in as Jon · test household\"",
+    +   "target covered: a \"Fixture: Grandmother’s slow-braised chicken thig\" — the point hits header.top \"TableSigned in as Jon · test householdSimulated \"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:391:7
+
+    Error: Our Recipes — Sounds good @ 200%: probe p.faint.small "Shared near-term ideas. Saving one does not sche" 13.6px → 27.2px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 25
+
+    - Array []
+    + Array [
+    +   "Tab: Tab #1 button[new-recipe].btn.line.small \"New recipe\" (16,498 170×53) is covered by a[nav-explore] \"Explore\"",
+    +   "Tab: Tab #2 a \"Fixture: Grandmother’s slow-braised chicken thig\" (29,108 371×457) is outside the viewport",
+    +   "Tab: Tab #4 button.btn.line.small \"Favorite Fixture: Grandmother’s slow-braised chi\" (247,346 128×99) is outside the viewport",
+    +   "page scrolls sideways: scrollWidth 653 > clientWidth 320",
+    +   "text off-screen: h1.brand-title \"Table\" x -249–-107 of 320",
+    +   "text off-screen: p.muted.small \"Signed in as Jon · test household\" x -249–-107 of 320",
+    +   "text off-screen: strong[me] \"Jon\" x -212–-162 of 320",
+    +   "text off-screen: span[retailer-mode].pill.sim \"Simulated retailer\" x -95–39 of 320",
+    +   "text off-screen: div[currency].currency.current \"Up to date\" x -249–-110 of 320",
+    +   "text off-screen: button#rtab-all \"All\" x -249–-185 of 320",
+    +   "text off-screen: button#rtab-favorites \"My favorites\" x -181–32 of 320",
+    +   "text off-screen: button#rtab-sounds_good.on \"Sounds good\" x -249–-22 of 320",
+    +   "text off-screen: button[new-recipe].btn.line.small \"New recipe\" x -249–-79 of 320",
+    +   "text off-screen: p.faint.small \"Shared near-term ideas. Saving one does not sche\" x -249–39 of 320",
+    +   "text off-screen: strong \"Fixture: Grandmother’s slow-braised chicken thig\" x -236–135 of 320",
+    +   "text off-screen: div.faint.small \"v1 · fixture · Sounds good (Jon) · you: no feedb\" x -236–72 of 320",
+    +   "text off-screen: button.btn.line.small \"Favorite Fixture: Grandmother’s slow-braised chi\" x 247–375 of 320",
+    +   "text off-screen: span \"★\" x 258–364 of 320",
+    +   "target covered: button#rtab-all \"All\" — the point hits p.muted.small \"Signed in as Jon · test household\"",
+    +   "target covered: button#rtab-favorites \"My favorites\" — the point hits span[retailer-mode].pill.sim \"Simulated retailer\"",
+    +   "target covered: button#rtab-sounds_good.on \"Sounds good\" — the point hits p.muted.small \"Signed in as Jon · test household\"",
+    +   "target covered: button[new-recipe].btn.line.small \"New recipe\" — the point hits div \"TableSigned in as Jon · test household\"",
+    +   "target covered: a \"Fixture: Grandmother’s slow-braised chicken thig\" — the point hits header.top \"TableSigned in as Jon · test householdSimulated \"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:394:7
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: 'Save note' })
+        - locator resolved to <button class="btn line small">Save note</button>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <div data-testid="currency" data-currency="current" class="currency current">Up to date</div> from <header class="top">…</header> subtree intercepts pointer events
+      - retrying click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <a class="" href="/explore" data-testid="nav-explore">Explore</a> from <nav class="nav" aria-label="Main">…</nav> subtree intercepts pointer events
+      - retrying click action
+        - waiting 20ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <div data-testid="currency" data-currency="current" class="currency current">Up to date</div> from <header class="top">…</header> subtree intercepts pointer events
+      2 × retrying click action
+          - waiting 100ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <p class="muted small">…</p> from <header class="top">…</header> subtree intercepts pointer events
+      7 × retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <a class="" href="/explore" data-testid="nav-explore">Explore</a> from <nav class="nav" aria-label="Main">…</nav> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div data-testid="currency" data-currency="current" class="currency current">Up to date</div> from <header class="top">…</header> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <p class="muted small">…</p> from <header class="top">…</header> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <p class="muted small">…</p> from <header class="top">…</header> subtree intercepts pointer events
+      - retrying click action
+        - waiting 500ms
+
+
+      396 |       await go(page, `/recipes/${longId}`);
+      397 |       await expect(page.getByTestId("recipe-title")).toHaveText(LONG_RECIPE);
+    > 398 |       await page.getByRole("button", { name: "Save note" }).click();
+          |                                                             ^
+      399 |       await expect(page.locator("#new-note-error")).toBeVisible();
+      400 |       await sweep(page, scale, "Recipe detail (with a note error)");
+      401 |       await context.close();
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:398:61
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-155a8-ipes-and-recipe-detail-200--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b18-text-scaling-B18-at-32-155a8-ipes-and-recipe-detail-200--chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-155a8-ipes-and-recipe-detail-200--chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b18-text-scaling-B18-at-32-155a8-ipes-and-recipe-detail-200--chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  9) [chromium] › tests/e2e/b18-text-scaling.spec.ts:404:5 › B18 at 320 px with 200% text › recipe editor dialog, plain state (200%) 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for getByTestId('new-recipe')
+        - locator resolved to <button class="btn line small" aria-haspopup="dialog" data-testid="new-recipe">New recipe</button>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <a class="" href="/explore" data-testid="nav-explore">Explore</a> from <nav class="nav" aria-label="Main">…</nav> subtree intercepts pointer events
+        - retrying click action
+        - waiting 20ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <div data-testid="currency" data-currency="current" class="currency current">Up to date</div> from <header class="top">…</header> subtree intercepts pointer events
+      2 × retrying click action
+          - waiting 100ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <p class="muted small">…</p> from <header class="top">…</header> subtree intercepts pointer events
+      7 × retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <a class="" href="/explore" data-testid="nav-explore">Explore</a> from <nav class="nav" aria-label="Main">…</nav> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div data-testid="currency" data-currency="current" class="currency current">Up to date</div> from <header class="top">…</header> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <p class="muted small">…</p> from <header class="top">…</header> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <p class="muted small">…</p> from <header class="top">…</header> subtree intercepts pointer events
+      - retrying click action
+        - waiting 500ms
+
+
+      406 |       const { page, context } = await scaledMember(browser, "jon", scale);
+      407 |       await page.getByRole("link", { name: "Our Recipes" }).click();
+    > 408 |       await page.getByTestId("new-recipe").click();
+          |                                            ^
+      409 |       await expect(page.getByRole("dialog", { name: "New recipe" })).toBeVisible();
+      410 |       await sweep(page, scale, "New recipe dialog");
+      411 |       await context.close();
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:408:44
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-62010-tor-dialog-plain-state-200--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b18-text-scaling-B18-at-32-62010-tor-dialog-plain-state-200--chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-62010-tor-dialog-plain-state-200--chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b18-text-scaling-B18-at-32-62010-tor-dialog-plain-state-200--chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  10) [chromium] › tests/e2e/b18-text-scaling.spec.ts:414:5 › B18 at 320 px with 200% text › Groceries: lines, product, removal, order, receipts (200%) 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: 'Change product for Broccoli' })
+        - locator resolved to <button class="link small" aria-haspopup="dialog" data-testid="product-broccoli" aria-label="Change product for Broccoli">change product…</button>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <div data-testid="currency" data-currency="current" class="currency current">Up to date</div> from <header class="top">…</header> subtree intercepts pointer events
+      - retrying click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <a class="" href="/recipes" data-testid="nav-recipes">Our Recipes</a> from <nav class="nav" aria-label="Main">…</nav> subtree intercepts pointer events
+      - retrying click action
+        - waiting 20ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <div data-testid="currency" data-currency="current" class="currency current">Up to date</div> from <header class="top">…</header> subtree intercepts pointer events
+      2 × retrying click action
+          - waiting 100ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <p class="muted small">…</p> from <header class="top">…</header> subtree intercepts pointer events
+      7 × retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <a class="" href="/recipes" data-testid="nav-recipes">Our Recipes</a> from <nav class="nav" aria-label="Main">…</nav> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div data-testid="currency" data-currency="current" class="currency current">Up to date</div> from <header class="top">…</header> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <p class="muted small">…</p> from <header class="top">…</header> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <p class="muted small">…</p> from <header class="top">…</header> subtree intercepts pointer events
+      - retrying click action
+        - waiting 500ms
+
+
+      419 |       await expect(page.getByTestId("line-broccoli")).toBeVisible();
+      420 |
+    > 421 |       await page.getByRole("button", { name: "Change product for Broccoli" }).click();
+          |                                                                               ^
+      422 |       const pd = page.getByRole("dialog", { name: "Product for Broccoli" });
+      423 |       await expect(pd).toBeVisible();
+      424 |       await sweep(page, scale, "Product dialog");
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:421:79
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-f8922-removal-order-receipts-200--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b18-text-scaling-B18-at-32-f8922-removal-order-receipts-200--chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-f8922-removal-order-receipts-200--chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b18-text-scaling-B18-at-32-f8922-removal-order-receipts-200--chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  11) [chromium] › tests/e2e/b18-text-scaling.spec.ts:488:5 › B18 at 320 px with 200% text › Groceries: uncertain transfer and the cart check (200%) 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for getByTestId('approve-all')
+        - locator resolved to <button class="btn line" data-testid="approve-all">Approve 13 reviewable</button>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <header class="top">…</header> intercepts pointer events
+      - retrying click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <a class="" href="/recipes" data-testid="nav-recipes">Our Recipes</a> from <nav class="nav" aria-label="Main">…</nav> subtree intercepts pointer events
+      - retrying click action
+        - waiting 20ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <header class="top">…</header> intercepts pointer events
+      2 × retrying click action
+          - waiting 100ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="brand">…</div> from <header class="top">…</header> subtree intercepts pointer events
+      7 × retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <a class="" href="/recipes" data-testid="nav-recipes">Our Recipes</a> from <nav class="nav" aria-label="Main">…</nav> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <header class="top">…</header> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="brand">…</div> from <header class="top">…</header> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="brand">…</div> from <header class="top">…</header> subtree intercepts pointer events
+      - retrying click action
+        - waiting 500ms
+
+
+      491 |       const { page, context } = await scaledMember(browser, "alex", scale);
+      492 |       await page.getByRole("link", { name: "Groceries" }).click();
+    > 493 |       await page.getByTestId("approve-all").click();
+          |                                             ^
+      494 |       await expect(page.getByTestId("send")).toBeEnabled();
+      495 |       await page.getByTestId("send").click();
+      496 |       await expect(page.getByTestId("batch")).toHaveAttribute("data-status", "uncertain");
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:493:45
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-4c57a-fer-and-the-cart-check-200--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b18-text-scaling-B18-at-32-4c57a-fer-and-the-cart-check-200--chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-4c57a-fer-and-the-cart-check-200--chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b18-text-scaling-B18-at-32-4c57a-fer-and-the-cart-check-200--chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  12) [chromium] › tests/e2e/b18-text-scaling.spec.ts:509:5 › B18 at 320 px with 200% text › Household: settings, conflict, targets, exclusions, ingredient review (200%) 
+
+    Error: Household @ 200%: probe p.small.muted "Members: Jon, Alex · timezone America/New_York" 13.6px → 27.2px
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 90
+
+    - Array []
+    + Array [
+    +   "Tab: Tab #0 input#set-store \"\" (29,302 262×66) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "Tab: Tab #2 input#set-budget \"\" (29,486 262×66) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "Tab: Tab #3 input#set-firm \"\" (33,329 13×13) is covered by div[currency].currency.current \"Up to date\"",
+    +   "Tab: Tab #4 input#set-sessions \"\" (29,454 262×66) is covered by nav.nav \"Main\"",
+    +   "Tab: Tab #5 select#set-variety \"not setfamiliarbalancedadventurous\" (29,305 262×61) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "Tab: Tab #7 select#set-effort \"not seteasymediuminvolved\" (29,491 262×61) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "Tab: Tab #8 input#set-equipment \"\" (29,302 262×66) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "Tab: Tab #10 button[add-staple].btn.line \"Add a usual item…\" (29,278 262×115) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "Tab: Tab #11 input#tg-dinner-calories \"\" (29,303 262×66) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "Tab: Tab #13 input#tg-dinner-carbsG \"\" (29,486 262×66) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "Tab: Tab #14 input#tg-dinner-fatG \"\" (29,303 262×66) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "Tab: Tab #16 input#tg-daily-calories \"\" (29,303 262×66) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "Tab: Tab #17 input#tg-daily-proteinG \"\" (29,466 262×66) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "Tab: Tab #18 input#tg-daily-carbsG \"\" (29,303 262×66) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "Tab: Tab #20 button.btn.line.small \"Save whole-day targets\" (29,459 262×93) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "Tab: Tab #21 button.link \"Remove exclusion extraordinarily_long_ingredient\" (62,314 111×43) is covered by div[currency].currency.current \"Up to date\"",
+    +   "Tab: Tab #23 select#excl-who \"everyoneJonAlex\" (29,491 262×61) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "Tab: Tab #24 button.btn.line.small \"Add exclusion\" (29,309 207×53) is covered by div[currency].currency.current \"Up to date\"",
+    +   "Tab: Tab #25 input#rv-pesto-tags \"\" (29,307 262×59) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "Tab: Tab #27 button.btn.line.small \"Mark Basil pesto (store-bought) reviewed\" (29,419 262×132) is covered by nav.nav \"Main\"",
+    +   "Tab: Tab #28 a[export].btn.line \"Download household export\" (29,280 262×161) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "Tab: Tab #29 button.btn.line \"Sign out Jon\" (16,475 288×68) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "from [data-testid=\"targets\"] input: Tab #0 input#tg-dinner-calories \"\" (29,303 262×66) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "from [data-testid=\"targets\"] input: Tab #2 input#tg-dinner-carbsG \"\" (29,486 262×66) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "from [data-testid=\"targets\"] input: Tab #3 input#tg-dinner-fatG \"\" (29,303 262×66) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "from [data-testid=\"targets\"] input: Tab #5 input#tg-daily-calories \"\" (29,303 262×66) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "from [data-testid=\"targets\"] input: Tab #6 input#tg-daily-proteinG \"\" (29,466 262×66) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "from [data-testid=\"targets\"] input: Tab #7 input#tg-daily-carbsG \"\" (29,303 262×66) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "from [data-testid=\"targets\"] input: Tab #9 button.btn.line.small \"Save whole-day targets\" (29,459 262×93) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "from [data-testid=\"targets\"] input: Tab #10 button.link \"Remove exclusion extraordinarily_long_ingredient\" (62,314 111×43) is covered by div[currency].currency.current \"Up to date\"",
+    +   "from [data-testid=\"targets\"] input: Tab #12 select#excl-who \"everyoneJonAlex\" (29,491 262×61) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "from [data-testid=\"targets\"] input: Tab #13 button.btn.line.small \"Add exclusion\" (29,309 207×53) is covered by div[currency].currency.current \"Up to date\"",
+    +   "from [data-testid=\"targets\"] input: Tab #14 input#rv-pesto-tags \"\" (29,307 262×59) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "from [data-testid=\"targets\"] input: Tab #16 button.btn.line.small \"Mark Basil pesto (store-bought) reviewed\" (29,419 262×132) is covered by nav.nav \"Main\"",
+    +   "from [data-testid=\"targets\"] input: Tab #17 a[export].btn.line \"Download household export\" (29,280 262×161) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "from [data-testid=\"targets\"] input: Tab #18 button.btn.line \"Sign out Jon\" (16,475 288×68) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "from [data-testid=\"exclusions\"] button:not([disabled]): Tab #0 button.link \"Remove exclusion extraordinarily_long_ingredient\" (62,314 111×43) is covered by div[currency].currency.current \"Up to date\"",
+    +   "from [data-testid=\"exclusions\"] button:not([disabled]): Tab #2 select#excl-who \"everyoneJonAlex\" (29,491 262×61) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "from [data-testid=\"exclusions\"] button:not([disabled]): Tab #3 button.btn.line.small \"Add exclusion\" (29,309 207×53) is covered by div[currency].currency.current \"Up to date\"",
+    +   "from [data-testid=\"exclusions\"] button:not([disabled]): Tab #4 input#rv-pesto-tags \"\" (29,307 262×59) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "from [data-testid=\"exclusions\"] button:not([disabled]): Tab #6 button.btn.line.small \"Mark Basil pesto (store-bought) reviewed\" (29,419 262×132) is covered by nav.nav \"Main\"",
+    +   "from [data-testid=\"exclusions\"] button:not([disabled]): Tab #7 a[export].btn.line \"Download household export\" (29,280 262×161) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "from [data-testid=\"exclusions\"] button:not([disabled]): Tab #8 button.btn.line \"Sign out Jon\" (16,475 288×68) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "from [data-testid=\"ingredient-review\"] input: Tab #0 input#rv-pesto-tags \"\" (29,307 262×59) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "from [data-testid=\"ingredient-review\"] input: Tab #2 button.btn.line.small \"Mark Basil pesto (store-bought) reviewed\" (29,419 262×132) is covered by nav.nav \"Main\"",
+    +   "from [data-testid=\"ingredient-review\"] input: Tab #3 a[export].btn.line \"Download household export\" (29,280 262×161) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "from [data-testid=\"ingredient-review\"] input: Tab #4 button.btn.line \"Sign out Jon\" (16,475 288×68) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "from [data-testid=\"staples\"] button:not([disabled]): Tab #0 button[add-staple].btn.line \"Add a usual item…\" (29,278 262×115) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "from [data-testid=\"staples\"] button:not([disabled]): Tab #1 input#tg-dinner-calories \"\" (29,303 262×66) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "from [data-testid=\"staples\"] button:not([disabled]): Tab #3 input#tg-dinner-carbsG \"\" (29,486 262×66) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "from [data-testid=\"staples\"] button:not([disabled]): Tab #4 input#tg-dinner-fatG \"\" (29,303 262×66) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "from [data-testid=\"staples\"] button:not([disabled]): Tab #6 input#tg-daily-calories \"\" (29,303 262×66) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "from [data-testid=\"staples\"] button:not([disabled]): Tab #7 input#tg-daily-proteinG \"\" (29,466 262×66) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "from [data-testid=\"staples\"] button:not([disabled]): Tab #8 input#tg-daily-carbsG \"\" (29,303 262×66) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "from [data-testid=\"staples\"] button:not([disabled]): Tab #10 button.btn.line.small \"Save whole-day targets\" (29,459 262×93) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "from [data-testid=\"staples\"] button:not([disabled]): Tab #11 button.link \"Remove exclusion extraordinarily_long_ingredient\" (62,314 111×43) is covered by div[currency].currency.current \"Up to date\"",
+    +   "from [data-testid=\"staples\"] button:not([disabled]): Tab #13 select#excl-who \"everyoneJonAlex\" (29,491 262×61) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "from [data-testid=\"staples\"] button:not([disabled]): Tab #14 button.btn.line.small \"Add exclusion\" (29,309 207×53) is covered by div[currency].currency.current \"Up to date\"",
+    +   "from [data-testid=\"staples\"] button:not([disabled]): Tab #15 input#rv-pesto-tags \"\" (29,307 262×59) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "from [data-testid=\"staples\"] button:not([disabled]): Tab #17 button.btn.line.small \"Mark Basil pesto (store-bought) reviewed\" (29,419 262×132) is covered by nav.nav \"Main\"",
+    +   "from [data-testid=\"staples\"] button:not([disabled]): Tab #18 a[export].btn.line \"Download household export\" (29,280 262×161) is covered by header.top \"TableSigned in as Jon · test householdSimulated \"",
+    +   "from [data-testid=\"staples\"] button:not([disabled]): Tab #19 button.btn.line \"Sign out Jon\" (16,475 288×68) is covered by a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: input#set-store \"\" — the point hits div.brand \"TableSigned in as Jon · test householdSimulated \"",
+    +   "target covered: select#set-scope \"not setpickup spendingdinner ingredient cost\" — the point hits div.brand \"TableSigned in as Jon · test householdSimulated \"",
+    +   "target covered: input#set-sessions \"\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: select#set-variety \"not setfamiliarbalancedadventurous\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: input#set-maxnew \"\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: select#set-effort \"not seteasymediuminvolved\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: input#set-equipment \"\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: button[add-staple].btn.line \"Add a usual item…\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: input#tg-dinner-calories \"\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: input#tg-dinner-proteinG \"\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: input#tg-dinner-carbsG \"\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: input#tg-dinner-fatG \"\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: button.btn.line.small \"Save dinner targets\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: input#tg-daily-calories \"\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: input#tg-daily-proteinG \"\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: input#tg-daily-carbsG \"\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: input#tg-daily-fatG \"\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: button.btn.line.small \"Save whole-day targets\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: button.link \"Remove exclusion extraordinarily_long_ingredient\" — the point hits a[nav-explore] \"Explore\"",
+    +   "target covered: input#excl-term \"\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: select#excl-who \"everyoneJonAlex\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: button.btn.line.small \"Add exclusion\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: input#rv-pesto-tags \"\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    +   "target covered: input#rv-pesto-none \"\" — the point hits a[nav-week] \"Week\"",
+    +   "target covered: button.btn.line.small \"Mark Basil pesto (store-bought) reviewed\" — the point hits nav.nav \"Main\"",
+    +   "target covered: button.btn.line \"Sign out Jon\" — the point hits a[nav-recipes] \"Our Recipes\"",
+    + ]
+
+      295 |   for (const a of anchors) await tabSweep(page, a ? `from ${a}` : "Tab", a, findings);
+      296 |   findings.push(...(await page.evaluate(layoutFindings)));
+    > 297 |   expect.soft([...new Set(findings)], `${full}: probe ${s.probe!.name} ${s.probe!.before}px → ${s.probe!.after}px`).toEqual([]);
+          |                                                                                                                     ^
+      298 | }
+      299 |
+      300 | async function cmd(page: Page, name: string, payload: unknown) {
+        at sweep (/tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:297:117)
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:516:7
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for getByTestId('targets').getByRole('button', { name: 'Save dinner targets' })
+        - locator resolved to <button class="btn line small">Save dinner targets</button>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <header class="top">…</header> intercepts pointer events
+      - retrying click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <a class="" href="/recipes" data-testid="nav-recipes">Our Recipes</a> from <nav class="nav" aria-label="Main">…</nav> subtree intercepts pointer events
+      - retrying click action
+        - waiting 20ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <header class="top">…</header> intercepts pointer events
+      2 × retrying click action
+          - waiting 100ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="brand">…</div> from <header class="top">…</header> subtree intercepts pointer events
+      7 × retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <a class="" href="/recipes" data-testid="nav-recipes">Our Recipes</a> from <nav class="nav" aria-label="Main">…</nav> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <header class="top">…</header> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="brand">…</div> from <header class="top">…</header> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="brand">…</div> from <header class="top">…</header> subtree intercepts pointer events
+      - retrying click action
+        - waiting 500ms
+
+
+      523 |       const t = page.getByTestId("targets");
+      524 |       await t.getByLabel("Dinner calories (kcal)").fill("x");
+    > 525 |       await t.getByRole("button", { name: "Save dinner targets" }).click();
+          |                                                                    ^
+      526 |       await expect(t.getByLabel("Dinner calories (kcal)")).toHaveAttribute("aria-invalid", "true");
+      527 |       const ex = page.getByTestId("exclusions");
+      528 |       await ex.getByRole("button", { name: "Add exclusion" }).click();
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:525:68
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-bd28e-ions-ingredient-review-200--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b18-text-scaling-B18-at-32-bd28e-ions-ingredient-review-200--chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-bd28e-ions-ingredient-review-200--chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b18-text-scaling-B18-at-32-bd28e-ions-ingredient-review-200--chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  13) [chromium] › tests/e2e/b18-text-scaling.spec.ts:554:5 › B18 at 320 px with 200% text › Household: usual items and their dialogs, with a staple conflict (200%) 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for getByTestId('add-staple')
+        - locator resolved to <button class="btn line" aria-haspopup="dialog" data-testid="add-staple">Add a usual item…</button>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <header class="top">…</header> intercepts pointer events
+      - retrying click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <a class="" href="/recipes" data-testid="nav-recipes">Our Recipes</a> from <nav class="nav" aria-label="Main">…</nav> subtree intercepts pointer events
+      - retrying click action
+        - waiting 20ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <header class="top">…</header> intercepts pointer events
+      2 × retrying click action
+          - waiting 100ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="brand">…</div> from <header class="top">…</header> subtree intercepts pointer events
+      7 × retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <a class="" href="/recipes" data-testid="nav-recipes">Our Recipes</a> from <nav class="nav" aria-label="Main">…</nav> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <header class="top">…</header> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="brand">…</div> from <header class="top">…</header> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="brand">…</div> from <header class="top">…</header> subtree intercepts pointer events
+      - retrying click action
+        - waiting 500ms
+
+
+      558 |       const { page, context } = await scaledMember(browser, "jon", scale);
+      559 |       await page.getByRole("link", { name: "Household" }).click();
+    > 560 |       await page.getByTestId("add-staple").click();
+          |                                            ^
+      561 |       const add = page.getByRole("dialog", { name: "Add a usual item" });
+      562 |       await expect(add).toBeVisible();
+      563 |       await add.getByRole("button", { name: "Add usual item" }).click();
+        at /tmp/table-w-b18/tests/e2e/b18-text-scaling.spec.ts:560:44
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-89e9f-with-a-staple-conflict-200--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b18-text-scaling-B18-at-32-89e9f-with-a-staple-conflict-200--chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b18-text-scaling-B18-at-32-89e9f-with-a-staple-conflict-200--chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b18-text-scaling-B18-at-32-89e9f-with-a-staple-conflict-200--chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  13 failed
+    [chromium] › tests/e2e/b18-text-scaling.spec.ts:331:5 › B18 at 320 px with 150% text › Week, Change sheet, proposal, Cook and Reheat (150%) 
+    [chromium] › tests/e2e/b18-text-scaling.spec.ts:371:5 › B18 at 320 px with 150% text › Explore, Our Recipes and recipe detail (150%) 
+    [chromium] › tests/e2e/b18-text-scaling.spec.ts:414:5 › B18 at 320 px with 150% text › Groceries: lines, product, removal, order, receipts (150%) 
+    [chromium] › tests/e2e/b18-text-scaling.spec.ts:488:5 › B18 at 320 px with 150% text › Groceries: uncertain transfer and the cart check (150%) 
+    [chromium] › tests/e2e/b18-text-scaling.spec.ts:509:5 › B18 at 320 px with 150% text › Household: settings, conflict, targets, exclusions, ingredient review (150%) 
+    [chromium] › tests/e2e/b18-text-scaling.spec.ts:554:5 › B18 at 320 px with 150% text › Household: usual items and their dialogs, with a staple conflict (150%) 
+    [chromium] › tests/e2e/b18-text-scaling.spec.ts:331:5 › B18 at 320 px with 200% text › Week, Change sheet, proposal, Cook and Reheat (200%) 
+    [chromium] › tests/e2e/b18-text-scaling.spec.ts:371:5 › B18 at 320 px with 200% text › Explore, Our Recipes and recipe detail (200%) 
+    [chromium] › tests/e2e/b18-text-scaling.spec.ts:404:5 › B18 at 320 px with 200% text › recipe editor dialog, plain state (200%) 
+    [chromium] › tests/e2e/b18-text-scaling.spec.ts:414:5 › B18 at 320 px with 200% text › Groceries: lines, product, removal, order, receipts (200%) 
+    [chromium] › tests/e2e/b18-text-scaling.spec.ts:488:5 › B18 at 320 px with 200% text › Groceries: uncertain transfer and the cart check (200%) 
+    [chromium] › tests/e2e/b18-text-scaling.spec.ts:509:5 › B18 at 320 px with 200% text › Household: settings, conflict, targets, exclusions, ingredient review (200%) 
+    [chromium] › tests/e2e/b18-text-scaling.spec.ts:554:5 › B18 at 320 px with 200% text › Household: usual items and their dialogs, with a staple conflict (200%) 
+  3 passed (3.3m)

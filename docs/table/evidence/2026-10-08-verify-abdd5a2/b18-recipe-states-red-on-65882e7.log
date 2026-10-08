@@ -1,0 +1,325 @@
+
+Running 4 tests using 1 worker
+
+  ✘  1 [chromium] › tests/e2e/b18-recipe-states.spec.ts:60:3 › B18 recipe editor conflict with long content at 320px, 150% text: full contents readable, decisions reachable in order (3.9s)
+  ✓  2 [chromium] › tests/e2e/b18-recipe-states.spec.ts:98:3 › B18 recipe editor errors at 320px, 150% text: field and field and form errors and a newer version's long text are readable and attached, nothing clipped (3.6s)
+  ✘  3 [chromium] › tests/e2e/b18-recipe-states.spec.ts:60:3 › B18 recipe editor conflict with long content at 320px, 200% text: full contents readable, decisions reachable in order (1.0m)
+  ✘  4 [chromium] › tests/e2e/b18-recipe-states.spec.ts:98:3 › B18 recipe editor errors at 320px, 200% text: field and field and form errors and a newer version's long text are readable and attached, nothing clipped (1.0m)
+
+
+  1) [chromium] › tests/e2e/b18-recipe-states.spec.ts:60:3 › B18 recipe editor conflict with long content at 320px, 150% text: full contents readable, decisions reachable in order 
+
+    Error: elements past the right edge
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 65
+
+    - Array []
+    + Array [
+    +   "DIV[recipe-rebased]",
+    +   "DIV",
+    +   "P",
+    +   "STRONG",
+    +   "UL[recipe-conflict-changes]",
+    +   "LI",
+    +   "LI",
+    +   "LI",
+    +   "DIV[recipe-conflict]",
+    +   "P",
+    +   "DIV[recipe-conflict-instructions]",
+    +   "STRONG",
+    +   "DIV",
+    +   "DIV",
+    +   "DIV",
+    +   "BUTTON",
+    +   "FORM",
+    +   "P",
+    +   "LABEL",
+    +   "INPUT#re-title",
+    +   "DIV",
+    +   "SPAN",
+    +   "LABEL",
+    +   "SELECT#re-level",
+    +   "LABEL",
+    +   "FIELDSET",
+    +   "DIV",
+    +   "SPAN",
+    +   "INPUT#re-c-9",
+    +   "BUTTON",
+    +   "BUTTON#re-add-comp",
+    +   "FIELDSET#re-rows",
+    +   "DIV",
+    +   "SPAN",
+    +   "INPUT#re-n-10",
+    +   "SPAN",
+    +   "INPUT#re-q-10",
+    +   "SPAN",
+    +   "INPUT#re-u-10",
+    +   "SELECT",
+    +   "DIV",
+    +   "SPAN",
+    +   "INPUT#re-n-11",
+    +   "SPAN",
+    +   "INPUT#re-q-11",
+    +   "SPAN",
+    +   "INPUT#re-u-11",
+    +   "SELECT",
+    +   "DIV",
+    +   "SPAN",
+    +   "INPUT#re-n-12",
+    +   "SPAN",
+    +   "INPUT#re-q-12",
+    +   "SPAN",
+    +   "INPUT#re-u-12",
+    +   "SELECT",
+    +   "BUTTON#re-add-row",
+    +   "LABEL",
+    +   "TEXTAREA#re-steps",
+    +   "LABEL",
+    +   "TEXTAREA#re-reheat",
+    +   "P#re-save-held",
+    +   "BUTTON#re-save",
+    + ]
+
+      44 |     return { sw: d.scrollWidth, cw: d.clientWidth, over };
+      45 |   });
+    > 46 |   expect(r.over, "elements past the right edge").toEqual([]);
+         |                                                  ^
+      47 |   expect(r.sw).toBeLessThanOrEqual(r.cw);
+      48 |   expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
+      49 | }
+        at fits (/home/user/table/tests/e2e/b18-recipe-states.spec.ts:46:50)
+        at /home/user/table/tests/e2e/b18-recipe-states.spec.ts:79:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b18-recipe-states-B18-reci-ab070-ecisions-reachable-in-order-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b18-recipe-states-B18-reci-ab070-ecisions-reachable-in-order-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b18-recipe-states-B18-reci-ab070-ecisions-reachable-in-order-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b18-recipe-states-B18-reci-ab070-ecisions-reachable-in-order-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b18-recipe-states-B18-reci-ab070-ecisions-reachable-in-order-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › tests/e2e/b18-recipe-states.spec.ts:60:3 › B18 recipe editor conflict with long content at 320px, 200% text: full contents readable, decisions reachable in order 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Test ended.
+    Call log:
+      - waiting for getByRole('button', { name: 'Edit (new version)' })
+        - locator resolved to <button class="btn line small" aria-haspopup="dialog">Edit (new version)</button>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <div data-testid="currency" data-currency="current" class="currency current">Up to date</div> from <header class="top">…</header> subtree intercepts pointer events
+      - retrying click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <a class="on" href="/recipes" aria-current="page" data-testid="nav-recipes">Our Recipes</a> from <nav class="nav" aria-label="Main">…</nav> subtree intercepts pointer events
+      - retrying click action
+        - waiting 20ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <div data-testid="currency" data-currency="current" class="currency current">Up to date</div> from <header class="top">…</header> subtree intercepts pointer events
+      2 × retrying click action
+          - waiting 100ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <p class="muted small">…</p> from <header class="top">…</header> subtree intercepts pointer events
+      28 × retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <a class="on" href="/recipes" aria-current="page" data-testid="nav-recipes">Our Recipes</a> from <nav class="nav" aria-label="Main">…</nav> subtree intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <div data-testid="currency" data-currency="current" class="currency current">Up to date</div> from <header class="top">…</header> subtree intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <p class="muted small">…</p> from <header class="top">…</header> subtree intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <p class="muted small">…</p> from <header class="top">…</header> subtree intercepts pointer events
+      - retrying click action
+        - waiting 500ms
+
+
+      68 |     const base = await p.evaluate(() => parseFloat(getComputedStyle(document.body).fontSize));
+      69 |     expect(base).toBeGreaterThanOrEqual(16 * (scale / 100) - 0.5); // the text really is larger
+    > 70 |     await p.getByRole("button", { name: "Edit (new version)" }).click();
+         |                                                                 ^
+      71 |     const d = p.getByRole("dialog", { name: `Edit ${CHILI} — new version` });
+      72 |     await d.getByLabel("Steps", { exact: true }).fill("Jon's short method.");
+      73 |     await d.getByLabel("Title", { exact: true }).fill("Jon's chili");
+        at /home/user/table/tests/e2e/b18-recipe-states.spec.ts:70:65
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b18-recipe-states-B18-reci-0ce1a-ecisions-reachable-in-order-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b18-recipe-states-B18-reci-0ce1a-ecisions-reachable-in-order-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b18-recipe-states-B18-reci-0ce1a-ecisions-reachable-in-order-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b18-recipe-states-B18-reci-0ce1a-ecisions-reachable-in-order-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b18-recipe-states-B18-reci-0ce1a-ecisions-reachable-in-order-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chromium] › tests/e2e/b18-recipe-states.spec.ts:98:3 › B18 recipe editor errors at 320px, 200% text: field and field and form errors and a newer version's long text are readable and attached, nothing clipped 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Test ended.
+    Call log:
+      - waiting for getByRole('button', { name: 'Edit (new version)' })
+        - locator resolved to <button class="btn line small" aria-haspopup="dialog">Edit (new version)</button>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <div data-testid="currency" data-currency="current" class="currency current">Up to date</div> from <header class="top">…</header> subtree intercepts pointer events
+      - retrying click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <a class="on" href="/recipes" aria-current="page" data-testid="nav-recipes">Our Recipes</a> from <nav class="nav" aria-label="Main">…</nav> subtree intercepts pointer events
+      - retrying click action
+        - waiting 20ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <div data-testid="currency" data-currency="current" class="currency current">Up to date</div> from <header class="top">…</header> subtree intercepts pointer events
+      2 × retrying click action
+          - waiting 100ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <p class="muted small">…</p> from <header class="top">…</header> subtree intercepts pointer events
+      27 × retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <a class="on" href="/recipes" aria-current="page" data-testid="nav-recipes">Our Recipes</a> from <nav class="nav" aria-label="Main">…</nav> subtree intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <div data-testid="currency" data-currency="current" class="currency current">Up to date</div> from <header class="top">…</header> subtree intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <p class="muted small">…</p> from <header class="top">…</header> subtree intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <p class="muted small">…</p> from <header class="top">…</header> subtree intercepts pointer events
+      - retrying click action
+        - waiting 500ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <a class="on" href="/recipes" aria-current="page" data-testid="nav-recipes">Our Recipes</a> from <nav class="nav" aria-label="Main">…</nav> subtree intercepts pointer events
+      - retrying click action
+        - waiting 500ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <div data-testid="currency" data-currency="current" class="currency current">Up to date</div> from <header class="top">…</header> subtree intercepts pointer events
+      - retrying click action
+        - waiting 500ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <p class="muted small">…</p> from <header class="top">…</header> subtree intercepts pointer events
+      - retrying click action
+        - waiting 500ms
+
+
+      104 |     await p.goto(`/recipes/${id}`);
+      105 |     await p.addStyleTag({ content: `html { font-size: ${scale}% !important; }` });
+    > 106 |     await p.getByRole("button", { name: "Edit (new version)" }).click();
+          |                                                                 ^
+      107 |     const d = p.getByRole("dialog", { name: `Edit ${CHILI} — new version` });
+      108 |     // Field errors: blank title and a bad amount.
+      109 |     await d.getByLabel("Title", { exact: true }).fill("");
+        at /home/user/table/tests/e2e/b18-recipe-states.spec.ts:106:65
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b18-recipe-states-B18-reci-9ec10-nd-attached-nothing-clipped-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b18-recipe-states-B18-reci-9ec10-nd-attached-nothing-clipped-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b18-recipe-states-B18-reci-9ec10-nd-attached-nothing-clipped-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b18-recipe-states-B18-reci-9ec10-nd-attached-nothing-clipped-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b18-recipe-states-B18-reci-9ec10-nd-attached-nothing-clipped-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests/e2e/b18-recipe-states.spec.ts:60:3 › B18 recipe editor conflict with long content at 320px, 150% text: full contents readable, decisions reachable in order 
+    [chromium] › tests/e2e/b18-recipe-states.spec.ts:60:3 › B18 recipe editor conflict with long content at 320px, 200% text: full contents readable, decisions reachable in order 
+    [chromium] › tests/e2e/b18-recipe-states.spec.ts:98:3 › B18 recipe editor errors at 320px, 200% text: field and field and form errors and a newer version's long text are readable and attached, nothing clipped 
+  1 passed (2.3m)

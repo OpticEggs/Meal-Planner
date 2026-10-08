@@ -1,38 +1,41 @@
 # Table — Implementation status
 
-_Last updated 2026-10-08 (UTC), after B17 (keyboard, focus and error pass over the remaining forms)._
+_Last updated 2026-10-08 (UTC), after the B17 correction (RB17-01..03) and B18 (text-scaling sweep)._
 
 ## Code identity
 
 | What | Identity |
 |---|---|
-| Starting point of this pass | `81f94e4c8e7459452fa56122c33666a35cea9f85` (baseline verify-all PASS before any edit: vitest 118/118, Playwright 57/57, 30 mutations killed) |
-| Implementation commit verified | `972e368144590b8c04095e8f062d84441cdea2cd` (clean tree; tracked-file hash `20bd2c9a…5e44` unchanged during the run) |
-| Documentation/evidence commit | the commit after 972e368 on `main` (docs only — `git diff --stat 972e368..HEAD`) |
+| Starting point of this pass | `7220679d814c19e5611e324da1eb1b6a768e5964` (baseline verify-all PASS before any edit: vitest 121/121, Playwright 72/72, 31 mutations killed) |
+| Implementation commit verified | `abdd5a2cbd1014822ee09670b484eb528468ee22` (clean tree; tracked-file hash `2b5f21da…3a6a` unchanged during the run) |
+| Documentation/evidence commit | the commit after abdd5a2 on `main` (docs only — `git diff --stat abdd5a2..HEAD`) |
 | Remote | `https://github.com/OpticEggs/Meal-Planner`, branch `main` |
 | Restore | `git clone --branch main <bundle> table` or `git clone <bundle> table` |
-| Migrations | `001`–`005`; B17 adds none (the recipe ingredient `note` column already existed and is now written) |
+| Migrations | `001`–`005`; this pass adds none |
 
-## Verification (independently measured on 972e368)
+## Verification (independently measured on abdd5a2)
 
-`scripts/verify-all.sh` → `docs/table/evidence/2026-10-08-verify-972e368/summary.md` (complete logs + JSON):
-typecheck PASS · vitest 121/121 (real PostgreSQL) · production build PASS · Playwright 72/72 (Chromium,
+`scripts/verify-all.sh` → `docs/table/evidence/2026-10-08-verify-abdd5a2/summary.md` (complete logs + JSON):
+typecheck PASS · vitest 141/141 (real PostgreSQL) · production build PASS · Playwright 104/104 (Chromium,
 production server, two authenticated contexts, 0 skipped, 0 flaky) · mutation self-test PASS ·
-mutation checks 31 killed / 0 survived / 0 error, sources restored. Red-before-green on `81f94e4` for
-every new test (logs in the same folder). Two workers ran in isolated worktrees/databases/ports (the
-Household half and the red runs); a read-only reviewer found six defects in the recipe half, all
-fixed before verification (DECISIONS D61).
+mutation checks 39 killed / 0 survived / 0 error, sources restored. Red-before-green on `7220679` for
+RB17-01..03 and the B18 sweep (logs in the same folder; see ACCEPTANCE). A worker built the sweep in an
+isolated worktree, database and ports; two read-only reviews of the correction found eleven defects in
+total, all fixed before verification (DECISIONS D61, D65).
 
 ## This pass
 
-**B17 — remaining forms (Chromium-verified).** Recipe entry and editing is a dialog on the one modal
-system: rows and their controls are named by position and content, errors are attached and focused,
-adding or removing rows and components keeps focus on something real, closing with unsaved work asks
-first, and a version saved by the other member meanwhile is shown with what it changed (start over
-from it, or keep your edits and save on top). Recipe filters are a real tablist; per-row controls name
-their recipe; Explore reports every "Sounds good"; deferred-dinner placement is named and focuses its
-preview. Household inputs no longer erase what a member is typing when the other member saves; targets,
-exclusions (removal confirmed) and ingredient review (no-tags confirmed) have attached errors.
+**B17 correction (RB17-01..03).** A recipe version the other member saves while the editor is open is
+brought into the draft field by field: what the member did not change takes the new content
+(including summary, source label and ingredient form/note, which the editor does not show) and is
+listed in full; a field both changed shows both full contents and must be decided before Save; a
+later version rebases again. Ingredient comparison counts occurrences and uses keys, so repeated rows
+stay distinct. Saving an existing recipe now requires the version it was edited from (no versionless
+path). Accepted dinners stay pinned to their versions (T21 unchanged).
+
+**B18 — text scaling (Chromium-verified).** Every screen and dialog at 320 px with 150% and 200% text,
+including conflict, error and long-content states: no sideways scroll, nothing clipped, every control
+reachable and hittable, focus where it should be. Eight layout defects fixed (DECISIONS D66).
 WebKit / iPhone Safari / VoiceOver: **BLOCKED** (not installed; no device).
 
 ## Stage reached
@@ -92,8 +95,8 @@ Backup/restore: `scripts/backup.sh dump|restore|check` (dumps include auth table
 
 ## Evidence
 
-Current: `docs/table/evidence/2026-10-08-verify-972e368/` (see Verification above). History:
-`2026-10-08-verify-5f7b72f/` (B15/B16), `2026-10-08-verify-0804381/` (B14/B12, with sheet
+Current: `docs/table/evidence/2026-10-08-verify-abdd5a2/` (see Verification above). History:
+`2026-10-08-verify-972e368/` (B17), `2026-10-08-verify-5f7b72f/` (B15/B16), `2026-10-08-verify-0804381/` (B14/B12, with sheet
 screenshots), `2026-10-08-verify-2c56267/` (correction pass), `2026-10-08-full-run*.md`,
 `2026-10-08-first-slice-e2e.md`. See ACCEPTANCE.md for per-test status.
 
@@ -106,6 +109,7 @@ screenshots), `2026-10-08-verify-2c56267/` (correction pass), `2026-10-08-full-r
 
 ## Next executable task
 
-**B18 — text-scaling sweep across every screen** (320 px with 150% and 200% text, dialogs open), no
-owner input needed. Owner-gated: B5/B6 Kroger, B8 devices (WebKit, iPhone Safari, VoiceOver for
-B14/B15/B17), B9 hosting.
+None that needs no owner input. The product's Stage 1–4 scope for the simulated retailer is complete
+and Chromium-verified; the remaining work is owner-gated: B5/B6 Kroger (credentials and written
+approval), B7 FDC key, B8 devices (WebKit, iPhone Safari, VoiceOver), B9 hosting. B10, B11 and B13
+are optional, only on request.

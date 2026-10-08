@@ -42,7 +42,7 @@ Review corrections and regressions: `docs/table/CORRECTIONS-89f3ea9.md`.
 Local app: see `docs/table/IMPLEMENTATION-STATUS.md` → "Run it locally".
 
 ## Layout
-`src/domain` pure calculations (planning, recipes, groceries) · `src/server/commands` the only
+`src/domain` pure calculations (planning, recipes — `recipes/rebase.ts` = the editor's three-way rebase and state reducer —, groceries) · `src/server/commands` the only
 mutation path (`framework.ts` = lock, idempotency, receipts, change events) · `src/server/queries`
 coherent snapshots · `src/server/integrations/retailer.ts` simulated + fail-closed Kroger ·
 `src/ui` client screens (`a11y.tsx` = the one modal system, focus helpers, the one live region; `forms.tsx` = attached field errors; `GroceryDialogs.tsx`, `Staples.tsx`, `RecipeEditor.tsx`) · `src/server/commands/staples.ts` staple management (revision-bound) · `migrations/` explicit SQL · `tests/{unit,integration,e2e,mutation}`.

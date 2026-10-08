@@ -178,3 +178,55 @@ browser tests all FAILED against the old `Household.tsx` (`pre-b17-household-on-
 Existing test changed (assertions unchanged): **b15-b16.spec** "B16 Household" waits for the Week page
 before an absence check and clicks the nav by test id (a navigation race: the absence check could pass
 on the still-open Household page, whose export link also matches the name "Household").
+
+## B17 correction (RB17-01..03) and B18 text scaling — added 2026-10-08
+
+New IDs; no earlier row renumbered. Start `7220679`; implementation commit `abdd5a2`; evidence
+`docs/table/evidence/2026-10-08-verify-abdd5a2/summary.md` (vitest 141/141, Playwright 104/104,
+39 mutations killed, 0 survived, 0 error; tracked-file hash unchanged during the run).
+
+**Reproduction before repair (real PostgreSQL + two signed-in Chromium contexts, on `7220679`):**
+`rb17-characterization-on-7220679.log` observed all three review findings: the old steps/reheat text
+saved over the newer version after "Keep my edits"; summary, source label, ingredient form and note
+reverted by a title-only save; "Nothing you can edit here changed" for a change to the first of two
+turkey rows; a versionless save accepted. The expected-correctness tests then FAILED on `7220679`:
+8 of 8 browser tests (`rb17-red-e2e-on-7220679.log`) and the RB17-03 integration test
+(`rb17-red-vitest-on-7220679.log`). The text-scaling sweep FAILED 13 of 16 on `7220679`
+(`pre-b18-sweep-on-7220679.log`); the recipe-editor states FAILED 3 of 4 before their fixes
+(`b18-recipe-states-red-on-65882e7.log`). Of the second review's regressions, "focus stays on the
+ingredient field" FAILED on the pre-review code (`review2-red-e2e-on-5cd4324.log`); "own save never
+reported as the other member's" PASSED there — that race did not reproduce, so it is a guard with a
+regression test, not a demonstrated failure.
+
+| ID | What is checked | Tests | Status on abdd5a2 |
+|---|---|---|---|
+| RB17-01a Content shown and kept | Both commit orders: the other member's new steps and reheat text are shown in full and kept; only the member's title edit is applied (exact saved version row) | e2e b17-correction ×2; unit "rebase" | PASS (Chromium) |
+| RB17-01b Hidden fields | A newer API-created version changing summary, source label, ingredient form and note survives a stale title-only editor's save | e2e; unit | PASS |
+| RB17-01c Both changed | Both full texts shown; nothing chosen for the member; "Keep my" / "Use version n's" saved exactly; focus moves to the next decision or Save, never `<body>` | e2e ×2 (keep mine, use theirs) | PASS (Chromium) |
+| RB17-01d Third version | A version arriving after a decision is brought in before Save; a re-changed field re-conflicts; an undecided field stays undecided across a later version; Save held, nothing written | e2e ×2; unit "editor state" | PASS |
+| RB17-01e Editor state | Keystrokes after a rebase apply to the merged draft; older/late versions ignored; start over clears edits, decisions and the rebase record; unsaved changes by content; own save not rebased; focus kept on the field being edited | unit ×4; e2e ×3 | PASS |
+| RB17-02 Occurrences | First of two occurrences changed (quantity, unit, form/note), additions/removals of identical occurrences, reorder, rename by key; both rows survive save and storage | unit ×9; e2e duplicate turkey rows; integration storage | PASS |
+| RB17-03 Required version | Existing recipe: missing / null → `version_required`, "two" / 0 / 1.5 → `invalid`, stale → `stale_version`; versions, pointer and ingredient rows unchanged; the current version is accepted; creation needs none | integration b17.recipes | PASS |
+| B18 sweep | 320×640 at 150% and 200% text: login, Week (proposal, adopted, Change sheet tabs, draft), Cook, Reheat, Explore, Our Recipes (all tabs), recipe detail, recipe editor, Groceries (lines, product, removal, order, receipts, substitution, uncertain transfer, cart check), Household (settings, conflict, targets, exclusions, ingredient review, usual items and their dialogs, staple conflict). Text actually scales; no sideways scroll; nothing past the edge; every control scrolled into view and hit-tested at its centre (not under the header, nav or sheet title); Tab order and actual focus | e2e b18-text-scaling (16) | PASS (Chromium) |
+| B18 recipe states | Conflict with long unbroken content (full text readable, decisions hittable and in keyboard order, focus to Save after the last decision); field errors attached and focused; a newer version's long text; a form-level error with nothing written | e2e b18-recipe-states (4) | PASS (Chromium) |
+| RB17 mutations | 8: version optional again; untouched field reverted; conflict decided silently; occurrences collapsed; undecided field dropped; older version rebased; compared by display name; compared unlike stored | `tests/mutation/run.mjs` | PASS — all KILLED by assertion |
+| WebKit / iPhone Safari / VoiceOver / devices | Same checks | — | **BLOCKED** — only Chromium installed; downloads not permitted; no device |
+
+**Existing tests changed (disclosed):**
+- `tests/integration/b17.recipes.test.ts` — the test "callers that do not name a version keep the old
+  behavior; a malformed expectation is refused" asserted that a versionless edit of an existing
+  recipe was accepted: it encoded the RB17-03 bypass. It is replaced by the RB17-03 test above,
+  which keeps its malformed-expectation assertion ("two" → `invalid`) and adds missing, null, 0,
+  1.5 and stale, with no write in any case.
+- `tests/integration/plan.contract.test.ts` (T21) — its direct `SaveRecipeVersion` call now passes
+  `expectedVersionNo: 1` (an internal caller update). T21's assertions are unchanged.
+- `tests/e2e/b17-plan-recipes.spec.ts` — "editing the same recipe" now decides the title conflict with
+  "Keep my Title" instead of the removed single "Keep my edits (I've reviewed version 2)"
+  acknowledgement; its database assertions are unchanged. The test "starting over from the other
+  member's version…" is renamed "non-overlapping edits…": its scenario (Jon edits the title, Alex
+  adds cumin) no longer conflicts, so the cumin is brought in automatically and Jon's title stands.
+  Its final assertions (version 3 keeps the cumin and carries Jon's title) are unchanged. Start-over
+  behaviour (draft replaced, conflict gone, focus on Title) is asserted by the new
+  b17-correction test "'Start over' in a conflict…".
+
+No test was skipped, deleted or weakened.

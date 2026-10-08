@@ -1,0 +1,51 @@
+
+Running 2 tests using 1 worker
+
+  ✘  1 [chromium] › tests/e2e/b17-correction.spec.ts:285:1 › RB17-01: focus stays on the ingredient field the member is on when a newer version's ingredients are brought in (3.8s)
+  ✓  2 [chromium] › tests/e2e/b17-correction.spec.ts:305:1 › RB17-01: the member's own save is never reported as the other member's version (2.2s)
+
+
+  1) [chromium] › tests/e2e/b17-correction.spec.ts:285:1 › RB17-01: focus stays on the ingredient field the member is on when a newer version's ingredients are brought in 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Array [
+    -   "re-q-3",
+    -   true,
+    +   "",
+    +   false,
+      ]
+
+      298 |   await expect(dj.getByRole("textbox", { name: "Ingredient 1 amount" })).toHaveValue("333");
+      299 |   const now = await focused(jon.page);
+    > 300 |   expect([now.id, now.inDialog]).toEqual([before, true]);
+          |                                  ^
+      301 |   await jon.context.close();
+      302 |   await alex.context.close();
+      303 | });
+        at /home/user/table/tests/e2e/b17-correction.spec.ts:300:34
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-foc-2913a--ingredients-are-brought-in-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-foc-2913a--ingredients-are-brought-in-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-correction-RB17-01-foc-2913a--ingredients-are-brought-in-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-correction-RB17-01-foc-2913a--ingredients-are-brought-in-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-correction-RB17-01-foc-2913a--ingredients-are-brought-in-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests/e2e/b17-correction.spec.ts:285:1 › RB17-01: focus stays on the ingredient field the member is on when a newer version's ingredients are brought in 
+  1 passed (11.2s)

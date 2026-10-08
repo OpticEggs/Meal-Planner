@@ -1,0 +1,24 @@
+
+Running 3 tests using 1 worker
+
+[1/3] [chromium] › tests/e2e/zz-rb17-repro.spec.ts:55:1 › repro RB17-01 method: Keep my edits saves the old steps over the newer version
+[chromium] › tests/e2e/zz-rb17-repro.spec.ts:55:1 › repro RB17-01 method: Keep my edits saves the old steps over the newer version
+conflict box: "Alex saved version 2 (Fixture: Turkey chili) while you were editing. Your changes are kept here and have not been saved. What version 2 changed:\n\nSteps changed\nReheat instructions changed\n\nKeeping your edits saves them as version 3, replacing what version 2 changed where your edits differ.\n\nStart over from version 2\nKeep my edits (I’ve reviewed version 2)"
+
+stored v3: {"title":"Chili (title only)","instructions":"1. Prepare the components.\n2. Cook Turkey chili.\n3. Plate each person's portions.","reheat":"Reheat covered at 350°F for 15 minutes, or microwave 2–3 minutes, until hot throughout.","oldSteps":"1. Prepare the components.\n2. Cook Turkey chili.\n3. Plate each person's portions."}
+
+[2/3] [chromium] › tests/e2e/zz-rb17-repro.spec.ts:75:1 › repro RB17-01 hidden: summary/source/form/note revert after Keep my edits
+[chromium] › tests/e2e/zz-rb17-repro.spec.ts:75:1 › repro RB17-01 hidden: summary/source/form/note revert after Keep my edits
+conflict list: "Nothing you can edit here changed."
+
+stored v2:  {"v2":{"summary":"NEW SUMMARY","source_label":"NEW SOURCE"},"v2rows":[{"ingredient_key":"ground_turkey","quantity":"4","unit":"oz","form":"cooked","note":"NEW NOTE"}]}
+
+stored v3: {"v3":{"title":"Chili (Jon)","summary":"Test fixture recipe (chili).","source_label":"Test fixture — not a verified recipe"},"v3rows":[{"ingredient_key":"ground_turkey","quantity":"4","unit":"oz","form":"raw","note":null}]}
+
+[3/3] [chromium] › tests/e2e/zz-rb17-repro.spec.ts:94:1 › repro RB17-02: change to the first of two occurrences is not reported
+[chromium] › tests/e2e/zz-rb17-repro.spec.ts:94:1 › repro RB17-02: change to the first of two occurrences is not reported
+conflict list: "Nothing you can edit here changed."
+
+draft amounts: 10 100
+
+  3 passed (13.0s)
