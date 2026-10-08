@@ -104,6 +104,8 @@ function ProposalView() {
           <button className="btn primary full" onClick={adopt} disabled={busy || !writesAllowed || proposal.stale || incomplete(proposal)} data-testid="adopt">Use this week</button>
         </div>
       )}
+      <div className="section-label">Also need (this week’s pickup list — no menu required)</div>
+      <AlsoNeed from="week" />
     </section>
   );
 }
