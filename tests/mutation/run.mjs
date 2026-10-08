@@ -202,8 +202,12 @@ MUTATIONS.push(
     edits: [["        id, actor.householdId, v.key, v.url,", "        id, actor.householdId, v.url, v.url,"]] },
   { name: "MS_import_confirms_incomplete", file: "src/server/commands/imports.ts", suite: MSS, pattern: "URL-11", expect: [/URL-11/],
     edits: [["    if (problems.length) throw new Reject(\"incomplete\"", "    if (false) throw new Reject(\"incomplete\""]] },
-  { name: "MS_budget_bytes_page_read", file: "src/server/recipe-import-service.ts", suite: MSS, pattern: "BB-02", expect: [/BB-02/],
-    edits: [["  if (isBudgetBytes(b.domain)) {", "  if (false && isBudgetBytes(b.domain)) {"]] },
+  // Since RUC-01 Budget Bytes is refused by two independent checks (the service before reading, and the
+  // fetcher's read policy on every request), so removing only the service check SURVIVES (verify run on
+  // 33c84e1). The mutation now removes the shared predicate, i.e. both layers; RUC01_redirect_skips_read_policy
+  // covers the fetcher layer on its own.
+  { name: "MS_budget_bytes_page_read", file: "src/server/integrations/recipe-import/url.ts", suite: MSS, pattern: "BB-02", expect: [/BB-02/],
+    edits: [["  return d === \"budgetbytes.com\" || d.endsWith(\".budgetbytes.com\");", "  return false;"]] },
   { name: "MS_fetch_private_address_allowed", file: "src/server/integrations/recipe-import/fetcher.ts", suite: MSS, pattern: "URL-05", expect: [/URL-05/],
     edits: [["!isPublicAddress(a)) throw refuse(", "false) throw refuse("]] },
   { name: "MS_destination_keeps_store_products", file: "src/server/groceries/recompute.ts", suite: MSD, pattern: "GR-02", expect: [/GR-02/],
@@ -227,7 +231,7 @@ MUTATIONS.push(
 // package, records a promotion as such, needs the Kroger store, and stays bound to what was seen.
 MUTATIONS.push(
   { name: "U2C_content_kept_without_permission", file: "src/server/integrations/recipe-import/content-policy.ts", suite: U2C, pattern: "U-01", expect: [/U-01/],
-    edits: [["  return NOTHING_KEPT;\n}", "  return { instructions: true, photos: true, basis: \"(mutated)\" };\n}"]] },
+    edits: [["  return { ...NOTHING_KEPT, source };\n}", "  return { instructions: true, photos: true, basis: \"(mutated)\", kind: \"owner_mode\", source };\n}"]] },
   { name: "U2C_photo_not_sniffed", file: "src/server/recipe-import-service.ts", suite: U2C, pattern: "U-04", expect: [/U-04/],
     edits: [["const type = sniffImage(got.bytes);", "const type = sniffImage(got.bytes) ?? \"image/png\";"]] },
   { name: "U2C_suggestion_applied_unreviewed", file: "src/server/commands/imports.ts", suite: U2C, pattern: "U-10", expect: [/U-10/],
