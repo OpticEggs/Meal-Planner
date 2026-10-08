@@ -3,7 +3,7 @@ import { Reject, runCommand, type Actor } from "./framework";
 import { ensureCycle } from "../groceries/recompute";
 import { weekById } from "../queries/load";
 import type { RequirementLine } from "@/domain/groceries/projection";
-import { KNOWN_UNITS, normalizeUnit } from "@/domain/units";
+import { KNOWN_UNITS, convert, normalizeUnit } from "@/domain/units";
 
 async function cycleFor(c: Db, householdId: string, weekId: string): Promise<string> {
   const w = await weekById(c, householdId, weekId);
@@ -129,7 +129,15 @@ export function mapRequestCommand(actor: Actor, operationId: string, p: { reques
 export function recordAvailabilityCommand(
   actor: Actor,
   operationId: string,
-  p: { weekId: string; ingredientKey: string; state: "enough" | "some" | "need"; quantity?: string | null; unit?: string | null },
+  p: {
+    weekId: string;
+    ingredientKey: string;
+    state: "enough" | "some" | "need";
+    quantity?: string | null;
+    unit?: string | null;
+    /** What the observer was shown: the demand they are vouching for. Required for "enough". */
+    reviewed?: { quantity: string; unit: string; fingerprint?: string } | null;
+  },
 ) {
   return runCommand(actor, "RecordAvailability", operationId, p, async (c) => {
     if (!["enough", "some", "need"].includes(p.state)) throw new Reject("invalid", "Unknown availability");
@@ -137,17 +145,29 @@ export function recordAvailabilityCommand(
     const cycleId = await cycleFor(c, actor.householdId, p.weekId);
     const line = (await currentLines(c, cycleId)).find((l) => l.key === p.ingredientKey);
     if (!line) throw new Reject("not_found", "That item is not on this week's list");
+    let reviewedDemand: string | null = null;
+    let reviewedUnit: string | null = null;
+    if (p.reviewed) {
+      if (!/^\d+(\.\d+)?$/.test(String(p.reviewed.quantity)) || !p.reviewed.unit) throw new Reject("invalid", "Reviewed amount must be a number with a unit");
+      reviewedDemand = String(p.reviewed.quantity);
+      reviewedUnit = normalizeUnit(p.reviewed.unit);
+      if (line.meal && convert(reviewedDemand, reviewedUnit, line.meal.unit) === null) {
+        throw new Reject("stale_review", `${line.name} is now measured in ${line.meal.unit}; review it again.`);
+      }
+    } else if (p.state === "enough") {
+      // "Have enough" vouches for a specific amount. Never substitute the server's current
+      // demand for what the observer actually saw.
+      throw new Reject("invalid", "Have enough needs the amount you reviewed");
+    }
     await c.query(
       `INSERT INTO availability_observations(household_id, cycle_id, ingredient_key, state, quantity, unit, reviewed_demand, reviewed_unit, member_id)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
-      [
-        actor.householdId, cycleId, p.ingredientKey, p.state, p.quantity ?? null, p.unit ? normalizeUnit(p.unit) : null,
-        line.meal?.quantity ?? null, line.meal?.unit ?? null, actor.memberId,
-      ],
+      [actor.householdId, cycleId, p.ingredientKey, p.state, p.quantity ?? null, p.unit ? normalizeUnit(p.unit) : null, reviewedDemand, reviewedUnit, actor.memberId],
     );
     const label = { enough: "Have enough", some: "Have some", need: "Need" }[p.state];
+    const changedSince = !!(p.reviewed?.fingerprint && p.reviewed.fingerprint !== line.fingerprint);
     return {
-      status: "accepted", result: {},
+      status: "accepted", result: { boundTo: reviewedDemand ? { quantity: reviewedDemand, unit: reviewedUnit } : null, changedSinceReview: changedSince },
       change: { weekId: p.weekId, summary: { type: "availability", text: `${actor.displayName}: ${line.name} — ${label}` } },
       recomputeWeeks: [p.weekId],
     };
@@ -247,63 +267,121 @@ export function approvePurchaseLinesCommand(actor: Actor, operationId: string, p
 export function confirmOrderCommand(
   actor: Actor,
   operationId: string,
-  p: { weekId: string; contentsKnown: boolean; lines?: { ingredientKey: string | null; name: string; packages: number }[]; pickupAt?: string | null; note?: string },
+  p: {
+    weekId: string;
+    contentsKnown: boolean;
+    lines?: { ingredientKey: string | null; productId?: string | null; name: string; packages: number }[];
+    pickupAt?: string | null;
+    note?: string;
+  },
 ) {
   return runCommand(actor, "ConfirmOrder", operationId, p, async (c) => {
     const cycleId = await cycleFor(c, actor.householdId, p.weekId);
     const existing = await c.query("SELECT 1 FROM orders WHERE cycle_id=$1", [cycleId]);
-    if (existing.rowCount) throw new Reject("already_confirmed", "An order is already confirmed for this week. Record corrections as receipt observations.");
+    if (existing.rowCount) throw new Reject("already_confirmed", "An order is already confirmed for this pickup. Record corrections as receipt observations.");
     const lines = p.contentsKnown ? p.lines ?? [] : [];
     if (p.contentsKnown && lines.length === 0) throw new Reject("invalid", "List the confirmed contents, or confirm with contents unknown");
     for (const l of lines) if (!Number.isInteger(l.packages) || l.packages < 1 || !String(l.name ?? "").trim()) throw new Reject("invalid", "Each line needs a name and whole packages");
     const pickup = p.pickupAt ? new Date(p.pickupAt) : null;
     if (pickup && Number.isNaN(pickup.getTime())) throw new Reject("invalid", "Pickup time is not a valid time");
+    // Listed contents reconcile every transfer made so far for this pickup; with contents
+    // unknown, nothing is reconciled and those transfers stay accounted (and flagged).
+    const reconciles = p.contentsKnown
+      ? (await c.query("SELECT id FROM handoff_batches WHERE cycle_id=$1 ORDER BY authorized_at", [cycleId])).rows.map((r) => r.id)
+      : [];
     const o = await c.query(
-      "INSERT INTO orders(household_id, cycle_id, confirmed_by, source, contents_known, pickup_at, note) VALUES ($1,$2,$3,'member',$4,$5,$6) RETURNING id",
-      [actor.householdId, cycleId, actor.memberId, p.contentsKnown, pickup, p.note ?? null],
+      `INSERT INTO orders(household_id, cycle_id, confirmed_by, source, contents_known, pickup_at, note, reconciles_batch_ids, confirmed_at)
+       VALUES ($1,$2,$3,'member',$4,$5,$6,$7, clock_timestamp()) RETURNING id`,
+      [actor.householdId, cycleId, actor.memberId, p.contentsKnown, pickup, p.note ?? null, reconciles],
     );
     for (const l of lines) {
-      const prod = l.ingredientKey
-        ? await c.query("SELECT product_id FROM product_mappings WHERE household_id=$1 AND ingredient_key=$2", [actor.householdId, l.ingredientKey])
-        : { rows: [] as { product_id: string }[] };
-      await c.query("INSERT INTO order_lines(order_id, household_id, ingredient_key, product_id, name, packages) VALUES ($1,$2,$3,$4,$5,$6)", [
-        o.rows[0].id, actor.householdId, l.ingredientKey, prod.rows[0]?.product_id ?? null, l.name.trim(), l.packages,
-      ]);
+      // The confirmed product identity is what the member states (usually from the transfer);
+      // it is never inferred from today's mapping. Unknown product = unknown package basis.
+      let prod: { id: string; package_qty: string | null; package_unit: string | null } | null = null;
+      if (l.productId) {
+        const r = await c.query("SELECT id, package_qty, package_unit, ingredient_key FROM products WHERE id=$1 AND household_id=$2", [l.productId, actor.householdId]);
+        if (!r.rowCount) throw new Reject("not_found", `Unknown product for ${l.name}`);
+        if (l.ingredientKey && r.rows[0].ingredient_key !== l.ingredientKey) throw new Reject("invalid", `${l.name}: product is for a different ingredient`);
+        prod = r.rows[0];
+      }
+      await c.query(
+        "INSERT INTO order_lines(order_id, household_id, ingredient_key, product_id, name, packages, package_qty, package_unit) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)",
+        [o.rows[0].id, actor.householdId, l.ingredientKey, prod?.id ?? null, l.name.trim(), l.packages, prod?.package_qty ?? null, prod?.package_unit ?? null],
+      );
     }
     return {
-      status: "accepted", result: { orderId: o.rows[0].id },
+      status: "accepted", result: { orderId: o.rows[0].id, reconciledTransfers: reconciles.length },
       change: { weekId: p.weekId, summary: { type: "order", text: `${actor.displayName} confirmed the order${p.contentsKnown ? "" : " (contents not listed)"}` } },
       recomputeWeeks: [p.weekId],
     };
   });
 }
 
-export function recordReceiptCommand(actor: Actor, operationId: string, p: { orderLineId: string; state: "received" | "missing" | "substituted"; packages: number; substituteText?: string }) {
+export function recordReceiptCommand(
+  actor: Actor,
+  operationId: string,
+  p: { orderLineId: string; state: "received" | "missing" | "substituted"; packages: number; substituteText?: string; correctsReceiptId?: string | null },
+) {
   return runCommand(actor, "RecordReceipt", operationId, p, async (c) => {
     if (!["received", "missing", "substituted"].includes(p.state)) throw new Reject("invalid", "Unknown receipt state");
+    if (p.state === "substituted" && !String(p.substituteText ?? "").trim()) throw new Reject("invalid", "Say what arrived instead");
     const l = await c.query(
       `SELECT ol.*, g.week_id FROM order_lines ol JOIN orders o ON o.id=ol.order_id JOIN grocery_cycles g ON g.id=o.cycle_id WHERE ol.id=$1 AND ol.household_id=$2`,
       [p.orderLineId, actor.householdId],
     );
     if (!l.rowCount) throw new Reject("not_found", "Order line not found");
-    const prior = await c.query("SELECT COALESCE(sum(packages),0)::int AS n FROM receipt_observations WHERE order_line_id=$1", [p.orderLineId]);
+    if (p.correctsReceiptId) {
+      const prev = await c.query("SELECT 1 FROM receipt_observations WHERE id=$1 AND order_line_id=$2", [p.correctsReceiptId, p.orderLineId]);
+      if (!prev.rowCount) throw new Reject("not_found", "The observation being corrected is not on this order line");
+      const done = await c.query("SELECT 1 FROM receipt_observations WHERE corrects_id=$1", [p.correctsReceiptId]);
+      if (done.rowCount) throw new Reject("stale_target", "That observation was already corrected. Review the current receipt.");
+    }
+    // Effective observations exclude any that a later observation corrects (history is kept).
+    const prior = await c.query(
+      `SELECT COALESCE(sum(packages),0)::int AS n FROM receipt_observations r WHERE order_line_id=$1
+         AND NOT EXISTS (SELECT 1 FROM receipt_observations x WHERE x.corrects_id=r.id) AND r.id IS DISTINCT FROM $2`,
+      [p.orderLineId, p.correctsReceiptId ?? null],
+    );
     if (!Number.isInteger(p.packages) || p.packages < 1 || prior.rows[0].n + p.packages > l.rows[0].packages) {
       throw new Reject("invalid", "More packages than the order line holds");
     }
-    await c.query("INSERT INTO receipt_observations(household_id, order_line_id, state, packages, substitute_text, member_id) VALUES ($1,$2,$3,$4,$5,$6)", [
-      actor.householdId, p.orderLineId, p.state, p.packages, p.substituteText ?? null, actor.memberId,
-    ]);
+    const ins = await c.query(
+      "INSERT INTO receipt_observations(household_id, order_line_id, state, packages, substitute_text, member_id, corrects_id) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING id",
+      [actor.householdId, p.orderLineId, p.state, p.packages, p.substituteText ?? null, actor.memberId, p.correctsReceiptId ?? null],
+    );
     return {
-      status: "accepted", result: {},
-      change: { weekId: l.rows[0].week_id, summary: { type: "receipt", text: `${actor.displayName}: ${l.rows[0].name} ${p.state}` } },
+      status: "accepted", result: { receiptId: ins.rows[0].id },
+      change: { weekId: l.rows[0].week_id, summary: { type: "receipt", text: `${actor.displayName}: ${l.rows[0].name} ${p.state}${p.correctsReceiptId ? " (correction)" : ""}` } },
       recomputeWeeks: [l.rows[0].week_id],
     };
   });
 }
 
-// Placeholder so the review regressions load against the reviewed base; replaced below.
-export function validateSubstitutionCommand(actor: Actor, operationId: string, p: { receiptId: string; suitable: boolean; quantity?: string; unit?: string }) {
-  return runCommand(actor, "ValidateSubstitution", operationId, p, async () => {
-    throw new Reject("not_implemented", "ValidateSubstitution is not implemented in 89f3ea9");
+/** Judges a substitution: unsuitable leaves the original need actionable; suitable covers only
+ *  the stated physical amount. Recorded as a new immutable observation. */
+export function validateSubstitutionCommand(
+  actor: Actor,
+  operationId: string,
+  p: { receiptId: string; suitable: boolean; quantity?: string | null; unit?: string | null },
+) {
+  return runCommand(actor, "ValidateSubstitution", operationId, p, async (c) => {
+    const r = await c.query(
+      `SELECT r.state, ol.name, g.week_id FROM receipt_observations r JOIN order_lines ol ON ol.id=r.order_line_id JOIN orders o ON o.id=ol.order_id
+       JOIN grocery_cycles g ON g.id=o.cycle_id WHERE r.id=$1 AND r.household_id=$2`,
+      [p.receiptId, actor.householdId],
+    );
+    if (!r.rowCount) throw new Reject("not_found", "Receipt observation not found");
+    if (r.rows[0].state !== "substituted") throw new Reject("invalid", "Only a substitution can be validated");
+    if (p.suitable) {
+      if (!/^\d+(\.\d+)?$/.test(String(p.quantity ?? "")) || Number(p.quantity) <= 0 || !p.unit) throw new Reject("invalid", "Say how much of the substitute arrived (amount and unit)");
+    }
+    await c.query("INSERT INTO substitution_validations(household_id, receipt_id, suitable, quantity, unit, member_id) VALUES ($1,$2,$3,$4,$5,$6)", [
+      actor.householdId, p.receiptId, !!p.suitable, p.suitable ? p.quantity : null, p.suitable ? normalizeUnit(String(p.unit)) : null, actor.memberId,
+    ]);
+    return {
+      status: "accepted", result: {},
+      change: { weekId: r.rows[0].week_id, summary: { type: "receipt", text: `${actor.displayName}: substitute for ${r.rows[0].name} ${p.suitable ? "works" : "does not work"}` } },
+      recomputeWeeks: [r.rows[0].week_id],
+    };
   });
 }

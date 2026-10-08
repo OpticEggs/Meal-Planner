@@ -84,22 +84,36 @@ export async function projectionInput(
   let approvals: ProjectionInput["approvals"] = [];
   if (cycleId) {
     const statuses = await batchStatuses(c, cycleId);
+    const bh = await c.query("SELECT id, authorized_at FROM handoff_batches WHERE cycle_id=$1", [cycleId]);
     const bl = await c.query(
-      "SELECT l.* FROM handoff_batch_lines l JOIN handoff_batches b ON b.id=l.batch_id WHERE b.cycle_id=$1",
+      `SELECT l.*, p.package_qty, p.package_unit FROM handoff_batch_lines l JOIN handoff_batches b ON b.id=l.batch_id
+       LEFT JOIN products p ON p.id=l.product_id WHERE b.cycle_id=$1`,
       [cycleId],
     );
     batches = [...statuses.entries()].map(([id, status]) => ({
-      id, status, lines: bl.rows.filter((l) => l.batch_id === id).map((l) => ({ ingredientKey: l.ingredient_key, packages: l.packages })),
+      id, status,
+      authorizedAt: bh.rows.find((b) => b.id === id)?.authorized_at.toISOString(),
+      lines: bl.rows.filter((l) => l.batch_id === id).map((l) => ({ ingredientKey: l.ingredient_key, packages: l.packages, packageQty: l.package_qty, packageUnit: l.package_unit })),
     }));
     const o = await c.query("SELECT * FROM orders WHERE cycle_id=$1 ORDER BY confirmed_at DESC, id LIMIT 1", [cycleId]);
     if (o.rowCount) {
       const ol = await c.query("SELECT * FROM order_lines WHERE order_id=$1 ORDER BY name", [o.rows[0].id]);
-      const rec = await c.query("SELECT r.* FROM receipt_observations r JOIN order_lines l ON l.id=r.order_line_id WHERE l.order_id=$1", [o.rows[0].id]);
+      const rec = await c.query(
+        `SELECT r.*, (SELECT row_to_json(v) FROM (SELECT suitable, quantity, unit FROM substitution_validations sv WHERE sv.receipt_id=r.id
+           ORDER BY sv.observed_at DESC, sv.id DESC LIMIT 1) v) AS validation
+         FROM receipt_observations r JOIN order_lines l ON l.id=r.order_line_id WHERE l.order_id=$1 ORDER BY r.observed_at`,
+        [o.rows[0].id],
+      );
       order = {
         id: o.rows[0].id, contentsKnown: o.rows[0].contents_known, pickupAt: o.rows[0].pickup_at?.toISOString() ?? null,
         pickupDate: o.rows[0].pickup_at ? localDate(o.rows[0].pickup_at, household.timezone) : null,
-        lines: ol.rows.map((l) => ({ id: l.id, ingredientKey: l.ingredient_key, name: l.name, packages: l.packages })),
-        receipts: rec.rows.map((r) => ({ orderLineId: r.order_line_id, state: r.state, packages: r.packages })),
+        confirmedAt: o.rows[0].confirmed_at.toISOString(),
+        reconcilesBatchIds: o.rows[0].reconciles_batch_ids,
+        lines: ol.rows.map((l) => ({ id: l.id, ingredientKey: l.ingredient_key, name: l.name, packages: l.packages, productId: l.product_id, packageQty: l.package_qty, packageUnit: l.package_unit })),
+        receipts: rec.rows.map((r) => ({
+          id: r.id, orderLineId: r.order_line_id, state: r.state, packages: r.packages, correctsId: r.corrects_id, substituteText: r.substitute_text,
+          validation: r.validation ? { suitable: r.validation.suitable, quantity: r.validation.quantity === null ? null : String(r.validation.quantity), unit: r.validation.unit } : null,
+        })),
       };
     }
     const ap = await c.query("SELECT * FROM purchase_approvals WHERE cycle_id=$1 AND state='active'", [cycleId]);

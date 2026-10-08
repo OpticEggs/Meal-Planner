@@ -63,7 +63,9 @@ export interface PriceInput {
 export interface BatchInput {
   id: string;
   status: "authorized" | "dispatch_started" | "acknowledged" | "failed" | "canceled_before_dispatch" | "uncertain";
-  lines: { ingredientKey: string; packages: number }[];
+  authorizedAt?: string;
+  // Package basis of the exact product transferred (null = unknown basis).
+  lines: { ingredientKey: string; packages: number; packageQty?: string | null; packageUnit?: string | null }[];
 }
 
 export interface OrderInput {
@@ -71,8 +73,19 @@ export interface OrderInput {
   contentsKnown: boolean;
   pickupAt: string | null;
   pickupDate: string | null; // household-local date of pickup, if known
-  lines: { id: string; ingredientKey: string | null; name: string; packages: number }[];
-  receipts: { orderLineId: string; state: "received" | "missing" | "substituted"; packages: number }[];
+  confirmedAt?: string;
+  /** Transfers whose contents this confirmed order reconciles (empty when contents are unknown). */
+  reconcilesBatchIds?: string[];
+  lines: { id: string; ingredientKey: string | null; name: string; packages: number; productId?: string | null; packageQty?: string | null; packageUnit?: string | null }[];
+  receipts: {
+    id?: string;
+    orderLineId: string;
+    state: "received" | "missing" | "substituted";
+    packages: number;
+    correctsId?: string | null;
+    substituteText?: string | null;
+    validation?: { suitable: boolean; quantity: string | null; unit: string | null } | null;
+  }[];
 }
 
 export interface ApprovalInput {
@@ -258,29 +271,87 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
       leftAfterMeal = { quantity: left.toDecimalPlaces(2).toString(), unit: mealUnit! };
     }
 
-    // 4. History: confirmed order (expected supply), receipts, transfers.
-    const orderLines = input.order?.lines.filter((ol) => ol.ingredientKey === ingredientKey && ingredientKey) ?? [];
-    const ordered = orderLines.reduce((a, ol) => a + ol.packages, 0);
-    const receipts = input.order?.receipts.filter((r) => orderLines.some((ol) => ol.id === r.orderLineId)) ?? [];
-    const received = receipts.filter((r) => r.state === "received").reduce((a, r) => a + r.packages, 0);
-    const missing = receipts.filter((r) => r.state === "missing").reduce((a, r) => a + r.packages, 0);
-    let sent = 0;
-    let uncertain = 0;
-    if (!orderActive) {
-      for (const b of input.batches) {
-        const n = b.lines.filter((l) => l.ingredientKey === ingredientKey).reduce((a, l) => a + l.packages, 0);
-        if (b.status === "authorized" || b.status === "dispatch_started" || b.status === "acknowledged") sent += n;
-        if (b.status === "uncertain") uncertain += n;
+    // 4. History. A confirmed order is expected supply for the transfers it explicitly
+    // reconciles; every other transfer (later, or under an order whose contents are unknown)
+    // stays accounted as sent or uncertain. Quantities are physical, each on its own record's
+    // package basis, so later product/mapping changes cannot rescale history.
+    const order = input.order;
+    const reconciled = new Set(order && order.contentsKnown ? order.reconcilesBatchIds ?? [] : []);
+    const unitP = product?.packageQty && product.packageUnit ? product.packageUnit : null;
+    const pkgP = product?.packageQty && product.packageUnit ? new D(product.packageQty) : null;
+    let basisUnknown = false;
+    const toP = (packages: number, qty: string | null | undefined, unit: string | null | undefined): Dec | null => {
+      if (!pkgP || !unitP) return null;
+      if (!qty || !unit) {
+        basisUnknown = true;
+        return pkgP.mul(packages); // unknown basis: counted as today's package, and flagged
+      }
+      const c = convert(new D(qty).mul(packages), unit, unitP);
+      if (!c) basisUnknown = true;
+      return c ?? pkgP.mul(packages);
+    };
+    const orderLines = order?.lines.filter((ol) => ol.ingredientKey === ingredientKey && ingredientKey) ?? [];
+    const superseded = new Set((order?.receipts ?? []).map((r) => r.correctsId).filter(Boolean) as string[]);
+    const receipts = (order?.receipts ?? []).filter((r) => orderLines.some((ol) => ol.id === r.orderLineId) && !(r.id && superseded.has(r.id)));
+    let ordered = 0;
+    let received = 0;
+    let missing = 0;
+    let coveredP: Dec = new D(0);
+    let receivedP: Dec = new D(0);
+    for (const ol of orderLines) {
+      ordered += ol.packages;
+      const rs = receipts.filter((r) => r.orderLineId === ol.id);
+      const rec = rs.filter((r) => r.state === "received").reduce((a, r) => a + r.packages, 0);
+      const mis = rs.filter((r) => r.state === "missing").reduce((a, r) => a + r.packages, 0);
+      const subs = rs.filter((r) => r.state === "substituted");
+      const sub = subs.reduce((a, r) => a + r.packages, 0);
+      received += rec;
+      missing += mis;
+      // Original product still expected = packages not reported missing or substituted.
+      coveredP = coveredP.plus(toP(ol.packages - mis - sub, ol.packageQty, ol.packageUnit) ?? 0);
+      receivedP = receivedP.plus(toP(rec, ol.packageQty, ol.packageUnit) ?? 0);
+      for (const r of subs) {
+        const v = r.validation;
+        if (!v) {
+          unresolved.push(`Substituted with "${r.substituteText ?? "something else"}" — confirm whether it works for ${ing?.name ?? key}`);
+        } else if (!v.suitable) {
+          missing += r.packages; // an unsuitable substitute leaves the need actionable
+        } else {
+          const q = v.quantity && v.unit && unitP ? convert(v.quantity, v.unit, unitP) : null;
+          if (q) {
+            coveredP = coveredP.plus(q);
+            receivedP = receivedP.plus(q);
+            received += r.packages;
+          } else unresolved.push(`Substitute "${r.substituteText ?? ""}" amount cannot be compared with ${ing?.name ?? key}`);
+        }
       }
     }
+    let sent = 0;
+    let uncertain = 0;
+    let sentP: Dec = new D(0);
+    let preOrderUnknown = false;
+    for (const b of input.batches) {
+      if (reconciled.has(b.id)) continue;
+      const ls = b.lines.filter((l) => l.ingredientKey === ingredientKey);
+      const n = ls.reduce((a, l) => a + l.packages, 0);
+      if (!n) continue;
+      const counts = b.status === "authorized" || b.status === "dispatch_started" || b.status === "acknowledged" || b.status === "uncertain";
+      if (!counts) continue;
+      if (b.status === "uncertain") uncertain += n;
+      else sent += n;
+      for (const l of ls) sentP = sentP.plus(toP(l.packages, l.packageQty, l.packageUnit) ?? 0);
+      if (order && !order.contentsKnown && b.authorizedAt && order.confirmedAt && b.authorizedAt <= order.confirmedAt) preOrderUnknown = true;
+    }
     if (uncertain > 0) unresolved.push("A transfer outcome is uncertain — check the retailer cart; Table does not resend automatically");
+    if (preOrderUnknown) unresolved.push(`Order confirmed with contents not listed — cannot tell whether the transferred ${ing?.name ?? key} is included`);
+    if (basisUnknown) unresolved.push(`Package size of an earlier ${ing?.name ?? key} purchase is not recorded — counted as today's package`);
     const coveredByOrder = ordered - missing;
     // Expected supply only supports dinners on or after pickup. Unknown pickup is unresolved
     // availability, never proof that goods arrive in time.
-    if (coveredByOrder > 0 && m && input.order) {
+    if (coveredByOrder > 0 && m && order) {
       const today = input.today ?? "";
       const upcoming = [...new Set(m.sources.map((x) => x.cookNight))].filter((n) => n >= today).sort();
-      const pickup = input.order.pickupDate;
+      const pickup = order.pickupDate;
       const early = pickup === null ? upcoming : upcoming.filter((n) => n < pickup);
       if (early.length) {
         const days = early.map(dayName).join(", ");
@@ -291,7 +362,12 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
         );
       }
     }
-    const toSend = packagesNeeded === null ? null : Math.max(0, packagesNeeded - coveredByOrder - sent - uncertain);
+    let toSend: number | null;
+    if (packagesNeeded === null) toSend = null;
+    else if (pkgP) {
+      const short = pkgP.mul(packagesNeeded).minus(coveredP).minus(sentP);
+      toSend = packagesFor(D.max(0, short), pkgP);
+    } else toSend = Math.max(0, packagesNeeded - coveredByOrder - sent - uncertain);
 
     const fingerprint = hashOf({
       key,
@@ -302,6 +378,7 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
       product: product ? [product.id, product.packageQty, product.packageUnit] : null,
       packagesNeeded,
       coveredByOrder,
+      covered: coveredP.toDecimalPlaces(6).toString(),
       unresolved: unresolved.filter((u) => !u.startsWith("A transfer outcome")),
     });
     const ap = input.approvals.find((a) => a.ingredientKey === key);
@@ -311,12 +388,12 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
 
     let status: LineStatus;
     if (missing > 0 && toSend && toSend > 0) status = "missing";
-    else if (toSend === 0 && received > 0 && received >= ordered - missing && ordered > 0) status = "received";
-    else if (toSend === 0 && coveredByOrder > 0) status = "ordered";
     else if (toSend === 0 && uncertain > 0) status = "uncertain";
     else if (toSend === 0 && sent > 0) status = "in_cart_transfer";
+    else if (toSend === 0 && received > 0 && received >= ordered - missing && ordered > 0) status = "received";
+    else if (toSend === 0 && coveredByOrder > 0) status = "ordered";
     else if (toSend === 0) status = "nothing_needed";
-    else if (orderActive && toSend !== null && toSend > 0 && approval?.valid) status = "approved";
+    else if (orderActive && toSend !== null && toSend > 0 && approval?.valid && unresolved.length === 0) status = "approved";
     else if (orderActive) status = "not_sent_yet";
     else if (approval?.valid && unresolved.length === 0) status = "approved";
     else status = "needs_review";

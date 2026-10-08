@@ -5,7 +5,7 @@ import {
 } from "./plan";
 import {
   addProductCommand, approvePurchaseLinesCommand, captureHouseholdNeedCommand, chooseProductCommand, confirmOrderCommand, mapRequestCommand,
-  recordAvailabilityCommand, recordPriceCommand, recordReceiptCommand, removeRequestCommand,
+  recordAvailabilityCommand, recordPriceCommand, recordReceiptCommand, removeRequestCommand, validateSubstitutionCommand,
 } from "./groceries";
 import { resolveUncertainTransferCommand, startHandoff } from "./purchasing";
 import {
@@ -39,6 +39,7 @@ export const COMMANDS: Record<string, Handler> = {
   ResolveUncertainTransfer: resolveUncertainTransferCommand,
   ConfirmOrder: confirmOrderCommand,
   RecordReceipt: recordReceiptCommand,
+  ValidateSubstitution: validateSubstitutionCommand,
   SaveInterest: saveInterestCommand,
   ArchiveInterest: archiveInterestCommand,
   SetRecipePreference: setRecipePreferenceCommand,

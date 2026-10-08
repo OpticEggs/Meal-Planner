@@ -159,7 +159,7 @@ function Line({ l }: { l: any }) {
       </div>
       {l.ingredientKey && l.meal && (
         <div className="row small" aria-label={`Availability for ${l.name}`}>
-          <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "enough" })}>Have enough</button>
+          <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "enough", reviewed: { quantity: l.meal.quantity, unit: l.meal.unit, fingerprint: l.fingerprint } })}>Have enough</button>
           <input className="tiny" placeholder="amt" value={some} onChange={(e) => setSome(e.target.value)} aria-label="Amount on hand" />
           <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "some", quantity: some || null, unit: some ? l.meal.unit : null })}>Have some</button>
           <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "need" })}>Need</button>

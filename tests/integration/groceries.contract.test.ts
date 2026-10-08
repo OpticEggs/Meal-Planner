@@ -327,7 +327,9 @@ describe("T19 'Have some' without a quantity, or reviewed demand increases", () 
     expect(c.unresolved.join(" ")).toMatch(/Have some" without an amount/);
     expect(c.status).toBe("needs_review");
     // "Have enough" covers what was reviewed (700 g of broccoli) ...
-    await recordAvailabilityCommand(alex, op(), { weekId: fx.weekId, ingredientKey: "broccoli", state: "enough" });
+    // Since the F06 correction, "Have enough" carries the amount the observer was shown.
+    const seenBroccoli = await line(fx.weekId, "broccoli");
+    await recordAvailabilityCommand(alex, op(), { weekId: fx.weekId, ingredientKey: "broccoli", state: "enough", reviewed: { quantity: seenBroccoli.meal.quantity, unit: seenBroccoli.meal.unit, fingerprint: seenBroccoli.fingerprint } });
     expect((await line(fx.weekId, "broccoli")).packagesNeeded).toBe(0);
     // ... not unlimited future demand: Jon doubles his Wednesday broccoli.
     const ev = (await q<{ revision: number }>("SELECT revision FROM cooking_events WHERE id=$1", [fx.events.chicken_rice]))[0];
@@ -406,7 +408,7 @@ describe("Expected supply respects pickup timing (plan §6.4)", () => {
     await approveAll(alex, fx.weekId);
     await send(alex, fx.weekId);
     const payload = (await q<{ payload: any[] }>("SELECT payload FROM handoff_batches"))[0].payload;
-    const lines = payload.map((i: any) => ({ ingredientKey: i.ingredientKey, name: i.ingredientKey, packages: i.packages }));
+    const lines = payload.map((i: any) => ({ ingredientKey: i.ingredientKey, productId: fx.products[i.ingredientKey], name: i.ingredientKey, packages: i.packages }));
     // Pickup Tuesday 18:00 New York; today (fixed clock) is Monday.
     await confirmOrderCommand(alex, op(), { weekId: fx.weekId, contentsKnown: true, lines, pickupAt: "2026-10-13T22:00:00Z" });
     expect((await line(fx.weekId, "tofu")).unresolved.join(" ")).toMatch(/picked up Tuesday; Monday's dinner needs it earlier/);
