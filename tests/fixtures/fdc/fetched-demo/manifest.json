@@ -1,0 +1,34 @@
+{
+  "label": "FIXTURE — fetched demo records. DEMO_KEY, documentation access, not production validation.",
+  "provenance": "fixture_fetched_demo",
+  "access": "DEMO_KEY, documentation access, not production validation",
+  "note": "Three requests made once on 2026-10-08 with the public DEMO_KEY (3 of the 5 requests authorized for this pass). The files are byte-for-byte the recorded responses; the key was never part of them. Recurring tests replay these files offline and never contact the API.",
+  "requestsLog": { "file": "requests.log", "sha256": "c312d1437b8777c4eba4378cce06e6bb4f103d7d4f2816f04f93114a6b30f46a" },
+  "records": [
+    {
+      "id": "r1",
+      "request": "1 2026-10-08T12:22:24Z POST /v1/foods/search chicken breast raw [Foundation,SR Legacy]",
+      "retrievedAt": "2026-10-08T12:22:25Z",
+      "status": 200,
+      "body": { "file": "r1-search-chicken.json", "sha256": "09f91f6a08f1d893270f28ea4523a131309d088de47a016fc7bbe0e5ef2fb24c" },
+      "headers": { "file": "r1.headers", "sha256": "538259cc72fe8d92ecbf71c3dc2ba354d5d081d214d60acb56814d50b2550df7" }
+    },
+    {
+      "id": "r2",
+      "request": "2 2026-10-08T12:22:32Z GET /v1/food/2646170 (format full)",
+      "retrievedAt": "2026-10-08T12:22:32Z",
+      "status": 429,
+      "note": "A GENUINE 429 OVER_RATE_LIMIT response (DEMO_KEY limits are per IP address); kept as the real rate-limit shape.",
+      "body": { "file": "r2-food-2646170.json", "sha256": "836fe5c63ad5d27c15026438cd6bbd91c5bdf45eff2625c89aa429f44c7ed576" },
+      "headers": { "file": "r2.headers", "sha256": "b1cdbc3b47e089f9610234eb1b343fdf8f30834dfa145fb30126afda9da1b5ba" }
+    },
+    {
+      "id": "r3",
+      "request": "3 2026-10-08T12:22:32Z GET /v1/food/171077 (format full)",
+      "retrievedAt": "2026-10-08T12:22:33Z",
+      "status": 200,
+      "body": { "file": "r3-food-171077.json", "sha256": "2769a87322b6ddb2bc7ceb6b450bc440055cf85dbde9d17b4118db49f525de7c" },
+      "headers": { "file": "r3.headers", "sha256": "4575c44641c3a5e95feb33e2d82378d01ae168ada5d8f4715dd7df49fbd8fb98" }
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "fdcId": 9000004,
+  "dataType": "Branded",
+  "description": "SYNTHETIC TEST FOOD (not nutrition data) — GRANOLA",
+  "brandOwner": "Synthetic Test Brand",
+  "publicationDate": "2026-01-01",
+  "servingSize": 30,
+  "servingSizeUnit": "g",
+  "householdServingFullText": "1/2 cup",
+  "foodNutrients": [
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "208",
+        "name": "Energy",
+        "unitName": "KCAL"
+      },
+      "amount": 400
+    },
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "203",
+        "name": "Protein",
+        "unitName": "G"
+      },
+      "amount": 10
+    },
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "204",
+        "name": "Total lipid (fat)",
+        "unitName": "G"
+      },
+      "amount": 13.3
+    },
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "205",
+        "name": "Carbohydrate, by difference",
+        "unitName": "G"
+      },
+      "amount": 66.7
+    }
+  ],
+  "labelNutrients": {
+    "calories": {
+      "value": 120
+    },
+    "protein": {
+      "value": 3
+    },
+    "fat": {
+      "value": 4
+    },
+    "carbohydrates": {
+      "value": 20
+    }
+  }
+}

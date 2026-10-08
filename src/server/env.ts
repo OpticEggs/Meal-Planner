@@ -131,3 +131,23 @@ export function krogerFakeTransportEnabled(): boolean {
   if (!isTestEnv()) throw new Error("TABLE_KROGER_FAKE_TRANSPORT is a test-only setting and is refused outside TABLE_ENV=test");
   return v === "1" || v === "true";
 }
+
+/** USDA FoodData Central key (server-side only; never sent to a browser, logged or stored).
+ *  In the test environment a real key is ignored, so no test run can reach the live API. */
+export function fdcApiKey(): string | null {
+  if (isTestEnv()) return null;
+  const k = process.env.FDC_API_KEY?.trim();
+  return k ? k : null;
+}
+
+/** Nutrition lookup status. `fixture` = the labeled fixture transport, a test-only setting
+ *  (TABLE_FDC_FIXTURES=1) refused outside TABLE_ENV=test, like TABLE_FIXED_NOW. */
+export function fdcStatus(): "configured" | "not_configured" | "fixture" {
+  const t = process.env.TABLE_FDC_FIXTURES;
+  if (t) {
+    if (t !== "1") throw new Error(`TABLE_FDC_FIXTURES must be 1 or unset (got ${t})`);
+    if (!isTestEnv()) throw new Error("TABLE_FDC_FIXTURES is a test-only setting and is refused outside TABLE_ENV=test");
+    return "fixture";
+  }
+  return fdcApiKey() ? "configured" : "not_configured";
+}

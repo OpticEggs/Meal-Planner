@@ -13,6 +13,7 @@ import {
   addRecipeNoteCommand, archiveInterestCommand, archiveRecipeCommand, reviewIngredientCommand, saveInterestCommand, saveRecipeVersionCommand,
   setFavoriteCommand, setRecipePreferenceCommand,
 } from "./library";
+import { clearNutritionMatchCommand, confirmNutritionMatchCommand } from "./nutrition";
 import { addExclusionCommand, removeExclusionCommand, setTargetsCommand, updateSettingsCommand } from "./household";
 import { disconnectKrogerCommand, setKrogerLocationCommand } from "./kroger";
 
@@ -60,4 +61,6 @@ export const COMMANDS: Record<string, Handler> = {
   RemoveExclusion: removeExclusionCommand,
   DisconnectKroger: disconnectKrogerCommand,
   SetKrogerLocation: setKrogerLocationCommand,
+  ConfirmNutritionMatch: (actor, operationId, payload) => confirmNutritionMatchCommand(actor, operationId, payload),
+  ClearNutritionMatch: clearNutritionMatchCommand,
 };

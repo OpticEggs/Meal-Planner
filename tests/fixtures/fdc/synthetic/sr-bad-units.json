@@ -1,0 +1,48 @@
+{
+  "fdcId": 9000002,
+  "dataType": "SR Legacy",
+  "description": "SYNTHETIC TEST FOOD (not nutrition data) — broccoli, raw",
+  "publicationDate": "4/1/2019",
+  "foodNutrients": [
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "208",
+        "name": "Energy",
+        "unitName": "kJ"
+      },
+      "amount": 141
+    },
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "203",
+        "name": "Protein",
+        "unitName": "mg"
+      },
+      "amount": 2820
+    },
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "204",
+        "name": "Total lipid (fat)",
+        "unitName": "g"
+      },
+      "amount": 0.37
+    }
+  ],
+  "foodPortions": [
+    {
+      "id": 10,
+      "amount": 1,
+      "gramWeight": 91,
+      "modifier": "cup chopped",
+      "measureUnit": {
+        "id": 9999,
+        "name": "undetermined",
+        "abbreviation": "undetermined"
+      }
+    }
+  ]
+}

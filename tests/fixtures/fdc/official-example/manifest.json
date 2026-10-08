@@ -1,0 +1,13 @@
+{
+  "label": "FIXTURE — official examples. Built from the `example` values of the FoodData Central OpenAPI spec 1.0.0 (read from the public documentation page; no API call). Not fetched food records and not nutrition data.",
+  "provenance": "fixture_official_example",
+  "source": "FoodData Central OpenAPI spec 1.0.0, components.schemas (fdc-openapi-1.0.0.json)",
+  "note": "Each file is the schema's own example values assembled into one object (nested $ref examples included). The spec's examples are illustrative: e.g. the FoodNutrient example carries nutrient number \"305\" with the name \"Carbohydrate, by difference\" and an amount of \"0E-8\". They are kept exactly as the spec states them, which is why most macro values here are unknown.",
+  "records": [
+    { "file": "branded-534358.json", "schema": "BrandedFoodItem (with FoodNutrient, Nutrient, FoodNutrientDerivation, NutrientAnalysisDetails examples)", "request": "GET /v1/food/534358" },
+    { "file": "foundation-747448.json", "schema": "FoundationFoodItem (with FoodCategory, FoodNutrient, FoodPortion, MeasureUnit examples)", "request": "GET /v1/food/747448" },
+    { "file": "sr-legacy-170379.json", "schema": "SRLegacyFoodItem (with FoodCategory, FoodNutrient examples)", "request": "GET /v1/food/170379" },
+    { "file": "survey-337985.json", "schema": "SurveyFoodItem (with FoodPortion, MeasureUnit, WweiaFoodCategory examples; the spec spells the key `datatype`)", "request": "GET /v1/food/337985" },
+    { "file": "search-broccoli.json", "schema": "POST /v1/foods/search 200 response: array of SearchResult with one SearchResultFood and AbridgedFoodNutrient example (the live API returns a single object; the spec says array)", "request": "POST /v1/foods/search {query: broccoli}" }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "label": "FIXTURE TRANSPORT ROUTES — test only (TABLE_ENV=test with TABLE_FDC_FIXTURES=1). Every response names its provenance; nothing here is presented as live data.",
+  "search": [
+    { "match": "^chicken breast raw$", "status": 200, "body": "fetched-demo/r1-search-chicken.json", "headers": "fetched-demo/r1.headers", "provenance": "fixture_fetched_demo" },
+    { "match": "^broccoli$", "status": 200, "body": "official-example/search-broccoli.json", "provenance": "fixture_official_example" },
+    { "match": "synthetic", "status": 200, "body": "synthetic/search-synthetic.json", "provenance": "fixture_synthetic" },
+    { "match": "^slow lookup$", "behavior": "hang", "provenance": "fixture_synthetic" },
+    { "match": "^server down$", "status": 503, "body": "synthetic/unavailable.txt", "provenance": "fixture_synthetic" },
+    { "match": "^bad key$", "status": 403, "body": "synthetic/error-invalid-key.json", "provenance": "fixture_synthetic" },
+    { "match": "", "status": 200, "body": "synthetic/search-none.json", "provenance": "fixture_synthetic" }
+  ],
+  "detail": [
+    { "fdcId": 171077, "status": 200, "body": "fetched-demo/r3-food-171077.json", "headers": "fetched-demo/r3.headers", "provenance": "fixture_fetched_demo" },
+    { "fdcId": 2646170, "status": 429, "body": "fetched-demo/r2-food-2646170.json", "headers": "fetched-demo/r2.headers", "provenance": "fixture_fetched_demo" },
+    { "fdcId": 534358, "status": 200, "body": "official-example/branded-534358.json", "provenance": "fixture_official_example" },
+    { "fdcId": 747448, "status": 200, "body": "official-example/foundation-747448.json", "provenance": "fixture_official_example" },
+    { "fdcId": 170379, "status": 200, "body": "official-example/sr-legacy-170379.json", "provenance": "fixture_official_example" },
+    { "fdcId": 337985, "status": 200, "body": "official-example/survey-337985.json", "provenance": "fixture_official_example" },
+    { "fdcId": 9000001, "status": 200, "body": "synthetic/foundation-atwater-only.json", "provenance": "fixture_synthetic" },
+    { "fdcId": 9000002, "status": 200, "body": "synthetic/sr-bad-units.json", "provenance": "fixture_synthetic" },
+    { "fdcId": 9000003, "status": 200, "body": "synthetic/branded-ml-serving.json", "provenance": "fixture_synthetic" },
+    { "fdcId": 9000004, "status": 200, "body": "synthetic/branded-g-serving.json", "provenance": "fixture_synthetic" },
+    { "fdcId": 9000005, "status": 200, "body": "synthetic/survey-food.json", "provenance": "fixture_synthetic" },
+    { "fdcId": 9000006, "status": 200, "body": "synthetic/foundation-general-only.json", "provenance": "fixture_synthetic" },
+    { "fdcId": 9000097, "status": 200, "body": "synthetic/schema-mismatch.json", "provenance": "fixture_synthetic" },
+    { "fdcId": 9000098, "status": 200, "body": "synthetic/malformed.txt", "provenance": "fixture_synthetic" },
+    { "fdcId": 9000099, "status": 403, "body": "synthetic/error-invalid-key.json", "provenance": "fixture_synthetic" },
+    { "fdcId": 9000096, "status": 403, "body": "synthetic/error-missing-key.json", "provenance": "fixture_synthetic" },
+    { "fdcId": 0, "status": 404, "body": "synthetic/not-found.json", "provenance": "fixture_synthetic" }
+  ]
+}

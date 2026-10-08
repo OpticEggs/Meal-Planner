@@ -54,6 +54,9 @@ export interface NutritionFacts {
   fatG: string | null;
   source: string;
   synthetic: boolean;
+  /** The form the values describe (raw / cooked / as_sold). A recipe that uses the ingredient in a
+   *  different form gets "not applicable" (unknown) for it — yields are never converted (B7). */
+  form?: string;
 }
 
 export interface Assignment {

@@ -1,0 +1,31 @@
+{
+  "totalHits": 4,
+  "currentPage": 1,
+  "totalPages": 1,
+  "foods": [
+    {
+      "fdcId": 9000001,
+      "dataType": "Foundation",
+      "description": "SYNTHETIC TEST FOOD (not nutrition data) — chicken thigh, roasted",
+      "publishedDate": "2026-01-01"
+    },
+    {
+      "fdcId": 9000004,
+      "dataType": "Branded",
+      "description": "SYNTHETIC TEST FOOD (not nutrition data) — GRANOLA",
+      "brandOwner": "Synthetic Test Brand",
+      "publishedDate": "2026-01-01"
+    },
+    {
+      "fdcId": 9000005,
+      "dataType": "Survey (FNDDS)",
+      "description": "SYNTHETIC TEST FOOD (not nutrition data) — black beans, canned",
+      "publishedDate": "2020-10-30"
+    },
+    {
+      "fdcId": 9000099,
+      "dataType": "Experimental",
+      "description": "SYNTHETIC TEST FOOD (not nutrition data) — experimental food (unsupported data type)"
+    }
+  ]
+}

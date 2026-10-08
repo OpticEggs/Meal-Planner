@@ -1,0 +1,35 @@
+{
+  "fdcId": 9000006,
+  "dataType": "Foundation",
+  "description": "SYNTHETIC TEST FOOD (not nutrition data) — rice, white, raw",
+  "publicationDate": "2026-01-01",
+  "foodNutrients": [
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "957",
+        "name": "Energy (Atwater General Factors)",
+        "unitName": "KCAL"
+      },
+      "amount": 360
+    },
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "203",
+        "name": "Protein",
+        "unitName": "G"
+      },
+      "amount": 6.6
+    },
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "205",
+        "name": "Carbohydrate, by difference",
+        "unitName": "G"
+      },
+      "amount": 79.3
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "fdcId": 9000001,
+  "dataType": "Foundation",
+  "description": "SYNTHETIC TEST FOOD (not nutrition data) — chicken thigh, roasted",
+  "publicationDate": "2026-01-01",
+  "foodNutrients": [
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "268",
+        "name": "Energy",
+        "unitName": "kJ"
+      },
+      "amount": 900
+    },
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "958",
+        "name": "Energy (Atwater Specific Factors)",
+        "unitName": "KCAL"
+      },
+      "amount": 211
+    },
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "957",
+        "name": "Energy (Atwater General Factors)",
+        "unitName": "KCAL"
+      },
+      "amount": 215
+    },
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "203",
+        "name": "Protein",
+        "unitName": "g"
+      },
+      "amount": 26
+    },
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "204",
+        "name": "Total lipid (fat)",
+        "unitName": "g"
+      },
+      "amount": 11.5
+    },
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "205",
+        "name": "Carbohydrate, by difference",
+        "unitName": "g"
+      },
+      "amount": 0
+    }
+  ],
+  "foodPortions": [
+    {
+      "id": 1,
+      "amount": 1,
+      "gramWeight": 140,
+      "modifier": "thigh",
+      "measureUnit": {
+        "id": 9999,
+        "name": "undetermined",
+        "abbreviation": "undetermined"
+      }
+    },
+    {
+      "id": 2,
+      "amount": 1,
+      "gramWeight": 135,
+      "measureUnit": {
+        "id": 1000,
+        "name": "cup",
+        "abbreviation": "cup"
+      },
+      "modifier": "diced"
+    },
+    {
+      "id": 3,
+      "amount": 0.5,
+      "gramWeight": 0,
+      "modifier": "zero-weight",
+      "measureUnit": {
+        "id": 9999,
+        "name": "undetermined",
+        "abbreviation": "undetermined"
+      }
+    }
+  ]
+}

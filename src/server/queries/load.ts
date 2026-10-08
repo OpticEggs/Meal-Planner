@@ -81,7 +81,7 @@ export async function loadNutrition(c: Db, householdId: string): Promise<Map<str
       n.ingredient_key,
       {
         ingredientKey: n.ingredient_key, basisQty: n.basis_qty, basisUnit: n.basis_unit, calories: n.calories, proteinG: n.protein_g,
-        carbsG: n.carbs_g, fatG: n.fat_g, source: n.source, synthetic: n.synthetic,
+        carbsG: n.carbs_g, fatG: n.fat_g, source: n.source, synthetic: n.synthetic, form: n.form,
       },
     ]),
   );

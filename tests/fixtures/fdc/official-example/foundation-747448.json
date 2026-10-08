@@ -1,0 +1,77 @@
+{
+  "fdcId": 747448,
+  "dataType": "Foundation",
+  "description": "Strawberries, raw",
+  "foodClass": "FinalFood",
+  "footNote": "Source number reflects the actual number of samples analyzed for a nutrient. Repeat nutrient analyses may have been done on the same sample with the values shown.",
+  "isHistoricalReference": false,
+  "ndbNumber": "9316",
+  "publicationDate": "12/16/2019",
+  "scientificName": "Fragaria X ananassa",
+  "foodCategory": {
+    "id": 11,
+    "code": "1100",
+    "description": "Vegetables and Vegetable Products"
+  },
+  "foodNutrients": [
+    {
+      "id": 167514,
+      "amount": "0E-8",
+      "dataPoints": 49,
+      "min": 73.73,
+      "max": 91.8,
+      "median": 90.3,
+      "type": "FoodNutrient",
+      "nutrient": {
+        "id": 1005,
+        "number": "305",
+        "name": "Carbohydrate, by difference",
+        "rank": 1110,
+        "unitName": "g"
+      },
+      "foodNutrientDerivation": {
+        "id": 75,
+        "code": "LCCD",
+        "description": "Calculated from a daily value percentage per serving size measure",
+        "foodNutrientSource": {
+          "id": 9,
+          "code": "12",
+          "description": "Manufacturer's analytical; partial documentation"
+        }
+      },
+      "nutrientAnalysisDetails": {
+        "subSampleId": 343866,
+        "amount": "0E-8",
+        "nutrientId": 1005,
+        "labMethodDescription": "10.2135/cropsci2017.04.0244",
+        "labMethodLink": "https://doi.org/10.2135/cropsci2017.04.0244",
+        "labMethodTechnique": "DOI for Beans",
+        "nutrientAcquisitionDetails": [
+          {
+            "sampleUnitId": 321632,
+            "purchaseDate": "12/2/2005",
+            "storeCity": "TRUSSVILLE",
+            "storeState": "AL"
+          }
+        ]
+      }
+    }
+  ],
+  "foodPortions": [
+    {
+      "id": 135806,
+      "amount": 1,
+      "dataPoints": 9,
+      "gramWeight": 91,
+      "minYearAcquired": 2011,
+      "modifier": "10205",
+      "portionDescription": "1 cup",
+      "sequenceNumber": 1,
+      "measureUnit": {
+        "id": 999,
+        "abbreviation": "undetermined",
+        "name": "undetermined"
+      }
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "fdcId": 9000005,
+  "datatype": "Survey (FNDDS)",
+  "description": "SYNTHETIC TEST FOOD (not nutrition data) — black beans, canned",
+  "foodCode": "99999999",
+  "publicationDate": "10/30/2020",
+  "foodNutrients": [
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "208",
+        "name": "Energy",
+        "unitName": "kcal"
+      },
+      "amount": 91
+    },
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "203",
+        "name": "Protein",
+        "unitName": "g"
+      },
+      "amount": 6
+    },
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "204",
+        "name": "Total lipid (fat)",
+        "unitName": "g"
+      },
+      "amount": 0.29
+    },
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "205",
+        "name": "Carbohydrate, by difference",
+        "unitName": "g"
+      },
+      "amount": 16.6
+    }
+  ],
+  "foodPortions": [
+    {
+      "id": 20,
+      "amount": 1,
+      "gramWeight": 172,
+      "portionDescription": "1 cup",
+      "measureUnit": {
+        "id": 9999,
+        "name": "undetermined",
+        "abbreviation": "undetermined"
+      }
+    },
+    {
+      "id": 21,
+      "amount": 1,
+      "gramWeight": 439,
+      "portionDescription": "1 can (15 oz), drained",
+      "measureUnit": {
+        "id": 9999,
+        "name": "undetermined",
+        "abbreviation": "undetermined"
+      }
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import { D, Dec, baseUnit, convert, normalizeUnit } from "../units";
 import type { Allocation, NutritionFacts, RecipeVersion } from "../types";
+import { normalizeForm } from "../nutrition/form";
 
 export interface IngredientDemand {
   ingredientKey: string;
@@ -46,6 +47,8 @@ export interface NutrientTotal {
   value: string | null; // null = unknown (never zero)
   knownPart: string; // sum of the parts that are known
   missing: string[]; // ingredient keys lacking data or conversion
+  /** Of `missing`: ingredients whose values describe another form than the recipe uses. */
+  formMismatch?: string[];
 }
 
 export interface PlateNutrition {
@@ -66,6 +69,7 @@ export function plateNutrition(
 ): PlateNutrition {
   const known = Object.fromEntries(FIELDS.map((f) => [f, new D(0)])) as Record<(typeof FIELDS)[number], Dec>;
   const missing = Object.fromEntries(FIELDS.map((f) => [f, new Set<string>()])) as Record<(typeof FIELDS)[number], Set<string>>;
+  const formMismatch = new Set<string>();
   let synthetic = false;
   for (const ing of recipe.ingredients) {
     const portions = new D(componentPortions[ing.componentKey] ?? "0");
@@ -73,9 +77,12 @@ export function plateNutrition(
     const facts = nutrition.get(ing.ingredientKey);
     const qty = new D(ing.quantity).mul(portions);
     const inBasis = facts ? convert(qty, ing.unit, facts.basisUnit) : null;
+    // Values for another form (e.g. raw values for a cooked use) are not applicable: unknown.
+    const otherForm = !!facts && facts.form !== undefined && normalizeForm(facts.form) !== normalizeForm(ing.form);
+    if (otherForm) formMismatch.add(ing.ingredientKey);
     for (const f of FIELDS) {
       const v = facts?.[f];
-      if (!facts || inBasis === null || v === null || v === undefined || normalizeUnit(facts.basisUnit) === "") {
+      if (!facts || otherForm || inBasis === null || v === null || v === undefined || normalizeUnit(facts.basisUnit) === "") {
         missing[f].add(ing.ingredientKey);
         continue;
       }
@@ -86,7 +93,7 @@ export function plateNutrition(
   const out = {} as PlateNutrition;
   for (const f of FIELDS) {
     const m = [...missing[f]];
-    out[f] = { value: m.length ? null : known[f].toDecimalPlaces(1).toString(), knownPart: known[f].toDecimalPlaces(1).toString(), missing: m };
+    out[f] = { value: m.length ? null : known[f].toDecimalPlaces(1).toString(), knownPart: known[f].toDecimalPlaces(1).toString(), missing: m, formMismatch: [...formMismatch] };
   }
   out.synthetic = synthetic;
   return out;

@@ -37,6 +37,8 @@ const B9 = "tests/integration/b9.dispatch-overlap.test.ts";
 const B9R = "tests/integration/b9.account-recovery.test.ts";
 const B5C = "tests/integration/b5.kroger-connection.test.ts";
 const B5D = "tests/integration/b5.kroger-dispatch.test.ts";
+const B7U = "tests/unit/fdc-normalize.test.ts";
+const B7I = "tests/integration/b7.nutrition.test.ts";
 
 /** expect: regexes over failing test full names; at least one must fail by assertion. */
 const MUTATIONS = [
@@ -144,6 +146,19 @@ const MUTATIONS = [
       "householdId, t.accessToken, t.refreshToken,\n        t.expiresInSeconds,"]] },
   { name: "B5_refresh_not_coordinated", file: "src/server/integrations/kroger/connection.ts", suite: B5C, pattern: "refresh coordination", expect: [/exactly one refresh|marks needs_reauthorization once and never loops/],
     edits: [["AND token_revision=$3 AND (refresh_lease_until IS NULL OR refresh_lease_until <= clock_timestamp())", "AND token_revision=$3"]] },
+  // B7: FoodData Central nutrition. Each reintroduces a defect a real implementation could have.
+  { name: "B7_missing_kcal_becomes_zero", file: "src/domain/nutrition/fdc.ts", suite: B7U, pattern: "B7", expect: [/never zero/],
+    edits: [["  return { amount: null, unit: null, number: null, status: \"missing\" };", "  return { amount: \"0\", unit: EXPECTED_UNIT[key], number: null, status: \"missing\" };"]] },
+  { name: "B7_serving_treated_as_100g", file: "src/domain/nutrition/fdc.ts", suite: B7U, pattern: "B7", expect: [/30 g label serving/],
+    edits: [["unit: \"serving\", gramWeight: grams, source: \"brandedServing\"", "unit: \"serving\", gramWeight: \"100\", source: \"brandedServing\""]] },
+  { name: "B7_ml_serving_as_grams", file: "src/domain/nutrition/fdc.ts", suite: B7U, pattern: "B7", expect: [/serving in ml/],
+    edits: [["const GRAM_UNITS = new Set([\"g\", \"grm\", \"gram\", \"grams\"]);", "const GRAM_UNITS = new Set([\"g\", \"grm\", \"gram\", \"grams\", \"ml\"]);"]] },
+  { name: "B7_digest_not_checked", file: "src/server/commands/nutrition.ts", suite: B7I, pattern: "B7 changed since review", expect: [/values that differ from the reviewed ones/],
+    edits: [["    if (view.reviewDigest !== p.reviewDigest) {", "    if (false) {"]] },
+  { name: "B7_stale_revision_accepted", file: "src/server/commands/nutrition.ts", suite: B7I, pattern: "B7 competing", expect: [/refused stale/],
+    edits: [["  if (cur.revision !== expectedRevision) {", "  if (false) {"]] },
+  { name: "B7_allergen_flag_set_from_fdc", file: "src/server/commands/nutrition.ts", suite: B7I, pattern: "B7 nutrition never rewrites", expect: [/not allergen clearance/],
+    edits: [["    const portion = eff.value.portion;", "    const portion = eff.value.portion;\n    await c.query(\"UPDATE ingredients SET allergen_info_known=true WHERE household_id=$1 AND key=$2\", [actor.householdId, p.ingredientKey]);"]] },
 ];
 MUTATIONS.push(
   { name: "B9_late_outcome_overwrites_uncertain", file: "src/server/commands/purchasing.ts", suite: B9, pattern: "B9", expect: [/never overwrites it|later answer does not change it/],

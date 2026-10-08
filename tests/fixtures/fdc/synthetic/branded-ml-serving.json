@@ -1,0 +1,62 @@
+{
+  "fdcId": 9000003,
+  "dataType": "Branded",
+  "description": "SYNTHETIC TEST FOOD (not nutrition data) — OAT DRINK",
+  "brandOwner": "Synthetic Test Brand",
+  "publicationDate": "2026-01-01",
+  "servingSize": 240,
+  "servingSizeUnit": "ml",
+  "householdServingFullText": "1 cup",
+  "foodNutrients": [
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "208",
+        "name": "Energy",
+        "unitName": "KCAL"
+      },
+      "amount": 50
+    },
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "203",
+        "name": "Protein",
+        "unitName": "G"
+      },
+      "amount": 0.42
+    },
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "204",
+        "name": "Total lipid (fat)",
+        "unitName": "G"
+      },
+      "amount": 1.25
+    },
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "number": "205",
+        "name": "Carbohydrate, by difference",
+        "unitName": "G"
+      },
+      "amount": 6.67
+    }
+  ],
+  "labelNutrients": {
+    "calories": {
+      "value": 120
+    },
+    "protein": {
+      "value": 1
+    },
+    "fat": {
+      "value": 3
+    },
+    "carbohydrates": {
+      "value": 16
+    }
+  }
+}

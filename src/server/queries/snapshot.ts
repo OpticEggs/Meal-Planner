@@ -1,5 +1,6 @@
 import { readSnapshot, type Db } from "../db/pool";
-import { nowInstant } from "../env";
+import { fdcStatus, nowInstant } from "../env";
+import { nutritionSources } from "./nutrition";
 import { retailerSummary } from "../integrations/retailer";
 import type { Actor } from "../commands/framework";
 import { addDays, dayName, localDate, nextDinnerDate, nightsOf, weekStartOf } from "@/domain/dates";
@@ -70,6 +71,9 @@ export async function householdSnapshot(actor: Actor, weekStartParam?: string | 
       targets: await targets(c, actor.householdId),
       exclusions,
       ingredients: [...ingredients.values()],
+      // B7: each ingredient's nutrition source and the server's lookup status (never the key).
+      nutritionSources: await nutritionSources(c, actor.householdId),
+      nutritionLookup: fdcStatus(),
       staples: (
         await c.query(
           `SELECT s.*, i.name, p.name AS product_name, p.retailer, p.package_qty, p.package_unit, m.display_name AS updated_by_name,

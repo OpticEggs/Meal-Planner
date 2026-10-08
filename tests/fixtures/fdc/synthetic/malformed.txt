@@ -1,0 +1,1 @@
+<html><body>SYNTHETIC: 200 OK with a body that is not JSON</body></html>

@@ -1,0 +1,29 @@
+[
+  {
+    "totalHits": 1034,
+    "foods": [
+      {
+        "fdcId": 45001529,
+        "dataType": "Branded",
+        "description": "BROCCOLI",
+        "foodNutrients": [
+          {
+            "number": 303,
+            "name": "Iron, Fe",
+            "amount": 0.53,
+            "unitName": "mg",
+            "derivationCode": "LCCD",
+            "derivationDescription": "Calculated from a daily value percentage per serving size measure"
+          }
+        ],
+        "publicationDate": "4/1/2019",
+        "brandOwner": "Supervalu, Inc.",
+        "gtinUpc": "041303020937",
+        "additionalDescriptions": "Coon; sharp cheese; Tillamook; Hoop; Pioneer; New York; Wisconsin; Longhorn"
+      }
+    ],
+    "foodSearchCriteria": {
+      "query": "broccoli"
+    }
+  }
+]

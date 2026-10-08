@@ -17,6 +17,7 @@ export const EXPORT_TABLES: Spec[] = [
   { table: "member_targets", where: "member_id IN (SELECT id FROM members WHERE household_id=$1)" },
   { table: "exclusions", where: "household_id=$1" },
   { table: "ingredients", where: "household_id=$1" },
+  { table: "nutrition_matches", where: "household_id=$1" }, // B7 append-only nutrition decisions (no key is ever stored)
   { table: "ingredient_nutrition", where: "household_id=$1" },
   { table: "recipes", where: "household_id=$1" },
   { table: "recipe_versions", where: "household_id=$1" },

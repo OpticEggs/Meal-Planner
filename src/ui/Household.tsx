@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useStore } from "./store";
 import { authClient } from "./auth-client";
 import { Staples } from "./Staples";
+import { IngredientNutrition, nutritionStatusText } from "./NutritionMatch";
 import { ModalSheet, focusFirst } from "./a11y";
 import { FieldError, FormAlert, fieldProps, focusFirstInvalid, isDecimal, isWhole, type Errors } from "./forms";
 
@@ -32,10 +33,11 @@ export function HouseholdScreen() {
       <Targets />
       <Exclusions />
       <IngredientReview />
+      <IngredientNutrition />
       <div className="card stack">
         <div className="section-label">Connections</div>
         <p className="small" data-testid="connection-retailer">Retailer: {snapshot.retailer.live ? snapshot.retailer.label : "Simulated retailer (recording fake)"} — {snapshot.retailer.reason}</p>
-        <p className="small">Nutrition lookup (USDA FoodData Central): not connected. Nutrition comes only from ingredient data you or the fixtures entered; unknown stays unknown.</p>
+        <p className="small" data-testid="connection-nutrition">{nutritionStatusText(snapshot.nutritionLookup)}</p>
       </div>
       <div className="card stack">
         <div className="section-label">Export</div>

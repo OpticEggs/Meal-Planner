@@ -1,0 +1,31 @@
+{
+  "fdcId": 337985,
+  "datatype": "Survey (FNDDS)",
+  "description": "Beef curry",
+  "endDate": "12/31/2014",
+  "foodClass": "Survey",
+  "foodCode": "27116100",
+  "publicationDate": "4/1/2019",
+  "startDate": "1/1/2013",
+  "foodPortions": [
+    {
+      "id": 135806,
+      "amount": 1,
+      "dataPoints": 9,
+      "gramWeight": 91,
+      "minYearAcquired": 2011,
+      "modifier": "10205",
+      "portionDescription": "1 cup",
+      "sequenceNumber": 1,
+      "measureUnit": {
+        "id": 999,
+        "abbreviation": "undetermined",
+        "name": "undetermined"
+      }
+    }
+  ],
+  "wweiaFoodCategory": {
+    "wweiaFoodCategoryCode": 3002,
+    "wweiaFoodCategoryDescription": "Meat mixed dishes"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "label": "FIXTURE — SYNTHETIC. Invented for tests only. Not nutrition data, not fetched, not from the spec.",
+  "provenance": "fixture_synthetic",
+  "note": "Every food description starts with \"SYNTHETIC TEST FOOD (not nutrition data)\" and every id is in the 9000000 range, which these fixtures reserve. Shapes follow the FDC detail/search field names; values are chosen to exercise one rule each. The two error bodies are modeled on the api.data.gov error format, which the genuine 429 in fetched-demo/r2 shares; they were not received from the API.",
+  "records": [
+    { "file": "foundation-atwater-only.json", "exercises": "no 208: energy from 958 (Atwater specific); kJ 268 present and ignored; portions with and without a determined measure unit; a zero-gram portion is not offered; description says roasted (hint: cooked)" },
+    { "file": "foundation-general-only.json", "exercises": "no 208 and no 958: energy from 957 (Atwater general); fat missing; upper-case units" },
+    { "file": "sr-bad-units.json", "exercises": "208 stated in kJ and 203 in mg: bad_unit, unknown; carbohydrate missing" },
+    { "file": "branded-ml-serving.json", "exercises": "Branded serving in ml: not grams, so no gram serving and the per-100 basis is unclear (unknown)" },
+    { "file": "branded-g-serving.json", "exercises": "Branded serving 30 g: per-100 g values plus a label serving that is not 100 g" },
+    { "file": "survey-food.json", "exercises": "Survey (FNDDS) shape (key spelled datatype) with portions described only by portionDescription" },
+    { "file": "search-none.json", "exercises": "a search with no matches" },
+    { "file": "search-synthetic.json", "exercises": "search results across data types, with an unsupported data type left out" },
+    { "file": "error-invalid-key.json", "exercises": "403 API_KEY_INVALID" },
+    { "file": "error-missing-key.json", "exercises": "403 API_KEY_MISSING" },
+    { "file": "schema-mismatch.json", "exercises": "valid JSON in the wrong shape" },
+    { "file": "malformed.txt", "exercises": "200 with a body that is not JSON" },
+    { "file": "unavailable.txt", "exercises": "503" },
+    { "file": "not-found.json", "exercises": "404 for a food id the fixtures do not hold" }
+  ]
+}
