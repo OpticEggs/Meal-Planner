@@ -4,6 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useStore } from "./store";
 import { money, nutrient } from "./format";
 import { PlaceholderTile } from "./Tile";
+import { BUDGET_BYTES_INDEX, SaveLinkForm, SavedLinksList } from "./SavedLinks";
+import { ImportReviewDialog } from "./ImportReview";
+import { focusFirst } from "./a11y";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -27,6 +30,8 @@ export function ExploreScreen() {
   const [passOnly, setPassOnly] = useState(false);
   const [sort, setSort] = useState<SortKey>("title");
   const [msg, setMsg] = useState<string | null>(null);
+  const [source, setSource] = useState<"" | "budget_bytes" | "links">("");
+  const [importing, setImporting] = useState<{ b: any; el: HTMLElement } | null>(null);
   useEffect(() => {
     void loadLibrary();
   }, [loadLibrary]);
@@ -41,6 +46,8 @@ export function ExploreScreen() {
       if (effort && r.version.effortLevel !== effort) return false;
       if (ingredient && !r.ingredientNames.some((n: string) => n.toLowerCase().includes(ingredient.toLowerCase()))) return false;
       if (passOnly && r.constraint.status !== "ok") return false;
+      if (source === "budget_bytes" && r.version.sourceDomain !== "budgetbytes.com") return false;
+      if (source === "links") return false; // saved links are listed below, recipes are not
       return true;
     });
     const s = SORTS.find((x) => x.key === sort)!;
@@ -48,7 +55,8 @@ export function ExploreScreen() {
     const k = list.filter((r: any) => s.value(r) !== null).sort((a: any, b: any) => s.value(a)! - s.value(b)! || a.version.title.localeCompare(b.version.title));
     const u = list.filter((r: any) => s.value(r) === null).sort((a: any, b: any) => a.version.title.localeCompare(b.version.title));
     return { known: k, unknown: u };
-  }, [library, query, cuisine, effort, ingredient, passOnly, sort]);
+  }, [library, query, cuisine, effort, ingredient, passOnly, sort, source]);
+  const links = (library?.bookmarks ?? []).filter((b: any) => !b.archived && (source === "links" || (source === "budget_bytes" && b.domain === "budgetbytes.com")));
 
   const cuisines = [...new Set((library?.recipes ?? []).map((r: any) => r.version.cuisine).filter(Boolean))].sort() as string[];
   return (
@@ -62,11 +70,31 @@ export function ExploreScreen() {
           <label>Cuisine<select value={cuisine} onChange={(e) => setCuisine(e.target.value)}><option value="">Any</option>{cuisines.map((c) => <option key={c}>{c}</option>)}</select></label>
           <label>Effort<select value={effort} onChange={(e) => setEffort(e.target.value)}><option value="">Any</option><option>easy</option><option>medium</option><option>involved</option></select></label>
           <label>Includes ingredient<input value={ingredient} onChange={(e) => setIngredient(e.target.value)} /></label>
+          <label>Source<select data-testid="explore-source" value={source} onChange={(e) => setSource(e.target.value as typeof source)}>
+            <option value="">Any (our recipes)</option><option value="budget_bytes">Budget Bytes</option><option value="links">Saved links (any site)</option>
+          </select></label>
           <label>Sort by<select data-testid="explore-sort" value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>{SORTS.map((s) => <option key={s.key} value={s.key}>{s.label}</option>)}</select></label>
         </div>
         <label className="row small"><input type="checkbox" checked={passOnly} onChange={(e) => setPassOnly(e.target.checked)} /> Only recipes that pass our exclusions</label>
         <p className="faint small">Costs use recorded package prices (simulated store); additional basket cost compares adding one dinner for both of you to the current accepted week. Nutrition is per default plate from explicit ingredient data.</p>
       </div>
+      {source === "budget_bytes" && (
+        <div className="card stack" data-testid="budget-bytes-lane">
+          <h2 className="h3" style={{ margin: 0 }}>Budget Bytes</h2>
+          <p className="small" style={{ margin: 0 }}>Find recipes on the Budget Bytes site, then save the ones you want here. Table shows only the links you two saved — it doesn't copy Budget Bytes' recipes, photos or methods. Prices posted there are from when each recipe was published, not your store today.</p>
+          <a className="btn line" href={BUDGET_BYTES_INDEX} target="_blank" rel="noopener noreferrer" data-testid="browse-budget-bytes">Browse Budget Bytes ↗</a>
+          <SaveLinkForm idPrefix="bb-save-link" source="Budget Bytes" />
+        </div>
+      )}
+      {source === "links" && <div className="card"><SaveLinkForm idPrefix="explore-save-link" /></div>}
+      {source && (
+        <>
+          <div className="section-label">{source === "budget_bytes" ? "Budget Bytes links you saved" : "Saved links"}</div>
+          <SavedLinksList links={links} empty={source === "budget_bytes" ? "No Budget Bytes links saved yet. Browse Budget Bytes, copy a recipe's link and save it here." : "No saved links yet."} onImport={(b, el) => setImporting({ b, el })} />
+          {source === "budget_bytes" && <div className="section-label">Budget Bytes recipes in Our Recipes</div>}
+        </>
+      )}
+      {importing && <ImportReviewDialog bookmark={importing.b} onClose={() => { const el = importing.el; setImporting(null); focusFirst(el, () => document.querySelector<HTMLElement>('[data-testid="explore-source"]')); }} />}
       {msg && <p role="status" className="small">{msg}</p>}
       {!library && <p className="muted">Loading…</p>}
       <ul className="recipes" data-testid="explore-results">

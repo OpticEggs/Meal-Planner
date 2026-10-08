@@ -38,6 +38,8 @@ const B9R = "tests/integration/b9.account-recovery.test.ts";
 const COOK = "tests/integration/cook-records.test.ts";
 const THEME = "tests/unit/theme-contrast.test.ts";
 const B2122 = "tests/integration/b21-b22.test.ts";
+const MSS = "tests/integration/ms-sources.test.ts";
+const MSD = "tests/integration/ms-destinations.test.ts";
 const B5C = "tests/integration/b5.kroger-connection.test.ts";
 const B5D = "tests/integration/b5.kroger-dispatch.test.ts";
 const B7U = "tests/unit/fdc-normalize.test.ts";
@@ -190,6 +192,21 @@ MUTATIONS.push(
     edits: [["    if (!e.rows[0].on_plan) {", "    if (false) {"]] },
   { name: "B22_status_only", file: "src/server/commands/plan.ts", suite: B2122, pattern: "B22", expect: [/no longer scheduled|same moment/],
     edits: [["(e.status = 'scheduled' AND w.accepted_choice_revision > 0", "(e.status <> 'retired' AND w.accepted_choice_revision > 0"], ["AND EXISTS (SELECT 1 FROM assignments a WHERE a.week_id=e.week_id AND a.cooking_event_id=e.id AND a.kind='cook' AND a.night=e.cook_night)) AS on_plan", ") AS on_plan"]] },
+  // Multi-source handoff: links, import, Budget Bytes, destinations, Instacart.
+  { name: "MS_link_dedup_by_raw_url", file: "src/server/commands/sources.ts", suite: MSS, pattern: "URL-02", expect: [/URL-02/],
+    edits: [["        id, actor.householdId, v.key, v.url,", "        id, actor.householdId, v.url, v.url,"]] },
+  { name: "MS_import_confirms_incomplete", file: "src/server/commands/imports.ts", suite: MSS, pattern: "URL-11", expect: [/URL-11/],
+    edits: [["    if (problems.length) throw new Reject(\"incomplete\"", "    if (false) throw new Reject(\"incomplete\""]] },
+  { name: "MS_budget_bytes_page_read", file: "src/server/recipe-import-service.ts", suite: MSS, pattern: "BB-02", expect: [/BB-02/],
+    edits: [["  if (isBudgetBytes(b.domain)) {", "  if (false && isBudgetBytes(b.domain)) {"]] },
+  { name: "MS_fetch_private_address_allowed", file: "src/server/integrations/recipe-import/fetcher.ts", suite: MSS, pattern: "URL-05", expect: [/URL-05/],
+    edits: [["!isPublicAddress(a)) throw refuse(", "false) throw refuse("]] },
+  { name: "MS_destination_keeps_store_products", file: "src/server/groceries/recompute.ts", suite: MSD, pattern: "GR-02", expect: [/GR-02/],
+    edits: [["prods.rows.filter(() => storeCart).map", "prods.rows.filter(() => true).map"]] },
+  { name: "MS_destination_ignores_revision", file: "src/server/commands/destinations.ts", suite: MSD, pattern: "GR-10", expect: [/GR-10/],
+    edits: [["    if (cyc.destination_revision !== p.expectedRevision) {", "    if (false) {"]] },
+  { name: "MS_instacart_stale_list_requested", file: "src/server/commands/destinations.ts", suite: MSD, pattern: "IC-03", expect: [/IC-03/],
+    edits: [["    if (preview.fingerprint !== p.listFingerprint) throw", "    if (false) throw"]] },
   // Visual update: the contrast check reads the shipped tokens; a too-light or too-dark text token must fail it.
   { name: "UI_light_text_too_faint", file: "src/app/globals.css", suite: THEME, pattern: "theme contrast", expect: [/theme contrast — light/],
     edits: [["--muted: #574e45; --faint: #6b6157;", "--muted: #574e45; --faint: #9a8f84;"]] },

@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { Db } from "../db/pool";
-import { Reject, runCommand, type Actor } from "./framework";
+import { Reject, runCommand, type Actor, type HandlerOutcome } from "./framework";
 import { normalizeUnit } from "@/domain/units";
 import { slug } from "@/domain/recipes/rebase";
 
@@ -93,7 +93,16 @@ export interface RecipeDraft {
 /** Manual structured recipe entry/edit. Every save creates a NEW immutable version; accepted
  *  meals stay pinned to the version they were chosen with. Text is stored as data, never markup. */
 export function saveRecipeVersionCommand(actor: Actor, operationId: string, p: RecipeDraft) {
-  return runCommand(actor, "SaveRecipeVersion", operationId, p, async (c) => {
+  return runCommand(actor, "SaveRecipeVersion", operationId, p, (c) => writeRecipeVersion(c, actor, p));
+}
+
+/** Writes one new immutable recipe version (the only path: manual saves and confirmed imports).
+ *  An imported version records its source page and draft; later manual versions keep the source page. */
+export async function writeRecipeVersion(
+  c: Db, actor: Actor, p: RecipeDraft,
+  origin: { provenance: "manual" | "imported"; sourceUrl?: string | null; importDraftId?: string | null } = { provenance: "manual" },
+): Promise<HandlerOutcome> {
+  {
     const title = String(p.title ?? "").trim().slice(0, 140);
     if (!title) throw new Reject("invalid", "Title required");
     if (!Array.isArray(p.components) || p.components.length === 0) throw new Reject("invalid", "At least one component (for example: main) is required");
@@ -154,13 +163,18 @@ export function saveRecipeVersionCommand(actor: Actor, operationId: string, p: R
       );
     }
     const vid = randomUUID();
+    let sourceUrl = origin.sourceUrl ?? null;
+    if (!sourceUrl && versionNo > 1) {
+      sourceUrl = (await c.query("SELECT source_url FROM recipe_versions WHERE recipe_id=$1 AND version_no=$2", [recipeId, versionNo - 1])).rows[0]?.source_url ?? null;
+    }
     await c.query(
       `INSERT INTO recipe_versions(id, recipe_id, household_id, version_no, title, cuisine, summary, effort_minutes, effort_level, leftover_friendly,
-         instructions, reheat_instructions, provenance, source_label, estimate, created_by)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,'manual',$13,true,$14)`,
+         instructions, reheat_instructions, provenance, source_label, estimate, created_by, source_url, import_draft_id)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,true,$15,$16,$17)`,
       [
         vid, recipeId, actor.householdId, versionNo, title, p.cuisine ?? null, p.summary ?? null, p.effortMinutes ?? null, p.effortLevel ?? null,
-        !!p.leftoverFriendly, String(p.instructions ?? "").slice(0, 10000), String(p.reheatInstructions ?? "").slice(0, 4000), p.sourceLabel ?? null, actor.memberId,
+        !!p.leftoverFriendly, String(p.instructions ?? "").slice(0, 10000), String(p.reheatInstructions ?? "").slice(0, 4000), origin.provenance, p.sourceLabel ?? null, actor.memberId,
+        sourceUrl, origin.importDraftId ?? null,
       ],
     );
     for (const cmp of components) {
@@ -178,7 +192,7 @@ export function saveRecipeVersionCommand(actor: Actor, operationId: string, p: R
       result: { recipeId, versionId: vid, versionNo },
       change: { summary: { type: "recipe", text: `${actor.displayName} saved ${title} (version ${versionNo})` } },
     };
-  });
+  }
 }
 
 export function archiveRecipeCommand(actor: Actor, operationId: string, p: { recipeId: string; archived: boolean }) {

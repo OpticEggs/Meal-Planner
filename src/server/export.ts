@@ -23,6 +23,9 @@ export const EXPORT_TABLES: Spec[] = [
   { table: "recipe_versions", where: "household_id=$1" },
   { table: "recipe_components", where: "recipe_version_id IN (SELECT id FROM recipe_versions WHERE household_id=$1)" },
   { table: "recipe_ingredients", where: "recipe_version_id IN (SELECT id FROM recipe_versions WHERE household_id=$1)" },
+  { table: "recipe_bookmarks", where: "household_id=$1" }, // shared saved links (no page content is stored)
+  { table: "recipe_bookmark_saves", where: "household_id=$1" },
+  { table: "recipe_import_drafts", where: "household_id=$1" },
   { table: "weeks", where: "household_id=$1" },
   { table: "cooking_events", where: "household_id=$1" },
   { table: "assignments", where: "household_id=$1" },
@@ -65,7 +68,8 @@ export const EXPORT_TABLES: Spec[] = [
  *  tokens, PKCE verifiers and authorization states must NEVER be exported). Every other table with
  *  a household_id must be in EXPORT_TABLES (checked by the X12 test). */
 // cook_records_effective is a view derived from cook_records + cook_record_corrections (both exported).
-export const NOT_EXPORTED = ["command_receipts", "fake_retailer_calls", "fake_retailer_script", "kroger_connections", "kroger_auth_states", "cook_records_effective"];
+// instacart_list_links: provider-generated links whose retention terms are unverified; a link is regenerable from the list.
+export const NOT_EXPORTED = ["command_receipts", "fake_retailer_calls", "fake_retailer_script", "kroger_connections", "kroger_auth_states", "cook_records_effective", "instacart_list_links"];
 
 export interface HouseholdExport {
   format: "table-household-export";

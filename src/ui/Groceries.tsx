@@ -8,6 +8,7 @@ import {
   CartCheckDialog, ConfirmOrderDialog, CorrectReceiptDialog, ProductDialog, RemoveRequestDialog, SubstituteDialog, ValidateSubstituteDialog,
   type GroceryDialog,
 } from "./GroceryDialogs";
+import { InstacartPanel, ShoppingListCard, WhereToShop, destinationLabel } from "./WhereToShop";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -105,6 +106,7 @@ export function GroceriesScreen() {
       </section>
     );
   const s = g.summary;
+  const storeCart = !g.where || g.where.destination === "retailer_cart";
   // Lines whose packages have no recorded price (the same rule a line uses to say "price unknown").
   const unpriced = g.lines.filter((l: any) => (l.toSend ?? 0) > 0 && (!l.product || !l.price));
   const sendable = g.lines.filter((l: any) => l.toSend === null || l.toSend > 0);
@@ -130,12 +132,15 @@ export function GroceriesScreen() {
           <button className="btn line small" onClick={() => { setDelta(null); focusFirst(document.querySelector<HTMLElement>('[data-testid="readiness"]')); }}>Got it</button>
         </div>
       )}
+      {g.where && <WhereToShop />}
       {/* Pickup estimate (visual update): a large figure only when every package has a price; an
           incomplete estimate stays visibly incomplete and says which lines lack a price. */}
       <div className="card stack" data-testid="pickup-card">
         <div className="section-label" style={{ margin: 0 }}>Pickup estimate</div>
         <p className={s.pickupSpending?.complete ? "estimate-total" : "estimate-partial"} data-testid="groceries-pickup-estimate">{costView(s.pickupSpending)}</p>
-        <p className="faint small" style={{ margin: 0 }}>For the packages in this purchase, at {snapshot.retailer.live ? `${snapshot.retailer.label} prices` : "simulated store prices"}.</p>
+        {storeCart
+          ? <p className="faint small" style={{ margin: 0 }}>For the packages in this purchase, at {snapshot.retailer.live ? `${snapshot.retailer.label} prices` : "simulated store prices"}.</p>
+          : <p className="faint small" style={{ margin: 0 }} data-testid="destination-prices">Table has no prices for {destinationLabel(g.where, snapshot.retailer)}: package sizes and prices are recorded only for the store cart.</p>}
         {!s.pickupSpending?.complete && unpriced.length > 0 && (
           <details className="small">
             <summary>Why isn&apos;t this a total?</summary>
@@ -162,13 +167,16 @@ export function GroceriesScreen() {
         )}
       </div>
       {msg && <p role="alert" className="warnbox" data-testid="grocery-msg">{msg}</p>}
-      <div className="row">
+      {!storeCart && <ShoppingListCard open />}
+      {g.where?.destination === "instacart_list" && <InstacartPanel />}
+      {storeCart && <div className="row">
         <button className="btn line" disabled={!approvable.length || !writesAllowed} onClick={() => approve(approvable)} data-testid="approve-all">Approve {approvable.length} reviewable</button>
         <button className="btn primary" disabled={!s.ready || !writesAllowed || !snapshot.retailer.ready} onClick={send} data-testid="send">
           Send to {snapshot.retailer.live ? snapshot.retailer.label : "Simulated retailer"}
         </button>
-      </div>
-      {!snapshot.retailer.ready && <p className="warn small">{snapshot.retailer.reason}</p>}
+      </div>}
+      {storeCart && !snapshot.retailer.ready && <p className="warn small">{snapshot.retailer.reason}</p>}
+      {storeCart && g.shoppingList && <ShoppingListCard />}
       <div className="section-label">Also need</div>
       <AlsoNeed from="groceries" />
       <div className="section-label">This week’s list</div>

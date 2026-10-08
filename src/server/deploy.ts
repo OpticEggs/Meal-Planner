@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { instacartConfigProblems } from "./integrations/instacart/config";
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { pool } from "./db/pool";
@@ -23,12 +24,13 @@ export function configProblems(env: Record<string, string | undefined> = process
   } catch {
     p.push("BETTER_AUTH_URL_missing");
   }
-  for (const k of ["TABLE_FIXED_NOW", "TABLE_DISPATCH_TIMEOUT_MS", "TABLE_FDC_FIXTURES", "TABLE_KROGER_FAKE_TRANSPORT"]) {
+  for (const k of ["TABLE_FIXED_NOW", "TABLE_DISPATCH_TIMEOUT_MS", "TABLE_FDC_FIXTURES", "TABLE_KROGER_FAKE_TRANSPORT", "TABLE_RECIPE_FETCH_FIXTURES", "TABLE_INSTACART_FAKE_TRANSPORT"]) {
     if (env[k]) p.push(`${k}_set_in_production`);
   }
   const retailer = env.TABLE_RETAILER ?? "simulated";
   if (retailer !== "simulated" && retailer !== "kroger") p.push("TABLE_RETAILER_invalid");
   if ((env.KROGER_ACTIVATE ?? "").trim() && retailer !== "kroger") p.push("KROGER_ACTIVATE_without_kroger_retailer");
+  p.push(...instacartConfigProblems({ ...env, TABLE_ENV: "production" }));
   return p;
 }
 

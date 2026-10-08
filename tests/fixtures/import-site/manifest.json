@@ -1,0 +1,20 @@
+{
+  "hosts": {
+    "recipes.example.com": ["93.184.215.14"],
+    "two.example.com": ["93.184.215.14"],
+    "plain.example.com": ["93.184.215.14"],
+    "login.example.com": ["93.184.215.14"],
+    "private.example.com": ["10.0.0.5"],
+    "mixed.example.com": ["93.184.215.14", "127.0.0.1"],
+    "metadata.example.com": ["169.254.169.254"],
+    "mapped.example.com": ["::ffff:192.168.1.10"],
+    "hop.example.com": ["93.184.215.14"]
+  },
+  "pages": {
+    "https://recipes.example.com/chili": { "status": 200, "headers": { "content-type": "text/html; charset=utf-8" }, "file": "chili.html" },
+    "https://two.example.com/menu": { "status": 200, "headers": { "content-type": "text/html" }, "file": "two-recipes.html" },
+    "https://plain.example.com/page": { "status": 200, "headers": { "content-type": "text/html" }, "file": "no-recipe.html" },
+    "https://login.example.com/recipe": { "status": 403, "headers": { "content-type": "text/html" }, "body": "login required" },
+    "https://hop.example.com/go": { "status": 302, "headers": { "location": "https://private.example.com/inside" } }
+  }
+}

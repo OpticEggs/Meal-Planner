@@ -6,10 +6,12 @@ import { money, nutrient } from "./format";
 import { focusFirst, tabKeyTarget } from "./a11y";
 import { RecipeEditorDialog } from "./RecipeEditor";
 import { PlaceholderTile } from "./Tile";
+import { SaveLinkForm, SavedLinksList } from "./SavedLinks";
+import { ImportReviewDialog } from "./ImportReview";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-const FILTERS = ["all", "favorites", "sounds_good"] as const;
+const FILTERS = ["all", "favorites", "sounds_good", "links"] as const;
 
 const PREFS = [
   { v: "make_again", label: "Make again" },
@@ -19,7 +21,8 @@ const PREFS = [
 
 export function RecipesScreen() {
   const { library, loadLibrary, me, command } = useStore();
-  const [filter, setFilter] = useState<"all" | "favorites" | "sounds_good">("all");
+  const [filter, setFilter] = useState<(typeof FILTERS)[number]>("all");
+  const [importing, setImporting] = useState<{ b: any; el: HTMLElement } | null>(null);
   const [creating, setCreating] = useState<HTMLElement | null>(null);
   const tabs = useRef<Record<string, HTMLButtonElement | null>>({});
   useEffect(() => {
@@ -44,7 +47,7 @@ export function RecipesScreen() {
                   tabs.current[to]?.focus();
                 }
               }}>
-              {{ all: "All", favorites: "My favorites", sounds_good: "Sounds good" }[f]}
+              {{ all: "All", favorites: "My favorites", sounds_good: "Sounds good", links: "Saved links" }[f]}
             </button>
           ))}
         </div>
@@ -55,6 +58,19 @@ export function RecipesScreen() {
           returnFocus={() => focusFirst(creating, () => document.querySelector<HTMLElement>('[data-testid="new-recipe"]'))} />
       )}
       <div role="tabpanel" id="recipe-panel" aria-labelledby={`rtab-${filter}`}>
+      {filter === "links" ? (
+        <div className="stack">
+          <div className="card"><SaveLinkForm idPrefix="recipes-save-link" /></div>
+          <SavedLinksList links={(library.bookmarks ?? []).filter((b: any) => !b.archived)} empty="No saved links yet." onImport={(b, el) => setImporting({ b, el })} />
+          {(library.bookmarks ?? []).some((b: any) => b.archived) && (
+            <details>
+              <summary>Archived links ({library.bookmarks.filter((b: any) => b.archived).length})</summary>
+              <SavedLinksList links={library.bookmarks.filter((b: any) => b.archived)} empty="" />
+            </details>
+          )}
+          {importing && <ImportReviewDialog bookmark={importing.b} onClose={() => { const el = importing.el; setImporting(null); focusFirst(el, () => document.querySelector<HTMLElement>("#rtab-links")); }} />}
+        </div>
+      ) : (<>
       {filter === "sounds_good" && <p className="faint small">Shared near-term ideas. Saving one does not schedule it.</p>}
       {list.length === 0 && <p className="small muted">{filter === "favorites" ? "No favorites yet." : filter === "sounds_good" ? "No saved ideas yet." : "No recipes yet."}</p>}
       <ul className="recipes" data-testid="recipe-list">
@@ -76,6 +92,7 @@ export function RecipesScreen() {
           </li>
         ))}
       </ul>
+      </>)}
       </div>
     </section>
   );

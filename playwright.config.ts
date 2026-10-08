@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+import { fileURLToPath } from "node:url";
 
 const PORT = 3100;
 export const TEST_ENV = {
@@ -9,6 +10,8 @@ export const TEST_ENV = {
   TABLE_RETAILER: "simulated",
   BETTER_AUTH_URL: `http://127.0.0.1:${PORT}`,
   BETTER_AUTH_SECRET: "e2e-only-secret-0123456789abcdef0123456789abcdef",
+  // Recipe pages are read only from local synthetic fixtures (multi-source phase 2); nothing leaves the machine.
+  TABLE_RECIPE_FETCH_FIXTURES: fileURLToPath(new URL("./tests/fixtures/import-site/manifest.json", import.meta.url)),
 };
 for (const [k, v] of Object.entries(TEST_ENV)) if (k !== "NODE_ENV") process.env[k] = v;
 

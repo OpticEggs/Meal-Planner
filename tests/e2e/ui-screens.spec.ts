@@ -48,6 +48,9 @@ for (const scheme of SCHEMES) {
       await page.getByRole("link", { name: "Recipes" }).click();
       await expect(page.getByTestId("recipe-row").first()).toBeVisible();
       await shot("4-recipes");
+      await page.getByRole("tab", { name: "Saved links" }).click();
+      await shot("4b-saved-links");
+      await page.getByRole("tab", { name: "All" }).click();
       await page.getByTestId("recipe-row").first().getByRole("link").first().click();
       await expect(page.getByTestId("recipe-title")).toBeVisible();
       await shot("5-recipe");

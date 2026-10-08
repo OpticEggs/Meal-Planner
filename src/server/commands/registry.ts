@@ -16,6 +16,9 @@ import {
 import { clearNutritionMatchCommand, confirmNutritionMatchCommand } from "./nutrition";
 import { addExclusionCommand, removeExclusionCommand, setTargetsCommand, updateSettingsCommand } from "./household";
 import { disconnectKrogerCommand, setKrogerLocationCommand } from "./kroger";
+import { archiveLinkCommand, saveLinkCommand } from "./sources";
+import { prepareInstacartListCommand, setShoppingDestinationCommand } from "./destinations";
+import { confirmImportDraftCommand, discardImportDraftCommand, pasteIngredientsCommand, updateImportDraftCommand } from "./imports";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Handler = (actor: Actor, operationId: string, payload: any) => Promise<CommandReceipt>;
@@ -54,6 +57,15 @@ export const COMMANDS: Record<string, Handler> = {
   SetFavorite: setFavoriteCommand,
   AddRecipeNote: addRecipeNoteCommand,
   SaveRecipeVersion: saveRecipeVersionCommand,
+  SaveLink: saveLinkCommand,
+  ArchiveLink: archiveLinkCommand,
+  // Drafts read from a page are created only by the server import route (not a client command).
+  PasteIngredients: pasteIngredientsCommand,
+  UpdateImportDraft: updateImportDraftCommand,
+  DiscardImportDraft: discardImportDraftCommand,
+  ConfirmImportDraft: confirmImportDraftCommand,
+  SetShoppingDestination: setShoppingDestinationCommand,
+  PrepareInstacartList: (a, o, p) => prepareInstacartListCommand(a, o, p),
   ArchiveRecipe: archiveRecipeCommand,
   ReviewIngredient: reviewIngredientCommand,
   UpdateSettings: updateSettingsCommand,

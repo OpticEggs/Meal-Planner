@@ -1,4 +1,4 @@
-import { computeProjection, type ProjectionInput, type ProjectionResult, type BatchInput } from "@/domain/groceries/projection";
+import { computeProjection, type ProjectionInput, type ProjectionResult, type BatchInput, type Destination } from "@/domain/groceries/projection";
 import type { PlanState, RecipeVersion } from "@/domain/types";
 import type { Db } from "../db/pool";
 import { loadHousehold, loadIngredients, loadPlanState, loadRecipeVersions, loadSettings, weekById } from "../queries/load";
@@ -7,8 +7,10 @@ import { nowInstant } from "../env";
 import { retailer } from "../integrations/retailer";
 
 export async function ensureCycle(c: Db, householdId: string, weekId: string): Promise<string> {
+  // A new cycle starts with the household's preferred way of shopping.
   const r = await c.query(
-    `INSERT INTO grocery_cycles(household_id, week_id) VALUES ($1,$2)
+    `INSERT INTO grocery_cycles(household_id, week_id, destination)
+     VALUES ($1,$2,(SELECT preferred_destination FROM households WHERE id=$1))
      ON CONFLICT (week_id) DO UPDATE SET week_id = EXCLUDED.week_id RETURNING id`,
     [householdId, weekId],
   );
@@ -65,8 +67,14 @@ export async function projectionInput(
      WHERE pm.household_id=$1 AND pm.suitable`,
     [householdId],
   );
+  // Store products, package sizes and prices belong to the store cart (the retailer adapter's store).
+  // Another way of shopping gets none of them: its packages and prices stay unknown, never borrowed.
+  const destination: Destination = cycleId
+    ? ((await c.query("SELECT destination FROM grocery_cycles WHERE id=$1", [cycleId])).rows[0]?.destination ?? "retailer_cart")
+    : ((await c.query("SELECT preferred_destination FROM households WHERE id=$1", [householdId])).rows[0]?.preferred_destination ?? "retailer_cart");
+  const storeCart = destination === "retailer_cart";
   const products: ProjectionInput["products"] = new Map(
-    prods.rows.map((p) => [
+    prods.rows.filter(() => storeCart).map((p) => [
       p.ingredient_key,
       {
         product: {
@@ -84,7 +92,7 @@ export async function projectionInput(
   // retailer sells them. A product from another retailer is unavailable, never swapped.
   const intentIds = [...new Set((reqs.rows as Record<string, unknown>[]).map((r) => r.product_id as string | null).filter((x): x is string => !!x))];
   const intentProducts: NonNullable<ProjectionInput["intentProducts"]> = new Map();
-  if (intentIds.length) {
+  if (intentIds.length && storeCart) {
     const ip = await c.query(
       `SELECT p.*, pr.id AS price_id, pr.amount_minor, pr.currency, pr.price_kind, pr.source AS price_source, pr.observed_at AS price_observed_at
        FROM products p LEFT JOIN LATERAL (SELECT * FROM price_observations po WHERE po.product_id=p.id ORDER BY po.observed_at DESC, po.id DESC LIMIT 1) pr ON true
@@ -171,6 +179,7 @@ export async function projectionInput(
       approvals,
       budget: { scope: settings.budgetScope, limitMinor: settings.budgetLimitMinor, firm: settings.budgetFirm, currency: settings.budgetCurrency },
       today: localDate(nowInstant(), household.timezone),
+      destination,
     },
   };
 }

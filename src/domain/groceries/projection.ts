@@ -112,7 +112,13 @@ export interface ProjectionInput {
   budget: { scope: "pickup" | "dinner_ingredients" | null; limitMinor: number | null; firm: boolean; currency: string };
   /** Household-local today; dinners before today are history and need no timing check. */
   today?: string;
+  /** How this cycle is bought (multi-source handoff, phase 4). Only "retailer_cart" (the store the
+   *  retailer adapter sends to) uses products, package counts and prices; the other ways get no
+   *  store products, so their prices stay unknown and nothing can be sent to a cart. */
+  destination?: Destination;
 }
+
+export type Destination = "retailer_cart" | "instacart_list" | "manual";
 
 export type LineStatus =
   | "nothing_needed"
@@ -134,6 +140,8 @@ export interface RequirementLine {
   requests: { id: string; kind: "usual" | "extra"; packages: number | null; text: string; contributors: { memberId: string; name: string; taps: number }[]; productId?: string | null }[];
   availability: AvailabilityInput | null;
   homeSupply: string | null;
+  /** Meal amount still needed after what a member said is at home (same unit as `meal`). */
+  netMeal: { quantity: string; unit: string } | null;
   product: ProductInput | null;
   price: PriceInput | null;
   packagesForMeal: number | null;
@@ -191,6 +199,7 @@ function costFrom(values: (number | null)[], currency: string): CostView {
 }
 
 export function computeProjection(input: ProjectionInput): ProjectionResult {
+  const destination: Destination = input.destination ?? "retailer_cart";
   // 1. Meal demand from accepted, scheduled cooking events.
   type MealSource = { eventId: string; cookNight: string; recipeTitle: string; quantity: string; unit: string };
   const meal = new Map<string, { byUnit: Map<string, Dec>; sources: MealSource[] }>();
@@ -416,6 +425,8 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
       coveredByOrder,
       covered: coveredP.toDecimalPlaces(6).toString(),
       unresolved: unresolved.filter((u) => !u.startsWith("A transfer outcome")),
+      // Absent for the store cart, so every earlier fingerprint (and the approvals bound to it) is unchanged.
+      ...(destination !== "retailer_cart" ? { destination } : {}),
     });
     const ap = input.approvals.find((a) => a.ingredientKey === key);
     const approval = ap
@@ -456,6 +467,7 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
       requests: reqs.map((r) => ({ id: r.id, kind: r.kind, packages: r.packages, text: r.text, contributors: r.contributors, productId: r.productId ?? null })),
       availability: avail,
       homeSupply: homeSupply ? homeSupply.toDecimalPlaces(3).toString() : null,
+      netMeal: netMeal && mealUnit ? { quantity: netMeal.toDecimalPlaces(3).toString(), unit: normalizeUnit(mealUnit) } : null,
       product,
       price,
       packagesForMeal,
@@ -484,9 +496,8 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
 
   // 5. Review identity and payload over lines that still need sending.
   const sendable = lines.filter((l) => l.toSend === null || l.toSend > 0);
-  const reviewFingerprint = hashOf(
-    sendable.map((l) => [l.key, l.fingerprint, l.toSend, l.product?.id ?? null, l.price ? [l.price.id, l.price.amountMinor] : null, l.approval?.valid ? l.approval.id : null]),
-  );
+  const reviewItems = sendable.map((l) => [l.key, l.fingerprint, l.toSend, l.product?.id ?? null, l.price ? [l.price.id, l.price.amountMinor] : null, l.approval?.valid ? l.approval.id : null]);
+  const reviewFingerprint = hashOf(destination === "retailer_cart" ? reviewItems : { destination, reviewItems });
   const payload = sendable
     .filter((l) => l.product && l.toSend && l.toSend > 0)
     .map((l) => ({ productRef: l.product!.ref, ingredientKey: l.ingredientKey!, packages: l.toSend! }))
@@ -507,6 +518,9 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
   }
 
   const readyBlockers: string[] = [];
+  if (destination !== "retailer_cart") {
+    readyBlockers.push(destination === "manual" ? "You chose to shop elsewhere: copy the list; nothing is sent to a store cart" : "You chose an Instacart shopping list: nothing is sent to a store cart");
+  }
   for (const l of sendable) {
     if (l.unresolved.length) readyBlockers.push(`${l.name}: ${l.unresolved[0]}`);
     else if (!l.price) readyBlockers.push(`${l.name}: price unknown`);

@@ -151,3 +151,22 @@ export function fdcStatus(): "configured" | "not_configured" | "fixture" {
   }
   return fdcApiKey() ? "configured" : "not_configured";
 }
+
+/**
+ * Recipe page reading for "Import ingredients" (multi-source handoff, phase 2). OFF unless set:
+ *  - TABLE_RECIPE_FETCH_FIXTURES=<manifest.json> (test only): pages are served from local fixtures
+ *    through the same SSRF-checked fetcher; nothing leaves the machine.
+ *  - TABLE_RECIPE_IMPORT_FETCH=on: real public pages, through the SSRF-checked fetcher. Not enabled
+ *    anywhere yet — a production read of third-party pages is a separate owner decision.
+ * Pasting ingredient lines and manual entry work in every mode.
+ */
+export function recipeFetchMode(): { mode: "off" } | { mode: "fixtures"; manifest: string } | { mode: "live" } {
+  const fixtures = process.env.TABLE_RECIPE_FETCH_FIXTURES;
+  if (fixtures) {
+    if (!isTestEnv()) throw new Error("TABLE_RECIPE_FETCH_FIXTURES is a test-only setting and is refused outside TABLE_ENV=test");
+    return { mode: "fixtures", manifest: fixtures };
+  }
+  const live = process.env.TABLE_RECIPE_IMPORT_FETCH;
+  if (live && live !== "on" && live !== "off") throw new Error(`TABLE_RECIPE_IMPORT_FETCH must be on or off (got ${live})`);
+  return live === "on" ? { mode: "live" } : { mode: "off" };
+}

@@ -9,7 +9,10 @@ import { computeCoverage, mealsChosen } from "@/domain/planning/coverage";
 import { checkPlan } from "@/domain/planning/constraints";
 import { plateNutrition } from "@/domain/recipes/plate";
 import { D } from "@/domain/units";
-import type { RequirementLine } from "@/domain/groceries/projection";
+import type { Destination, RequirementLine } from "@/domain/groceries/projection";
+import { buildShoppingList } from "@/domain/groceries/shopping-list";
+import { instacartPreview } from "../groceries/instacart-list";
+import { instacartCapabilities } from "../integrations/instacart/config";
 import {
   findWeek,
   loadExclusions,
@@ -293,9 +296,29 @@ async function groceriesFor(c: Db, householdId: string, weekId: string, accepted
       };
     }
     const productsQ = await c.query("SELECT id, product_ref, name, ingredient_key, package_qty, package_unit, retailer, fixture FROM products WHERE household_id=$1 ORDER BY name", [householdId]);
+    // Where to shop (phase 4–5): the list for any way of shopping, and what an Instacart list would contain.
+    const destination: Destination = cycle.destination ?? "retailer_cart";
+    const shoppingList = buildShoppingList(lines, destination);
+    const setBy = cycle.destination_set_by ? (await c.query("SELECT display_name FROM members WHERE id=$1", [cycle.destination_set_by])).rows[0]?.display_name : null;
+    const links = (
+      await c.query(
+        `SELECT l.id, l.status, l.link_url, l.expires_at, l.requested_at, l.finished_at, l.destination_revision, l.list_fingerprint, l.outcome,
+                jsonb_array_length(l.payload->'lines') AS line_count, m.display_name
+         FROM instacart_list_links l JOIN members m ON m.id=l.requested_by WHERE l.cycle_id=$1 ORDER BY l.requested_at DESC LIMIT 5`,
+        [cycle.id],
+      )
+    ).rows.map((l) => ({
+      id: l.id, status: l.status, url: l.status === "link_prepared" ? l.link_url : null, expiresAt: l.expires_at?.toISOString() ?? null,
+      requestedAt: l.requested_at.toISOString(), by: l.display_name, lineCount: l.line_count, current: l.destination_revision === cycle.destination_revision,
+      listFingerprint: l.list_fingerprint, outcome: l.outcome,
+    }));
+    const where = {
+      destination, revision: cycle.destination_revision, storeLabel: cycle.destination_store_label, setBy, setAt: cycle.destination_set_at?.toISOString() ?? null,
+      instacart: { capabilities: instacartCapabilities().map((x) => ({ capability: x.capability, status: x.status, reason: x.reason })), preview: destination === "instacart_list" ? instacartPreview(shoppingList, cycle.destination_revision) : null, links },
+    };
     return {
       cycleId: cycle.id, projectionRevision: cycle.projection_revision, projectionAcceptedRevision: cycle.projection_accepted_revision,
-      summary: cycle.projection_summary, lines, batches, order,
+      summary: cycle.projection_summary, lines, batches, order, where, shoppingList,
       products: productsQ.rows.map((p) => ({ id: p.id, ref: p.product_ref, name: p.name, ingredientKey: p.ingredient_key, packageQty: p.package_qty, packageUnit: p.package_unit, retailer: p.retailer, fixture: p.fixture })),
     };
 }

@@ -30,8 +30,10 @@ export interface RecipeVersion {
   leftoverFriendly: boolean;
   instructions: string;
   reheatInstructions: string;
-  provenance: "fixture" | "sample" | "manual";
+  provenance: "fixture" | "sample" | "manual" | "imported";
   sourceLabel: string | null;
+  /** The page an imported recipe came from (kept on later versions); null for manual/fixture recipes. */
+  sourceUrl?: string | null;
   estimate: boolean;
   components: RecipeComponent[];
   ingredients: RecipeIngredient[];
