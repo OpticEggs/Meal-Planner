@@ -62,8 +62,10 @@ signup. A custom domain is optional (registration is billed by a registrar, not 
   demonstrated hosted peak and not a guarantee that 512 MB is sufficient**; if the hosted service
   restarts for memory, the next size up is Standard (2 GB, $25/month). The database load of two people
   is expected to be far below 0.1 CPU / 256 MB; that too is an expectation, not a measurement.
-- Free tiers are not suitable: Render's free web services have no shell, and free Postgres has no
-  backups and a 30-day limit.
+- Render's own free tier is not suitable: free web services have no shell, and free Postgres has no backups and is
+  deleted after 30 days. A genuinely free alternative (Oracle Cloud Always Free with self-managed PostgreSQL, private
+  access through Tailscale) is researched and compared in `HOSTING-FREE-OPTIONS.md` (2026-10-08) — free, but with
+  idle-reclamation, self-maintenance and no-SLA risks.
 
 **Fallback:** none proposed. The one material drawback found — Render starts the new instance before
 stopping the old one during a deploy (≈60 s overlap) — is a property of the application's recovery

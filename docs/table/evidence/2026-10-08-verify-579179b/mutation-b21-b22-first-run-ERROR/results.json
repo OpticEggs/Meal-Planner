@@ -1,0 +1,32 @@
+{
+  "when": "2026-10-08T17:02:05.327Z",
+  "head": "3632963ac2cd1c1cc6e91a8383f67bb4c59b64e1",
+  "restored": true,
+  "pass": true,
+  "results": [
+    {
+      "name": "B21_rerecord_without_link",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/10 failed by assertion: a correction followed by legitimate re-recording still succeeds, and only the new record is effective"
+    },
+    {
+      "name": "B22_stale_event_accepted",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "5/7 failed by assertion: an event no longer scheduled — replaced (Friday gets another recipe) — is refused as stale; the week and history are unchanged and the event is not restored | an event no longer scheduled — set aside as a backup (deferred) — is refused as stale; the week and history are unchanged and the event is not restored | an event no longer scheduled — removed (Friday set to out) — is refused as stale; the week and history are unchanged and the event is not restored"
+    },
+    {
+      "name": "B22_status_only",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/7 failed by assertion: an event no longer scheduled — set aside as a backup (deferred) — is refused as stale; the week and history are unchanged and the event is not restored"
+    }
+  ]
+}

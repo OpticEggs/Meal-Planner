@@ -55,7 +55,7 @@ Local app: see `docs/table/IMPLEMENTATION-STATUS.md` → "Run it locally".
 mutation path (`framework.ts` = lock, idempotency, receipts, change events) · `src/server/queries`
 coherent snapshots · `src/server/integrations/retailer.ts` simulated retailer + Kroger wiring;
 `src/server/integrations/kroger/` Kroger adapter behind staged activation (`KROGER_ACTIVATE`, all off;
-fake transport in tests); cook records: one effective record per cooking event, corrections appended (`CorrectCookRecord`), readers use the `cook_records_effective` view (D78–D80); `src/server/integrations/fdc/` + `src/domain/nutrition/` FoodData Central lookup
+fake transport in tests); cook records: one effective record per cooking event — enforced by the database for every writer (migration 009 chain: `replaces`, unique indexes, deferred check; D84) — corrections appended (`CorrectCookRecord`), readers use the `cook_records_effective` view (D78–D80), `RecordCooked` only for a dinner still on its accepted plan (D85); `src/server/integrations/fdc/` + `src/domain/nutrition/` FoodData Central lookup
 and normalization (member-confirmed matches, append-only `nutrition_matches`) · `src/server/deploy.ts`
 production config + schema checks behind `/api/health` ·
 `src/app/globals.css` theme tokens (light default, dark via `prefers-color-scheme`; every colour a token, contrast checked by `tests/unit/theme-contrast.test.ts`) · `src/ui` client screens (`a11y.tsx` = the one modal system, focus helpers, the one live region; `forms.tsx` = attached field errors; `GroceryDialogs.tsx`, `Staples.tsx`, `RecipeEditor.tsx`) · `src/server/commands/staples.ts` staple management (revision-bound) · `migrations/` explicit SQL · `tests/{unit,integration,e2e,mutation}`.

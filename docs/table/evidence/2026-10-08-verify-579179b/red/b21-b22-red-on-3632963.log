@@ -1,0 +1,177 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /tmp/table-red
+
+ ❯ tests/integration/b21-b22.test.ts (17 tests | 12 failed) 45351ms
+   ❯ B21: one effective cooking record per event, enforced by the database (10)
+     × a direct insert of a second effective record under a different generation is refused 774ms
+     × two writers outside the command framework, concurrently, different generations (READ COMMITTED): at most one commits 11241ms
+     × two writers outside the command framework, concurrently, different generations (REPEATABLE READ): at most one commits 11242ms
+     × two writers outside the command framework, concurrently, different generations (SERIALIZABLE): at most one commits 11301ms
+     × a direct re-record names the corrected record it replaces; naming an uncorrected one, or a second successor, is refused 758ms
+     × two writers re-record the same corrected record concurrently: one succeeds 707ms
+     × a re-record racing an uncommitted correction is refused; after the correction commits it is accepted 760ms
+   ❯ B22: cooking is recorded only for a dinner still scheduled in its accepted plan (7)
+     × an event no longer scheduled — replaced (Friday gets another recipe) — is refused as stale; the week and history are unchanged and the event is not restored 915ms
+     × an event no longer scheduled — set aside as a backup (deferred) — is refused as stale; the week and history are unchanged and the event is not restored 875ms
+     × an event no longer scheduled — removed (Friday set to out) — is refused as stale; the week and history are unchanged and the event is not restored 801ms
+     × replacement and recording at the same moment — replacement first 744ms
+     × replacement and recording at the same moment — recording first 766ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/b21-b22.test.ts > B21: one effective cooking record per event, enforced by the database > a direct insert of a second effective record under a different generation is refused
+AssertionError: expected 'ok' to match /^refused/
+
+- Expected:
+/^refused/
+
++ Received:
+"ok"
+
+ ❯ tests/integration/b21-b22.test.ts:59:15
+     57|     expect((await cmd(plan.recordCookedCommand(jon, op(), { eventId: f…
+     58|     const r = await outcome(q(RAW(), [fx.events.salmon, 2]));
+     59|     expect(r).toMatch(/^refused/);
+       |               ^
+     60|     expect(await effective(fx.events.salmon)).toBe(1);
+     61|     expect(await rows(fx.events.salmon)).toHaveLength(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  tests/integration/b21-b22.test.ts > B21: one effective cooking record per event, enforced by the database > two writers outside the command framework, concurrently, different generations (READ COMMITTED): at most one commits
+ FAIL  tests/integration/b21-b22.test.ts > B21: one effective cooking record per event, enforced by the database > two writers outside the command framework, concurrently, different generations (REPEATABLE READ): at most one commits
+ FAIL  tests/integration/b21-b22.test.ts > B21: one effective cooking record per event, enforced by the database > two writers outside the command framework, concurrently, different generations (SERIALIZABLE): at most one commits
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/integration/b21-b22.test.ts:76:71
+     74|       const bCommit = await finish(b, bResult === "ok");
+     75|       expect(aCommit).toBe("ok");
+     76|       expect([bResult, bCommit].some((x) => x.startsWith("refused"))).…
+       |                                                                       ^
+     77|       expect(await effective(fx.events.salmon)).toBe(1);
+     78|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+ FAIL  tests/integration/b21-b22.test.ts > B21: one effective cooking record per event, enforced by the database > a direct re-record names the corrected record it replaces; naming an uncorrected one, or a second successor, is refused
+AssertionError: expected 'ok' to match /^refused/
+
+- Expected:
+/^refused/
+
++ Received:
+"ok"
+
+ ❯ tests/integration/b21-b22.test.ts:105:60
+    103|     await cmd(plan.correctCookRecordCommand(alex, op(), { cookRecordId…
+    104|     // a new first record for the event is refused even now: a re-reco…
+    105|     expect(await outcome(q(RAW(), [fx.events.salmon, 2]))).toMatch(/^r…
+       |                                                            ^
+    106|     expect(await outcome(q(RAW("replaces"), [fx.events.salmon, 2, firs…
+    107|     expect(await outcome(q(RAW("replaces"), [fx.events.salmon, 3, firs…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/12]⎯
+
+ FAIL  tests/integration/b21-b22.test.ts > B21: one effective cooking record per event, enforced by the database > two writers re-record the same corrected record concurrently: one succeeds
+AssertionError: expected 'refused: column "replaces" of relatio…' to be 'ok' // Object.is equality
+
+Expected: "ok"
+Received: "refused: column "replaces" of relation "cook_records" does not exist"
+
+ ❯ tests/integration/b21-b22.test.ts:118:86
+    116|     const a = await begin("READ COMMITTED");
+    117|     const b = await begin("READ COMMITTED");
+    118|     expect(await outcome(a.query(RAW("replaces"), [fx.events.salmon, 2…
+       |                                                                                      ^
+    119|     const bInsert = outcome(b.query(RAW("replaces"), [fx.events.salmon…
+    120|     await waitForBlocked();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/12]⎯
+
+ FAIL  tests/integration/b21-b22.test.ts > B21: one effective cooking record per event, enforced by the database > a re-record racing an uncommitted correction is refused; after the correction commits it is accepted
+AssertionError: expected 'refused: column "replaces" of relatio…' to be 'ok' // Object.is equality
+
+Expected: "ok"
+Received: "refused: column "replaces" of relation "cook_records" does not exist"
+
+ ❯ tests/integration/b21-b22.test.ts:139:80
+    137|     expect(await outcome(q(RAW("replaces"), [fx.events.salmon, 2, firs…
+    138|     expect(await finish(corr, true)).toBe("ok");
+    139|     expect(await outcome(q(RAW("replaces"), [fx.events.salmon, 2, firs…
+       |                                                                                ^
+    140|     expect(await effective(fx.events.salmon)).toBe(1);
+    141|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/12]⎯
+
+ FAIL  tests/integration/b21-b22.test.ts > B22: cooking is recorded only for a dinner still scheduled in its accepted plan > an event no longer scheduled — replaced (Friday gets another recipe) — is refused as stale; the week and history are unchanged and the event is not restored
+ FAIL  tests/integration/b21-b22.test.ts > B22: cooking is recorded only for a dinner still scheduled in its accepted plan > an event no longer scheduled — set aside as a backup (deferred) — is refused as stale; the week and history are unchanged and the event is not restored
+ FAIL  tests/integration/b21-b22.test.ts > B22: cooking is recorded only for a dinner still scheduled in its accepted plan > an event no longer scheduled — removed (Friday set to out) — is refused as stale; the week and history are unchanged and the event is not restored
+AssertionError: expected false to be 'stale_event' // Object.is equality
+
+- Expected:
+"stale_event"
+
++ Received:
+false
+
+ ❯ tests/integration/b21-b22.test.ts:213:49
+    211|       expect(eventStatus).not.toBe("scheduled");
+    212|       const r: any = await cmd(plan.recordCookedCommand(alex, op(), { …
+    213|       expect(r.status === "rejected" && r.code).toBe("stale_event");
+       |                                                 ^
+    214|       expect(r.message).toMatch(/no longer|not on/i);
+    215|       expect(await cookRows()).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/12]⎯
+
+ FAIL  tests/integration/b21-b22.test.ts > B22: cooking is recorded only for a dinner still scheduled in its accepted plan > replacement and recording at the same moment — replacement first
+AssertionError: expected false to be 'stale_event' // Object.is equality
+
+- Expected:
+"stale_event"
+
++ Received:
+false
+
+ ❯ tests/integration/b21-b22.test.ts:246:55
+    244|         const [rep, rec]: any[] = await race(fx.householdId, replace, …
+    245|         expect(rep.status).toBe("accepted");
+    246|         expect(rec.status === "rejected" && rec.code).toBe("stale_even…
+       |                                                       ^
+    247|         expect(await cookRows()).toBe(0);
+    248|       } else {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/12]⎯
+
+ FAIL  tests/integration/b21-b22.test.ts > B22: cooking is recorded only for a dinner still scheduled in its accepted plan > replacement and recording at the same moment — recording first
+AssertionError: expected 'already_recorded' to be 'stale_event' // Object.is equality
+
+Expected: "stale_event"
+Received: "already_recorded"
+
+ ❯ tests/integration/b21-b22.test.ts:258:57
+    256|       expect(await status(fx.events.salmon)).toBe("retired");
+    257|       const again: any = await cmd(plan.recordCookedCommand(jon, op(),…
+    258|       expect(again.status === "rejected" && again.code).toBe("stale_ev…
+       |                                                         ^
+    259|     });
+    260|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/12]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  12 failed | 5 passed (17)
+   Start at  17:02:39
+   Duration  46.97s (tests 97%, transform 2%, import 1%)
+

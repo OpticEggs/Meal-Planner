@@ -1,0 +1,11 @@
+backup check PASS: every table's row count matches after restore
+-- restored copy (table_backup_check):
+cook_records_immutable
+cook_records_link_check
+cook_records_one_first_per_event
+cook_records_one_per_event_generation
+cook_records_one_successor
+cook_records_pkey
+6
+ERROR:  cooking record 53e7e697-58cc-4e06-ad00-cda2c484549d replaces record 2a9a70fe-b99c-4e9e-b89a-8b4ab6872259, which has not been corrected: an event has one effective cooking record
+CONTEXT:  PL/pgSQL function cook_records_check_link() line 25 at RAISE

@@ -1,0 +1,10 @@
+$ npx vitest run tests/integration/b16.staple-management.test.ts -t "re-pointing"
+exit 1 signal 
+--- stdout
+JSON report written to /tmp/table-verify-579179b-20261008T173530Z/mutation/mutation-B16_repoint_keeps_old_package_count.json
+
+--- stderr
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+

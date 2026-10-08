@@ -1,6 +1,6 @@
 # Table — Implementation status
 
-_Last updated 2026-10-08 (UTC), after the visual update (B20) and the cook-record idempotency fix
+_Last updated 2026-10-08 (UTC), after B21/B22 (database cook-record invariant, stale cooking events) and the free-hosting research, which followed the visual update (B20) and the cook-record idempotency fix
 (B19, delivery review of fb4d771, gate 2), which followed the integration-preparation pass (B9 deployment candidate, B7 nutrition, B5
 Kroger adapter, B8 checklist)._
 
@@ -8,16 +8,21 @@ Kroger adapter, B8 checklist)._
 
 | What | Identity |
 |---|---|
-| Latest code commit | `f22f9d56b3764193c40981d27112a2ab900d369d` — visual update (B20) |
-| Implementation commit verified | `f22f9d5` (clean tree; tracked-file hash `f5410515…fa1b` unchanged during the run) |
+| Latest code commit | `579179b` — B21/B22 (`5250e62`) plus a disclosed test correction (`579179b`) |
+| Implementation commit verified | `579179b` (clean tree; source hash unchanged during the run); the first run on `5250e62` FAILED one mutation (ERROR) and is kept |
+| Visual update | `f22f9d5` (B20), verified at `f22f9d5` |
 | Cook-record fix | `02a3b1a` (B19) on top of `fb4d771` (the reviewed delivery); verified at `02a3b1a` |
 | Integration-preparation pass | start `639c103` (+ docs-only `0712ccb`); `a871af9` B9 · `c974507` B5 (worker) · `668b00e` B5 integration · `f20a7ab` B7 (worker) · `4d0e822` integration · `c19bd5a` background-refresh fix (verified at `c19bd5a`) |
 | Documentation/evidence commits | the commits after each verified code commit on `main` (docs only — e.g. `git diff --stat 02a3b1a..HEAD`) |
 | Remote | `https://github.com/OpticEggs/Meal-Planner`, branch `main` |
 | Restore | `git clone --branch main <bundle> table` or `git clone <bundle> table` |
-| Migrations | `001`–`008`: `006_nutrition_sources.sql` (B7), `007_kroger.sql` (B5), `008_cook_record_corrections.sql` (B19); upgrades from a populated 005 database (to 007) and a populated 007 database holding duplicate cook records (to 008) checked |
+| Migrations | `001`–`009`: `006_nutrition_sources.sql` (B7), `007_kroger.sql` (B5), `008_cook_record_corrections.sql` (B19), `009_cook_record_chain.sql` (B21); upgrades from a populated 005 database (to 007) a populated 007 database holding duplicate cook records (to 008), and a populated 008 database with planted cross-generation violations (to 009) checked |
 
-## Verification (measured on f22f9d5)
+## Verification (measured on 579179b)
+
+`scripts/verify-all.sh` → `docs/table/evidence/2026-10-08-verify-579179b/summary.md`: vitest 315/315, Playwright 121/121, 67 mutations killed, 0 survived, 0 error. The first run on `5250e62` FAILED (one mutation ERROR — see ACCEPTANCE "B21/B22") and is kept in `verify-5250e62-FAIL/`.
+
+### Previous run (f22f9d5, visual update)
 
 `scripts/verify-all.sh` → `docs/table/evidence/2026-10-08-verify-f22f9d5/summary.md`: typecheck PASS ·
 vitest 298/298 · production build PASS · Playwright 121/121 (Chromium, 0 skipped, 0 flaky) · mutation
@@ -40,6 +45,10 @@ checks 57 killed / 0 survived / 0 error, sources restored. The first full run, o
 browser test (T09) — root-caused to a client race and fixed in `c19bd5a` (D77); that run is kept in
 `verify-4d0e822-FAIL/`. Red-before-green, the local production-mode check and the upgrade check are in
 the same folder (see ACCEPTANCE "Integration preparation").
+
+## B21/B22 (directive "B21/B22 Implementation Directive")
+
+B21: the database keeps one effective cooking record per event for any writer — records form a chain (`replaces`) enforced by two unique indexes and a deferred check (migration 009; D84). B22: `RecordCooked` refuses a dinner that is no longer on its accepted plan (replaced, removed, set aside) with `stale_event`, writes nothing and restores nothing; a past dinner still on its plan is recorded on its own date (D85). Hosting: a genuinely free option was researched (`HOSTING-FREE-OPTIONS.md`); nothing provisioned.
 
 ## Visual update (B20)
 
@@ -140,9 +149,8 @@ Backup/restore: `scripts/backup.sh dump|restore|check` (dumps include auth table
 
 ## Evidence
 
-Current: `docs/table/evidence/2026-10-08-verify-f22f9d5/` (see Verification above), rechecked independently
-in `2026-10-08-independent-recheck-bcb74ed/` (records and hashes; no rerun). History:
-`2026-10-08-verify-02a3b1a/` (cook-record fix), `2026-10-08-verify-c19bd5a/` (integration preparation), `2026-10-08-verify-abdd5a2/` (B17 correction, B18), `2026-10-08-independent-recheck-639c103/`, `2026-10-08-verify-972e368/` (B17), `2026-10-08-verify-5f7b72f/` (B15/B16), `2026-10-08-verify-0804381/` (B14/B12, with sheet
+Current: `docs/table/evidence/2026-10-08-verify-579179b/` (see Verification above). History:
+`2026-10-08-verify-f22f9d5/` (visual update; rechecked independently in `2026-10-08-independent-recheck-bcb74ed/`), `2026-10-08-verify-02a3b1a/` (cook-record fix), `2026-10-08-verify-c19bd5a/` (integration preparation), `2026-10-08-verify-abdd5a2/` (B17 correction, B18), `2026-10-08-independent-recheck-639c103/`, `2026-10-08-verify-972e368/` (B17), `2026-10-08-verify-5f7b72f/` (B15/B16), `2026-10-08-verify-0804381/` (B14/B12, with sheet
 screenshots), `2026-10-08-verify-2c56267/` (correction pass), `2026-10-08-full-run*.md`,
 `2026-10-08-first-slice-e2e.md`. See ACCEPTANCE.md for per-test status.
 
@@ -158,6 +166,5 @@ screenshots), `2026-10-08-verify-2c56267/` (correction pass), `2026-10-08-full-r
 None without owner input. Owner gates, all in `OWNER-INPUTS.md`: hosting approval and provisioning
 (H1–H7), the household's FDC key (N1–N2), Kroger registration, provider validation, data-retention
 decision and a bounded cart test (K1–K7), device runs (P1–P2). The approved visual update
-is delivered (B20). Open decisions from the recheck: B21 (database-wide cook-record invariant) and B22
-(cooking recorded for a dinner no longer scheduled). Kroger data retention (K6) is to
+is delivered (B20). B21 and B22 are implemented (D84, D85). Kroger data retention (K6) is to
 be clarified with Kroger developer support or counsel before any live cart addition (delivery review).

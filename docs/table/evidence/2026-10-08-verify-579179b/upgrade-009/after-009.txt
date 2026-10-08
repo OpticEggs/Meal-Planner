@@ -1,0 +1,21 @@
+ cook_night | generation | corrected | duplicate | effective |         original_columns         
+------------+------------+-----------+-----------+-----------+----------------------------------
+ 2026-10-12 |          2 | f         | f         | t         | 889ed2c767c5f38979407a6e0d148277
+ 2026-10-12 |          1 | t         | f         | f         | 9fdb91da71ef2e93af57200595dc500c
+ 2026-10-14 |          1 | f         | f         | t         | 5409ef620c3670894f3010388dbf9467
+ 2026-10-14 |          2 | f         | t         | f         | 2b356888f1639b3ee891aae525c04860
+ 2026-10-16 |          3 | f         | t         | f         | a61f3e1418cf44365b470cb366f507b8
+ 2026-10-16 |          1 | t         | f         | f         | 35e37c26d80d270aade5f077198effac
+ 2026-10-16 |          2 | f         | f         | t         | 607dcbe7592415e71117e2d82bada084
+ 2026-10-16 |          1 | f         | f         | t         | e00e7a90112235cd06a6a6ddead2c93f
+ 2026-10-16 |          1 | f         | t         | f         | 05765377d94d4a66a000a82d6b8bd12b
+ 2026-10-17 |          1 | f         | f         | t         | a6d9d9bcecc1fddfb395c5c4bfd332e4
+ 2026-10-18 |          2 | t         | f         | f         | cf39a715fce8c07c044bc14670855fb1
+ 2026-10-18 |          3 | f         | f         | t         | 15efa9fe247660b4d69b4dec198c23b5
+ 2026-10-18 |          1 | t         | f         | f         | a830542a869cc508cbf316ef7faef9b6
+(13 rows)
+
+ check | cooking_event_id | count 
+-------+------------------+-------
+(0 rows)
+

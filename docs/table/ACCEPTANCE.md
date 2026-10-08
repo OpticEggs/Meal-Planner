@@ -2,7 +2,7 @@
 
 Status vocabulary: NOT IMPLEMENTED · IMPLEMENTED / NOT RUN · PASS · FAIL · BLOCKED.
 
-**Current evidence run:** `docs/table/evidence/2026-10-08-verify-f22f9d5/summary.md` (implementation commit `f22f9d5`, visual update; clean tree, source hash unchanged during the run): vitest 298/298, Playwright 121/121, 64 mutations killed, 0 survived, 0 error. Earlier runs are kept as history under `docs/table/evidence/` (latest before this: `2026-10-08-verify-02a3b1a/`, cook-record idempotency).
+**Current evidence run:** `docs/table/evidence/2026-10-08-verify-579179b/summary.md` (B21/B22: implementation `5250e62`, test correction `579179b`; clean tree, source hash unchanged during the run): vitest 315/315, Playwright 121/121, 67 mutations killed, 0 survived, 0 error. Earlier runs are kept as history under `docs/table/evidence/` (the failed first run of this pass is `2026-10-08-verify-579179b/verify-5250e62-FAIL/`).
 Environment: real PostgreSQL 16.15, production `next start` server, two independently signed-in
 Chromium contexts, recording fake retailer (simulated; nothing reaches a store), fixed household clock
 2026-10-12 15:00 America/New_York. Concurrency orders are forced with database lock barriers.
@@ -290,7 +290,7 @@ Restore order: with an immediate `duplicate_of` reference the restore test faile
 
 | ID | What is checked | Tests | Status |
 |---|---|---|---|
-| COOK-01 One record per event | A second press by the same member (new operation id) adds nothing and names who recorded it; the same operation id replays the receipt; both members at once, in both orders → exactly one record, by the first, the other told "already recorded"; the database refuses a repeated insert of the current record if a command were bypassed (same generation only — see D78 scope; a raw insert under a new generation is not refused, B21) | integration cook-records (5) | PASS (command path; database backstop partial) |
+| COOK-01 One record per event | A second press by the same member (new operation id) adds nothing and names who recorded it; the same operation id replays the receipt; both members at once, in both orders → exactly one record, by the first, the other told "already recorded"; the database refuses a repeated insert of the current record if a command were bypassed (since B21/D84 for every generation and every writer — CR-21-01) | integration cook-records (5); b21-b22 | PASS |
 | COOK-02 Cooked state shown | The snapshot carries who recorded the night and when; the Cook page shows "Cooked · recorded by …" instead of the button, live for the other member; a press from a stale page is answered "already recorded" and adds nothing | integration cook-records; e2e cook-records | PASS (Chromium) |
 | COOK-03 Correction | "This wasn't cooked" appends a correction (nothing deleted); history, "new to you" and the Cook page ignore the corrected record; cooking can be recorded again, once; refusals for another household (`not_found`), unknown reason (`invalid`), already corrected (`stale`) write nothing; the dialog opens on "Keep the record", Escape keeps it, focus returns | integration cook-records; e2e cook-records | PASS (Chromium) |
 | COOK-04 Existing duplicates and restore | Duplicates are kept and marked, shown once; export/restore keeps records, duplicates and corrections in the worst row order; upgrade of a populated 007 database holding duplicates (only `schema_migrations` differs over pre-existing tables; 2 effective, 2 marked) | integration cook-records "export and restore"; scripted upgrade check (`upgrade-008/`) | PASS (local) |
@@ -333,3 +333,34 @@ timing. The assertion (the visible message is shown) is unchanged. No test was s
 refs, evidence counts and both tracked-file hashes matched; no rerun of tests. B19 and B20 closed for
 the command path and Chromium-tested presentation. COOK-01's database clause narrowed above; open items
 B21 (database-wide invariant) and B22 (cooking recorded for a dinner no longer scheduled) await a decision.
+
+## B21/B22 — database cook-record invariant, stale cooking events — added 2026-10-08
+
+New IDs; no earlier row renumbered. Start `3632963`; implementation commit `5250e62`, test correction
+`579179b`; verified at `579179b`. Evidence `docs/table/evidence/2026-10-08-verify-579179b/summary.md` (vitest 315/315, Playwright 121/121, 67 mutations killed, 0 survived, 0 error).
+The first full run, on `5250e62`, **FAILED** — vitest 315/315 and Playwright 121/121 passed, but the mutation
+`COOK_second_record_added` was classified ERROR (kept as `verify-5250e62-FAIL/`). Root cause: with migration 009
+the database itself refuses the mutant's second record, so the mutated command throws, and the cook-records
+tests let that error escape instead of asserting on it. Corrected in `579179b` (below).
+
+**Red before green** (`red/b21-b22-red-on-3632963.log`, the committed test file run on `3632963` with
+its schema at 008): 12 of 17 failed. Ten by assertion on the gaps — a raw second record under another
+generation accepted; two raw writers both committed (READ COMMITTED, REPEATABLE READ, SERIALIZABLE); a
+new first record accepted after a correction; replaced, set-aside and removed dinners recorded; both
+race orders. Two failed because the link column did not exist yet (mechanism absent, not a behavior
+assertion). The five that passed are preservation checks (append-only, correction and re-record through
+the command, export/restore, a moved dinner, a past dinner). A first run of the test file against a
+database not named `table_test` was refused by the fixture guard and is not evidence.
+
+| ID | What is checked | Tests | Status |
+|---|---|---|---|
+| CR-21-01 Database invariant | A raw insert of a second effective record under a different generation is refused; two writers outside the command framework, concurrently, in READ COMMITTED, REPEATABLE READ and SERIALIZABLE → at most one commits; one effective record remains | integration b21-b22 (4) | PASS |
+| CR-21-02 Correction then re-record | Through the command, twice (generations 1→2→3), one effective record each time; a raw re-record must name the corrected record; naming an uncorrected record, a second successor, or racing an uncommitted correction is refused; concurrent re-records → one | integration b21-b22 (4) | PASS |
+| CR-21-03 Append-only, restore, upgrade | UPDATE/DELETE refused; export/restore of a corrected chain plus a historical duplicate in reverse row order; upgrade of a populated 008 database with planted cases (valid chains linked, two cross-generation violations kept and marked duplicates, original columns of all 13 rows identical, no event with two effective records); pg_dump backup restored with the trigger and indexes, which still refuse an uncorrected successor | integration b21-b22; `upgrade-009/` | PASS (local) |
+| CR-22-01 Stale events | Replaced, set-aside and removed dinners → `stale_event`, nothing written, accepted week and event status unchanged; moved dinner still recordable; past dinner on its plan recorded on its own date | integration b21-b22 (5) | PASS |
+| CR-22-02 Replacement vs recording | Both commit orders, serialized by the household lock: stale / recorded-then-retired; a later press is stale | integration b21-b22 (2) | PASS |
+| CR mutations | B21_rerecord_without_link, B22_stale_event_accepted, B22_status_only | `tests/mutation/run.mjs` | PASS — all KILLED by assertion (a first run classified them ERROR because the tests let a thrown command error escape; the tests now capture each outcome, then assert) |
+
+**Existing test changed (disclosed):** `tests/integration/cook-records.test.ts` — the second-press, both-members
+and re-record calls now capture the command's outcome (a thrown error included) and assert on it, as the B21/B22
+tests do. Assertions unchanged; the five COOK mutations are killed by assertion (`mut-cook-fix/`).

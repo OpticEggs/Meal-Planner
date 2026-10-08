@@ -1,0 +1,48 @@
+{
+  "when": "2026-10-08T17:35:20.801Z",
+  "head": "5250e62459cdad8c6bc1a940f2c203a14d5a717d",
+  "restored": true,
+  "pass": true,
+  "results": [
+    {
+      "name": "COOK_second_record_added",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "4/9 failed by assertion: a second press by the same member (a new operation id) adds nothing and reports who recorded it and when | both members press at the same moment: exactly one record, the other is told it is already recorded — Jon first | both members press at the same moment: exactly one record, the other is told it is already recorded — Alex first"
+    },
+    {
+      "name": "COOK_correction_applied_twice",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/9 failed by assertion: a correction is refused for a record already corrected, another household's record, or an unknown reason — and writes nothing"
+    },
+    {
+      "name": "COOK_history_counts_corrected",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/9 failed by assertion: a mistaken record is corrected by an appended correction; history and 'new to you' ignore it; cooking can then be recorded again"
+    },
+    {
+      "name": "COOK_new_to_you_counts_corrected",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/9 failed by assertion: a mistaken record is corrected by an appended correction; history and 'new to you' ignore it; cooking can then be recorded again"
+    },
+    {
+      "name": "COOK_snapshot_ignores_record",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/9 failed by assertion: the household snapshot shows the night as already cooked, by whom"
+    }
+  ]
+}

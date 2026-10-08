@@ -1,0 +1,2 @@
+ERROR:  duplicate key value violates unique constraint "cook_records_one_first_per_event"
+DETAIL:  Key (cooking_event_id)=(5dbc94a2-7407-4019-8e6f-b4ebbbf2b923) already exists.
