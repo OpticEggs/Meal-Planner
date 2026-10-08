@@ -1,0 +1,269 @@
+
+Running 7 tests using 1 worker
+
+[1/7] [chromium] › tests/e2e/b17-plan-recipes.spec.ts:32:1 › B17 new recipe: a dialog with focus inside, per-row names, attached errors, row add/remove focus, and a discard guard
+  1) [chromium] › tests/e2e/b17-plan-recipes.spec.ts:32:1 › B17 new recipe: a dialog with focus inside, per-row names, attached errors, row add/remove focus, and a discard guard 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('dialog', { name: 'New recipe' })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for getByRole('dialog', { name: 'New recipe' })
+
+
+      41 |   await p.keyboard.press("Enter");
+      42 |   const dialog = p.getByRole("dialog", { name: "New recipe" });
+    > 43 |   await expect(dialog).toBeVisible();
+         |                        ^
+      44 |   expect(await focused(p)).toMatchObject({ id: "re-title", inDialog: true });
+      45 |   for (const key of ["Tab", "Shift+Tab"]) for (let i = 0; i < 25; i++) {
+      46 |     await p.keyboard.press(key);
+        at /tmp/table-pre-b17/tests/e2e/b17-plan-recipes.spec.ts:43:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-plan-recipes-B17-new-r-13184-e-focus-and-a-discard-guard-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-plan-recipes-B17-new-r-13184-e-focus-and-a-discard-guard-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-plan-recipes-B17-new-r-13184-e-focus-and-a-discard-guard-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-plan-recipes-B17-new-r-13184-e-focus-and-a-discard-guard-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[2/7] [chromium] › tests/e2e/b17-plan-recipes.spec.ts:101:3 › B17 editing the same recipe: the second editor sees the new version, keeps typed work and focus, and saves on top only after review — Jon saves first
+  2) [chromium] › tests/e2e/b17-plan-recipes.spec.ts:101:3 › B17 editing the same recipe: the second editor sees the new version, keeps typed work and focus, and saves on top only after review — Jon saves first 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.fill: Test ended.
+    Call log:
+      - waiting for getByRole('dialog', { name: 'Edit Fixture: Turkey chili — new version' }).getByLabel('Title', { exact: true })
+
+
+      113 |     const d2 = second.page.getByRole("dialog", { name: "Edit Fixture: Turkey chili — new version" });
+      114 |     const title2 = d2.getByLabel("Title", { exact: true });
+    > 115 |     await title2.fill("Turkey chili (second)");
+          |                  ^
+      116 |     await title2.focus();
+      117 |     await d1.getByLabel("Title", { exact: true }).fill("Turkey chili (first)");
+      118 |     await d1.getByRole("button", { name: "Save new version" }).click();
+        at /tmp/table-pre-b17/tests/e2e/b17-plan-recipes.spec.ts:115:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-plan-recipes-B17-editi-95476-er-review-—-Jon-saves-first-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-plan-recipes-B17-editi-95476-er-review-—-Jon-saves-first-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-plan-recipes-B17-editi-95476-er-review-—-Jon-saves-first-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-plan-recipes-B17-editi-95476-er-review-—-Jon-saves-first-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-plan-recipes-B17-editi-95476-er-review-—-Jon-saves-first-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[3/7] [chromium] › tests/e2e/b17-plan-recipes.spec.ts:101:3 › B17 editing the same recipe: the second editor sees the new version, keeps typed work and focus, and saves on top only after review — Alex saves first
+  3) [chromium] › tests/e2e/b17-plan-recipes.spec.ts:101:3 › B17 editing the same recipe: the second editor sees the new version, keeps typed work and focus, and saves on top only after review — Alex saves first 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.fill: Test ended.
+    Call log:
+      - waiting for getByRole('dialog', { name: 'Edit Fixture: Turkey chili — new version' }).getByLabel('Title', { exact: true })
+
+
+      113 |     const d2 = second.page.getByRole("dialog", { name: "Edit Fixture: Turkey chili — new version" });
+      114 |     const title2 = d2.getByLabel("Title", { exact: true });
+    > 115 |     await title2.fill("Turkey chili (second)");
+          |                  ^
+      116 |     await title2.focus();
+      117 |     await d1.getByLabel("Title", { exact: true }).fill("Turkey chili (first)");
+      118 |     await d1.getByRole("button", { name: "Save new version" }).click();
+        at /tmp/table-pre-b17/tests/e2e/b17-plan-recipes.spec.ts:115:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-plan-recipes-B17-editi-7754b-r-review-—-Alex-saves-first-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-plan-recipes-B17-editi-7754b-r-review-—-Alex-saves-first-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-plan-recipes-B17-editi-7754b-r-review-—-Alex-saves-first-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-plan-recipes-B17-editi-7754b-r-review-—-Alex-saves-first-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-plan-recipes-B17-editi-7754b-r-review-—-Alex-saves-first-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[4/7] [chromium] › tests/e2e/b17-plan-recipes.spec.ts:135:1 › B17 recipe lists: filter tabs are a real tablist; each row's controls are named by recipe; notes errors are attached
+  4) [chromium] › tests/e2e/b17-plan-recipes.spec.ts:135:1 › B17 recipe lists: filter tabs are a real tablist; each row's controls are named by recipe; notes errors are attached 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  getByRole('tab', { name: 'My favorites' })
+    Expected: "true"
+    Received: "false"
+    Timeout:  10000ms
+
+    Call log:
+      - Expect "toHaveAttribute" with timeout 10000ms
+      - waiting for getByRole('tab', { name: 'My favorites' })
+        14 × locator resolved to <button class="" role="tab" aria-selected="false">My favorites</button>
+           - unexpected value "false"
+
+
+      141 |   await all.focus();
+      142 |   await p.keyboard.press("ArrowRight");
+    > 143 |   await expect(p.getByRole("tab", { name: "My favorites" })).toHaveAttribute("aria-selected", "true");
+          |                                                              ^
+      144 |   expect((await focused(p)).name).toBe("My favorites");
+      145 |   await expect(p.getByRole("tabpanel", { name: "My favorites" })).toContainText("No favorites yet.");
+      146 |   await p.keyboard.press("Home");
+        at /tmp/table-pre-b17/tests/e2e/b17-plan-recipes.spec.ts:143:62
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-plan-recipes-B17-recip-85e7d-e-notes-errors-are-attached-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-plan-recipes-B17-recip-85e7d-e-notes-errors-are-attached-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-plan-recipes-B17-recip-85e7d-e-notes-errors-are-attached-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-plan-recipes-B17-recip-85e7d-e-notes-errors-are-attached-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[5/7] [chromium] › tests/e2e/b17-plan-recipes.spec.ts:165:1 › B17 Explore and deferred dinners: distinct names, results reported, a placement preview takes focus
+  5) [chromium] › tests/e2e/b17-plan-recipes.spec.ts:165:1 › B17 Explore and deferred dinners: distinct names, results reported, a placement preview takes focus 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Test ended.
+    Call log:
+      - waiting for getByRole('button', { name: 'Sounds good: Fixture: Pesto pasta' })
+
+
+      169 |   await p.getByRole("link", { name: "Explore" }).click();
+      170 |   const save = p.getByRole("button", { name: "Sounds good: Fixture: Pesto pasta" });
+    > 171 |   await save.click();
+          |              ^
+      172 |   await expect(p.getByRole("button", { name: "In Sounds good: Fixture: Pesto pasta" })).toBeDisabled();
+      173 |   await expect(p.getByRole("status").filter({ hasText: "Saved Fixture: Pesto pasta to Sounds good." })).toHaveCount(1);
+      174 |   // Defer Friday's dinner with a backup, then place it back by keyboard.
+        at /tmp/table-pre-b17/tests/e2e/b17-plan-recipes.spec.ts:171:14
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-plan-recipes-B17-Explo-01453-acement-preview-takes-focus-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-plan-recipes-B17-Explo-01453-acement-preview-takes-focus-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-plan-recipes-B17-Explo-01453-acement-preview-takes-focus-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-plan-recipes-B17-Explo-01453-acement-preview-takes-focus-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[6/7] [chromium] › tests/e2e/b17-plan-recipes.spec.ts:194:3 › B17 recipe editor at 320px with 150% text: fits, no sideways scroll, controls hittable
+  6) [chromium] › tests/e2e/b17-plan-recipes.spec.ts:194:3 › B17 recipe editor at 320px with 150% text: fits, no sideways scroll, controls hittable 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.evaluate: Test ended.
+    Call log:
+      - waiting for getByRole('dialog', { name: 'New recipe' })
+
+
+      200 |     await p.getByTestId("new-recipe").click();
+      201 |     const dialog = p.getByRole("dialog", { name: "New recipe" });
+    > 202 |     const box = await dialog.evaluate((d) => ({ sw: d.scrollWidth, cw: d.clientWidth, right: d.getBoundingClientRect().right, vw: innerWidth, anim: getComputedStyle(d).animationName }));
+          |                              ^
+      203 |     expect(box.sw).toBeLessThanOrEqual(box.cw);
+      204 |     expect(box.right).toBeLessThanOrEqual(box.vw + 0.5);
+      205 |     expect(box.anim).toBe("none");
+        at /tmp/table-pre-b17/tests/e2e/b17-plan-recipes.spec.ts:202:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-plan-recipes-B17-recip-bd871-ys-scroll-controls-hittable-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-plan-recipes-B17-recip-bd871-ys-scroll-controls-hittable-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-plan-recipes-B17-recip-bd871-ys-scroll-controls-hittable-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-plan-recipes-B17-recip-bd871-ys-scroll-controls-hittable-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[7/7] [chromium] › tests/e2e/b17-plan-recipes.spec.ts:194:3 › B17 recipe editor at 390px with 150% text: fits, no sideways scroll, controls hittable
+  7) [chromium] › tests/e2e/b17-plan-recipes.spec.ts:194:3 › B17 recipe editor at 390px with 150% text: fits, no sideways scroll, controls hittable 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.evaluate: Test ended.
+    Call log:
+      - waiting for getByRole('dialog', { name: 'New recipe' })
+
+
+      200 |     await p.getByTestId("new-recipe").click();
+      201 |     const dialog = p.getByRole("dialog", { name: "New recipe" });
+    > 202 |     const box = await dialog.evaluate((d) => ({ sw: d.scrollWidth, cw: d.clientWidth, right: d.getBoundingClientRect().right, vw: innerWidth, anim: getComputedStyle(d).animationName }));
+          |                              ^
+      203 |     expect(box.sw).toBeLessThanOrEqual(box.cw);
+      204 |     expect(box.right).toBeLessThanOrEqual(box.vw + 0.5);
+      205 |     expect(box.anim).toBe("none");
+        at /tmp/table-pre-b17/tests/e2e/b17-plan-recipes.spec.ts:202:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-plan-recipes-B17-recip-38408-ys-scroll-controls-hittable-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-plan-recipes-B17-recip-38408-ys-scroll-controls-hittable-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-plan-recipes-B17-recip-38408-ys-scroll-controls-hittable-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-plan-recipes-B17-recip-38408-ys-scroll-controls-hittable-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  7 failed
+    [chromium] › tests/e2e/b17-plan-recipes.spec.ts:32:1 › B17 new recipe: a dialog with focus inside, per-row names, attached errors, row add/remove focus, and a discard guard 
+    [chromium] › tests/e2e/b17-plan-recipes.spec.ts:101:3 › B17 editing the same recipe: the second editor sees the new version, keeps typed work and focus, and saves on top only after review — Jon saves first 
+    [chromium] › tests/e2e/b17-plan-recipes.spec.ts:101:3 › B17 editing the same recipe: the second editor sees the new version, keeps typed work and focus, and saves on top only after review — Alex saves first 
+    [chromium] › tests/e2e/b17-plan-recipes.spec.ts:135:1 › B17 recipe lists: filter tabs are a real tablist; each row's controls are named by recipe; notes errors are attached 
+    [chromium] › tests/e2e/b17-plan-recipes.spec.ts:165:1 › B17 Explore and deferred dinners: distinct names, results reported, a placement preview takes focus 
+    [chromium] › tests/e2e/b17-plan-recipes.spec.ts:194:3 › B17 recipe editor at 320px with 150% text: fits, no sideways scroll, controls hittable 
+    [chromium] › tests/e2e/b17-plan-recipes.spec.ts:194:3 › B17 recipe editor at 390px with 150% text: fits, no sideways scroll, controls hittable 

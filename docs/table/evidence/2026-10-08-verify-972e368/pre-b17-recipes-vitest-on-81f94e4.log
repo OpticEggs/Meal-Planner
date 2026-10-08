@@ -1,0 +1,59 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /tmp/table-pre-b17
+
+ ❯ tests/integration/b17.recipes.test.ts (3 tests | 3 failed) 1786ms
+   ❯ B17 recipe versions are edited against the version seen (3)
+     × two edits made from the same version: the first saves, the second is refused with who saved what — Jon first 666ms
+     × two edits made from the same version: the first saves, the second is refused with who saved what — Alex first 561ms
+     × callers that do not name a version keep the old behavior; a malformed expectation is refused 557ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/b17.recipes.test.ts > B17 recipe versions are edited against the version seen > two edits made from the same version: the first saves, the second is refused with who saved what — Jon first
+ FAIL  tests/integration/b17.recipes.test.ts > B17 recipe versions are edited against the version seen > two edits made from the same version: the first saves, the second is refused with who saved what — Alex first
+AssertionError: expected false to be 'stale_version' // Object.is equality
+
+- Expected:
+"stale_version"
+
++ Received:
+false
+
+ ❯ tests/integration/b17.recipes.test.ts:28:49
+     26|       const [x, y] = order === "Jon first" ? await race((jon as Actor)…
+     27|       expect(x.status).toBe("accepted");
+     28|       expect(y.status === "rejected" && y.code).toBe("stale_version");
+       |                                                 ^
+     29|       const winner = order === "Jon first" ? "Jon" : "Alex";
+     30|       expect(y.status === "rejected" && y.message).toContain(`${winner…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/integration/b17.recipes.test.ts > B17 recipe versions are edited against the version seen > callers that do not name a version keep the old behavior; a malformed expectation is refused
+AssertionError: expected false to be 'invalid' // Object.is equality
+
+- Expected:
+"invalid"
+
++ Received:
+false
+
+ ❯ tests/integration/b17.recipes.test.ts:47:51
+     45|     expect((await saveRecipeVersionCommand(jon, op(), draft(recipeId, …
+     46|     const bad = await saveRecipeVersionCommand(jon, op(), { ...draft(r…
+     47|     expect(bad.status === "rejected" && bad.code).toBe("invalid");
+       |                                                   ^
+     48|     expect((await versions(recipeId)).length).toBe(2);
+     49|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  04:05:07
+   Duration  2.70s (tests 70%, import 16%, transform 14%)
+

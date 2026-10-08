@@ -1,0 +1,266 @@
+
+Running 7 tests using 1 worker
+
+  ✘  1 [chromium] › tests/e2e/b17-household.spec.ts:42:1 › B17 settings: another member's save keeps what I typed, shows their values, holds Save until reviewed; my save lands on the reviewed revision (14.1s)
+  ✘  2 [chromium] › tests/e2e/b17-household.spec.ts:103:1 › B17 settings: invalid budget, sessions and new-recipe limit are attached errors, the first takes focus, nothing is saved (11.5s)
+  ✘  3 [chromium] › tests/e2e/b17-household.spec.ts:137:1 › B17 settings: a server rejection is a focused alert (11.5s)
+  ✘  4 [chromium] › tests/e2e/b17-household.spec.ts:153:1 › B17 targets: distinct labels per scope, attached and focused errors, a valid save persists and is announced (11.7s)
+  ✘  5 [chromium] › tests/e2e/b17-household.spec.ts:184:1 › B17 exclusions: empty term is an attached error, server rejection is shown, removal is a confirmation with Keep it as default (1.0m)
+  ✘  6 [chromium] › tests/e2e/b17-household.spec.ts:248:1 › B17 ingredient review: no tags needs an explicit 'no allergen tags apply', else an attached error (1.0m)
+  ✘  7 [chromium] › tests/e2e/b17-household.spec.ts:269:1 › B17 Household at 320px with 150% text: no horizontal overflow, errors and the exclusion dialog included (1.7s)
+
+
+  1) [chromium] › tests/e2e/b17-household.spec.ts:42:1 › B17 settings: another member's save keeps what I typed, shows their values, holds Save until reviewed; my save lands on the reviewed revision 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByTestId('settings-conflict')
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for getByTestId('settings-conflict')
+
+
+      72 |
+      73 |   const conflict = a.getByTestId("settings-conflict");
+    > 74 |   await expect(conflict).toBeVisible();
+         |                          ^
+      75 |   await expect(conflict).toContainText("Jon saved household inputs while you were editing");
+      76 |   await expect(conflict).toContainText("95.50");
+      77 |   await expect(conflict).toContainText("5");
+        at /tmp/table-w-household/tests/e2e/b17-household.spec.ts:74:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-household-B17-settings-0250c-ds-on-the-reviewed-revision-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-household-B17-settings-0250c-ds-on-the-reviewed-revision-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-household-B17-settings-0250c-ds-on-the-reviewed-revision-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-household-B17-settings-0250c-ds-on-the-reviewed-revision-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-household-B17-settings-0250c-ds-on-the-reviewed-revision-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › tests/e2e/b17-household.spec.ts:103:1 › B17 settings: invalid budget, sessions and new-recipe limit are attached errors, the first takes focus, nothing is saved 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "set-budget"
+    Received: ""
+
+    Call Log:
+    - Timeout 10000ms exceeded while waiting on the predicate
+
+      112 |   await form.getByLabel("Max new recipes").fill("8");
+      113 |   await form.getByLabel("Max new recipes").press("Enter");
+    > 114 |   await expect.poll(async () => (await focused(a)).id).toBe("set-budget");
+          |   ^
+      115 |   await expect(form.getByLabel("Budget ($)")).toHaveAttribute("aria-invalid", "true");
+      116 |   await expect(form.getByLabel("Budget ($)")).toHaveAccessibleDescription(/at most 2 decimal places/);
+      117 |   await expect(form.getByLabel("Cooking sessions / week")).toHaveAccessibleDescription(/whole number from 1 to 7/);
+        at /tmp/table-w-household/tests/e2e/b17-household.spec.ts:114:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-household-B17-settings-232a3-akes-focus-nothing-is-saved-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-household-B17-settings-232a3-akes-focus-nothing-is-saved-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-household-B17-settings-232a3-akes-focus-nothing-is-saved-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-household-B17-settings-232a3-akes-focus-nothing-is-saved-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chromium] › tests/e2e/b17-household.spec.ts:137:1 › B17 settings: a server rejection is a focused alert 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByTestId('settings').getByRole('alert')
+    Expected: "Invalid setting: test rejection"
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" with timeout 10000ms
+      - waiting for getByTestId('settings').getByRole('alert')
+
+
+      145 |   await form.getByRole("button", { name: "Save household inputs" }).click();
+      146 |   const alert = form.getByRole("alert");
+    > 147 |   await expect(alert).toHaveText("Invalid setting: test rejection");
+          |                       ^
+      148 |   await expect.poll(async () => (await focused(a)).name).toBe("Invalid setting: test rejection");
+      149 |   await expect(form.getByLabel("Budget ($)")).toHaveValue("50");
+      150 |   await alex.context.close();
+        at /tmp/table-w-household/tests/e2e/b17-household.spec.ts:147:23
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-household-B17-settings-3f61d-ejection-is-a-focused-alert-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-household-B17-settings-3f61d-ejection-is-a-focused-alert-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-household-B17-settings-3f61d-ejection-is-a-focused-alert-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-household-B17-settings-3f61d-ejection-is-a-focused-alert-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [chromium] › tests/e2e/b17-household.spec.ts:153:1 › B17 targets: distinct labels per scope, attached and focused errors, a valid save persists and is announced 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('targets').getByLabel('Dinner calories (kcal)')
+    Expected: 1
+    Received: 0
+    Timeout:  10000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 10000ms
+      - waiting for getByTestId('targets').getByLabel('Dinner calories (kcal)')
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      157 |   await toHousehold(a);
+      158 |   const t = a.getByTestId("targets");
+    > 159 |   await expect(t.getByLabel("Dinner calories (kcal)")).toHaveCount(1);
+          |                                                        ^
+      160 |   await expect(t.getByLabel("Whole-day protein (g)")).toHaveCount(1);
+      161 |   await t.getByLabel("Dinner calories (kcal)").fill("abc");
+      162 |   await t.getByLabel("Dinner fat (g)").fill("-3");
+        at /tmp/table-w-household/tests/e2e/b17-household.spec.ts:159:56
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-household-B17-targets--47239-e-persists-and-is-announced-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-household-B17-targets--47239-e-persists-and-is-announced-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-household-B17-targets--47239-e-persists-and-is-announced-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-household-B17-targets--47239-e-persists-and-is-announced-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [chromium] › tests/e2e/b17-household.spec.ts:184:1 › B17 exclusions: empty term is an attached error, server rejection is shown, removal is a confirmation with Keep it as default 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Test ended.
+    Call log:
+      - waiting for getByTestId('exclusions').getByRole('button', { name: 'Add exclusion' })
+
+
+      190 |   const ex = a.getByTestId("exclusions");
+      191 |   const term = ex.getByLabel("Exclusion", { exact: true });
+    > 192 |   await ex.getByRole("button", { name: "Add exclusion" }).click();
+          |                                                           ^
+      193 |   await expect.poll(async () => (await focused(a)).id).toBe("excl-term");
+      194 |   await expect(term).toHaveAttribute("aria-invalid", "true");
+      195 |   await expect(term).toHaveAccessibleDescription(/Enter an ingredient or tag/);
+        at /tmp/table-w-household/tests/e2e/b17-household.spec.ts:192:59
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-household-B17-exclusio-1c594-ion-with-Keep-it-as-default-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-household-B17-exclusio-1c594-ion-with-Keep-it-as-default-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-household-B17-exclusio-1c594-ion-with-Keep-it-as-default-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-household-B17-exclusio-1c594-ion-with-Keep-it-as-default-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [chromium] › tests/e2e/b17-household.spec.ts:248:1 › B17 ingredient review: no tags needs an explicit 'no allergen tags apply', else an attached error 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Test ended.
+    Call log:
+      - waiting for getByRole('button', { name: 'Mark Basil pesto (store-bought) reviewed' })
+
+
+      254 |   const tags = a.getByLabel(`Tags for ${name}`);
+      255 |   await expect(tags).toHaveValue("");
+    > 256 |   await a.getByRole("button", { name: `Mark ${name} reviewed` }).click();
+          |                                                                  ^
+      257 |   await expect.poll(async () => (await focused(a)).id).toBe("rv-pesto-tags");
+      258 |   await expect(tags).toHaveAttribute("aria-invalid", "true");
+      259 |   await expect(tags).toHaveAccessibleDescription(/no allergen tags apply/i);
+        at /tmp/table-w-household/tests/e2e/b17-household.spec.ts:256:66
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-household-B17-ingredie-c0918-pply-else-an-attached-error-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-household-B17-ingredie-c0918-pply-else-an-attached-error-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-household-B17-ingredie-c0918-pply-else-an-attached-error-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-household-B17-ingredie-c0918-pply-else-an-attached-error-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [chromium] › tests/e2e/b17-household.spec.ts:269:1 › B17 Household at 320px with 150% text: no horizontal overflow, errors and the exclusion dialog included 
+
+    Error: household at 320px/150%
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 0
+    Received:    326
+
+      276 |   await p.addStyleTag({ content: "html { font-size: 150% !important; }" });
+      277 |   const overflow = () => p.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    > 278 |   expect(await overflow(), "household at 320px/150%").toBeLessThanOrEqual(0);
+          |                                                       ^
+      279 |   // With field errors showing.
+      280 |   const form = p.getByTestId("settings");
+      281 |   await form.getByLabel("Budget ($)").fill("1.234");
+        at /tmp/table-w-household/tests/e2e/b17-household.spec.ts:278:55
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b17-household-B17-Househol-6d17b-e-exclusion-dialog-included-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b17-household-B17-Househol-6d17b-e-exclusion-dialog-included-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b17-household-B17-Househol-6d17b-e-exclusion-dialog-included-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b17-household-B17-Househol-6d17b-e-exclusion-dialog-included-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7 failed
+    [chromium] › tests/e2e/b17-household.spec.ts:42:1 › B17 settings: another member's save keeps what I typed, shows their values, holds Save until reviewed; my save lands on the reviewed revision 
+    [chromium] › tests/e2e/b17-household.spec.ts:103:1 › B17 settings: invalid budget, sessions and new-recipe limit are attached errors, the first takes focus, nothing is saved 
+    [chromium] › tests/e2e/b17-household.spec.ts:137:1 › B17 settings: a server rejection is a focused alert 
+    [chromium] › tests/e2e/b17-household.spec.ts:153:1 › B17 targets: distinct labels per scope, attached and focused errors, a valid save persists and is announced 
+    [chromium] › tests/e2e/b17-household.spec.ts:184:1 › B17 exclusions: empty term is an attached error, server rejection is shown, removal is a confirmation with Keep it as default 
+    [chromium] › tests/e2e/b17-household.spec.ts:248:1 › B17 ingredient review: no tags needs an explicit 'no allergen tags apply', else an attached error 
+    [chromium] › tests/e2e/b17-household.spec.ts:269:1 › B17 Household at 320px with 150% text: no horizontal overflow, errors and the exclusion dialog included 

@@ -1,0 +1,134 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/table
+
+ ✓ tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01a: an empty recipe collection yields a draft of seven open nights that cannot be adopted 642ms
+ ✓ tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01b: too few eligible recipes leaves named open nights; adoption refused 555ms
+ ✓ tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01c: a submitted proposal with an uncovered Thursday or missing plates is refused at the server 610ms
+ ✓ tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01d: a complete, fully priced proposal that is known to exceed a firm budget is refused 638ms
+ ✓ tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01e: complete coverage with unknown prices is adoptable; grocery readiness stays unproven 658ms
+ ✓ tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02a: a locked Thursday leftover keeps its Wednesday source through a whole-week adoption 664ms
+ ✓ tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02b: a locked Wednesday source keeps its dependent plates consistent through adoption 648ms
+ ✓ tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02c: moving Wednesday's cooking after Alex's reserved Thursday lunch discloses and resolves the lunch before Apply 659ms
+ ✓ tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02d: a move and a lunch edit on the same cooking conflict in either order (move first) 720ms
+ ✓ tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02d: a move and a lunch edit on the same cooking conflict in either order (lunch edit first) 692ms
+ ✓ tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02e: independent Friday and Sunday edits still both survive 589ms
+ ✓ tests/integration/review-regressions.test.ts > R-F03 current exclusions apply to every newly scheduled choice > R-F03a: placing a deferred dinner that now violates an exclusion is refused 616ms
+ ✓ tests/integration/review-regressions.test.ts > R-F03 current exclusions apply to every newly scheduled choice > R-F03b: adding an eater to a dinner checks that eater's personal exclusions 539ms
+ ✓ tests/integration/review-regressions.test.ts > R-F04 order and transfer reconciliation > R-F04a: a transfer acknowledged after the order is still counted; the same demand is not offered again 775ms
+ ✓ tests/integration/review-regressions.test.ts > R-F04 order and transfer reconciliation > R-F04b: 'contents unknown' does not clear an uncertain transfer hold 660ms
+ ✓ tests/integration/review-regressions.test.ts > R-F04 order and transfer reconciliation > R-F04c: an acknowledged transfer stays counted when the order's contents are unknown, and is flagged 608ms
+ ✓ tests/integration/review-regressions.test.ts > R-F04 order and transfer reconciliation > R-F04d: a known order reconciles its pre-order transfers exactly once (no double count) 615ms
+ ✓ tests/integration/review-regressions.test.ts > R-F05 receipts, substitutions and package identity > R-F05a: an unvalidated substitution does not cover the original need 631ms
+ ✓ tests/integration/review-regressions.test.ts > R-F05 receipts, substitutions and package identity > R-F05b: an unsuitable substitution leaves the need actionable; a suitable smaller one covers only its amount 1319ms
+ ✓ tests/integration/review-regressions.test.ts > R-F05 receipts, substitutions and package identity > R-F05c: ordered packages keep their own size when the product mapping later changes 640ms
+ ✓ tests/integration/review-regressions.test.ts > R-F05 receipts, substitutions and package identity > R-F05d: a mistaken 'missing' is corrected by a new observation without rewriting history 690ms
+ ✓ tests/integration/review-regressions.test.ts > R-F06 'Have enough' is bound to what the reviewer saw > R-F06a: a concurrent increase cannot enlarge Alex's assertion (change first) 622ms
+ ✓ tests/integration/review-regressions.test.ts > R-F06 'Have enough' is bound to what the reviewer saw > R-F06a: a concurrent increase cannot enlarge Alex's assertion (observation first) 649ms
+ ✓ tests/integration/review-regressions.test.ts > R-F06 'Have enough' is bound to what the reviewer saw > R-F06b: 'Have enough' without the reviewed amount is refused; an unchanged review covers the need 537ms
+ ✓ tests/integration/review-regressions.test.ts > R-F07 capture lifecycle > R-F07a: Also need works before any week is adopted and reports its destination 544ms
+ ✓ tests/integration/review-regressions.test.ts > R-F07 capture lifecycle > R-F07b: after this week's order is confirmed, a new need goes to the next pickup, not the confirmed order 640ms
+ ✓ tests/integration/review-regressions.test.ts > R-F07 capture lifecycle > R-F07c: a remembered usual quantity is reused by later staple taps 609ms
+ ✓ tests/integration/review-regressions.test.ts > R-F08 household-wide purchasing inputs reach every active week > R-F08a: a price change made from week B invalidates week A's old review; old Send makes zero calls 591ms
+ ✓ tests/integration/review-regressions.test.ts > R-F08 household-wide purchasing inputs reach every active week > R-F08b: a product mapping change from week B reaches week A's quantities 536ms
+ ✓ tests/integration/plan.contract.test.ts > T01 preview Friday while the other member reviews groceries; cancel > leaves accepted week, portions and active requirements unchanged with no household edit or external call 727ms
+ ✓ tests/integration/plan.contract.test.ts > T02 either member adopts the displayed week > creates one shared accepted plan and no order, cooking or consumption record 604ms
+ ✓ tests/integration/plan.contract.test.ts > T03 Sounds good and preference changes > persist without changing accepted assignments, portions or requirements 634ms
+ ✓ tests/integration/plan.contract.test.ts > T04 previews affecting leftovers or a locked night > shows consequences before Apply, cancellation changes nothing, protected dinners are not moved 741ms
+ ✓ tests/integration/plan.contract.test.ts > T07 record less left than planned > makes the dependent night unresolved, keeps the selected dinner, proposes but does not apply recovery 692ms
+ ✓ tests/integration/plan.contract.test.ts > T08 (server boundary) other member changes Friday while a Friday preview is open > reports the current Friday and stale draft from the snapshot before Apply; the old draft cannot apply 780ms
+ ✓ tests/integration/plan.contract.test.ts > T10 concurrent independent Friday and Sunday replacements — Jon (Sunday) first > both survive, neither restores other nights, groceries are recalculated 875ms
+ ✓ tests/integration/plan.contract.test.ts > T10 concurrent independent Friday and Sunday replacements — Alex (Friday) first > both survive, neither restores other nights, groceries are recalculated 910ms
+ ✓ tests/integration/plan.contract.test.ts > T11 concurrent replacements of the same target — Jon first > one commits; the other makes no accepted write and keeps its draft 715ms
+ ✓ tests/integration/plan.contract.test.ts > T11 concurrent replacements of the same target — Alex first > one commits; the other makes no accepted write and keeps its draft 657ms
+ ✓ tests/integration/plan.contract.test.ts > T12 adopt a whole proposal after a newer accepted change — adoption first > never restores an obsolete seven-day snapshot 673ms
+ ✓ tests/integration/plan.contract.test.ts > T12 adopt a whole proposal after a newer accepted change — Friday change first > never restores an obsolete seven-day snapshot 662ms
+ ✓ tests/integration/plan.contract.test.ts > T15 (plan commands) duplicate click or retry > returns the same recorded result with no duplicate edit; reused id with different payload is refused 658ms
+ ✓ tests/integration/plan.contract.test.ts > T21 edit a recipe in the library after adopting it > keeps the accepted assignment on its pinned recipe version 693ms
+ ✓ tests/integration/plan.contract.test.ts > T22 two night edits interacting through a real dependency > leftover source: conflict in either order (Wednesday first) 648ms
+ ✓ tests/integration/plan.contract.test.ts > T22 two night edits interacting through a real dependency > leftover source: conflict in either order (Thursday first) 617ms
+ ✓ tests/integration/plan.contract.test.ts > T22 two night edits interacting through a real dependency > destination lock: a move onto a night that was locked meanwhile is stopped, never overwritten 584ms
+ ✓ tests/integration/plan.contract.test.ts > T22 two night edits interacting through a real dependency > firm constraint: each change fits a firm budget alone, the combination does not, and is not silently relaxed 649ms
+ ✓ tests/integration/plan.contract.test.ts > X01 (commands) household isolation > another household cannot read or write plans, drafts or purchases by id substitution, with no side effects 718ms
+ ✓ tests/integration/plan.contract.test.ts > X03 (command identity) > same id + same payload returns the original; same id + different payload is rejected with no write 542ms
+ ✓ tests/integration/plan.contract.test.ts > Negative control: a stale target is rejected > a lock request bound to an old revision makes no write 545ms
+ ✓ tests/integration/groceries.contract.test.ts > Fixture arithmetic (explicit expected grocery lines) > computes the specified quantities and packages 651ms
+ ✓ tests/integration/groceries.contract.test.ts > T05 dinners covered, product/price unresolved > shows meals chosen without asserting grocery readiness or budget compliance 676ms
+ ✓ tests/integration/groceries.contract.test.ts > T13 accepted meal change while the other member's grocery review is open > shows the delta, keeps unaffected approvals, and stale Send makes zero outbound calls 1202ms
+ ✓ tests/integration/groceries.contract.test.ts > T14 replacement after order confirmation > changes current requirements but never the confirmed order; new chicken is not sent; stale Send makes zero calls 1114ms
+ ✓ tests/integration/groceries.contract.test.ts > T15 (handoff) duplicate click or retry > one batch and one outbound call for one operation id 572ms
+ ✓ tests/integration/groceries.contract.test.ts > X03 purchase deduplication across different operation ids > concurrent sends of the same review produce one transfer (first wins) 665ms
+ ✓ tests/integration/groceries.contract.test.ts > X03 purchase deduplication across different operation ids > concurrent sends of the same review produce one transfer (second wins) 661ms
+ ✓ tests/integration/groceries.contract.test.ts > T16 / X05 external transfer times out after possible acceptance > is uncertain and never replayed automatically; granularity stays batch-level 986ms
+ ✓ tests/integration/groceries.contract.test.ts > T16 / X05 external transfer times out after possible acceptance > a process stop after dispatch-started becomes uncertain on recovery, with no replay 649ms
+ ✓ tests/integration/groceries.contract.test.ts > T17 / X04 plan change after a valid batch has started sending > keeps the exact started payload; revised needs are a separate delta; nothing is reversed 674ms
+ ✓ tests/integration/groceries.contract.test.ts > T17 / X04 plan change after a valid batch has started sending > superseded queued work is canceled before dispatch-started (other race order) 662ms
+ ✓ tests/integration/groceries.contract.test.ts > T18 repeated staple taps, overlapping recipe need, explicit extra > dedupes the usual request with names, keeps reasons, keeps the extra 668ms
+ ✓ tests/integration/groceries.contract.test.ts > T19 'Have some' without a quantity, or reviewed demand increases > never invents a pantry subtraction and reopens review visibly 605ms
+ ✓ tests/integration/groceries.contract.test.ts > T20 confirm an order, then receive one item and report another missing > confirmation does not imply receipt; received resolves; missing stays actionable 1127ms
+ ✓ tests/integration/groceries.contract.test.ts > X09 capture after confirmation > identifies a staple already in the confirmed order before creating a duplicate; Add another is an explicit extra 672ms
+ ✓ tests/integration/groceries.contract.test.ts > Expected supply respects pickup timing (plan §6.4) > ordered goods support only dinners on or after pickup; unknown pickup is unresolved, not proof 1197ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > B16a: add, view, rename and set a usual amount in packages or a measured unit; future taps use it 797ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > B16b: adding validates the item and product; an explicit product is a recorded decision 682ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > B16c: removing hides the shortcut only; restore brings it back; a removed staple cannot be edited or re-pointed 683ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario A: concurrent edits of one staple — the first decision survives, the second sees a conflict with the current value — Jon first 694ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario A: an edit racing a removal — whichever commits second is refused — Jon first 683ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario A: concurrent edits of one staple — the first decision survives, the second sees a conflict with the current value — Alex first 666ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario A: an edit racing a removal — whichever commits second is refused — Alex first 649ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario B: staple changes during Alex's grocery review leave the reviewed purchase intact and sendable 943ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario B: choosing the new product for this pickup withdraws only that line's approval; the old review cannot authorize Send 802ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario B/E: two product choices for the same pickup line made against the same view — Jon first 717ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario B/E: two product choices for the same pickup line made against the same view — Alex first 695ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario C: removing a staple with outstanding demand removes its shortcut, not the grocery need 776ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario D: after an order is confirmed and received, staple changes leave product identities, quantities, receipts and transfers unchanged 924ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > re-pointing a staple with a measured usual amount re-expresses it in the new product's packages, or refuses an unconvertible product 723ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > line product issues are explicit: none chosen, unavailable, conflicting 691ms
+ ✓ tests/integration/b16.staple-management.test.ts > B15/B16 review regressions > a product choice naming another household's week is refused without revealing that week's product 556ms
+ ✓ tests/integration/b16.staple-management.test.ts > B15/B16 review regressions > 'last changed by' includes product decisions 560ms
+ ✓ tests/integration/b16.staple-management.test.ts > B15/B16 review regressions > a substitution decision made against an older view is refused, not silently replaced 687ms
+ ✓ tests/integration/b16.staple-management.test.ts > B15/B16 review regressions > removing a request is refused when someone joined it after the confirmation was shown 583ms
+ ✓ tests/integration/b16.staple-management.test.ts > B15/B16 review regressions > the household export covers every household table (staples included) and restores them 563ms
+ ✓ tests/integration/b12.staple-products.test.ts > B12 remembered staple products > B12a: approving a different product updates the remembered product and its revision, records the decision, and both members see it 817ms
+ ✓ tests/integration/b12.staple-products.test.ts > B12 remembered staple products > B12b: future one-tap requests use the latest approved product and usual quantity; the outstanding purchase and its approval are untouched 967ms
+ ✓ tests/integration/b12.staple-products.test.ts > B12 remembered staple products > B12c: confirmed orders and transfers stay unchanged; later needs route to the next pickup with the new product 851ms
+ ✓ tests/integration/b12.staple-products.test.ts > B12 remembered staple products > B12d: concurrent approvals cannot silently overwrite a newer decision — Jon first 680ms
+ ✓ tests/integration/b12.staple-products.test.ts > B12 remembered staple products > B12d: concurrent approvals cannot silently overwrite a newer decision — Alex first 644ms
+ ✓ tests/integration/b12.staple-products.test.ts > B12 remembered staple products > B12e: unknown or unavailable products are refused, and a remembered product that is unavailable leaves the line unresolved 702ms
+ ✓ tests/integration/b12.staple-products.test.ts > B12 remembered staple products > B12f: remembering a usual quantity never changes the remembered product 641ms
+ ✓ tests/integration/household.more.test.ts > Backup and deferred dinners > keeps the original as a deferred dinner, never stacked, and it can be placed deliberately later 768ms
+ ✓ tests/integration/household.more.test.ts > Proposal controls > Fewer sessions and Different dinners revise open nights only and explain the actual change 647ms
+ ✓ tests/integration/household.more.test.ts > X08 new exclusion flags, never replaces > flags Friday's salmon after a fish exclusion and leaves the accepted dinner in place 690ms
+ ✓ tests/integration/household.more.test.ts > Separate per-person targets and portions > each member sets their own daily and dinner targets; plates show nutrition against the dinner target only 574ms
+ ✓ tests/integration/household.more.test.ts > Separate per-person targets and portions > settings are saved inputs with revision checks; nothing starts set 569ms
+ ✓ tests/integration/b3.received-goods.test.ts > B3 received goods and genuine additional purchasing > labels and favors options that use received, unallocated goods; extra cost excludes goods already received 1213ms
+ ✓ tests/integration/b3.received-goods.test.ts > B3 received goods and genuine additional purchasing > with no purchasing history, additional basket cost equals the full extra purchase 545ms
+ ✓ tests/integration/b17.recipes.test.ts > B17 recipe versions are edited against the version seen > two edits made from the same version: the first saves, the second is refused with who saved what — Jon first 637ms
+ ✓ tests/integration/b17.recipes.test.ts > B17 recipe versions are edited against the version seen > two edits made from the same version: the first saves, the second is refused with who saved what — Alex first 579ms
+ ✓ tests/integration/b17.recipes.test.ts > B17 recipe versions are edited against the version seen > callers that do not name a version keep the old behavior; a malformed expectation is refused 501ms
+ ✓ tests/integration/x12.environment.test.ts > X12 test helpers are blocked outside the test environment > refuses a fixed clock, fixture seeding and test barriers in production 4ms
+ ✓ tests/integration/x12.environment.test.ts > X12 incomplete real retailer configuration never reports mock success as live > Kroger mode without configuration (or without verified authorization) refuses handoff with zero calls 629ms
+ ✓ tests/integration/x12.environment.test.ts > X12 export omits secrets and round-trips into an isolated database > exports household data without credentials and restores it faithfully 787ms
+ ✓ tests/unit/domain.test.ts > X06 portion, unit and nutrition arithmetic > component-only changes affect only that component's ingredients 4ms
+ ✓ tests/unit/domain.test.ts > X06 portion, unit and nutrition arithmetic > a leftover batch is counted once: plates on later nights draw from the same cooking 1ms
+ ✓ tests/unit/domain.test.ts > X06 portion, unit and nutrition arithmetic > rounds packages up exactly and never with binary floating point 1ms
+ ✓ tests/unit/domain.test.ts > X06 portion, unit and nutrition arithmetic > mass ounces are not fluid ounces; custom units only match themselves 1ms
+ ✓ tests/unit/domain.test.ts > X06 portion, unit and nutrition arithmetic > missing nutrition or conversion stays unknown, never zero 1ms
+ ✓ tests/unit/domain.test.ts > X07 cost scopes and unknowns > keeps dinner ingredient cost, pickup spending and unknown prices distinct 10ms
+ ✓ tests/unit/domain.test.ts > X07 cost scopes and unknowns > a firm budget cannot be proven by unknown prices, and a known excess is 'over' 3ms
+ ✓ tests/unit/domain.test.ts > X07 cost scopes and unknowns > usual replenishment is a minimum, shared with recipe demand; explicit extras add 1ms
+ ✓ tests/unit/domain.test.ts > X08 dates, DST, locks, exclusions > uses household-local dates across local midnight and daylight-saving transitions 11ms
+ ✓ tests/unit/domain.test.ts > X08 dates, DST, locks, exclusions > a new exclusion flags the current dinner without replacing it 1ms
+ ✓ tests/unit/domain.test.ts > X08 dates, DST, locks, exclusions > unknown ingredient information cannot pass a hard-exclusion check for a new choice 2ms
+ ✓ tests/unit/domain.test.ts > X08 dates, DST, locks, exclusions > locks are never overwritten; leftovers never precede their cooking 1ms
+ ✓ tests/unit/domain.test.ts > X08 dates, DST, locks, exclusions > closure staleness is per target: an unrelated night's revision does not stale a preview 1ms
+ ✓ tests/unit/domain.test.ts > Proposal engine (deterministic, explainable) > is deterministic and applies hard eligibility before preference 2ms
+ ✓ tests/unit/domain.test.ts > Proposal engine (deterministic, explainable) > keeps locked nights unchanged 1ms
+
+ Test Files  10 passed (10)
+      Tests  121 passed (121)
+   Start at  04:21:49
+   Duration  79.06s (tests 95%, import 4%, transform 1%)
+
+JSON report written to /tmp/table-verify-b17/vitest.json

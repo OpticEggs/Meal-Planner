@@ -2,7 +2,7 @@
 
 Status vocabulary: NOT IMPLEMENTED · IMPLEMENTED / NOT RUN · PASS · FAIL · BLOCKED.
 
-**Current evidence run:** `docs/table/evidence/2026-10-08-verify-5f7b72f/summary.md` (implementation commit `5f7b72f`, B15 + B16; clean tree, source hash unchanged during the run): vitest 118/118, Playwright 57/57, 30 mutations killed. Earlier runs are kept as history: `2026-10-08-verify-0804381/` (B14/B12), `2026-10-08-verify-2c56267/` (correction pass), `2026-10-08-full-run*.md`.
+**Current evidence run:** `docs/table/evidence/2026-10-08-verify-972e368/summary.md` (implementation commit `972e368`, B17; clean tree, source hash unchanged during the run): vitest 121/121, Playwright 72/72, 31 mutations killed. Earlier runs are kept as history: `2026-10-08-verify-5f7b72f/` (B15/B16), `2026-10-08-verify-0804381/` (B14/B12), `2026-10-08-verify-2c56267/` (correction pass), `2026-10-08-full-run*.md`.
 Environment: real PostgreSQL 16.15, production `next start` server, two independently signed-in
 Chromium contexts, recording fake retailer (simulated; nothing reaches a store), fixed household clock
 2026-10-12 15:00 America/New_York. Concurrency orders are forced with database lock barriers.
@@ -154,3 +154,27 @@ b8fa763 at its first focus check).
 Existing tests whose code changed (assertions unchanged): **T14** (e2e) adds the second
 confirmation click "Yes, record this order"; **b12.staples.spec** opens the product dialog
 instead of the inline form. No test was skipped, deleted or weakened.
+
+## B17 remaining forms — added 2026-10-08
+
+New IDs; no earlier row renumbered or replaced. Implementation commit `972e368`; evidence
+`docs/table/evidence/2026-10-08-verify-972e368/summary.md`. Red-before-green on `81f94e4` (isolated
+worktrees, databases and ports): the 8 recipe/plan browser tests (7 at the time of the run; the
+"start over" test was added after the review) and the 3 integration tests all FAILED
+(`pre-b17-recipes-on-81f94e4.log`, `pre-b17-recipes-vitest-on-81f94e4.log`), and the 7 Household
+browser tests all FAILED against the old `Household.tsx` (`pre-b17-household-on-81f94e4.log`); none passed.
+
+| ID | What is checked (actual focus / database state) | Tests | Status on 972e368 |
+|---|---|---|---|
+| B17-a Recipe editor dialog | Keyboard open, focus on Title, Tab trapped (25 each way); attached errors with first invalid focused, nothing saved; add row focuses its name; remove focuses a survivor (or the lone survivor's name); removing a component re-points its rows; discard guard ("Keep editing" focused, Escape again keeps editing and restores focus, Discard saves nothing); save returns focus and announces | e2e b17-plan-recipes "new recipe" | PASS (Chromium) |
+| B17-b Concurrent recipe edits | Both orders: second editor sees who saved version 2 and what changed, keeps typed title and focus, Save held; "Keep my edits" saves version 3; "Start over from version 2" replaces the draft and keeps the other member's added ingredient | e2e ×2 + "starting over"; integration b17.recipes ×2 (database barrier, both orders) | PASS |
+| B17-c Lists and notes | Filter tablist (arrows, Home, labelled panel, empty state); per-row Favorite names with aria-pressed; empty note → attached error, focus | e2e "recipe lists" | PASS (Chromium) |
+| B17-d Explore and placement | Sounds good names per card, result reported; placement controls named by dinner; new placement preview takes focus | e2e "Explore and deferred dinners" | PASS (Chromium) |
+| B17-e 320/390 px, 150% text, reduced motion | Recipe editor fits, no sideways scroll, controls hit-tested, no animation | e2e ×2 | PASS (Chromium) |
+| B17-f Household forms | Settings conflict (typed values kept, Save held, revision +1 after review), field errors, server rejection alert; targets errors and save; exclusion add errors, removal confirmation (Enter/Escape keep, Remove removes, focus survives); ingredient review tags-or-confirmation; 320 px / 150% | e2e b17-household (7) | PASS (Chromium) |
+| B17 mutation | Stale recipe version stacked | `tests/mutation/run.mjs` B17_stale_recipe_version_stacked | PASS — KILLED by assertion |
+| WebKit / iPhone Safari / VoiceOver | Same checks | — | **BLOCKED** — only Chromium installed; downloads not permitted; no device |
+
+Existing test changed (assertions unchanged): **b15-b16.spec** "B16 Household" waits for the Week page
+before an absence check and clicks the nav by test id (a navigation race: the absence check could pass
+on the still-open Household page, whose export link also matches the name "Household").
