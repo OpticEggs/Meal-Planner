@@ -1,0 +1,173 @@
+import { computeProjection, type ProjectionInput, type ProjectionResult, type BatchInput } from "@/domain/groceries/projection";
+import type { PlanState, RecipeVersion } from "@/domain/types";
+import type { Db } from "../db/pool";
+import { loadIngredients, loadPlanState, loadRecipeVersions, loadSettings, weekById } from "../queries/load";
+
+export async function ensureCycle(c: Db, householdId: string, weekId: string): Promise<string> {
+  const r = await c.query(
+    `INSERT INTO grocery_cycles(household_id, week_id) VALUES ($1,$2)
+     ON CONFLICT (week_id) DO UPDATE SET week_id = EXCLUDED.week_id RETURNING id`,
+    [householdId, weekId],
+  );
+  return r.rows[0].id;
+}
+
+export async function batchStatuses(c: Db, cycleId: string): Promise<Map<string, BatchInput["status"]>> {
+  const r = await c.query(
+    `SELECT DISTINCT ON (s.batch_id) s.batch_id, s.status FROM handoff_status_events s
+     JOIN handoff_batches b ON b.id=s.batch_id WHERE b.cycle_id=$1 ORDER BY s.batch_id, s.id DESC`,
+    [cycleId],
+  );
+  return new Map(r.rows.map((x) => [x.batch_id, x.status]));
+}
+
+/** Builds the projection input for a week from persisted state. Optionally overrides the
+ *  plan state (used by previews to compute the would-be purchasing delta). */
+export async function projectionInput(
+  c: Db,
+  householdId: string,
+  weekId: string,
+  override?: { state: PlanState; recipes: Map<string, RecipeVersion> },
+): Promise<{ input: ProjectionInput; cycleId: string }> {
+  const week = await weekById(c, householdId, weekId);
+  if (!week) throw new Error("week not found");
+  const cycleId = await ensureCycleRead(c, householdId, weekId);
+  const state = override?.state ?? (await loadPlanState(c, week));
+  const rvIds = [...new Set(state.events.map((e) => e.recipeVersionId))];
+  const recipes = override?.recipes ?? (await loadRecipeVersions(c, householdId, rvIds));
+  const ingredients = await loadIngredients(c, householdId);
+  const settings = await loadSettings(c, householdId);
+
+  const reqs = cycleId
+    ? await c.query(
+        `SELECT r.*, COALESCE(json_agg(json_build_object('memberId', rc.member_id, 'name', m.display_name, 'taps', rc.taps) ORDER BY rc.first_at)
+           FILTER (WHERE rc.member_id IS NOT NULL), '[]') AS contributors
+         FROM household_requests r LEFT JOIN request_contributors rc ON rc.request_id=r.id LEFT JOIN members m ON m.id=rc.member_id
+         WHERE r.cycle_id=$1 AND r.state='active' GROUP BY r.id ORDER BY r.created_at`,
+        [cycleId],
+      )
+    : { rows: [] as Record<string, unknown>[] };
+  const avail = cycleId
+    ? await c.query(
+        `SELECT DISTINCT ON (a.ingredient_key) a.*, m.display_name FROM availability_observations a JOIN members m ON m.id=a.member_id
+         WHERE a.cycle_id=$1 ORDER BY a.ingredient_key, a.observed_at DESC, a.id DESC`,
+        [cycleId],
+      )
+    : { rows: [] as Record<string, unknown>[] };
+  const prods = await c.query(
+    `SELECT pm.ingredient_key, p.*, pr.id AS price_id, pr.amount_minor, pr.currency, pr.price_kind, pr.source AS price_source, pr.observed_at AS price_observed_at
+     FROM product_mappings pm JOIN products p ON p.id=pm.product_id
+     LEFT JOIN LATERAL (SELECT * FROM price_observations po WHERE po.product_id=p.id ORDER BY po.observed_at DESC, po.id DESC LIMIT 1) pr ON true
+     WHERE pm.household_id=$1 AND pm.suitable`,
+    [householdId],
+  );
+  const products: ProjectionInput["products"] = new Map(
+    prods.rows.map((p) => [
+      p.ingredient_key,
+      {
+        product: {
+          id: p.id, ref: p.product_ref, name: p.name, ingredientKey: p.ingredient_key, packageQty: p.package_qty, packageUnit: p.package_unit,
+          variableWeight: p.variable_weight, fixture: p.fixture, retailer: p.retailer,
+        },
+        price: p.price_id
+          ? { id: p.price_id, amountMinor: p.amount_minor, currency: p.currency, kind: p.price_kind, source: p.price_source, observedAt: p.price_observed_at.toISOString() }
+          : null,
+      },
+    ]),
+  );
+
+  let batches: BatchInput[] = [];
+  let order: ProjectionInput["order"] = null;
+  let approvals: ProjectionInput["approvals"] = [];
+  if (cycleId) {
+    const statuses = await batchStatuses(c, cycleId);
+    const bl = await c.query(
+      "SELECT l.* FROM handoff_batch_lines l JOIN handoff_batches b ON b.id=l.batch_id WHERE b.cycle_id=$1",
+      [cycleId],
+    );
+    batches = [...statuses.entries()].map(([id, status]) => ({
+      id, status, lines: bl.rows.filter((l) => l.batch_id === id).map((l) => ({ ingredientKey: l.ingredient_key, packages: l.packages })),
+    }));
+    const o = await c.query("SELECT * FROM orders WHERE cycle_id=$1 ORDER BY confirmed_at DESC, id LIMIT 1", [cycleId]);
+    if (o.rowCount) {
+      const ol = await c.query("SELECT * FROM order_lines WHERE order_id=$1 ORDER BY name", [o.rows[0].id]);
+      const rec = await c.query("SELECT r.* FROM receipt_observations r JOIN order_lines l ON l.id=r.order_line_id WHERE l.order_id=$1", [o.rows[0].id]);
+      order = {
+        id: o.rows[0].id, contentsKnown: o.rows[0].contents_known, pickupAt: o.rows[0].pickup_at?.toISOString() ?? null,
+        lines: ol.rows.map((l) => ({ id: l.id, ingredientKey: l.ingredient_key, name: l.name, packages: l.packages })),
+        receipts: rec.rows.map((r) => ({ orderLineId: r.order_line_id, state: r.state, packages: r.packages })),
+      };
+    }
+    const ap = await c.query("SELECT * FROM purchase_approvals WHERE cycle_id=$1 AND state='active'", [cycleId]);
+    approvals = ap.rows.map((a) => ({ id: a.id, ingredientKey: a.ingredient_key, productId: a.product_id, packages: a.packages, lineFingerprint: a.line_fingerprint }));
+  }
+
+  const events = state.events.map((event) => ({
+    event, recipe: recipes.get(event.recipeVersionId)!, allocations: state.allocations.filter((a) => a.cookingEventId === event.id),
+  }));
+  return {
+    cycleId: cycleId ?? "",
+    input: {
+      events,
+      ingredients,
+      requests: (reqs.rows as Record<string, unknown>[]).map((r) => ({
+        id: r.id as string, ingredientKey: r.ingredient_key as string | null, text: r.text as string, kind: r.kind as "usual" | "extra",
+        packages: r.packages as number | null, contributors: r.contributors as { memberId: string; name: string; taps: number }[],
+      })),
+      availability: (avail.rows as Record<string, unknown>[]).map((a) => ({
+        id: a.id as string, ingredientKey: a.ingredient_key as string, state: a.state as "enough" | "some" | "need", quantity: a.quantity as string | null,
+        unit: a.unit as string | null, reviewedDemand: a.reviewed_demand as string | null, reviewedUnit: a.reviewed_unit as string | null, memberName: a.display_name as string,
+      })),
+      products,
+      batches,
+      order,
+      approvals,
+      budget: { scope: settings.budgetScope, limitMinor: settings.budgetLimitMinor, firm: settings.budgetFirm, currency: settings.budgetCurrency },
+    },
+  };
+}
+
+async function ensureCycleRead(c: Db, householdId: string, weekId: string): Promise<string | null> {
+  const r = await c.query("SELECT id FROM grocery_cycles WHERE household_id=$1 AND week_id=$2", [householdId, weekId]);
+  return r.rows[0]?.id ?? null;
+}
+
+/**
+ * Regenerates the stored requirement projection for a week inside the caller's
+ * transaction, and invalidates exactly the approvals whose line changed.
+ */
+export async function recomputeProjection(c: Db, householdId: string, weekId: string): Promise<ProjectionResult> {
+  await ensureCycle(c, householdId, weekId);
+  const { input, cycleId } = await projectionInput(c, householdId, weekId);
+  const result = computeProjection(input);
+  const week = await c.query("SELECT accepted_choice_revision FROM weeks WHERE id=$1", [weekId]);
+  const cyc = await c.query(
+    `UPDATE grocery_cycles SET projection_revision = projection_revision + 1, projection_accepted_revision=$2,
+       projection_summary=$3 WHERE id=$1 RETURNING projection_revision`,
+    [
+      cycleId,
+      week.rows[0].accepted_choice_revision,
+      {
+        reviewFingerprint: result.reviewFingerprint, payloadHash: result.payloadHash, payload: result.payload, ready: result.ready,
+        readyBlockers: result.readyBlockers, dinnerIngredientCost: result.dinnerIngredientCost, pickupSpending: result.pickupSpending, budget: result.budget,
+      },
+    ],
+  );
+  const rev = cyc.rows[0].projection_revision;
+  await c.query("DELETE FROM requirement_lines WHERE cycle_id=$1", [cycleId]);
+  for (const l of result.lines) {
+    await c.query(
+      "INSERT INTO requirement_lines(cycle_id, household_id, ingredient_key, projection_revision, line, line_fingerprint) VALUES ($1,$2,$3,$4,$5,$6)",
+      [cycleId, householdId, l.key, rev, l, l.fingerprint],
+    );
+  }
+  // Preserve approvals for unchanged lines; mark changed ones stale (kept for history).
+  for (const ap of input.approvals) {
+    const line = result.lines.find((l) => l.key === ap.ingredientKey);
+    const unchanged = line && line.fingerprint === ap.lineFingerprint && (line.toSend === ap.packages || line.toSend === 0);
+    if (!unchanged) {
+      await c.query("UPDATE purchase_approvals SET state='stale', state_changed_at=now() WHERE id=$1", [ap.id]);
+    }
+  }
+  return result;
+}

@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Table — Jon & Alex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,620&family=Outfit:wght@380;460;560;640&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #12110f;
+    --surface: #1c1a17;
+    --card: #24211d;
+    --card-2: #2c2823;
+    --line: rgba(244, 236, 224, 0.08);
+    --text: #f6f1ea;
+    --muted: #a89c90;
+    --faint: #74695e;
+    --amber: #e4a15a;
+    --amber-dim: rgba(228, 161, 90, 0.14);
+    --sage: #8fbf96;
+    --sage-dim: rgba(143, 191, 150, 0.14);
+    --rose: #e09a86;
+    --sky: #8eb6d4;
+    --warn: #e2b15c;
+    --bad: #e07a68;
+    --shadow: 0 16px 40px rgba(0,0,0,.35);
+    --nav-h: 74px;
+    --radius: 18px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #0c0b0a; color: var(--text); font-family: Outfit, sans-serif; }
+  body { min-height: 100dvh; }
+  button, input, select { font-family: inherit; color: inherit; }
+  button { cursor: pointer; }
+  img { display: block; max-width: 100%; }
+  .app {
+    width: min(440px, 100%);
+    margin: 0 auto;
+    min-height: 100dvh;
+    background: var(--bg);
+    position: relative;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.04);
+  }
+  .top {
+    position: sticky; top: 0; z-index: 20;
+    padding: 14px 18px 10px;
+    background: linear-gradient(180deg, rgba(18,17,15,.96), rgba(18,17,15,.88) 70%, rgba(18,17,15,0));
+    backdrop-filter: blur(10px);
+  }
+  .brand { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; }
+  .brand h1 { font-family: Fraunces, serif; font-weight: 560; font-size: 28px; margin: 0; letter-spacing: -0.03em; }
+  .brand p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+  .store-pill {
+    border: 1px solid var(--line); background: var(--card); color: var(--muted);
+    border-radius: 999px; padding: 7px 10px; font-size: 11px; letter-spacing: .01em;
+  }
+  .screen { display: none; padding: 6px 16px calc(var(--nav-h) + 28px); }
+  .screen.on { display: block; }
+  .nav {
+    position: fixed; left: 50%; transform: translateX(-50%);
+    width: min(440px, 100%); bottom: 0; z-index: 30;
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    background: rgba(22,20,18,.94); border-top: 1px solid var(--line);
+    padding: 8px 6px calc(10px + env(safe-area-inset-bottom));
+    backdrop-filter: blur(16px);
+  }
+  .nav button {
+    background: none; border: 0; color: var(--faint); font-size: 10px; letter-spacing: .02em;
+    display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 4px 0;
+  }
+  .nav button.on { color: var(--amber); }
+  .nav svg { width: 20px; height: 20px; }
+  .budget {
+    display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 8px; margin: 8px 0 14px;
+  }
+  .stat {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 10px 11px;
+  }
+  .stat span { display: block; color: var(--faint); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; }
+  .stat strong { display: block; margin-top: 4px; font-size: 16px; font-weight: 560; }
+  .stat em { font-style: normal; color: var(--muted); font-size: 11px; font-weight: 380; }
+  .bar { height: 4px; border-radius: 99px; background: #3a342e; margin-top: 8px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--amber); border-radius: 99px; }
+  .tonight {
+    position: relative; border-radius: 22px; overflow: hidden; min-height: 230px; margin-bottom: 14px;
+    border: 1px solid var(--line);
+  }
+  .tonight img { width: 100%; height: 230px; object-fit: cover; }
+  .tonight .shade {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,.05) 20%, rgba(12,10,8,.88));
+    padding: 14px; display: flex; flex-direction: column; justify-content: flex-end;
+  }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(228,161,90,.92); color: #1a140e; border-radius: 999px;
+    font-size: 11px; font-weight: 640; padding: 4px 8px; width: fit-content; letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .tonight h2 { margin: 8px 0 2px; font-family: Fraunces, serif; font-size: 28px; font-weight: 560; }
+  .tonight .meta { color: #efe6da; font-size: 13px; }
+  .row-actions { display: flex; gap: 8px; margin-top: 12px; }
+  .btn {
+    border: 0; border-radius: 12px; padding: 11px 12px; font-weight: 560; font-size: 14px;
+  }
+  .btn.primary { background: var(--amber); color: #1b140d; }
+  .btn.ghost { background: rgba(255,255,255,.1); color: white; }
+  .btn.line { background: transparent; border: 1px solid var(--line); color: var(--text); }
+  .btn.full { width: 100%; }
+  .btn.small { padding: 8px 10px; font-size: 13px; border-radius: 10px; }
+  .btn:disabled { opacity: .45; }
+  .section-label {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin: 16px 2px 8px; color: var(--muted); font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
+  }
+  .day {
+    display: grid; grid-template-columns: 52px 64px 1fr auto; gap: 10px; align-items: center;
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 8px;
+    margin-bottom: 8px; text-align: left; width: 100%;
+  }
+  .day.off { opacity: .72; }
+  .day .when { font-size: 12px; color: var(--muted); }
+  .day .when b { display: block; color: var(--text); font-size: 14px; font-weight: 560; }
+  .day img, .ph {
+    width: 64px; height: 52px; border-radius: 10px; object-fit: cover; background: #322e29;
+  }
+  .day h3 { margin: 0; font-size: 15px; font-weight: 560; }
+  .day p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+  .tag { font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: var(--amber); }
+  .sheet {
+    position: fixed; inset: 0; z-index: 40; background: rgba(0,0,0,.55);
+    display: none; align-items: flex-end; justify-content: center;
+  }
+  .sheet.on { display: flex; }
+  .panel {
+    width: min(440px, 100%); max-height: min(92dvh, 820px); overflow: auto;
+    background: #191714; border-radius: 22px 22px 0 0; border: 1px solid var(--line);
+    padding: 12px 16px 28px;
+  }
+  .grab { width: 42px; height: 4px; border-radius: 99px; background: #4a433c; margin: 4px auto 12px; }
+  .panel h2 { font-family: Fraunces, serif; font-weight: 560; font-size: 26px; margin: 8px 0 4px; }
+  .hero-img { width: 100%; height: 190px; object-fit: cover; border-radius: 16px; }
+  .facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 12px 0; }
+  .facts div { background: var(--card); border-radius: 12px; padding: 8px; }
+  .facts span { display: block; color: var(--faint); font-size: 10px; text-transform: uppercase; letter-spacing: .04em; }
+  .facts b { font-size: 13px; font-weight: 560; }
+  .people { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .person { background: var(--card); border-radius: 16px; padding: 12px; border: 1px solid var(--line); }
+  .person header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .dot { width: 8px; height: 8px; border-radius: 99px; display: inline-block; margin-right: 6px; }
+  .jon { background: var(--sky); } .alex { background: var(--rose); }
+  .macros { color: var(--muted); font-size: 12px; line-height: 1.45; }
+  .slider { width: 100%; accent-color: var(--amber); }
+  .note {
+    background: var(--amber-dim); border: 1px solid rgba(228,161,90,.25);
+    color: #f0d7b4; border-radius: 14px; padding: 10px 12px; font-size: 13px; line-height: 1.4; margin: 10px 0;
+  }
+  .note.sage { background: var(--sage-dim); border-color: rgba(143,191,150,.25); color: #d5ead8; }
+  .note.bad { background: rgba(224,122,104,.12); border-color: rgba(224,122,104,.3); color: #f0c7bf; }
+  .g-item, .recipe-card, .pref {
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 12px; margin-bottom: 8px;
+  }
+  .g-item header, .recipe-card { display: flex; justify-content: space-between; gap: 8px; }
+  .g-item h3, .recipe-card h3 { margin: 0; font-size: 15px; }
+  .g-item p, .recipe-card p { margin: 4px 0 0; color: var(--muted); font-size: 12.5px; line-height: 1.4; }
+  .price { font-variant-numeric: tabular-nums; font-weight: 560; }
+  .status { font-size: 11px; letter-spacing: .04em; text-transform: uppercase; }
+  .ok { color: var(--sage); } .warn { color: var(--warn); } .bad { color: var(--bad); }
+  .seg { display: flex; gap: 6px; margin-top: 8px; }
+  .seg button {
+    flex: 1; border: 1px solid var(--line); background: transparent; border-radius: 10px; padding: 7px 4px; font-size: 11px; color: var(--muted);
+  }
+  .seg button.on { background: var(--text); color: #1b140d; border-color: var(--text); }
+  .search {
+    width: 100%; background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 12px 12px; font-size: 14px; outline: none; margin-bottom: 10px;
+  }
+  .filters { display: flex; gap: 6px; overflow: auto; padding-bottom: 8px; margin-bottom: 6px; }
+  .filters button {
+    flex: 0 0 auto; border: 1px solid var(--line); background: var(--card); color: var(--muted);
+    border-radius: 999px; padding: 7px 10px; font-size: 12px;
+  }
+  .filters button.on { color: #1b140d; background: var(--amber); border-color: var(--amber); }
+  .explore-card { display: grid; grid-template-columns: 92px 1fr; gap: 10px; }
+  .explore-card img { width: 92px; height: 84px; object-fit: cover; border-radius: 12px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .field { margin-bottom: 10px; }
+  .field label { display: block; color: var(--muted); font-size: 12px; margin-bottom: 4px; }
+  .field input, .field select {
+    width: 100%; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px;
+  }
+  .steps { padding-left: 18px; color: #efe8df; font-size: 14px; line-height: 1.45; }
+  .steps li { margin: 6px 0; }
+  .stars button { background: none; border: 0; font-size: 22px; color: #4e463e; padding: 0 2px; }
+  .stars button.on { color: var(--amber); }
+  .hidden { display: none !important; }
+  .kicker { color: var(--amber); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; margin: 0; }
+  .math { font-variant-numeric: tabular-nums; font-size: 13px; color: #efe6da; line-height: 1.55; }
+  .math b { color: white; }
+  .toast {
+    position: fixed; left: 50%; transform: translateX(-50%);
+    bottom: 92px; z-index: 50; background: #f6f1ea; color: #1b140d;
+    border-radius: 999px; padding: 10px 14px; font-size: 13px; font-weight: 560;
+    display: none; width: max-content; max-width: 90%;
+  }
+  .toast.on { display: block; }
+  .shortlist { font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <div>
+        <h1>Table</h1>
+        <p id="subhead">Week of Oct 5 · Jon & Alex</p>
+      </div>
+      <div class="store-pill">Kroger · Prosper</div>
+    </div>
+  </header>
+
+  <main id="week" class="screen on"></main>
+  <main id="explore" class="screen"></main>
+  <main id="recipes" class="screen"></main>
+  <main id="groceries" class="screen"></main>
+  <main id="household" class="screen"></main>
+
+  <nav class="nav">
+    <button class="on" data-tab="week" aria-label="This week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Week</button>
+    <button data-tab="explore"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Explore</button>
+    <button data-tab="recipes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 4h12v16H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>Recipes</button>
+    <button data-tab="groceries"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 7h15l-1.5 9h-12z"/><path d="M6 7L5 4H2"/><circle cx="9" cy="20" r="1.2"/><circle cx="17" cy="20" r="1.2"/></svg>Groceries</button>
+    <button data-tab="household"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3.5 19c.6-3 2.8-4.5 5.5-4.5S14 16 14.6 19M14 14.6c1.6-.4 3.2.1 4.4 1.4 1 1.1 1.5 2.2 1.6 3"/></svg>Household</button>
+  </nav>
+</div>
+<div class="sheet" id="sheet"><div class="panel" id="panel"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = (s, r=document) => r.querySelector(s);
+const screens = ["week","explore","recipes","groceries","household"];
+const state = {
+  tab: "week",
+  filter: "all",
+  query: "",
+  orderPlaced: false,
+  sent: false,
+  transfer: null,
+  rating: 0,
+  note: "",
+  portions: { jon: 1.15, alex: 0.85 },
+  days: [
+    { id:"mon", when:"Mon 5", name:"Sheet-pan fajitas", kind:"Cooked", meal:"fajitas", done:true },
+    { id:"tue", when:"Tue 6", name:"Fajita leftovers", kind:"Leftover", meal:"fajitas", done:true },
+    { id:"wed", when:"Wed 7", name:"Greek chicken bowls", kind:"Tonight · 30 min", meal:"greek", tonight:true },
+    { id:"thu", when:"Thu 8", name:"Bowl leftovers", kind:"Leftover", meal:"greek" },
+    { id:"fri", when:"Fri 9", name:"Salmon rice bowls", kind:"Cook · fast", meal:"salmon", fast:true },
+    { id:"sat", when:"Sat 10", name:"Eating out", kind:"Out", meal:null },
+    { id:"sun", when:"Sun 11", name:"Turkey taco skillet", kind:"Cook · leftovers", meal:"skillet" }
+  ],
+  pantry: {
+    chicken: "some",
+    rice: "some",
+    yogurt: "need",
+    tortillas: "enough",
+    salmon: "need",
+    cilantro: "need",
+    peppers: "need",
+    turkey: "need"
+  }
+};
+
+const meals = {
+  fajitas: {
+    name:"Sheet-pan chicken fajitas", blurb:"Peppers, onion, lime, warm tortillas.",
+    img:"images/fajitas.jpg", active:25, total:35, servings:4, leftover:2,
+    rating:5, last:"Mon", cuisine:"Mexican", method:"Sheet pan",
+    costServing:3.40, addCost:6.80,
+    base:{cal:610, p:42, c:48, f:22},
+    mods:"Less seasoning on Alex's half. Extra peppers.",
+    steps:["Slice 1.5 lb chicken and peppers.","Toss with oil, chili, cumin, salt.","Roast at 425°F for 22 minutes.","Warm tortillas. Portion chicken heavier for Jon."]
+  },
+  greek: {
+    name:"Greek chicken bowls", blurb:"Rice, cucumber, tomato, yogurt, lemon.",
+    img:"images/greek.jpg", active:20, total:30, servings:4, leftover:2,
+    rating:4, last:"3 weeks ago", cuisine:"Mediterranean", method:"Stovetop",
+    costServing:3.90, addCost:4.10,
+    base:{cal:640, p:46, c:52, f:20},
+    mods:"",
+    steps:["Season and sear chicken.","Steam rice already started from the pantry bag.","Chop cucumber and tomato.","Jon: more chicken. Alex: more salad, less rice."]
+  },
+  salmon: {
+    name:"Salmon rice bowls", blurb:"Roasted salmon, broccoli, rice, scallion.",
+    img:"images/salmon.jpg", active:15, total:25, servings:2, leftover:0,
+    rating:4, last:"Sep 18", cuisine:"Weeknight", method:"Sheet pan",
+    costServing:6.80, addCost:14.40,
+    base:{cal:690, p:44, c:48, f:32},
+    mods:"",
+    steps:["Roast salmon and broccoli.","Portion rice.","Sauce on the side — last note said it was heavy."]
+  },
+  skillet: {
+    name:"Turkey taco skillet", blurb:"Rice, beans, corn, salsa. One pan.",
+    img:"images/skillet.jpg", active:25, total:40, servings:5, leftover:3,
+    rating:5, last:"Sep 2", cuisine:"Mexican", method:"Skillet",
+    costServing:2.70, addCost:7.40,
+    base:{cal:580, p:36, c:62, f:18},
+    mods:"Double the vegetables. Good for leftovers.",
+    steps:["Brown turkey.","Add rice, beans, corn, salsa, simmer.","Top after plating so leftovers reheat clean."]
+  },
+  stirfry: {
+    name:"Beef and broccoli", blurb:"Fast stir-fry. Uses rice already in the basket.",
+    img:"images/stirfry.jpg", active:20, total:30, servings:3, leftover:1,
+    rating:4, last:"Aug 22", cuisine:"Weeknight", method:"Stovetop",
+    costServing:4.60, addCost:9.10,
+    base:{cal:620, p:38, c:50, f:24},
+    mods:"",
+    steps:["Slice beef thin.","Stir-fry broccoli and peppers.","Sauce on the side."]
+  },
+  pasta: {
+    name:"Chicken vegetable linguine", blurb:"Uses chicken already required this week.",
+    img:"images/pasta.jpg", active:30, total:40, servings:4, leftover:2,
+    rating:3, last:"Jul 30", cuisine:"Italian", method:"Stovetop",
+    costServing:3.20, addCost:2.40,
+    base:{cal:700, p:40, c:74, f:22},
+    mods:"",
+    steps:["Boil linguine.","Sear chicken.","Toss with roasted vegetables."]
+  }
+};
+
+const grocerySeed = [
+  { id:"chicken", name:"Chicken breast", detail:"Fajitas 1.0 lb + bowls 1.5 lb − freezer 0.5 lb", need:"2.0 lb", buy:"2 × 1.5 lb packs", extra:"1.0 lb over", price:11.98, match:"Kroger boneless breast", remembered:true, exception:"package", status:"ready" },
+  { id:"rice", name:"Jasmine rice", detail:"Bowls + skillet share one bag. Pantry covers part.", need:"1.4 lb", buy:"Have some — no purchase", extra:"", price:0, match:"Mahatma 2 lb, remembered", remembered:true, exception:null, status:"pantry" },
+  { id:"yogurt", name:"Plain Greek yogurt", detail:"Bowls, 1.5 cups. Remembered brand.", need:"16 oz", buy:"1 tub", extra:"", price:4.49, match:"Simple Truth 0%", remembered:true, exception:null, status:"ready" },
+  { id:"tortillas", name:"Flour tortillas", detail:"Enough confirmed for fajitas.", need:"8", buy:"Have enough", extra:"", price:0, match:"Mission fajita", remembered:true, exception:null, status:"pantry" },
+  { id:"salmon", name:"Salmon fillets", detail:"Friday. No approved product yet.", need:"0.8 lb", buy:"Choose a pack", extra:"", price:12.99, match:"Unresolved", remembered:false, exception:"match", status:"review" },
+  { id:"cilantro", name:"Cilantro", detail:"Recipe says one bunch. Sold as a clamshell here.", need:"1 bunch", buy:"Unresolved unit", extra:"", price:1.29, match:"Unresolved", remembered:false, exception:"unit", status:"review" },
+  { id:"peppers", name:"Bell peppers", detail:"Fajitas, 3 peppers.", need:"3 ct", buy:"1 bag", extra:"", price:4.99, match:"Tri-color bag", remembered:true, exception:null, status:"ready" },
+  { id:"turkey", name:"Ground turkey", detail:"Sunday skillet, 1.25 lb.", need:"1.25 lb", buy:"1 × 1.3 lb pack", extra:"", price:5.79, match:"Kroger 93% lean", remembered:true, exception:null, status:"ready" },
+  { id:"coffee", name:"Coffee", detail:"Household extra, not a dinner ingredient.", need:"1 bag", buy:"1 bag", extra:"", price:8.99, match:"Simple Truth breakfast blend", remembered:true, exception:null, status:"extra" },
+  { id:"detergent", name:"Laundry detergent", detail:"Household extra.", need:"1", buy:"1", extra:"", price:12.49, match:"Tide 46 oz", remembered:true, exception:null, status:"extra" }
+];
+
+function money(n){ return n.toLocaleString("en-US", {style:"currency", currency:"USD"}); }
+function portionMacros(meal, mult){
+  const b = meal.base;
+  return { cal:Math.round(b.cal*mult), p:Math.round(b.p*mult), c:Math.round(b.c*mult), f:Math.round(b.f*mult) };
+}
+function toast(msg){
+  const t = $("#toast"); t.textContent = msg; t.classList.add("on");
+  clearTimeout(toast._t); toast._t = setTimeout(()=>t.classList.remove("on"), 2200);
+}
+function openSheet(html){ $("#panel").innerHTML = `<div class="grab"></div>${html}`; $("#sheet").classList.add("on"); }
+function closeSheet(){ $("#sheet").classList.remove("on"); }
+$("#sheet").addEventListener("click", e => { if(e.target.id==="sheet") closeSheet(); });
+
+function dinnerSpend(){
+  return grocerySeed.filter(g => g.status==="ready" || g.status==="review").reduce((s,g)=>s+g.price,0);
+}
+function orderSpend(){ return grocerySeed.reduce((s,g)=>s+g.price,0); }
+
+function renderWeek(){
+  const dSpend = dinnerSpend(), oSpend = orderSpend();
+  const tonight = meals.greek;
+  $("#week").innerHTML = `
+    <div class="budget">
+      <div class="stat"><span>Dinner groceries</span><strong>${money(dSpend)} <em>/ 120</em></strong><div class="bar"><i style="width:${Math.min(100,dSpend/120*100)}%"></i></div></div>
+      <div class="stat"><span>Whole order</span><strong>${money(oSpend)}</strong><em>of $180</em></div>
+      <div class="stat"><span>Recipe value</span><strong>$48</strong><em>eaten, not bought</em></div>
+    </div>
+    <article class="tonight">
+      <img src="${tonight.img}" alt="Greek chicken bowls" />
+      <div class="shade">
+        <div class="chip">Tonight · Wednesday</div>
+        <h2>${tonight.name}</h2>
+        <div class="meta">20 min active · Jon 736 cal · Alex 544 cal · cooks once, covers Thursday</div>
+        <div class="row-actions">
+          <button class="btn primary" id="cook">Cook this</button>
+          <button class="btn ghost" id="swap-tonight">Swap</button>
+        </div>
+      </div>
+    </article>
+    <div class="section-label"><span>This week</span><button class="btn line small" id="replan">Adjust plan</button></div>
+    ${state.days.map(d => {
+      const m = d.meal ? meals[d.meal] : null;
+      return `<button class="day ${d.meal?"":"off"}" data-day="${d.id}">
+        <div class="when">${d.when.split(" ")[0]}<b>${d.when.split(" ")[1]}</b></div>
+        ${m ? `<img src="${m.img}" alt="" />` : `<div class="ph"></div>`}
+        <div><div class="tag">${d.kind}</div><h3>${d.name}</h3><p>${m?`${m.active} min active · +${money(m.addCost)} to basket`:"No groceries"}</p></div>
+        <span class="shortlist">›</span>
+      </button>`;
+    }).join("")}
+    <p class="shortlist" style="margin-top:10px">Shortlist from this week: beef and broccoli, saved by Alex. It does not change the plan until you swap it in.</p>
+  `;
+  $("#cook").onclick = () => openCook();
+  $("#swap-tonight").onclick = () => openSwap("wed");
+  $("#replan").onclick = openPlan;
+  document.querySelectorAll("[data-day]").forEach(btn => btn.onclick = () => openDay(btn.dataset.day));
+}
+
+function openDay(id){
+  const d = state.days.find(x => x.id===id);
+  if(!d.meal){ openSheet(`<p class="kicker">${d.when}</p><h2>Eating out</h2><p class="macros">No recipe, no groceries, no nutrition claim. Dinner targets are not marked as met.</p>`); return; }
+  const m = meals[d.meal];
+  const j = portionMacros(m, state.portions.jon), a = portionMacros(m, state.portions.alex);
+  openSheet(`
+    <p class="kicker">${d.when} · ${d.kind}</p>
+    <h2>${m.name}</h2>
+    <img class="hero-img" src="${m.img}" alt="" />
+    <p class="macros">${m.blurb} Rated ${m.rating}/5 · last cooked ${m.last}.</p>
+    <div class="facts">
+      <div><span>Active</span><b>${m.active}m</b></div>
+      <div><span>Total</span><b>${m.total}m</b></div>
+      <div><span>/ serving</span><b>${money(m.costServing)}</b></div>
+      <div><span>Adds</span><b>${money(m.addCost)}</b></div>
+    </div>
+    <div class="note">Adds ${money(m.addCost)} to this week's basket. Recipe cost is ${money(m.costServing)} per serving — the value eaten, not the package you buy. Leftovers cover ${m.leftover} more plate${m.leftover===1?"":"s"}.</div>
+    <div class="people">
+      <div class="person"><header><b><i class="dot jon"></i>Jon</b><span>${j.cal} cal</span></header><div class="macros">${j.p}p · ${j.c}c · ${j.f}f<br/>Dinner target 50g protein. Not a full-day claim.</div></div>
+      <div class="person"><header><b><i class="dot alex"></i>Alex</b><span>${a.cal} cal</span></header><div class="macros">${a.p}p · ${a.c}c · ${a.f}f<br/>Dinner target 35g protein. Same meal, smaller components.</div></div>
+    </div>
+    ${m.mods?`<div class="note sage">Household version: ${m.mods}</div>`:""}
+    <div class="row-actions">
+      <button class="btn primary" id="swap-day">Replace this meal</button>
+      <button class="btn line" id="to-cook">Open recipe</button>
+    </div>`);
+  $("#swap-day").onclick = () => openSwap(id);
+  $("#to-cook").onclick = openCook;
+}
+
+function openSwap(dayId){
+  const options = ["stirfry","pasta","salmon","skillet","greek","fajitas"];
+  openSheet(`
+    <p class="kicker">Replace ${state.days.find(d=>d.id===dayId).when}</p>
+    <h2>Same menu, different night</h2>
+    <p class="macros">Sorted by additional grocery cost — what this meal adds to the basket you already need.</p>
+    ${options.map(id => {
+      const m = meals[id];
+      return `<button class="recipe-card explore-card" data-pick="${id}" style="width:100%;text-align:left;color:inherit">
+        <img src="${m.img}" alt="" />
+        <div><h3>${m.name}</h3><p>${m.active} min · ${money(m.costServing)}/serving · adds ${money(m.addCost)}</p><p>${m.leftover?`Covers ${m.leftover} leftover plate${m.leftover>1?"s":""}`:"No leftovers"}</p></div>
+      </button>`;
+    }).join("")}
+  `);
+  document.querySelectorAll("[data-pick]").forEach(btn => btn.onclick = () => {
+    const id = btn.dataset.pick;
+    const day = state.days.find(d => d.id===dayId);
+    day.meal = id; day.name = meals[id].name;
+    closeSheet(); renderWeek(); toast(`${day.when} is now ${meals[id].name}`);
+  });
+}
+
+function openPlan(){
+  openSheet(`
+    <p class="kicker">Plan our week</p>
+    <h2>Four cooks, not seven recipes</h2>
+    <div class="two">
+      <div class="field"><label>Dinners at home</label><select><option>5</option><option selected>4</option><option>3</option></select></div>
+      <div class="field"><label>Fast nights</label><select><option>Wed, Fri</option><option>Fri only</option></select></div>
+      <div class="field"><label>Leftovers</label><select><option selected>Yes, next day</option><option>No</option></select></div>
+      <div class="field"><label>Dinner budget</label><select><option>$90</option><option selected>$120</option><option>$150</option></select></div>
+    </div>
+    <div class="note">Eating out stays on the calendar so Saturday does not invent a recipe. Preferences carry forward: no cilantro-heavy sauces for Alex, preferred tortillas remembered, Prosper store.</div>
+    <button class="btn primary full" id="keep-plan">Keep this week</button>
+  `);
+  $("#keep-plan").onclick = () => { closeSheet(); toast("Week held. Shortlist stays a shortlist."); };
+}
+
+function openCook(){
+  const m = meals[state.days.find(d=>d.tonight).meal] || meals.greek;
+  const j = portionMacros(m, state.portions.jon), a = portionMacros(m, state.portions.alex);
+  openSheet(`
+    <p class="kicker">Tonight</p>
+    <h2>${m.name}</h2>
+    <img class="hero-img" src="${m.img}" alt="" />
+    <div class="people" style="margin-top:12px">
+      <div class="person"><header><b><i class="dot jon"></i>Jon</b></header><div class="macros">${j.cal} cal · ${j.p}g protein<br/>1.15× chicken, standard rice</div></div>
+      <div class="person"><header><b><i class="dot alex"></i>Alex</b></header><div class="macros">${a.cal} cal · ${a.p}g protein<br/>0.85× chicken, extra cucumber</div></div>
+    </div>
+    <ol class="steps">${m.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
+    <div class="field"><label>After cooking</label>
+      <div class="stars" id="stars">${[1,2,3,4,5].map(n=>`<button data-star="${n}" class="${n<=state.rating?"on":""}">★</button>`).join("")}</div>
+    </div>
+    <div class="field"><label>Household note — saved on your version, not the original</label>
+      <input id="cook-note" placeholder="Use less sauce. Double the vegetables." value="${state.note}" />
+    </div>
+    <button class="btn primary full" id="save-cook">Save what worked</button>
+  `);
+  document.querySelectorAll("[data-star]").forEach(b => b.onclick = () => {
+    state.rating = +b.dataset.star; openCook();
+  });
+  $("#save-cook").onclick = () => {
+    state.note = $("#cook-note").value;
+    if(state.note) m.mods = state.note;
+    closeSheet(); toast("Saved on your household version");
+  };
+}
+
+function renderExplore(){
+  const q = state.query.toLowerCase();
+  const list = Object.entries(meals).filter(([id,m]) => {
+    const blob = `${m.name} ${m.cuisine} ${m.method} ${m.blurb}`.toLowerCase();
+    if(q && !blob.includes(q) && !(q.includes("fast") && m.active<=20) && !(q.includes("basket") && m.addCost<5) && !(q.includes("protein"))) return false;
+    if(state.filter==="fast" && m.active>20) return false;
+    if(state.filter==="cheap" && m.addCost>5) return false;
+    if(state.filter==="reuse" && m.addCost>5) return false;
+    return true;
+  });
+  $("#explore").innerHTML = `
+    <p class="kicker" style="margin-top:6px">Explore</p>
+    <input class="search" id="q" placeholder="Replace Thursday with something faster that still fits protein" value="${state.query.replace(/"/g,""")}" />
+    <div class="filters">
+      ${[["all","All"],["fast","Under 20 min"],["cheap","Low added cost"],["reuse","Uses this basket"]].map(([id,label])=>`<button data-f="${id}" class="${state.filter===id?"on":""}">${label}</button>`).join("")}
+    </div>
+    ${list.map(([id,m]) => `<article class="recipe-card explore-card">
+      <img src="${m.img}" alt="" />
+      <div>
+        <h3>${m.name}</h3>
+        <p>${m.blurb}</p>
+        <p>${m.active} min active · ${money(m.costServing)} recipe · adds ${money(m.addCost)} · ${m.base.p}g protein at 1×</p>
+        <button class="btn line small" data-save="${id}" style="margin-top:8px">Save to shortlist</button>
+      </div>
+    </article>`).join("") || `<div class="note">Nothing matched. Hard exclusions never get auto-accepted; this is only a ranking filter.</div>`}
+  `;
+  $("#q").oninput = e => { state.query = e.target.value; renderExplore(); };
+  document.querySelectorAll("[data-f]").forEach(b => b.onclick = () => { state.filter=b.dataset.f; renderExplore(); });
+  document.querySelectorAll("[data-save]").forEach(b => b.onclick = () => toast("Shortlist only. The week did not change."));
+}
+
+function renderRecipes(){
+  $("#recipes").innerHTML = `
+    <p class="kicker" style="margin-top:6px">Our recipes</p>
+    <div class="section-label"><span>Household versions</span><span>${Object.keys(meals).length}</span></div>
+    ${Object.entries(meals).map(([id,m]) => `<article class="recipe-card">
+      <div>
+        <h3>${m.name}</h3>
+        <p>${"★".repeat(m.rating)}${"☆".repeat(5-m.rating)} · last ${m.last} · ${m.servings} plates</p>
+        <p>${m.mods ? `Your version: ${m.mods}` : "No household edits yet. Original quantities stay intact."}</p>
+      </div>
+    </article>`).join("")}
+    <div class="note sage">Favorites store the modification, not a link back to someone else's recipe. Export stays with the household.</div>
+  `;
+}
+
+function pantryButtons(g){
+  if(g.status==="extra") return "";
+  const cur = state.pantry[g.id] || "need";
+  return `<div class="seg">${[["enough","Have enough"],["some","Have some"],["need","Need to buy"]].map(([k,l])=>`<button data-pantry="${g.id}" data-v="${k}" class="${cur===k?"on":""}">${l}</button>`).join("")}</div>`;
+}
+
+function renderGroceries(){
+  const exceptions = grocerySeed.filter(g => g.exception && state.pantry[g.id] !== "enough");
+  const dinner = grocerySeed.filter(g => g.status!=="extra");
+  const extras = grocerySeed.filter(g => g.status==="extra");
+  $("#groceries").innerHTML = `
+    <p class="kicker" style="margin-top:6px">Groceries · Prosper</p>
+    <h2 style="font-family:Fraunces,serif;font-weight:560;margin:4px 0 8px">Review the exceptions</h2>
+    <div class="note ${exceptions.length?"bad":"sage"}">${exceptions.length?`${exceptions.length} items are unresolved. Approved matches are carried forward and not re-asked.`:"No exceptions. Remembered products are ready to send."}</div>
+    <div class="g-item">
+      <h3>Chicken, merged correctly</h3>
+      <p class="math">Tuesday fajitas needed <b>1.0 lb</b> breast. Thursday bowls need <b>1.5 lb</b>. Freezer confirmed <b>0.5 lb</b>. Buy <b>2.0 lb</b>. Broth is not chicken. Raw rice is not cooked rice.</p>
+    </div>
+    ${dinner.map(g => `
+      <article class="g-item">
+        <header><h3>${g.name}</h3><span class="price">${g.price?money(g.price):"—"}</span></header>
+        <p>${g.detail}</p>
+        <p>${g.match} · need ${g.need}${g.extra?` · <span class="warn">${g.extra}</span>`:""}</p>
+        <p class="status ${g.exception && state.pantry[g.id]!=="enough"?"warn":"ok"}">${state.pantry[g.id]==="enough"?"Covered by pantry":g.exception==="match"?"Unfamiliar product":g.exception==="package"?"Package larger than needed":g.exception==="unit"?"Unit not interchangeable":"Approved match"}</p>
+        ${pantryButtons(g)}
+        ${g.id==="salmon"?`<div class="seg"><button class="on">Atlantic 0.75 lb · $12.99</button><button>Sockeye 1 lb · $16.49</button></div>`:""}
+      </article>`).join("")}
+    <div class="section-label"><span>Also this trip</span><span>not in the dinner budget</span></div>
+    ${extras.map(g => `<article class="g-item"><header><h3>${g.name}</h3><span class="price">${money(g.price)}</span></header><p>${g.detail} ${g.match}.</p></article>`).join("")}
+    <div class="note">Dinner groceries ${money(dinnerSpend())}. Whole order ${money(orderSpend())}, including coffee and detergent. Prices refreshed Oct 5 at Prosper. Final Kroger charges can change for coupons, substitutions, tax, and weighted items.</div>
+    <button class="btn primary full" id="send">${state.sent?"Review Kroger transfer":"Send to Kroger cart"}</button>
+    <p class="shortlist" style="margin-top:8px">This list stays here. Adding to the cart does not sync Kroger's shopping list.</p>
+  `;
+  document.querySelectorAll("[data-pantry]").forEach(b => b.onclick = () => {
+    state.pantry[b.dataset.pantry] = b.dataset.v; renderGroceries();
+  });
+  $("#send").onclick = openTransfer;
+}
+
+function openTransfer(){
+  const lines = [
+    { name:"Chicken breast 1.5 lb", qty:2, upc:"0001111041701", result: state.transfer?.chicken || "pending" },
+    { name:"Simple Truth Greek yogurt", qty:1, upc:"0001111088120", result: state.transfer?.yogurt || "pending" },
+    { name:"Bell pepper bag", qty:1, upc:"0001111003321", result: state.transfer?.peppers || "pending" },
+    { name:"Ground turkey", qty:1, upc:"0001111099002", result: state.transfer?.turkey || "pending" },
+    { name:"Salmon fillets", qty:1, upc:"—", result: state.transfer?.salmon || "pending" },
+    { name:"Coffee", qty:1, upc:"0001111077444", result: state.transfer?.coffee || "pending" },
+    { name:"Detergent", qty:1, upc:"0003077200022", result: state.transfer?.detergent || "pending" }
+  ];
+  const label = r => r==="ok"?"Added":r==="fail"?"Failed":r==="uncertain"?"Uncertain — not resent":"Ready";
+  const cls = r => r==="ok"?"ok":r==="fail"?"bad":r==="uncertain"?"warn":"";
+  openSheet(`
+    <p class="kicker">Cart handoff · not checkout</p>
+    <h2>Exactly what gets sent</h2>
+    <p class="macros">PUT /v1/cart/add after your Kroger login. Modality pickup. Cilantro stays off until the unit is resolved.</p>
+    ${lines.map(l => `<article class="g-item"><header><h3>${l.name}</h3><span class="status ${cls(l.result)}">${label(l.result)}</span></header><p>Qty ${l.qty} · UPC ${l.upc}</p></article>`).join("")}
+    <button class="btn primary full" id="do-send" ${state.sent?"disabled":""}>${state.sent?"Already sent — duplicates blocked":"Add approved items"}</button>
+    <button class="btn line full" id="handoff" style="margin-top:8px">Open Kroger to pick a time</button>
+    <button class="btn ghost full" id="placed" style="margin-top:8px">${state.orderPlaced?"Order marked placed":"We placed the order"}</button>
+  `);
+  $("#do-send").onclick = () => {
+    state.sent = true;
+    state.transfer = { chicken:"ok", yogurt:"ok", peppers:"ok", turkey:"ok", salmon:"fail", coffee:"uncertain", detergent:"ok" };
+    openTransfer();
+    toast("Cart updated. Failed and uncertain lines were not resent.");
+  };
+  $("#handoff").onclick = () => toast("Checkout handoff only. Pickup time stays in Kroger.");
+  $("#placed").onclick = () => { state.orderPlaced = true; toast("Marked placed by you. Returning from Kroger did not do this."); closeSheet(); };
+}
+
+function renderHousehold(){
+  $("#household").innerHTML = `
+    <p class="kicker" style="margin-top:6px">Household</p>
+    <h2 style="font-family:Fraunces,serif;font-weight:560;margin:4px 0 10px">One menu. Two plates.</h2>
+    <div class="people">
+      <div class="person"><header><b><i class="dot jon"></i>Jon</b></header>
+        <div class="macros">Dinner target<br/>700 cal · 50g protein<br/>Full day is separate and unknown here.</div>
+        <label class="shortlist">Chicken portion</label>
+        <input class="slider" type="range" min="0.7" max="1.5" step="0.05" value="${state.portions.jon}" data-who="jon" />
+      </div>
+      <div class="person"><header><b><i class="dot alex"></i>Alex</b></header>
+        <div class="macros">Dinner target<br/>550 cal · 35g protein<br/>Same components, different amounts.</div>
+        <label class="shortlist">Chicken portion</label>
+        <input class="slider" type="range" min="0.6" max="1.3" step="0.05" value="${state.portions.alex}" data-who="alex" />
+      </div>
+    </div>
+    <div class="section-label"><span>Carried forward</span></div>
+    <article class="pref"><h3 style="margin:0 0 4px">Hard exclusion</h3><p>Tree-nut allergy. An unresolved nut ingredient cannot be auto-accepted or silently substituted.</p></article>
+    <article class="pref"><h3 style="margin:0 0 4px">Dislike, not a block</h3><p>Heavy cilantro sauces rank lower. They are not removed unless you exclude them.</p></article>
+    <article class="pref"><h3 style="margin:0 0 4px">Store and brands</h3><p>Kroger Marketplace, Prosper. Remembered: Mission tortillas, Simple Truth yogurt, Mahatma rice.</p></article>
+    <article class="pref"><h3 style="margin:0 0 4px">Budgets</h3><p>Dinner groceries $120. Whole order $180. Detergent does not make the dinners look expensive.</p></article>
+    <article class="pref"><h3 style="margin:0 0 4px">Equipment</h3><p>Sheet pan, skillet, rice cooker. No air fryer assumption.</p></article>
+    <div class="note">Planned nutrition is not eaten nutrition. Scheduling Thursday is not proof either of you ate it. Missing nutrient data is flagged, never treated as zero.</div>
+  `;
+  document.querySelectorAll("[data-who]").forEach(sl => sl.oninput = () => {
+    state.portions[sl.dataset.who] = +sl.value;
+  });
+}
+
+const renderers = { week:renderWeek, explore:renderExplore, recipes:renderRecipes, groceries:renderGroceries, household:renderHousehold };
+function show(tab){
+  state.tab = tab;
+  screens.forEach(id => $("#"+id).classList.toggle("on", id===tab));
+  document.querySelectorAll(".nav button").forEach(b => b.classList.toggle("on", b.dataset.tab===tab));
+  const titles = { week:"Week of Oct 5 · Jon & Alex", explore:"Search the library", recipes:"Favorites and edits", groceries:"Prosper pickup list", household:"Profiles and rules" };
+  $("#subhead").textContent = titles[tab];
+  renderers[tab]();
+}
+document.querySelectorAll(".nav button").forEach(b => b.onclick = () => show(b.dataset.tab));
+show("week");
+</script>
+</body>
+</html>

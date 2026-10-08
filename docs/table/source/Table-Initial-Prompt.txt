@@ -1,0 +1,30 @@
+You are the implementation owner for Table, a private shared dinner-planning and grocery-pickup preparation app for my wife Alex and me. I want you to code it, not restart the design discussion or return another plan.
+
+Read the attached Table-Implementation-Plan.md and Table-Claude-Handoff.md completely. If they arrive in Table-Claude-Package.zip, extract/read that packet. SOURCE-REGISTER.md explains the sources. The original and syntax-repaired HTML under references/ are visual references, not working application logic or confirmed household settings.
+
+Work in the actual Table repository if one is provided. Otherwise create an isolated local Table workspace where your environment permits it. First inspect the workspace, existing instructions, branch and uncommitted changes. Do not put this app into the CFP app/vault or another unrelated project. Do not overwrite other work or bypass hooks. No repository URL, remote, deployment permission or credentials should be assumed.
+
+The product contract is fixed:
+
+- Table proposes one complete week. Use this week deliberately adopts it as our shared plan; adoption does not mean ordered, cooked or eaten.
+- Browsing, previews, Sounds good, preferences, recipe edits and observations do not rewrite accepted dinners. Only accepted choices drive active meal grocery requirements. Household requests retain independent reasons.
+- Independent Friday and Sunday changes must both survive. Same-target edits and stale full-week adoption require renewed review, not last-write-wins. Send scoped commands, not an old seven-day snapshot.
+- A newer accepted decision and stale-preview warning must be visible while a preview is open and on return to the app, before Apply is pressed.
+- An accepted meal change updates both users' current requirements. It cannot rewrite a frozen transfer, confirmed order or received package. Newly needed items remain not sent. Unaffected approvals persist; stale grocery Send makes zero new retailer calls.
+- Coverage, prices and availability can become unresolved without replacing a selected dinner. Unknown is not zero or proof of readiness. Portions, leftovers, nutrition and costs use structured deterministic calculations.
+
+Implement stages 1–4 of the plan, beginning with the first persistent two-user slice. Prove that slice and save its evidence before expanding the interface, then continue the next ready internal task without asking for routine milestone approval. Missing Kroger access or real household inputs must not block the mock workflow: use clearly labeled fixtures, unset production settings and a recording fake retailer.
+
+For a new workspace, use the plan's TypeScript/Next.js/PostgreSQL/Playwright defaults, a maintained authentication library and a small modular server application. Verify and pin compatible versions. A compatible established Table stack may be retained with a short decision record. Do not ask me to choose routine implementation libraries. No microservices, autonomous purchasing agent, or orchestration framework is needed.
+
+Start with real persistence, two distinct authenticated sessions, isolated previews, scoped transactional commands, recipe-version pinning, visible stale-state recovery, and a minimal Week/Groceries interface. Then complete quantities, review approvals, immutable purchasing history and the full weekly journey: proposals, adoption, changes, next dinner, Cook/reheat, separate portions and targets, favorites/notes, Sounds good, Also need, manual recipes, discovery and budget sorting.
+
+Preserve acceptance tests T01–T22 exactly and add X01–X12 as specified. Test with a running server, real PostgreSQL, two independent browser contexts, controlled race ordering and a recording fake retailer. Assert persisted rows, revisions and outbound calls, not only UI agreement. Run both commit orders. Do not skip, weaken or relabel missing tests as passed. A scaffold or simulated cart response is not completed functionality.
+
+Do not make real cart additions, place orders, reserve pickup slots, provision paid services, create remotes, push, or deploy without the separate access and authorization required by the handoff. Stage 5 documentation and adapter preparation may proceed, but live retailer behavior remains unverified until actually tested with explicit approval. Never copy prototype allergies, targets, budgets, brands or UPCs into our real settings.
+
+Maintain a short CLAUDE.md and the specified docs/table status, backlog, acceptance, decisions and integration-capabilities records. Save exact evidence and the next executable task before compaction or stopping. Do not make me relay messages among workers. Use only tools you actually have and do not promise work after your session ends.
+
+Finish with what actually works, the exact code/branch/commit or workspace state, reproducible run/test commands, actual pass/fail/skip results and evidence, the stage reached, remaining blockers and the next ready task. Distinguish mock completion from live integration and deployment.
+
+Begin by reading the packet, inspecting the workspace and implementing the first slice. Do not stop after restating these instructions.
