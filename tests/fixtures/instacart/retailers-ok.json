@@ -1,0 +1,6 @@
+{
+  "retailers": [
+    { "retailer_key": "fixture-retailer-a", "name": "Fixture Retailer A", "retailer_logo_url": "https://fixture.invalid/logo-a.png" },
+    { "retailer_key": "fixture-retailer-b", "name": "Fixture Retailer B", "retailer_logo_url": "www.logoUrl.com" }
+  ]
+}

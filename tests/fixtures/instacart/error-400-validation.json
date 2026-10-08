@@ -1,0 +1,10 @@
+{
+  "error": {
+    "message": "There were issues with your request",
+    "code": 9999,
+    "errors": [
+      { "error": { "message": "Invalid quantity: -0.1. Cannot be lower than or equal to 0.0", "code": 1001 }, "meta": { "key": "line_items[0].line_item_measurements[0].quantity" } }
+    ]
+  },
+  "meta": {}
+}
