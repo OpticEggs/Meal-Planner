@@ -85,4 +85,21 @@ describe("X12 export omits secrets and round-trips into an isolated database", (
     // Everything round-trips except the export timestamp.
     expect(JSON.parse(JSON.stringify(again.tables))).toEqual(JSON.parse(JSON.stringify(data.tables)));
   });
+
+  it("an export lists rows in the same order whatever plan the database chooses (index or sequential scan)", async () => {
+    const { fx } = await fresh();
+    const exportWith = async (settings: string) => {
+      const c = new pg.Client({ connectionString: process.env.DATABASE_URL });
+      await c.connect();
+      try {
+        await c.query(settings);
+        return JSON.parse(JSON.stringify((await exportHousehold(c, fx.householdId)).tables));
+      } finally {
+        await c.end();
+      }
+    };
+    const bySeqScan = await exportWith("SET enable_indexscan = off; SET enable_bitmapscan = off; SET enable_indexonlyscan = off");
+    const byIndex = await exportWith("SET enable_seqscan = off");
+    expect(byIndex).toEqual(bySeqScan);
+  });
 });

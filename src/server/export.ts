@@ -83,7 +83,9 @@ export interface HouseholdExport {
 export async function exportHousehold(c: pg.PoolClient | pg.Client, householdId: string): Promise<HouseholdExport> {
   const tables: HouseholdExport["tables"] = {};
   for (const s of EXPORT_TABLES) {
-    const r = await c.query(`SELECT * FROM ${s.table} WHERE ${s.where}`, [householdId]);
+    // A stable order (the row's own text), so two exports of the same data are identical whatever
+    // plan each database chooses (an index scan and a sequential scan return rows in different orders).
+    const r = await c.query(`SELECT * FROM ${s.table} t WHERE ${s.where} ORDER BY t::text`, [householdId]);
     tables[s.table] = r.rows.map((row) => {
       const o: Record<string, unknown> = { ...row };
       for (const k of s.omit ?? []) delete o[k];
