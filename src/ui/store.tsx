@@ -90,7 +90,9 @@ export function HouseholdProvider({ me, children }: { me: Store["me"]; children:
           if (libraryWanted.current) await loadLibrary();
         } while (again.current);
         setError(null);
-        setCurrency("current");
+        // A refresh that finishes while the app is in the background does not make it current: what is
+        // shown on return must be re-established by the refresh that the return triggers.
+        setCurrency(document.visibilityState === "visible" ? "current" : "refreshing");
       } catch (e) {
         setError((e as Error).message);
         setCurrency("offline");
