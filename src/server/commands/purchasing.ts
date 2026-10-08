@@ -1,6 +1,6 @@
 import { hashOf } from "@/domain/hash";
 import { inTransaction, pool, type Db } from "../db/pool";
-import { isTestEnv } from "../env";
+import { dispatchRecoveryAfterMs, dispatchTimeoutMs, isTestEnv } from "../env";
 import { log } from "../log";
 import { Reject, runCommand, type Actor, type CommandReceipt } from "./framework";
 import { batchStatuses, ensureCycle, recomputeProjection } from "../groceries/recompute";
@@ -85,11 +85,11 @@ async function currentStatus(c: Db, batchId: string): Promise<string> {
   return r.rows[0]?.status;
 }
 
-async function emit(c: Db, householdId: string, weekId: string, text: string) {
+async function emit(c: Db, householdId: string, weekId: string, text: string, extra: Record<string, unknown> = {}) {
   const u = await c.query("UPDATE households SET update_seq=update_seq+1 WHERE id=$1 RETURNING update_seq", [householdId]);
   const w = await c.query("SELECT accepted_choice_revision FROM weeks WHERE id=$1", [weekId]);
   await c.query("INSERT INTO change_events(household_id, seq, actor_member_id, command, summary, accepted_choice_revision) VALUES ($1,$2,NULL,'Dispatch',$3,$4)", [
-    householdId, u.rows[0].update_seq, { type: "handoff", text, weekId }, w.rows[0].accepted_choice_revision,
+    householdId, u.rows[0].update_seq, { type: "handoff", text, weekId, ...extra }, w.rows[0].accepted_choice_revision,
   ]);
 }
 
@@ -130,26 +130,59 @@ export async function dispatchBatch(householdId: string, batchId: string, weekId
     log({ at: "dispatch", batchId, status: decision.status });
     return { status: decision.status };
   }
-  // Network I/O outside any transaction.
-  let outcome;
+  // Network I/O outside any transaction, bounded: no answer within the dispatch bound is uncertain
+  // (never retried). The bound is what lets recovery tell an interrupted send from a slow one.
+  let outcome: { kind: "acknowledged" | "failed" | "uncertain"; evidence: Record<string, unknown> };
+  const bound = dispatchTimeoutMs();
+  let timer: ReturnType<typeof setTimeout> | undefined;
   try {
-    outcome = await retailer().addToCart({
-      householdId, batchId, dispatchId: `${batchId}:1`,
-      items: decision.payload.map((i) => ({ productRef: i.productRef, quantity: i.packages })),
-    });
+    outcome = await Promise.race([
+      retailer().addToCart({
+        householdId, batchId, dispatchId: `${batchId}:1`,
+        items: decision.payload.map((i) => ({ productRef: i.productRef, quantity: i.packages })),
+      }),
+      new Promise<never>((_, reject) => {
+        timer = setTimeout(() => reject(new DispatchBoundExceeded(`no response within ${Math.round(bound / 1000)} s; outcome unknown`)), bound);
+      }),
+    ]);
   } catch (e) {
-    outcome = { kind: "uncertain" as const, evidence: { error: (e as Error).message } };
+    outcome = { kind: "uncertain" as const, evidence: e instanceof DispatchBoundExceeded ? { reason: e.message, boundMs: bound } : { error: (e as Error).message } };
+  } finally {
+    clearTimeout(timer);
   }
   const final = outcome.kind;
-  await inTransaction(async (c) => {
+  const recorded = await inTransaction(async (c) => {
     await c.query("SELECT 1 FROM households WHERE id=$1 FOR UPDATE", [householdId]);
+    // Another process may already have marked this send uncertain (it outlived the recovery bound,
+    // or a member may since have checked the cart). A late answer never overwrites that: it is
+    // reported, labeled late, and the transfer stays uncertain.
+    const now = await currentStatus(c, batchId);
+    if (now !== "dispatch_started") {
+      await emit(c, householdId, weekId, `A late retailer response (${final}) arrived for a transfer already marked ${now}. It stays ${now}; check the retailer cart.`, {
+        lateOutcome: { kind: final, evidence: outcome.evidence, statusWhenArrived: now },
+      });
+      return false;
+    }
     await c.query("INSERT INTO handoff_status_events(batch_id, status, evidence) VALUES ($1,$2,$3)", [batchId, final, outcome.evidence]);
     await recomputeProjection(c, householdId, weekId);
     const text = final === "acknowledged" ? "The retailer acknowledged the transfer (batch-level)." : final === "failed" ? "The transfer failed. Nothing was added." : "The transfer outcome is uncertain. Check the retailer cart; Table will not resend automatically.";
     await emit(c, householdId, weekId, text);
+    return true;
   });
+  if (!recorded) {
+    log({ at: "dispatch", batchId, status: "late_outcome_ignored", outcome: final });
+    return { status: "uncertain" as const };
+  }
   log({ at: "dispatch", batchId, status: final });
   return { status: final };
+}
+
+class DispatchBoundExceeded extends Error {}
+
+/** Server start: recover only sends older than the recovery bound — a process starting while another
+ *  is still sending (an overlapping deploy) leaves that send alone. */
+export async function startupRecovery(): Promise<number> {
+  return recoverInterruptedDispatches(dispatchRecoveryAfterMs());
 }
 
 /** After a crash, a batch left in dispatch_started has an unknown external outcome. Mark it

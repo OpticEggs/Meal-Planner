@@ -19,6 +19,7 @@
     "test:e2e": "playwright test",
     "household:create": "tsx scripts/household-create.ts",
     "member:create": "tsx scripts/member-create.ts",
+    "member:reset-password": "tsx scripts/member-reset-password.ts",
     "sample:recipes": "tsx scripts/sample-recipes.ts",
     "verify": "scripts/verify-all.sh"
   },

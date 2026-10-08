@@ -114,9 +114,9 @@ test("X11: narrow mobile layout, keyboard operation, text scaling, distinct iden
 const PORT2 = 3101;
 const BASE2 = `http://127.0.0.1:${PORT2}`;
 let server: ChildProcess | null = null;
-async function startServer() {
+async function startServer(extraEnv: Record<string, string> = {}) {
   server = spawn("npx", ["next", "start", "-p", String(PORT2), "-H", "127.0.0.1"], {
-    env: { ...process.env, ...TEST_ENV, BETTER_AUTH_URL: BASE2 },
+    env: { ...process.env, ...TEST_ENV, BETTER_AUTH_URL: BASE2, ...extraEnv },
     stdio: "ignore",
     detached: true,
   });
@@ -187,9 +187,14 @@ test.describe("process restart", () => {
     for (let i = 0; i < 100 && (await retailerCalls()) === 0; i++) await alex.page.waitForTimeout(50);
     expect(await retailerCalls()).toBe(1);
     killServer(); // crash with the retailer call in flight
-    await startServer(); // startup recovery runs here
-    const status = (await q("SELECT status FROM handoff_status_events ORDER BY id DESC LIMIT 1"))[0].status;
-    expect(status).toBe("uncertain");
+    // B9 (disclosed test change): recovery now waits until a send is older than the dispatch bound,
+    // so a process starting during an overlapping deploy cannot mark another live process's send.
+    // The restarted server runs with a short test-only bound; the normative outcome is unchanged:
+    // the crashed send becomes uncertain (by crash recovery, not by a timeout) and is never retried.
+    await startServer({ TABLE_DISPATCH_TIMEOUT_MS: "1000" });
+    await expect.poll(async () => (await q("SELECT status FROM handoff_status_events ORDER BY id DESC LIMIT 1"))[0].status, { timeout: 15_000 }).toBe("uncertain");
+    const ev = (await q("SELECT evidence FROM handoff_status_events ORDER BY id DESC LIMIT 1"))[0].evidence;
+    expect(ev.reason).toBe("process stopped after dispatch started; outcome unknown");
     await alex.page.reload();
     await expect(alex.page.getByTestId("batch")).toHaveAttribute("data-status", "uncertain");
     await alex.page.waitForTimeout(1000);

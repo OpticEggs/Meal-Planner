@@ -33,6 +33,8 @@ const B12 = "tests/integration/b12.staple-products.test.ts";
 const B16 = "tests/integration/b16.staple-management.test.ts";
 const B17 = "tests/integration/b17.recipes.test.ts";
 const REBASE = "tests/unit/recipe-rebase.test.ts";
+const B9 = "tests/integration/b9.dispatch-overlap.test.ts";
+const B9R = "tests/integration/b9.account-recovery.test.ts";
 
 /** expect: regexes over failing test full names; at least one must fail by assertion. */
 const MUTATIONS = [
@@ -127,6 +129,20 @@ const MUTATIONS = [
   { name: "B15_stale_product_choice_applied", file: "src/server/commands/groceries.ts", suite: B16, pattern: "Scenario B/E", expect: [/two product choices for the same pickup line/],
     edits: [["  if ((now?.id ?? null) !== (p.expectedProductId ?? null)) {", "  if (false) {"]] },
 ];
+MUTATIONS.push(
+  { name: "B9_late_outcome_overwrites_uncertain", file: "src/server/commands/purchasing.ts", suite: B9, pattern: "B9", expect: [/never overwrites it|later answer does not change it/],
+    edits: [["    if (now !== \"dispatch_started\") {", "    if (false) {"]] },
+  { name: "B9_startup_recovers_live_sends", file: "src/server/commands/purchasing.ts", suite: B9, pattern: "B9", expect: [/does not mark that transfer uncertain/],
+    edits: [["  return recoverInterruptedDispatches(dispatchRecoveryAfterMs());", "  return recoverInterruptedDispatches(0);"]] },
+  { name: "B9_dispatch_unbounded", file: "src/server/commands/purchasing.ts", suite: B9, pattern: "B9", expect: [/never answers becomes uncertain/],
+    edits: [["        timer = setTimeout(() => reject(", "        timer = setTimeout(() => void ("]] },
+  { name: "B9_no_running_sweep", file: "src/instrumentation.ts", suite: B9, pattern: "B9", expect: [/periodic sweep/],
+    edits: [["  setInterval(() => void run(\"recovery-sweep\"), recoverySweepIntervalMs()).unref();", "  // (mutated) no sweep while running"]] },
+  { name: "B9_reset_keeps_sessions", file: "src/server/provision.ts", suite: B9R, pattern: "B9", expect: [/ends that member's sessions/],
+    edits: [["  await ctx.internalAdapter.deleteUserSessions(userId);", "  // (mutated) sessions kept"]] },
+  { name: "B9_reset_any_account", file: "src/server/provision.ts", suite: B9R, pattern: "B9", expect: [/non-member account/],
+    edits: [["  if (!userId || !member?.rowCount) throw", "  if (!userId) throw"]] },
+);
 // A harmless change that MUST be classified SURVIVED (proves the classifier can say so).
 const CONTROLS_LIST = [
   { name: "control_noop_comment", control: true, file: "src/server/commands/plan.ts", suite: PLAN, pattern: "T10", expect: [/T10/],

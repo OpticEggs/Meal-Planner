@@ -27,3 +27,17 @@ export async function createMember(
   const m = await c.query("INSERT INTO members(household_id, user_id, display_name) VALUES ($1,$2,$3) RETURNING id", [householdId, user.id, displayName]);
   return { memberId: m.rows[0].id, userId: user.id };
 }
+
+/** Account recovery without email (B9): an operator, in the host's shell, sets a new password for one
+ *  household member through Better Auth's own hashing and ends every session that member had. Only an
+ *  account that belongs to a household member can be reset; nothing else changes. */
+export async function resetMemberPassword(c: pg.PoolClient | pg.Client, email: string, password: string): Promise<void> {
+  if (password.length < 10) throw new Error("password must be at least 10 characters");
+  const ctx = await getAuth().$context;
+  const found = await ctx.internalAdapter.findUserByEmail(email.toLowerCase());
+  const userId = found?.user.id;
+  const member = userId ? await c.query("SELECT 1 FROM members WHERE user_id=$1", [userId]) : null;
+  if (!userId || !member?.rowCount) throw new Error("no household member has that email address");
+  await ctx.internalAdapter.updatePassword(userId, await ctx.password.hash(password));
+  await ctx.internalAdapter.deleteUserSessions(userId);
+}

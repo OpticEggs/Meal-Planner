@@ -47,3 +47,30 @@ export function nowInstant(): Date {
   }
   return new Date();
 }
+
+/**
+ * Upper bound on one retailer dispatch (B9). A dispatch with no answer within it is recorded as
+ * uncertain; recovery treats a dispatch as interrupted only after `dispatchRecoveryAfterMs()`, which
+ * is longer, so a process starting while another is still sending never marks that send uncertain.
+ * A shorter bound is honored only in the test environment.
+ */
+export function dispatchTimeoutMs(): number {
+  const v = process.env.TABLE_DISPATCH_TIMEOUT_MS;
+  if (v) {
+    if (!isTestEnv()) throw new Error("TABLE_DISPATCH_TIMEOUT_MS is a test-only setting and is refused outside TABLE_ENV=test");
+    const n = Number(v);
+    if (!Number.isInteger(n) || n < 1) throw new Error("TABLE_DISPATCH_TIMEOUT_MS must be a positive whole number of milliseconds");
+    return n;
+  }
+  return 90_000;
+}
+/** Recovery treats a send as interrupted only after the dispatch bound plus a margin for recording
+ *  its outcome (default 90 s + 60 s). */
+export function dispatchRecoveryAfterMs(): number {
+  const t = dispatchTimeoutMs();
+  return t + Math.min(60_000, t);
+}
+/** How often a running server sweeps for interrupted sends (default every 30 s). */
+export function recoverySweepIntervalMs(): number {
+  return Math.min(30_000, Math.max(250, Math.floor(dispatchRecoveryAfterMs() / 2)));
+}
