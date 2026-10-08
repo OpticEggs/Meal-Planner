@@ -37,6 +37,7 @@ const B9 = "tests/integration/b9.dispatch-overlap.test.ts";
 const B9R = "tests/integration/b9.account-recovery.test.ts";
 const COOK = "tests/integration/cook-records.test.ts";
 const THEME = "tests/unit/theme-contrast.test.ts";
+const B2122 = "tests/integration/b21-b22.test.ts";
 const B5C = "tests/integration/b5.kroger-connection.test.ts";
 const B5D = "tests/integration/b5.kroger-dispatch.test.ts";
 const B7U = "tests/unit/fdc-normalize.test.ts";
@@ -181,6 +182,14 @@ MUTATIONS.push(
     edits: [["    \"SELECT DISTINCT v.recipe_id FROM cook_records_effective cr JOIN", "    \"SELECT DISTINCT v.recipe_id FROM cook_records cr JOIN"]] },
   { name: "COOK_snapshot_ignores_record", file: "src/server/queries/snapshot.ts", suite: COOK, pattern: "cook-record", expect: [/already cooked, by whom|appended correction/],
     edits: [["cooked: cookedBy.get(ev.id) ?? null", "cooked: null"]] },
+  // B21: the command must re-record as the next link of the chain (the database refuses anything else).
+  { name: "B21_rerecord_without_link", file: "src/server/commands/plan.ts", suite: B2122, pattern: "B21", expect: [/correction followed by legitimate re-recording/],
+    edits: [["prev ? prev.generation + 1 : 1, prev?.id ?? null]", "prev ? prev.generation + 1 : 1, null]"]] },
+  // B22: a dinner no longer on its accepted plan is refused.
+  { name: "B22_stale_event_accepted", file: "src/server/commands/plan.ts", suite: B2122, pattern: "B22", expect: [/no longer scheduled|same moment/],
+    edits: [["    if (!e.rows[0].on_plan) {", "    if (false) {"]] },
+  { name: "B22_status_only", file: "src/server/commands/plan.ts", suite: B2122, pattern: "B22", expect: [/no longer scheduled|same moment/],
+    edits: [["(e.status = 'scheduled' AND w.accepted_choice_revision > 0", "(e.status <> 'retired' AND w.accepted_choice_revision > 0"], ["AND EXISTS (SELECT 1 FROM assignments a WHERE a.week_id=e.week_id AND a.cooking_event_id=e.id AND a.kind='cook' AND a.night=e.cook_night)) AS on_plan", ") AS on_plan"]] },
   // Visual update: the contrast check reads the shipped tokens; a too-light or too-dark text token must fail it.
   { name: "UI_light_text_too_faint", file: "src/app/globals.css", suite: THEME, pattern: "theme contrast", expect: [/theme contrast — light/],
     edits: [["--muted: #574e45; --faint: #6b6157;", "--muted: #574e45; --faint: #9a8f84;"]] },

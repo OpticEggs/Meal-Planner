@@ -3,7 +3,7 @@ import { computeOperation, closureStale, type OperationResult, type PlanOperatio
 import { explainChange, generateProposal, type KeptNight, type PreferenceValue, type ProposalContent, type ProposalInputs } from "@/domain/planning/proposal";
 import { admitWeek } from "@/domain/planning/admission";
 import { computeProjection } from "@/domain/groceries/projection";
-import { addDays, dayName, nextDinnerDate, weekStartOf } from "@/domain/dates";
+import { addDays, dayName, weekStartOf } from "@/domain/dates";
 import type { PlanState, RecipeVersion } from "@/domain/types";
 import type { Db } from "../db/pool";
 import { nowInstant } from "../env";
@@ -12,7 +12,6 @@ import { ensureCycle, projectionInput } from "../groceries/recompute";
 import {
   findWeek,
   loadExclusions,
-  loadHousehold,
   loadIngredients,
   loadMembers,
   loadPlanState,
@@ -492,8 +491,19 @@ export function recordLeftoverShortfallCommand(actor: Actor, operationId: string
 
 export function recordCookedCommand(actor: Actor, operationId: string, p: { eventId: string }) {
   return runCommand(actor, "RecordCooked", operationId, p, async (c) => {
-    const e = await c.query("SELECT week_id, recipe_version_id, cook_night FROM cooking_events WHERE id=$1 AND household_id=$2", [p.eventId, actor.householdId]);
+    const e = await c.query(
+      `SELECT e.week_id, e.recipe_version_id, e.cook_night,
+              (e.status = 'scheduled' AND w.accepted_choice_revision > 0
+               AND EXISTS (SELECT 1 FROM assignments a WHERE a.week_id=e.week_id AND a.cooking_event_id=e.id AND a.kind='cook' AND a.night=e.cook_night)) AS on_plan
+       FROM cooking_events e JOIN weeks w ON w.id=e.week_id WHERE e.id=$1 AND e.household_id=$2`,
+      [p.eventId, actor.householdId],
+    );
     if (!e.rowCount) throw new Reject("not_found", "Cooking event not found");
+    // Only a dinner still cooked on a night of its accepted week (B22). A replaced, removed or set-aside
+    // dinner is refused, and nothing about the week or the event changes; a past date is fine.
+    if (!e.rows[0].on_plan) {
+      throw new Reject("stale_event", "This dinner is no longer on the plan (it was replaced, removed or set aside), so it can't be recorded as cooked. Nothing was added.");
+    }
     // One effective record per cooking event (the household lock serializes both members' presses).
     const existing = await c.query(
       `SELECT cr.id, cr.recorded_at, m.display_name FROM cook_records_effective cr JOIN members m ON m.id=cr.recorded_by
@@ -506,13 +516,17 @@ export function recordCookedCommand(actor: Actor, operationId: string, p: { even
         record: { id: x.id, by: x.display_name, at: x.recorded_at },
       });
     }
-    const h = await loadHousehold(c, actor.householdId);
-    const today = nextDinnerDate(nowInstant(), h.timezone, 24);
-    // After a correction, cooking can be recorded again under the next generation.
-    const gen = await c.query("SELECT coalesce(max(generation), 0) + 1 AS g FROM cook_records WHERE cooking_event_id=$1 AND duplicate_of IS NULL", [p.eventId]);
-    await c.query("INSERT INTO cook_records(household_id, cooking_event_id, recipe_version_id, recorded_by, cooked_on, generation) VALUES ($1,$2,$3,$4,$5,$6)", [
-      actor.householdId, p.eventId, e.rows[0].recipe_version_id, actor.memberId, e.rows[0].cook_night ?? today, gen.rows[0].g,
-    ]);
+    // After a correction, cooking is recorded again as the next link: it names the corrected record it
+    // replaces (the database refuses anything else — migration 009, B21).
+    const last = await c.query(
+      "SELECT id, generation FROM cook_records WHERE cooking_event_id=$1 AND duplicate_of IS NULL ORDER BY generation DESC LIMIT 1",
+      [p.eventId],
+    );
+    const prev = last.rows[0] ?? null;
+    await c.query(
+      "INSERT INTO cook_records(household_id, cooking_event_id, recipe_version_id, recorded_by, cooked_on, generation, replaces) VALUES ($1,$2,$3,$4,$5,$6,$7)",
+      [actor.householdId, p.eventId, e.rows[0].recipe_version_id, actor.memberId, e.rows[0].cook_night, prev ? prev.generation + 1 : 1, prev?.id ?? null],
+    );
     return { status: "accepted", result: { recorded: true }, change: { weekId: e.rows[0].week_id, summary: { type: "cooked", text: `${actor.displayName} recorded cooking` } } };
   });
 }
