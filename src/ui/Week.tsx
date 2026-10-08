@@ -52,7 +52,8 @@ function ProposalView() {
     setBusy(false);
     if (r.status !== "accepted") {
       const newer = r.details?.newerChanges?.map((c: any) => `${c.text}`).join("; ");
-      setMsg(`${r.message}${newer ? ` Newer: ${newer}.` : ""}`);
+      const problems = r.details?.problems?.join(" ");
+      setMsg(`${r.message}${newer ? ` Newer: ${newer}.` : ""}${problems ? ` ${problems}` : ""}`);
     }
   }
   return (
@@ -95,11 +96,20 @@ function ProposalView() {
             <button className="btn line small" onClick={() => generate("fewer_sessions")} disabled={busy}>Fewer sessions</button>
             <button className="btn line small" onClick={() => generate("different_dinners")} disabled={busy}>Different dinners</button>
           </div>
-          <button className="btn primary full" onClick={adopt} disabled={busy || !writesAllowed || proposal.stale} data-testid="adopt">Use this week</button>
+          {incomplete(proposal) && (
+            <p className="warnbox" role="status" data-testid="incomplete-proposal">
+              This draft is not a complete week ({proposal.content.nights.filter((n: any) => n.kind === "open").length} night(s) without a dinner). It stays a draft; add recipes or change the controls, then propose again.
+            </p>
+          )}
+          <button className="btn primary full" onClick={adopt} disabled={busy || !writesAllowed || proposal.stale || incomplete(proposal)} data-testid="adopt">Use this week</button>
         </div>
       )}
     </section>
   );
+}
+
+function incomplete(proposal: any): boolean {
+  return proposal.content.nights.some((n: any) => n.kind === "open") || proposal.content.unresolved.length > 0;
 }
 
 function ProposalSummary({ proposal }: { proposal: any }) {

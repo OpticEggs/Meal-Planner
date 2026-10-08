@@ -52,6 +52,8 @@ export interface KeptNight {
   eventId: string | null;
   allocations: ProposalEvent["allocations"];
   cookNight: string | null;
+  locked?: boolean;
+  reason?: string;
 }
 
 export interface ProposalContext {
@@ -170,9 +172,9 @@ export function generateProposal(ctx: ProposalContext, inputs: ProposalInputs): 
         kind: kept.kind,
         eventKey: kept.eventId ? `keep:${kept.eventId}` : null,
         recipeVersionId: kept.recipeVersionId,
-        locked: true,
+        locked: kept.locked ?? true,
         kept: true,
-        reasons: ["Locked — kept as accepted"],
+        reasons: [kept.reason ?? "Locked — kept as accepted"],
       });
       lastCook = null;
       continue;

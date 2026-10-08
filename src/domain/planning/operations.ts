@@ -211,6 +211,8 @@ export function computeOperation(base: PlanState, op: PlanOperation, ctx: Operat
           openNight(d, "leftovers cannot come before the cooking");
         }
       }
+      // Reserved lunches on or before the new cooking night cannot be provided by it.
+      s.allocations = s.allocations.filter((al) => !(al.cookingEventId === e.id && al.kind === "lunch" && al.night <= op.toNight));
       e.cookNight = op.toNight;
       e.revision += 1;
       dest.kind = "cook";
@@ -234,6 +236,7 @@ export function computeOperation(base: PlanState, op: PlanOperation, ctx: Operat
       if (dest.locked) blockers.push({ code: "locked", message: `${dayName(dest.night)} is locked.` });
       if (dest.kind === "cook" || dest.kind === "leftover") blockers.push({ code: "destination_occupied", message: `${dayName(dest.night)} already has a dinner.` });
       const rv = ctx.recipes.get(e.recipeVersionId)!;
+      checkNewRecipe(rv); // placing is a new scheduled choice: current exclusions apply
       e.status = "scheduled";
       e.cookNight = op.toNight;
       e.revision += 1;
@@ -303,11 +306,31 @@ export function computeOperation(base: PlanState, op: PlanOperation, ctx: Operat
         s.allocations[idx].componentPortions = { ...s.allocations[idx].componentPortions, ...op.componentPortions };
         consequences.push(`${nameOf(op.memberId)}'s ${op.kind} plate on ${dayName(op.night)} changes; only the changed components change quantities.`);
       } else {
+        const r = checkRecipe(rv, [op.memberId], ctx.exclusions, ctx.ingredients);
+        if (r.status === "violated") blockers.push({ code: "constraint_violation", message: `${rv.title} for ${nameOf(op.memberId)}: ${r.reasons.join("; ")}` });
+        if (r.status === "unknown") blockers.push({ code: "constraint_unknown", message: `${rv.title} cannot pass ${nameOf(op.memberId)}'s exclusions: ${r.reasons.join("; ")}` });
         s.allocations.push({ cookingEventId: e.id, memberId: op.memberId, kind: op.kind, night: op.night, componentPortions: { ...defaultPlate(rv), ...op.componentPortions } });
         consequences.push(`${nameOf(op.memberId)} reserves a ${op.kind} from ${rv.title} on ${dayName(op.night)}.`);
       }
       e.revision += 1;
       break;
+    }
+  }
+
+  const touchedEvents = new Set([...closureE, ...newEvents]);
+  for (const al of base.allocations) {
+    if (al.kind !== "lunch" || !closureE.has(al.cookingEventId)) continue;
+    const still = s.allocations.some(
+      (x) => x.kind === "lunch" && x.memberId === al.memberId && x.night === al.night && (x.cookingEventId === al.cookingEventId || newEvents.includes(x.cookingEventId)),
+    );
+    if (!still) consequences.push(`${nameOf(al.memberId)}'s reserved lunch on ${dayName(al.night)} is released — it can no longer come from this cooking.`);
+  }
+  for (const al of s.allocations) {
+    if (!touchedEvents.has(al.cookingEventId)) continue;
+    const e = s.events.find((x) => x.id === al.cookingEventId);
+    if (!e || e.status !== "scheduled" || !e.cookNight) continue;
+    if (al.night < e.cookNight || (al.kind === "lunch" && al.night <= e.cookNight)) {
+      blockers.push({ code: "invalid", message: `${nameOf(al.memberId)}'s ${al.kind} on ${dayName(al.night)} would come before its cooking.` });
     }
   }
 

@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { computeOperation, closureStale, type OperationResult, type PlanOperation } from "@/domain/planning/operations";
 import { explainChange, generateProposal, type KeptNight, type PreferenceValue, type ProposalContent, type ProposalInputs } from "@/domain/planning/proposal";
-import { checkRecipe } from "@/domain/planning/constraints";
+import { admitWeek } from "@/domain/planning/admission";
 import { computeProjection } from "@/domain/groceries/projection";
 import { addDays, dayName, nextDinnerDate, weekStartOf } from "@/domain/dates";
 import type { PlanState, RecipeVersion } from "@/domain/types";
@@ -135,12 +135,18 @@ export function generateProposalCommand(actor: Actor, operationId: string, p: Ge
         (r) => r.recipe_id,
       ),
     );
+    // A locked night protects its whole meal dependency group: the source cooking and every
+    // night that draws from it (leftovers), with their plates and reserved lunches.
+    const lockedEvents = new Set(state.assignments.filter((a) => a.locked && a.cookingEventId).map((a) => a.cookingEventId!));
     const kept: KeptNight[] = state.assignments
-      .filter((a) => a.locked)
+      .filter((a) => a.locked || (a.cookingEventId && lockedEvents.has(a.cookingEventId)))
       .map((a) => {
         const e = state.events.find((x) => x.id === a.cookingEventId);
+        const lockedNight = state.assignments.find((x) => x.locked && x.cookingEventId && x.cookingEventId === a.cookingEventId);
         return {
           night: a.night, kind: a.kind, recipeVersionId: e?.recipeVersionId ?? null, eventId: e?.id ?? null, cookNight: e?.cookNight ?? null,
+          locked: a.locked,
+          reason: a.locked ? "Locked — kept as accepted" : `Kept — ${dayName(lockedNight!.night)} is locked and shares this cooking`,
           allocations: state.allocations.filter((al) => al.cookingEventId === e?.id).map((al) => ({ memberId: al.memberId, kind: al.kind, night: al.night, componentPortions: al.componentPortions })),
         };
       });
@@ -219,21 +225,32 @@ export function adoptWeekProposalCommand(actor: Actor, operationId: string, p: A
     const content: ProposalContent = proposal.content;
     const state = await loadPlanState(c, week);
     const members = await loadMembers(c, actor.householdId);
-    const rvIds = content.events.map((e) => e.recipeVersionId);
+    const rvIds = [...new Set([...content.events.map((e) => e.recipeVersionId), ...state.events.map((e) => e.recipeVersionId)])];
     const recipes = await loadRecipeVersions(c, actor.householdId, rvIds);
     const exclusions = await loadExclusions(c, actor.householdId);
     const ingredients = await loadIngredients(c, actor.householdId);
-    const problems: string[] = [];
-    for (const ev of content.events.filter((e) => !e.key.startsWith("keep:"))) {
-      const rv = recipes.get(ev.recipeVersionId);
-      if (!rv) {
-        problems.push("A proposed recipe version no longer exists");
-        continue;
-      }
-      const chk = checkRecipe(rv, members.map((m) => m.id), exclusions, ingredients);
-      if (chk.status !== "ok") problems.push(`${rv.title}: ${chk.reasons.join("; ")}`);
+    // Complete-plan admission at the authoritative boundary: coverage, plates, lunches,
+    // locked dependencies and current exclusions. An incomplete draft stays a draft.
+    const admission = admitWeek({ content, state, members, recipes, exclusions, ingredients });
+    if (admission.problems.length) {
+      const first = admission.problems[0];
+      const code = admission.problems.some((x) => x.code === "incomplete_week") ? "incomplete_week" : first.code;
+      throw new Reject(code, code === "incomplete_week"
+        ? "This proposal is not a complete week, so it stays a draft. Nothing was adopted."
+        : "This proposal does not keep your protected dinners or hard requirements. Nothing was adopted.", { problems: admission.problems.map((x) => x.message) });
     }
-    if (problems.length) throw new Reject("constraint_violation", "This proposal no longer passes your hard requirements. Nothing was adopted.", { problems });
+    // Known hard budget: evaluated on the complete candidate with current prices. Unknown
+    // prices never prove compliance, but they do not block choosing dinners.
+    const settings = await loadSettings(c, actor.householdId);
+    if (settings.budgetFirm && settings.budgetScope && settings.budgetLimitMinor !== null) {
+      const cand = await projectionInput(c, actor.householdId, week.id, { state: admission.candidate, recipes });
+      const result = computeProjection(cand.input);
+      if (result.budget.status === "over") {
+        throw new Reject("constraint_violation", `This week would put the ${settings.budgetScope === "pickup" ? "pickup estimate" : "dinner ingredient cost"} over your firm budget. Nothing was adopted.`, {
+          problems: [`Known total ${result.budget.scope === "pickup" ? result.pickupSpending.knownMinor : result.dinnerIngredientCost.knownMinor} > limit ${settings.budgetLimitMinor} (minor units)`],
+        });
+      }
+    }
 
     // Locked nights are kept exactly; everything else follows the reviewed proposal.
     const keptEventIds = new Set(content.events.filter((e) => e.key.startsWith("keep:")).map((e) => e.key.slice(5)));
