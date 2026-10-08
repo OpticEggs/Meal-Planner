@@ -6,6 +6,7 @@ export function money(minor: number | null | undefined, currency = "USD"): strin
 export function costView(v: { knownMinor: number; unknownCount: number; complete: boolean; currency: string } | null | undefined): string {
   if (!v) return "unknown";
   if (v.complete) return money(v.knownMinor, v.currency);
+  if (v.knownMinor === 0) return `unknown — ${v.unknownCount} unpriced`;
   return `${money(v.knownMinor, v.currency)} known + ${v.unknownCount} unpriced`;
 }
 
