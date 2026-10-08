@@ -329,10 +329,12 @@ export async function previewConsequence(c: Db, householdId: string, weekId: str
     const change = !fa ? "now needed for dinner" : !fb ? "no longer needed for dinner" : "dinner amount changes";
     delta.push({ name, before: fa, after: fb, change });
   }
+  // Genuine extra purchasing: what would still have to be bought, after orders, receipts and
+  // transfers already accounted for — not a re-pricing of goods already bought.
   const additional =
-    current.pickupSpending.complete && next.pickupSpending.complete
-      ? { known: true, minor: next.pickupSpending.knownMinor - current.pickupSpending.knownMinor }
-      : { known: false, minor: null as number | null, unknownCount: next.pickupSpending.unknownCount };
+    current.outstandingPurchase.complete && next.outstandingPurchase.complete
+      ? { known: true, minor: next.outstandingPurchase.knownMinor - current.outstandingPurchase.knownMinor }
+      : { known: false, minor: null as number | null, unknownCount: next.outstandingPurchase.unknownCount };
   const budgetBlock =
     settings.budgetFirm && next.budget.status === "over" && (next.budget.scope === "pickup" ? next.pickupSpending.knownMinor > current.pickupSpending.knownMinor : next.dinnerIngredientCost.knownMinor > current.dinnerIngredientCost.knownMinor)
       ? `This would put the ${next.budget.scope === "pickup" ? "pickup estimate" : "dinner ingredient cost"} over your firm budget.`

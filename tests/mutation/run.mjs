@@ -66,6 +66,9 @@ const MUTATIONS = [
     edits: [["      if (!confirmed.rowCount) break;", "      break;"]] },
   { name: "F08_single_week_recompute", file: "src/server/commands/framework.ts", suite: REV, pattern: "R-F08", expect: [/R-F08/],
     edits: [["      if (outcome.purchasingInputsChanged) {", "      if (false) {"]] },
+  { name: "B3_extra_cost_reprices_history", file: "src/server/commands/plan.ts", suite: "tests/integration/b3.received-goods.test.ts", pattern: "B3", expect: [/labels and favors/],
+    edits: [["current.outstandingPurchase.complete && next.outstandingPurchase.complete\n      ? { known: true, minor: next.outstandingPurchase.knownMinor - current.outstandingPurchase.knownMinor }",
+      "current.pickupSpending.complete && next.pickupSpending.complete\n      ? { known: true, minor: next.pickupSpending.knownMinor - current.pickupSpending.knownMinor }"]] },
 ];
 // A harmless change that MUST be classified SURVIVED (proves the classifier can say so).
 const CONTROLS_LIST = [

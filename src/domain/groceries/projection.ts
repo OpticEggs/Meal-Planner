@@ -150,6 +150,10 @@ export interface RequirementLine {
   status: LineStatus;
   usageCostMinor: number | null;
   pickupCostMinor: number | null;
+  /** Cost of what still has to be bought (toSend x price): the basis of "additional basket cost". */
+  outstandingCostMinor: number | null;
+  /** Received goods not needed by the current plan or requests (physical, product unit). */
+  receivedSurplus: { quantity: string; unit: string } | null;
 }
 
 export interface CostView {
@@ -168,6 +172,8 @@ export interface ProjectionResult {
   readyBlockers: string[];
   dinnerIngredientCost: CostView;
   pickupSpending: CostView;
+  /** Still to buy after orders, receipts and transfers already accounted for. */
+  outstandingPurchase: CostView;
   budget: { status: "unset" | "within" | "over" | "unknown"; scope: string | null; limitMinor: number | null; firm: boolean };
 }
 
@@ -401,6 +407,15 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
     const usageCostMinor =
       mealQty && pkgInMealUnit && price ? Number(mealQty.div(pkgInMealUnit).mul(price.amountMinor).toDecimalPlaces(0, D.ROUND_HALF_UP)) : mealQty ? null : 0;
     const pickupCostMinor = packagesNeeded === null ? null : packagesNeeded === 0 ? 0 : price ? packagesNeeded * price.amountMinor : null;
+    const outstandingCostMinor = toSend === null ? null : toSend === 0 ? 0 : price ? toSend * price.amountMinor : null;
+    // Received goods beyond what the plan and requests need are applicable, unallocated supply.
+    let receivedSurplus: RequirementLine["receivedSurplus"] = null;
+    if (pkgP && unitP && receivedP.gt(0)) {
+      const mealP = netMeal && mealUnit ? convert(netMeal, mealUnit, unitP) : new D(0);
+      const wantP = D.max(mealP ?? new D(0), pkgP.mul(packagesUsual)).plus(pkgP.mul(packagesExtra));
+      const surplus = receivedP.minus(wantP);
+      if (surplus.gt(0)) receivedSurplus = { quantity: surplus.toDecimalPlaces(2).toString(), unit: unitP };
+    }
 
     lines.push({
       key,
@@ -431,6 +446,8 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
       status,
       usageCostMinor,
       pickupCostMinor,
+      outstandingCostMinor,
+      receivedSurplus,
     });
   }
 
@@ -448,6 +465,7 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
   const currency = input.budget.currency;
   const dinnerIngredientCost = costFrom(lines.filter((l) => l.meal || l.mealUnitConflict).map((l) => l.usageCostMinor), currency);
   const pickupSpending = costFrom(lines.filter((l) => l.packagesNeeded !== 0).map((l) => l.pickupCostMinor), currency);
+  const outstandingPurchase = costFrom(lines.filter((l) => l.toSend !== 0).map((l) => l.outstandingCostMinor), currency);
 
   let budgetStatus: ProjectionResult["budget"]["status"] = "unset";
   if (input.budget.scope && input.budget.limitMinor !== null) {
@@ -476,6 +494,7 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
     readyBlockers,
     dinnerIngredientCost,
     pickupSpending,
+    outstandingPurchase,
     budget: { status: budgetStatus, scope: input.budget.scope, limitMinor: input.budget.limitMinor, firm: input.budget.firm },
   };
 }

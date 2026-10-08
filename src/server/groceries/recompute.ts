@@ -170,7 +170,8 @@ export async function recomputeProjection(c: Db, householdId: string, weekId: st
       week.rows[0].accepted_choice_revision,
       {
         reviewFingerprint: result.reviewFingerprint, payloadHash: result.payloadHash, payload: result.payload, ready: result.ready,
-        readyBlockers: result.readyBlockers, dinnerIngredientCost: result.dinnerIngredientCost, pickupSpending: result.pickupSpending, budget: result.budget,
+        readyBlockers: result.readyBlockers, dinnerIngredientCost: result.dinnerIngredientCost, pickupSpending: result.pickupSpending,
+        outstandingPurchase: result.outstandingPurchase, budget: result.budget,
       },
     ],
   );

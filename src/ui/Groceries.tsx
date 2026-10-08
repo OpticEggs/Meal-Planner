@@ -89,6 +89,7 @@ export function GroceriesScreen() {
       <div className="stats">
         <div className="stat"><span>Pickup estimate</span><strong>{costView(s.pickupSpending)}</strong><em>packages in this purchase</em></div>
         <div className="stat"><span>Dinner ingredients</span><strong>{costView(s.dinnerIngredientCost)}</strong><em>value used by planned dinners</em></div>
+        <div className="stat"><span>Still to buy</span><strong data-testid="still-to-buy">{costView(s.outstandingPurchase)}</strong><em>after what is sent, ordered or received</em></div>
         <div className="stat"><span>Budget</span><strong>{s.budget.status === "unset" ? "not set" : `${s.budget.status}${s.budget.limitMinor !== null ? ` · ${money(s.budget.limitMinor)}` : ""}`}</strong><em>{s.budget.scope ?? ""}{s.budget.firm ? " · firm" : ""}</em></div>
       </div>
       <p className="faint small">Prices are estimates from recorded observations, not a guaranteed checkout total; the store may change final charges.</p>

@@ -243,7 +243,10 @@ function ChangeSheet({ n }: { n: any }) {
   }, [library, loadLibrary]);
   const options = useMemo(() => {
     const list = (library?.recipes ?? []).filter((r: any) => !r.archived && r.version.id !== n.recipe?.id);
-    const known = list.filter((r: any) => r.additionalBasketCost.known).sort((a: any, b: any) => a.additionalBasketCost.minor - b.additionalBasketCost.minor || a.version.title.localeCompare(b.version.title));
+    // Options that use received, unallocated goods come first; then genuine extra cost.
+    const known = list
+      .filter((r: any) => r.additionalBasketCost.known)
+      .sort((a: any, b: any) => (b.usesReceived?.length ? 1 : 0) - (a.usesReceived?.length ? 1 : 0) || a.additionalBasketCost.minor - b.additionalBasketCost.minor || a.version.title.localeCompare(b.version.title));
     const unknown = list.filter((r: any) => !r.additionalBasketCost.known).sort((a: any, b: any) => a.version.title.localeCompare(b.version.title));
     return { known, unknown };
   }, [library, n.recipe?.id]);
@@ -266,7 +269,7 @@ function ChangeSheet({ n }: { n: any }) {
       {(mode === "replace" || mode === "backup") && (
         <div className="stack">
           <p className="faint small">
-            {mode === "replace" ? "Choose a dinner to preview. Nothing changes until you press Apply." : "Choose a backup; the original stays as a deferred dinner instead of being discarded."} Sorted by additional basket cost vs the current accepted week; unpriced options are listed separately.
+            {mode === "replace" ? "Choose a dinner to preview. Nothing changes until you press Apply." : "Choose a backup; the original stays as a deferred dinner instead of being discarded."} Dinners that use groceries you already received come first, then by what you would still have to buy; unpriced options are listed separately.
           </p>
           {!library && <p className="muted">Loading recipes…</p>}
           {[...options.known, ...options.unknown].map((r: any, i: number) => (
@@ -279,7 +282,10 @@ function ChangeSheet({ n }: { n: any }) {
                 onClick={() => preview(mode === "replace" ? { type: "replace", assignmentId: n.assignmentId, recipeVersionId: r.version.id } : { type: "backup", assignmentId: n.assignmentId, recipeVersionId: r.version.id })}
               >
                 <span>{r.version.title}</span>
-                <span className="faint small">{r.additionalBasketCost.known ? `${r.additionalBasketCost.minor >= 0 ? "+" : ""}${money(r.additionalBasketCost.minor)}` : "unknown"}{r.constraint.status !== "ok" ? " · fails exclusions" : ""}</span>
+                <span className="faint small">
+                  {r.usesReceived?.length ? `Uses received ${r.usesReceived.join(", ")} · ` : ""}
+                  {r.additionalBasketCost.known ? `${r.additionalBasketCost.minor >= 0 ? "+" : ""}${money(r.additionalBasketCost.minor)}` : "unknown"}{r.constraint.status !== "ok" ? " · fails exclusions" : ""}
+                </span>
               </button>
             </div>
           ))}

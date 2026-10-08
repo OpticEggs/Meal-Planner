@@ -82,14 +82,20 @@ export async function librarySnapshot(actor: Actor) {
           allocations: members.map((m) => ({ cookingEventId: `explore:${rv.id}`, memberId: m.id, kind: "dinner" as const, night: weekStart, componentPortions: plate })),
         };
         const withIt = computeProjection({ ...baseline.input, events: [...baseline.input.events, extraEvent] });
-        const known = withIt.pickupSpending.complete && baselineResult.pickupSpending.complete;
+        const known = withIt.outstandingPurchase.complete && baselineResult.outstandingPurchase.complete;
         additional = {
-          minor: known ? withIt.pickupSpending.knownMinor - baselineResult.pickupSpending.knownMinor : null,
+          minor: known ? withIt.outstandingPurchase.knownMinor - baselineResult.outstandingPurchase.knownMinor : null,
           known,
-          baseline: "current accepted week",
-          unknownCount: withIt.pickupSpending.unknownCount,
+          baseline: "current accepted week, after what is already ordered or received",
+          unknownCount: withIt.outstandingPurchase.unknownCount,
         };
       }
+      // Applicable received, unallocated goods this recipe would use (never inferred stock).
+      const usesReceived = baselineResult
+        ? [...new Set(rv.ingredients.map((i) => i.ingredientKey))]
+            .filter((k) => baselineResult.lines.find((l) => l.key === k)?.receivedSurplus)
+            .map((k) => ingredients.get(k)?.name ?? k)
+        : [];
       const check = checkRecipe(rv, members.map((m) => m.id), exclusions, ingredients);
       recipes.push({
         recipeId: r.id,
@@ -109,6 +115,7 @@ export async function librarySnapshot(actor: Actor) {
         nutritionPerPlate: nut,
         servingCost: { knownMinor: Number(servingKnown.toDecimalPlaces(0)), missing: servingMissing, complete: servingMissing.length === 0 },
         additionalBasketCost: additional,
+        usesReceived,
         constraint: check,
         ingredientNames: rv.ingredients.map((i) => ingredients.get(i.ingredientKey)?.name ?? i.ingredientKey),
       });
