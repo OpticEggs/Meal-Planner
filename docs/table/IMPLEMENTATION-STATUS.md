@@ -13,7 +13,7 @@ real store.
 |---|---|
 | 1 Executable contract & fixtures | Done — pinned stack, migrations, Better Auth, deterministic fixture, recording fake retailer, two-user harness |
 | 2 Persistent shared plan & concurrency | Done — first slice evidence `evidence/2026-10-08-first-slice-e2e.md` |
-| 3 Quantities & honest grocery state | Done, except B2 (pickup-time constraint on expected supply) — see BACKLOG |
+| 3 Quantities & honest grocery state | Done (including pickup-time constraint on expected supply) |
 | 4 Household experience | Done for the mock workflow; device/Safari validation not available (B8) |
 | 5 Verified Kroger integration | BLOCKED — capability documented in INTEGRATION-CAPABILITIES.md; adapter fails closed |
 | 6 Household release | Not started (needs hosting decision; no paid provisioning authorized) |
@@ -78,4 +78,6 @@ See ACCEPTANCE.md for per-test status and `docs/table/evidence/` for raw run rec
 
 ## Next executable task
 
-**B2 — pickup timing constrains expected supply** (no owner input needed).
+**B3 — replacement suggestions prefer received goods, and additional basket cost counts only
+packages beyond what is already ordered/received** (no owner input needed; scope and done-criteria
+in BACKLOG.md). Owner-gated items: B1 repository destination, B5/B6 Kroger, B8 devices, B9 hosting.

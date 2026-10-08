@@ -399,3 +399,24 @@ describe("X09 capture after confirmation", () => {
     expect(y2.toSend).toBe(1);
   });
 });
+
+describe("Expected supply respects pickup timing (plan §6.4)", () => {
+  it("ordered goods support only dinners on or after pickup; unknown pickup is unresolved, not proof", async () => {
+    const { fx, alex } = await fresh();
+    await approveAll(alex, fx.weekId);
+    await send(alex, fx.weekId);
+    const payload = (await q<{ payload: any[] }>("SELECT payload FROM handoff_batches"))[0].payload;
+    const lines = payload.map((i: any) => ({ ingredientKey: i.ingredientKey, name: i.ingredientKey, packages: i.packages }));
+    // Pickup Tuesday 18:00 New York; today (fixed clock) is Monday.
+    await confirmOrderCommand(alex, op(), { weekId: fx.weekId, contentsKnown: true, lines, pickupAt: "2026-10-13T22:00:00Z" });
+    expect((await line(fx.weekId, "tofu")).unresolved.join(" ")).toMatch(/picked up Tuesday; Monday's dinner needs it earlier/);
+    expect((await line(fx.weekId, "rice")).unresolved.join(" ")).toMatch(/Monday's dinner needs it earlier/);
+    expect((await line(fx.weekId, "chicken_thigh")).unresolved).toEqual([]); // Wednesday onwards
+    const { fx: fx2, alex: alex2 } = await fresh();
+    await approveAll(alex2, fx2.weekId);
+    await send(alex2, fx2.weekId);
+    const p2 = (await q<{ payload: any[] }>("SELECT payload FROM handoff_batches"))[0].payload;
+    await confirmOrderCommand(alex2, op(), { weekId: fx2.weekId, contentsKnown: true, lines: p2.map((i: any) => ({ ingredientKey: i.ingredientKey, name: i.ingredientKey, packages: i.packages })), pickupAt: null });
+    expect((await line(fx2.weekId, "chicken_thigh")).unresolved.join(" ")).toMatch(/Pickup time not recorded/);
+  });
+});

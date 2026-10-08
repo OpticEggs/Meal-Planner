@@ -1,6 +1,7 @@
 import { hashOf } from "../hash";
 import { D, Dec, convert, normalizeUnit, packagesFor } from "../units";
 import { eventDemand } from "../recipes/plate";
+import { dayName } from "../dates";
 import type { Allocation, CookingEvent, Ingredient, RecipeVersion } from "../types";
 
 /**
@@ -69,6 +70,7 @@ export interface OrderInput {
   id: string;
   contentsKnown: boolean;
   pickupAt: string | null;
+  pickupDate: string | null; // household-local date of pickup, if known
   lines: { id: string; ingredientKey: string | null; name: string; packages: number }[];
   receipts: { orderLineId: string; state: "received" | "missing" | "substituted"; packages: number }[];
 }
@@ -91,6 +93,8 @@ export interface ProjectionInput {
   order: OrderInput | null;
   approvals: ApprovalInput[];
   budget: { scope: "pickup" | "dinner_ingredients" | null; limitMinor: number | null; firm: boolean; currency: string };
+  /** Household-local today; dinners before today are history and need no timing check. */
+  today?: string;
 }
 
 export type LineStatus =
@@ -271,6 +275,22 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
     }
     if (uncertain > 0) unresolved.push("A transfer outcome is uncertain — check the retailer cart; Table does not resend automatically");
     const coveredByOrder = ordered - missing;
+    // Expected supply only supports dinners on or after pickup. Unknown pickup is unresolved
+    // availability, never proof that goods arrive in time.
+    if (coveredByOrder > 0 && m && input.order) {
+      const today = input.today ?? "";
+      const upcoming = [...new Set(m.sources.map((x) => x.cookNight))].filter((n) => n >= today).sort();
+      const pickup = input.order.pickupDate;
+      const early = pickup === null ? upcoming : upcoming.filter((n) => n < pickup);
+      if (early.length) {
+        const days = early.map(dayName).join(", ");
+        unresolved.push(
+          pickup === null
+            ? `Pickup time not recorded — cannot confirm the ordered ${ing?.name ?? key} arrives before ${days}'s dinner`
+            : `Ordered ${ing?.name ?? key} is picked up ${dayName(pickup)}; ${days}'s dinner needs it earlier`,
+        );
+      }
+    }
     const toSend = packagesNeeded === null ? null : Math.max(0, packagesNeeded - coveredByOrder - sent - uncertain);
 
     const fingerprint = hashOf({

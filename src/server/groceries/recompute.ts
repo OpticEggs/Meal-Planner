@@ -1,7 +1,9 @@
 import { computeProjection, type ProjectionInput, type ProjectionResult, type BatchInput } from "@/domain/groceries/projection";
 import type { PlanState, RecipeVersion } from "@/domain/types";
 import type { Db } from "../db/pool";
-import { loadIngredients, loadPlanState, loadRecipeVersions, loadSettings, weekById } from "../queries/load";
+import { loadHousehold, loadIngredients, loadPlanState, loadRecipeVersions, loadSettings, weekById } from "../queries/load";
+import { localDate } from "@/domain/dates";
+import { nowInstant } from "../env";
 
 export async function ensureCycle(c: Db, householdId: string, weekId: string): Promise<string> {
   const r = await c.query(
@@ -37,6 +39,7 @@ export async function projectionInput(
   const recipes = override?.recipes ?? (await loadRecipeVersions(c, householdId, rvIds));
   const ingredients = await loadIngredients(c, householdId);
   const settings = await loadSettings(c, householdId);
+  const household = await loadHousehold(c, householdId);
 
   const reqs = cycleId
     ? await c.query(
@@ -94,6 +97,7 @@ export async function projectionInput(
       const rec = await c.query("SELECT r.* FROM receipt_observations r JOIN order_lines l ON l.id=r.order_line_id WHERE l.order_id=$1", [o.rows[0].id]);
       order = {
         id: o.rows[0].id, contentsKnown: o.rows[0].contents_known, pickupAt: o.rows[0].pickup_at?.toISOString() ?? null,
+        pickupDate: o.rows[0].pickup_at ? localDate(o.rows[0].pickup_at, household.timezone) : null,
         lines: ol.rows.map((l) => ({ id: l.id, ingredientKey: l.ingredient_key, name: l.name, packages: l.packages })),
         receipts: rec.rows.map((r) => ({ orderLineId: r.order_line_id, state: r.state, packages: r.packages })),
       };
@@ -123,6 +127,7 @@ export async function projectionInput(
       order,
       approvals,
       budget: { scope: settings.budgetScope, limitMinor: settings.budgetLimitMinor, firm: settings.budgetFirm, currency: settings.budgetCurrency },
+      today: localDate(nowInstant(), household.timezone),
     },
   };
 }
