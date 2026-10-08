@@ -1,0 +1,41 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /tmp/table-msred
+
+ ❯ tests/integration/ms-sources.test.ts (0 test)
+ ❯ tests/integration/ms-destinations.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/ms-destinations.test.ts [ tests/integration/ms-destinations.test.ts ]
+Error: Cannot find package '@/server/commands/destinations' imported from /tmp/table-msred/tests/integration/ms-destinations.test.ts
+ ❯ tests/integration/ms-destinations.test.ts:13:1
+     11| import { createPreviewCommand } from "@/server/commands/plan";
+     12| import { updateSettingsCommand } from "@/server/commands/household";
+     13| import { prepareInstacartListCommand, setShoppingDestinationCommand } …
+       | ^
+     14| import { householdSnapshot } from "@/server/queries/snapshot";
+     15| import { nearbyRetailers } from "@/server/integrations/instacart/clien…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/integration/ms-sources.test.ts [ tests/integration/ms-sources.test.ts ]
+Error: Cannot find package '@/server/commands/sources' imported from /tmp/table-msred/tests/integration/ms-sources.test.ts
+ ❯ tests/integration/ms-sources.test.ts:10:1
+      8| import pg from "pg";
+      9| import { fresh, op, protectedState, q, race } from "./helpers";
+     10| import * as sources from "@/server/commands/sources";
+       | ^
+     11| import * as imports from "@/server/commands/imports";
+     12| import * as library from "@/server/commands/library";
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  no tests
+   Start at  18:11:10
+   Duration  2.91s (worker 94%, environment 6%)
+

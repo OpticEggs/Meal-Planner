@@ -1,0 +1,27 @@
+Role: Implementation owner
+Repository: OpticEggs/Meal-Planner
+Task: Add universal recipe links/import, Budget Bytes source discovery, and selectable multi-grocer purchasing options to the existing Table app.
+
+Read every document in the attached Table-Claude-Multi-Source-Handoff package, starting with TABLE-IMPLEMENTATION-HANDOFF.md and TABLE-ACCEPTANCE-MATRIX.md. Also read the repository's CLAUDE.md, maintained project guidance, existing acceptance/decision records and the current migration/source tree.
+
+The handoff was drafted against 3632963ac2cd1c1cc6e91a8383f67bb4c59b64e1. FETCH the current origin/main first; treat newer commits as canonical and preserve them. The B21/B22 cooking-record corrections were separately approved; do not replace, reset, duplicate or interfere with any active implementation of them. Use a separate worktree or wait for integration if files overlap. Do not force push.
+
+This is an IMPLEMENTATION authorization for the bounded, fully offline/fixture-tested capabilities in the handoff, not permission for hosting/provisioning, accounts/credentials, a production web fetch, provider network calls, cart writes, orders, checkout or recurring costs.
+
+Implement in this order:
+1. Persisted, shared, deduplicated URL bookmarks with safe link validation, attribution, and a Save link/Source filter UI.
+2. Secure, transport-injected Recipe JSON-LD extraction and member-reviewed structured import, with bookmark-only/manual fallback, immutable recipe versions, legal/source provenance, and no invented ingredient quantities. Review/validate the SSRF defenses and controlled redirects before any real public-site fetching.
+3. Budget Bytes source lane that links to the official index and exposes household-saved Budget Bytes recipes. Do not scrape or mirror the catalog, its photographs or its authored instructions without separately established rights.
+4. Per-cycle shopping-destination selection, manual/copyable grocery export and store-specific review/projection semantics. Preserve all accepted-plan, stale-review, purchase-approval and history invariants.
+5. A credential-independent, disabled-by-default Instacart Developer Platform nearby-retailer and hosted shopping-list LINK adapter with recorded-fixture transport; distinguish a link from a cart write and from an order. Preserve Kroger's current fail-closed adapter and owner gates.
+6. Run the full suite and all acceptance cases in TABLE-ACCEPTANCE-MATRIX.md; real PostgreSQL, two authenticated Chromium contexts, concurrent edit orders, migration, export/restore, deterministic external transports, red-before-green where feasible, mutation-harness self-test and source-hash check.
+
+Preserve T01–T22, X01–X12, RB17, B14–B20, and B21/B22 after they land. Work through authorized phases without routine check-ins. If any legal/provider dependency blocks a phase, implement safe link-only or fixture-only behavior, document the precise blocker, and continue independent authorized work; never fake capability or quietly broaden scope.
+
+For provider API facts, use official current documentation and distinguish documented, implemented, fixture-tested, provider-read and live-verified. The Instacart nearby-retailer endpoint is not a physical pickup-store locator. The Instacart shopping-list endpoint returns a link for customer store selection/checkout, not an order. Schema.org markup is data format, not permission to reproduce page content. Budget Bytes requires case-by-case permission for using its recipes or photographs on other websites; start with links, attribution, and user-curated selected sources. Do not make new internet requests in automated tests.
+
+You are authorized to make scoped code/test/migration/docs changes and ordinary fast-forward pushes ONLY to OpticEggs/Meal-Planner on the established main workflow, once the clean tested implementation has evidence. Do not push to any other repository, force push, deploy, create services, buy anything, alter DNS, or use actual Kroger/Instacart/FDC accounts. Keep secrets out of chat and the repo.
+
+Deliver a fully verified implementation commit; separate docs/evidence commit; exact SHA identities and test counts; new acceptance register; provider capability/rights gates; validated git bundle + sha256; and one consolidated list of owner inputs for later LIVE provider activation. Your final response must distinguish working fixture functionality from features that still need credentials/rights/device testing.
+
+Begin coding after baseline inspection; do not return another speculative architecture-only plan.

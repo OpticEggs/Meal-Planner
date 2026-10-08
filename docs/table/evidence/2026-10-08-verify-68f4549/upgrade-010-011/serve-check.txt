@@ -1,0 +1,17 @@
+{
+ "where": {
+  "destination": "retailer_cart",
+  "revision": 1,
+  "capabilities": [
+   "not_configured",
+   "not_configured"
+  ]
+ },
+ "listItems": 15,
+ "listStates": [
+  "already_ordered",
+  "to_buy"
+ ],
+ "recipes": 8,
+ "bookmarks": 0
+}

@@ -1,0 +1,64 @@
+{
+  "when": "2026-10-08T18:10:43.588Z",
+  "head": "5a18270ba3b66c382a92393eb0ac295b26e2c749",
+  "restored": true,
+  "pass": true,
+  "results": [
+    {
+      "name": "MS_link_dedup_by_raw_url",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/3 failed by assertion: URL-02: both members save tracking variants of one page at once — one bookmark, both notes kept (Jon first) | URL-02: both members save tracking variants of one page at once — one bookmark, both notes kept (Alex first)"
+    },
+    {
+      "name": "MS_import_confirms_incomplete",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: URL-11/12: an incomplete draft can't be confirmed; a complete one becomes one imported version with its source, changing no plan"
+    },
+    {
+      "name": "MS_budget_bytes_page_read",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/16 failed by assertion: BB-02/03: a Budget Bytes link is saved once, attributed, and never read — the member pastes or types the ingredients"
+    },
+    {
+      "name": "MS_fetch_private_address_allowed",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/8 failed by assertion: URL-05: links resolving to private, mixed, metadata or mapped addresses, or redirecting there, are refused before any connection"
+    },
+    {
+      "name": "MS_destination_keeps_store_products",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: GR-02/03/06: switching to another store keeps meals, drops store products and prices, stales approvals and makes the old Send do nothing"
+    },
+    {
+      "name": "MS_destination_ignores_revision",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/2 failed by assertion: GR-10: both members choose at once — the later choice is refused, nothing is lost silently (Jon first) | GR-10: both members choose at once — the later choice is refused, nothing is lost silently (Alex first)"
+    },
+    {
+      "name": "MS_instacart_stale_list_requested",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: IC-03: a stale list or a changed destination makes zero provider calls"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Table — Implementation status
 
-_Last updated 2026-10-08 (UTC), after B21/B22 (database cook-record invariant, stale cooking events) and the free-hosting research, which followed the visual update (B20) and the cook-record idempotency fix
+_Last updated 2026-10-08 (UTC), after the multi-source handoff (recipe links, reviewed import, Budget Bytes lane, where to shop, Instacart list link — fixture-only), which followed B21/B22 (database cook-record invariant, stale cooking events) and the free-hosting research, which followed the visual update (B20) and the cook-record idempotency fix
 (B19, delivery review of fb4d771, gate 2), which followed the integration-preparation pass (B9 deployment candidate, B7 nutrition, B5
 Kroger adapter, B8 checklist)._
 
@@ -8,17 +8,22 @@ Kroger adapter, B8 checklist)._
 
 | What | Identity |
 |---|---|
-| Latest code commit | `579179b` — B21/B22 (`5250e62`) plus a disclosed test correction (`579179b`) |
-| Implementation commit verified | `579179b` (clean tree; source hash unchanged during the run); the first run on `5250e62` FAILED one mutation (ERROR) and is kept |
+| Latest code commit | `68f4549` — multi-source handoff: `c1bf933` (Instacart client, worker), `99c3b99` (import building blocks, worker), `2b9d83a` (integration), `68f4549` (E2E-01/02 tests) |
+| B21/B22 | `5250e62` + test correction `579179b`, verified at `579179b` |
+| Implementation commit verified | `68f4549` (clean tree; source hash unchanged during the run) |
 | Visual update | `f22f9d5` (B20), verified at `f22f9d5` |
 | Cook-record fix | `02a3b1a` (B19) on top of `fb4d771` (the reviewed delivery); verified at `02a3b1a` |
 | Integration-preparation pass | start `639c103` (+ docs-only `0712ccb`); `a871af9` B9 · `c974507` B5 (worker) · `668b00e` B5 integration · `f20a7ab` B7 (worker) · `4d0e822` integration · `c19bd5a` background-refresh fix (verified at `c19bd5a`) |
 | Documentation/evidence commits | the commits after each verified code commit on `main` (docs only — e.g. `git diff --stat 02a3b1a..HEAD`) |
 | Remote | `https://github.com/OpticEggs/Meal-Planner`, branch `main` |
 | Restore | `git clone --branch main <bundle> table` or `git clone <bundle> table` |
-| Migrations | `001`–`009`: `006_nutrition_sources.sql` (B7), `007_kroger.sql` (B5), `008_cook_record_corrections.sql` (B19), `009_cook_record_chain.sql` (B21); upgrades from a populated 005 database (to 007) a populated 007 database holding duplicate cook records (to 008), and a populated 008 database with planted cross-generation violations (to 009) checked |
+| Migrations | `001`–`011`: `006_nutrition_sources.sql` (B7), `007_kroger.sql` (B5), `008_cook_record_corrections.sql` (B19), `009_cook_record_chain.sql` (B21), `010_recipe_sources.sql`, `011_shopping_destinations.sql` (multi-source); upgrades from a populated 005 database (to 007) a populated 007 database holding duplicate cook records (to 008), a populated 008 database with planted cross-generation violations (to 009), and a populated 009 database (to 011, only `schema_migrations` differs over existing columns) checked |
 
-## Verification (measured on 579179b)
+## Verification (measured on 68f4549)
+
+`scripts/verify-all.sh` → `docs/table/evidence/2026-10-08-verify-68f4549/summary.md`: vitest 833/833, Playwright 128/128, 74 mutations killed, 0 survived, 0 error.
+
+### Previous run (579179b, B21/B22)
 
 `scripts/verify-all.sh` → `docs/table/evidence/2026-10-08-verify-579179b/summary.md`: vitest 315/315, Playwright 121/121, 67 mutations killed, 0 survived, 0 error. The first run on `5250e62` FAILED (one mutation ERROR — see ACCEPTANCE "B21/B22") and is kept in `verify-5250e62-FAIL/`.
 
@@ -45,6 +50,10 @@ checks 57 killed / 0 survived / 0 error, sources restored. The first full run, o
 browser test (T09) — root-caused to a client race and fixed in `c19bd5a` (D77); that run is kept in
 `verify-4d0e822-FAIL/`. Red-before-green, the local production-mode check and the upgrade check are in
 the same folder (see ACCEPTANCE "Integration preparation").
+
+## Multi-source handoff (B23)
+
+What works now, with no credentials: shared saved links (both members, de-duplicated, attributed, notes kept); import by pasting a recipe's ingredient lines, reviewed line by line into an imported recipe with its source link; the Budget Bytes lane (official index link, your saved links, your confirmed recipes); where to shop per pickup (store cart, Instacart list, another store) with a copyable/downloadable list. Fixture-tested but OFF: reading recipe pages (SSRF-checked fetcher; synthetic test pages only) and the Instacart shopping-list link and nearby-retailer lookup (doc-shaped synthetic fixtures). Nothing was fetched from a site, a store or Instacart. DECISIONS D86–D92; owner gates OWNER-INPUTS §6.
 
 ## B21/B22 (directive "B21/B22 Implementation Directive")
 
@@ -149,8 +158,8 @@ Backup/restore: `scripts/backup.sh dump|restore|check` (dumps include auth table
 
 ## Evidence
 
-Current: `docs/table/evidence/2026-10-08-verify-579179b/` (see Verification above). History:
-`2026-10-08-verify-f22f9d5/` (visual update; rechecked independently in `2026-10-08-independent-recheck-bcb74ed/`), `2026-10-08-verify-02a3b1a/` (cook-record fix), `2026-10-08-verify-c19bd5a/` (integration preparation), `2026-10-08-verify-abdd5a2/` (B17 correction, B18), `2026-10-08-independent-recheck-639c103/`, `2026-10-08-verify-972e368/` (B17), `2026-10-08-verify-5f7b72f/` (B15/B16), `2026-10-08-verify-0804381/` (B14/B12, with sheet
+Current: `docs/table/evidence/2026-10-08-verify-68f4549/` (see Verification above). History:
+`2026-10-08-verify-579179b/` (B21/B22), `2026-10-08-verify-f22f9d5/` (visual update; rechecked independently in `2026-10-08-independent-recheck-bcb74ed/`), `2026-10-08-verify-02a3b1a/` (cook-record fix), `2026-10-08-verify-c19bd5a/` (integration preparation), `2026-10-08-verify-abdd5a2/` (B17 correction, B18), `2026-10-08-independent-recheck-639c103/`, `2026-10-08-verify-972e368/` (B17), `2026-10-08-verify-5f7b72f/` (B15/B16), `2026-10-08-verify-0804381/` (B14/B12, with sheet
 screenshots), `2026-10-08-verify-2c56267/` (correction pass), `2026-10-08-full-run*.md`,
 `2026-10-08-first-slice-e2e.md`. See ACCEPTANCE.md for per-test status.
 
@@ -163,8 +172,9 @@ screenshots), `2026-10-08-verify-2c56267/` (correction pass), `2026-10-08-full-r
 
 ## Next executable task
 
-None without owner input. Owner gates, all in `OWNER-INPUTS.md`: hosting approval and provisioning
-(H1–H7), the household's FDC key (N1–N2), Kroger registration, provider validation, data-retention
-decision and a bounded cart test (K1–K7), device runs (P1–P2). The approved visual update
-is delivered (B20). B21 and B22 are implemented (D84, D85). Kroger data retention (K6) is to
-be clarified with Kroger developer support or counsel before any live cart addition (delivery review).
+**One task, waiting on the owner: choose the host (OWNER-INPUTS H1) and authorize the private deployment (H3).**
+Paid Render (≈ $13.30/month, `DEPLOYMENT.md`) or the $0 Oracle Always Free + Tailscale option
+(`HOSTING-FREE-OPTIONS.md`, with its idle-reclamation and self-maintenance risks). Everything after it — the
+device run (P1, D01–D26), the FDC key (N1–N2), recipe page reading (R1), Instacart access and validation
+(I1–I3), Budget Bytes permission beyond links (R2) and the Kroger gates (K1–K7, K6 data retention first) — needs a
+deployed app or a separate owner decision, each listed in `OWNER-INPUTS.md`.

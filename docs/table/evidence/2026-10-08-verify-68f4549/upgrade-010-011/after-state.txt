@@ -1,0 +1,4 @@
+retailer_cart|1|1
+retailer_cart|2
+0
+fixture|8

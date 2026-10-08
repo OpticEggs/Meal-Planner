@@ -43,7 +43,8 @@ TABLE_NEW_PASSWORD=... npm run member:reset-password -- <email>   # operator acc
 Deployment: `docs/table/DEPLOYMENT.md` (provisional Render recommendation, runbook; nothing provisioned),
 templates in `deploy/`, `/api/health` for the host. Owner gates: `docs/table/OWNER-INPUTS.md`.
 Device checks: `docs/table/DEVICE-CHECKLIST.md`. Test-only switches refused in production:
-`TABLE_FIXED_NOW`, `TABLE_DISPATCH_TIMEOUT_MS`, `TABLE_FDC_FIXTURES`, `TABLE_KROGER_FAKE_TRANSPORT`.
+`TABLE_FIXED_NOW`, `TABLE_DISPATCH_TIMEOUT_MS`, `TABLE_FDC_FIXTURES`, `TABLE_KROGER_FAKE_TRANSPORT`,
+`TABLE_RECIPE_FETCH_FIXTURES`, `TABLE_INSTACART_FAKE_TRANSPORT` (+ `TABLE_INSTACART_FAKE_SCENARIO`). Off unless set: `TABLE_RECIPE_IMPORT_FETCH=on` (real page reading — owner gate R1), `INSTACART_ACTIVATE` (owner gates I1–I3).
 Never run vitest and Playwright against the same database at the same time (they use table_test / table_e2e).
 Remote: https://github.com/OpticEggs/Meal-Planner (`main`). Restore a bundle with `git clone --branch main <bundle> table`.
 Review corrections and regressions: `docs/table/CORRECTIONS-89f3ea9.md`.
@@ -56,6 +57,6 @@ mutation path (`framework.ts` = lock, idempotency, receipts, change events) · `
 coherent snapshots · `src/server/integrations/retailer.ts` simulated retailer + Kroger wiring;
 `src/server/integrations/kroger/` Kroger adapter behind staged activation (`KROGER_ACTIVATE`, all off;
 fake transport in tests); cook records: one effective record per cooking event — enforced by the database for every writer (migration 009 chain: `replaces`, unique indexes, deferred check; D84) — corrections appended (`CorrectCookRecord`), readers use the `cook_records_effective` view (D78–D80), `RecordCooked` only for a dinner still on its accepted plan (D85); `src/server/integrations/fdc/` + `src/domain/nutrition/` FoodData Central lookup
-and normalization (member-confirmed matches, append-only `nutrition_matches`) · `src/server/deploy.ts`
+and normalization (member-confirmed matches, append-only `nutrition_matches`) · recipe sources: `src/server/commands/{sources,imports}.ts` (saved links, reviewed import drafts), `src/server/recipe-import-service.ts` + `src/server/integrations/recipe-import/` (URL validation, SSRF-checked `safeFetch`, JSON-LD, ingredient lines; page reading off unless configured) · where to shop: `src/server/commands/destinations.ts`, `src/domain/groceries/shopping-list*.ts`, `src/server/integrations/instacart/` (Developer Platform list link, staged and off) · `src/server/deploy.ts`
 production config + schema checks behind `/api/health` ·
 `src/app/globals.css` theme tokens (light default, dark via `prefers-color-scheme`; every colour a token, contrast checked by `tests/unit/theme-contrast.test.ts`) · `src/ui` client screens (`a11y.tsx` = the one modal system, focus helpers, the one live region; `forms.tsx` = attached field errors; `GroceryDialogs.tsx`, `Staples.tsx`, `RecipeEditor.tsx`) · `src/server/commands/staples.ts` staple management (revision-bound) · `migrations/` explicit SQL · `tests/{unit,integration,e2e,mutation}`.

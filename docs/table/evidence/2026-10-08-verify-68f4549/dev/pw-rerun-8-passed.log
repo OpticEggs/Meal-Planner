@@ -1,0 +1,13 @@
+
+Running 8 tests using 1 worker
+
+  ✓  1 [chromium] › tests/e2e/b18-text-scaling.spec.ts:414:5 › B18 at 320 px with 150% text › Groceries: lines, product, removal, order, receipts (150%) (24.4s)
+  ✓  2 [chromium] › tests/e2e/b18-text-scaling.spec.ts:488:5 › B18 at 320 px with 150% text › Groceries: uncertain transfer and the cart check (150%) (7.1s)
+  ✓  3 [chromium] › tests/e2e/b18-text-scaling.spec.ts:414:5 › B18 at 320 px with 200% text › Groceries: lines, product, removal, order, receipts (200%) (22.1s)
+  ✓  4 [chromium] › tests/e2e/b18-text-scaling.spec.ts:488:5 › B18 at 320 px with 200% text › Groceries: uncertain transfer and the cart check (200%) (6.4s)
+  ✓  5 [chromium] › tests/e2e/ms-groceries.spec.ts:103:3 › Instacart shopping list (fixture fake) › IC-01/02: a link is prepared — it opens Instacart, says nothing was ordered, and no cart batch or order exists; ZIP lookup shows brands only (4.6s)
+  ✓  6 [chromium] › tests/e2e/ms-sources.spec.ts:16:1 › URL-01/02: a link saved by Jon appears once for Alex, attributed, with a working source link; nothing else changes (4.3s)
+  ✓  7 [chromium] › tests/e2e/ms-sources.spec.ts:52:1 › URL-12: Jon reads a recipe page, decides the unclear lines, and only then creates the recipe; the source stays linked (3.6s)
+  ✓  8 [chromium] › tests/e2e/ms-sources.spec.ts:118:1 › E2E-03: Saved links and the import dialog fit 320 px at 200% text with no horizontal scroll (2.2s)
+
+  8 passed (1.4m)

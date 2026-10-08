@@ -1,0 +1,150 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /tmp/table-ms
+
+ ❯ tests/integration/ms-sources.test.ts (25 tests | 2 failed) 23972ms
+   ❯ reviewed import (URL-05..15) (8)
+     × URL-11/12: an incomplete draft can't be confirmed; a complete one becomes one imported version with its source, changing no plan 1023ms
+   ❯ Budget Bytes lane (BB-02..04) (2)
+     × BB-04: the member's own pasted list becomes a household recipe after review; its source stays linked 895ms
+ ❯ tests/integration/ms-destinations.test.ts (16 tests | 3 failed) 14536ms
+   ❯ where to shop (GR-01..12) (9)
+     × GR-05/11: after a transfer and a confirmed order, switching changes no history; a new need shows as still to buy, no second order 1210ms
+     × GR-07: an unpriced line keeps the total incomplete and a firm budget unconfirmed 804ms
+   ❯ Instacart shopping-list link (IC-01..06, SEC-02/03) (7)
+     × IC-05/SEC-02: 401/403 and an untrusted link are failures with no link stored; the key appears nowhere in the database or export 1025ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/ms-destinations.test.ts > where to shop (GR-01..12) > GR-05/11: after a transfer and a confirmed order, switching changes no history; a new need shows as still to buy, no second order
+AssertionError: expected undefined to match object { state: 'to_buy', packages: 1 }
+
+- Expected:
+{
+  "packages": 1,
+  "state": "to_buy",
+}
+
++ Received:
+undefined
+
+ ❯ tests/integration/ms-destinations.test.ts:142:60
+    140|     const s: any = await householdSnapshot(jon);
+    141|     const items = s.groceries.shoppingList.items;
+    142|     expect(items.find((i: any) => /coffee/i.test(i.name))).toMatchObje…
+       |                                                            ^
+    143|     expect(items.filter((i: any) => i.state === "already_ordered").len…
+    144|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/integration/ms-destinations.test.ts > where to shop (GR-01..12) > GR-07: an unpriced line keeps the total incomplete and a firm budget unconfirmed
+AssertionError: expected [ 'unknown', 'over' ] to include 'unset'
+ ❯ tests/integration/ms-destinations.test.ts:151:33
+    149|     const s = await summary(fx.weekId);
+    150|     expect(s.pickupSpending.complete).toBe(false);
+    151|     expect(["unknown", "over"]).toContain(s.budget.status);
+       |                                 ^
+    152|     expect(s.ready).toBe(false);
+    153|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/integration/ms-destinations.test.ts > Instacart shopping-list link (IC-01..06, SEC-02/03) > IC-05/SEC-02: 401/403 and an untrusted link are failures with no link stored; the key appears nowhere in the database or export
+AssertionError: expected [ 'command_receipts', …(5) ] to include 'instacart_list_links'
+ ❯ tests/integration/ms-destinations.test.ts:268:26
+    266|     const dump = JSON.stringify(await q("SELECT * FROM instacart_list_…
+    267|     expect(dump).not.toContain(FAKE_KEY);
+    268|     expect(NOT_EXPORTED).toContain("instacart_list_links");
+       |                          ^
+    269|     const src = new pg.Client({ connectionString: process.env.DATABASE…
+    270|     await src.connect();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/integration/ms-sources.test.ts > reviewed import (URL-05..15) > URL-11/12: an incomplete draft can't be confirmed; a complete one becomes one imported version with its source, changing no plan
+AssertionError: expected [ { …(4) }, { …(4) }, { …(4) }, …(2) ] to deep equally contain { …(4) }
+
+- Expected:
+{
+  "form": "raw",
+  "ingredient_key": "dried-black-beans",
+  "quantity": "0.375",
+  "unit": "cup",
+}
+
++ Received:
+[
+  {
+    "form": "raw",
+    "ingredient_key": "dried_black_beans",
+    "quantity": "0.375",
+    "unit": "cup",
+  },
+  {
+    "form": "raw",
+    "ingredient_key": "olive_oil",
+    "quantity": "0.5",
+    "unit": "tbsp",
+  },
+  {
+    "form": "raw",
+    "ingredient_key": "ground_turkey",
+    "quantity": "0.25",
+    "unit": "lb",
+  },
+  {
+    "form": "raw",
+    "ingredient_key": "diced_tomatoes",
+    "quantity": "3.75",
+    "unit": "oz",
+  },
+  {
+    "form": "cooked",
+    "ingredient_key": "cooked_rice",
+    "quantity": "0.125",
+    "unit": "cup",
+  },
+]
+
+ ❯ tests/integration/ms-sources.test.ts:211:18
+    209|     expect(v.summary).toMatch(/Not counted in groceries: salt to taste…
+    210|     const ings = await q<any>("SELECT ingredient_key, quantity::text, …
+    211|     expect(ings).toContainEqual({ ingredient_key: "dried-black-beans",…
+       |                  ^
+    212|     expect(ings).toContainEqual({ ingredient_key: "diced-tomatoes", qu…
+    213|     expect(ings.find((i: any) => i.ingredient_key.includes("salt"))).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/integration/ms-sources.test.ts > Budget Bytes lane (BB-02..04) > BB-04: the member's own pasted list becomes a household recipe after review; its source stays linked
+AssertionError: expected { provenance: 'imported', …(2) } to deeply equal { provenance: 'imported', …(2) }
+
+- Expected
++ Received
+
+  {
+    "provenance": "imported",
+    "source_label": "Budget Bytes",
+-   "source_url": "https://www.budgetbytes.com/some-recipe",
++   "source_url": "https://www.budgetbytes.com/some-recipe/",
+  }
+
+ ❯ tests/integration/ms-sources.test.ts:283:15
+    281|     expect(c.status, JSON.stringify(c)).toBe("accepted");
+    282|     const v = (await q<any>("SELECT provenance, source_url, source_lab…
+    283|     expect(v).toEqual({ provenance: "imported", source_url: "https://w…
+       |               ^
+    284|     expect((await q<any>("SELECT method FROM recipe_import_drafts WHER…
+    285|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  2 failed | 1 passed (3)
+      Tests  5 failed | 43 passed (48)
+   Start at  18:01:49
+   Duration  41.95s (tests 93%, transform 4%, import 3%)
+

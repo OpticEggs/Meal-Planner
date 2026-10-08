@@ -92,3 +92,28 @@ decision (OWNER-INPUTS K6) before `cart` or price recording is activated. Behavi
 
 FDC data are CC0 public domain; the suggested citation is "U.S. Department of Agriculture, Agricultural
 Research Service. FoodData Central".
+
+## Recipe sources (multi-source handoff, phases 1–3)
+
+| Capability | Status |
+|---|---|
+| Shared saved links: validation, normalization/de-duplication, attribution, notes, archive/restore, export/restore | implemented, tested (unit, real-PostgreSQL integration, two-member browser) |
+| Page reading for import (`safeFetch`: SSRF checks, pinned connection, redirects re-validated, size/time/decompression limits) | implemented, **fixture-tested only** — the production transport (`nodeTransport`, `systemResolver`) is written but **not exercised**; real page reading is **OFF** (`TABLE_RECIPE_IMPORT_FETCH` unset). Before enabling: review that Node's connection path cannot re-resolve names (`autoSelectFamily`), that no proxy environment applies, and the source-policy list |
+| JSON-LD Recipe extraction, conservative ingredient-line parsing, reviewed drafts, confirmation into an imported recipe version with source provenance | implemented, tested with **synthetic** pages only (no real site's content) |
+| Paste-the-ingredients import (any link, including link-only sites) | implemented, tested |
+| Budget Bytes | **link-only**: official index link, saved links and household-confirmed recipes. Pages are never read; no photos, methods or posted prices are copied. Any broader use needs Budget Bytes' permission (their FAQ: reuse on other sites is evaluated case by case; commercial use needs a license) |
+| Schema.org `Recipe` markup | treated as a data format, **not** permission to reproduce content |
+
+## Shopping destinations and Instacart (phases 4–5)
+
+| Capability | Status |
+|---|---|
+| Where to shop per pickup (store cart / Instacart list / another store), revision-bound; destination-scoped products and prices; stale-review protection | implemented, tested |
+| Copy/download the grocery list (text, CSV) | implemented, tested; records nothing |
+| Instacart Developer Platform — nearby retailers (`GET /idp/v1/retailers`) | documented (docs read 2026-10-08), implemented, **fixture-tested with doc-shaped synthetic responses**; **not provider-read, not live-verified**; OFF (`INSTACART_ACTIVATE` unset). Returns retailer brands/keys only — not store locations, pickup slots, stock or prices |
+| Instacart — shopping-list link (`POST /idp/v1/products/products_link`, `line_item_measurements`) | documented, implemented, fixture-tested; **not provider-read, not live-verified**; OFF. A link is not a cart write, not an order, and says nothing about the store, products or prices the member will choose. The link host is trusted only for `www.instacart.com` (the docs do not state the domain) |
+| Instacart Connect (retailer-partner fulfillment APIs) | **not used** — not available to Table |
+| Kroger direct | unchanged: fail-closed adapter, all capabilities off (see above) |
+
+Capability states shown in the app are factual: `not_configured`, `configured_fixture_only` (test fake),
+`configured_not_verified`. None is ever shown as verified.

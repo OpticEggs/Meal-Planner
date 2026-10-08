@@ -2,7 +2,7 @@
 
 Status vocabulary: NOT IMPLEMENTED · IMPLEMENTED / NOT RUN · PASS · FAIL · BLOCKED.
 
-**Current evidence run:** `docs/table/evidence/2026-10-08-verify-579179b/summary.md` (B21/B22: implementation `5250e62`, test correction `579179b`; clean tree, source hash unchanged during the run): vitest 315/315, Playwright 121/121, 67 mutations killed, 0 survived, 0 error. Earlier runs are kept as history under `docs/table/evidence/` (the failed first run of this pass is `2026-10-08-verify-579179b/verify-5250e62-FAIL/`).
+**Current evidence run:** `docs/table/evidence/2026-10-08-verify-68f4549/summary.md` (multi-source handoff, implementation `c1bf933`, `99c3b99`, `2b9d83a`, `68f4549`; clean tree, source hash unchanged during the run): vitest 833/833, Playwright 128/128, 74 mutations killed, 0 survived, 0 error. Earlier runs are kept as history under `docs/table/evidence/` (latest before this: `2026-10-08-verify-579179b/`, B21/B22).
 Environment: real PostgreSQL 16.15, production `next start` server, two independently signed-in
 Chromium contexts, recording fake retailer (simulated; nothing reaches a store), fixed household clock
 2026-10-12 15:00 America/New_York. Concurrency orders are forced with database lock barriers.
@@ -364,3 +364,69 @@ database not named `table_test` was refused by the fixture guard and is not evid
 **Existing test changed (disclosed):** `tests/integration/cook-records.test.ts` — the second-press, both-members
 and re-record calls now capture the command's outcome (a thrown error included) and assert on it, as the B21/B22
 tests do. Assertions unchanged; the five COOK mutations are killed by assertion (`mut-cook-fix/`).
+
+## Multi-source handoff (TABLE-ACCEPTANCE-MATRIX.md) — added 2026-10-08
+
+New IDs as in the handoff's matrix; no earlier row renumbered. Start `798a3e8` (B21/B22 in place); implementation
+commits `c1bf933` (Instacart client, worker), `99c3b99` (import building blocks, worker), `2b9d83a` (integration,
+phases 1–5), `68f4549` (E2E-01/02); verified at `68f4549`. Evidence
+`docs/table/evidence/2026-10-08-verify-68f4549/summary.md` (vitest 833/833, Playwright 128/128, 74 mutations killed, 0 survived, 0 error). Chromium only; every external transport is a
+local fixture: page reads come from `tests/fixtures/import-site` (synthetic pages), Instacart from doc-shaped synthetic
+fixtures through the recording fake; `fetch` is stubbed to throw in every new test file.
+
+**Red before green.** These are new capabilities: on `798a3e8` the new integration files fail at import (the modules
+do not exist — `red/ms-red-on-798a3e8.log`), which is recorded as such, not as behavior red. Behavior-level proof is
+by mutation: seven MS mutations, each killed by an assertion of the acceptance case it breaks (link de-duplication,
+incomplete import confirmed, Budget Bytes page read, private address allowed, store products kept for another
+destination, destination revision ignored, stale Instacart list requested). A first full verification run was
+**stopped by the operator** to add the E2E-01/02 tests to the verified commit (kept as
+`ABORTED-by-operator-2b9d83a/`, not a result).
+
+| ID | Tests | Status |
+|---|---|---|
+| URL-01 save without importing | integration ms-sources; e2e ms-sources | PASS |
+| URL-02 tracking variants, both members at once, operation-id replay | integration (both orders, replay); e2e; mutation MS_link_dedup_by_raw_url | PASS |
+| URL-03 social / login-only / no recipe | integration (Instagram post, 403 page, page without Recipe) | PASS |
+| URL-04 `file:`, `javascript:`, `data:`, credentials, localhost, IP, single-label, malformed | integration (8 links, nothing written); unit recipe-import-url (45); e2e | PASS |
+| URL-05 private / mixed / metadata / mapped addresses, unsafe redirect, numeric hosts, ports, rebinding | integration (only the validated public address is ever connected); unit recipe-import-ip (106), recipe-import-fetcher (62); mutation MS_fetch_private_address_allowed | PASS (fixture transport; the production transport is not exercised — see INTEGRATION-CAPABILITIES) |
+| URL-06 huge body, redirect loop, decompression bomb, slow stream, malformed HTML/JSON-LD | unit recipe-import-fetcher, recipe-import-jsonld | PASS |
+| URL-07 scripts, event handlers, prompt-injection text | integration (synthetic page with script, onload, injection text: nothing stored); unit recipe-import-jsonld (hostile) | PASS |
+| URL-08 JSON-LD Recipe incl. `@graph`, `@type` arrays | integration; unit recipe-import-jsonld (60) | PASS |
+| URL-09 several Recipe nodes, unrelated JSON-LD | integration (member chooses; never mixed); unit | PASS |
+| URL-10 fractions, units, can/bunch/to taste, raw/cooked | integration; unit recipe-import-ingredient-line (125) | PASS |
+| URL-11 incomplete import not eligible | integration; unit ms-domain; ms-flow E2E-02; mutation MS_import_confirms_incomplete | PASS |
+| URL-12 confirm → one imported version with source | integration; e2e ms-sources | PASS |
+| URL-13 editing an imported recipe keeps a scheduled dinner pinned | integration | PASS |
+| URL-14 both members edit one draft at once | integration (both orders: revision conflict, nothing overwritten) | PASS (revision conflict; no field-by-field rebase for drafts) |
+| URL-15 archive the link after import | integration (recipe and dinner unchanged; restorable) | PASS |
+| URL-16 export/restore with links and drafts; upgrade | integration (reverse row order); upgrade check of a populated 009 database (`upgrade-010-011/`) | PASS (local) |
+| BB-01 Budget Bytes filter, official link, no catalog | e2e ms-sources | PASS |
+| BB-02 saved once, attributed, both members | integration; e2e | PASS |
+| BB-03 link-only; never read | integration (zero transport calls); e2e; mutation MS_budget_bytes_page_read | PASS |
+| BB-04 member's own list → household recipe after review; posted price never a store price | integration; Explore copy | PASS |
+| GR-01 no store chosen / no credentials | integration (zero calls, nothing recorded) | PASS |
+| GR-02 Jon switches while Alex reviews | integration (old Send → `stale_review`, zero calls); e2e (live for Alex) | PASS |
+| GR-03 store products/prices not misapplied; history unchanged | integration (switch away and back); mutation MS_destination_keeps_store_products | PASS |
+| GR-04 open plan preview during a switch | integration | PASS |
+| GR-05 switch after a confirmed order + new need | integration (history equal; the need goes to the next pickup — no second order) | PASS |
+| GR-06 no product at another destination | integration (no product reused; Instacart lines carry no product ids/UPCs) | PASS |
+| GR-07 unpriced line | integration (incomplete total, firm budget unconfirmed) | PASS |
+| GR-08 copy/download | unit ms-domain (text, CSV, formula-safe); e2e (clipboard) | PASS |
+| GR-09 switch while approving | integration (the old approval is refused) | PASS (server); focus/typed-input preservation during a switch not separately tested |
+| GR-10 both choose at once | integration (both orders); mutation MS_destination_ignores_revision | PASS |
+| GR-11 switching during an in-flight/uncertain batch | integration (acknowledged transfer history unchanged, no replay); late-answer rules unchanged and covered by INT-01/X05 | PASS (in-flight cases by the existing tests) |
+| GR-12 nearby without entitlement | integration (unavailable, zero calls) | PASS |
+| IC-01 nearby brands | integration; e2e (separate server, recording fake) | PASS (doc-shaped fixtures) |
+| IC-02 list link from the frozen review | integration (`line_item_measurements`, no product ids, no batch/order); e2e | PASS (doc-shaped fixtures) |
+| IC-03 stale review / changed destination | integration (zero calls); mutation MS_instacart_stale_list_requested | PASS (T1 refusal; the T2 cancel path is implemented, not forced in a test) |
+| IC-04 duplicate, timeout, 5xx | integration (replay without a call; uncertain, called once, not repeated) | PASS |
+| IC-05 401/403, untrusted link, expiry | integration (failed; no link stored; key absent from DB and export) | PASS (expiry: the docs state no expiry in the response; not exercised) |
+| IC-06 not configured | integration; unit instacart-config | PASS |
+| E2E-01 / E2E-02 | integration ms-flow (real PostgreSQL, commands end to end); browser pieces in ms-sources/ms-groceries | PASS (server-level end to end; not one continuous browser journey) |
+| E2E-03 320/390 px, light/dark, 150/200% text, keyboard | e2e ms-sources/ms-groceries (320 px at 200% text, both themes, dialog focus and Escape); B18 sweep over Groceries with the new controls; ui-screens (Saved links) | PASS (Chromium) — Safari/VoiceOver **NOT RUN** (B8, D24–D26) |
+| SEC-01 another household | integration (link, draft, import, review, confirm, discard: `not_found`, nothing leaked) | PASS |
+| SEC-02 no network, secrets server-side | every new test stubs `fetch`; key absent from DB rows, receipts, change events, export | PASS |
+| SEC-03 malformed provider response / unsupported units | integration (unreadable 200 → uncertain); unit instacart-client (unsupported unit refuses the whole list) | PASS |
+
+**Existing tests changed:** `tests/e2e/ui-screens.spec.ts` also captures the Saved links tab (addition only).
+No test was skipped, deleted or weakened.

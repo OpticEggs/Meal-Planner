@@ -1,0 +1,8 @@
+Import worker (w-import, c048126): url.ts, ip.ts, fetcher.ts, jsonld.ts, ingredient-line.ts; 398 unit tests.
+Decisions: dedup key = host w/o www + non-default port + path w/o trailing slash + sorted non-tracking params; scheme & fragment ignored.
+IP literal hosts refused (incl. 2130706433, 0x7f.1, [::1]); >=2 labels, alpha/xn-- TLD; blocked suffixes local, localhost, internal, home.arpa, arpa, test, invalid, onion, lan, localdomain, intranet, corp, home, example. Control chars refused. IDN kept punycode.
+Public IPv6 must be in 2000::/3 minus 2001::/23, 2001:db8::/32, 3fff::/20; mapped/compat/NAT64/6to4 judged by embedded v4. Strict IPv4 (no leading zeros). Zone ids refused.
+Fetcher: validate -> inflight cap (2, per process, busy) -> resolve -> all first 8 answers public -> pin first. Redirects manual max 3, each re-validated (redirect_refused) and re-resolved. Only 200 success. Headers fixed: User-Agent, Accept, Accept-Encoding gzip/deflate/br. Deadline 10s; streamed decompression cap 2 MiB decoded & received. Content types html/xhtml/ld+json/json; charset utf-8/us-ascii only.
+JSON-LD: indexOf scanner; depth pre-check 64; walks arrays/@graph/mainEntity only (not ItemList); text sanitized; servings only when unambiguous.
+Fractions: non-terminating (thirds etc.) -> requires_review, quantity null. Units T=tbsp t=tsp c=cup; no unit word -> each; unsupported unit word -> review (qty kept).
+Risks: nodeTransport/systemResolver untested (happy-eyeballs autoSelectFamily must not resolve itself; NODE_USE_ENV_PROXY in Node 24 could bypass pinning; getaddrinfo reads /etc/hosts, no abort); per-process limits; strict charset; ref/si removal may merge distinct pages; gzip bomb stops just past 2 MiB.
