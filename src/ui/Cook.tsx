@@ -5,6 +5,8 @@ import { useStore } from "./store";
 import { AlsoNeed } from "./AlsoNeed";
 import { ModalSheet, focusFirst } from "./a11y";
 import { FormAlert } from "./forms";
+import { Steps } from "./Recipes";
+import { PlaceholderTile } from "./Tile";
 
 /** Cook / reheat-and-serve. Opening this records nothing; "Mark cooked" is explicit. */
 export function CookScreen({ night }: { night: string }) {
@@ -21,22 +23,25 @@ export function CookScreen({ night }: { night: string }) {
     <article className="stack" data-testid="cook-view">
       <Link href="/" className="small">‹ Week</Link>
       <span className="chip">{n.dayName} · {isCook ? "Cook" : "Reheat and serve"}</span>
-      <h2 className="h2" data-testid="cook-title">{n.recipe.title}</h2>
+      <div className="row" style={{ alignItems: "flex-start", flexWrap: "nowrap" }}>
+        <PlaceholderTile title={n.recipe.title} large />
+        <h2 className="page-title grow" data-testid="cook-title">{n.recipe.title}</h2>
+      </div>
       <p className="faint small">Recipe version {n.recipe.versionNo} (pinned to this dinner){n.recipe.estimate ? " · times and amounts are estimates" : ""} · {n.recipe.provenance === "fixture" ? "test fixture recipe" : n.recipe.sourceLabel ?? n.recipe.provenance}</p>
       {isCook ? (
         <>
           <div className="section-label">This cooking covers</div>
-          <ul className="small">
+          <ul className="plain small">
             {Object.entries(groupPlates(n.batch.plates)).map(([k, v]) => <li key={k}>{k}: {v}</li>)}
           </ul>
           <div className="section-label">Amounts for the whole batch</div>
-          <ul className="small" data-testid="cook-amounts">
+          <ul className="plain" data-testid="cook-amounts">
             {n.recipe.components.map((cmp: any) => (
               <li key={cmp.key}>
                 <strong>{cmp.name}</strong>
-                <ul>
+                <ul className="amounts">
                   {n.cookAmounts.filter((a: any) => a.componentKey === cmp.key).map((a: any) => (
-                    <li key={a.ingredientKey} className="row between">
+                    <li key={a.ingredientKey}>
                       <span>{a.quantity} {a.unit} {a.name}</span>
                       <AlsoNeed from="cook" ingredientKey={a.ingredientKey} label={a.name} />
                     </li>
@@ -46,13 +51,13 @@ export function CookScreen({ night }: { night: string }) {
             ))}
           </ul>
           <div className="section-label">Plates tonight</div>
-          <ul className="small">
+          <ul className="plain small">
             {n.plates.map((p: any) => (
               <li key={p.memberId + p.kind}>{snapshot.members.find((m: any) => m.id === p.memberId)?.displayName}: {n.recipe.components.map((c: any) => `${c.name} ${p.componentPortions[c.key]}×`).join(", ")}</li>
             ))}
           </ul>
           <div className="section-label">Steps</div>
-          <pre className="instructions">{n.recipe.instructions || "No steps recorded."}</pre>
+          <Steps text={n.recipe.instructions} />
           {n.event.cooked ? (
             <div className="card stack" data-testid="cooked-state">
               <p style={{ margin: 0 }}><strong>Cooked</strong> · recorded by {n.event.cooked.by}, {new Date(n.event.cooked.at).toLocaleString([], { weekday: "short", hour: "numeric", minute: "2-digit" })}</p>
@@ -61,7 +66,7 @@ export function CookScreen({ night }: { night: string }) {
               </button>
             </div>
           ) : (
-            <button className="btn primary" data-testid="mark-cooked" disabled={busy || !writesAllowed} onClick={async () => {
+            <button className="btn primary full big" data-testid="mark-cooked" disabled={busy || !writesAllowed} onClick={async () => {
               setBusy(true);
               const r = await command("RecordCooked", { eventId: n.event.id });
               setBusy(false);
@@ -79,9 +84,9 @@ export function CookScreen({ night }: { night: string }) {
       ) : (
         <>
           <p>Leftovers from {n.event.cookNight}. Serve each plate:</p>
-          <ul className="small">{n.plates.map((p: any) => <li key={p.memberId + p.kind}>{snapshot.members.find((m: any) => m.id === p.memberId)?.displayName}: {n.recipe.components.map((c: any) => `${c.name} ${p.componentPortions[c.key]}×`).join(", ")}</li>)}</ul>
+          <ul className="plain small">{n.plates.map((p: any) => <li key={p.memberId + p.kind}>{snapshot.members.find((m: any) => m.id === p.memberId)?.displayName}: {n.recipe.components.map((c: any) => `${c.name} ${p.componentPortions[c.key]}×`).join(", ")}</li>)}</ul>
           <div className="section-label">Reheat</div>
-          <pre className="instructions" data-testid="reheat-instructions">{n.recipe.reheatInstructions || "No reheat instructions recorded for this recipe."}</pre>
+          {n.recipe.reheatInstructions ? <Steps text={n.recipe.reheatInstructions} testId="reheat-instructions" /> : <p className="faint" data-testid="reheat-instructions">No reheat instructions recorded for this recipe.</p>}
         </>
       )}
       {msg && <p role="status">{msg}</p>}

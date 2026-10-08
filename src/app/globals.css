@@ -1,11 +1,26 @@
-/* Visual reference: the prototype's warm dark palette, restrained amber accent, serif
-   headings and simple cards. Contrast pairs chosen for WCAG AA on the dark surfaces. */
+/* Visual update (UI-VISUAL-UPDATE-PROPOSAL.md): a light theme by default and the original warm dark
+   theme when the phone is in dark mode. Same token names in both; every text/background pair is
+   checked for WCAG AA by tests/unit/theme-contrast.test.ts (4.5:1 text, 3:1 focus outline). */
 :root {
-  --bg: #12110f; --surface: #1c1a17; --card: #24211d; --card-2: #2c2823;
-  --line: rgba(244, 236, 224, 0.14); --text: #f6f1ea; --muted: #c2b6aa; --faint: #a3978b;
-  --amber: #e4a15a; --sage: #8fbf96; --warn: #f0c070; --bad: #f09a88; --sky: #8eb6d4;
-  --radius: 16px; --nav-h: 64px;
-  color-scheme: dark;
+  --page: #ebe6df; --bg: #f7f4ef; --surface: #ffffff; --card: #ffffff; --card-2: #f1ece5;
+  --line: rgba(45, 35, 25, 0.16); --text: #1c1915; --muted: #574e45; --faint: #6b6157;
+  --amber: #9c4f0a; --accent-fill: #a8550d; --on-accent: #ffffff;
+  --sage: #2d6a3a; --warn: #855400; --on-warn: #ffffff; --bad: #a8342a; --sky: #1b66a8;
+  --nav-bg: rgba(255, 255, 255, 0.97); --warn-bg: rgba(133, 84, 0, 0.08);
+  --shadow: 0 1px 2px rgba(40, 30, 20, 0.06), 0 6px 18px rgba(40, 30, 20, 0.07);
+  --radius: 18px; --nav-h: 64px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #0c0b0a; --bg: #12110f; --surface: #1c1a17; --card: #24211d; --card-2: #2c2823;
+    --line: rgba(244, 236, 224, 0.14); --text: #f6f1ea; --muted: #c2b6aa; --faint: #a3978b;
+    --amber: #e4a15a; --accent-fill: #e4a15a; --on-accent: #1b140d;
+    --sage: #8fbf96; --warn: #f0c070; --on-warn: #1a1408; --bad: #f09a88; --sky: #8eb6d4;
+    --nav-bg: rgba(22, 20, 18, 0.98); --warn-bg: rgba(240, 192, 112, 0.1);
+    --shadow: none;
+    color-scheme: dark;
+  }
 }
 * { box-sizing: border-box; }
 /* Sticky header + fixed bottom nav: scrolled-to and keyboard-focused controls must land in
@@ -16,7 +31,7 @@
 html { scroll-padding-top: calc(var(--top-h, 132px) + 8px); scroll-padding-bottom: calc(var(--nav-real-h, var(--nav-h)) + 16px); }
 html[data-header="static"] { scroll-padding-top: 8px; }
 html[data-header="static"] .top { position: relative; }
-html, body { margin: 0; background: #0c0b0a; color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 100%; line-height: 1.45; }
+html, body { margin: 0; background: var(--page); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 100%; line-height: 1.45; }
 button, input, select, textarea { font: inherit; color: inherit; }
 a { color: var(--amber); }
 :focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
@@ -27,12 +42,14 @@ a { color: var(--amber); }
    pushing the page sideways at large text sizes; ordinary words still wrap between words. */
 .app { width: min(560px, 100%); margin: 0 auto; min-height: 100dvh; background: var(--bg); position: relative; overflow-wrap: anywhere; }
 .login { padding: 32px 16px; display: grid; gap: 14px; }
-.top { position: sticky; top: 0; z-index: 20; padding: 12px 16px 8px; background: var(--bg); border-bottom: 1px solid var(--line); }
+.top { position: sticky; top: 0; z-index: 20; padding: 10px 16px 8px; background: var(--bg); border-bottom: 1px solid var(--line); }
 .brand { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .top .brand p { margin: 2px 0 0; }
 .brand > div { min-width: 0; }
-.brand-title { font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; font-weight: 600; font-size: 1.75rem; margin: 0; letter-spacing: -0.02em; }
-.h2 { font-family: Georgia, "Iowan Old Style", serif; font-weight: 600; font-size: 1.35rem; margin: 6px 0; }
+.brand-title { font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; font-weight: 600; font-size: 1.3rem; margin: 0; letter-spacing: -0.01em; }
+/* Screen titles: large, bold, sans, left aligned; each screen opens with one. */
+.page-title { font-size: 2rem; font-weight: 750; letter-spacing: -0.025em; line-height: 1.1; margin: 8px 0 4px; }
+.h2 { font-weight: 700; font-size: 1.35rem; letter-spacing: -0.015em; margin: 6px 0; }
 .pill { border: 1px solid var(--line); background: var(--card); color: var(--muted); border-radius: 999px; padding: 6px 10px; font-size: 0.75rem; }
 .pill.sim { border-color: var(--warn); color: var(--warn); }
 .currency { font-size: 0.78rem; margin-top: 4px; padding: 3px 8px; border-radius: 8px; display: inline-block; }
@@ -41,12 +58,16 @@ a { color: var(--amber); }
 .currency.offline { color: var(--bad); border: 1px solid var(--bad); }
 .screen { padding: 8px 16px calc(var(--nav-real-h, var(--nav-h)) + 32px); }
 .nav { position: fixed; left: 50%; transform: translateX(-50%); bottom: 0; width: min(560px, 100%); z-index: 30; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
-  background: rgba(22, 20, 18, 0.98); border-top: 1px solid var(--line); padding: 6px 4px calc(8px + env(safe-area-inset-bottom)); }
-.nav a { text-align: center; text-decoration: none; color: var(--faint); font-size: 0.8rem; padding: 10px 2px; border-radius: 10px; min-height: 44px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; overflow-wrap: anywhere; hyphens: auto; line-height: 1.15; }
-.nav a.on { color: var(--amber); font-weight: 600; }
-.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; margin: 10px 0; }
+  background: var(--nav-bg); border-top: 1px solid var(--line); padding: 6px 4px calc(8px + env(safe-area-inset-bottom)); }
+.nav a { text-align: center; text-decoration: none; color: var(--faint); font-size: 0.74rem; padding: 6px 0; border-radius: 14px; min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 0; overflow-wrap: anywhere; hyphens: auto; line-height: 1.15; }
+.nav a.on { color: var(--text); font-weight: 650; background: var(--card-2); }
+.nav-icon { display: inline-flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; max-width: 100%; }
+.nav-icon svg { width: 22px; height: 22px; }
+/* In flow (overlapping the icon's corner) so it can never push the tab wider than its column; it wraps under the icon at large text. */
+.nav-icon .nav-count { margin: -6px 0 0 -8px; white-space: nowrap; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; margin: 12px 0; box-shadow: var(--shadow); }
 .card.ok { border-color: var(--sage); }
-.stack { display: grid; gap: 10px; }
+.stack { display: grid; gap: 12px; }
 .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .row.between { justify-content: space-between; }
 .col { display: flex; flex-direction: column; gap: 6px; }
@@ -58,16 +79,17 @@ input, select, textarea { background: var(--card-2); border: 1px solid var(--lin
 input[type="checkbox"], input[type="radio"] { width: auto; min-height: auto; }
 input.tiny { width: 5.5em; }
 .btn { border: 0; border-radius: 12px; padding: 10px 14px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; }
-.btn.primary { background: var(--amber); color: #1b140d; }
+.btn.primary { background: var(--accent-fill); color: var(--on-accent); }
 .btn.line { background: transparent; border: 1px solid var(--line); color: var(--text); }
 .btn.small { padding: 6px 10px; font-size: 0.85rem; min-height: 36px; }
 .btn.full { width: 100%; }
+.btn.big { min-height: 52px; font-size: 1.05rem; border-radius: 14px; }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 .link { background: none; border: 0; color: var(--amber); text-decoration: underline; cursor: pointer; padding: 2px 4px; }
 .muted { color: var(--muted); } .faint { color: var(--faint); } .small { font-size: 0.85rem; }
 .warn { color: var(--warn); } .bad { color: var(--bad); }
-.warnbox { border: 1px solid var(--warn); background: rgba(240, 192, 112, 0.1); color: var(--text); padding: 10px; border-radius: 12px; margin: 8px 0; }
-.section-label { margin: 16px 2px 8px; color: var(--muted); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 400; }
+.warnbox { border: 1px solid var(--warn); background: var(--warn-bg); color: var(--text); padding: 10px; border-radius: 12px; margin: 8px 0; }
+.section-label { margin: 20px 2px 8px; color: var(--muted); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 650; }
 /* B15/B16 forms and states */
 .btn.danger { background: transparent; border: 1px solid var(--bad); color: var(--bad); }
 .grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
@@ -88,12 +110,33 @@ legend { font-weight: 600; margin-bottom: 6px; }
 .stat span { display: block; color: var(--faint); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; }
 .stat strong { display: block; margin-top: 2px; font-size: 0.95rem; }
 .stat em { font-style: normal; color: var(--faint); font-size: 0.72rem; }
-.chip { display: inline-flex; background: var(--amber); color: #1a140e; border-radius: 999px; font-size: 0.72rem; font-weight: 700; padding: 3px 8px; width: fit-content; letter-spacing: 0.04em; text-transform: uppercase; }
-.tonight h2 { font-family: Georgia, serif; font-size: 1.5rem; margin: 8px 0 4px; }
+.chip { display: inline-flex; background: var(--accent-fill); color: var(--on-accent); border-radius: 999px; font-size: 0.72rem; font-weight: 700; padding: 3px 8px; width: fit-content; letter-spacing: 0.04em; text-transform: uppercase; }
+.tonight h2 { font-size: 1.6rem; font-weight: 750; letter-spacing: -0.02em; line-height: 1.15; margin: 10px 0 4px; }
 .nights { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
-.night { display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: start; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 10px; }
+.night { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 12px; align-items: start; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; box-shadow: var(--shadow); }
 .night.is-next { border-color: var(--amber); }
-.night .day { font-family: Georgia, serif; color: var(--muted); padding-top: 2px; }
+.night .day { color: var(--amber); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.night-title { font-size: 1.05rem; font-weight: 650; line-height: 1.25; }
+.meta { color: var(--muted); font-size: 0.85rem; }
+/* Designed placeholder (no photographs exist): the recipe's initial on a soft tile. */
+.tile { width: 56px; height: 56px; border-radius: 14px; background: var(--card-2); border: 1px solid var(--line); display: grid; place-items: center; font-family: Georgia, "Iowan Old Style", serif; font-size: 1.5rem; color: var(--amber); flex: none; }
+.tile.large { width: 72px; height: 72px; font-size: 2rem; border-radius: 18px; }
+.weekchips { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0 2px; }
+.weekchips .chip-btn[aria-current="true"] { border-color: var(--text); font-weight: 650; }
+.estimate-total { font-size: 2.2rem; font-weight: 750; letter-spacing: -0.02em; line-height: 1.1; margin: 4px 0 2px; overflow-wrap: anywhere; }
+.estimate-partial { font-size: 1.35rem; font-weight: 700; line-height: 1.2; margin: 4px 0 2px; }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.seg > .btn { border-radius: 0; border: 0; border-right: 1px solid var(--line); }
+.seg > .btn:last-child { border-right: 0; }
+.statrow { display: grid; grid-template-columns: repeat(auto-fit, minmax(7.5em, 1fr)); gap: 10px; }
+.statrow > div { display: grid; gap: 2px; }
+.statrow span { color: var(--faint); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 650; }
+.statrow strong { font-size: 1.05rem; }
+ol.steps { padding-left: 1.4em; margin: 0; display: grid; gap: 8px; }
+.plain { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.plain.small { gap: 4px; }
+.amounts { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+.amounts li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
 .full-row { grid-column: 1 / -1; }
 .badge { display: inline-block; border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; margin-right: 6px; font-size: 0.75rem; }
 .cov-covered { color: var(--sage); border-color: var(--sage); }
@@ -108,13 +151,13 @@ legend { font-weight: 600; margin-bottom: 6px; }
 .modal-backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.62); }
 .sheet-modal { position: relative; overflow-wrap: anywhere; width: min(560px, 100%); max-height: calc(100dvh - 12px); overflow-y: auto; overflow-x: hidden;
   overscroll-behavior: contain; background: var(--surface); color: var(--text); border: 1px solid var(--line); border-bottom: 0;
-  border-radius: 16px 16px 0 0; outline: none; scroll-padding-top: calc(var(--sheet-head-h, 56px) + 8px); scroll-padding-bottom: 8px; }
+  border-radius: 20px 20px 0 0; outline: none; scroll-padding-top: calc(var(--sheet-head-h, 56px) + 8px); scroll-padding-bottom: 8px; }
 .sheet-modal[data-head="static"] { scroll-padding-top: 8px; }
 .sheet-modal[data-head="static"] .sheet-head { position: relative; }
 .sheet-head { position: sticky; top: 0; z-index: 1; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;
   padding: 12px 16px 10px; background: var(--surface); border-bottom: 1px solid var(--line); }
 .sheet-head > div { min-width: 0; }
-.sheet-title { font-family: Georgia, "Iowan Old Style", serif; font-weight: 600; font-size: 1.2rem; margin: 0; overflow-wrap: anywhere; }
+.sheet-title { font-weight: 700; font-size: 1.25rem; letter-spacing: -0.01em; margin: 0; overflow-wrap: anywhere; }
 .sheet-sub { margin: 2px 0 0; overflow-wrap: anywhere; }
 .sheet-body { display: grid; gap: 10px; padding: 12px 16px calc(16px + env(safe-area-inset-bottom)); min-width: 0; }
 .sheet-body select, .sheet-body input { max-width: 100%; min-width: 0; }
@@ -127,10 +170,10 @@ legend { font-weight: 600; margin-bottom: 6px; }
 @keyframes sheet-in { from { transform: translateY(24px); opacity: 0.6; } to { transform: none; opacity: 1; } }
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 .preview-title { font-size: 1rem; font-weight: 600; margin: 0; }
-.nav-count { margin-top: 2px; min-width: 1.4em; padding: 0 5px; border-radius: 999px; background: var(--warn); color: #1a1408; font-size: 0.72rem; font-weight: 700; line-height: 1.4; text-align: center; }
+.nav-count { margin-top: 2px; min-width: 1.4em; padding: 0 5px; border-radius: 999px; background: var(--warn); color: var(--on-warn); font-size: 0.72rem; font-weight: 700; line-height: 1.4; text-align: center; }
 .tabs { display: flex; gap: 4px; flex-wrap: wrap; }
 .tabs button { background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; min-height: 36px; cursor: pointer; }
-.tabs button.on { border-color: var(--amber); color: var(--amber); }
+.tabs button.on { border-color: var(--text); color: var(--text); font-weight: 650; background: var(--card-2); }
 .option > span { min-width: 0; overflow-wrap: anywhere; }
 .option > span:first-child { flex: 1 1 8em; } /* B18: the cost wraps under a long title at large text */
 .option { width: 100%; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; background: var(--card-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px; cursor: pointer; text-align: left; min-height: 44px; }
@@ -142,7 +185,6 @@ legend { font-weight: 600; margin-bottom: 6px; }
 .recipe > .grow { flex: 1 1 9em; }
 /* The title link is a block, so a title wrapped over several lines is one solid target. */
 .recipe > .grow > a { display: block; }
-.thumb { width: 44px; height: 44px; border-radius: 10px; background: var(--card-2); display: grid; place-items: center; font-family: Georgia, serif; color: var(--amber); flex: none; }
 .alsoneed { display: flex; gap: 6px; flex-wrap: wrap; }
 .alsoneed input { flex: 1; min-width: min(10em, 100%); }
 .instructions { white-space: pre-wrap; font-family: inherit; background: var(--surface); padding: 10px; border-radius: 10px; margin: 0; }

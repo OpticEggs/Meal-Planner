@@ -4,7 +4,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useStore } from "./store";
 import { ModalSheet, focusFirst, nightFallback } from "./a11y";
 import { AlsoNeed } from "./AlsoNeed";
-import { costView, dateLabel, money, nutrient } from "./format";
+import { budgetText, costView, dateLabel, effortText, money, nutrient, preferenceText } from "./format";
+import { PlaceholderTile } from "./Tile";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -14,11 +15,14 @@ export function WeekScreen() {
   const clock = snapshot.clock;
   return (
     <div>
-      <div className="weeknav">
-        <button className="btn line small" onClick={() => setWeekStart(clock.prevWeekStart)} aria-label="Previous week">‹</button>
-        <h2 className="h2" data-testid="week-title" tabIndex={-1}>Week of {dateLabel(clock.weekStart)}</h2>
-        <button className="btn line small" onClick={() => setWeekStart(clock.nextWeekStart)} aria-label="Next week">›</button>
-      </div>
+      <h2 className="page-title" data-testid="week-title" tabIndex={-1}>Week of {dateLabel(clock.weekStart)}</h2>
+      {/* Week movement (visual update): the arrows keep their names; "This week" returns to the current
+          week. Browsing weeks only reads; it never changes a plan. */}
+      <nav className="weekchips" aria-label="Choose a week">
+        <button className="chip-btn" onClick={() => setWeekStart(clock.prevWeekStart)} aria-label="Previous week"><span aria-hidden="true">‹ </span>Previous</button>
+        <button className="chip-btn" onClick={() => setWeekStart(clock.currentWeekStart)} aria-current={clock.weekStart === clock.currentWeekStart ? "true" : undefined}>This week</button>
+        <button className="chip-btn" onClick={() => setWeekStart(clock.nextWeekStart)} aria-label="Next week">Next<span aria-hidden="true"> ›</span></button>
+      </nav>
       {snapshot.week?.adopted ? <AdoptedWeek /> : <ProposalView />}
     </div>
   );
@@ -81,10 +85,11 @@ function ProposalView() {
           <ol className="nights">
             {proposal.content.nights.map((n: any) => (
               <li key={n.night} className="night" data-testid={`proposal-night-${n.night}`}>
-                <span className="day">{dayShort(n.night)}</span>
-                <div>
-                  <strong>{n.kind === "cook" ? proposal.titles[n.recipeVersionId] : n.kind === "leftover" ? `Leftovers: ${proposal.titles[n.recipeVersionId]}` : n.kind === "out" ? "Out" : "Open — needs a decision"}</strong>
-                  <div className="faint small">{n.reasons.join(" · ")}</div>
+                <PlaceholderTile title={n.recipeVersionId ? proposal.titles[n.recipeVersionId] : null} />
+                <div className="grow">
+                  <div className="day">{dayShort(n.night)}</div>
+                  <strong className="night-title">{n.kind === "cook" ? proposal.titles[n.recipeVersionId] : n.kind === "leftover" ? `Leftovers: ${proposal.titles[n.recipeVersionId]}` : n.kind === "out" ? "Out" : "Open — needs a decision"}</strong>
+                  <div className="meta">{n.reasons.join(" · ")}</div>
                 </div>
               </li>
             ))}
@@ -102,7 +107,7 @@ function ProposalView() {
               This draft is not a complete week ({proposal.content.nights.filter((n: any) => n.kind === "open").length} night(s) without a dinner). It stays a draft; add recipes or change the controls, then propose again.
             </p>
           )}
-          <button className="btn primary full" onClick={adopt} disabled={busy || !writesAllowed || proposal.stale || incomplete(proposal)} data-testid="adopt">Use this week</button>
+          <button className="btn primary full big" onClick={adopt} disabled={busy || !writesAllowed || proposal.stale || incomplete(proposal)} data-testid="adopt">Use this week</button>
         </div>
       )}
       <div className="section-label">Also need (this week’s pickup list — no menu required)</div>
@@ -141,20 +146,38 @@ function dayShort(d: string) {
 // After adoption
 
 function AdoptedWeek() {
-  const { snapshot } = useStore();
+  const { snapshot, loadLibrary } = useStore();
   const week = snapshot.week;
   const next = week.nights.find((n: any) => n.night === snapshot.clock.nextDinner);
   const g = snapshot.groceries;
   const [openNight, setOpenNight] = useState<string | null>(null);
+  // Dinner cards show serving cost and the members' recorded preferences from the library read.
+  useEffect(() => {
+    void loadLibrary();
+  }, [loadLibrary]);
+  const outstanding = (g?.lines ?? []).filter((l: any) => ["needs_review", "not_sent_yet", "uncertain", "missing"].includes(l.status)).length;
+  const unresolved = week.nights.filter((n: any) => n.coverage.status === "unresolved" || n.coverage.status === "uncovered");
   return (
     <section aria-label="Accepted week">
       <h2 className="sr-only" id="plan-status">Accepted plan status</h2>
       <p className="status-line" data-testid="status-sentence">{week.statusSentence}</p>
       {next && <NextDinner night={next} />}
-      <div className="stats">
-        <div className="stat"><span>Pickup estimate</span><strong data-testid="pickup-estimate">{costView(g?.summary?.pickupSpending)}</strong></div>
-        <div className="stat"><span>Dinner ingredients</span><strong>{costView(g?.summary?.dinnerIngredientCost)}</strong></div>
-        <div className="stat"><span>Budget</span><strong>{budgetLabel(g?.summary?.budget)}</strong></div>
+      {(outstanding > 0 || unresolved.length > 0) && (
+        <div className="card stack" data-testid="still-to-do">
+          <div className="section-label" style={{ margin: 0 }}>Still to do</div>
+          <ul className="small" style={{ margin: 0, paddingLeft: "1.2em" }}>
+            {unresolved.length > 0 && <li>{unresolved.map((n: any) => n.dayName).join(", ")}: {unresolved.length > 1 ? "need" : "needs"} a decision (use Change below)</li>}
+            {outstanding > 0 && <li><Link href="/groceries" style={{ display: "inline-block" }}>{outstanding} grocery {outstanding === 1 ? "line needs" : "lines need"} someone</Link></li>}
+          </ul>
+        </div>
+      )}
+      <div className="card stack" data-testid="week-groceries-summary">
+        <div className="section-label" style={{ margin: 0 }}>Pickup estimate</div>
+        <p className={g?.summary?.pickupSpending?.complete ? "estimate-total" : "estimate-partial"} data-testid="pickup-estimate">{costView(g?.summary?.pickupSpending)}</p>
+        <div className="statrow">
+          <div><span>Dinner ingredients</span><strong>{costView(g?.summary?.dinnerIngredientCost)}</strong></div>
+          <div><span>Budget</span><strong>{budgetText(g?.summary?.budget)}</strong></div>
+        </div>
       </div>
       <OpenPreviews exceptNight={openNight} />
       <div className="section-label">This week · accepted revision <span data-testid="accepted-revision">{week.acceptedChoiceRevision}</span></div>
@@ -170,18 +193,18 @@ function AdoptedWeek() {
   );
 }
 
-function budgetLabel(b: any) {
-  if (!b || b.status === "unset") return "not set";
-  if (b.status === "unknown") return "unknown (unpriced items)";
-  return `${b.status === "over" ? "over" : "within"} ${money(b.limitMinor)}${b.firm ? " (firm)" : ""}`;
-}
-
 function NextDinner({ night }: { night: any }) {
   const label = night.kind === "cook" ? night.recipe?.title : night.kind === "leftover" ? `Leftovers: ${night.recipe?.title}` : night.kind === "out" ? "Dinner out" : "No dinner chosen";
   return (
     <div className="tonight card" data-testid="next-dinner">
-      <span className="chip">Next dinner · {night.dayName}</span>
-      <h2>{label}</h2>
+      <div className="row" style={{ alignItems: "flex-start", flexWrap: "nowrap" }}>
+        <PlaceholderTile title={night.recipe?.title} large />
+        <div className="grow">
+          <span className="chip">Next dinner · {night.dayName}</span>
+          <h2>{label}</h2>
+          {night.recipe && <div className="meta">{effortText(night.recipe)}{night.recipe.cuisine ? ` · ${night.recipe.cuisine}` : ""}</div>}
+        </div>
+      </div>
       <p className="muted small">
         {night.kind === "cook" && night.batch
           ? `One cooking covers ${new Set(night.batch.plates.filter((p: any) => p.kind === "dinner").map((p: any) => p.night)).size} dinner(s)${night.batch.plates.some((p: any) => p.kind === "lunch") ? " and a reserved lunch" : ""}.`
@@ -190,10 +213,8 @@ function NextDinner({ night }: { night: any }) {
             : ""}
         {night.coverage.status === "unresolved" ? ` Unresolved: ${night.coverage.reason}` : ""}
       </p>
-      <div className="row">
-        {night.kind === "cook" && <Link className="btn primary" href={`/cook/${night.night}`} data-testid="cook-link">Cook</Link>}
-        {night.kind === "leftover" && <Link className="btn primary" href={`/cook/${night.night}`} data-testid="reheat-link">Reheat and serve</Link>}
-      </div>
+      {night.kind === "cook" && <Link className="btn primary full big" href={`/cook/${night.night}`} data-testid="cook-link">Cook</Link>}
+      {night.kind === "leftover" && <Link className="btn primary full big" href={`/cook/${night.night}`} data-testid="reheat-link">Reheat and serve</Link>}
     </div>
   );
 }
@@ -203,10 +224,11 @@ function coverageText(c: any) {
 }
 
 function NightRow({ n, open, onOpen, onClose }: { n: any; open: boolean; onOpen: () => void; onClose: () => void }) {
-  const { command, writesAllowed, snapshot, announce } = useStore();
+  const { command, writesAllowed, snapshot, announce, library } = useStore();
   const [msg, setMsg] = useState<string | null>(null);
   const opener = useRef<HTMLButtonElement>(null);
   const title = n.kind === "cook" ? n.recipe?.title : n.kind === "leftover" ? `Leftovers: ${n.recipe?.title}` : n.kind === "out" ? "Out" : "Open";
+  const lib = n.recipe ? library?.recipes?.find((r: any) => r.recipeId === n.recipe.recipeId) : null;
   async function lock() {
     const r = await command("SetNightLock", { assignmentId: n.assignmentId, expectedRevision: n.revision, locked: !n.locked });
     setMsg(r.status === "accepted" ? null : r.message);
@@ -214,10 +236,20 @@ function NightRow({ n, open, onOpen, onClose }: { n: any; open: boolean; onOpen:
   }
   return (
     <li className={`night ${n.night === snapshot.clock.nextDinner ? "is-next" : ""}`} data-testid={`night-${n.night}`} data-kind={n.kind} data-revision={n.revision}>
-      <span className="day" aria-hidden="true">{n.dayName.slice(0, 3)}</span>
+      <PlaceholderTile title={n.recipe?.title} />
       <div className="grow">
+        <div className="day" aria-hidden="true">{n.dayName.slice(0, 3)}</div>
         <span className="sr-only">{n.dayName}: </span>
-        <strong data-testid={`night-title-${n.night}`}>{title}</strong>
+        <strong className="night-title" data-testid={`night-title-${n.night}`}>{title}</strong>
+        {n.recipe && (n.kind === "cook" || n.kind === "leftover") && (
+          <div className="meta">
+            {n.kind === "cook" ? effortText(n.recipe) : "Reheat and serve"}
+            {n.recipe.cuisine ? ` · ${n.recipe.cuisine}` : ""}
+            {lib ? ` · ${lib.servingCost.complete ? `${money(lib.servingCost.knownMinor)} a serving` : "serving cost unknown"}` : ""}
+            {lib && snapshot.members ? <span className="sr-only"> · </span> : null}
+            {lib && snapshot.members ? <div>{preferenceText(lib.preferences, snapshot.members)}</div> : null}
+          </div>
+        )}
         <div className="faint small">
           <span className={`badge cov-${n.coverage.status}`}>{coverageText(n.coverage)}</span>
           {n.constraint.status !== "ok" && <span className={`badge con-${n.constraint.status}`}>{n.constraint.status === "violated" ? "Conflicts with an exclusion" : "Ingredient info unknown"}</span>}

@@ -36,6 +36,7 @@ const REBASE = "tests/unit/recipe-rebase.test.ts";
 const B9 = "tests/integration/b9.dispatch-overlap.test.ts";
 const B9R = "tests/integration/b9.account-recovery.test.ts";
 const COOK = "tests/integration/cook-records.test.ts";
+const THEME = "tests/unit/theme-contrast.test.ts";
 const B5C = "tests/integration/b5.kroger-connection.test.ts";
 const B5D = "tests/integration/b5.kroger-dispatch.test.ts";
 const B7U = "tests/unit/fdc-normalize.test.ts";
@@ -180,6 +181,11 @@ MUTATIONS.push(
     edits: [["    \"SELECT DISTINCT v.recipe_id FROM cook_records_effective cr JOIN", "    \"SELECT DISTINCT v.recipe_id FROM cook_records cr JOIN"]] },
   { name: "COOK_snapshot_ignores_record", file: "src/server/queries/snapshot.ts", suite: COOK, pattern: "cook-record", expect: [/already cooked, by whom|appended correction/],
     edits: [["cooked: cookedBy.get(ev.id) ?? null", "cooked: null"]] },
+  // Visual update: the contrast check reads the shipped tokens; a too-light or too-dark text token must fail it.
+  { name: "UI_light_text_too_faint", file: "src/app/globals.css", suite: THEME, pattern: "theme contrast", expect: [/theme contrast — light/],
+    edits: [["--muted: #574e45; --faint: #6b6157;", "--muted: #574e45; --faint: #9a8f84;"]] },
+  { name: "UI_dark_text_too_faint", file: "src/app/globals.css", suite: THEME, pattern: "theme contrast", expect: [/theme contrast — dark/],
+    edits: [["--muted: #c2b6aa; --faint: #a3978b;", "--muted: #c2b6aa; --faint: #6f655b;"]] },
   { name: "B9_reset_keeps_sessions", file: "src/server/provision.ts", suite: B9R, pattern: "B9", expect: [/ends that member's sessions/],
     edits: [["  await ctx.internalAdapter.deleteUserSessions(userId);", "  // (mutated) sessions kept"]] },
   { name: "B9_reset_any_account", file: "src/server/provision.ts", suite: B9R, pattern: "B9", expect: [/non-member account/],

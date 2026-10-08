@@ -46,7 +46,7 @@ test("Mark cooked records once; both members see who recorded it; a stale second
   expect(await corrections()).toBe(0);
   await open.click();
   await alex.page.getByRole("dialog", { name: "Correct the cooking record?" }).getByRole("button", { name: "It wasn't cooked" }).click();
-  await expect(alex.page.getByText("Corrected: this dinner is not recorded as cooked.")).toBeVisible();
+  await expect(alex.page.getByTestId("cook-view").getByText("Corrected: this dinner is not recorded as cooked.")).toBeVisible();
   await expect(alex.page.getByRole("button", { name: "Mark cooked" })).toBeFocused(); // focus lands on the control that replaced the record
   expect([await count(), await corrections()]).toEqual([1, 1]); // nothing deleted
   await expect(jon.page.getByRole("button", { name: "Mark cooked" })).toBeVisible(); // Jon sees it live

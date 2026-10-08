@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useStore } from "./store";
 import { money, nutrient } from "./format";
+import { PlaceholderTile } from "./Tile";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -84,7 +85,7 @@ export function ExploreScreen() {
 function RecipeCard({ r, onSave }: { r: any; onSave: () => void }) {
   return (
     <li className="card recipe" data-testid="recipe-card" data-title={r.version.title}>
-      <div className="thumb" aria-hidden="true">{r.version.title.replace("Fixture: ", "").slice(0, 1)}</div>
+      <PlaceholderTile title={r.version.title} />
       <div className="grow">
         <Link href={`/recipes/${r.recipeId}`}><strong>{r.version.title}</strong></Link>
         <div className="faint small">

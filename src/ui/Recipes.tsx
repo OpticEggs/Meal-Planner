@@ -5,6 +5,7 @@ import { useStore } from "./store";
 import { money, nutrient } from "./format";
 import { focusFirst, tabKeyTarget } from "./a11y";
 import { RecipeEditorDialog } from "./RecipeEditor";
+import { PlaceholderTile } from "./Tile";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -59,6 +60,7 @@ export function RecipesScreen() {
       <ul className="recipes" data-testid="recipe-list">
         {list.map((r: any) => (
           <li key={r.recipeId} className="card recipe" data-testid="recipe-row" data-title={r.version.title}>
+            <PlaceholderTile title={r.version.title} />
             <div className="grow">
               <Link href={`/recipes/${r.recipeId}`}><strong>{r.version.title}</strong></Link>
               <div className="faint small">
@@ -94,11 +96,21 @@ export function RecipeDetail({ recipeId }: { recipeId: string }) {
   return (
     <article className="stack" data-testid="recipe-detail">
       <Link href="/recipes" className="small">‹ Our Recipes</Link>
-      <h2 className="h2" data-testid="recipe-title">{v.title}</h2>
+      <div className="row" style={{ alignItems: "flex-start", flexWrap: "nowrap" }}>
+        <PlaceholderTile title={v.title} large />
+        <h2 className="page-title grow" data-testid="recipe-title">{v.title}</h2>
+      </div>
       <p className="faint small">
         Version {v.versionNo} · {v.provenance === "fixture" ? "test fixture" : v.provenance}{v.sourceLabel ? ` · ${v.sourceLabel}` : ""}{v.estimate ? " · amounts/times are estimates" : ""}
       </p>
-      <div className="row">
+      <div className="section-label" style={{ margin: "4px 0 0" }}>To make</div>
+      <div className="statrow" data-testid="recipe-make-stats">
+        <div><span>Time</span><strong>{v.effortMinutes ? `${v.effortMinutes} min${v.estimate ? " (estimate)" : ""}` : "unknown"}</strong></div>
+        <div><span>Effort</span><strong>{v.effortLevel ?? "unknown"}</strong></div>
+        <div><span>Ingredients</span><strong>{new Set(v.ingredients.map((i: any) => i.ingredientKey)).size}</strong></div>
+        <div><span>Leftovers</span><strong>{v.leftoverFriendly ? "leftover-friendly" : "not marked"}</strong></div>
+      </div>
+      <div className="seg" role="group" aria-label="Your feedback">
         {PREFS.map((p) => (
           <button key={p.v} className={`btn small ${r.preferences[me.memberId] === p.v ? "primary" : "line"}`} aria-pressed={r.preferences[me.memberId] === p.v} aria-label={`${p.label} (your feedback)`}
             onClick={() => command("SetRecipePreference", { recipeId, value: r.preferences[me.memberId] === p.v ? null : p.v })}>
@@ -125,14 +137,21 @@ export function RecipeDetail({ recipeId }: { recipeId: string }) {
       {r.nutritionPerPlate.synthetic && <p className="faint small">Nutrition uses synthetic test values.</p>}
       {r.constraint.status !== "ok" && <p className="warnbox">{r.constraint.reasons.join("; ")}</p>}
       <div className="section-label">Ingredients (per portion of each component)</div>
-      <ul className="small">
+      <ul className="plain" data-testid="recipe-ingredients">
         {v.components.map((c: any) => (
-          <li key={c.key}><strong>{c.name}</strong>: {v.ingredients.filter((i: any) => i.componentKey === c.key).map((i: any) => `${i.quantity} ${i.unit} ${i.name}`).join(", ")}</li>
+          <li key={c.key}>
+            <strong>{c.name}</strong>
+            <ul className="amounts small">
+              {v.ingredients.filter((i: any) => i.componentKey === c.key).map((i: any, k: number) => (
+                <li key={k}><span>{i.name}</span><span className="muted">{i.quantity} {i.unit}</span></li>
+              ))}
+            </ul>
+          </li>
         ))}
       </ul>
       <div className="section-label">Steps</div>
-      <pre className="instructions">{v.instructions || "No steps recorded."}</pre>
-      {v.reheatInstructions && (<><div className="section-label">Reheat</div><pre className="instructions">{v.reheatInstructions}</pre></>)}
+      <Steps text={v.instructions} />
+      {v.reheatInstructions && (<><div className="section-label">Reheat</div><Steps text={v.reheatInstructions} /></>)}
       <div className="section-label">Notes</div>
       <ul className="small" data-testid="notes">{r.notes.map((n: any) => <li key={n.id}>{n.body} <span className="faint">— {n.by}</span></li>)}</ul>
       <form className="row" noValidate onSubmit={async (e) => {
@@ -161,4 +180,14 @@ export function RecipeDetail({ recipeId }: { recipeId: string }) {
       <p className="faint small">Editing creates a new version. Dinners already accepted keep the version they were chosen with.</p>
     </article>
   );
+}
+
+/** Steps as a numbered list when the text has several lines; otherwise the text as written. */
+export function Steps({ text, testId }: { text: string | null | undefined; testId?: string }) {
+  const lines = (text ?? "").split(/\n+/).map((x) => x.trim()).filter(Boolean);
+  if (!lines.length) return <p className="faint small" data-testid={testId}>No steps recorded.</p>;
+  if (lines.length === 1) return <p style={{ margin: 0, whiteSpace: "pre-wrap" }} data-testid={testId}>{lines[0]}</p>;
+  // Steps written as "1. …" are shown in the numbered list without repeating their own number.
+  const numbered = lines.every((l) => /^\d+[.)]\s+/.test(l));
+  return <ol className="steps" data-testid={testId}>{lines.map((l, i) => <li key={i}>{numbered ? l.replace(/^\d+[.)]\s+/, "") : l}</li>)}</ol>;
 }

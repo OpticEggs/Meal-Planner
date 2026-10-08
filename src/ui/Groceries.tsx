@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useStore } from "./store";
 import { AlsoNeed } from "./AlsoNeed";
-import { costView, money, qty } from "./format";
+import { budgetText, costView, money, qty } from "./format";
 import { focusFirst } from "./a11y";
 import {
   CartCheckDialog, ConfirmOrderDialog, CorrectReceiptDialog, ProductDialog, RemoveRequestDialog, SubstituteDialog, ValidateSubstituteDialog,
@@ -105,6 +105,8 @@ export function GroceriesScreen() {
       </section>
     );
   const s = g.summary;
+  // Lines whose packages have no recorded price (the same rule a line uses to say "price unknown").
+  const unpriced = g.lines.filter((l: any) => (l.toSend ?? 0) > 0 && (!l.product || !l.price));
   const sendable = g.lines.filter((l: any) => l.toSend === null || l.toSend > 0);
   const approvable = sendable.filter((l: any) => l.product && l.price && l.toSend > 0 && l.unresolved.length === 0 && !l.approval?.valid);
 
@@ -128,13 +130,29 @@ export function GroceriesScreen() {
           <button className="btn line small" onClick={() => { setDelta(null); focusFirst(document.querySelector<HTMLElement>('[data-testid="readiness"]')); }}>Got it</button>
         </div>
       )}
-      <div className="stats">
-        <div className="stat"><span>Pickup estimate</span><strong>{costView(s.pickupSpending)}</strong><em>packages in this purchase</em></div>
-        <div className="stat"><span>Dinner ingredients</span><strong>{costView(s.dinnerIngredientCost)}</strong><em>value used by planned dinners</em></div>
-        <div className="stat"><span>Still to buy</span><strong data-testid="still-to-buy" aria-describedby="still-to-buy-help">{costView(s.outstandingPurchase)}</strong><em id="still-to-buy-help">after what is sent, ordered or received</em></div>
-        <div className="stat"><span>Budget</span><strong>{s.budget.status === "unset" ? "not set" : `${s.budget.status}${s.budget.limitMinor !== null ? ` · ${money(s.budget.limitMinor)}` : ""}`}</strong><em>{s.budget.scope ?? ""}{s.budget.firm ? " · firm" : ""}</em></div>
+      {/* Pickup estimate (visual update): a large figure only when every package has a price; an
+          incomplete estimate stays visibly incomplete and says which lines lack a price. */}
+      <div className="card stack" data-testid="pickup-card">
+        <div className="section-label" style={{ margin: 0 }}>Pickup estimate</div>
+        <p className={s.pickupSpending?.complete ? "estimate-total" : "estimate-partial"} data-testid="groceries-pickup-estimate">{costView(s.pickupSpending)}</p>
+        <p className="faint small" style={{ margin: 0 }}>For the packages in this purchase, at {snapshot.retailer.live ? `${snapshot.retailer.label} prices` : "simulated store prices"}.</p>
+        {!s.pickupSpending?.complete && unpriced.length > 0 && (
+          <details className="small">
+            <summary>Why isn&apos;t this a total?</summary>
+            <p style={{ margin: "6px 0" }}>These lines have no recorded price, so the total can&apos;t be known yet:</p>
+            <ul>{unpriced.map((l: any) => <li key={l.key}>{l.name}</li>)}</ul>
+          </details>
+        )}
+        <details className="small">
+          <summary>How this is estimated</summary>
+          <p style={{ margin: "6px 0 0" }}>Prices are estimates from recorded observations, not a guaranteed checkout total; the store may change final charges.</p>
+        </details>
+        <div className="statrow">
+          <div><span>Dinner ingredients</span><strong>{costView(s.dinnerIngredientCost)}</strong><em className="faint small">value used by planned dinners</em></div>
+          <div><span>Still to buy</span><strong data-testid="still-to-buy" aria-describedby="still-to-buy-help">{costView(s.outstandingPurchase)}</strong><em id="still-to-buy-help" className="faint small">after what is sent, ordered or received</em></div>
+          <div><span>Budget</span><strong>{budgetText(s.budget)}</strong></div>
+        </div>
       </div>
-      <p className="faint small">Prices are estimates from recorded observations, not a guaranteed checkout total; the store may change final charges.</p>
       <div className={`card ${s.ready ? "ok" : ""}`} data-testid="readiness" role="group" aria-label="Grocery readiness" tabIndex={-1}>
         {s.ready ? <strong>Groceries ready to send.</strong> : (
           <>
@@ -258,12 +276,14 @@ function Line({ l, open }: { l: any; open: Opener }) {
         {l.availability && <div className="faint">{l.availability.memberName}: {{ enough: "Have enough", some: `Have some${l.availability.quantity ? ` (${l.availability.quantity} ${l.availability.unit})` : ""}`, need: "Need" }[l.availability.state as string]}</div>}
       </div>
       {l.ingredientKey && l.meal && (
-        <div className="row small" aria-label={`Availability for ${l.name}`}>
-          <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "enough", reviewed: { quantity: l.meal.quantity, unit: l.meal.unit, fingerprint: l.fingerprint } })} aria-label={`Have enough ${l.name}`}>Have enough</button>
+        <div className="row small">
           <input className="tiny" placeholder="amt" value={some} onChange={(e) => setSome(e.target.value)} aria-label={`Amount of ${l.name} on hand (${l.meal.unit})`}
             aria-invalid={msg?.field === "some" ? true : undefined} aria-describedby={msg?.field === "some" ? msgId : undefined} />
-          <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "some", quantity: some || null, unit: some ? l.meal.unit : null }, "some")} aria-label={`Have some ${l.name}`}>Have some</button>
-          <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "need" })} aria-label={`Need ${l.name}`}>Need</button>
+          <div className="seg" role="group" aria-label={`Availability for ${l.name}`}>
+            <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "enough", reviewed: { quantity: l.meal.quantity, unit: l.meal.unit, fingerprint: l.fingerprint } })} aria-label={`Have enough ${l.name}`}>Have enough</button>
+            <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "some", quantity: some || null, unit: some ? l.meal.unit : null }, "some")} aria-label={`Have some ${l.name}`}>Have some</button>
+            <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "need" })} aria-label={`Need ${l.name}`}>Need</button>
+          </div>
         </div>
       )}
       {!l.ingredientKey && (
