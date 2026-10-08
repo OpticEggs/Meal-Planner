@@ -4,6 +4,7 @@ import { useStore } from "./store";
 import { authClient } from "./auth-client";
 import { Staples } from "./Staples";
 import { IngredientNutrition, nutritionStatusText } from "./NutritionMatch";
+import { KrogerConnection } from "./KrogerConnection";
 import { ModalSheet, focusFirst } from "./a11y";
 import { FieldError, FormAlert, fieldProps, focusFirstInvalid, isDecimal, isWhole, type Errors } from "./forms";
 
@@ -38,6 +39,7 @@ export function HouseholdScreen() {
         <div className="section-label">Connections</div>
         <p className="small" data-testid="connection-retailer">Retailer: {snapshot.retailer.live ? snapshot.retailer.label : "Simulated retailer (recording fake)"} — {snapshot.retailer.reason}</p>
         <p className="small" data-testid="connection-nutrition">{nutritionStatusText(snapshot.nutritionLookup)}</p>
+        <KrogerConnection />
       </div>
       <div className="card stack">
         <div className="section-label">Export</div>

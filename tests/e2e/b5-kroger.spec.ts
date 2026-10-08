@@ -64,3 +64,43 @@ test("B5: Kroger connect start follows the command route rules and stores nothin
   expect(await q("SELECT 1 FROM kroger_auth_states")).toHaveLength(0);
   expect(await q("SELECT status, location_id, access_token_sealed FROM kroger_connections WHERE household_id=$1", [fx.householdId])).toEqual([{ status: "not_connected", location_id: "TEST0001", access_token_sealed: null }]);
 });
+
+test("B5 Household card: capabilities stated honestly (never live-verified), refused sign-in announced and focused, store id validated and saved", async ({ browser }) => {
+  const fx = await seed();
+  const jon = await member(browser, "jon", { viewport: { width: 390, height: 800 } });
+  await jon.page.goto("/household?kroger=refused");
+  await expect(jon.page.getByTestId("kroger-connection")).toBeVisible();
+  await expect(jon.page.getByTestId("kroger-alert")).toContainText("not valid for you");
+  await expect(jon.page.getByTestId("kroger-alert")).toBeFocused();
+  await expect(jon.page.getByTestId("kroger-cap-cart")).toContainText("not available");
+  await expect(jon.page.getByTestId("kroger-cap-cart")).toContainText("not live-verified");
+  await expect(jon.page.getByRole("button", { name: "Connect Kroger account" })).toBeDisabled(); // connect is not activated
+  await expect(jon.page.getByTestId("kroger-connection-status")).toContainText("Not connected");
+  const input = jon.page.getByLabel("Kroger store id");
+  await input.fill("12");
+  await jon.page.getByRole("button", { name: "Save store" }).click();
+  await expect(input).toBeFocused();
+  await expect(input).toHaveAccessibleDescription(/8 letters or digits/);
+  await input.fill("TEST0001");
+  await jon.page.getByRole("button", { name: "Save store" }).click();
+  await expect(jon.page.getByTestId("kroger-connection-status")).toContainText("Store: TEST0001");
+  expect(await q("SELECT location_id FROM kroger_connections WHERE household_id=$1", [fx.householdId])).toEqual([{ location_id: "TEST0001" }]);
+  await jon.context.close();
+});
+
+test("B5 Household card at 320 px with 200% text: readable, no sideways scroll, controls hittable", async ({ browser }) => {
+  await seed();
+  const jon = await member(browser, "jon", { viewport: { width: 320, height: 640 }, reducedMotion: "reduce" });
+  await jon.page.goto("/household");
+  await jon.page.addStyleTag({ content: "html { font-size: 200% !important; }" });
+  const card = jon.page.getByTestId("kroger-connection");
+  await card.scrollIntoViewIfNeeded();
+  expect(await jon.page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
+  expect(await card.evaluate((d) => d.getBoundingClientRect().right <= innerWidth + 0.5 && d.scrollWidth <= d.clientWidth + 0.5)).toBe(true);
+  for (const name of ["Save store"]) {
+    const el = card.getByRole("button", { name });
+    await el.scrollIntoViewIfNeeded();
+    expect(await el.evaluate((b) => { const r = b.getBoundingClientRect(); return b.contains(document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2)); }), name).toBe(true);
+  }
+  await jon.context.close();
+});
