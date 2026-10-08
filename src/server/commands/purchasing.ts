@@ -33,8 +33,14 @@ export async function startHandoff(actor: Actor, operationId: string, p: StartHa
     const cycleId = await ensureCycle(c, actor.householdId, p.weekId);
     const w = await c.query("SELECT 1 FROM weeks WHERE id=$1 AND household_id=$2", [p.weekId, actor.householdId]);
     if (!w.rowCount) throw new Reject("not_found", "Week not found");
-    const cyc = await c.query("SELECT projection_summary FROM grocery_cycles WHERE id=$1", [cycleId]);
+    const cyc = await c.query(
+      "SELECT g.projection_summary, g.projection_inputs_revision, h.purchasing_revision FROM grocery_cycles g JOIN households h ON h.id=g.household_id WHERE g.id=$1",
+      [cycleId],
+    );
     const summary = cyc.rows[0].projection_summary;
+    if (Number(cyc.rows[0].projection_inputs_revision) !== Number(cyc.rows[0].purchasing_revision)) {
+      throw new Reject("stale_review", "Household products or prices changed; this list must be reviewed again. Nothing was sent.");
+    }
     if (summary.reviewFingerprint !== p.reviewFingerprint || summary.payloadHash !== p.payloadHash) {
       throw new Reject("stale_review", "Groceries changed since this review. Nothing was sent; review the current list.", {
         currentReviewFingerprint: summary.reviewFingerprint,

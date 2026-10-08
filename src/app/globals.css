@@ -91,3 +91,4 @@ input.tiny { width: 5.5em; }
 .instructions { white-space: pre-wrap; font-family: inherit; background: var(--surface); padding: 10px; border-radius: 10px; margin: 0; }
 details summary { cursor: pointer; }
 .wrap { flex-wrap: wrap; }
+.chip-btn { background: var(--card-2); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; min-height: 36px; cursor: pointer; font-size: 0.85rem; }

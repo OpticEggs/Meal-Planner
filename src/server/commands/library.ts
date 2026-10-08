@@ -176,11 +176,10 @@ export function reviewIngredientCommand(actor: Actor, operationId: string, p: { 
       [actor.householdId, p.key, tags, !!p.allergenInfoKnown, p.name ? String(p.name).slice(0, 80) : null],
     );
     if (!r.rowCount) throw new Reject("not_found", "Ingredient not found");
-    const weeks = await c.query("SELECT id FROM weeks WHERE household_id=$1 AND accepted_choice_revision > 0", [actor.householdId]);
     return {
       status: "accepted", result: {},
       change: { summary: { type: "ingredient", text: `${actor.displayName} reviewed ingredient ${p.key}` } },
-      recomputeWeeks: weeks.rows.map((w) => w.id),
+      purchasingInputsChanged: true,
     };
   });
 }

@@ -57,7 +57,13 @@ export function GroceriesScreen() {
   }, [g, lastChange]);
 
   if (!snapshot) return <p className="muted">Loading…</p>;
-  if (!g) return <p className="muted">Adopt a week to see its groceries.</p>;
+  if (!g)
+    return (
+      <section aria-label="Groceries">
+        <p className="muted">Nothing on this pickup list yet. Add what you need — dinners don’t have to be chosen first.</p>
+        <AlsoNeed from="groceries" />
+      </section>
+    );
   const s = g.summary;
   const sendable = g.lines.filter((l: any) => l.toSend === null || l.toSend > 0);
   const approvable = sendable.filter((l: any) => l.product && l.price && l.toSend > 0 && l.unresolved.length === 0 && !l.approval?.valid);
@@ -248,7 +254,7 @@ function Transfers() {
 function Order() {
   const { snapshot, command } = useStore();
   const g = snapshot.groceries;
-  const [lines, setLines] = useState<{ ingredientKey: string | null; name: string; packages: number }[] | null>(null);
+  const [lines, setLines] = useState<{ ingredientKey: string | null; productId?: string | null; name: string; packages: number }[] | null>(null);
   const [unknown, setUnknown] = useState(false);
   const [pickup, setPickup] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
@@ -259,10 +265,38 @@ function Order() {
         <p className="small">Confirmed by {g.order.confirmedBy}{g.order.pickupAt ? ` · pickup ${new Date(g.order.pickupAt).toLocaleString()}` : " · pickup time not recorded (availability unresolved)"}{g.order.contentsKnown ? "" : " · contents not listed — cannot show what was included"}</p>
         <ul className="small">
           {g.order.lines.map((l: any) => {
-            const got = l.receipts.reduce((a: number, r: any) => a + r.packages, 0);
+            const got = l.receipts.filter((r: any) => !r.correctedBy).reduce((a: number, r: any) => a + r.packages, 0);
             return (
               <li key={l.id} data-testid={`order-line-${l.ingredientKey ?? l.name}`}>
-                {l.name} ×{l.packages} {l.receipts.length > 0 && <span className="faint">({l.receipts.map((r: any) => `${r.packages} ${r.state}`).join(", ")})</span>}
+                {l.name} ×{l.packages}{l.packageQty ? ` (${l.packageQty} ${l.packageUnit} each)` : l.productId ? "" : " (product not recorded)"}
+                {l.receipts.length > 0 && (
+                  <ul className="small">
+                    {l.receipts.map((r: any) => (
+                      <li key={r.id} className={r.correctedBy ? "faint" : ""}>
+                        {r.packages} {r.state}{r.substituteText ? `: ${r.substituteText}` : ""}{r.correctsId ? " (correction)" : ""}{r.correctedBy ? " — corrected later" : ""}
+                        {r.state === "substituted" && !r.correctedBy && (r.validation ? ` — ${r.validation.suitable ? `works (${r.validation.quantity} ${r.validation.unit})` : "does not work"}` : (
+                          <span className="row">
+                            <button className="btn line small" onClick={() => {
+                              const amt = prompt(`How much ${r.substituteText} arrived? (number and unit, e.g. "8 oz")`);
+                              const m = amt?.trim().match(/^(\d+(?:\.\d+)?)\s*(\S+)$/);
+                              if (m) void command("ValidateSubstitution", { receiptId: r.id, suitable: true, quantity: m[1], unit: m[2] });
+                            }}>It works</button>
+                            <button className="btn line small" onClick={() => command("ValidateSubstitution", { receiptId: r.id, suitable: false })}>Doesn’t work</button>
+                          </span>
+                        ))}
+                        {!r.correctedBy && (
+                          <button className="link small" onClick={() => {
+                            const st = prompt("Correct to: received, missing or substituted?", r.state === "missing" ? "received" : "missing");
+                            if (st === "received" || st === "missing" || st === "substituted") {
+                              const sub = st === "substituted" ? prompt("Substituted with?") ?? "" : undefined;
+                              void command("RecordReceipt", { orderLineId: l.id, state: st, packages: r.packages, substituteText: sub, correctsReceiptId: r.id });
+                            }
+                          }}>correct</button>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
                 {got < l.packages && (
                   <span className="row">
                     <button className="btn line small" onClick={() => command("RecordReceipt", { orderLineId: l.id, state: "received", packages: l.packages - got })}>Received</button>
@@ -282,8 +316,18 @@ function Order() {
   }
   const sentLines = () => {
     const acc = new Map<string, number>();
-    for (const b of g.batches.filter((b: any) => b.status === "acknowledged")) for (const i of b.payload) acc.set(i.ingredientKey, (acc.get(i.ingredientKey) ?? 0) + i.packages);
-    return [...acc].map(([k, n]) => ({ ingredientKey: k, name: snapshot.ingredients.find((i: any) => i.key === k)?.name ?? k, packages: n }));
+    const refOf = new Map<string, string>();
+    for (const b of g.batches.filter((b: any) => b.status === "acknowledged")) {
+      for (const i of b.payload) {
+        acc.set(i.ingredientKey, (acc.get(i.ingredientKey) ?? 0) + i.packages);
+        refOf.set(i.ingredientKey, i.productRef);
+      }
+    }
+    // The confirmed product is the one transferred, never inferred from today's mapping.
+    return [...acc].map(([k, n]) => ({
+      ingredientKey: k, productId: g.products.find((p: any) => p.ref === refOf.get(k))?.id ?? null,
+      name: snapshot.ingredients.find((i: any) => i.key === k)?.name ?? k, packages: n,
+    }));
   };
   return (
     <div className="card stack" data-testid="confirm-order">

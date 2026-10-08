@@ -39,11 +39,10 @@ export function updateSettingsCommand(actor: Actor, operationId: string, p: Sett
     } catch (e) {
       throw new Reject("invalid", `Invalid setting: ${(e as Error).message}`);
     }
-    const weeks = await c.query("SELECT id FROM weeks WHERE household_id=$1 AND accepted_choice_revision > 0", [actor.householdId]);
     return {
       status: "accepted", result: {},
       change: { summary: { type: "settings", text: `${actor.displayName} updated household settings` } },
-      recomputeWeeks: weeks.rows.map((w) => w.id), // budget status may change; selected dinners never do
+      purchasingInputsChanged: true, // budget status may change everywhere; selected dinners never do
     };
   });
 }

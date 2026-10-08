@@ -162,7 +162,9 @@ export async function recomputeProjection(c: Db, householdId: string, weekId: st
   const week = await c.query("SELECT accepted_choice_revision FROM weeks WHERE id=$1", [weekId]);
   const cyc = await c.query(
     `UPDATE grocery_cycles SET projection_revision = projection_revision + 1, projection_accepted_revision=$2,
-       projection_summary=$3 WHERE id=$1 RETURNING projection_revision`,
+       projection_summary=$3,
+       projection_inputs_revision=(SELECT purchasing_revision FROM households WHERE id=household_id)
+     WHERE id=$1 RETURNING projection_revision`,
     [
       cycleId,
       week.rows[0].accepted_choice_revision,

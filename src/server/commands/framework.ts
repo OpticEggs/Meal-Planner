@@ -39,6 +39,9 @@ export interface HandlerOutcome {
   change?: { summary: Record<string, unknown>; weekId?: string | null };
   /** Weeks whose grocery projection must be recomputed in this transaction. */
   recomputeWeeks?: string[];
+  /** Household-wide purchasing inputs (products, mappings, prices, budget) changed: bump the
+   *  purchasing revision and recompute every grocery cycle of the household. */
+  purchasingInputsChanged?: boolean;
 }
 
 export class Reject extends Error {
@@ -98,8 +101,14 @@ export async function runCommand(
     if (outcome.status === "rejected") {
       await c.query("ROLLBACK TO SAVEPOINT cmd");
     } else {
-      for (const weekId of new Set(outcome.recomputeWeeks ?? [])) {
-        await recomputeProjection(c, actor.householdId, weekId);
+      if (outcome.purchasingInputsChanged) {
+        await c.query("UPDATE households SET purchasing_revision = purchasing_revision + 1 WHERE id=$1", [actor.householdId]);
+        const cycles = await c.query("SELECT week_id FROM grocery_cycles WHERE household_id=$1", [actor.householdId]);
+        for (const r of cycles.rows) await recomputeProjection(c, actor.householdId, r.week_id);
+      } else {
+        for (const weekId of new Set(outcome.recomputeWeeks ?? [])) {
+          await recomputeProjection(c, actor.householdId, weekId);
+        }
       }
       if (outcome.change) {
         const u = await c.query("UPDATE households SET update_seq = update_seq + 1 WHERE id=$1 RETURNING update_seq", [actor.householdId]);

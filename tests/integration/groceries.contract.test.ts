@@ -388,17 +388,25 @@ describe("X09 capture after confirmation", () => {
     expect(await q("SELECT id FROM household_requests")).toEqual(before);
     const r2 = await captureHouseholdNeedCommand(jon, op(), { weekId: fx.weekId, text: "Plain Greek yogurt", from: "week", addAnother: true });
     expect(r2.status === "accepted" && r2.result.kind).toBe("extra");
+    // Correction F07 (review of 89f3ea9): this assertion used to expect the extra inside the
+    // already-confirmed pickup. The X09 pass condition is unchanged; the extra now goes to the
+    // next open pickup, and the confirmed order is untouched.
+    expect(r2.status === "accepted" && r2.result.destination).toMatchObject({ weekStart: "2026-10-19", reason: "next_pickup" });
     const y = await line(fx.weekId, "greek_yogurt");
     expect(y.ordered).toBe(1);
-    expect(y.toSend).toBe(1);
-    expect(y.status).toBe("not_sent_yet");
+    expect(y.toSend).toBe(0);
+    const nextWeek = (await q<{ id: string }>("SELECT id FROM weeks WHERE household_id=$1 AND week_start='2026-10-19'", [fx.householdId]))[0];
+    const yn = await line(nextWeek.id, "greek_yogurt");
+    expect(yn.requests.map((r: any) => r.kind)).toEqual(["extra"]);
+    expect(yn.toSend).toBe(1);
     // Received and ordered views of the same package are not double counted.
     const ol = (await q<{ id: string }>("SELECT id FROM order_lines WHERE ingredient_key='greek_yogurt'"))[0];
     await recordReceiptCommand(jon, op(), { orderLineId: ol.id, state: "received", packages: 1 });
     const y2 = await line(fx.weekId, "greek_yogurt");
     expect(y2.ordered).toBe(1);
     expect(y2.received).toBe(1);
-    expect(y2.toSend).toBe(1);
+    expect(y2.toSend).toBe(0);
+    expect((await line(nextWeek.id, "greek_yogurt")).toSend).toBe(1);
   });
 });
 

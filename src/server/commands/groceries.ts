@@ -1,7 +1,10 @@
 import type { Db } from "../db/pool";
 import { Reject, runCommand, type Actor } from "./framework";
 import { ensureCycle } from "../groceries/recompute";
-import { weekById } from "../queries/load";
+import { loadHousehold, weekById } from "../queries/load";
+import { ensureWeek } from "./plan";
+import { addDays, localDate, weekStartOf } from "@/domain/dates";
+import { nowInstant } from "../env";
 import type { RequirementLine } from "@/domain/groceries/projection";
 import { KNOWN_UNITS, convert, normalizeUnit } from "@/domain/units";
 
@@ -17,23 +20,44 @@ export async function currentLines(c: Db, cycleId: string): Promise<RequirementL
 }
 
 export interface CapturePayload {
-  weekId: string;
+  /** The week the member is looking at; omitted = the household's current week. A menu does
+   *  not need to be adopted: the pickup list exists independently of the dinners. */
+  weekId?: string | null;
+  weekStart?: string | null;
   text: string;
   ingredientKey?: string | null;
   kind?: "usual" | "extra";
   packages?: number | null;
   from: "week" | "groceries" | "cook" | "household";
   addAnother?: boolean;
+  /** Save `packages` as this household's usual amount for the item. */
+  rememberUsual?: boolean;
 }
 
-/** "Also need": one fast shared capture. A staple tap means the usual amount; repeated
- *  usual taps merge with contributors kept; an explicit extra stays extra. */
+async function orderedIn(c: Db, cycleId: string, key: string | null) {
+  if (!key) return [];
+  return (await c.query(`SELECT ol.name, ol.packages FROM orders o JOIN order_lines ol ON ol.order_id=o.id WHERE o.cycle_id=$1 AND ol.ingredient_key=$2`, [cycleId, key])).rows;
+}
+
+/** "Also need": one fast shared capture. A staple tap means the household's usual amount;
+ *  repeated usual taps merge with contributors kept; an explicit extra stays extra. Once a
+ *  pickup's order is confirmed, new needs go to the next open pickup — never into the
+ *  confirmed order, and never by changing the menu. */
 export function captureHouseholdNeedCommand(actor: Actor, operationId: string, p: CapturePayload) {
   return runCommand(actor, "CaptureHouseholdNeed", operationId, p, async (c) => {
     const text = String(p.text ?? "").trim().slice(0, 200);
     if (!text) throw new Reject("invalid", "Say what you need");
     if (!["week", "groceries", "cook", "household"].includes(p.from)) throw new Reject("invalid", "Unknown capture point");
-    const cycleId = await cycleFor(c, actor.householdId, p.weekId);
+    // Starting week: the one shown, or the household's current week.
+    let start;
+    if (p.weekId) {
+      start = await weekById(c, actor.householdId, p.weekId);
+      if (!start) throw new Reject("not_found", "Week not found");
+    } else {
+      const h = await loadHousehold(c, actor.householdId);
+      start = await ensureWeek(c, actor.householdId, p.weekStart ?? weekStartOf(localDate(nowInstant(), h.timezone)));
+    }
+    const startCycle = await ensureCycle(c, actor.householdId, start.id);
     let key = p.ingredientKey ?? null;
     if (key) {
       const ok = await c.query("SELECT 1 FROM ingredients WHERE household_id=$1 AND key=$2", [actor.householdId, key]);
@@ -46,39 +70,69 @@ export function captureHouseholdNeedCommand(actor: Actor, operationId: string, p
     let packages = p.packages ?? null;
     if (packages !== null && (!Number.isInteger(packages) || packages < 1 || packages > 50)) throw new Reject("invalid", "Packages must be 1-50");
 
-    // After a confirmed order, look for the item in that order before creating a duplicate.
-    const order = await c.query(
-      `SELECT ol.name, ol.packages FROM orders o JOIN order_lines ol ON ol.order_id=o.id WHERE o.cycle_id=$1 AND ol.ingredient_key=$2`,
-      [cycleId, key],
-    );
-    if (key && order.rowCount && kind === "usual") {
-      if (!p.addAnother) {
-        throw new Reject("already_in_order", `${order.rows[0].name} is already in your confirmed order (${order.rows[0].packages}). Add another?`, {
-          inOrder: order.rows.map((r) => ({ name: r.name, packages: r.packages })),
-        });
+    // Destination: the first pickup (from the shown week on) without a confirmed order.
+    let dest = start;
+    let destCycle = startCycle;
+    let routed = false;
+    for (let i = 0; i < 8; i++) {
+      const confirmed = await c.query("SELECT 1 FROM orders WHERE cycle_id=$1", [destCycle]);
+      if (!confirmed.rowCount) break;
+      // Before creating a next-pickup duplicate, check whether it is already expected.
+      const inOrder = await orderedIn(c, destCycle, key);
+      if (inOrder.length && kind === "usual") {
+        if (!p.addAnother) {
+          throw new Reject("already_in_order", `${inOrder[0].name} is already in your confirmed order (${inOrder[0].packages}). Add another?`, {
+            inOrder: inOrder.map((r) => ({ name: r.name, packages: r.packages })),
+          });
+        }
+        kind = "extra";
+        packages = packages ?? 1;
       }
-      kind = "extra";
-      packages = packages ?? 1;
+      dest = await ensureWeek(c, actor.householdId, addDays(dest.weekStart, 7));
+      destCycle = await ensureCycle(c, actor.householdId, dest.id);
+      routed = true;
+    }
+
+    // Remembered staple: usual amount (and the product chosen for the ingredient).
+    if (key && kind === "usual") {
+      const staple = await c.query("SELECT usual_packages FROM household_staples WHERE household_id=$1 AND ingredient_key=$2", [actor.householdId, key]);
+      if (p.rememberUsual && packages) {
+        await c.query(
+          `INSERT INTO household_staples(household_id, ingredient_key, usual_packages, product_id, updated_by)
+           VALUES ($1,$2,$3,(SELECT product_id FROM product_mappings WHERE household_id=$1 AND ingredient_key=$2),$4)
+           ON CONFLICT (household_id, ingredient_key) DO UPDATE SET usual_packages=EXCLUDED.usual_packages, product_id=EXCLUDED.product_id,
+             updated_by=EXCLUDED.updated_by, updated_at=now()`,
+          [actor.householdId, key, packages, actor.memberId],
+        );
+      } else if (staple.rowCount) {
+        packages = packages ?? staple.rows[0].usual_packages;
+      } else {
+        await c.query(
+          `INSERT INTO household_staples(household_id, ingredient_key, usual_packages, product_id, updated_by)
+           VALUES ($1,$2,$3,(SELECT product_id FROM product_mappings WHERE household_id=$1 AND ingredient_key=$2),$4) ON CONFLICT DO NOTHING`,
+          [actor.householdId, key, packages ?? 1, actor.memberId],
+        );
+      }
     }
 
     let requestId: string;
     let merged = false;
     if (kind === "usual" && key) {
-      const existing = await c.query("SELECT id FROM household_requests WHERE cycle_id=$1 AND ingredient_key=$2 AND kind='usual' AND state='active' LIMIT 1", [cycleId, key]);
+      const existing = await c.query("SELECT id FROM household_requests WHERE cycle_id=$1 AND ingredient_key=$2 AND kind='usual' AND state='active' LIMIT 1", [destCycle, key]);
       if (existing.rowCount) {
         requestId = existing.rows[0].id;
         merged = true;
       } else {
         const ins = await c.query(
           "INSERT INTO household_requests(household_id, cycle_id, ingredient_key, text, kind, packages, captured_from) VALUES ($1,$2,$3,$4,'usual',$5,$6) RETURNING id",
-          [actor.householdId, cycleId, key, text, packages, p.from],
+          [actor.householdId, destCycle, key, text, packages, p.from],
         );
         requestId = ins.rows[0].id;
       }
     } else {
       const ins = await c.query(
         "INSERT INTO household_requests(household_id, cycle_id, ingredient_key, text, kind, packages, captured_from) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING id",
-        [actor.householdId, cycleId, key, text, kind, kind === "extra" ? packages ?? 1 : packages, p.from],
+        [actor.householdId, destCycle, key, text, kind, kind === "extra" ? packages ?? 1 : packages, p.from],
       );
       requestId = ins.rows[0].id;
     }
@@ -89,9 +143,12 @@ export function captureHouseholdNeedCommand(actor: Actor, operationId: string, p
     );
     return {
       status: "accepted",
-      result: { requestId, merged, matchedIngredient: key, kind },
-      change: { weekId: p.weekId, summary: { type: "request", text: `${actor.displayName} added ${text}${kind === "extra" ? " (extra)" : ""}` } },
-      recomputeWeeks: [p.weekId],
+      result: {
+        requestId, merged, matchedIngredient: key, kind,
+        destination: { weekId: dest.id, weekStart: dest.weekStart, reason: routed ? "next_pickup" : "this_pickup" },
+      },
+      change: { weekId: dest.id, summary: { type: "request", text: `${actor.displayName} added ${text}${kind === "extra" ? " (extra)" : ""}${routed ? " to the next pickup" : ""}` } },
+      recomputeWeeks: [dest.id],
     };
   });
 }
@@ -194,8 +251,8 @@ export function addProductCommand(
     );
     const productId = ins.rows[0].id;
     if (p.priceMinor != null) {
-      await c.query("INSERT INTO price_observations(household_id, product_id, amount_minor, source, store_label) VALUES ($1,$2,$3,'manual',NULL)", [
-        actor.householdId, productId, p.priceMinor,
+      await c.query("INSERT INTO price_observations(household_id, product_id, amount_minor, source, store_label, observed_at) VALUES ($1,$2,$3,'manual',NULL,$4)", [
+        actor.householdId, productId, p.priceMinor, nowInstant(),
       ]);
     }
     await c.query(
@@ -206,7 +263,7 @@ export function addProductCommand(
     return {
       status: "accepted", result: { productId, unitKnown: unit ? KNOWN_UNITS.includes(unit) : null },
       change: { weekId: p.weekId, summary: { type: "product", text: `${actor.displayName} chose ${name}` } },
-      recomputeWeeks: [p.weekId],
+      purchasingInputsChanged: true,
     };
   });
 }
@@ -220,7 +277,7 @@ export function chooseProductCommand(actor: Actor, operationId: string, p: { wee
        ON CONFLICT (household_id, ingredient_key) DO UPDATE SET product_id=EXCLUDED.product_id, decided_by=EXCLUDED.decided_by, decided_at=now(), suitable=true`,
       [actor.householdId, p.ingredientKey, p.productId, actor.memberId],
     );
-    return { status: "accepted", result: {}, change: { weekId: p.weekId, summary: { type: "product", text: `${actor.displayName} chose ${pr.rows[0].name}` } }, recomputeWeeks: [p.weekId] };
+    return { status: "accepted", result: {}, change: { weekId: p.weekId, summary: { type: "product", text: `${actor.displayName} chose ${pr.rows[0].name}` } }, purchasingInputsChanged: true };
   });
 }
 
@@ -229,8 +286,8 @@ export function recordPriceCommand(actor: Actor, operationId: string, p: { weekI
     if (!Number.isInteger(p.amountMinor) || p.amountMinor < 0) throw new Reject("invalid", "Price must be whole cents");
     const pr = await c.query("SELECT name FROM products WHERE id=$1 AND household_id=$2", [p.productId, actor.householdId]);
     if (!pr.rowCount) throw new Reject("not_found", "Product not found");
-    await c.query("INSERT INTO price_observations(household_id, product_id, amount_minor, source) VALUES ($1,$2,$3,'manual')", [actor.householdId, p.productId, p.amountMinor]);
-    return { status: "accepted", result: {}, change: { weekId: p.weekId, summary: { type: "price", text: `${actor.displayName} entered a price for ${pr.rows[0].name}` } }, recomputeWeeks: [p.weekId] };
+    await c.query("INSERT INTO price_observations(household_id, product_id, amount_minor, source, observed_at) VALUES ($1,$2,$3,'manual',$4)", [actor.householdId, p.productId, p.amountMinor, nowInstant()]);
+    return { status: "accepted", result: {}, change: { weekId: p.weekId, summary: { type: "price", text: `${actor.displayName} entered a price for ${pr.rows[0].name}` } }, purchasingInputsChanged: true };
   });
 }
 

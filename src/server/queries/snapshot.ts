@@ -62,6 +62,14 @@ export async function householdSnapshot(actor: Actor, weekStartParam?: string | 
       targets: await targets(c, actor.householdId),
       exclusions,
       ingredients: [...ingredients.values()],
+      staples: (
+        await c.query(
+          `SELECT s.ingredient_key, s.usual_packages, i.name, p.name AS product_name FROM household_staples s
+           JOIN ingredients i ON i.household_id=s.household_id AND i.key=s.ingredient_key LEFT JOIN products p ON p.id=s.product_id
+           WHERE s.household_id=$1 ORDER BY i.name`,
+          [actor.householdId],
+        )
+      ).rows.map((r) => ({ ingredientKey: r.ingredient_key, name: r.name, usualPackages: r.usual_packages, productName: r.product_name })),
     };
 
     const proposalsQ = week
@@ -80,7 +88,8 @@ export async function householdSnapshot(actor: Actor, weekStartParam?: string | 
         proposals: proposalsQ.rows.map((p) => proposalView(p, rv, 0)),
         previews: [],
         deferred: [],
-        groceries: null,
+        // The pickup list exists before (and independently of) an adopted menu.
+        groceries: week ? await groceriesFor(c, actor.householdId, week.id, 0) : null,
         recipeVersions: Object.fromEntries([...rv].map(([id, r]) => [id, recipeSummary(r)])),
       };
     }
@@ -174,11 +183,39 @@ export async function householdSnapshot(actor: Actor, weekStartParam?: string | 
       });
     }
 
-    // Groceries: the stored projection must belong to exactly this accepted revision.
-    const cyc = await c.query("SELECT * FROM grocery_cycles WHERE week_id=$1", [week.id]);
+    const groceries = await groceriesFor(c, actor.householdId, week.id, week.acceptedChoiceRevision);
+    if (!groceries) throw new IncoherentSnapshot("accepted week has no grocery projection");
+    const summary = groceries.summary;
+    const order = groceries.order;
+    const chosen = mealsChosen(coverage, constraints.filter((x) => x.status === "violated").map((x) => x.night));
+
+    return {
+      ...base,
+      week: {
+        id: week.id, weekStart, acceptedChoiceRevision: week.acceptedChoiceRevision, adopted: true, adoptedAt: week.adoptedAt,
+        adoptedBy: members.find((m) => m.id === week.adoptedBy)?.displayName ?? null, nights, mealsChosen: chosen,
+        statusSentence: statusSentence(nights, chosen, summary, order !== null),
+      },
+      proposals: proposalsQ.rows.map((p) => proposalView(p, recipes, week.acceptedChoiceRevision)),
+      previews,
+      deferred,
+      groceries,
+      recipeVersions: Object.fromEntries([...recipes].map(([id, r]) => [id, recipeSummary(r)])),
+    };
+  });
+}
+
+
+async function groceriesFor(c: Db, householdId: string, weekId: string, acceptedRevision: number) {
+    const cyc = await c.query("SELECT * FROM grocery_cycles WHERE week_id=$1", [weekId]);
     const cycle = cyc.rows[0];
-    if (!cycle || cycle.projection_accepted_revision !== week.acceptedChoiceRevision) {
-      throw new IncoherentSnapshot(`projection revision ${cycle?.projection_accepted_revision} does not match accepted revision ${week.acceptedChoiceRevision}`);
+    if (!cycle || (acceptedRevision === 0 && cycle.projection_revision === 0)) return null; // nothing captured yet
+    const hhRev = (await c.query("SELECT purchasing_revision FROM households WHERE id=$1", [householdId])).rows[0].purchasing_revision;
+    // The stored projection must belong to exactly this accepted revision AND these purchasing inputs.
+    if (cycle.projection_accepted_revision !== acceptedRevision || Number(cycle.projection_inputs_revision) !== Number(hhRev)) {
+      throw new IncoherentSnapshot(
+        `projection (accepted ${cycle.projection_accepted_revision}, inputs ${cycle.projection_inputs_revision}) does not match week ${acceptedRevision} / inputs ${hhRev}`,
+      );
     }
     const lines: RequirementLine[] = (await c.query("SELECT line FROM requirement_lines WHERE cycle_id=$1 ORDER BY ingredient_key", [cycle.id])).rows.map((r) => r.line);
     const batches = (
@@ -193,41 +230,29 @@ export async function householdSnapshot(actor: Actor, weekStartParam?: string | 
       `SELECT o.*, m.display_name FROM orders o JOIN members m ON m.id=o.confirmed_by WHERE o.cycle_id=$1 ORDER BY o.confirmed_at DESC LIMIT 1`,
       [cycle.id],
     );
-    let order = null;
+    let order: any = null;
     if (orderQ.rowCount) {
       const o = orderQ.rows[0];
       const ol = await c.query(
-        `SELECT ol.*, COALESCE((SELECT json_agg(json_build_object('state', r.state, 'packages', r.packages, 'substituteText', r.substitute_text) ORDER BY r.observed_at)
+        `SELECT ol.*, COALESCE((SELECT json_agg(json_build_object('id', r.id, 'state', r.state, 'packages', r.packages, 'substituteText', r.substitute_text,
+             'correctsId', r.corrects_id, 'correctedBy', (SELECT x.id FROM receipt_observations x WHERE x.corrects_id=r.id),
+             'validation', (SELECT json_build_object('suitable', v.suitable, 'quantity', v.quantity, 'unit', v.unit) FROM substitution_validations v
+               WHERE v.receipt_id=r.id ORDER BY v.observed_at DESC LIMIT 1)) ORDER BY r.observed_at)
            FROM receipt_observations r WHERE r.order_line_id=ol.id), '[]') AS receipts FROM order_lines ol WHERE ol.order_id=$1 ORDER BY ol.name`,
         [o.id],
       );
       order = {
         id: o.id, confirmedBy: o.display_name, confirmedAt: o.confirmed_at.toISOString(), contentsKnown: o.contents_known,
         pickupAt: o.pickup_at?.toISOString() ?? null, note: o.note,
-        lines: ol.rows.map((l) => ({ id: l.id, ingredientKey: l.ingredient_key, name: l.name, packages: l.packages, receipts: l.receipts })),
+        lines: ol.rows.map((l) => ({ id: l.id, ingredientKey: l.ingredient_key, productId: l.product_id, packageQty: l.package_qty, packageUnit: l.package_unit, name: l.name, packages: l.packages, receipts: l.receipts })),
       };
     }
-    const productsQ = await c.query("SELECT id, name, ingredient_key, package_qty, package_unit, retailer, fixture FROM products WHERE household_id=$1 ORDER BY name", [actor.householdId]);
-    const summary = cycle.projection_summary;
-    const chosen = mealsChosen(coverage, constraints.filter((x) => x.status === "violated").map((x) => x.night));
-
+    const productsQ = await c.query("SELECT id, product_ref, name, ingredient_key, package_qty, package_unit, retailer, fixture FROM products WHERE household_id=$1 ORDER BY name", [householdId]);
     return {
-      ...base,
-      week: {
-        id: week.id, weekStart, acceptedChoiceRevision: week.acceptedChoiceRevision, adopted: true, adoptedAt: week.adoptedAt,
-        adoptedBy: members.find((m) => m.id === week.adoptedBy)?.displayName ?? null, nights, mealsChosen: chosen,
-        statusSentence: statusSentence(nights, chosen, summary, order !== null),
-      },
-      proposals: proposalsQ.rows.map((p) => proposalView(p, recipes, week.acceptedChoiceRevision)),
-      previews,
-      deferred,
-      groceries: {
-        cycleId: cycle.id, projectionRevision: cycle.projection_revision, projectionAcceptedRevision: cycle.projection_accepted_revision,
-        summary, lines, batches, order, products: productsQ.rows.map((p) => ({ id: p.id, name: p.name, ingredientKey: p.ingredient_key, packageQty: p.package_qty, packageUnit: p.package_unit, retailer: p.retailer, fixture: p.fixture })),
-      },
-      recipeVersions: Object.fromEntries([...recipes].map(([id, r]) => [id, recipeSummary(r)])),
+      cycleId: cycle.id, projectionRevision: cycle.projection_revision, projectionAcceptedRevision: cycle.projection_accepted_revision,
+      summary: cycle.projection_summary, lines, batches, order,
+      products: productsQ.rows.map((p) => ({ id: p.id, ref: p.product_ref, name: p.name, ingredientKey: p.ingredient_key, packageQty: p.package_qty, packageUnit: p.package_unit, retailer: p.retailer, fixture: p.fixture })),
     };
-  });
 }
 
 function recipeSummary(r: import("@/domain/types").RecipeVersion) {

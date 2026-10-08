@@ -8,15 +8,18 @@ export function AlsoNeed({ from, ingredientKey, label }: { from: "week" | "groce
   const [text, setText] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
   const [pendingAnother, setPendingAnother] = useState<{ text: string; key?: string } | null>(null);
-  const weekId = snapshot?.week?.id;
-  if (!weekId || !snapshot.week.adopted) return <p className="faint small">Adopt a week to start its grocery list.</p>;
+  if (!snapshot) return null;
+  // Capture never waits for an adopted menu: it targets the shown week's pickup, and the
+  // server routes past a confirmed order to the next open pickup.
+  const target = snapshot.week?.id ? { weekId: snapshot.week.id } : { weekStart: snapshot.clock.weekStart };
   async function capture(t: string, kind: "usual" | "extra", key?: string, addAnother = false) {
     if (!t.trim()) return;
-    const r = await command("CaptureHouseholdNeed", { weekId, text: t, ingredientKey: key ?? null, kind, from, addAnother });
+    const r = await command("CaptureHouseholdNeed", { ...target, text: t, ingredientKey: key ?? null, kind, from, addAnother });
     if (r.status === "accepted") {
       setText("");
       setPendingAnother(null);
-      setMsg(r.result.merged ? `Already on the list — added you as a requester.` : r.result.matchedIngredient ? `Added.` : `Added as text; match it to an item when you review groceries.`);
+      const where = r.result.destination?.reason === "next_pickup" ? ` to the next pickup (week of ${r.result.destination.weekStart.slice(5)}) — this week's order is already confirmed` : "";
+      setMsg(r.result.merged ? `Already on the list${where} — added you as a requester.` : r.result.matchedIngredient ? `Added${where}.` : `Added as text${where}; match it to an item when you review groceries.`);
     } else if (r.code === "already_in_order") {
       setPendingAnother({ text: t, key });
       setMsg(r.message);
@@ -45,6 +48,15 @@ export function AlsoNeed({ from, ingredientKey, label }: { from: "week" | "groce
       <datalist id="ingredient-names">{snapshot.ingredients.map((i: any) => <option key={i.key} value={i.name} />)}</datalist>
       <button className="btn primary small" type="submit">Add</button>
       <button className="btn line small" type="button" onClick={() => capture(text, "extra")} title="An explicit extra package on top of anything else">Extra</button>
+      {snapshot.staples?.length > 0 && (
+        <div className="row full-row" aria-label="Usual items">
+          {snapshot.staples.map((st: any) => (
+            <button key={st.ingredientKey} type="button" className="chip-btn" onClick={() => capture(st.name, "usual", st.ingredientKey)} title={st.productName ?? undefined}>
+              {st.name}{st.usualPackages > 1 ? ` ×${st.usualPackages}` : ""}
+            </button>
+          ))}
+        </div>
+      )}
       {msg && <p className="faint small full-row" role="status">{msg}</p>}
       {pendingAnother && <button type="button" className="btn line small" onClick={() => capture(pendingAnother.text, "usual", pendingAnother.key, true)}>Add another</button>}
     </form>
