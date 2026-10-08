@@ -20,12 +20,15 @@ test("B12: Alex makes a different yogurt the usual; Jon sees it live; the purcha
   // Alex adds another product for this pickup, then explicitly makes it the usual.
   await alex.page.getByRole("link", { name: "Groceries" }).click();
   const yog = alex.page.getByTestId("line-greek_yogurt");
-  await yog.getByRole("button", { name: "Other product or price for Plain Greek yogurt" }).click();
-  await yog.getByLabel("Product name").fill("Fage Total 35 oz");
-  await yog.getByLabel("Package size").fill("35");
-  await yog.getByLabel("Unit").fill("oz");
-  await yog.getByLabel("Price ($, optional)").fill("6.99");
-  await yog.getByRole("button", { name: "Save product" }).click();
+  // (Since B15 the product form is a dialog rather than inline in the line.)
+  await yog.getByRole("button", { name: "Change product for Plain Greek yogurt" }).click();
+  const pd = alex.page.getByRole("dialog", { name: "Product for Plain Greek yogurt" });
+  await pd.getByLabel("Product name").fill("Fage Total 35 oz");
+  await pd.getByLabel("Package size").fill("35");
+  await pd.getByLabel("Unit").fill("oz");
+  await pd.getByLabel("Price ($, optional)").fill("6.99");
+  await pd.getByRole("button", { name: "Save product" }).click();
+  await expect(pd).toHaveCount(0);
   await expect(yog).toContainText("Fage Total 35 oz · 1 pkg needed");
   await expect(alex.page.getByTestId("staple-greek_yogurt")).toContainText("Your usual: Plain Greek yogurt 32 oz tub");
   const make = alex.page.getByRole("button", { name: "Make Fage Total 35 oz your usual Plain Greek yogurt" });

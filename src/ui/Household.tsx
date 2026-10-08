@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useStore } from "./store";
 import { authClient } from "./auth-client";
+import { Staples } from "./Staples";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -15,6 +16,7 @@ export function HouseholdScreen() {
         <p className="small muted">Members: {snapshot.members.map((m: any) => m.displayName).join(", ")} · timezone {snapshot.household.timezone}</p>
       </div>
       <Settings />
+      <Staples />
       <Targets />
       <Exclusions />
       <IngredientReview />

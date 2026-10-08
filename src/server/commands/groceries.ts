@@ -8,6 +8,7 @@ import { nowInstant } from "../env";
 import type { RequirementLine } from "@/domain/groceries/projection";
 import { KNOWN_UNITS, convert, normalizeUnit } from "@/domain/units";
 import { retailer } from "../integrations/retailer";
+import { usualFor } from "./staples";
 
 async function cycleFor(c: Db, householdId: string, weekId: string): Promise<string> {
   const w = await weekById(c, householdId, weekId);
@@ -98,17 +99,31 @@ export function captureHouseholdNeedCommand(actor: Actor, operationId: string, p
     // that package as its product intent. The remembered product itself changes only through
     // ApproveStapleProduct; remembering a usual quantity never changes it.
     // An explicit extra of a staple ("Add another", Extra) asks for the same remembered package.
+    // A removed (inactive) staple is not a shortcut any more: no remembered product or amount
+    // applies, and a capture does not silently bring it back (B16).
     let productIntent: string | null = null;
-    const staple = key ? await c.query("SELECT usual_packages, product_id FROM household_staples WHERE household_id=$1 AND ingredient_key=$2", [actor.householdId, key]) : null;
-    if (staple?.rowCount) productIntent = staple.rows[0].product_id;
+    const staple = key
+      ? await c.query("SELECT usual_packages, product_id, active, details_revision, display_name, usual_amount, usual_unit FROM household_staples WHERE household_id=$1 AND ingredient_key=$2", [actor.householdId, key])
+      : null;
+    const activeStaple = staple?.rowCount && staple.rows[0].active ? staple.rows[0] : null;
+    if (activeStaple) productIntent = activeStaple.product_id;
     if (key && kind === "usual" && staple) {
-      if (staple.rowCount) {
+      if (activeStaple) {
         if (p.rememberUsual && packages) {
-          await c.query("UPDATE household_staples SET usual_packages=$3, updated_by=$4, updated_at=now() WHERE household_id=$1 AND ingredient_key=$2", [
-            actor.householdId, key, packages, actor.memberId,
-          ]);
-        } else packages = packages ?? staple.rows[0].usual_packages;
-      } else {
+          // An explicit "make this the usual amount" from capture: a details change like any other,
+          // so a Household editor holding the old revision gets a conflict, not an overwrite.
+          const up = await c.query(
+            `UPDATE household_staples SET usual_packages=$3, usual_amount=NULL, usual_unit=NULL, details_revision=details_revision+1, updated_by=$4, updated_at=now()
+             WHERE household_id=$1 AND ingredient_key=$2 RETURNING details_revision`,
+            [actor.householdId, key, packages, actor.memberId],
+          );
+          await c.query(
+            "INSERT INTO staple_changes(household_id, ingredient_key, kind, before, after, details_revision, changed_by) VALUES ($1,$2,'edited',$3,$4,$5,$6)",
+            [actor.householdId, key, JSON.stringify({ usualPackages: activeStaple.usual_packages, usual: activeStaple.usual_unit ? { quantity: String(activeStaple.usual_amount), unit: activeStaple.usual_unit } : null }),
+              JSON.stringify({ usualPackages: packages, usual: { quantity: String(packages), unit: "package" } }), up.rows[0].details_revision, actor.memberId],
+          );
+        } else packages = packages ?? activeStaple.usual_packages;
+      } else if (!staple.rowCount) {
         // First usual capture of a known item: remember it with the household's current product choice.
         const ins = await c.query(
           `INSERT INTO household_staples(household_id, ingredient_key, usual_packages, product_id, updated_by)
@@ -116,6 +131,10 @@ export function captureHouseholdNeedCommand(actor: Actor, operationId: string, p
           [actor.householdId, key, packages ?? 1, actor.memberId],
         );
         productIntent = ins.rows[0].product_id;
+        await c.query(
+          "INSERT INTO staple_changes(household_id, ingredient_key, kind, before, after, details_revision, changed_by) VALUES ($1,$2,'created',NULL,$3,1,$4)",
+          [actor.householdId, key, JSON.stringify({ usualPackages: packages ?? 1, from: "capture" }), actor.memberId],
+        );
       }
     }
 
@@ -157,8 +176,15 @@ export function captureHouseholdNeedCommand(actor: Actor, operationId: string, p
   });
 }
 
-export function removeRequestCommand(actor: Actor, operationId: string, p: { requestId: string }) {
+export function removeRequestCommand(actor: Actor, operationId: string, p: { requestId: string; expectedContributorIds?: string[] }) {
   return runCommand(actor, "RemoveRequest", operationId, p, async (c) => {
+    // B15: the confirmation named who asked for it; someone joining meanwhile makes it stale.
+    if (Array.isArray(p.expectedContributorIds)) {
+      const now = (await c.query("SELECT member_id FROM request_contributors rc JOIN household_requests r ON r.id=rc.request_id WHERE rc.request_id=$1 AND r.household_id=$2 ORDER BY member_id", [p.requestId, actor.householdId])).rows.map((x) => x.member_id);
+      if (now.join(",") !== [...p.expectedContributorIds].sort().join(",")) {
+        throw new Reject("stale_target", "Someone else added themselves to this request while you were deciding. Review who asked for it, then decide again.");
+      }
+    }
     const r = await c.query(
       `UPDATE household_requests SET state='removed', resolved_at=now() WHERE id=$1 AND household_id=$2 AND state='active'
        RETURNING (SELECT week_id FROM grocery_cycles g WHERE g.id=cycle_id) AS week_id, text`,
@@ -238,11 +264,16 @@ export function recordAvailabilityCommand(
 export function addProductCommand(
   actor: Actor,
   operationId: string,
-  p: { weekId: string; ingredientKey: string; name: string; packageQty: string | null; packageUnit: string | null; variableWeight?: boolean; priceMinor?: number | null },
+  p: {
+    weekId: string; ingredientKey: string; name: string; packageQty: string | null; packageUnit: string | null; variableWeight?: boolean; priceMinor?: number | null;
+    /** The pickup's product the member saw (B15); a different current product is a conflict. */
+    expectedProductId?: string | null;
+  },
 ) {
   return runCommand(actor, "AddProduct", operationId, p, async (c) => {
     const ok = await c.query("SELECT 1 FROM ingredients WHERE household_id=$1 AND key=$2", [actor.householdId, p.ingredientKey]);
     if (!ok.rowCount) throw new Reject("not_found", "Unknown ingredient");
+    await checkSeenProduct(c, actor.householdId, p.weekId, p.ingredientKey, p);
     const name = String(p.name ?? "").trim().slice(0, 120);
     if (!name) throw new Reject("invalid", "Product name required");
     if (p.packageQty != null && !/^\d+(\.\d+)?$/.test(String(p.packageQty))) throw new Reject("invalid", "Package size must be a number");
@@ -273,10 +304,31 @@ export function addProductCommand(
   });
 }
 
-export function chooseProductCommand(actor: Actor, operationId: string, p: { weekId: string; ingredientKey: string; productId: string }) {
+/** B15: a product choice made against what the member saw. When `expectedProductId` is given and
+ *  this pickup's line now shows a different product, the choice is refused with the current one —
+ *  a concurrent choice is never silently replaced. (Omitted = no check, as before.) */
+async function checkSeenProduct(c: Db, householdId: string, weekId: string, key: string, p: { expectedProductId?: string | null }) {
+  // The week must be this household's (it is also named in the change event).
+  if (!(await weekById(c, householdId, weekId))) throw new Reject("not_found", "Week not found");
+  if (p.expectedProductId === undefined) return;
+  const r = await c.query(
+    "SELECT r.line FROM requirement_lines r JOIN grocery_cycles g ON g.id=r.cycle_id WHERE g.week_id=$1 AND g.household_id=$3 AND r.ingredient_key=$2",
+    [weekId, key, householdId],
+  );
+  const now = r.rows[0]?.line?.product ?? null;
+  if ((now?.id ?? null) !== (p.expectedProductId ?? null)) {
+    throw new Reject("product_changed", `This pickup's product changed to ${now?.name ?? "none"} while you were choosing. Review it, then choose again.`, {
+      current: { productId: now?.id ?? null, productName: now?.name ?? null },
+    });
+  }
+}
+
+export function chooseProductCommand(actor: Actor, operationId: string, p: { weekId: string; ingredientKey: string; productId: string; expectedProductId?: string | null }) {
   return runCommand(actor, "ChooseProduct", operationId, p, async (c) => {
-    const pr = await c.query("SELECT name FROM products WHERE id=$1 AND household_id=$2 AND ingredient_key=$3", [p.productId, actor.householdId, p.ingredientKey]);
+    const pr = await c.query("SELECT name, retailer FROM products WHERE id=$1 AND household_id=$2 AND ingredient_key=$3", [p.productId, actor.householdId, p.ingredientKey]);
     if (!pr.rowCount) throw new Reject("not_found", "Product not found for that ingredient");
+    if (pr.rows[0].retailer !== retailer().mode) throw new Reject("product_unavailable", `${pr.rows[0].name} is not available from the active store`);
+    await checkSeenProduct(c, actor.householdId, p.weekId, p.ingredientKey, p);
     await c.query(
       `INSERT INTO product_mappings(household_id, ingredient_key, product_id, decided_by) VALUES ($1,$2,$3,$4)
        ON CONFLICT (household_id, ingredient_key) DO UPDATE SET product_id=EXCLUDED.product_id, decided_by=EXCLUDED.decided_by, decided_at=now(), suitable=true`,
@@ -311,7 +363,7 @@ export function approveStapleProductCommand(actor: Actor, operationId: string, p
   return runCommand(actor, "ApproveStapleProduct", operationId, p, async (c) => {
     if (!Number.isInteger(p.expectedRevision) || p.expectedRevision < 1) throw new Reject("invalid", "Say which remembered product this replaces");
     const st = await c.query(
-      `SELECT s.product_id, s.product_revision, i.name, pp.name AS product_name, m.display_name AS updated_by
+      `SELECT s.product_id, s.product_revision, s.active, s.display_name, s.usual_amount, s.usual_unit, i.name, pp.name AS product_name, m.display_name AS updated_by
        FROM household_staples s JOIN ingredients i ON i.household_id=s.household_id AND i.key=s.ingredient_key
        LEFT JOIN products pp ON pp.id=s.product_id LEFT JOIN members m ON m.id=s.updated_by
        WHERE s.household_id=$1 AND s.ingredient_key=$2`,
@@ -319,6 +371,7 @@ export function approveStapleProductCommand(actor: Actor, operationId: string, p
     );
     if (!st.rowCount) throw new Reject("not_found", "That item is not one of your usual items");
     const s = st.rows[0];
+    if (!s.active) throw new Reject("staple_inactive", `${s.display_name ?? s.name} was removed from your usual items; restore it before changing its product`);
     const pr = await c.query("SELECT id, name, retailer FROM products WHERE id=$1 AND household_id=$2 AND ingredient_key=$3", [
       typeof p.productId === "string" && /^[0-9a-f-]{36}$/i.test(p.productId) ? p.productId : null, actor.householdId, p.ingredientKey,
     ]);
@@ -334,10 +387,17 @@ export function approveStapleProductCommand(actor: Actor, operationId: string, p
     if (s.product_id === pr.rows[0].id) {
       return { status: "accepted", result: { ingredientKey: p.ingredientKey, productId: s.product_id, revision: s.product_revision, unchanged: true } };
     }
+    // A usual amount given in a measured unit is re-expressed in the new product's packages; a
+    // product it cannot be converted to is refused (change the usual amount first).
+    let usualPackages: number | null = null;
+    if (s.usual_unit) {
+      const full = await c.query("SELECT id, name, package_qty, package_unit, retailer FROM products WHERE id=$1", [pr.rows[0].id]);
+      usualPackages = usualFor({ quantity: String(s.usual_amount), unit: s.usual_unit }, full.rows[0]).packages;
+    }
     const up = await c.query(
-      `UPDATE household_staples SET product_id=$3, product_revision=product_revision+1, updated_by=$4, updated_at=now()
+      `UPDATE household_staples SET product_id=$3, product_revision=product_revision+1, updated_by=$4, updated_at=now(), usual_packages=COALESCE($6, usual_packages)
        WHERE household_id=$1 AND ingredient_key=$2 AND product_revision=$5 RETURNING product_revision`,
-      [actor.householdId, p.ingredientKey, pr.rows[0].id, actor.memberId, p.expectedRevision],
+      [actor.householdId, p.ingredientKey, pr.rows[0].id, actor.memberId, p.expectedRevision, usualPackages],
     );
     const revision = up.rows[0].product_revision;
     await c.query(
@@ -491,7 +551,12 @@ export function recordReceiptCommand(
 export function validateSubstitutionCommand(
   actor: Actor,
   operationId: string,
-  p: { receiptId: string; suitable: boolean; quantity?: string | null; unit?: string | null },
+  p: {
+    receiptId: string; suitable: boolean; quantity?: string | null; unit?: string | null;
+    /** B15: the decision the member saw (null = none yet). A different current decision, or a
+     *  receipt corrected meanwhile, is refused instead of silently replaced. Omitted = no check. */
+    expectedValidationId?: string | null;
+  },
 ) {
   return runCommand(actor, "ValidateSubstitution", operationId, p, async (c) => {
     const r = await c.query(
@@ -501,6 +566,19 @@ export function validateSubstitutionCommand(
     );
     if (!r.rowCount) throw new Reject("not_found", "Receipt observation not found");
     if (r.rows[0].state !== "substituted") throw new Reject("invalid", "Only a substitution can be validated");
+    if (p.expectedValidationId !== undefined) {
+      const corrected = await c.query("SELECT 1 FROM receipt_observations WHERE corrects_id=$1", [p.receiptId]);
+      if (corrected.rowCount) throw new Reject("stale_target", "This receipt was corrected meanwhile; review it again before deciding about the substitute.");
+      const v = await c.query(
+        `SELECT v.id, v.suitable, m.display_name FROM substitution_validations v JOIN members m ON m.id=v.member_id WHERE v.receipt_id=$1 ORDER BY v.observed_at DESC, v.id DESC LIMIT 1`,
+        [p.receiptId],
+      );
+      if ((v.rows[0]?.id ?? null) !== (p.expectedValidationId ?? null)) {
+        throw new Reject("stale_target", `${v.rows[0]?.display_name ?? "Someone"} already decided this substitute ${v.rows[0]?.suitable ? "works" : "does not work"}. Review it before deciding again.`, {
+          current: v.rows[0] ? { validationId: v.rows[0].id, suitable: v.rows[0].suitable } : null,
+        });
+      }
+    }
     if (p.suitable) {
       if (!/^\d+(\.\d+)?$/.test(String(p.quantity ?? "")) || Number(p.quantity) <= 0 || !p.unit) throw new Reject("invalid", "Say how much of the substitute arrived (amount and unit)");
     }

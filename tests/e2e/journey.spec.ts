@@ -187,6 +187,8 @@ test("T14/T20: simulated send, order confirmed with different contents, then a F
   const broccoliRow = form.locator("div.row", { has: alex.page.locator('input[value="Broccoli"]') });
   await broccoliRow.getByRole("button", { name: "remove" }).click();
   await form.getByRole("button", { name: "Confirm order" }).click();
+  // B15: recording a confirmed order is irreversible, so it takes a second, deliberate step.
+  await form.getByRole("button", { name: "Yes, record this order" }).click();
   await expect(alex.page.getByTestId("order")).toBeVisible();
   await expect(alex.page.getByTestId("line-broccoli")).toHaveAttribute("data-status", "not_sent_yet");
   const orderBefore = await q("SELECT * FROM order_lines ORDER BY name");

@@ -149,6 +149,9 @@ export interface RequirementLine {
   uncertain: number;
   toSend: number | null;
   unresolved: string[];
+  /** Why the line has no usable product, for status wording (B15): none chosen, the requested
+   *  product is unknown or not sold by the active store, or requests name different products. */
+  productIssue: "none_chosen" | "unknown" | "unavailable" | "conflict" | null;
   approval: { id: string; packages: number; valid: boolean } | null;
   fingerprint: string;
   status: LineStatus;
@@ -232,18 +235,28 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
     // substitute.
     let prodEntry: { product: ProductInput; price: PriceInput | null } | undefined = ingredientKey ? input.products.get(ingredientKey) : undefined;
     const intents = [...new Set(reqs.filter((r) => r.productId).map((r) => r.productId as string))];
+    let productIssue: RequirementLine["productIssue"] = null;
     if (ingredientKey && intents.length) {
       const intent = intents.length === 1 ? input.intentProducts?.get(intents[0]) : undefined;
       prodEntry = undefined;
-      if (intents.length > 1) unresolved.push("Requests for this item name different products — choose one for this pickup");
-      else if (!intent) unresolved.push("Your usual product is no longer known — choose a product for this pickup");
-      else if (!intent.available) unresolved.push(`Your usual product (${intent.product.name}) is not available from the active store — choose a product for this pickup`);
-      else prodEntry = intent;
+      if (intents.length > 1) {
+        productIssue = "conflict";
+        unresolved.push("Requests for this item name different products — choose one for this pickup");
+      } else if (!intent) {
+        productIssue = "unknown";
+        unresolved.push("Your usual product is no longer known — choose a product for this pickup");
+      } else if (!intent.available) {
+        productIssue = "unavailable";
+        unresolved.push(`Your usual product (${intent.product.name}) is not available from the active store — choose a product for this pickup`);
+      } else prodEntry = intent;
     }
     const product = prodEntry?.product ?? null;
     const price = prodEntry?.price ?? null;
     if (!ingredientKey) unresolved.push("Needs review: match this request to an ingredient and product");
-    else if (!product && !intents.length) unresolved.push("No product chosen for this ingredient");
+    else if (!product && !intents.length) {
+      productIssue = "none_chosen";
+      unresolved.push("No product chosen for this ingredient");
+    }
 
     // 2. Home supply (availability observation for this cycle).
     const avail = ingredientKey ? input.availability.find((a) => a.ingredientKey === ingredientKey) ?? null : null;
@@ -458,6 +471,7 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
       uncertain,
       toSend,
       unresolved,
+      productIssue,
       approval,
       fingerprint,
       status,

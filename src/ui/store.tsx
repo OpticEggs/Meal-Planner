@@ -24,6 +24,8 @@ interface Store {
   /** One polite screen-reader announcement at a time (see LiveRegion). */
   announcement: { id: number; text: string } | null;
   announce: (text: string) => void;
+  /** True when this household sequence number was produced by this member's own command here. */
+  isOwnSeq: (seq: number) => boolean;
 }
 
 const Ctx = createContext<Store | null>(null);
@@ -45,6 +47,8 @@ export function HouseholdProvider({ me, children }: { me: Store["me"]; children:
   const [lastChange, setLastChange] = useState<Store["lastChange"]>(null);
   const [announcement, setAnnouncement] = useState<Store["announcement"]>(null);
   const announce = useCallback((text: string) => setAnnouncement((a) => ({ id: (a?.id ?? 0) + 1, text })), []);
+  const ownSeqs = useRef(new Set<number>());
+  const isOwnSeq = useCallback((seq: number) => ownSeqs.current.has(seq), []);
   const seqRef = useRef(0);
   const weekRef = useRef<string | null>(null);
   const inflight = useRef<Promise<void> | null>(null);
@@ -171,6 +175,7 @@ export function HouseholdProvider({ me, children }: { me: Store["me"]; children:
           body: JSON.stringify({ operationId, payload }),
         });
         res = await r.json();
+        if (typeof res?.seq === "number") ownSeqs.current.add(res.seq);
       } catch (e) {
         res = { status: "rejected", code: "network", message: "Could not reach Table. Nothing is assumed saved; try again when online." };
       }
@@ -183,9 +188,9 @@ export function HouseholdProvider({ me, children }: { me: Store["me"]; children:
   const value = useMemo<Store>(
     () => ({
       me, snapshot, library, currency, error, weekStart, setWeekStart, refresh, loadLibrary, command, lastChange,
-      writesAllowed: currency === "current", announcement, announce,
+      writesAllowed: currency === "current", announcement, announce, isOwnSeq,
     }),
-    [me, snapshot, library, currency, error, weekStart, setWeekStart, refresh, loadLibrary, command, lastChange, announcement, announce],
+    [me, snapshot, library, currency, error, weekStart, setWeekStart, refresh, loadLibrary, command, lastChange, announcement, announce, isOwnSeq],
   );
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

@@ -3,6 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import { useStore } from "./store";
 import { AlsoNeed } from "./AlsoNeed";
 import { costView, money, qty } from "./format";
+import { focusFirst } from "./a11y";
+import {
+  CartCheckDialog, ConfirmOrderDialog, CorrectReceiptDialog, ProductDialog, RemoveRequestDialog, SubstituteDialog, ValidateSubstituteDialog,
+  type GroceryDialog,
+} from "./GroceryDialogs";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -17,6 +22,39 @@ const STATUS: Record<string, string> = {
   missing: "Missing from pickup — still needed",
   not_sent_yet: "Not sent yet",
 };
+
+/** Transfer states in words (B15): never only a color or a raw code. */
+export const BATCH_STATUS: Record<string, string> = {
+  authorized: "Approved — not sent yet",
+  dispatch_started: "Sending to the cart…",
+  acknowledged: "Sent to cart — the store acknowledged the transfer",
+  failed: "Not in the cart — the transfer failed",
+  canceled_before_dispatch: "Not sent — canceled before sending",
+  uncertain: "Uncertain — check the cart",
+};
+
+const ISSUE: Record<string, string> = {
+  none_chosen: "No product chosen",
+  unknown: "Product unknown",
+  unavailable: "Product unavailable at this store",
+  conflict: "Conflicting products requested",
+};
+
+type Opener = (d: GroceryDialog, e: React.SyntheticEvent<HTMLElement>) => void;
+
+/** Where focus goes when a dialog's opener is gone (B15): a surviving control near what it was about. */
+function groceryFallback(d: GroceryDialog): HTMLElement | null {
+  const q = (sel: string) => () => document.querySelector<HTMLElement>(sel);
+  const line = "key" in d ? `[data-testid="line-${d.key}"]` : null;
+  return focusFirst(
+    line ? q(`${line} button:not([disabled])`) : null,
+    d.kind === "cart-check" ? q('[data-testid="transfers"] button:not([disabled])') : null,
+    d.kind === "cart-check" ? q('[data-testid="transfers"]') : null,
+    ["confirm-order", "substitute", "validate", "correct"].includes(d.kind) ? q('[data-testid="order"] button:not([disabled])') : null,
+    ["confirm-order", "substitute", "validate", "correct"].includes(d.kind) ? q('[data-testid="order"]') : null,
+    q('[data-testid="readiness"]'),
+  );
+}
 
 function diffLines(before: any[], after: any[]): string[] {
   const out: string[] = [];
@@ -43,7 +81,9 @@ export function GroceriesScreen() {
   const [msg, setMsg] = useState<string | null>(null);
   const reviewBase = useRef<{ rev: number; lines: any[] } | null>(null);
   const [delta, setDelta] = useState<{ text: string | null; lines: string[] } | null>(null);
+  const [dialog, setDialog] = useState<{ d: GroceryDialog; opener: HTMLElement | null } | null>(null);
   const g = snapshot?.groceries;
+  const open: Opener = (d, e) => setDialog({ d, opener: e.currentTarget });
 
   // Keep what the reviewer last saw; when the projection changes underneath, show the delta.
   useEffect(() => {
@@ -85,17 +125,17 @@ export function GroceriesScreen() {
         <div className="warnbox" role="group" aria-label="Changed since you started reviewing" data-testid="grocery-delta">
           {delta.text && <strong>{delta.text}. </strong>}
           {delta.lines.join(" ")}
-          <button className="btn line small" onClick={() => setDelta(null)}>Got it</button>
+          <button className="btn line small" onClick={() => { setDelta(null); focusFirst(document.querySelector<HTMLElement>('[data-testid="readiness"]')); }}>Got it</button>
         </div>
       )}
       <div className="stats">
         <div className="stat"><span>Pickup estimate</span><strong>{costView(s.pickupSpending)}</strong><em>packages in this purchase</em></div>
         <div className="stat"><span>Dinner ingredients</span><strong>{costView(s.dinnerIngredientCost)}</strong><em>value used by planned dinners</em></div>
-        <div className="stat"><span>Still to buy</span><strong data-testid="still-to-buy">{costView(s.outstandingPurchase)}</strong><em>after what is sent, ordered or received</em></div>
+        <div className="stat"><span>Still to buy</span><strong data-testid="still-to-buy" aria-describedby="still-to-buy-help">{costView(s.outstandingPurchase)}</strong><em id="still-to-buy-help">after what is sent, ordered or received</em></div>
         <div className="stat"><span>Budget</span><strong>{s.budget.status === "unset" ? "not set" : `${s.budget.status}${s.budget.limitMinor !== null ? ` · ${money(s.budget.limitMinor)}` : ""}`}</strong><em>{s.budget.scope ?? ""}{s.budget.firm ? " · firm" : ""}</em></div>
       </div>
       <p className="faint small">Prices are estimates from recorded observations, not a guaranteed checkout total; the store may change final charges.</p>
-      <div className={`card ${s.ready ? "ok" : ""}`} data-testid="readiness" role="group" aria-label="Grocery readiness">
+      <div className={`card ${s.ready ? "ok" : ""}`} data-testid="readiness" role="group" aria-label="Grocery readiness" tabIndex={-1}>
         {s.ready ? <strong>Groceries ready to send.</strong> : (
           <>
             <strong>Not ready yet</strong>
@@ -115,31 +155,55 @@ export function GroceriesScreen() {
       <AlsoNeed from="groceries" />
       <div className="section-label">This week’s list</div>
       <ul className="lines">
-        {g.lines.map((l: any) => <Line key={l.key} l={l} />)}
+        {g.lines.map((l: any) => <Line key={l.key} l={l} open={open} />)}
       </ul>
-      <Transfers />
-      <Order />
+      <Transfers open={open} />
+      <Order open={open} />
+      {dialog && <DialogFor d={dialog.d} onClose={() => setDialog(null)} returnFocus={() => focusFirst(dialog.opener) ?? groceryFallback(dialog.d)} />}
     </section>
   );
 }
 
-function Line({ l }: { l: any }) {
+function DialogFor({ d, onClose, returnFocus }: { d: GroceryDialog; onClose: () => void; returnFocus: () => void }) {
+  const common = { onClose, returnFocus };
+  switch (d.kind) {
+    case "product": return <ProductDialog itemKey={d.key} {...common} />;
+    case "remove-request": return <RemoveRequestDialog itemKey={d.key} requestId={d.requestId} {...common} />;
+    case "confirm-order": return <ConfirmOrderDialog {...common} />;
+    case "substitute": return <SubstituteDialog orderLineId={d.orderLineId} {...common} />;
+    case "validate": return <ValidateSubstituteDialog receiptId={d.receiptId} {...common} />;
+    case "correct": return <CorrectReceiptDialog receiptId={d.receiptId} {...common} />;
+    case "cart-check": return <CartCheckDialog batchId={d.batchId} {...common} />;
+  }
+}
+
+/** The line's state in words, for the line heading: status, unresolved, product issue. */
+function lineState(l: any): string {
+  return [STATUS[l.status] ?? l.status, l.productIssue ? ISSUE[l.productIssue] : null, l.unresolved.length ? "Unresolved" : null, l.approval?.valid ? `approved ×${l.approval.packages}` : null]
+    .filter(Boolean)
+    .join(", ");
+}
+
+function Line({ l, open }: { l: any; open: Opener }) {
   const { snapshot, command, writesAllowed, announce } = useStore();
   const [some, setSome] = useState("");
-  const [msg, setMsg] = useState<string | null>(null);
-  const [adding, setAdding] = useState(false);
-  const products = snapshot.groceries.products.filter((p: any) => p.ingredientKey === l.ingredientKey);
-  const staple = l.ingredientKey ? snapshot.staples?.find((st: any) => st.ingredientKey === l.ingredientKey) : null;
-  async function run(name: string, payload: any) {
+  const [msg, setMsg] = useState<{ text: string; field?: string } | null>(null);
+  const staple = l.ingredientKey ? snapshot.staples?.find((st: any) => st.ingredientKey === l.ingredientKey && st.active) : null;
+  async function run(name: string, payload: any, field?: string) {
     const r = await command(name, payload);
-    setMsg(r.status === "accepted" ? null : r.message);
+    setMsg(r.status === "accepted" ? null : { text: r.message, field });
   }
   const weekId = snapshot.week.id;
+  const msgId = `line-msg-${l.key}`;
   return (
     <li className={`line st-${l.status}`} data-testid={`line-${l.key}`} data-status={l.status} data-to-send={l.toSend ?? ""}>
       <div className="row between">
-        <strong>{l.name}</strong>
-        <span className={`badge st-${l.status}`}>{STATUS[l.status] ?? l.status}</span>
+        <h3 className="line-name" aria-label={`${l.name}: ${lineState(l)}`}>{l.name}</h3>
+        <span className="row" aria-hidden="true">
+          <span className={`badge st-${l.status}`}>{STATUS[l.status] ?? l.status}</span>
+          {l.productIssue && <span className="badge con-unknown">{ISSUE[l.productIssue]}</span>}
+          {l.unresolved.length > 0 && <span className="badge con-unknown">Unresolved</span>}
+        </span>
       </div>
       <div className="small">
         {l.meal && (
@@ -151,7 +215,7 @@ function Line({ l }: { l: any }) {
         {l.requests.map((r: any) => (
           <div key={r.id}>
             {r.kind === "usual" ? "Usual amount" : `Extra ×${r.packages ?? 1}`} — requested by {r.contributors.map((c: any) => `${c.name}${c.taps > 1 ? ` ×${c.taps}` : ""}`).join(", ")}
-            <button className="link small" aria-label={`Remove ${r.kind === "usual" ? "usual" : "extra"} request for ${l.name}`} onClick={() => run("RemoveRequest", { requestId: r.id })}>remove</button>
+            <button className="link small" aria-label={`Remove ${r.kind === "usual" ? "usual" : "extra"} request for ${l.name}`} aria-haspopup="dialog" onClick={(e) => open({ kind: "remove-request", key: l.key, requestId: r.id }, e)}>remove</button>
           </div>
         ))}
         {l.product ? (
@@ -175,7 +239,7 @@ function Line({ l }: { l: any }) {
                   data-testid={`make-usual-${l.key}`}
                   onClick={async () => {
                     const r = await command("ApproveStapleProduct", { ingredientKey: l.ingredientKey, productId: l.product.id, expectedRevision: staple.productRevision });
-                    setMsg(r.status === "accepted" ? null : r.message);
+                    setMsg(r.status === "accepted" ? null : { text: r.message });
                     if (r.status === "accepted") announce(`${l.product.name} is now your usual ${staple.name}. Future one-tap requests use it; nothing was approved for purchase.`);
                   }}
                 >
@@ -196,8 +260,9 @@ function Line({ l }: { l: any }) {
       {l.ingredientKey && l.meal && (
         <div className="row small" aria-label={`Availability for ${l.name}`}>
           <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "enough", reviewed: { quantity: l.meal.quantity, unit: l.meal.unit, fingerprint: l.fingerprint } })} aria-label={`Have enough ${l.name}`}>Have enough</button>
-          <input className="tiny" placeholder="amt" value={some} onChange={(e) => setSome(e.target.value)} aria-label={`Amount of ${l.name} on hand`} />
-          <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "some", quantity: some || null, unit: some ? l.meal.unit : null })} aria-label={`Have some ${l.name}`}>Have some</button>
+          <input className="tiny" placeholder="amt" value={some} onChange={(e) => setSome(e.target.value)} aria-label={`Amount of ${l.name} on hand (${l.meal.unit})`}
+            aria-invalid={msg?.field === "some" ? true : undefined} aria-describedby={msg?.field === "some" ? msgId : undefined} />
+          <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "some", quantity: some || null, unit: some ? l.meal.unit : null }, "some")} aria-label={`Have some ${l.name}`}>Have some</button>
           <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "need" })} aria-label={`Need ${l.name}`}>Need</button>
         </div>
       )}
@@ -211,12 +276,9 @@ function Line({ l }: { l: any }) {
       )}
       {l.ingredientKey && (
         <div className="row small">
-          {products.length > 1 && (
-            <select aria-label={`Product for ${l.name}`} value={l.product?.id ?? ""} onChange={(e) => run("ChooseProduct", { weekId, ingredientKey: l.ingredientKey, productId: e.target.value })}>
-              {products.map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}
-            </select>
-          )}
-          <button className="link small" aria-expanded={adding} aria-label={`${adding ? "Close product form" : l.product ? "Other product or price" : "Choose product"} for ${l.name}`} onClick={() => setAdding(!adding)}>{adding ? "close" : l.product ? "other product / price" : "choose product"}</button>
+          <button className="link small" aria-haspopup="dialog" aria-label={`${l.product ? "Change product" : "Choose a product"} for ${l.name}`} data-testid={`product-${l.key}`} onClick={(e) => open({ kind: "product", key: l.key }, e)}>
+            {l.product ? "change product…" : "choose product…"}
+          </button>
           {l.toSend > 0 && l.product && l.price && l.unresolved.length === 0 && (
             l.approval?.valid
               ? <span className="badge">Approved ×{l.approval.packages}</span>
@@ -224,104 +286,70 @@ function Line({ l }: { l: any }) {
           )}
         </div>
       )}
-      {adding && <ProductForm l={l} onDone={() => setAdding(false)} />}
-      {msg && <p role="alert" className="warnbox">{msg}</p>}
+      {msg && <p role="alert" className="warnbox" id={msgId}>{msg.text}</p>}
     </li>
   );
 }
 
-function ProductForm({ l, onDone }: { l: any; onDone: () => void }) {
-  const { snapshot, command } = useStore();
-  const [f, setF] = useState({ name: "", packageQty: "", packageUnit: l.meal?.unit === "g" ? "oz" : l.meal?.unit ?? "each", price: "" });
-  const [msg, setMsg] = useState<string | null>(null);
-  return (
-    <form className="stack small" onSubmit={async (e) => {
-      e.preventDefault();
-      const r = await command("AddProduct", {
-        weekId: snapshot.week.id, ingredientKey: l.ingredientKey, name: f.name, packageQty: f.packageQty || null, packageUnit: f.packageUnit || null,
-        priceMinor: f.price ? Math.round(Number(f.price) * 100) : null,
-      });
-      if (r.status === "accepted") onDone(); else setMsg(r.message);
-    }}>
-      <p className="faint">Products are recorded for the simulated retailer only; nothing here is a verified store product.</p>
-      <label>Product name<input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} required /></label>
-      <div className="row">
-        <label>Package size<input value={f.packageQty} onChange={(e) => setF({ ...f, packageQty: e.target.value })} inputMode="decimal" /></label>
-        <label>Unit<input value={f.packageUnit} onChange={(e) => setF({ ...f, packageUnit: e.target.value })} /></label>
-        <label>Price ($, optional)<input value={f.price} onChange={(e) => setF({ ...f, price: e.target.value })} inputMode="decimal" /></label>
-      </div>
-      {msg && <p className="warn">{msg}</p>}
-      <button className="btn line small">Save product</button>
-    </form>
-  );
-}
-
-function Transfers() {
-  const { snapshot, command } = useStore();
+function Transfers({ open }: { open: Opener }) {
+  const { snapshot } = useStore();
   const batches = snapshot.groceries.batches;
   if (!batches.length) return null;
   return (
-    <div className="card stack" data-testid="transfers">
-      <div className="section-label">Cart transfers ({snapshot.retailer.live ? snapshot.retailer.label : "simulated — nothing reached a store"})</div>
-      {batches.map((b: any) => (
-        <div key={b.id} className="small" data-testid="batch" data-status={b.status}>
-          <strong>{b.status.replace(/_/g, " ")}</strong> · approved by {b.authorizedBy} · {b.payload.map((i: any) => `${i.ingredientKey} ×${i.packages}`).join(", ")}
-          <div className="faint">{b.history.map((h: any) => h.status).join(" → ")}{b.status === "acknowledged" ? " (batch-level acknowledgment; not an order confirmation)" : ""}</div>
-          {b.status === "uncertain" && (
-            <div className="row">
-              <span className="warn">Outcome unknown. Check the cart; Table will not resend automatically.</span>
-              <button className="btn line small" onClick={() => command("ResolveUncertainTransfer", { batchId: b.id, observed: "in_cart" })}>Items are in the cart</button>
-              <button className="btn line small" onClick={() => command("ResolveUncertainTransfer", { batchId: b.id, observed: "not_in_cart" })}>Items are not there</button>
-            </div>
-          )}
-        </div>
-      ))}
+    <div className="card stack" data-testid="transfers" tabIndex={-1} role="group" aria-labelledby="transfers-h">
+      <h3 className="section-label" id="transfers-h">Cart transfers ({snapshot.retailer.live ? snapshot.retailer.label : "simulated — nothing reached a store"})</h3>
+      <ul className="lines">
+        {batches.map((b: any, i: number) => (
+          <li key={b.id} className="small" data-testid="batch" data-status={b.status}>
+            <strong>Transfer {i + 1}: {BATCH_STATUS[b.status] ?? b.status}</strong> · approved by {b.authorizedBy} · {b.payload.map((x: any) => `${x.ingredientKey} ×${x.packages}`).join(", ")}
+            <div className="faint">{b.history.map((h: any) => BATCH_STATUS[h.status] ?? h.status).join(" → ")}{b.status === "acknowledged" ? " (batch-level acknowledgment; not an order confirmation)" : ""}</div>
+            {b.status === "uncertain" && (
+              <div className="row">
+                <span className="warn">Outcome unknown. Check the cart; Table will not resend automatically.</span>
+                <button className="btn line small" aria-haspopup="dialog" aria-label={`Check the cart for transfer ${i + 1}`} onClick={(e) => open({ kind: "cart-check", batchId: b.id }, e)}>Check the cart…</button>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
       <p className="faint small">Checkout and pickup time are chosen at the store’s site. Table does not remove cart items or place orders.</p>
     </div>
   );
 }
 
-function Order() {
+function Order({ open }: { open: Opener }) {
   const { snapshot, command } = useStore();
   const g = snapshot.groceries;
-  const [lines, setLines] = useState<{ ingredientKey: string | null; productId?: string | null; name: string; packages: number }[] | null>(null);
-  const [unknown, setUnknown] = useState(false);
-  const [pickup, setPickup] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
   if (g.order) {
     return (
-      <div className="card stack" data-testid="order">
-        <div className="section-label">Confirmed order</div>
+      <div className="card stack" data-testid="order" tabIndex={-1} role="group" aria-labelledby="order-h">
+        <h3 className="section-label" id="order-h">Confirmed order</h3>
         <p className="small">Confirmed by {g.order.confirmedBy}{g.order.pickupAt ? ` · pickup ${new Date(g.order.pickupAt).toLocaleString()}` : " · pickup time not recorded (availability unresolved)"}{g.order.contentsKnown ? "" : " · contents not listed — cannot show what was included"}</p>
+        {msg && <p role="alert" className="warnbox">{msg}</p>}
         <ul className="small">
           {g.order.lines.map((l: any) => {
             const got = l.receipts.filter((r: any) => !r.correctedBy).reduce((a: number, r: any) => a + r.packages, 0);
+            const record = async (state: "received" | "missing") => {
+              const r = await command("RecordReceipt", { orderLineId: l.id, state, packages: l.packages - got });
+              setMsg(r.status === "accepted" ? null : r.message);
+            };
             return (
               <li key={l.id} data-testid={`order-line-${l.ingredientKey ?? l.name}`}>
-                {l.name} ×{l.packages}{l.packageQty ? ` (${l.packageQty} ${l.packageUnit} each)` : l.productId ? "" : " (product not recorded)"}
+                Confirmed: {l.name} ×{l.packages}{l.packageQty ? ` (${l.packageQty} ${l.packageUnit} each)` : l.productId ? "" : " (product not recorded)"}
                 {l.receipts.length > 0 && (
                   <ul className="small">
                     {l.receipts.map((r: any) => (
                       <li key={r.id} className={r.correctedBy ? "faint" : ""}>
                         {r.packages} {r.state}{r.substituteText ? `: ${r.substituteText}` : ""}{r.correctsId ? " (correction)" : ""}{r.correctedBy ? " — corrected later" : ""}
                         {r.state === "substituted" && !r.correctedBy && (r.validation ? ` — ${r.validation.suitable ? `works (${r.validation.quantity} ${r.validation.unit})` : "does not work"}` : (
-                          <span className="row">
-                            <button className="btn line small" onClick={() => {
-                              const amt = prompt(`How much ${r.substituteText} arrived? (number and unit, e.g. "8 oz")`);
-                              const m = amt?.trim().match(/^(\d+(?:\.\d+)?)\s*(\S+)$/);
-                              if (m) void command("ValidateSubstitution", { receiptId: r.id, suitable: true, quantity: m[1], unit: m[2] });
-                            }}>It works</button>
-                            <button className="btn line small" onClick={() => command("ValidateSubstitution", { receiptId: r.id, suitable: false })}>Doesn’t work</button>
-                          </span>
+                          <>
+                            {" — not yet judged "}
+                            <button className="btn line small" aria-haspopup="dialog" aria-label={`Does ${r.substituteText} work for ${l.name}?`} onClick={(e) => open({ kind: "validate", receiptId: r.id }, e)}>Does it work?…</button>
+                          </>
                         ))}
                         {!r.correctedBy && (
-                          <button className="link small" onClick={() => {
-                            const st = prompt("Correct to: received, missing or substituted?", r.state === "missing" ? "received" : "missing");
-                            if (st === "received" || st === "missing" || st === "substituted") {
-                              const sub = st === "substituted" ? prompt("Substituted with?") ?? "" : undefined;
-                              void command("RecordReceipt", { orderLineId: l.id, state: st, packages: r.packages, substituteText: sub, correctsReceiptId: r.id });
-                            }
-                          }}>correct</button>
+                          <button className="link small" aria-haspopup="dialog" aria-label={`Correct the receipt for ${l.name} (${r.packages} ${r.state})`} onClick={(e) => open({ kind: "correct", receiptId: r.id }, e)}>correct…</button>
                         )}
                       </li>
                     ))}
@@ -329,12 +357,9 @@ function Order() {
                 )}
                 {got < l.packages && (
                   <span className="row">
-                    <button className="btn line small" onClick={() => command("RecordReceipt", { orderLineId: l.id, state: "received", packages: l.packages - got })}>Received</button>
-                    <button className="btn line small" onClick={() => command("RecordReceipt", { orderLineId: l.id, state: "missing", packages: l.packages - got })}>Missing</button>
-                    <button className="btn line small" onClick={() => {
-                      const t = prompt("Substituted with?");
-                      if (t) void command("RecordReceipt", { orderLineId: l.id, state: "substituted", packages: l.packages - got, substituteText: t });
-                    }}>Substituted</button>
+                    <button className="btn line small" aria-label={`Received ${l.name}`} onClick={() => record("received")}>Received</button>
+                    <button className="btn line small" aria-label={`Missing ${l.name}`} onClick={() => record("missing")}>Missing</button>
+                    <button className="btn line small" aria-haspopup="dialog" aria-label={`Substituted ${l.name}…`} onClick={(e) => open({ kind: "substitute", orderLineId: l.id }, e)}>Substituted…</button>
                   </span>
                 )}
               </li>
@@ -344,47 +369,10 @@ function Order() {
       </div>
     );
   }
-  const sentLines = () => {
-    const acc = new Map<string, number>();
-    const refOf = new Map<string, string>();
-    for (const b of g.batches.filter((b: any) => b.status === "acknowledged")) {
-      for (const i of b.payload) {
-        acc.set(i.ingredientKey, (acc.get(i.ingredientKey) ?? 0) + i.packages);
-        refOf.set(i.ingredientKey, i.productRef);
-      }
-    }
-    // The confirmed product is the one transferred, never inferred from today's mapping.
-    return [...acc].map(([k, n]) => ({
-      ingredientKey: k, productId: g.products.find((p: any) => p.ref === refOf.get(k))?.id ?? null,
-      name: snapshot.ingredients.find((i: any) => i.key === k)?.name ?? k, packages: n,
-    }));
-  };
   return (
-    <div className="card stack" data-testid="confirm-order">
-      <div className="section-label">After checkout</div>
-      {!lines ? (
-        <button className="btn line" onClick={() => setLines(sentLines())}>Confirm order contents…</button>
-      ) : (
-        <form className="stack small" onSubmit={async (e) => {
-          e.preventDefault();
-          const r = await command("ConfirmOrder", { weekId: snapshot.week.id, contentsKnown: !unknown, lines: unknown ? [] : lines, pickupAt: pickup ? new Date(pickup).toISOString() : null });
-          if (r.status !== "accepted") setMsg(r.message);
-        }}>
-          <p className="faint">List what the store confirmed. A transfer to the cart is not proof that everything was ordered.</p>
-          <label className="row"><input type="checkbox" checked={unknown} onChange={(e) => setUnknown(e.target.checked)} /> I placed an order but don’t have its contents</label>
-          {!unknown && lines.map((l, i) => (
-            <div key={i} className="row">
-              <input value={l.name} aria-label="Item" onChange={(e) => setLines(lines.map((x, j) => (j === i ? { ...x, name: e.target.value } : x)))} />
-              <input className="tiny" type="number" min={1} value={l.packages} aria-label="Packages" onChange={(e) => setLines(lines.map((x, j) => (j === i ? { ...x, packages: Number(e.target.value) } : x)))} />
-              <button type="button" className="link" onClick={() => setLines(lines.filter((_, j) => j !== i))}>remove</button>
-            </div>
-          ))}
-          {!unknown && <button type="button" className="link" onClick={() => setLines([...lines, { ingredientKey: null, name: "", packages: 1 }])}>add line</button>}
-          <label>Pickup time (optional)<input type="datetime-local" value={pickup} onChange={(e) => setPickup(e.target.value)} /></label>
-          {msg && <p className="warn">{msg}</p>}
-          <button className="btn primary small">Confirm order</button>
-        </form>
-      )}
+    <div className="card stack" data-testid="after-checkout">
+      <h3 className="section-label">After checkout</h3>
+      <button className="btn line" aria-haspopup="dialog" onClick={(e) => open({ kind: "confirm-order" }, e)}>Confirm order contents…</button>
     </div>
   );
 }

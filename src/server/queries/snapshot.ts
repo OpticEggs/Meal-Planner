@@ -64,19 +64,36 @@ export async function householdSnapshot(actor: Actor, weekStartParam?: string | 
       ingredients: [...ingredients.values()],
       staples: (
         await c.query(
-          `SELECT s.ingredient_key, s.usual_packages, s.product_id, s.product_revision, s.updated_at, i.name, p.name AS product_name, p.retailer,
-             m.display_name AS updated_by
+          `SELECT s.*, i.name, p.name AS product_name, p.retailer, p.package_qty, p.package_unit, m.display_name AS updated_by_name,
+             (SELECT json_build_object('kind', x.kind, 'at', x.at, 'by', mm.display_name) FROM (
+                SELECT sc.kind, sc.changed_at AS at, sc.changed_by AS by FROM staple_changes sc WHERE sc.household_id=s.household_id AND sc.ingredient_key=s.ingredient_key
+                UNION ALL
+                SELECT 'product', d.decided_at, d.decided_by FROM staple_product_decisions d WHERE d.household_id=s.household_id AND d.ingredient_key=s.ingredient_key
+              ) x JOIN members mm ON mm.id=x.by ORDER BY x.at DESC LIMIT 1) AS last_change
            FROM household_staples s
            JOIN ingredients i ON i.household_id=s.household_id AND i.key=s.ingredient_key LEFT JOIN products p ON p.id=s.product_id
            LEFT JOIN members m ON m.id=s.updated_by
-           WHERE s.household_id=$1 ORDER BY i.name`,
+           WHERE s.household_id=$1 ORDER BY lower(COALESCE(s.display_name, i.name))`,
           [actor.householdId],
         )
       ).rows.map((r) => ({
-        ingredientKey: r.ingredient_key, name: r.name, usualPackages: r.usual_packages, productId: r.product_id, productName: r.product_name,
+        ingredientKey: r.ingredient_key,
+        // The shortcut's label: the household's display name, else the item's name.
+        name: r.display_name ?? r.name, displayName: r.display_name, ingredientName: r.name,
+        active: r.active, detailsRevision: r.details_revision,
+        usual: r.usual_unit ? { quantity: String(r.usual_amount), unit: r.usual_unit } : { quantity: String(r.usual_packages), unit: "package" },
+        usualPackages: r.usual_packages, productId: r.product_id, productName: r.product_name,
+        productPackage: r.package_qty ? { quantity: String(r.package_qty), unit: r.package_unit } : null,
         // Unknown (no remembered product) and unavailable (not sold by the active retailer) stay explicit.
         productAvailable: r.product_id ? r.retailer === retailerSummary().mode : null,
-        productRevision: r.product_revision, updatedBy: r.updated_by,
+        productRevision: r.product_revision, updatedBy: r.updated_by_name, updatedAt: r.updated_at.toISOString(),
+        lastChange: r.last_change ?? null,
+      })),
+      // Every product the household has recorded (for staple management), with store availability.
+      products: (
+        await c.query("SELECT id, name, ingredient_key, package_qty, package_unit, retailer FROM products WHERE household_id=$1 ORDER BY name", [actor.householdId])
+      ).rows.map((p) => ({
+        id: p.id, name: p.name, ingredientKey: p.ingredient_key, packageQty: p.package_qty, packageUnit: p.package_unit, available: p.retailer === retailerSummary().mode,
       })),
     };
 
@@ -244,8 +261,8 @@ async function groceriesFor(c: Db, householdId: string, weekId: string, accepted
       const ol = await c.query(
         `SELECT ol.*, COALESCE((SELECT json_agg(json_build_object('id', r.id, 'state', r.state, 'packages', r.packages, 'substituteText', r.substitute_text,
              'correctsId', r.corrects_id, 'correctedBy', (SELECT x.id FROM receipt_observations x WHERE x.corrects_id=r.id),
-             'validation', (SELECT json_build_object('suitable', v.suitable, 'quantity', v.quantity, 'unit', v.unit) FROM substitution_validations v
-               WHERE v.receipt_id=r.id ORDER BY v.observed_at DESC LIMIT 1)) ORDER BY r.observed_at)
+             'validation', (SELECT json_build_object('id', v.id, 'suitable', v.suitable, 'quantity', v.quantity, 'unit', v.unit) FROM substitution_validations v
+               WHERE v.receipt_id=r.id ORDER BY v.observed_at DESC, v.id DESC LIMIT 1)) ORDER BY r.observed_at)
            FROM receipt_observations r WHERE r.order_line_id=ol.id), '[]') AS receipts FROM order_lines ol WHERE ol.order_id=$1 ORDER BY ol.name`,
         [o.id],
       );

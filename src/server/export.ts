@@ -38,6 +38,9 @@ export const EXPORT_TABLES: Spec[] = [
   { table: "products", where: "household_id=$1" },
   { table: "product_mappings", where: "household_id=$1" },
   { table: "price_observations", where: "household_id=$1" },
+  { table: "household_staples", where: "household_id=$1" },
+  { table: "staple_product_decisions", where: "household_id=$1" },
+  { table: "staple_changes", where: "household_id=$1" },
   { table: "household_requests", where: "household_id=$1" },
   { table: "request_contributors", where: "request_id IN (SELECT id FROM household_requests WHERE household_id=$1)" },
   { table: "availability_observations", where: "household_id=$1" },
@@ -49,8 +52,14 @@ export const EXPORT_TABLES: Spec[] = [
   { table: "orders", where: "household_id=$1" },
   { table: "order_lines", where: "household_id=$1" },
   { table: "receipt_observations", where: "household_id=$1" },
+  { table: "substitution_validations", where: "household_id=$1" },
   { table: "change_events", where: "household_id=$1" },
 ];
+
+/** Household-scoped tables deliberately NOT exported: operational idempotency records and the
+ *  test-only simulated-retailer recorder. Every other table with a household_id must be in
+ *  EXPORT_TABLES (checked by the X12 test). */
+export const NOT_EXPORTED = ["command_receipts", "fake_retailer_calls", "fake_retailer_script"];
 
 export interface HouseholdExport {
   format: "table-household-export";
@@ -117,6 +126,14 @@ export async function restoreHousehold(c: pg.PoolClient | pg.Client, data: House
         );
       }
       counts[s.table] = rows.length;
+    }
+    // Serial ids were restored explicitly: move their sequences past them.
+    const serials = await c.query(
+      `SELECT table_name, column_name FROM information_schema.columns WHERE table_schema='public' AND column_default LIKE 'nextval(%' AND table_name = ANY($1::text[])`,
+      [EXPORT_TABLES.map((s) => s.table)],
+    );
+    for (const r of serials.rows) {
+      await c.query(`SELECT setval(pg_get_serial_sequence($1, $2), GREATEST((SELECT COALESCE(max("${r.column_name}"), 0) FROM ${r.table_name}), 1))`, [r.table_name, r.column_name]);
     }
     await c.query("COMMIT");
   } catch (e) {

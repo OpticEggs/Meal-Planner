@@ -159,7 +159,7 @@ export function LiveRegion() {
  * polls that bring nothing new announce nothing.
  */
 export function useChangeAnnouncer() {
-  const { snapshot, lastChange, me, announce, currency } = useStore();
+  const { snapshot, lastChange, me, announce, currency, isOwnSeq } = useStore();
   const prev = useRef<{ scope: string; stale: Set<string>; approved: Set<string> } | null>(null);
   const announcedSeq = useRef(0);
   const prevCurrency = useRef(currency);
@@ -176,12 +176,15 @@ export function useChangeAnnouncer() {
       return;
     }
     const parts: string[] = [];
+    // A refresh that only brings this member's own command: the action announces its own result
+    // (B15 — e.g. "chosen; approve it again"), so the consequences are not announced twice.
+    const own = isOwnSeq(Number(snapshot.seq)) || (!!lastChange && lastChange.seq === snapshot.seq && lastChange.actorId === me.memberId);
     if (lastChange && lastChange.seq > announcedSeq.current && lastChange.seq <= snapshot.seq) {
       announcedSeq.current = lastChange.seq;
       if (lastChange.actorId !== me.memberId && lastChange.text) parts.push(`${lastChange.text}.`);
     }
     for (const pv of snapshot.previews ?? []) {
-      if (pv.stale && !p.stale.has(pv.id)) {
+      if (!own && pv.stale && !p.stale.has(pv.id)) {
         const days = pv.targetNights
           .map((d: string) => snapshot.week?.nights?.find((x: any) => x.night === d)?.dayName)
           .filter(Boolean)
@@ -190,9 +193,9 @@ export function useChangeAnnouncer() {
       }
     }
     const reopened = (snapshot.groceries?.lines ?? []).filter((l: any) => p.approved.has(l.key) && l.status === "needs_review").length;
-    if (reopened) parts.push(`${reopened} approved grocery line${reopened === 1 ? "" : "s"} need${reopened === 1 ? "s" : ""} review again.`);
+    if (reopened && !own) parts.push(`${reopened} approved grocery line${reopened === 1 ? "" : "s"} need${reopened === 1 ? "s" : ""} review again.`);
     if (parts.length) announce(parts.join(" "));
-  }, [snapshot, lastChange, me.memberId, announce]);
+  }, [snapshot, lastChange, me.memberId, announce, isOwnSeq]);
 
   useEffect(() => {
     const was = prevCurrency.current;

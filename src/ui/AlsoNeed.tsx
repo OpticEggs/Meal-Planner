@@ -48,9 +48,9 @@ export function AlsoNeed({ from, ingredientKey, label }: { from: "week" | "groce
       <datalist id="ingredient-names">{snapshot.ingredients.map((i: any) => <option key={i.key} value={i.name} />)}</datalist>
       <button className="btn primary small" type="submit">Add</button>
       <button className="btn line small" type="button" onClick={() => capture(text, "extra")} title="An explicit extra package on top of anything else">Extra</button>
-      {snapshot.staples?.length > 0 && (
-        <div className="row full-row" aria-label="Usual items">
-          {snapshot.staples.map((st: any) => (
+      {snapshot.staples?.some((st: any) => st.active) && (
+        <div className="row full-row" role="group" aria-label="Usual items">
+          {snapshot.staples.filter((st: any) => st.active).map((st: any) => (
             <button key={st.ingredientKey} type="button" className="chip-btn" onClick={() => capture(st.name, "usual", st.ingredientKey)} title={st.productName ?? undefined}
               aria-label={`${st.name}${st.usualPackages > 1 ? ` ×${st.usualPackages}` : ""} — your usual (${st.productName ?? "no product remembered"}${st.productAvailable === false ? ", not available from this store" : ""})`}>
               {st.name}{st.usualPackages > 1 ? ` ×${st.usualPackages}` : ""}

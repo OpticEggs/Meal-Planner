@@ -30,6 +30,7 @@ const PLAN = "tests/integration/plan.contract.test.ts";
 const GROC = "tests/integration/groceries.contract.test.ts";
 const REV = "tests/integration/review-regressions.test.ts";
 const B12 = "tests/integration/b12.staple-products.test.ts";
+const B16 = "tests/integration/b16.staple-management.test.ts";
 
 /** expect: regexes over failing test full names; at least one must fail by assertion. */
 const MUTATIONS = [
@@ -74,15 +75,35 @@ const MUTATIONS = [
   { name: "B12_stale_staple_overwrites", file: "src/server/commands/groceries.ts", suite: B12, pattern: "B12d", expect: [/B12d/],
     edits: [["    if (s.product_revision !== p.expectedRevision) {", "    if (false) {"], ["WHERE household_id=$1 AND ingredient_key=$2 AND product_revision=$5 RETURNING", "WHERE household_id=$1 AND ingredient_key=$2 AND $5::int IS NOT NULL RETURNING"]] },
   { name: "B12_tap_ignores_remembered_product", file: "src/server/commands/groceries.ts", suite: B12, pattern: "B12", expect: [/B12b|B12c/],
-    edits: [["    if (staple?.rowCount) productIntent = staple.rows[0].product_id;", "    if (false) productIntent = staple!.rows[0].product_id;"]] },
+    edits: [["    if (activeStaple) productIntent = activeStaple.product_id;", "    if (false && activeStaple) productIntent = activeStaple.product_id;"]] },
   { name: "B12_decision_swaps_outstanding_purchase", file: "src/server/commands/groceries.ts", suite: B12, pattern: "B12b", expect: [/B12b/],
     edits: [["    const revision = up.rows[0].product_revision;",
       "    const revision = up.rows[0].product_revision;\n    await c.query(\"UPDATE household_requests SET product_id=$2 WHERE household_id=$1 AND ingredient_key=$3 AND state='active' AND product_id IS NOT NULL\", [actor.householdId, pr.rows[0].id, p.ingredientKey]);"],
       ["      change: { weekId: null, summary: { type: \"staple\",", "      purchasingInputsChanged: true,\n      change: { weekId: null, summary: { type: \"staple\","]] },
   { name: "B12_unavailable_product_substituted", file: "src/domain/groceries/projection.ts", suite: B12, pattern: "B12e", expect: [/B12e/],
-    edits: [["      else if (!intent.available) unresolved.push(", "      else if (false) unresolved.push("]] },
+    edits: [["      } else if (!intent.available) {", "      } else if (false) {"]] },
   { name: "B12_usual_quantity_overwrites_product", file: "src/server/commands/groceries.ts", suite: B12, pattern: "B12f", expect: [/B12f/],
-    edits: [["\"UPDATE household_staples SET usual_packages=$3, updated_by=$4,", "\"UPDATE household_staples SET usual_packages=$3, product_id=(SELECT product_id FROM product_mappings m WHERE m.household_id=$1 AND m.ingredient_key=$2), updated_by=$4,"]] },
+    edits: [["UPDATE household_staples SET usual_packages=$3, usual_amount=NULL", "UPDATE household_staples SET usual_packages=$3, product_id=(SELECT product_id FROM product_mappings m WHERE m.household_id=$1 AND m.ingredient_key=$2), usual_amount=NULL"]] },
+  // B16: staple management and the cross-feature scenarios.
+  { name: "B16_stale_edit_applied", file: "src/server/commands/staples.ts", suite: B16, pattern: "Scenario A", expect: [/concurrent edits of one staple/],
+    edits: [["    if (s.details_revision !== p.expectedRevision) throw staleDetails(s);", "    if (false) throw staleDetails(s);"], ["AND details_revision=$8 RETURNING", "AND $8::int IS NOT NULL RETURNING"]] },
+  { name: "B16_stale_removal_applied", file: "src/server/commands/staples.ts", suite: B16, pattern: "Scenario A", expect: [/an edit racing a removal/],
+    edits: [["    if (p.expectedRevision !== s.details_revision) throw staleDetails(s);", "    if (false) throw staleDetails(s);"], ["AND details_revision=$5 RETURNING", "AND $5::int IS NOT NULL RETURNING"]] },
+  { name: "B16_removed_staple_still_a_shortcut", file: "src/server/commands/groceries.ts", suite: B16, pattern: "B16c", expect: [/B16c/],
+    edits: [["const activeStaple = staple?.rowCount && staple.rows[0].active ? staple.rows[0] : null;", "const activeStaple = staple?.rowCount ? staple.rows[0] : null;"]] },
+  { name: "B16_removal_drops_grocery_need", file: "src/server/commands/staples.ts", suite: B16, pattern: "Scenario C", expect: [/Scenario C/],
+    edits: [["    await logChange(c, actor, p.ingredientKey, p.active ? \"restored\" : \"deactivated\",",
+      "    if (!p.active) await c.query(\"UPDATE household_requests SET state='removed' WHERE household_id=$1 AND ingredient_key=$2 AND state='active'\", [actor.householdId, p.ingredientKey]);\n    await logChange(c, actor, p.ingredientKey, p.active ? \"restored\" : \"deactivated\","]] },
+  { name: "B16_measured_amount_rounds_down", file: "src/server/commands/staples.ts", suite: B16, pattern: "B16a", expect: [/B16a/],
+    edits: [["const packages = packagesFor(inPkgUnit, new D(product.package_qty));", "const packages = Math.max(1, inPkgUnit.div(product.package_qty).floor().toNumber());"]] },
+  { name: "B16_repoint_keeps_old_package_count", file: "src/server/commands/groceries.ts", suite: B16, pattern: "re-pointing", expect: [/re-pointing a staple/],
+    edits: [["usual_packages=COALESCE($6, usual_packages)", "usual_packages=COALESCE(NULL::int + $6, usual_packages)"]] },
+  { name: "B15_product_choice_any_household_week", file: "src/server/commands/groceries.ts", suite: B16, pattern: "another household", expect: [/another household's week/],
+    edits: [["  if (!(await weekById(c, householdId, weekId))) throw new Reject(\"not_found\", \"Week not found\");", "  void weekById;"]] },
+  { name: "B15_substitution_decision_overwritten", file: "src/server/commands/groceries.ts", suite: B16, pattern: "substitution decision", expect: [/substitution decision made against an older view/],
+    edits: [["      if ((v.rows[0]?.id ?? null) !== (p.expectedValidationId ?? null)) {", "      if (false) {"]] },
+  { name: "B15_stale_product_choice_applied", file: "src/server/commands/groceries.ts", suite: B16, pattern: "Scenario B/E", expect: [/two product choices for the same pickup line/],
+    edits: [["  if ((now?.id ?? null) !== (p.expectedProductId ?? null)) {", "  if (false) {"]] },
 ];
 // A harmless change that MUST be classified SURVIVED (proves the classifier can say so).
 const CONTROLS_LIST = [
