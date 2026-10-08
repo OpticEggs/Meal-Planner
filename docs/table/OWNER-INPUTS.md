@@ -61,7 +61,7 @@ the simulated-retailer deployment. Each step is a separate gate.
 | Kroger connection | K1–K4, K5 | B5(b) |
 | Kroger data retention | K6 | any cart or price activation |
 | Kroger cart test | K7, bound to account + product ids + quantities | B6 |
-| Visual update | ~~approval~~ given 2026-10-08 (after the cook-record fix) | — |
+| Visual update | ~~approval~~ given 2026-10-08; delivered as B20 (`f22f9d5`) | — |
 
 The hosting recommendation is provisional; it is not a host selection or spending authorization until
 H1/H3 are given, and it stays provisional until the hosted checks in DEPLOYMENT.md §9 pass.

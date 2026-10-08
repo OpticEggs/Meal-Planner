@@ -2,7 +2,7 @@
 
 Status vocabulary: NOT IMPLEMENTED · IMPLEMENTED / NOT RUN · PASS · FAIL · BLOCKED.
 
-**Current evidence run:** `docs/table/evidence/2026-10-08-verify-02a3b1a/summary.md` (implementation commit `02a3b1a`, cook-record idempotency; clean tree, source hash unchanged during the run): vitest 293/293, Playwright 117/117, 62 mutations killed, 0 survived, 0 error. Earlier runs are kept as history under `docs/table/evidence/` (latest before this: `2026-10-08-verify-c19bd5a/`, integration preparation).
+**Current evidence run:** `docs/table/evidence/2026-10-08-verify-f22f9d5/summary.md` (implementation commit `f22f9d5`, visual update; clean tree, source hash unchanged during the run): vitest 298/298, Playwright 121/121, 64 mutations killed, 0 survived, 0 error. Earlier runs are kept as history under `docs/table/evidence/` (latest before this: `2026-10-08-verify-02a3b1a/`, cook-record idempotency).
 Environment: real PostgreSQL 16.15, production `next start` server, two independently signed-in
 Chromium contexts, recording fake retailer (simulated; nothing reaches a store), fixed household clock
 2026-10-12 15:00 America/New_York. Concurrency orders are forced with database lock barriers.
@@ -298,3 +298,33 @@ Restore order: with an immediate `duplicate_of` reference the restore test faile
 | Devices | Cook page cooked state and correction dialog on iPhone Safari/VoiceOver | DEVICE-CHECKLIST D-row added | **NOT RUN** (B8) |
 
 **Existing tests changed:** none. T06 (cook mode records cooking) passes unchanged.
+
+## Visual update (UI-VISUAL-UPDATE-PROPOSAL.md §5) — added 2026-10-08
+
+New IDs; no earlier row renumbered. Start `d0c8df8` (code `02a3b1a`); implementation commit `f22f9d5`;
+verified at `f22f9d5`. Evidence `docs/table/evidence/2026-10-08-verify-f22f9d5/summary.md` (vitest 298/298, Playwright 121/121, 64 mutations killed, 0 survived, 0 error).
+Before/after screenshots at 390 px and 320 px, light and dark preference, in `screens-before-02a3b1a/` and
+`screens-after-f22f9d5/` (each view on arrival `-top` and as a full page `-full`; in a full-page capture the
+fixed header and tab bar appear once, at the scroll position). The code before this update has one theme,
+so its "light" captures are dark.
+
+**What the existing suite caught during development** (`dev/pw-first-run-31-failed.log`, kept): a new
+"Open Groceries" link whose name contained "Groceries" made 25 tests' `getByRole('link', { name:
+'Groceries' })` ambiguous (link removed — the tab bar is the route); the B18 sweep found the tab badge
+widening the Groceries tab at 200% text and a wrapped "N grocery lines need someone" link covered by its
+list item (both fixed in CSS); and the cook-records spec (from `02a3b1a`) looked up the correction
+message page-wide, which also matched the announcer (looked up inside the Cook view now — same
+assertion; disclosed below). After the fixes those 31 passed (`dev/pw-rerun-31-passed.log`).
+
+| ID | What is checked | Tests | Status |
+|---|---|---|---|
+| UI-01 Theme contrast | Both themes: every text/background pair ≥ 4.5:1, focus outline ≥ 3:1, read from `globals.css` (table in `contrast.md`; lowest 5.05 light, 5.13 dark) | unit theme-contrast (5); mutations UI_light_text_too_faint, UI_dark_text_too_faint | PASS |
+| UI-02 Contracts unchanged | Every existing test id and accessible name; T01–T22, X01–X12, B14–B18 focus and modal tests, the 320 px / 150% / 200% sweep, cook records | full Playwright suite | PASS (Chromium) |
+| UI-03 Phone widths | Week, Cook, Groceries, Our Recipes, recipe detail, Explore, a proposal at 390 and 320 px in both themes: no horizontal page scroll | e2e ui-screens (4) | PASS (Chromium) |
+| UI-04 Honest numbers | Pickup estimate is one large figure only when complete; otherwise "known + N unpriced" with the lines listed; "simulated store prices" labeled; budget in one wording on Week and Groceries; unknown time/effort shown as unknown | T05, B15 tests, ui-screens (visual) | PASS (Chromium) |
+| Devices | Both themes, contrast and the new layout on iPhone Safari with VoiceOver and large text | DEVICE-CHECKLIST (existing D-rows cover every screen) | **NOT RUN** (B8) |
+
+**Existing test changed (disclosed):** `tests/e2e/cook-records.spec.ts` line 49 — `getByText("Corrected:
+this dinner is not recorded as cooked.")` → the same text inside `getByTestId("cook-view")`. The page-wide
+lookup also matches the polite announcer whenever both hold the text, so whether it passed depended on
+timing. The assertion (the visible message is shown) is unchanged. No test was skipped, deleted or weakened.

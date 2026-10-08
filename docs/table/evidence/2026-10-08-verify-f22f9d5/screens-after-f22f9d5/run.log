@@ -1,0 +1,9 @@
+
+Running 4 tests using 1 worker
+
+  ✓  1 [chromium] › tests/e2e/ui-screens.spec.ts:23:5 › main views at 390 px, light theme (5.4s)
+  ✓  2 [chromium] › tests/e2e/ui-screens.spec.ts:23:5 › main views at 320 px, light theme (4.4s)
+  ✓  3 [chromium] › tests/e2e/ui-screens.spec.ts:23:5 › main views at 390 px, dark theme (4.4s)
+  ✓  4 [chromium] › tests/e2e/ui-screens.spec.ts:23:5 › main views at 320 px, dark theme (4.3s)
+
+  4 passed (23.7s)

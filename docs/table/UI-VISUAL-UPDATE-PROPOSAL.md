@@ -1,4 +1,6 @@
-# Table — Visual update proposal (not implemented)
+# Table — Visual update proposal (approved; implemented in f22f9d5)
+
+> **Status (2026-10-08):** approved and implemented as §5 describes — `f22f9d5`, DECISIONS D81–D83, ACCEPTANCE "Visual update", evidence `evidence/2026-10-08-verify-f22f9d5/` (before/after screenshots). Device checks remain B8.
 
 Prepared 2026-10-08, after the integration-preparation delivery. **This is a proposal only.** No
 application code, schema, tests or dependencies were changed for it, and nothing here is implemented.

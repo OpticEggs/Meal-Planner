@@ -1,0 +1,24 @@
+{
+  "when": "2026-10-08T15:48:18.868Z",
+  "head": "02a3b1a1d5177442b7fec3c3f45b39e8ac921c0a",
+  "restored": true,
+  "pass": true,
+  "results": [
+    {
+      "name": "UI_light_text_too_faint",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/4 failed by assertion: text pairs meet 4.5:1 and the focus outline meets 3:1"
+    },
+    {
+      "name": "UI_dark_text_too_faint",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/4 failed by assertion: text pairs meet 4.5:1 and the focus outline meets 3:1"
+    }
+  ]
+}
