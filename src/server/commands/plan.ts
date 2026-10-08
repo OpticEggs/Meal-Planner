@@ -131,7 +131,7 @@ export function generateProposalCommand(actor: Actor, operationId: string, p: Ge
       ).rows.map((r) => r.recipe_id),
     );
     const cooked = new Set<string>(
-      (await c.query("SELECT DISTINCT v.recipe_id FROM cook_records cr JOIN recipe_versions v ON v.id=cr.recipe_version_id WHERE cr.household_id=$1", [actor.householdId])).rows.map(
+      (await c.query("SELECT DISTINCT v.recipe_id FROM cook_records_effective cr JOIN recipe_versions v ON v.id=cr.recipe_version_id WHERE cr.household_id=$1", [actor.householdId])).rows.map(
         (r) => r.recipe_id,
       ),
     );
@@ -494,12 +494,51 @@ export function recordCookedCommand(actor: Actor, operationId: string, p: { even
   return runCommand(actor, "RecordCooked", operationId, p, async (c) => {
     const e = await c.query("SELECT week_id, recipe_version_id, cook_night FROM cooking_events WHERE id=$1 AND household_id=$2", [p.eventId, actor.householdId]);
     if (!e.rowCount) throw new Reject("not_found", "Cooking event not found");
+    // One effective record per cooking event (the household lock serializes both members' presses).
+    const existing = await c.query(
+      `SELECT cr.id, cr.recorded_at, m.display_name FROM cook_records_effective cr JOIN members m ON m.id=cr.recorded_by
+       WHERE cr.cooking_event_id=$1 ORDER BY cr.generation DESC LIMIT 1`,
+      [p.eventId],
+    );
+    if (existing.rowCount) {
+      const x = existing.rows[0];
+      throw new Reject("already_recorded", `${x.display_name} already recorded this as cooked. Nothing was added.`, {
+        record: { id: x.id, by: x.display_name, at: x.recorded_at },
+      });
+    }
     const h = await loadHousehold(c, actor.householdId);
     const today = nextDinnerDate(nowInstant(), h.timezone, 24);
-    await c.query("INSERT INTO cook_records(household_id, cooking_event_id, recipe_version_id, recorded_by, cooked_on) VALUES ($1,$2,$3,$4,$5)", [
-      actor.householdId, p.eventId, e.rows[0].recipe_version_id, actor.memberId, e.rows[0].cook_night ?? today,
+    // After a correction, cooking can be recorded again under the next generation.
+    const gen = await c.query("SELECT coalesce(max(generation), 0) + 1 AS g FROM cook_records WHERE cooking_event_id=$1 AND duplicate_of IS NULL", [p.eventId]);
+    await c.query("INSERT INTO cook_records(household_id, cooking_event_id, recipe_version_id, recorded_by, cooked_on, generation) VALUES ($1,$2,$3,$4,$5,$6)", [
+      actor.householdId, p.eventId, e.rows[0].recipe_version_id, actor.memberId, e.rows[0].cook_night ?? today, gen.rows[0].g,
     ]);
     return { status: "accepted", result: { recorded: true }, change: { weekId: e.rows[0].week_id, summary: { type: "cooked", text: `${actor.displayName} recorded cooking` } } };
+  });
+}
+
+/** Corrects a mistaken "cooked" record (it was not cooked). Appends a correction; nothing is deleted
+ *  or edited. A record already corrected (or superseded as a duplicate) is stale. */
+export function correctCookRecordCommand(actor: Actor, operationId: string, p: { cookRecordId: string; reason: string }) {
+  return runCommand(actor, "CorrectCookRecord", operationId, p, async (c) => {
+    if (p.reason !== "not_cooked") throw new Reject("invalid", "The only correction is: it was not cooked");
+    const r = await c.query(
+      `SELECT cr.id, cr.duplicate_of, ce.week_id,
+              EXISTS (SELECT 1 FROM cook_record_corrections k WHERE k.cook_record_id=cr.id) AS corrected
+       FROM cook_records cr LEFT JOIN cooking_events ce ON ce.id=cr.cooking_event_id
+       WHERE cr.id=$1 AND cr.household_id=$2`,
+      [p.cookRecordId, actor.householdId],
+    );
+    if (!r.rowCount) throw new Reject("not_found", "Cooking record not found");
+    const x = r.rows[0];
+    if (x.corrected || x.duplicate_of) throw new Reject("stale", "This cooking record was already corrected. Nothing was changed.");
+    await c.query("INSERT INTO cook_record_corrections(household_id, cook_record_id, reason, corrected_by) VALUES ($1,$2,$3,$4)", [
+      actor.householdId, p.cookRecordId, p.reason, actor.memberId,
+    ]);
+    return {
+      status: "accepted", result: { corrected: true },
+      change: x.week_id ? { weekId: x.week_id, summary: { type: "cooked", text: `${actor.displayName} corrected a cooking record: not cooked` } } : undefined,
+    };
   });
 }
 

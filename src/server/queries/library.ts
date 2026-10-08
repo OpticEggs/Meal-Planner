@@ -1,4 +1,4 @@
-import { readSnapshot } from "../db/pool";
+import { pool, readSnapshot } from "../db/pool";
 import { nowInstant } from "../env";
 import type { Actor } from "../commands/framework";
 import { computeProjection } from "@/domain/groceries/projection";
@@ -45,7 +45,7 @@ export async function librarySnapshot(actor: Actor) {
     ).rows;
     const cooked = (
       await c.query(
-        "SELECT v.recipe_id, cr.cooked_on, m.display_name FROM cook_records cr JOIN recipe_versions v ON v.id=cr.recipe_version_id JOIN members m ON m.id=cr.recorded_by WHERE cr.household_id=$1 ORDER BY cr.cooked_on DESC",
+        "SELECT v.recipe_id, cr.cooked_on, m.display_name FROM cook_records_effective cr JOIN recipe_versions v ON v.id=cr.recipe_version_id JOIN members m ON m.id=cr.recorded_by WHERE cr.household_id=$1 ORDER BY cr.cooked_on DESC",
         [actor.householdId],
       )
     ).rows;
@@ -128,4 +128,14 @@ export async function librarySnapshot(actor: Actor) {
       ingredients: [...ingredients.values()],
     };
   });
+}
+
+/** Recipes this household has an effective "cooked" record for (corrected and duplicate records
+ *  do not count) — the basis of "New to you". */
+export async function effectiveCookedRecipeIds(householdId: string): Promise<Set<string>> {
+  const r = await pool().query(
+    "SELECT DISTINCT v.recipe_id FROM cook_records_effective cr JOIN recipe_versions v ON v.id=cr.recipe_version_id WHERE cr.household_id=$1",
+    [householdId],
+  );
+  return new Set(r.rows.map((x) => x.recipe_id as string));
 }

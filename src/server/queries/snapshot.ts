@@ -146,6 +146,14 @@ export async function householdSnapshot(actor: Actor, weekStartParam?: string | 
       [week.id],
     );
     const meta = new Map(asgMeta.rows.map((r) => [r.id, { updatedAt: r.updated_at.toISOString(), updatedBy: r.display_name }]));
+    // Effective "cooked" record per cooking event (corrected and duplicate records do not count).
+    const cookedQ = await c.query(
+      `SELECT DISTINCT ON (cr.cooking_event_id) cr.cooking_event_id, cr.id, cr.recorded_at, m.display_name
+       FROM cook_records_effective cr JOIN members m ON m.id=cr.recorded_by
+       WHERE cr.cooking_event_id = ANY($1::uuid[]) ORDER BY cr.cooking_event_id, cr.generation DESC`,
+      [state.events.map((e) => e.id)],
+    );
+    const cookedBy = new Map(cookedQ.rows.map((r) => [r.cooking_event_id as string, { recordId: r.id as string, by: r.display_name as string, at: (r.recorded_at as Date).toISOString() }]));
     const targetRows = base.targets;
 
     const nights = nightsOf(weekStart).map((night) => {
@@ -178,7 +186,7 @@ export async function householdSnapshot(actor: Actor, weekStartParam?: string | 
         reason: a?.reason ?? null,
         updatedBy: a ? meta.get(a.id)?.updatedBy ?? null : null,
         updatedAt: a ? meta.get(a.id)?.updatedAt ?? null : null,
-        event: ev ? { id: ev.id, revision: ev.revision, cookNight: ev.cookNight, recipeVersionId: ev.recipeVersionId } : null,
+        event: ev ? { id: ev.id, revision: ev.revision, cookNight: ev.cookNight, recipeVersionId: ev.recipeVersionId, cooked: cookedBy.get(ev.id) ?? null } : null,
         recipe: rv ? recipeSummary(rv) : null,
         batch: ev ? { plates: batchAllocs.map((al) => ({ memberId: al.memberId, kind: al.kind, night: al.night, componentPortions: al.componentPortions })) } : null,
         cookAmounts,

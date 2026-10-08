@@ -1,7 +1,7 @@
 import type { Actor, CommandReceipt } from "./framework";
 import {
   adoptWeekProposalCommand, applyPlanChangeCommand, cancelPreviewCommand, createPreviewCommand, generateProposalCommand,
-  recordCookedCommand, recordLeftoverShortfallCommand, setNightLockCommand, setPlateCommand,
+  correctCookRecordCommand, recordCookedCommand, recordLeftoverShortfallCommand, setNightLockCommand, setPlateCommand,
 } from "./plan";
 import {
   addProductCommand, approvePurchaseLinesCommand, approveStapleProductCommand, captureHouseholdNeedCommand, chooseProductCommand, confirmOrderCommand, mapRequestCommand,
@@ -30,6 +30,7 @@ export const COMMANDS: Record<string, Handler> = {
   SetPlate: setPlateCommand,
   RecordLeftoverShortfall: recordLeftoverShortfallCommand,
   RecordCooked: recordCookedCommand,
+  CorrectCookRecord: correctCookRecordCommand,
   CaptureHouseholdNeed: captureHouseholdNeedCommand,
   RemoveRequest: removeRequestCommand,
   MapRequest: mapRequestCommand,

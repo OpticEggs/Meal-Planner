@@ -35,6 +35,7 @@ const B17 = "tests/integration/b17.recipes.test.ts";
 const REBASE = "tests/unit/recipe-rebase.test.ts";
 const B9 = "tests/integration/b9.dispatch-overlap.test.ts";
 const B9R = "tests/integration/b9.account-recovery.test.ts";
+const COOK = "tests/integration/cook-records.test.ts";
 const B5C = "tests/integration/b5.kroger-connection.test.ts";
 const B5D = "tests/integration/b5.kroger-dispatch.test.ts";
 const B7U = "tests/unit/fdc-normalize.test.ts";
@@ -169,6 +170,16 @@ MUTATIONS.push(
     edits: [["        timer = setTimeout(() => reject(", "        timer = setTimeout(() => void ("]] },
   { name: "B9_no_running_sweep", file: "src/instrumentation.ts", suite: B9, pattern: "B9", expect: [/periodic sweep/],
     edits: [["  setInterval(() => void run(\"recovery-sweep\"), recoverySweepIntervalMs()).unref();", "  // (mutated) no sweep while running"]] },
+  { name: "COOK_second_record_added", file: "src/server/commands/plan.ts", suite: COOK, pattern: "cook-record", expect: [/adds nothing|exactly one record/],
+    edits: [["    if (existing.rowCount) {\n      const x = existing.rows[0];", "    if (false) {\n      const x = existing.rows[0];"]] },
+  { name: "COOK_correction_applied_twice", file: "src/server/commands/plan.ts", suite: COOK, pattern: "cook-record", expect: [/already corrected/],
+    edits: [["    if (x.corrected || x.duplicate_of) throw", "    if (x.duplicate_of) throw"]] },
+  { name: "COOK_history_counts_corrected", file: "src/server/queries/library.ts", suite: COOK, pattern: "cook-record", expect: [/appended correction/],
+    edits: [["\"SELECT v.recipe_id, cr.cooked_on, m.display_name FROM cook_records_effective cr JOIN", "\"SELECT v.recipe_id, cr.cooked_on, m.display_name FROM cook_records cr JOIN"]] },
+  { name: "COOK_new_to_you_counts_corrected", file: "src/server/queries/library.ts", suite: COOK, pattern: "cook-record", expect: [/appended correction/],
+    edits: [["    \"SELECT DISTINCT v.recipe_id FROM cook_records_effective cr JOIN", "    \"SELECT DISTINCT v.recipe_id FROM cook_records cr JOIN"]] },
+  { name: "COOK_snapshot_ignores_record", file: "src/server/queries/snapshot.ts", suite: COOK, pattern: "cook-record", expect: [/already cooked, by whom|appended correction/],
+    edits: [["cooked: cookedBy.get(ev.id) ?? null", "cooked: null"]] },
   { name: "B9_reset_keeps_sessions", file: "src/server/provision.ts", suite: B9R, pattern: "B9", expect: [/ends that member's sessions/],
     edits: [["  await ctx.internalAdapter.deleteUserSessions(userId);", "  // (mutated) sessions kept"]] },
   { name: "B9_reset_any_account", file: "src/server/provision.ts", suite: B9R, pattern: "B9", expect: [/non-member account/],

@@ -29,6 +29,7 @@ export const EXPORT_TABLES: Spec[] = [
   { table: "allocations", where: "household_id=$1" },
   { table: "leftover_observations", where: "household_id=$1" },
   { table: "cook_records", where: "household_id=$1" },
+  { table: "cook_record_corrections", where: "household_id=$1" },
   { table: "proposals", where: "household_id=$1" },
   { table: "previews", where: "household_id=$1" },
   { table: "interests", where: "household_id=$1" },
@@ -63,7 +64,8 @@ export const EXPORT_TABLES: Spec[] = [
  *  test-only simulated-retailer recorder, and the Kroger credential stores (sealed access/refresh
  *  tokens, PKCE verifiers and authorization states must NEVER be exported). Every other table with
  *  a household_id must be in EXPORT_TABLES (checked by the X12 test). */
-export const NOT_EXPORTED = ["command_receipts", "fake_retailer_calls", "fake_retailer_script", "kroger_connections", "kroger_auth_states"];
+// cook_records_effective is a view derived from cook_records + cook_record_corrections (both exported).
+export const NOT_EXPORTED = ["command_receipts", "fake_retailer_calls", "fake_retailer_script", "kroger_connections", "kroger_auth_states", "cook_records_effective"];
 
 export interface HouseholdExport {
   format: "table-household-export";
