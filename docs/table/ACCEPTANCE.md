@@ -2,7 +2,7 @@
 
 Status vocabulary: NOT IMPLEMENTED · IMPLEMENTED / NOT RUN · PASS · FAIL · BLOCKED.
 
-**Evidence run:** `docs/table/evidence/2026-10-08-full-run.md` and the final run recorded in IMPLEMENTATION-STATUS.md.
+**Current evidence run:** `docs/table/evidence/2026-10-08-verify-2c56267/summary.md` (implementation commit `2c56267`, clean tree, source hash unchanged during the run). Earlier runs (`2026-10-08-full-run*.md`) are kept as history; they predate the review of 89f3ea9.
 Environment: real PostgreSQL 16.15, production `next start` server, two independently signed-in
 Chromium contexts, recording fake retailer (simulated; nothing reaches a store), fixed household clock
 2026-10-12 15:00 America/New_York. Concurrency orders are forced with database lock barriers.
@@ -61,3 +61,28 @@ All 7 were caught in the evidence run: blanket whole-week conflict (T10 fails), 
 stale whole-week adoption (T12), Send ignoring the reviewed fingerprint (T13/T14), approvals not consumed (X03),
 uncertain transfers treated as unsent (T16), superseded queued work dispatched (T17).
 Also: `plan.contract.test.ts` "Negative control: a stale target is rejected".
+
+## Review regressions (independent review of 89f3ea9) — added 2026-10-08
+
+These are additional regression IDs; no T/X row above was renumbered or replaced. Full dispositions:
+`docs/table/CORRECTIONS-89f3ea9.md`. On 89f3ea9 the integration cases below FAILED (23 of 29;
+`evidence/corrections/2026-10-08-repro-on-89f3ea9.log`); all pass on `2c56267`.
+
+| ID | Tests | Status on 2c56267 |
+|---|---|---|
+| R-F01 whole-week admission | `tests/integration/review-regressions.test.ts` R-F01a–e; `tests/e2e/review-regressions.spec.ts` R-F01-UI | PASS |
+| R-F02 dependency closure | review-regressions R-F02a–e (incl. move vs lunch race, both orders) | PASS |
+| R-F03 exclusions on new choices | review-regressions R-F03a–b | PASS |
+| R-F04 order/transfer reconciliation | review-regressions R-F04a–d (exact fake-retailer call counts) | PASS |
+| R-F05 substitutions & package identity | review-regressions R-F05a–d | PASS |
+| R-F06 bound "Have enough" | review-regressions R-F06a (both orders), R-F06b; e2e R-F06-UI | PASS |
+| R-F07 capture lifecycle | review-regressions R-F07a–c; e2e R-F07-UI | PASS |
+| R-F08 cross-week purchasing inputs | review-regressions R-F08a–b | PASS |
+| B3 received goods / extra cost | `tests/integration/b3.received-goods.test.ts` (2) | PASS |
+| Layout: sticky header / fixed nav overlap | e2e "Header overlap" (Chromium 390×844) | PASS (Chromium); WebKit/iPhone BLOCKED |
+| V01 mutation classification | `tests/mutation/selftest.sh`; `tests/mutation/run.mjs` (16 mutations incl. one per finding + B3) | PASS — 16 killed, 0 survived, 0 error |
+| V02 bundle restore | `scripts/make-bundle.sh` (plain and `--branch main` clones, default branch master) | PASS for the delivered bundle |
+
+Original tests whose code changed (pass conditions unchanged): **X09** assertion now expects the
+"Add another" extra in the next open pickup (the old assertion encoded the F07 defect); **T19** passes
+the reviewed amount to "Have enough" (F06). No original test was skipped or weakened.

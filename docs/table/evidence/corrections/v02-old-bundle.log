@@ -1,0 +1,8 @@
+## Old bundle (89f3ea9), plain clone with default branch master
+Cloning into 'plain'...
+warning: remote HEAD refers to nonexistent ref, unable to checkout
+files checked out: 0
+
+## Old bundle, explicit branch
+Cloning into 'explicit'...
+89f3ea9b5e057c5e57928e7978dda3d23ad4d750

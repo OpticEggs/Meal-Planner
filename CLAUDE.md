@@ -31,9 +31,13 @@ npm run typecheck
 npx vitest run                      # unit + integration (real PostgreSQL, table_test)
 npx next build && npx playwright test   # browser suite (production server, table_e2e)
 tests/mutation/run.sh               # mutation checks: forbidden behaviors must fail the contract tests
-scripts/verify-all.sh               # everything above, writes docs/table/evidence/<date>-full-run.md
+scripts/verify-all.sh               # clean tree required; full logs + JSON to /tmp/table-verify-<commit>-<time>/; copy into docs/table/evidence/ in a separate docs commit
+tests/mutation/selftest.sh          # proves runner failures are ERROR (never "killed") and a no-op control SURVIVES
+scripts/make-bundle.sh <dir>        # restorable bundle (HEAD + main), SHA-256, and a tested restore
 ```
-Never run vitest and Playwright against the same database at the same time.
+Never run vitest and Playwright against the same database at the same time (they use table_test / table_e2e).
+Remote: https://github.com/OpticEggs/Meal-Planner (`main`). Restore a bundle with `git clone --branch main <bundle> table`.
+Review corrections and regressions: `docs/table/CORRECTIONS-89f3ea9.md`.
 
 Local app: see `docs/table/IMPLEMENTATION-STATUS.md` → "Run it locally".
 

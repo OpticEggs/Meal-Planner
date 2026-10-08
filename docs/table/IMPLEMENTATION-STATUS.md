@@ -1,29 +1,49 @@
 # Table — Implementation status
 
-_Last updated 2026-10-08 (UTC). Owner: Jon. Implementation: Claude._
+_Last updated 2026-10-08 (UTC), after the correction pass for the independent review of 89f3ea9._
+
+## Correction of the earlier completion claim
+
+The 89f3ea9 delivery said "stages 1–4 complete; only B3 remains". An independent review found eight
+contract gaps (F01–F08) and two verification defects (V01–V02) that the earlier green suite did not
+exercise. All were reproduced here as failing expected-correctness tests on 89f3ea9 against real
+PostgreSQL, then repaired; B3 was finished afterwards. Dispositions: `CORRECTIONS-89f3ea9.md`.
+
+## Code identity
+
+| What | Identity |
+|---|---|
+| Reviewed base | `89f3ea9b5e057c5e57928e7978dda3d23ad4d750` |
+| Implementation commit verified | `2c5626744ebcd464b511ce91094e1a21e9520470` (clean tree; tracked-file hash `b4932fba…711a` unchanged during the run) |
+| Documentation/evidence commit | the commit after 2c56267 on `main` (docs only — see `git diff --stat 2c56267..HEAD`) |
+| Remote | `https://github.com/OpticEggs/Meal-Planner`, branch `main` (GitHub's initial README commit merged, not overwritten) |
+| Restore | `git clone --branch main <bundle> table` or `git clone <bundle> table` (bundle advertises HEAD; both tested) |
+
+## Verification (independently measured in this pass, on 2c56267)
+
+`scripts/verify-all.sh` → `docs/table/evidence/2026-10-08-verify-2c56267/summary.md` (complete logs + JSON):
+typecheck PASS · vitest 91/91 (unit + real-PostgreSQL integration, 0 skipped) · production build
+PASS · Playwright 32/32 (Chromium, production server, two authenticated contexts, 0 skipped,
+0 flaky) · mutation self-test PASS · mutation checks 16 killed / 0 survived / 0 error, sources restored.
+
+Prior results (89f3ea9 and earlier) are kept as history in `docs/table/evidence/`; they are the
+author's reports from before the review and are not re-asserted here.
 
 ## Stage reached
 
 **Stages 1–4 implemented against a clearly labeled simulated retailer.** Stage 5 (Kroger) is
 documentation-only and live integration is **BLOCKED** (no credentials, no authorization).
-Stage 6 (household release/deployment) not started. Nothing was pushed, deployed, or sent to a
-real store.
+Stage 6 (household release/deployment) not started. The code is pushed to the private GitHub
+repository named above (owner-requested); nothing was deployed or sent to a real store.
 
 | Stage | State |
 |---|---|
 | 1 Executable contract & fixtures | Done — pinned stack, migrations, Better Auth, deterministic fixture, recording fake retailer, two-user harness |
 | 2 Persistent shared plan & concurrency | Done — first slice evidence `evidence/2026-10-08-first-slice-e2e.md` |
-| 3 Quantities & honest grocery state | Done (including pickup-time constraint on expected supply) |
-| 4 Household experience | Done for the mock workflow; device/Safari validation not available (B8) |
+| 3 Quantities & honest grocery state | Done for the simulated retailer, including the F04–F06 corrections (explicit order/transfer reconciliation, physical package basis, substitution validation, receipt corrections, bound \"Have enough\") and B3 |
+| 4 Household experience | Done for the mock workflow, including F01–F03 and F07 corrections; Chromium-only validation (WebKit/devices BLOCKED, B8) |
 | 5 Verified Kroger integration | BLOCKED — capability documented in INTEGRATION-CAPABILITIES.md; adapter fails closed |
 | 6 Household release | Not started (needs hosting decision; no paid provisioning authorized) |
-
-## Code identity
-
-- Workspace: `/home/user/table` (local Git, branch `main`, **no remote**). See final commit in
-  `git log -1`; the evidence file of each run records the exact commit.
-- This cloud container is ephemeral: until B1 (a repository destination Jon names) is done,
-  the code exists only here.
 
 ## What works (mock workflow, two members)
 
@@ -76,14 +96,12 @@ See ACCEPTANCE.md for per-test status.
 
 ## Blockers (genuine)
 
-1. Repository destination for this code (B1) — owner decision.
-2. Kroger: developer app credentials, store location, account authorization, and written
+1. Kroger: developer app credentials, store location, account authorization, and written
    approval for one live cart addition (B5/B6).
-3. Real devices / Safari for X11 device validation (B8).
-4. Hosting decision for Stage 6 (B9). No paid service will be provisioned without approval.
+2. Real devices / Safari / WebKit for X11 device validation (B8).
+3. Hosting decision for Stage 6 (B9). No paid service will be provisioned without approval.
 
 ## Next executable task
 
-**B3 — replacement suggestions prefer received goods, and additional basket cost counts only
-packages beyond what is already ordered/received** (no owner input needed; scope and done-criteria
-in BACKLOG.md). Owner-gated items: B1 repository destination, B5/B6 Kroger, B8 devices, B9 hosting.
+**B14 — focus restoration after the Change sheet/preview closes, plus a keyboard/screen-reader pass**
+(no owner input needed), then B12. Owner-gated: B5/B6 Kroger, B8 devices, B9 hosting.
