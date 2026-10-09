@@ -14,7 +14,7 @@
  */
 import type { AmountUnstated } from "../../contract";
 import { allWords, hasNumber, isGroup, isSym, isWord, wordsAt, type GroupTok, type Tok } from "./lexer";
-import { FORM_WORDS, FUNCTION_WORDS, IF_DESIRED, REMARK_WORDS, SIZE_WORDS, UNSTATED_PHRASES } from "./lexicon";
+import { APPLICATION_GERUNDS, FORM_WORDS, FUNCTION_WORDS, IF_DESIRED, REMARK_WORDS, SIZE_WORDS, UNSTATED_PHRASES } from "./lexicon";
 import { amountStartsAt, isPriceGroup, readAmountPhrase } from "./amount";
 import { emptyEffects, mergeEffects, type Effects } from "./types";
 
@@ -58,7 +58,6 @@ export interface PhraseMatch {
   optional: boolean;
 }
 
-const GERUND = /^[\p{L}-]{3,}ing$/u;
 const FRYING_STYLE = new Set(["deep", "shallow", "pan", "stir"]);
 
 /** A "no fixed amount" phrase starting at token `i` (CONTRACT §7.10), or null. */
@@ -67,9 +66,9 @@ export function unstatedAt(toks: readonly Tok[], i: number): PhraseMatch | null 
   if (wordsAt(toks, i, IF_DESIRED)) return { kind: "as_needed", len: 2, optional: true };
   if (isWord(toks[i], "for")) {
     const w1 = toks[i + 1];
-    if (isWord(w1) && GERUND.test(w1.lower) && w1.lower !== "serving" && w1.lower !== "garnishing") return { kind: "other", len: 2, optional: false };
+    if (isWord(w1) && APPLICATION_GERUNDS.has(w1.lower)) return { kind: "other", len: 2, optional: false };
     const w2 = toks[i + 2];
-    if (isWord(w1) && FRYING_STYLE.has(w1.lower) && isWord(w2) && GERUND.test(w2.lower)) return { kind: "other", len: 3, optional: false };
+    if (isWord(w1) && FRYING_STYLE.has(w1.lower) && isWord(w2) && APPLICATION_GERUNDS.has(w2.lower)) return { kind: "other", len: 3, optional: false };
   }
   return null;
 }

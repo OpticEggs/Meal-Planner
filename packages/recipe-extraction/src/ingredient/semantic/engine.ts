@@ -17,12 +17,12 @@ import { validateParsedIngredientV1 } from "../../validate";
 import { amountStartsAt, groupAmount, readAmountPhrase, readStatedAmount, placeSecondary, sumInSmallest, type AmountSlots } from "./amount";
 import { nonIngredientReason, numericLead } from "./classify";
 import { adjacent, isGroup, isNumberish, isSym, isWord, lex, type Tok } from "./lexer";
-import { BULLETS, CARDINALS, FRACTION_WORDS, FUNCTION_WORDS, MEASURE_ADJECTIVES, PREP_ADVERBS, REMARK_WORDS, SIZE_WORDS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
+import { BULLETS, FUNCTION_WORDS, MEASURE_ADJECTIVES, PREP_ADVERBS, REMARK_WORDS, SIZE_WORDS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
 import { readNameRegion, type NameReading } from "./name";
 import { normalizeLine } from "./normalize";
 import { classifyPiece, splitTopLevel, textOf, trimEdges, unstatedAt } from "./remarks";
 import { distributeOptions, foodHead, isRemarkOption, uniqueOptions } from "./alternatives";
-import { emptyEffects, mergeEffects, type AmountReading, type Effects } from "./types";
+import { emptyEffects, mergeEffects, type AmountReading } from "./types";
 import { readUnit } from "./unit";
 
 export const SEMANTIC_ENGINE_ID = "semantic-v1";
@@ -82,10 +82,9 @@ function amountWithSizeWords(text: string, toks: readonly Tok[]): { amount: Amou
 const DESCRIBING = (w: string) => REMARK_WORDS.has(w) || SIZE_WORDS.has(w) || w === "ripe";
 
 /** The name region holds only describing words ("boneless", "large, ripe") and no food yet. */
-function describingOnly(region: readonly Tok[], afterAmount: boolean): boolean {
+function describingOnly(region: readonly Tok[]): boolean {
   const ws = region.filter((t) => t.kind === "word") as { lower: string }[];
   if (ws.length === 0 || ws.length !== region.length) return false;
-  if (!afterAmount && ws.length < 1) return false;
   return ws.every((w) => DESCRIBING(w.lower) && !["more", "less", "so", "taste", "needed", "desired", "optional"].includes(w.lower));
 }
 
@@ -271,7 +270,7 @@ function read(input: unknown): Reading {
   // "1 pound boneless, skinless chicken breasts": a comma between describing words before the food
   // joins them; the food follows in the next segment.
   if (usedTail < 0) {
-    while (tails.length > 0 && describingOnly(region, amount !== null) && namesAFood(tails[0])) {
+    while (tails.length > 0 && describingOnly(region) && namesAFood(tails[0])) {
       region = [...region, ...tails[0]];
       tails = tails.slice(1);
     }

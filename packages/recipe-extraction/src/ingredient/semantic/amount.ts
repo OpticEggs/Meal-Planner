@@ -15,7 +15,7 @@
  */
 import { UNIT_REGISTRY, type EquivalentV1, type ExactQuantity, type QuantityV1, type ReasonCode, type UnitV1 } from "../../contract";
 import { add, cmp, div, fromDecimalString, mul, toExactQuantity, type Rational } from "../../rational";
-import { adjacent, flatText, isGroup, isSym, isWord, type GroupTok, type Tok } from "./lexer";
+import { adjacent, isGroup, isSym, isWord, type GroupTok, type Tok } from "./lexer";
 import { APPROX_SYMBOLS, APPROX_WORDS, CARDINALS, CONTAINER_UNITS, FRACTION_WORDS, LENGTH_WORDS, MEASURE_ADJECTIVES, RANGE_DASHES, SIZE_WORDS } from "./lexicon";
 import { readNumber, type NumberRead } from "./quantity";
 import { emptyEffects, type AmountReading, type Effects } from "./types";

@@ -187,12 +187,6 @@ export const REMARK_WORDS = setOf(
 /** Function words that may appear inside a remark without making it about an ingredient. */
 export const FUNCTION_WORDS = setOf("a an the or and of in from to your my any if as for with use using can be is you prefer like such e.g i.e etc");
 
-/** A remark that starts with one of these is a remark even when it names foods ("such as cheddar or Gruyère"). */
-export const REMARK_OPENERS: readonly (readonly string[])[] = [
-  ["such", "as"], ["like"], ["preferably"], ["ideally"], ["e.g"], ["eg"], ["i.e"], ["ie"], ["see"], ["i", "like"], ["i", "use"], ["we", "use"],
-  ["you", "can", "use"], ["any"], ["your", "favorite"], ["your", "favourite"], ["recipe"], ["store-bought", "is", "fine"],
-];
-
 /**
  * Preparation participles and adverbs that, at the END of the name with no comma ("2 eggs beaten"),
  * are a preparation note. A participle at the start of the name stays in the name (CONTRACT §7.6).
@@ -239,6 +233,17 @@ export const UNSTATED_PHRASES: readonly [readonly string[], AmountUnstated][] = 
   [["to", "fry"], "other"],
   [["to", "coat"], "other"],
 ];
+/**
+ * "for <…ing>" phrases that say how a food is applied, with no fixed amount (CONTRACT §7.10 "other":
+ * for dusting, greasing, frying, drizzling…). A component noun ("for icing", "for the filling") or a
+ * dish ("for spring rolls") is NOT one of these.
+ */
+export const APPLICATION_GERUNDS = setOf(
+  "dusting greasing frying deep-frying pan-frying stir-frying shallow-frying drizzling brushing sprinkling topping coating dipping rolling " +
+    "kneading shaping sautéing sauteing searing basting finishing glazing oiling buttering flouring dredging breading misting spraying " +
+    "decorating cooking baking roasting grilling broiling poaching boiling blanching lining smearing spreading",
+);
+
 /** "if desired": optional, and no fixed amount (like "as desired"). */
 export const IF_DESIRED: readonly string[] = ["if", "desired"];
 

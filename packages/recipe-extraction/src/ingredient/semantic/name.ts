@@ -4,7 +4,7 @@
  *
  *  - bracket groups: a stated amount is placed (package size / restatement), anything else is a remark;
  *  - a leading "of", size words (→ note) and cooked/raw words (→ form) are taken off the front;
- *  - a trailing remark with no comma ("to taste", "for frying", "optional", "plus more …") and a
+ *  - a trailing remark with no comma ("to taste", "for frying", "for the icing", "optional", "plus more …") and a
  *    trailing preparation phrase ("eggs beaten") are taken off the end;
  *  - a number left inside the name is not part of the food: the name stops there and the rest is noted
  *    (`quantity_unassigned`), except percentages ("2% milk") and sizes ("9-inch", → note);
@@ -16,7 +16,7 @@ import { FORM_WORDS, PREP_ADVERBS, SIZE_WORDS, TRAILING_COUNT_UNITS, TRAILING_PR
 import { amountStartsAt, groupAmounts, isPriceGroup, placeSecondary, readAmountPhrase, readStatedAmount, type AmountSlots } from "./amount";
 import { classifyGroup, classifyPiece, dropBarePrices, splitOr, textOf, trimEdges, unstatedAt } from "./remarks";
 import type { Effects } from "./types";
-import { foodHead, isRemarkOption } from "./alternatives";
+import { distributeOptions, foodHead, isRemarkOption } from "./alternatives";
 import { readUnit, type UnitRead } from "./unit";
 
 export interface NameContext {
@@ -59,18 +59,6 @@ function dimensionAt(text: string, toks: readonly Tok[], i: number): number {
 /** Name text of kept tokens: runs of neighbouring tokens copied as written, joined by one space. */
 function nameText(text: string, toks: readonly Tok[]): string {
   return trimEdges(textOf(text, toks));
-}
-
-/** "chicken or vegetable broth": a one-word option shares the last option's words after its first. */
-function distribute(text: string, options: Tok[][]): string[] {
-  if (options.length < 2) return options.map((o) => nameText(text, o));
-  const words = (o: Tok[]) => o.filter((t) => t.kind === "word" || t.kind === "num");
-  const last = options[options.length - 1];
-  const lastWords = words(last);
-  const shareable = lastWords.length >= 2 && options.slice(0, -1).every((o) => o.length === 1 && isWord(o[0]));
-  if (!shareable) return options.map((o) => nameText(text, o));
-  const tail = nameText(text, last.slice(last.indexOf(lastWords[1])));
-  return options.map((o, k) => (k === options.length - 1 ? nameText(text, o) : `${nameText(text, o)} ${tail}`));
 }
 
 /**
@@ -180,7 +168,8 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
     const phrase = unstatedAt(toks, i);
     const optionalWord = isWord(t, "optional") && i === toks.length - 1;
     const plus = isWord(t, "plus") || (isSym(t, "+") && i > 0);
-    if (!phrase && !optionalWord && !plus) continue;
+    const purpose = isWord(t, "for") && i + 1 < toks.length; // "powdered sugar for icing": a purpose is a note
+    if (!phrase && !optionalWord && !plus && !purpose) continue;
     const remark = toks.slice(i);
     toks = toks.slice(0, i);
     if (plus) plusRemark = remark;
@@ -218,7 +207,7 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
       // an article opening an option is not part of the food ("a lemon or a lime")
       return stopAtNumber(text, isWord(o[0], "a", "an", "the") && o.length > 1 ? o.slice(1) : o, fx);
     });
-    let texts = distribute(text, cleaned.filter((o) => o.length > 0)).filter((x) => x.length > 0);
+    let texts = distributeOptions(cleaned.filter((o) => o.length > 0).map((o) => nameText(text, o))).filter((x) => x.length > 0);
     // "fresh thyme or 1 tsp dried": a remark-only option names the first option's food in another form
     texts = texts.map((x, k) => (k > 0 && isRemarkOption(x) ? `${x} ${foodHead(texts[0])}` : x));
     if (texts.length >= 2) options = texts;

@@ -159,39 +159,9 @@ export const adjacent = (a: Tok | undefined, b: Tok | undefined) => a !== undefi
 export function wordsAt(toks: readonly Tok[], i: number, seq: readonly string[]): boolean {
   for (let k = 0; k < seq.length; k++) {
     const t = toks[i + k];
-    if (!isWord(t) || t.lower !== seq[k]) {
-      // "e.g" / "i.e" are written with periods: accept "e" "." "g" as the word "e.g".
-      return false;
-    }
+    if (!isWord(t) || t.lower !== seq[k]) return false;
   }
   return true;
-}
-
-/** Number of tokens (recursively) — used to bound work on hostile input. */
-export function countTokens(toks: readonly Tok[]): number {
-  let n = 0;
-  const stack: (readonly Tok[])[] = [toks];
-  while (stack.length) {
-    const list = stack.pop()!;
-    for (const t of list) {
-      n++;
-      if (t.kind === "group") stack.push(t.children);
-    }
-  }
-  return n;
-}
-
-/**
- * The text of a token run as written, with every bracket character removed (nested groups are
- * flattened: "(homemade (or store-bought))" → "homemade or store-bought") and spacing collapsed.
- */
-export function flatText(text: string, s: number, e: number): string {
-  return text
-    .slice(s, e)
-    .replace(/[()[\]{}]/g, " ")
-    .replace(/\s+/g, " ")
-    .replace(/\s+([,;:.!?])/g, "$1")
-    .trim();
 }
 
 /** Every word (lower case) inside a token run, groups included, in order. */
@@ -219,5 +189,3 @@ export function hasNumber(toks: readonly Tok[]): boolean {
   return false;
 }
 
-/** Span of a token run [first.s, last.e), or null for an empty run. */
-export const spanOf = (toks: readonly Tok[]): [number, number] | null => (toks.length === 0 ? null : [toks[0].s, toks[toks.length - 1].e]);

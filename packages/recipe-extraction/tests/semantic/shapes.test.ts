@@ -137,3 +137,12 @@ describe("units with no number, and choices inside brackets", () => {
     expect(read("One (28-ounce) can tomatoes")).toMatchObject({ status: "ready", quantity: { numerator: "1" }, unit: { canonical: "can" } });
   });
 });
+
+describe("purposes", () => {
+  it("only application verbs mean 'no fixed amount'; other purposes are notes", () => {
+    expect(read("flour, for kneading")).toMatchObject({ status: "ready", amountUnstated: "other" });
+    expect(read("Rice paper, for spring rolls")).toMatchObject({ status: "needs_review", amountUnstated: null, note: "for spring rolls" });
+    expect(read("powdered sugar for icing")).toMatchObject({ status: "needs_review", name: "powdered sugar", note: "for icing" });
+    expect(read("1 cup sugar for the topping")).toMatchObject({ status: "ready", name: "sugar", note: "for the topping" });
+  });
+});
