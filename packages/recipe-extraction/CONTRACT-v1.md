@@ -81,8 +81,9 @@ Table import 2 stopped. Codes are append-only: a code's meaning never changes; a
     "Use suggestion" button would have produced (e.g. 0.3333 for 1/3).
 - Phase 2 adds a semantic engine under a new id; the default changes only with benchmark evidence.
 - `extractorVersion` = `@table/recipe-extraction@<package version>`; `engines` names the page and
-  ingredient engines. Table's `EXTRACTOR_VERSION` (`table-import-2`) is unchanged until the Phase 3
-  adapter is proven.
+  ingredient engines. This package does not change Table's `EXTRACTOR_VERSION`; only a proven Phase 3
+  adapter would. (Table's own import moved from `table-import-2` to `table-import-3` in `main` `8e6bd6e`,
+  independently of this package.)
 
 ## 5. Exact arithmetic
 

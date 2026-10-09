@@ -1,0 +1,16 @@
+"2 tbsp butter, ghee, or oil" → needs_review | butter | 2 | tbsp | pkg - | eq[] | alts[] | note ghee or oil | unclassified
+"1 cup pecans, walnuts, or almonds" → needs_review | - | 1 | cup | pkg - | eq[] | alts[walnuts; almonds] | note - | ingredient_alternatives
+"1/2 cup raisins, cranberries or cherries" → needs_review | - | 1/2 | cup | pkg - | eq[] | alts[cranberries; cherries] | note - | ingredient_alternatives
+"2 (6 oz) cups yogurt" → needs_review | yogurt | 2 | cup | pkg - | eq[] | alts[] | note 6 oz | quantity_unassigned
+"4 (4 oz) cups applesauce" → needs_review | applesauce | 4 | cup | pkg - | eq[] | alts[] | note 4 oz | quantity_unassigned
+"between 1 and 2 tbsp sugar" → needs_review | between | - | - | pkg - | eq[] | alts[] | note 1 and 2 tbsp sugar | quantity_unassigned,quantity_missing
+"between 3 and 4 cups flour" → needs_review | between | - | - | pkg - | eq[] | alts[] | note 3 and 4 cups flour | quantity_unassigned,quantity_missing
+"1 cup cooked farro (from 1/2 cup uncooked)" → ready | farro | 1 | cup | pkg - | eq[] | alts[] | note from 1/2 cup uncooked | form_stated
+"2 cups cooked rice (from 2/3 cup raw)" → ready | rice | 2 | cup | pkg - | eq[] | alts[] | note from 2/3 cup raw | form_stated
+"1 lb large shrimp" → ready | large shrimp | 1 | lb | pkg - | eq[] | alts[] | note - | 
+"2 lb small new potatoes" → ready | small new potatoes | 2 | lb | pkg - | eq[] | alts[] | note - | 
+"1 lb jumbo sea scallops" → ready | jumbo sea scallops | 1 | lb | pkg - | eq[] | alts[] | note - | 
+"Dressing" → needs_review | Dressing | - | - | pkg - | eq[] | alts[] | note - | quantity_missing
+"For the Crust" → unsupported | - | - | - | pkg - | eq[] | alts[] | note - | section_heading
+"STEP 1" → needs_review | STEP | - | - | pkg - | eq[] | alts[] | note 1 | quantity_unassigned,quantity_missing
+"Glaze" → needs_review | Glaze | - | - | pkg - | eq[] | alts[] | note - | quantity_missing

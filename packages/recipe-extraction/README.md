@@ -18,7 +18,7 @@ npm run lab -- page fixtures/pages/dev-plain-jsonld.html --final-url https://www
 npm run lab -- line --engine semantic-v1 "1/3 cup pesto (homemade (or store-bought))"
 npm run lab -- engines
 npm run bench -- --pages --out-json /tmp/report.json --out-md /tmp/report.md   # dev + holdout-v1
-# --split holdout2 / --split every also scores holdout-v2 (opt-in: a routine run never touches it)
+# --split holdout2 / --split every also scores holdout-v2 (opt-in: a routine run never scores it; it only reads the file for its integrity and freeze-hash checks)
 ```
 
 The CLI reads local files only and refuses URLs.
@@ -28,7 +28,7 @@ The CLI reads local files only and refuses URLs.
 | Path | What |
 |---|---|
 | `src/contract.ts`, `src/rational.ts` | v1 types, unit registry, reason/diagnostic codes; exact BigInt rationals |
-| `src/legacy/` | **Frozen copies** of Table import 2's parsers at `cb7b56e` (+ `PROVENANCE.json`); parity-tested against the live Table modules |
+| `src/legacy/` | **Frozen copies** of Table import 2's parsers at `cb7b56e` (+ `PROVENANCE.json`); parity with the live Table modules is checked while a live file still equals the baseline; for the ingredient line, which `main` rewrote, `tests/parity/baseline-snapshot.json` (hashes of the frozen outputs) is the guard |
 | `src/ingredient/`, `src/page/` | Engines (`legacy-table-import-2` — the default, `legacy-table-import-2+suggestion`, Phase 2 candidate `semantic-v1` in `src/ingredient/semantic/`) and `extractRecipePage` |
 | `src/validate.ts` | Runtime validators for every contract rule |
 | `bin/recipe-lab.ts` | Fixture-only CLI |

@@ -43,7 +43,7 @@ independently written) C1 31/31, with one suppressed-ambiguity line (below).
 | A3 | no high-severity false certainty | 5 lines | **not met** |
 | A4 | S1 = S3 = S4 = S5 = S6 = 0 | S1 0, S3 1, S4 2, S5 1, S6 1 | **not met** |
 | A5 | C3 + C4 on R ≤ 10 % | 4.8 % | **met** |
-| A6 | legacy engines / baseline snapshot / parity unchanged; every output validates; deterministic | snapshot + 459 ported legacy tests pass, page parity holds, CE = 0, byte-identical reruns | **met** |
+| A6 | legacy engines / baseline snapshot / parity unchanged; every output validates; deterministic | snapshot + 459 ported legacy tests pass, page parity holds, CE = 0; the contract validator accepts all 2 007 outputs (3 engines × 669 lines, `evidence/…/a6-validation/`); byte-identical reruns | **met** |
 | A7 | pesto regression passes as a normal test | passes (`tests/characterization/pesto.test.ts`) | **met** |
 
 **G2 is not met.** As predeclared, `DEFAULT_ENGINE_ID` stays `legacy-table-import-2`; `semantic-v1` is registered
@@ -71,12 +71,12 @@ These are fixes in the package only; the app does not import the package (see §
 
 | Failure | Lines (holdout-v2) | Class |
 |---|---|---|
-| Count noun **after** the food not recognised for `pod`/`rib` (registry units): `eight cardamom pods`, `2 star anise pods`, `2 celery ribs, diced` → `each` with "pods"/"ribs" in the name | 0054, 0072, 0065 | C2 high (wrong unit, same dimension) |
+| Count noun **after** the food kept in the name: `eight cardamom pods`, `2 star anise pods`, `2 celery ribs, diced` → `each` with "pods"/"ribs" in the name. This is the engine's deliberate policy, not a miss: `lexicon.ts` reads only clove, stalk, sprig, slice, fillet, link, ear and bulb after a food, and keeps ribs, strips, wedges, heads, sticks, leaves, pods, cubes, sheets and pieces in the name. The labels follow CONTRACT §7.3 (unit `pod`, name `cardamom`), so it is a **policy conflict** covering all of these nouns (`4 lemon wedges`, `2 cinnamon sticks`; final-head review SF-3) | 0054, 0072, 0065 | C2 high (wrong unit, same dimension) |
 | An amount inside a remark accepted as a note: `1 cup cooked quinoa (from 1/3 cup dry)`, `1 cup rice (1 cup dry makes 3 cooked)` (labels: needs_review per §7.5 — a debatable but predeclared reading) | 0165, 0338 | C2 high, S4 |
 | Size word after a weight kept in the name: `1 lb large raw shrimp` → "large shrimp" (§7.6: size → note) | 0164 | C2 medium |
 | A three-way comma choice left undecided: `1 tbsp maple syrup, honey, or agave` → name "maple syrup", others in the note (needs_review, but scored as a silent choice) | 0219 | S5 |
 | Yogurt cups as containers: `3 (5.3 oz) cups vanilla Greek yogurt` → 3 `cup` (pre-registered debatable) | 0087 | S3 + S6 (C3) |
-| Clear lines sent to review (all with the line kept for a person; 5 useful partials C3a, 6 with a contradicting pre-fill C3b, 2 with no name C3x): `2 tsp + ½ tsp`, `1 cup plus 1/3 cup` not summed (0129, 0130, C3b); a double restatement `3 cups (750 ml) / 25 fl oz` (0140); digits in names `5-spice powder`, `00 flour` (0040, 0041, C3x); `93/7 ground turkey, 1 lb` (0151); `Pinch of salt` (0061); `Juice of 2 limes` / `Zest of ½ orange` (0212, 0213); `eggs x 3` → name "eggs x" (0253); `cut into half-moons` (0239); `hummus (store-bought (or see recipe))` (0232) | 12 (+ 0087 above = 13 C3) | C3 |
+| Clear lines sent to review — 13 in all, counting 0087 above (5 useful partials C3a, 6 with a contradicting pre-fill C3b incl. 0087, 2 with no name C3x); the line is kept for a person: `2 tsp + ½ tsp`, `1 cup plus 1/3 cup` not summed (0129, 0130, C3b); a double restatement `3 cups (750 ml) / 25 fl oz` (0140); digits in names `5-spice powder`, `00 flour` (0040, 0041, C3x); `93/7 ground turkey, 1 lb` (0151); `Pinch of salt` (0061); `Juice of 2 limes` / `Zest of ½ orange` (0212, 0213); `eggs x 3` → name "eggs x" (0253); `cut into half-moons` (0239); `hummus (store-bought (or see recipe))` (0232) | 12 + 0087 | C3 |
 | Invented first option on review lines: `kale or Swiss chard` → options "kale chard" / "Swiss chard", `chickpeas or white beans` → "chickpeas beans" / "white beans"; `between 2 and 3 cups water` → name "between", no amount | 0218, 0220, 0277 | C5b (review; with 0219 = 4 C5b) |
 | Headings sent to review instead of rejected: `SAUCE`, `Cake Layers`, `Step 2` | 0286, 0288, 0297 | C8 (not an acceptance error) |
 
@@ -87,6 +87,23 @@ ready), K4 `Five spice powder` (count invented, review). None of the K-shapes oc
 defects, and on the reviewer's 291 new round-3 probes they produced 12 silent ready-but-wrong lines
 (`evidence/…/review/REVIEW-ROUNDS.md`, `ROUND-3-REPORT.md`). The holdout-v2 rate is therefore not a bound for these
 shapes.
+
+**Found by the independent review of the final code head `0c0c60f` (after the evaluation; not in the holdout-v2
+rates; not fixed)** — 641 new probe lines, scored against the reviewer's own CONTRACT §7 labels
+(`evidence/…/review/final-head-0c0c60f/`): on 681 firm probes, 25 ready-but-wrong lines (21 high).
+- **`x` multiplier without a package size**: `1x cup milk` → ready, 1 `each`, name "x cup milk" (S3); `1x can
+  chickpeas`, `2x cans chickpeas`, `1 x can chickpeas` the same (C2 high). With a package size (`2 x 15 oz cans beans`)
+  it is read correctly.
+- **K3 is wider than "spelled-out units"**: a nutrient missing from the fact vocabulary is read as an ingredient even
+  with an abbreviated unit — `Vitamin C: 15 mg`, `Magnesium: 40 mg`, `Zinc 1 mg`, `Caffeine: 95 mg` → ready (S8 + S1);
+  rating text `4.8 stars (120 reviews)` → ready (S8).
+- **Count nouns after the food** (the policy conflict above): 5 firm C2 high.
+- **Three-way comma choices**: S5 on 5 of 5 probes (as 0219); a plural first option is treated as a category and
+  dropped — `1 cup pecans, walnuts, or almonds` → options walnuts / almonds only (review, C5b).
+- Size word after a weight (as 0164): 4 C2 medium; K1: 2.
+- Without firm failures in the probes: ranges (21/21 kept as ranges, at review), oz vs fl oz (25/25), nested brackets
+  (10/10), restatements (76/77), package shapes (68/73 correct, the rest at review). Hostile input and 100 000 fuzz
+  lines: 0 throws, 0 invalid outputs, deterministic.
 
 ## 5. The four baseline false-ready cases (holdout-v1, exposed) — inspected
 
@@ -118,7 +135,13 @@ package, 5 cross-dimension) and sends 177/271 clear lines to review, 153 of them
   ready-but-wrong lines among 807 probes, round 3 0 among those 807 but 12 among its 291 new probes (K1, K3); known
   defects K1–K4 and invented options recorded before the holdout-v2 run and not passed to the author
   (`review/REVIEW-ROUNDS.md`). Round-1 and round-2 findings were passed to the author as code-review findings (no
-  holdout content).
+  holdout content). The reviewed author commit `59756ba` and the scored `56eafe4` have identical git trees for `src/`,
+  `tests/semantic/`, `tests/characterization/` and the contract (`review/author-59756ba-equals-56eafe4.txt`).
+- **Final-head review** (`0c0c60f`, a fresh read-only reviewer, after the evaluation): no blocker; every number in
+  §1–§5 recomputed independently with its own scorer and matched; the evaluation report rebuilds byte-for-byte; legacy
+  engines, baseline snapshot, default engine and public API unchanged (validator widening as documented); no app code
+  differs from `main` `8c9fd8c`. Six should-fix findings — the engine shapes above, and two scorer faults that change
+  no reported figure (`EVALUATION-PLAN-v2.md` change log 10) — and nine nits (`review/final-head-0c0c60f/FINAL-HEAD-REVIEW.md`).
 - **One scoring run** of the candidate on holdout-v2; nothing was changed after it. If holdout-v2 failures drive a
   repair, holdout-v2 becomes exposed and a new fresh set is needed for the next acceptance claim.
 
@@ -143,6 +166,6 @@ have to hand Table the exact whole-recipe amount as text and let `perServing` di
 ```bash
 cd packages/recipe-extraction
 npm run typecheck && npm test                       # 1917 passed, 11 skipped at 16d7995
-npm run bench -- --split all                        # dev + holdout-v1 only (never touches holdout-v2)
+npm run bench -- --split all                        # dev + holdout-v1 only (never scores holdout-v2; reads it only for integrity checks)
 npm run bench -- --split every --pages --out-json r.json --out-md r.md   # + holdout-v2; r.json SHA-256 afc55fd5…
 ```

@@ -207,8 +207,9 @@ site was contacted; nothing is activated.
 
 ## Recipe Extraction Lab — Phases 0–2 (2026-10-09)
 
-Numbered D121–D125: first D112–D115, renumbered D118–D121 at the merge with main's import overhaul (D112–D117), and again at the merge of main's import-overhaul corrections (D118–D120). Handoff "Table Recipe Extraction Handoff 2026-10-09" (implementation plan, integration handoff, initial prompt; baseline
-`cb7b56e`). Bounded to Phase 0 (census, frozen baseline) and Phase 1 (pure package, parity, offline benchmark). **The app
+Numbered D121–D125: D121–D124 were first D112–D115, then D118–D121 after the merge with main's import overhaul (D112–D117); D125 was first D122; all moved when main's import-overhaul corrections took D118–D120. Handoff "Table Recipe Extraction Handoff 2026-10-09" (implementation plan, integration handoff, initial prompt; baseline
+`cb7b56e`). Bounded to Phase 0 (census, frozen baseline), Phase 1 (pure package, parity, offline benchmark) and Phase 2
+(a candidate engine with a predeclared, single fresh-holdout evaluation; D125). **The app
 is unchanged**: nothing here is imported by Table, deployed, or activated.
 
 | # | Decision | Why / test implication |

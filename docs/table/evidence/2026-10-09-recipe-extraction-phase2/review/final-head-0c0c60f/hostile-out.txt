@@ -1,0 +1,96 @@
+<object> → unsupported | - | - | - | rawLen 0 normLen 0 | empty_line | 2.0ms
+<undefined> → unsupported | - | - | - | rawLen 0 normLen 0 | empty_line | 0.0ms
+<number> → unsupported | - | - | - | rawLen 0 normLen 0 | empty_line | 0.0ms
+<number> → unsupported | - | - | - | rawLen 0 normLen 0 | empty_line | 0.0ms
+<number> → unsupported | - | - | - | rawLen 0 normLen 0 | empty_line | 0.0ms
+<boolean> → unsupported | - | - | - | rawLen 0 normLen 0 | empty_line | 0.0ms
+<object> → unsupported | - | - | - | rawLen 0 normLen 0 | empty_line | 0.0ms
+<object array> → unsupported | - | - | - | rawLen 0 normLen 0 | empty_line | 0.0ms
+<object array> → unsupported | - | - | - | rawLen 0 normLen 0 | empty_line | 0.0ms
+<object> → unsupported | - | - | - | rawLen 0 normLen 0 | empty_line | 0.0ms
+<object> → unsupported | - | - | - | rawLen 0 normLen 0 | empty_line | 0.0ms
+<object> → unsupported | - | - | - | rawLen 0 normLen 0 | empty_line | 0.0ms
+<symbol> → unsupported | - | - | - | rawLen 0 normLen 0 | empty_line | 0.0ms
+<bigint> → unsupported | - | - | - | rawLen 0 normLen 0 | empty_line | 0.0ms
+<function> → unsupported | - | - | - | rawLen 0 normLen 0 | empty_line | 0.0ms
+"" → unsupported | - | - | - | rawLen 0 normLen 0 | empty_line | 0.0ms
+" " → unsupported | - | - | - | rawLen 1 normLen 0 | empty_line | 0.0ms
+"\u0000" → unsupported | - | - | - | rawLen 1 normLen 0 | empty_line | 0.0ms
+"\u0000\u0000 1 cup flour" → ready | "flour" | 1/1 | cup | rawLen 14 normLen 11 |  | 5.4ms
+"1 cup\u0000flour" → ready | "flour" | 1/1 | cup | rawLen 11 normLen 11 |  | 0.2ms
+"‮1 cup flour" → ready | "flour" | 1/1 | cup | rawLen 12 normLen 11 |  | 0.9ms
+"1‮2 cups milk" → needs_review | "milk" | - | - | rawLen 13 normLen 13 | quantity_unassigned,quantity_missing | 0.7ms
+"1­2 cups milk" → needs_review | "milk" | - | - | rawLen 13 normLen 13 | quantity_unassigned,quantity_missing | 0.1ms
+"1​2 cups milk" → needs_review | "milk" | - | - | rawLen 13 normLen 13 | quantity_unassigned,quantity_missing | 0.1ms
+"1﻿2 cups" → needs_review | - | - | - | rawLen 8 normLen 8 | quantity_unassigned,quantity_missing,name_missing | 0.1ms
+"\ud800 cup" → needs_review | "\ud800 cup" | - | - | rawLen 5 normLen 5 | quantity_missing | 1.6ms
+"1 cup \udfff flour" → ready | "\udfff flour" | 1/1 | cup | rawLen 13 normLen 13 |  | 0.2ms
+"1/0 cup flour" → needs_review | "flour" | - | cup | rawLen 13 normLen 13 | quantity_invalid | 0.4ms
+"0/0 cup flour" → needs_review | "flour" | - | cup | rawLen 13 normLen 13 | quantity_invalid | 0.1ms
+"1/1000001 cup salt" → needs_review | "salt" | - | cup | rawLen 18 normLen 18 | quantity_implausible | 0.2ms
+"10001 g flour" → needs_review | "flour" | - | g | rawLen 13 normLen 13 | quantity_implausible | 0.1ms
+"10000 g flour" → ready | "flour" | 10000/1 | g | rawLen 13 normLen 13 |  | 0.1ms
+"99999999999999999999999999 cups" → needs_review | - | - | cup | rawLen 31 normLen 31 | quantity_implausible,name_missing | 0.2ms
+"1e3 g flour" → needs_review | "flour" | - | g | rawLen 11 normLen 11 | number_format_ambiguous | 0.1ms
+"Infinity cups milk" → needs_review | "Infinity cups milk" | - | - | rawLen 18 normLen 18 | quantity_missing | 0.5ms
+"NaN g sugar" → needs_review | "NaN g sugar" | - | - | rawLen 11 normLen 11 | quantity_missing | 0.1ms
+"-1 cup flour" → needs_review | "flour" | - | cup | rawLen 12 normLen 12 | quantity_not_positive | 0.1ms
+"−2 cups milk" → needs_review | - | - | - | rawLen 12 normLen 12 | quantity_unassigned,quantity_missing,name_missing | 0.3ms
+"+2 cups milk" → needs_review | - | - | - | rawLen 12 normLen 12 | quantity_unassigned,quantity_missing,name_missing | 1.3ms
+"½½ cup" → needs_review | - | - | cup | rawLen 6 normLen 6 | quantity_invalid,name_missing | 0.2ms
+"1½½ cups" → needs_review | - | - | cup | rawLen 8 normLen 8 | quantity_invalid,name_missing | 0.0ms
+"1 ½ ½ cups" → needs_review | - | - | - | rawLen 10 normLen 10 | quantity_unassigned,quantity_missing,name_missing | 0.2ms
+"1/2/3/4 cup" → needs_review | - | - | cup | rawLen 11 normLen 11 | quantity_invalid,name_missing | 0.1ms
+"1..2 cups" → needs_review | - | - | - | rawLen 9 normLen 9 | quantity_unassigned,quantity_missing,name_missing | 0.2ms
+"1-2-3 cups" → needs_review | - | - | - | rawLen 10 normLen 10 | quantity_range,quantity_unassigned,name_missing | 0.2ms
+"1 - - 2 cups" → needs_review | - | - | - | rawLen 12 normLen 12 | quantity_unassigned,quantity_missing,name_missing | 0.1ms
+"1 to to 2 cups" → needs_review | - | - | - | rawLen 14 normLen 14 | unclassified,quantity_unassigned,quantity_missing,name_missing | 0.2ms
+"1 or or 2 eggs" → needs_review | "eggs" | 1/1 | each | rawLen 14 normLen 14 | unclassified,quantity_unassigned | 0.2ms
+"((((((((((1 cup flour))))))))))" → needs_review | - | - | - | rawLen 31 normLen 31 | quantity_missing,name_missing | 1.1ms
+"((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((…" → unsupported | - | - | - | rawLen 10011 normLen 500 | input_truncated,not_an_ingredient | 0.5ms
+"1 cup flour (a (a (a (a (a (a (a (a (a (a (a (a (a (a (a (a …" → needs_review | "flour" | 1/1 | cup | rawLen 6012 normLen 500 | input_truncated,structure_unbalanced | 14.6ms
+"1 cup flour)))))))))))))))))))))))))))))))))))))))))))))))))…" → needs_review | "flour" | 1/1 | cup | rawLen 311 normLen 311 | structure_unbalanced | 0.2ms
+"[{(<1 cup>)}] flour" → needs_review | "flour" | - | - | rawLen 19 normLen 19 | quantity_missing | 0.1ms
+"1 cup very very very very very very very very very very very…" → needs_review | "very very very very very very very very " | 1/1 | cup | rawLen 1016 normLen 500 | input_truncated | 0.5ms
+"1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 …" → needs_review | - | - | - | rawLen 2004 normLen 499 | input_truncated,quantity_unassigned,quantity_missing,name_missing | 0.7ms
+"1/2 1/2 1/2 1/2 1/2 1/2 1/2 1/2 1/2 1/2 1/2 1/2 1/2 1/2 1/2 …" → needs_review | - | - | - | rawLen 2000 normLen 499 | input_truncated,quantity_unassigned,quantity_missing,name_missing | 1.2ms
+"or or or or or or or or or or or or or or or or or or or or …" → needs_review | - | - | - | rawLen 1200 normLen 500 | input_truncated,unclassified,quantity_missing,name_missing | 0.6ms
+", , , , , , , , , , , , , , , , , , , , , , , , , , , , , , …" → unsupported | - | - | - | rawLen 800 normLen 499 | input_truncated,not_an_ingredient | 0.1ms
+"1 cup flour, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x,…" → needs_review | "flour" | 1/1 | cup | rawLen 913 normLen 500 | input_truncated,unclassified | 3.9ms
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa…" → needs_review | "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" | - | - | rawLen 100000 normLen 500 | input_truncated,quantity_missing | 0.6ms
+"1 cup éééééééééééééééééééééééééééééééééééééééééééééééééééééé…" → needs_review | "éééééééééééééééééééééééééééééééééééééééé" | 1/1 | cup | rawLen 1000006 normLen 500 | input_truncated | 5.4ms
+"🍕 2 cups 🍅 tomatoes 🍅" → needs_review | - | - | - | rawLen 24 normLen 24 | quantity_unassigned,quantity_missing,name_missing | 0.2ms
+"٣ أكواب دقيق" → needs_review | "٣ أكواب دقيق" | - | - | rawLen 12 normLen 12 | quantity_missing | 0.1ms
+"２カップ 小麦粉" → needs_review | "カップ 小麦粉" | 2/1 | each | rawLen 8 normLen 8 | unclassified | 1.5ms
+"２ cups milk" → ready | "milk" | 2/1 | cup | rawLen 11 normLen 11 |  | 0.1ms
+"１/２ cup sugar" → ready | "sugar" | 1/2 | cup | rawLen 13 normLen 13 |  | 1.1ms
+"2 cups мука" → ready | "мука" | 2/1 | cup | rawLen 11 normLen 11 |  | 0.1ms
+"1 cup　rice" → ready | "rice" | 1/1 | cup | rawLen 10 normLen 10 |  | 0.1ms
+"<script>alert(1)</script>" → needs_review | "<script>alert </script>" | - | - | rawLen 25 normLen 25 | quantity_missing | 0.2ms
+"1 cup <b>flour</b>" → ready | "<b>flour</b>" | 1/1 | cup | rawLen 18 normLen 18 |  | 0.1ms
+"javascript:alert(1)" → needs_review | "alert" | - | - | rawLen 19 normLen 19 | quantity_missing | 0.3ms
+"data:text/html,1 cup" → needs_review | - | 1/1 | cup | rawLen 20 normLen 20 | ingredient_alternatives | 0.7ms
+"file:///etc/passwd" → needs_review | - | - | - | rawLen 18 normLen 18 | unclassified,ingredient_alternatives,quantity_missing | 0.1ms
+"\\u0031 cup" → ready | "\\u" | 31/1 | cup | rawLen 10 normLen 10 |  | 0.1ms
+"%31 cup flour" → needs_review | - | - | - | rawLen 13 normLen 13 | quantity_unassigned,quantity_missing,name_missing | 0.1ms
+"1&nbsp;cup flour" → needs_review | "nbsp" | 1/1 | each | rawLen 16 normLen 16 | unclassified | 0.1ms
+"1 cup &amp; sugar" → needs_review | "amp" | 1/1 | cup | rawLen 17 normLen 17 | unclassified | 0.1ms
+"constructor" → needs_review | "constructor" | - | - | rawLen 11 normLen 11 | quantity_missing | 0.0ms
+"__proto__" → unsupported | - | - | - | rawLen 9 normLen 9 | section_heading | 0.0ms
+"toString" → needs_review | "toString" | - | - | rawLen 8 normLen 8 | quantity_missing | 0.0ms
+"hasOwnProperty 1 cup" → ready | "hasOwnProperty" | 1/1 | cup | rawLen 20 normLen 20 |  | 0.1ms
+"1 cup __proto__" → ready | "proto" | 1/1 | cup | rawLen 15 normLen 15 |  | 0.1ms
+"1 cup constructor" → ready | "constructor" | 1/1 | cup | rawLen 17 normLen 17 |  | 0.0ms
+{
+  hostile: 83,
+  throws: 0,
+  invalid: 0,
+  netUsed: 0,
+  nondet: 0,
+  maxMs: '14.6',
+  maxLine: '"1 cup flour (a (a (a (a (a (a "… len 6012'
+}
+{
+  fuzz: { n: 100000, throws: 0, invalid: 0, net: 0, nondet: 0 },
+  ms: 4602
+}

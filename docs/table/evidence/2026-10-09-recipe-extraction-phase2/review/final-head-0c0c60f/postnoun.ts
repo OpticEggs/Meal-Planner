@@ -1,0 +1,4 @@
+import { ENGINES } from "./repo/packages/recipe-extraction/src/ingredient/engines";
+const e = ENGINES["semantic-v1"];
+const lines = ["2 garlic cloves","2 thyme sprigs","2 celery stalks","2 celery ribs","2 bacon slices","2 bacon strips","2 cinnamon sticks","2 butter sticks","2 lemon wedges","2 lime wedges","2 cardamom pods","2 vanilla pods","2 bay leaves","2 basil leaves","2 sage leaves","2 garlic bulbs","2 fennel bulbs","2 corn ears","2 lettuce heads","2 cabbage heads","2 salmon fillets","2 anchovy fillets","2 sausage links","2 bread loaves","2 chicken pieces","2 ginger pieces","2 mozzarella balls","2 pastry sheets","2 bouillon cubes","2 sugar cubes","2 tomato cans","2 chickpea cans","2 yeast packets","2 parsley bunches","2 chocolate blocks"];
+for (const l of lines) { const r: any = e.parse(l); console.log(`${l.padEnd(22)} → ${r.status.padEnd(12)} ${String(r.unit?.canonical).padEnd(7)} ${r.name}`); }

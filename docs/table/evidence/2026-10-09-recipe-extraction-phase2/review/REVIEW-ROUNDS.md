@@ -56,3 +56,23 @@ Should-fix (review lines only): invented alternatives from a one-word option sha
 or smoked turkey` → "ham turkey"; 24 probes) and three comma choices downgraded; exact within-system restatement check
 sends `1/3 cup (5 tbsp) butter` to review; `1 pint milk (UK)` ready; `1 m sausage` ready; normalization now removes
 joiners/soft hyphens between letters, beyond CONTRACT §2's wording (recorded in CONTRACT §11 item 2 by the coordinator).
+
+## Final-head review — `0c0c60f` (after the holdout-v2 run)
+
+A fresh read-only reviewer, in its own clone, with access to every fixture (holdout-v2 was already scored). Full
+report and probes: `final-head-0c0c60f/` (`FINAL-HEAD-REVIEW.md`, `probes.tsv` with its own labels, outputs, scripts).
+
+Verdict: **no blocker.** Every `BENCHMARK-v2.md` §1–§5 figure recomputed with the reviewer's own scorer (no `bench/`
+import) and matched; `--split every` rebuilt the evaluation JSON byte-for-byte (`afc55fd5…`); package 1917 passed /
+11 skipped; legacy copies equal their PROVENANCE hashes; snapshot unchanged since `f62dbdf`; default engine and public
+API unchanged; provenance patch applied unchanged (same patch-id) and correct; no app code differs from `8c9fd8c`.
+748 probes (641 new): 0 invalid, 0 nondeterministic, 0 safety-net uses; firm C2 25 (21 high).
+
+Should-fix (not fixed in Phase 2): SF-1 `x` multiplier without a package (`1x cup milk` → 1 `each`, S3); SF-2 K3 wider
+(`Vitamin C: 15 mg`, `4.8 stars (120 reviews)` ready); SF-3 count nouns after the food kept in the name by policy
+(conflicts with CONTRACT §7.3 labels); SF-4 three-way comma choices (S5 5/5; plural first option dropped); SF-5/SF-6
+scorer deviations (EVALUATION-PLAN-v2 change log 10). Nits N-1–N-9: wording ("never touches", A6 evidence, stale
+`EXTRACTOR_VERSION` and parity lines, DECISIONS intro, §4 tally) corrected in the docs; hostile-input oddities and
+debatable readies recorded. The reviewer could not see the author's copy; the coordinator confirmed `59756ba` and
+`56eafe4` have identical trees (`author-59756ba-equals-56eafe4.txt`) and ran the validator on all 2 007 outputs
+(`../a6-validation/`: 0 invalid).

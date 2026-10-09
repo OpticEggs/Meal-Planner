@@ -1,0 +1,35 @@
+2 garlic cloves        → ready        clove   garlic
+2 thyme sprigs         → ready        sprig   thyme
+2 celery stalks        → ready        stalk   celery
+2 celery ribs          → ready        each    celery ribs
+2 bacon slices         → ready        slice   bacon
+2 bacon strips         → ready        each    bacon strips
+2 cinnamon sticks      → ready        each    cinnamon sticks
+2 butter sticks        → ready        each    butter sticks
+2 lemon wedges         → ready        each    lemon wedges
+2 lime wedges          → ready        each    lime wedges
+2 cardamom pods        → ready        each    cardamom pods
+2 vanilla pods         → ready        each    vanilla pods
+2 bay leaves           → ready        each    bay leaves
+2 basil leaves         → ready        each    basil leaves
+2 sage leaves          → ready        each    sage leaves
+2 garlic bulbs         → ready        bulb    garlic
+2 fennel bulbs         → ready        bulb    fennel
+2 corn ears            → ready        ear     corn
+2 lettuce heads        → ready        each    lettuce heads
+2 cabbage heads        → ready        each    cabbage heads
+2 salmon fillets       → ready        fillet  salmon
+2 anchovy fillets      → ready        fillet  anchovy
+2 sausage links        → ready        link    sausage
+2 bread loaves         → ready        each    bread loaves
+2 chicken pieces       → ready        each    chicken pieces
+2 ginger pieces        → ready        each    ginger pieces
+2 mozzarella balls     → ready        each    mozzarella balls
+2 pastry sheets        → ready        each    pastry sheets
+2 bouillon cubes       → ready        each    bouillon cubes
+2 sugar cubes          → ready        each    sugar cubes
+2 tomato cans          → ready        each    tomato cans
+2 chickpea cans        → ready        each    chickpea cans
+2 yeast packets        → ready        each    yeast packets
+2 parsley bunches      → ready        each    parsley bunches
+2 chocolate blocks     → ready        each    chocolate blocks
