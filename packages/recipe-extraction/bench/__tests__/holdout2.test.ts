@@ -209,6 +209,15 @@ describe("FREEZE-v2", () => {
     expect(rec.ingredients.sha256).toMatch(/^[0-9a-f]{64}$/);
   });
 
+  it("holdout-v2 is frozen (2026-10-09, before any candidate evaluation) and FREEZE-v2.json matches the file", () => {
+    const recorded = JSON.parse(readFileSync(path.join(FIXTURES, FREEZE_V2_FILE), "utf8"));
+    expect(verifyFreezeV2(FIXTURES)).toEqual([]);
+    expect(recorded).toEqual(computeFreezeV2(FIXTURES, "2026-10-09"));
+    expect(recorded.frozenAt).toBe("2026-10-09");
+    expect(recorded.ingredients.cases).toBe(v2.length);
+    expect(freezeV2Status(FIXTURES)).toEqual({ frozen: true, frozenAt: "2026-10-09", sha256: recorded.ingredients.sha256 });
+  });
+
   it("before the freeze there is nothing to verify; the status says not frozen", () => {
     const dir = copy();
     rmSync(path.join(dir, FREEZE_V2_FILE), { force: true });
