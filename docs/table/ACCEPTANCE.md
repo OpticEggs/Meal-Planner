@@ -644,8 +644,13 @@ places (e.g. 0.6667 for ⅔); such a recipe planned as exactly its servings can 
 needs a reviewed data change, which is not authorized.
 
 **Recipe Extraction Lab (separate workstream, branch `claude/quirky-gauss-depmd8`).** Kept isolated: no lab code,
-contract, corpus, benchmark or plan was changed. Its deliberate guard on Table's live `ingredient-line.ts` failed after
-merging `main` (the only failure); the branch received a merge of `main` and one reconciliation commit that records
-`bca110e`'s file hash as the accepted later version (the `8e6bd6e` hash kept in the note) and appends §4 to
-`docs/table/recipe-extraction/PHASE-3-DEPENDENCIES.md`. Lab suite with `main` merged: 920 passed, 1 expected fail, 11
-skipped. These app corrections do not complete or replace the extraction engine; its Phase 3 is unauthorized.
+contract, corpus, benchmark or plan was changed, and **nothing was pushed to the lab branch**. Its deliberate guard on
+Table's live `ingredient-line.ts` (`tests/parity/provenance.test.ts`) is the only lab test that fails once `main` is
+merged. A reconciliation (merge of `bca110e` plus one commit recording `bca110e`'s file hash `4eba6151…` as the accepted
+later version, the `8e6bd6e` hash kept in the note, and §4 appended to
+`docs/table/recipe-extraction/PHASE-3-DEPENDENCIES.md`) was prepared; while it was prepared the lab session pushed
+seven commits ending in its holdout-v2 freeze (`dee4ed0` → `46a6547`), so it was not pushed onto that work. Rebuilt on
+`46a6547`, the lab suite reads 1 failed (the guard) before the reconciliation commit and 1006 passed, 1 expected fail,
+11 skipped after it; `46a6547` alone passes. The commit is kept as
+`evidence/2026-10-09-verify-bca110e/lab-reconciliation/` for the lab session or the owner to apply; it touches only
+`src/legacy/PROVENANCE.json` and that document, not the frozen holdout-v2 labels. These app corrections do not complete or replace the extraction engine; its Phase 3 is unauthorized.

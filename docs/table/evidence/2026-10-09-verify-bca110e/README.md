@@ -11,5 +11,6 @@
   then holds the old ⅓ cup (0.083333333333 per serving) although ½ cup had been typed.
 - `dev/rio-mutations/`: targeted runs of the two new mutations and the existing seasoning mutations before the full
   harness (all KILLED).
+- `lab-reconciliation/`: the Recipe Extraction Lab provenance commit, prepared and tested but not pushed (see its README).
 - No website, Kroger, Instacart or FoodData Central request was made; the pilot was not contacted. Browser JSON secret
   redacted.
