@@ -9,7 +9,7 @@ ROLE: Claude — Table integration owner. TASK: Recipe Extraction Lab **Phase 2 
 confidence discipline) in `packages/recipe-extraction`, on branch `claude/quirky-gauss-depmd8` (Phase 1 at `3ca998a`).
 
 Read first: root `CLAUDE.md`; `packages/recipe-extraction/CONTRACT-v1.md`; `docs/table/recipe-extraction/`
-(`SOURCE-AND-CONTRACT-CENSUS.md`, `BENCHMARK-v1.md`, `ADAPTER-IMPACT.md`); DECISIONS D118–D121 (numbered D112–D115 before the merge with main).
+(`SOURCE-AND-CONTRACT-CENSUS.md`, `BENCHMARK-v1.md`, `ADAPTER-IMPACT.md`); DECISIONS D121–D124 (numbered D112–D115, then D118–D121, before the merges with main).
 
 Build a new ingredient engine (new id, e.g. `semantic-v1`) under `src/ingredient/` — do not edit `src/legacy/`:
 1. Exact amounts: integers, decimals, fractions, mixed and hyphenated mixed (`1-1/2`), Unicode vulgar and fraction

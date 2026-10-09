@@ -13,7 +13,7 @@ deployment._
   so **the pesto line is already read correctly inside Table on `main`** (not yet on the owner's pilot unless it was
   upgraded). It also took DECISIONS D112–D117 and BACKLOG B28–B30.
 - Reconciled on this branch: `f62dbdf` pinned the frozen baseline's outputs (`baseline-snapshot.json`) while Table's
-  live parser still equalled it; `d466bc2` merged `origin/main` (lab decisions renumbered D118–D121, backlog B31–B33).
+  live parser still equalled it; `d466bc2` merged `origin/main` (lab decisions renumbered D118–D121, backlog B31–B33; renumbered again to D121–D125 and B32–B34 when `8c9fd8c` was merged, whose corrections took D118–D120 and B31).
   After the merge the branch's app code is byte-identical to `main`; only `packages/`, `docs/` and one `CLAUDE.md`
   line differ.
 

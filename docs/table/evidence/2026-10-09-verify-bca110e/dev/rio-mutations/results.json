@@ -1,0 +1,40 @@
+{
+  "when": "2026-10-09T20:27:11.063Z",
+  "head": "12434c0c8c4c69a73151b8f29caf69655d6642fe",
+  "restored": true,
+  "pass": true,
+  "results": [
+    {
+      "name": "IO_seasoning_bought",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/2 failed by assertion: salt and black pepper make no grocery line and no payload; the bell pepper does; both are named as left out"
+    },
+    {
+      "name": "IO_bell_pepper_is_seasoning",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "18/45 failed by assertion: \"red bell pepper\" → not a household seasoning | \"bell pepper\" → not a household seasoning | \"jalapeño pepper\" → not a household seasoning"
+    },
+    {
+      "name": "RIO01_per_serving_rounded_half_up",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: RIO-01: a whole recipe planned as its servings buys its packages, not one more"
+    },
+    {
+      "name": "RIO02_bare_pepper_always_seasoning",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: RIO-02: a pepper bought by the piece is an ingredient; table pepper by the spoon is a seasoning"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+baseline NOT CLEAN: tests/integration/plan.contract.test.ts -t "T10" (0 executed, exit 127)
+baseline NOT CLEAN: tests/integration/groceries.contract.test.ts -t "T13|T14" (0 executed, exit 127)
+ERROR    blanket_week_conflict — baseline not clean
+ERROR    stale_send — baseline not clean
+FAIL: 0 killed, 0 survived, 2 error — logs in /tmp/tmp.8ud6m0ilWL/broken
+baseline clean: tests/integration/plan.contract.test.ts -t "T10" (2 executed, exit 0)
+SURVIVED control_noop_comment (control) — 2 executed, all passed
+PASS: 0 killed, 1 survived, 0 error — logs in /tmp/tmp.8ud6m0ilWL/control
+SELFTEST PASS: runner failure -> ERROR (exit 1), control -> SURVIVED, sources restored

@@ -11,7 +11,7 @@ _2026-10-09, coordinator, read-only. Supersedes the "replace Table's parser" pre
 | Decisions | `quantity` decimal string | `quantity` exact amount text (fractions accepted, `parseAmount`) | ADAPTER-IMPACT §3's `decision.exact` proposal is unnecessary |
 | Per serving | `perPortion`, 4 dp | `perServing`: exact when terminating, else **12 dp** (`exact: false`); kitchen-fraction display | the remaining decimal limitation is 12 dp per serving for non-terminating amounts (§3) |
 | Seasonings | none | `seasonings.ts` `isHouseholdSeasoning(name)`: parse-time `omitted` + grocery projection exclusion; explicit requests still bought | decided by Table on the **name**; the extractor must not decide it (contract v1 already keeps `salt and pepper` as a name) |
-| Review | per-line cards + suggestions | compact rows, Use by default, uncertain lines first, fraction input | Phase 4 (`B33`) is largely delivered |
+| Review | per-line cards + suggestions | compact rows, Use by default, uncertain lines first, fraction input | Phase 4 (`B34`) is largely delivered |
 | Policy in the reader | — | package sizes multiplied (`2 (14.5 oz) cans` → 29 oz), quarts/pints/gallons → cups, count words into the name (`garlic (clove)`, unit `each`) | these are **adapter/household choices** under contract v1; the package reports the facts unmultiplied |
 
 ## 2. Remaining Phase 3 questions (to decide before any adapter code)
