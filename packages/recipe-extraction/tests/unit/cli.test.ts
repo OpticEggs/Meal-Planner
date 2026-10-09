@@ -37,9 +37,13 @@ describe("recipe-lab", () => {
     expect(JSON.parse(r.out)).toEqual(extractRecipePage(readFileSync(FIXTURE, "utf8"), { requestedUrl: "https://www.example.com/r/", finalUrl: "https://www.example.com/r/" }));
   });
 
-  it("engines lists both engines and the default", async () => {
+  it("engines lists every registered engine and the default (the legacy engine stays the default)", async () => {
     const r = await run("engines");
-    expect(JSON.parse(r.out).map((e: { id: string; default: boolean }) => [e.id, e.default])).toEqual([["legacy-table-import-2", true], ["legacy-table-import-2+suggestion", false]]);
+    expect(JSON.parse(r.out).map((e: { id: string; default: boolean }) => [e.id, e.default])).toEqual([
+      ["legacy-table-import-2", true],
+      ["legacy-table-import-2+suggestion", false],
+      ["semantic-v1", false],
+    ]);
   });
 
   it("validate reports problems with exit code 1, and 0 when valid", async () => {

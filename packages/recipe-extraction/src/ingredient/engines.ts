@@ -1,15 +1,17 @@
 /**
- * Ingredient engines by id. Phase 1 has only the frozen legacy engines; the default is the faithful
- * one. A new engine gets a new id, and the default changes only with benchmark evidence.
+ * Ingredient engines by id: the frozen legacy engines (Phase 1) and the Phase 2 candidate
+ * `semantic-v1`. The default stays the faithful legacy engine; it changes only with benchmark evidence.
  */
 import type { IngredientEngine } from "../contract";
 import { LEGACY_ENGINE_ID, legacyEngine, legacySuggestionEngine } from "./legacy";
+import { semanticEngine } from "./semantic/engine";
 
 export const DEFAULT_ENGINE_ID = LEGACY_ENGINE_ID;
 
 export const ENGINES: Readonly<Record<string, IngredientEngine>> = Object.freeze({
   [legacyEngine.id]: legacyEngine,
   [legacySuggestionEngine.id]: legacySuggestionEngine,
+  [semanticEngine.id]: semanticEngine,
 });
 
 /** The engine with this id. Throws for an unknown id (own keys only: "toString" is not an engine). */
