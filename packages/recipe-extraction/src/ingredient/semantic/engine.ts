@@ -17,7 +17,7 @@ import { validateParsedIngredientV1 } from "../../validate";
 import { groupAmount, readAmountPhrase, readStatedAmount, placeSecondary, sumInSmallest, type AmountSlots } from "./amount";
 import { nonIngredientReason, numericLead } from "./classify";
 import { adjacent, isGroup, isNumberish, isSym, isWord, lex, type Tok } from "./lexer";
-import { BULLETS, CARDINALS, FRACTION_WORDS, FUNCTION_WORDS, MEASURE_ADJECTIVES, PREP_ADVERBS, REMARK_WORDS, SIZE_WORDS, TRAILING_PREP_WORDS } from "./lexicon";
+import { BULLETS, CARDINALS, FRACTION_WORDS, FUNCTION_WORDS, MEASURE_ADJECTIVES, PREP_ADVERBS, REMARK_WORDS, SIZE_WORDS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
 import { readNameRegion, type NameReading } from "./name";
 import { normalizeLine } from "./normalize";
 import { classifyPiece, splitTopLevel, textOf, trimEdges, unstatedAt } from "./remarks";
@@ -76,6 +76,8 @@ const hasNumberTok = (toks: readonly Tok[]) => toks.some(isNumberish);
 
 /** A numbered list marker ("1.", "2)", "a)") followed by a space and an amount. */
 const NUMBERED_MARKER = /^(?:\d{1,2}|[A-Za-z])[.)](?= +[\d½⅓⅔¼¾⅕⅖⅗⅘⅙⅚⅐⅛⅜⅝⅞⅑⅒.])/;
+/** A numbered marker followed by a word ("1. Preheat"); group 1 is that word. */
+const NUMBERED_STEP = /^(?:\d{1,2}|[A-Za-z])[.)](?= +([\p{L}]+))/u;
 
 /** The whole run is a flag phrase ("to taste", "for serving", "optional"). */
 function phraseOnly(toks: readonly Tok[]): boolean {
@@ -103,6 +105,20 @@ function describingOnly(region: readonly Tok[], afterAmount: boolean): boolean {
   return ws.every((w) => DESCRIBING(w.lower) && !["more", "less", "so", "taste", "needed", "desired", "optional"].includes(w.lower));
 }
 
+const PREPOSITIONS = new Set(["into", "on", "onto", "off", "until", "over", "under", "at", "in", "with", "without", "for", "by", "from", "to", "about", "as", "if"]);
+
+/** A short plain noun phrase ("avocado", "garlic powder"): no participle, preposition or remark word. */
+function plainFoodItem(seg: readonly Tok[]): boolean {
+  if (seg.length === 0 || seg.length > 3 || !seg.every((t) => t.kind === "word")) return false;
+  return namesAFood(seg) && seg.every((w) => isWord(w) && !PREPOSITIONS.has(w.lower) && !/(?:ed|en)$/.test(w.lower) && !DESCRIBING(w.lower));
+}
+
+/** The run without a trailing "no fixed amount" phrase ("garlic powder to taste" → "garlic powder"). */
+function stripPhrase(seg: readonly Tok[]): Tok[] {
+  for (let i = 1; i < seg.length; i++) if (unstatedAt(seg, i)) return seg.slice(0, i);
+  return [...seg];
+}
+
 /** A segment that names a food: some word is not describing, preparation or a remark phrase. */
 function namesAFood(seg: readonly Tok[]): boolean {
   if (seg.length === 0 || !isWord(seg[0]) || isWord(seg[0], "or", "plus", "and") || unstatedAt(seg, 0) !== null) return false;
@@ -125,7 +141,13 @@ function read(input: unknown): Reading {
   const text = normalized;
   // "1) 2 cups flour", "a) 2 eggs", "1. 2 cups flour": a numbered marker before an amount is blanked
   // before lexing (offsets stay those of the normalized text).
-  const marker = NUMBERED_MARKER.exec(text);
+  let marker = NUMBERED_MARKER.exec(text);
+  if (!marker) {
+    // "1. Preheat the oven…", "2) Add the flour": a numbered step (the rest is then judged on its own);
+    // "2. cups milk" keeps its number, because a unit follows.
+    const step = NUMBERED_STEP.exec(text);
+    if (step && unitOfWord(step[1]) === null) marker = step;
+  }
   const lexed = lex(marker ? " ".repeat(marker[0].length) + text.slice(marker[0].length) : text);
   if (marker) push(reasons, "list_marker_removed");
   let toks: Tok[] = lexed.tokens;
@@ -338,6 +360,20 @@ function read(input: unknown): Reading {
     if (run.length > 0 && m < tails.length && isWord(tails[m][0], "or") && nr.name !== null) {
       for (const seg of run) listOptions.push({ s: seg[0].s, text: textOf(text, seg) });
       tails = [...tails.slice(0, usedTail + 1), ...tails.slice(m)];
+    }
+  }
+  // "salt, pepper, and garlic powder to taste", "sour cream, avocado, cilantro, for topping": several foods
+  // listed in one line. Read as written, but a person must split them.
+  {
+    let m = usedTail + 1;
+    let foods = 0;
+    while (m < tails.length && !isWord(tails[m][0], "or") && plainFoodItem(tails[m])) {
+      foods++;
+      m++;
+    }
+    const andLast = m < tails.length && (isWord(tails[m][0], "and") || isSym(tails[m][0], "&")) && plainFoodItem(stripPhrase(tails[m].slice(1)));
+    if (nr.name !== null && listOptions.length === 0 && (foods >= 2 || (foods >= 1 && andLast))) {
+      push(fx.reasons, "unclassified");
     }
   }
   tails.forEach((seg, idx) => {

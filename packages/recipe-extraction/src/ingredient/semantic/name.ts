@@ -100,6 +100,8 @@ function stopAtNumber(text: string, toks: readonly Tok[], fx: Effects): Tok[] {
     }
     fx.notes.push({ s: t.s, text: textOf(text, toks.slice(i)) });
     fx.unassigned++;
+    // a name cut before a second ingredient does not end in a conjunction ("flour and | 1 tsp salt")
+    while (kept.length > 0 && (isWord(kept[kept.length - 1], "and", "or", "with", "plus") || isSym(kept[kept.length - 1], "&", "+"))) kept.pop();
     break;
   }
   return kept;
@@ -128,10 +130,27 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
   }
   toks = dropBarePrices(toks, fx);
 
-  // 2. the front: "of", size words, cooked/raw
+  // 2. the front: "of", size words, cooked/raw, a distributive "each", and an alternative amount
+  //    ("2 large or 3 small potatoes": the second amount cannot be placed)
   let a = 0;
   if (ctx.dropLeadingOf && isWord(toks[a], "of")) a++;
+  if (ctx.hasQuantity && ctx.unitWritten && isWord(toks[a], "each")) {
+    // "1 tsp each salt and pepper": one amount for several foods — a person must split it
+    if (!fx.reasons.includes("unclassified")) fx.reasons.push("unclassified");
+    a++;
+    if (isSym(toks[a], ":")) a++;
+  }
   for (let guard = 0; guard < 8 && a < toks.length; guard++) {
+    if (isWord(toks[a], "or", "to") && (isNumberish(toks[a + 1]) || isWord(toks[a + 1], "a", "an"))) {
+      const alt = readAmountPhrase(text, toks, a + 1);
+      if (alt && alt.next < toks.length) {
+        fx.unassigned++;
+        fx.notes.push({ s: toks[a].s, text: textOf(text, toks.slice(a, alt.next)) });
+        a = alt.next;
+        if (isWord(toks[a], "of")) a++;
+        continue;
+      }
+    }
     const size = isSizeWordAt(toks, a);
     if (size > 0) {
       fx.notes.push({ s: toks[a].s, text: text.slice(toks[a].s, toks[a + size - 1].e) });

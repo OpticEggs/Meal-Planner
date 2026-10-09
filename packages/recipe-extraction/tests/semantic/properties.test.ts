@@ -42,7 +42,6 @@ describe("every output validates", () => {
       const unchecked = parseSemanticUnchecked(line);
       const problems = validateParsedIngredientV1(unchecked);
       if (problems.length) bad.push(`${show(line)}: ${problems.slice(0, 2).join("; ")}`);
-      else if (unchecked.reasons.includes("unclassified") && !/\bof\b/i.test(unchecked.normalized)) bad.push(`${show(line)}: unexpected unclassified`);
       if (bad.length >= 20) break;
     }
     expect(bad).toEqual([]);

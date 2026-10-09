@@ -91,7 +91,7 @@ export function groupAmounts(text: string, g: GroupTok): StatedAmount[] | null {
   let k = 0;
   const c = g.children;
   for (let guard = 0; guard < 8; guard++) {
-    const sa = readStatedAmount(text, c, k);
+    const sa = readStatedAmount(text, c, k) === null ? null : compoundAt(text, c, k) ?? readStatedAmount(text, c, k);
     if (!sa) return null;
     out.push(sa);
     k = sa.next;
@@ -100,6 +100,27 @@ export function groupAmounts(text: string, g: GroupTok): StatedAmount[] | null {
     k++;
   }
   return null;
+}
+
+/** A compound restatement ("1lb 2oz") read as one stated amount in its smallest unit, or null. */
+function compoundAt(text: string, toks: readonly Tok[], i: number): StatedAmount | null {
+  const first = readStatedAmount(text, toks, i);
+  if (!first || first.each || first.total || !isMassOrVolume(first.unit)) return null;
+  const parts = [{ value: first.value, unit: first.unit, sa: first }];
+  let k = first.next;
+  for (let guard = 0; guard < 3; guard++) {
+    let c = k;
+    if (isWord(toks[c], "plus", "and") || isSym(toks[c], "+")) c++;
+    const nx = readStatedAmount(text, toks, c);
+    if (!nx || nx.unit.dimension !== first.unit.dimension || nx.unit.canonical === parts[parts.length - 1].unit.canonical) break;
+    parts.push({ value: nx.value, unit: nx.unit, sa: nx });
+    k = nx.next;
+  }
+  if (parts.length < 2) return null;
+  const sum = sumInSmallest(parts);
+  if (!sum) return null;
+  const smallest = parts.find((p) => p.unit.canonical === sum.unit.canonical)!.sa;
+  return { ...smallest, value: sum.value, decimal: false, s: first.s, e: toks[k - 1].e, next: k, each: false, total: false };
 }
 
 /** A price annotation: "($0.16)", "($1.23*)", "( $0.02 )", "(about $1)", "($0.25 each)". */
