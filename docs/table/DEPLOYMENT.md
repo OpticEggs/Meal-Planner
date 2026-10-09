@@ -19,7 +19,7 @@ services, private services, and background workers"), **no shell, no one-off job
 15 minutes without traffic and takes about a minute to wake. So the database is updated by the **Start Command**
 itself, before the server starts. The health check answers 503 while a migration this code knows about is pending.
 
-### Upgrade from your phone — `7c79eb6` (verified commit); you run it, Claude does not deploy
+### Upgrade from your phone — `8e6bd6e` (verified commit); you run it, Claude does not deploy
 
 Everything marked **[tested]** was rehearsed locally on 2026-10-09 in production mode (production build,
 `TABLE_ENV=production`, PostgreSQL 16) on a household database at migration 011 created and populated by the
@@ -58,10 +58,10 @@ or paste the database password in these steps.
      under `/bin/sh`, a stop signal to the shell left the server running. **[unverified]** which shell Render uses.
    - **[unverified]** whether saving starts a deploy by itself; if one starts, check its commit in **Events** and
      continue with step 4 either way. Leave every environment variable as it is.
-4. **Deploy the exact commit.** **Manual Deploy** → **Deploy a specific commit** → `7c79eb6` → **Deploy**.
+4. **Deploy the exact commit.** **Manual Deploy** → **Deploy a specific commit** → `8e6bd6e` → **Deploy**.
    (Render's docs say this turns automatic deploys off for the service — what you want for a verified commit.)
 5. **Read the deploy log** (**Events** → the deploy → **Logs**). Expect, in order: `> tsx scripts/migrate.ts`,
-   then `applied: …` ending in `013_partial_handoff.sql` (earlier files too if the pilot is older), or
+   then `applied: …` ending in `014_member_recipe_photo.sql` (earlier files too if the pilot is older), or
    `schema up to date`, then `✓ Ready`. **Stop, don't retry,** on `Error: migration 0NN_….sql failed: …` or
    `… changed after it was applied`: copy that line (it holds no password) and ask for help. **[unverified]**
    Render keeps the previous release serving when a deploy fails.
@@ -78,14 +78,14 @@ or paste the database password in these steps.
   the database. **[tested]** the 011-era code served, read and wrote on the upgraded schema and its start said
   `schema up to date`. **Its `/api/health` still answers 200**, because it checks only the migrations it knows, so a
   200 does not prove code and database match.
-- **A migration cannot be un-applied.** 012 and 013 only add a table, optional columns, a wider check and two
+- **A migration cannot be un-applied.** 012, 013 and 014 only add a table, optional columns, a wider check and
   columns with defaults, which is why older code keeps working.
 - **Restoring from the Neon branch** returns the data to step 1: **everything written after it is lost** (recipes,
   links, plans, sign-ins). **[unverified]** Neon's exact restore screens. Do it only if data is damaged, not because
   a deploy failed.
 
 **Alternative (needs a computer):** keep any Start Command and run `npm run db:migrate` from your copy of the
-repository at `7c79eb6` with `DATABASE_URL` typed into that terminal only, then deploy the same commit. With
+repository at `8e6bd6e` with `DATABASE_URL` typed into that terminal only, then deploy the same commit. With
 this commit a start-time migration running at the same moment is safe (the lock above).
 
 ### One real recipe URL (only after you separately approve R1)

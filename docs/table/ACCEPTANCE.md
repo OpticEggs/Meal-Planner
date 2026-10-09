@@ -579,3 +579,39 @@ migration blocks start and leaves nothing half-applied, old code keeps serving o
 200). **Defect found:** two concurrent starts — one exited 1 ("relation recipe_images already exists") in 10 of 20
 trials. Repaired in `3378e01` with a transaction-level advisory lock: 20 of 20 both serve; `migrate-lock.test.ts` 4 of 5
 red on the previous runner, 5 of 5 green; mutation MIG_no_per_migration_lock killed. Not tried on Render or Neon.
+
+## Import overhaul and mobile redesign — added 2026-10-09
+
+Starting `cb7b56e`; member photo backend `dfb34cc` (worker); overhaul `8e6bd6e`; verified at `8e6bd6e` — `docs/table/evidence/2026-10-09-verify-8e6bd6e/summary.md`: vitest 1078/1078, Playwright 143/143, 100 mutations killed, 0 survived, 0 error.
+Before/after screens: `docs/table/evidence/2026-10-09-overhaul-screens/` (`compare/` has them side by side).
+
+**Red first.** `evidence/2026-10-09-verify-8e6bd6e/dev/red-on-cb7b56e.log`: the new parser, quantity, seasoning and
+IO tests against the previous code — the reported line failed (`"1/3 cup pesto (homemade (or store-bought))"` →
+review, "fraction not exact as a decimal", whole line as the name), all five IO cases failed, the quantity and
+seasoning modules did not exist. The "Have enough" rounding test fails on the previous projection (D117).
+
+| ID | What | Tests | Status |
+|---|---|---|---|
+| IO-01 | The reported line → pesto, 1/3 cup, note "homemade (or store-bought)"; clean lines start as Use; only the range and the no-amount line wait; salt and pepper left out | integration IO-01; unit parser table (67 parsed, 22 review cases); e2e IO-E1 | PASS |
+| IO-02 | Confirming gives exact per-serving amounts (1/3 cup ÷ 4 = 0.083333333333; 1 1/2 cups ÷ 4 = 0.375), source link kept, no salt/pepper in the recipe | integration IO-02 | PASS |
+| IO-03 | A typed fraction is accepted ("2 1/2"); nonsense is refused naming the line | integration IO-03 | PASS |
+| IO-04 | No suggestion workflow stored or shown | integration IO-04; e2e IO-E1, U2C-E1 | PASS |
+| IO-05 | Household-private mode keeps the method, not the photo; a per-site photo grant keeps it | integration IO-05; unit CP-02; integration R1-06 | PASS |
+| — | Fractions, mixed numbers, Unicode fractions, ranges, packages, nested parentheses, alternatives, hostile input; never the whole line as the name | unit recipe-import-ingredient-line, -sweep, quantity | PASS |
+| — | Seasonings: salt/black pepper variants omitted; bell/chili peppers, pepper sauce, flavoured salts, white pepper kept; recipes unchanged; explicit request still bought | unit seasonings | PASS |
+| MP-01..09 | Member photo: sniffed type, permission text, size cap, other household, stale revision, removal falls back, idempotent retry, route rules, export/restore | integration member-photo (worker) | PASS |
+| — | Browser: compact rows, source line in the editor, uncertain lines first, seasonings left out, save, illustrated fallback, own photo added (credited) and removed, no horizontal scroll | e2e IO-E1 | PASS |
+| — | Every existing screen at 320 px with 150 % and 200 % text, dark and light | e2e B18 sweeps, ui-screens, screens-overhaul | PASS |
+
+**Changed or removed assertions (transparent).** `tests/unit/recipe-import-ingredient-suggest.test.ts` was removed with
+the suggestion workflow (owner direction); its inputs are kept in `recipe-import-ingredient-sweep.test.ts` under the new
+contract. Rewritten with a dated comment: parser expectations ("1/2" was "0.5"; thirds were refused; cans/cloves were
+review lines), CP-02 and R1-06 (household-private keeps no photo), U-02/U-04/U-11 and member-photo's helper (a per-site
+photo grant instead of household-private), U-10 and RH-02 (defaults instead of suggestions), URL-08/URL-11 and the
+browser URL-12/U2C-E1 (the chili and taco pages now read cleanly), ms-domain per-portion (12 decimal places) and
+wording ("needs a quick check"), the journey's salsa amount (0.083333333333). Three mutations re-targeted
+(`UI_light/dark_text_too_faint` for the new palette; `U2C_suggestion_applied_unreviewed` → `U2C_uncertain_line_used_unreviewed`).
+
+**Defects found while testing:** the "Have enough" rounding (D117, journey); text inside the fallback illustration did
+not follow the text size (B18 sweep — now ordinary text); a visually hidden file input took keyboard focus (B18 sweep —
+now a visible button opens the picker).
