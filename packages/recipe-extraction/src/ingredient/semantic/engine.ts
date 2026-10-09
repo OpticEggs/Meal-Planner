@@ -198,9 +198,11 @@ function read(input: unknown): Reading {
   amount = readAmountPhrase(text, head, 0);
   if (amount) {
     region = head.slice(amount.next);
-    if (labelBefore && region.filter((t) => t.kind === "word").length === 0) {
-      // "Sugar: 1/2 cup" — the label is the name
-      region = [...labelBefore, ...region];
+    if (labelBefore && !region.some((t) => isWord(t) && !SIZE_WORDS.has(t.lower) && t.lower !== "extra")) {
+      // "Sugar: 1/2 cup", "Eggs - 2 large" — the label is the name (size words after the amount are notes)
+      const sizes = region.filter((t) => isWord(t));
+      if (sizes.length > 0) fx.notes.push({ s: sizes[0].s, text: textOf(text, sizes) });
+      region = [...labelBefore, ...region.filter((t) => !isWord(t))];
       nameFromLabel = true;
       labelBefore = null;
     }

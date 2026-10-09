@@ -156,6 +156,8 @@ describe("amount after the name (CONTRACT §7, quantity_after_name)", () => {
     ["Eggs: 2", "Eggs", "2", "each", null],
     ["tomatoes (2 large), diced", "tomatoes", "2", "each", "large; diced"],
     ["flour 2 cups", "flour", "2", "cup", null],
+    ["Eggs - 2 large", "Eggs", "2", "each", "large"],
+    ["Onion: 1 medium, diced", "Onion", "1", "each", "medium; diced"],
   ])("%s", (line, name, q, unit, note) => {
     const r = read(line);
     expect(core(r)).toEqual({ status: "ready", name, quantity: q, unit });
