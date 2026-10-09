@@ -255,12 +255,16 @@ function read(input: unknown): Reading {
         }
       }
     }
-    if (!amount && isWord(head[0]) && isWord(head[1], "of")) {
-      // "Pinch of salt": a unit with no number — the unit is read, no amount is invented.
-      const u = readUnit(text, head, 0);
-      if (u && u.next === 1) {
+    if (!amount) {
+      // "Pinch of salt", "small handful of basil", "Dash hot sauce": a unit with no number — the unit is
+      // read, no amount is invented. Without "of" only an imprecise unit is taken (a "strip steak" is food).
+      let k = 0;
+      while (isWord(head[k]) && (SIZE_WORDS.has((head[k] as { lower: string }).lower) || MEASURE_ADJECTIVES.has((head[k] as { lower: string }).lower))) k++;
+      const u = readUnit(text, head, k);
+      if (u && (isWord(head[u.next], "of") || (u.unit.dimension === "imprecise" && u.unit.canonical !== "drop" && u.unit.canonical !== "inch")) && u.next < head.length) {
         amount = { ...noAmount(), unit: u.unit, unitSpan: [u.s, u.e], next: 0 };
-        region = head.slice(1);
+        if (k > 0) fx.notes.push({ s: head[0].s, text: textOf(text, head.slice(0, k)) });
+        region = head.slice(u.next);
       }
     }
   }
@@ -392,18 +396,21 @@ function read(input: unknown): Reading {
   let name = nr.name;
   const additional = fx.options.filter((o) => o.mode === "additional");
   const variants = fx.options.filter((o) => o.mode === "variants").map((o) => o.text).filter((x) => x.length > 0);
+  const listed = fx.options.filter((o) => o.mode === "list").map((o) => o.text).filter((x) => x.length > 0);
   let base: string[] = nr.options ? [...nr.options] : name ? [name] : [];
-  if (variants.length >= 2 && base.length === 1) {
-    const single = variants.every((v) => !v.includes(" "));
-    if (single) base = variants.map((v) => `${v} ${base[0]}`); // "1 onion, red or white"
-    else if (!base[0].includes(" ")) base = distributeOptions([base[0], ...variants]); // "chicken, beef or vegetable stock"
-    else base = variants;
+  if (listed.length >= 2) base = listed; // "fresh herbs (parsley, cilantro, or basil)": the list names the food
+  else if (variants.length >= 2 && base.length === 1) {
+    const singles = variants.every((v) => !v.includes(" "));
+    const plural = variants.some((v) => /[^s]s$/i.test(v));
+    if (singles && !plural) base = variants.map((v) => `${v} ${base[0]}`); // "1 onion, red or white", "broth (chicken or vegetable)"
+    else if (!singles && !base[0].includes(" ")) base = distributeOptions([base[0], ...variants]); // "chicken, beef or vegetable stock"
+    else base = variants; // "nuts (walnuts or pecans)"
   } else if (variants.length >= 2 && base.length === 0) base = variants;
   const extra = [...listOptions.map((o) => o.text), ...additional.map((o) => (isRemarkOption(o.text) && name ? `${o.text} ${foodHead(name)}` : o.text))];
   // an option with its own amount ("(or 1 tsp dried)", "(or 2 cups)") is a second amount nobody can place
   if (additional.some((o) => o.hasAmount)) fx.unassigned++;
   let alternatives = uniqueOptions([...base, ...extra]);
-  if (alternatives.length >= 2 && (variants.length >= 2 || extra.length > 0 || (nr.options !== null && nr.options.length >= 2))) name = null;
+  if (alternatives.length >= 2 && (variants.length >= 2 || listed.length >= 2 || extra.length > 0 || (nr.options !== null && nr.options.length >= 2))) name = null;
   else {
     alternatives = [];
     for (const o of additional) if (o.text) fx.notes.push({ s: o.s, text: `or ${o.text}` });

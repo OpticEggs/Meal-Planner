@@ -18,9 +18,9 @@ export interface Effects {
   /**
    * Ingredient options found in a remark or after a comma. "additional": the remark offers another
    * ingredient ("(or cream)", ", or 1 cup water"); "variants": the remark lists versions of the named
-   * food (", red or white").
+   * food (", red or white"); "list": a bracketed list names the food ("(parsley, cilantro, or basil)").
    */
-  options: { text: string; s: number; hasAmount: boolean; mode: "additional" | "variants"; remarkOnly: boolean }[];
+  options: { text: string; s: number; hasAmount: boolean; mode: "additional" | "variants" | "list"; remarkOnly: boolean }[];
   /** Amounts that could not be placed (each adds `quantity_unassigned`). */
   unassigned: number;
 }

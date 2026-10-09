@@ -241,5 +241,20 @@ export function classifyGroup(text: string, g: GroupTok, fx: Effects): void {
     if (!fx.reasons.includes("price_annotation_removed")) fx.reasons.push("price_annotation_removed");
     return;
   }
-  for (const piece of splitTopLevel(g.children)) classifyPiece(text, piece, fx);
+  const pieces = splitTopLevel(g.children).filter((p) => p.length > 0);
+  // "(parsley, cilantro, or basil)": a list of foods ending in an "or" option names the choice
+  const last = pieces[pieces.length - 1];
+  if (pieces.length >= 3 && isWord(last[0], "or") && [...pieces.slice(0, -1), last.slice(1)].every(plainItem)) {
+    for (const p of [...pieces.slice(0, -1), last.slice(1)]) {
+      const item = isWord(p[0], "a", "an") && p.length > 1 ? p.slice(1) : p;
+      fx.options.push({ text: textOf(text, item), s: p[0].s, hasAmount: false, mode: "list", remarkOnly: false });
+    }
+    return;
+  }
+  for (const piece of pieces) classifyPiece(text, piece, fx);
+}
+
+/** A short run of plain words that is not only remark vocabulary ("cheddar", "a blend", "Monterey Jack"). */
+function plainItem(p: readonly Tok[]): boolean {
+  return p.length > 0 && p.length <= 3 && p.every((t) => t.kind === "word") && !remarkOnly(p);
 }

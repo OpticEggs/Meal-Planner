@@ -108,3 +108,32 @@ describe("options", () => {
     expect(read("12 lemon wedges")).toMatchObject({ unit: { canonical: "each" }, name: "lemon wedges" });
   });
 });
+
+describe("units with no number, and choices inside brackets", () => {
+  it("a unit with no number is read (after size words; imprecise units also without 'of'); nothing is invented", () => {
+    expect(read("Small pinch of salt")).toMatchObject({ status: "needs_review", quantity: null, unit: { canonical: "pinch" }, name: "salt", note: "Small" });
+    expect(read("Dash hot sauce")).toMatchObject({ status: "needs_review", quantity: null, unit: { canonical: "dash" }, name: "hot sauce" });
+    expect(read("Strip steak")).toMatchObject({ status: "needs_review", unit: null, name: "Strip steak" });
+  });
+
+  it("a form word can be one side of a choice", () => {
+    expect(read("1 cup cooked or canned chickpeas")).toMatchObject({ status: "needs_review", alternatives: ["cooked chickpeas", "canned chickpeas"], form: null });
+  });
+
+  it("a bracketed list of foods names the choice", () => {
+    expect(read("Fresh herbs (parsley, cilantro, or basil), for garnish")).toMatchObject({
+      status: "needs_review", name: null, alternatives: ["parsley", "cilantro", "basil"], amountUnstated: "for_garnish",
+    });
+    expect(read("2 cups shredded cheese (cheddar, mozzarella, or a blend)").alternatives).toEqual(["cheddar", "mozzarella", "blend"]);
+  });
+
+  it("single-word bracket options complete the name unless they are nouns in their own right (plural)", () => {
+    expect(read("1 cup sugar (white or brown)").alternatives).toEqual(["white sugar", "brown sugar"]);
+    expect(read("1 cup nuts (walnuts or pecans)").alternatives).toEqual(["walnuts", "pecans"]);
+  });
+
+  it("number words before a package size", () => {
+    expect(read("Two 15-ounce cans black beans")).toMatchObject({ status: "ready", quantity: { numerator: "2" }, unit: { canonical: "can" }, packageSize: { quantity: { numerator: "15" } } });
+    expect(read("One (28-ounce) can tomatoes")).toMatchObject({ status: "ready", quantity: { numerator: "1" }, unit: { canonical: "can" } });
+  });
+});

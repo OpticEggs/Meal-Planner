@@ -163,7 +163,8 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
       continue;
     }
     const t = toks[a];
-    if (isWord(t) && Object.prototype.hasOwnProperty.call(FORM_WORDS, t.lower)) {
+    // (a form word that is itself one side of a choice stays: "cooked or canned chickpeas")
+    if (isWord(t) && Object.prototype.hasOwnProperty.call(FORM_WORDS, t.lower) && !isWord(toks[a + 1], "or")) {
       fx.form ??= FORM_WORDS[t.lower];
       a++;
       continue;
