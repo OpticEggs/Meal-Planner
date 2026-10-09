@@ -25,10 +25,12 @@ export interface NumTok {
   kind: "num";
   s: number;
   e: number;
-  /** The numeral with superscript/subscript digits written as ASCII digits ("¹" → "1"). */
+  /** The numeral with superscript, subscript or full-width digits written as ASCII digits ("¹" → "1"). */
   text: string;
   /** int "12" · dec "1.5"/".5" · comma "1,5"/"1,000" (ambiguous) · malformed "1.2.3". */
   form: "int" | "dec" | "comma" | "malformed";
+  /** How the digits were written when not plain ASCII: superscript ("¹"), subscript ("₂"), full-width ("１"). */
+  script?: "super" | "sub" | "full";
 }
 export interface VulgarTok {
   kind: "vulgar";
@@ -62,10 +64,11 @@ const CLOSERS = new Set([")", "]", "}"]);
 
 const WORD = /[\p{L}\p{M}]+(?:['’‘\-‐‑][\p{L}\p{M}]+)*/uy;
 const NUMBER = /(?:\d+|(?=\.\d))(?:[.,]\d+)*/y;
-/** Superscript and subscript digits, as in "¹⁄₂" (index = digit value). */
+/** Superscript, subscript and full-width digits, as in "¹⁄₂" and "１" (index = digit value). */
 const SUPERSCRIPTS = "⁰¹²³⁴⁵⁶⁷⁸⁹";
 const SUBSCRIPTS = "₀₁₂₃₄₅₆₇₈₉";
-const SCRIPT_DIGITS = /[⁰¹²³⁴⁵⁶⁷⁸⁹]+|[₀₁₂₃₄₅₆₇₈₉]+/y;
+const FULLWIDTH = "０１２３４５６７８９";
+const SCRIPT_DIGITS = /[⁰¹²³⁴⁵⁶⁷⁸⁹]+|[₀₁₂₃₄₅₆₇₈₉]+|[０-９]+/y;
 
 export interface Lexed {
   tokens: Tok[];
@@ -124,8 +127,9 @@ export function lex(text: string): Lexed {
     SCRIPT_DIGITS.lastIndex = i;
     m = SCRIPT_DIGITS.exec(text);
     if (m) {
-      const ascii = [...m[0]].map((ch) => String(Math.max(SUPERSCRIPTS.indexOf(ch), SUBSCRIPTS.indexOf(ch)))).join("");
-      top.list.push({ kind: "num", s: i, e: i + m[0].length, text: ascii, form: "int" });
+      const ascii = [...m[0]].map((ch) => String(Math.max(SUPERSCRIPTS.indexOf(ch), SUBSCRIPTS.indexOf(ch), FULLWIDTH.indexOf(ch)))).join("");
+      const script = SUPERSCRIPTS.includes(c) ? "super" : SUBSCRIPTS.includes(c) ? "sub" : "full";
+      top.list.push({ kind: "num", s: i, e: i + m[0].length, text: ascii, form: "int", script });
       i += m[0].length;
       continue;
     }

@@ -1,14 +1,16 @@
 /** Shared helpers for the semantic-v1 tests. */
 import { expect } from "vitest";
 import type { ParsedIngredientV1, QuantityV1 } from "../../src/contract";
-import { parseSemanticUnchecked, semanticEngine } from "../../src/ingredient/semantic/engine";
+import { guardedParse, semanticEngine } from "../../src/ingredient/semantic/engine";
 import { validateParsedIngredientV1 } from "../../src/validate";
 
-/** Parse with semantic-v1 and assert the reading validates (also without the engine's safety net). */
+/** Parse with semantic-v1 and assert the reading validates and the engine's safety net was not used. */
 export function read(line: string): ParsedIngredientV1 {
   const r = semanticEngine.parse(line);
   expect(validateParsedIngredientV1(r), line).toEqual([]);
-  expect(parseSemanticUnchecked(line), `${line}: the safety net was needed`).toEqual(r);
+  const g = guardedParse(line);
+  expect(g.net, `${line}: the safety net was needed`).toBe("none");
+  expect(g.out).toEqual(r);
   return r;
 }
 

@@ -111,11 +111,24 @@ describe("counted things", () => {
   });
 
   it("imprecise units are read, and the line is still ready when clean", () => {
-    for (const [line, unit] of [["a pinch of salt", "pinch"], ["a dash of hot sauce", "dash"], ["a splash of vinegar", "splash"], ["1 handful baby spinach", "handful"], ["2 drops vanilla", "drop"], ["1 inch ginger", "inch"], ["1 knob butter", "knob"]] as const) {
+    for (const [line, unit] of [["a pinch of salt", "pinch"], ["a dash of hot sauce", "dash"], ["a splash of vinegar", "splash"], ["1 handful baby spinach", "handful"], ["2 drops vanilla", "drop"], ["1 knob butter", "knob"]] as const) {
       const r = read(line);
       expect(r, line).toMatchObject({ status: "ready", unit: { canonical: unit, dimension: "imprecise" } });
       expect(r.reasons).toContain("imprecise_unit");
     }
+  });
+
+  it("an inch is a size, never an amount bought: noted, and no count is invented", () => {
+    for (const [line, name, note] of [
+      ["1 inch ginger", "ginger", "1 inch"], ["9-inch pie crust", "pie crust", "9-inch"], ["10-inch tortillas", "tortillas", "10-inch"],
+      ["12 inch pizza crust", "pizza crust", "12 inch"], ["8 inch flour tortillas", "flour tortillas", "8 inch"], ["6 in. skewers", "skewers", "6 in"],
+    ] as const) {
+      const r = read(line);
+      expect(r, line).toMatchObject({ status: "needs_review", quantity: null, unit: null, name, note });
+      expect(r.reasons, line).toContain("quantity_missing");
+    }
+    // with a count, the size is a note on what is counted
+    expect(read("2 (10-inch) flour tortillas")).toMatchObject({ status: "ready", quantity: { numerator: "2" }, name: "flour tortillas", note: "10-inch" });
   });
 
   it("a unit with no number is read but no amount is invented", () => {

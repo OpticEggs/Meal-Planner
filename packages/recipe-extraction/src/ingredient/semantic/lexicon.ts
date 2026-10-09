@@ -24,7 +24,7 @@ const UNIT_SPELLINGS: Record<UnitCode, string> = {
   l: "l ls lt lts ltr ltrs liter liters litre litres",
   tsp: "tsp tsps tspn tspns teaspoon teaspoons teaspoonful teaspoonfuls",
   tbsp: "tbsp tbsps tbs tbl tbls tblsp tblsps tblspn tb tablespoon tablespoons tablespoonful tablespoonfuls",
-  fl_oz: "floz",
+  fl_oz: "floz fl-oz",
   cup: "c cup cups cupful cupfuls",
   pint: "pt pts pint pints",
   quart: "qt qts quart quarts",
@@ -117,10 +117,14 @@ export const VULGAR: Readonly<Record<string, readonly [number, number]>> = Objec
   "⅚": [5, 6], "⅐": [1, 7], "⅛": [1, 8], "⅜": [3, 8], "⅝": [5, 8], "⅞": [7, 8], "⅑": [1, 9], "⅒": [1, 10], "↉": [0, 3],
 });
 
-/** Cardinal number words (CONTRACT §7.1: one … twelve). */
+/** Cardinal number words (CONTRACT §7.1: one … twelve, continued through the teens and the tens). */
 export const CARDINALS: Readonly<Record<string, number>> = Object.assign(Object.create(null), {
-  one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12,
+  one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14,
+  fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19, twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70, eighty: 80,
+  ninety: 90,
 });
+/** Tens that combine with a unit word ("twenty-four", "thirty two"). */
+export const TENS = setOf("twenty thirty forty fifty sixty seventy eighty ninety");
 
 /** Fraction nouns: "half", "a third", "two thirds", "three quarters". */
 export const FRACTION_WORDS: Readonly<Record<string, number>> = Object.assign(Object.create(null), {
@@ -131,7 +135,7 @@ export const FRACTION_WORDS: Readonly<Record<string, number>> = Object.assign(Ob
 export const VAGUE_AMOUNT_WORDS = setOf("few several some couple little bit");
 
 /** Slash characters that write a fraction: solidus, fraction slash, division slash. */
-export const FRACTION_SLASHES = new Set(["/", "⁄", "∕"]);
+export const FRACTION_SLASHES = new Set(["/", "⁄", "∕", "／"]);
 
 /** Dashes that join a range ("2-3", "2–3"). */
 export const RANGE_DASHES = new Set(["-", "‐", "‑", "‒", "–", "—", "−", "~"]);
@@ -171,7 +175,8 @@ export const TIME_WORDS = setOf("minute minutes min mins hour hours hr hrs secon
 export const BOUND_PHRASES: readonly (readonly string[])[] = [["up", "to"], ["at", "least"], ["at", "most"], ["no", "more", "than"], ["not", "more", "than"], ["no", "less", "than"]];
 
 /** Length words: a size, never a unit of the registry ("2 cm piece ginger"). */
-export const LENGTH_WORDS = setOf("cm cms centimeter centimeters centimetre centimetres mm millimeter millimeters millimetre millimetres");
+/** Lengths right after a number: sizes, never amounts ("2 cm piece", "6 in. skewers": "in" only directly after the number). */
+export const LENGTH_WORDS = setOf("cm cms centimeter centimeters centimetre centimetres mm millimeter millimeters millimetre millimetres in");
 
 /** cooked / raw words (CONTRACT §7.6: → `form`). */
 export const FORM_WORDS: Readonly<Record<string, "cooked" | "raw">> = Object.assign(Object.create(null), {
@@ -199,6 +204,29 @@ export const REMARK_WORDS = setOf(
     // preference
     "favorite favourite preferably ideally optional kind brand type variety style",
 );
+
+/**
+ * Modifiers that, written alone before "or", clearly share the following food ("fresh or frozen peas",
+ * "red or white wine vinegar", "light or dark brown sugar"): colours, sweetness, fat, salt, heat, form and
+ * sourcing words. A noun before "or" ("chicken or vegetable broth", "butter or olive oil") is kept as written —
+ * the grammar alone does not say whether it shares the head.
+ */
+export const MODIFIER_WORDS = setOf(
+  "red white green yellow black brown orange purple golden pink dark light sweet unsweetened sweetened semisweet bittersweet hot mild spicy " +
+    "smoked plain skim low-fat nonfat non-fat fat-free full-fat reduced-fat lowfat low-sodium reduced-sodium salted unsalted regular wild long " +
+    "short coarse fine kosher flat-leaf curly seedless unbleached bleached toasted roasted instant quick old-fashioned rolled steel-cut " +
+    "large-curd small-curd extra-virgin virgin light-brown dark-brown fresh frozen dried canned cooked uncooked raw " +
+    // kinds that commonly name a version of the next food ("chicken or vegetable broth", "lemon or lime juice")
+    "chicken beef vegetable veggie pork turkey fish seafood mushroom bone lamb duck lemon lime grapefruit tangerine " +
+    "olive canola peanut sesame coconut avocado sunflower safflower grapeseed almond cashew walnut hazelnut pecan soy oat " +
+    "corn rice wine cider apple balsamic sherry bread cake pastry all-purpose self-rising whole-wheat whole semolina flour sea table grain",
+);
+
+/** Food words whose plural is the same word ("12 shrimp"): a count before them is a count. */
+export const INVARIANT_PLURALS = setOf("shrimp fish salmon trout cod tuna squid sheep deer halibut tilapia moose bison prawn scampi");
+
+/** Words that cannot start a food name; at the start of a name they are left-overs of a misread amount or a purpose ("or b", "for topping"). */
+export const LEADING_JUNK = setOf("or and nor with to plus but for");
 
 /** Function words that may appear inside a remark without making it about an ingredient. */
 export const FUNCTION_WORDS = setOf("a an the or and of in from to your my any if as for with use using can be is you prefer like such e.g i.e etc");
@@ -265,15 +293,52 @@ export const IF_DESIRED: readonly string[] = ["if", "desired"];
 
 // --- Non-ingredient lines --------------------------------------------------------------------------
 
-/** Imperative verbs that open an instruction ("Preheat the oven…"). Words that also open food names (brown, roast, grill) are left out. */
+/**
+ * Imperative verbs that open an instruction ("Preheat the oven…"). Words that also open food names (brown,
+ * roast, grill, cool, store, top) are left out. WEAK verbs also name foods or forms ("Cut green beans",
+ * "Season salt", "Roll", "Mince pie"), so a line opening with one is an instruction only when it reads like
+ * a sentence (INSTRUCTION_CUES or a closing period).
+ */
 export const INSTRUCTION_VERBS = setOf(
-  "preheat heat bake cook stir mix combine add place bring whisk serve let cover remove transfer pour season chill refrigerate simmer boil " +
-    "fry saute sauté blend beat fold knead spread sprinkle drain rinse chop dice mince peel grate put arrange divide repeat allow make prepare " +
-    "wash pat toss melt soak marinate grease wrap reduce return turn flip microwave pulse puree purée strain squeeze spoon layer " +
-    "set line whip cut slice garnish drizzle brush discard reserve meanwhile then once while when",
+  "preheat heat bake cook stir mix combine add place bring whisk serve let cover remove transfer pour chill refrigerate simmer boil " +
+    "saute sauté blend beat fold knead sprinkle drain rinse put arrange divide repeat allow make prepare wash pat toss melt soak marinate grease " +
+    "wrap reduce return turn flip microwave pulse puree purée strain squeeze spoon discard reserve meanwhile then once while when shape press " +
+    "scatter sift measure weigh",
 );
+export const WEAK_INSTRUCTION_VERBS = setOf("season whip line spread roll slice set cut chop dice mince peel grate garnish drizzle brush layer fry");
 /** Words that open a yield line ("Serves 4", "Makes 12 cookies"). */
 export const YIELD_WORDS = setOf("serves serve makes yields yield servings");
+
+/**
+ * Words that label recipe facts rather than food ("Calories: 250", "Serving size: 1 cup", "Special
+ * equipment: 2 baking sheets", "Protein 20g"). A line labelled with one of them is not an ingredient.
+ */
+/**
+ * Nutrient names: a label made only of these ("Fat: 10 g", "Saturated fat 3g", "Sugars 12 g") is a nutrition
+ * fact. A food word in the label makes it an ingredient again ("Duck fat: 2 tbsp"); "sugar" alone is food.
+ */
+export const NUTRIENT_WORDS = setOf("fat fats saturated unsaturated monounsaturated polyunsaturated trans sugars added total dietary");
+
+export const META_LABEL_WORDS = setOf(
+  "calories calorie kcal kj kilojoules energy nutrition nutritional protein proteins carbs carbohydrates carbohydrate fiber fibre cholesterol " +
+    "sodium serving servings size per portion portions weight total yield yields makes serves equipment need needed time prep " +
+    "note notes tip tips method directions instructions step steps",
+);
+/** Nouns that, right after a number, make it a count of something other than food ("4 servings", "250 kcal"). */
+export const META_NOUNS = setOf("servings serving portions portion people persons person kcal calories calorie cal kj");
+
+/**
+ * Words that name a part of a recipe; an all-capitals line made only of these (with "for", "the", "and",
+ * "to") is a heading ("TOPPING", "FOR THE SAUCE"). Other all-capitals lines may be food ("SALT", "OLIVE OIL").
+ */
+export const RECIPE_PART_WORDS = setOf(
+  "topping toppings sauce filling fillings crust dressing garnish garnishes marinade glaze frosting icing batter dough assembly base streusel " +
+    "salad main sides side extras optional serve finish decorate cake pie bread cookies muffins pastry crumb crumble syrup broth stock soup " +
+    "seasoning rub spice mix blend for the and to ingredients ingredient dry wet",
+);
+
+/** Words that, after an opening verb, show the line is an instruction ("Season with…", "Roll into…", "Mix all…"). */
+export const INSTRUCTION_CUES = setOf("the a an all into onto with until in to for over on at together then from off each well");
 export const NOTE_LABELS = setOf("note notes tip tips equipment instructions directions method step steps");
 export const HEADING_WORDS = setOf("ingredients ingredient");
 

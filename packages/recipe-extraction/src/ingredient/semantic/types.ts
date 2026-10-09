@@ -23,9 +23,11 @@ export interface Effects {
   options: { text: string; s: number; hasAmount: boolean; mode: "additional" | "variants" | "list"; remarkOnly: boolean }[];
   /** Amounts that could not be placed (each adds `quantity_unassigned`). */
   unassigned: number;
+  /** A remark that only says the amount is approximate ("1 cup water, about", "(approx.)"). */
+  approximate: boolean;
 }
 
-export const emptyEffects = (): Effects => ({ notes: [], reasons: [], optional: false, unstated: [], form: null, options: [], unassigned: 0 });
+export const emptyEffects = (): Effects => ({ notes: [], reasons: [], optional: false, unstated: [], form: null, options: [], unassigned: 0, approximate: false });
 
 export function mergeEffects(into: Effects, from: Effects): void {
   into.notes.push(...from.notes);
@@ -35,6 +37,7 @@ export function mergeEffects(into: Effects, from: Effects): void {
   into.form ??= from.form;
   into.options.push(...from.options);
   into.unassigned += from.unassigned;
+  into.approximate ||= from.approximate;
 }
 
 /** The amount part of a line. */
@@ -47,6 +50,12 @@ export interface AmountReading {
   unitSpan: [number, number] | null;
   packageSize: PackageSizeV1 | null;
   packageSpan: [number, number] | null;
+  /**
+   * The package size was written between a count and the food with no unit yet ("2 (6-ounce) salmon
+   * fillets"): it stands only if the line turns out to count a unit (CONTRACT §7.4). `marked`: written in
+   * brackets, hyphenated or after "x" (the count is clear); a bare "3 4 cups" is not.
+   */
+  packageProvisional: { marked: boolean } | null;
   equivalents: EquivalentV1[];
   approximate: boolean;
   fromWord: boolean;

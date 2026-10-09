@@ -14,13 +14,13 @@
  * (`quantity_unassigned`), never guessed.
  */
 import { UNIT_REGISTRY, type EquivalentV1, type ExactQuantity, type QuantityV1, type ReasonCode, type UnitV1 } from "../../contract";
-import { add, cmp, div, fromDecimalString, mul, toExactQuantity, type Rational } from "../../rational";
+import { add, cmp, div, fromDecimalString, fromExactQuantity, mul, toExactQuantity, type Rational } from "../../rational";
 import { adjacent, isGroup, isSym, isWord, type GroupTok, type Tok } from "./lexer";
 import {
   APPROX_SYMBOLS, APPROX_WORDS, BOUND_PHRASES, CARDINALS, CONTAINER_UNITS, FORM_WORDS, FRACTION_WORDS, FUNCTION_WORDS, LENGTH_WORDS, MEASURE_ADJECTIVES,
   RANGE_DASHES, REMARK_WORDS, SIZE_WORDS, TIME_WORDS, UNKNOWN_MEASURES,
 } from "./lexicon";
-import { readNumber, type NumberRead } from "./quantity";
+import { andFraction, readNumber, type NumberRead } from "./quantity";
 import { emptyEffects, type AmountReading, type Effects } from "./types";
 import { readUnit, type UnitRead } from "./unit";
 
@@ -158,21 +158,50 @@ export interface AmountSlots {
   effects: Effects;
 }
 
+/** The exact value of a contract quantity in the dimension's base unit, or null (count/imprecise units have no base). */
+function inBase(q: ExactQuantity, u: UnitV1): Rational | null {
+  const b = UNIT_REGISTRY[u.canonical].base;
+  const r = fromExactQuantity(q);
+  return b === null || r === null ? null : mul(r, fromDecimalString(b)!);
+}
+
+/**
+ * The largest relative difference accepted between an amount and its restatement in a related unit of the
+ * same dimension: 1/8 (12.5 %). Recipes round cross-system restatements ("1 cup (240 ml)" is 1.4 % off,
+ * "1 lb (450 g)" 0.8 %, "1 lb (500 g)" 9.3 %, "4 cups (1 liter)" 5.4 %); a contradiction is far larger
+ * ("1 lb (12 oz)" 25 %, "1 cup (8 tbsp)" 50 %, "1 tbsp (1 tsp)" 67 %). Exact arithmetic on the definitional
+ * sizes of UNIT_REGISTRY; mass and volume are never compared with each other.
+ */
+export const RESTATEMENT_TOLERANCE: Rational = { n: BigInt(1), d: BigInt(8) };
+
+/** true / false when two amounts of the same dimension can be compared; null when they cannot (count, imprecise, mass vs volume). */
+export function sameAmount(a: ExactQuantity, ua: UnitV1, b: ExactQuantity, ub: UnitV1): boolean | null {
+  if (ua.dimension !== ub.dimension) return null;
+  if (ua.canonical === ub.canonical) return a.numerator === b.numerator && a.denominator === b.denominator;
+  const x = inBase(a, ua);
+  const y = inBase(b, ub);
+  if (x === null || y === null) return null;
+  const big = cmp(x, y) >= 0 ? x : y;
+  const small = big === x ? y : x;
+  // (big - small) / big ≤ tolerance  ⇔  big - small ≤ tolerance · big
+  const diff = { n: big.n * small.d - small.n * big.d, d: big.d * small.d };
+  return cmp(diff, mul(RESTATEMENT_TOLERANCE, big)) <= 0;
+}
+
 /**
  * Decides what a second stated amount is, given the line's main amount:
- *  - a size that is not mass/volume ("9-inch") → note;
- *  - a count restatement ("1/2 cup (1 stick)") → recorded as a restatement (`equivalent_quantity_stated`);
- *    `equivalents` only carries mass/volume, so the count itself is not stored;
+ *  - an imprecise size ("9-inch") → note;
  *  - main counted (can, clove, bare count): written between count and item, after a container, or with
  *    "each" → the item's contents (`packageSize`); otherwise ("2 chicken breasts (about 1 lb)") → `equivalents`;
- *  - main mass/volume/imprecise → `equivalents` (same unit: equal → nothing new; different → unassigned).
+ *  - otherwise a restatement (`equivalents`, CONTRACT §2/§11: mass, volume or count — "1/2 cup (1 stick)");
+ *  - a restatement in the same dimension must agree with the amount (RESTATEMENT_TOLERANCE); one that does
+ *    not ("1 lb (12 oz)") is a second amount nobody can place (`quantity_unassigned`).
  */
 export function placeSecondary(text: string, slots: AmountSlots, sec: Secondary): void {
   const { sa } = sec;
   const fx = slots.effects;
-  if (!isMassOrVolume(sa.unit)) {
-    if (sa.unit.dimension === "imprecise") fx.notes.push({ s: sa.s, text: text.slice(sa.s, sa.e) });
-    else if (!fx.reasons.includes("equivalent_quantity_stated")) fx.reasons.push("equivalent_quantity_stated");
+  if (sa.unit.dimension === "imprecise") {
+    fx.notes.push({ s: sa.s, text: text.slice(sa.s, sa.e) });
     return;
   }
   const q = exactOf(sa.value, sa.decimal);
@@ -182,7 +211,7 @@ export function placeSecondary(text: string, slots: AmountSlots, sec: Secondary)
   }
   const main = slots.unit;
   const counted = main === null || main.dimension === "count";
-  const asPackage = counted && !sa.total && (sec.position === "between" || sa.each || (main !== null && CONTAINER_UNITS.has(main.canonical)));
+  const asPackage = isMassOrVolume(sa.unit) && counted && !sa.total && (sec.position === "between" || sa.each || (main !== null && CONTAINER_UNITS.has(main.canonical)));
   if (asPackage) {
     if (slots.packageSize === null) {
       slots.packageSize = { quantity: q, unit: sa.unit };
@@ -190,17 +219,17 @@ export function placeSecondary(text: string, slots: AmountSlots, sec: Secondary)
       if (!fx.reasons.includes("package_size_stated")) fx.reasons.push("package_size_stated");
       return;
     }
-    const same = slots.packageSize.quantity.numerator === q.numerator && slots.packageSize.quantity.denominator === q.denominator;
-    if (slots.packageSize.unit.canonical === sa.unit.canonical) {
-      if (!same) fx.unassigned++;
+    // the contents restated ("1 (12 oz) package frozen peas (about 2 cups)") must agree with the package size
+    if (sameAmount(slots.packageSize.quantity, slots.packageSize.unit, q, sa.unit) === false) {
+      fx.unassigned++;
       return;
     }
-    // "1 (12 oz) package frozen peas (about 2 cups)": the contents restated in another unit
-  }
-  if (main !== null && main.canonical === sa.unit.canonical && slots.quantity?.kind === "exact") {
-    if (!(slots.quantity.numerator === q.numerator && slots.quantity.denominator === q.denominator)) fx.unassigned++;
+    if (slots.packageSize.unit.canonical === sa.unit.canonical) return;
+  } else if (main !== null && slots.quantity?.kind === "exact" && sameAmount(slots.quantity, main, q, sa.unit) === false) {
+    fx.unassigned++; // "1 lb (12 oz)", "1 cup (8 tbsp)": not a restatement
     return;
   }
+  if (main !== null && main.canonical === sa.unit.canonical) return; // the same amount written twice
   if (slots.equivalents.some((x) => x.unit.canonical === sa.unit.canonical)) {
     fx.unassigned++;
     return;
@@ -248,6 +277,17 @@ interface Part {
   unit: UnitRead;
 }
 
+/** A between-position size and how it was written: in brackets, hyphenated ("15-oz") or after "x" (marked), or bare ("3 4 cups"). */
+interface Between {
+  sec: Secondary;
+  marked: boolean;
+}
+
+/** The note-able text of a bracket group with no number in it, when only remark words are inside ("(heaping)", "(US)"). */
+function remarkGroup(g: GroupTok): boolean {
+  return g.children.length > 0 && g.children.every((t) => t.kind === "word" || isSym(t, ".", "-", ",", "&"));
+}
+
 /** Reads the amount phrase starting at token `i`; null when no number (or number word) starts there. */
 export function readAmountPhrase(text: string, toks: readonly Tok[], i: number): AmountReading | null {
   const fx = emptyEffects();
@@ -276,6 +316,14 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
       break;
     }
   }
+  // "a 1/2 cup sugar": an article before a written amount is not a count ("a 15-oz can" and "a 15 oz can" are)
+  if (isWord(toks[j], "a", "an") && (toks[j + 1]?.kind === "num" || toks[j + 1]?.kind === "vulgar")) {
+    const n = readNumber(toks, j + 1);
+    const sa = readStatedAmount(text, toks, j + 1);
+    const hyphenated = n !== null && hyphen(toks[n.next]) && adjacent(toks[n.next - 1], toks[n.next]);
+    const container = sa !== null && readUnit(text, toks, sa.next)?.unit.dimension === "count";
+    if (sa !== null && !hyphenated && !container) j++;
+  }
   const n1 = readNumber(toks, j);
   if (!n1) return null;
   if (isTemperatureOrTime(toks, n1.next)) return null; // "350°F", "10 minutes" are not amounts
@@ -298,9 +346,11 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   }
 
   const slots: AmountSlots = { quantity: null, unit: null, packageSize: null, packageSpan: null, equivalents: [], effects: fx };
-  const between: Secondary[] = [];
+  const between: Between[] = [];
+  /** Something unexpected sat between the amount and its unit ("1 (15) oz can"): the amount is not clear. */
+  let irregular = false;
 
-  // Package sizes and size descriptors written before the unit.
+  // Package sizes, size descriptors and remarks written before the unit.
   for (let guard = 0; guard < 6; guard++) {
     const t = toks[k];
     if (isGroup(t)) {
@@ -310,9 +360,37 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
         continue;
       }
       const sa = groupAmount(text, t);
-      if (sa) {
-        if (isMassOrVolume(sa.unit) || sa.unit.dimension === "imprecise") {
-          between.push({ sa, position: "between" });
+      if (sa && (isMassOrVolume(sa.unit) || sa.unit.dimension === "imprecise")) {
+        between.push({ sec: { sa, position: "between" }, marked: true });
+        k++;
+        continue;
+      }
+      // "1 (15) oz can": a bare number in brackets, then a unit — a size written irregularly
+      const bare = readNumber(t.children, 0);
+      const u = bare && bare.ok && bare.next === t.children.length ? readUnit(text, toks, k + 1) : null;
+      if (bare && bare.ok && u && isMassOrVolume(u.unit)) {
+        const size: StatedAmount = { value: bare.value, decimal: bare.decimal, unit: u.unit, unitSpan: [u.s, u.e], s: t.s, e: u.e, next: u.next, each: false, total: false, approx: false };
+        between.push({ sec: { sa: size, position: "between" }, marked: true });
+        irregular = true;
+        k = u.next;
+        continue;
+      }
+      if (bare && bare.next === t.children.length && n1.ok) {
+        // "1 (1/2) cup milk": a second number before the unit — not clearly one amount
+        irregular = true;
+        fx.notes.push({ s: t.s, text: text.slice(t.innerS, t.innerE) });
+        fx.unassigned++;
+        k++;
+        continue;
+      }
+      // "2 (heaping) cups", "1 (US) cup", "2 (large) cans": a remark between the amount and its unit
+      if (remarkGroup(t)) {
+        let a = k + 1;
+        while (isWord(toks[a]) && (MEASURE_ADJECTIVES.has((toks[a] as { lower: string }).lower) || SIZE_WORDS.has((toks[a] as { lower: string }).lower))) a++;
+        if (readUnit(text, toks, a)) {
+          const words = t.children.filter((c) => c.kind === "word") as { lower: string }[];
+          if (words.length === 1 && APPROX_WORDS.has(words[0].lower)) approximate = true;
+          else fx.notes.push({ s: t.s, text: text.slice(t.innerS, t.innerE).trim() });
           k++;
           continue;
         }
@@ -322,7 +400,7 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
     if ((isWord(t, "x") || isSym(t, "×")) && n1.ok && max === null) {
       const sa = readStatedAmount(text, toks, k + 1);
       if (sa && isMassOrVolume(sa.unit)) {
-        between.push({ sa, position: "between" });
+        between.push({ sec: { sa, position: "between" }, marked: true });
         k = sa.next;
         continue;
       }
@@ -331,7 +409,9 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
     if (t?.kind === "num" && n1.ok && max === null) {
       const sa = readStatedAmount(text, toks, k);
       if (sa && (isMassOrVolume(sa.unit) || sa.unit.canonical === "inch")) {
-        between.push({ sa, position: "between" });
+        const n = readNumber(toks, k);
+        const marked = n !== null && hyphen(toks[n.next]) && adjacent(toks[n.next - 1], toks[n.next]);
+        between.push({ sec: { sa, position: "between" }, marked });
         k = sa.next;
         continue;
       }
@@ -345,36 +425,36 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
 
   // "2 cm piece ginger": a length is a size, not an amount of anything bought.
   const lengthWord = toks[k];
-  if (n1.ok && max === null && between.length === 0 && isWord(lengthWord) && LENGTH_WORDS.has(lengthWord.lower)) {
+  if (n1.ok && between.length === 0 && isWord(lengthWord) && LENGTH_WORDS.has(lengthWord.lower)) {
     let c = k + 1;
     if (isSym(toks[c], ".") && adjacent(toks[c - 1], toks[c])) c++;
-    fx.notes.push({ s: n1.s, text: text.slice(n1.s, toks[c - 1].e) });
-    fx.reasons.push("quantity_missing");
-    const u = readUnit(text, toks, c);
-    const counted = u !== null && u.unit.dimension === "count";
-    return {
-      quantity: null, quantitySpan: null, amountWritten: true, unit: counted ? u.unit : null, unitSpan: counted ? [u.s, u.e] : null, packageSize: null,
-      packageSpan: null, equivalents: [], approximate, fromWord: false, effects: fx, next: counted ? u.next : c,
-    };
+    return sizeOnly(text, toks, fx, n1.s, c, approximate);
   }
 
-  // Size and measure adjectives (also "thumb-sized"), then the unit.
+  // Size and measure adjectives (also "thumb-sized"), then the unit ("1/2 of a cup" too).
   let a = k;
   while (isWord(toks[a]) && (MEASURE_ADJECTIVES.has((toks[a] as { lower: string }).lower) || SIZE_WORDS.has((toks[a] as { lower: string }).lower) || isWord(toks[a], "extra") || /-sized?$/.test((toks[a] as { lower: string }).lower))) a++;
   let unitRead = readUnit(text, toks, a);
-  if (unitRead && a > k) {
+  if (!unitRead && a === k && isWord(toks[k], "of") && isWord(toks[k + 1], "a", "an") && n1.ok) {
+    const u = readUnit(text, toks, k + 2);
+    if (u) {
+      unitRead = u;
+      a = k + 2;
+    }
+  }
+  if (unitRead && a > k && !isWord(toks[k], "of")) {
     fx.notes.push({ s: toks[k].s, text: text.slice(toks[k].s, toks[a - 1].e) });
   }
   if (unitRead) k = unitRead.next;
 
-  // "400 g tin", "16-ounce package", "1-inch piece": a size followed by what it measures. The size is the
-  // container's contents (or a size note); how many containers is not stated, so no quantity is given.
+  // An inch is a size ("9-inch pie crust", "12 inch pizza crust", "1-inch piece ginger"), never an amount bought.
+  if (unitRead && unitRead.unit.canonical === "inch" && between.length === 0) return sizeOnly(text, toks, fx, n1.s, k, approximate);
+
+  // "400 g tin", "16-ounce package": a size followed by its container. The size is the container's
+  // contents; how many containers is not stated, so no quantity is given.
   if (unitRead && n1.ok && max === null && between.length === 0 && n1.value.n > BigInt(0)) {
     const c = readUnit(text, toks, k);
-    const measured = c && c.unit.dimension === "count" && c.unit.canonical !== "each";
-    const container = measured && CONTAINER_UNITS.has(c.unit.canonical) && isMassOrVolume(unitRead.unit);
-    const sized = measured && unitRead.unit.canonical === "inch";
-    if (c && (container || sized)) {
+    if (c && c.unit.dimension === "count" && CONTAINER_UNITS.has(c.unit.canonical) && isMassOrVolume(unitRead.unit)) {
       const size: StatedAmount = {
         value: n1.value, decimal: n1.decimal, unit: unitRead.unit, unitSpan: [unitRead.s, unitRead.e], s: n1.s, e: unitRead.e, next: c.next, each: false, total: false, approx: false,
       };
@@ -383,7 +463,7 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
       placeSecondary(text, slots0, { sa: size, position: "between" });
       return {
         quantity: null, quantitySpan: null, amountWritten: true, unit: c.unit, unitSpan: [c.s, c.e], packageSize: slots0.packageSize, packageSpan: slots0.packageSpan,
-        equivalents: [], approximate, fromWord: false, effects: fx, next: c.next,
+        packageProvisional: null, equivalents: [], approximate, fromWord: false, effects: fx, next: c.next,
       };
     }
   }
@@ -401,18 +481,38 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
       fx.reasons.push("unit_unknown");
       if (isWord(toks[c], "of")) c++;
       return {
-        quantity: null, quantitySpan: null, amountWritten: true, unit: null, unitSpan: null, packageSize: null, packageSpan: null, equivalents: [],
-        approximate, fromWord: false, effects: fx, next: c,
+        quantity: null, quantitySpan: null, amountWritten: true, unit: null, unitSpan: null, packageSize: null, packageSpan: null, packageProvisional: null,
+        equivalents: [], approximate, fromWord: false, effects: fx, next: c,
       };
     }
   }
 
+  let v1 = n1.ok ? n1.value : null;
+  if (unitRead && v1 !== null && max === null) {
+    // "a cup and a half", "1 cup and a half": the fraction belongs to the amount (not "1 cup and 1/2 tbsp")
+    const af = andFraction(toks, k);
+    if (af && !readUnit(text, toks, af.next)) {
+      v1 = add(v1, af.value);
+      qEnd = toks[af.next - 1].e;
+      k = af.next;
+    }
+    // "2 cans or jars", "2 cans/jars": a choice of container — read, but a person decides
+    if ((isWord(toks[k], "or") || isSym(toks[k], "/")) && isWord(toks[k + 1])) {
+      const alt = readUnit(text, toks, k + 1);
+      if (alt && !readNumber(toks, k + 1)) {
+        fx.notes.push({ s: toks[k].s, text: text.slice(toks[k].s, alt.e) });
+        if (!fx.reasons.includes("unclassified")) fx.reasons.push("unclassified");
+        k = alt.next;
+      }
+    }
+  }
+
   const parts: Part[] = [];
-  if (unitRead && n1.ok) parts.push({ value: n1.value, decimal: n1.decimal, unit: unitRead });
+  if (unitRead && v1 !== null) parts.push({ value: v1, decimal: n1.ok && n1.decimal, unit: unitRead });
 
   if (unitRead) {
     // Range with the unit repeated: "1 cup to 1 1/2 cups".
-    if (max === null && n1.ok && isRangeSep(toks[k])) {
+    if (max === null && v1 !== null && isRangeSep(toks[k])) {
       const n2 = rangeEnd(toks, k + 1);
       const u2 = n2 && n2.ok ? readUnit(text, toks, n2.next) : null;
       if (n2 && u2 && u2.unit.canonical === unitRead.unit.canonical) {
@@ -422,7 +522,7 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
       }
     }
     // Compound: "1 lb 4 oz", "1 cup plus 2 tbsp", "2 tbsp + 1 tsp".
-    if (max === null && n1.ok && isMassOrVolume(unitRead.unit)) {
+    if (max === null && v1 !== null && isMassOrVolume(unitRead.unit)) {
       for (let guard = 0; guard < 4; guard++) {
         let c = k;
         let connector = false;
@@ -467,7 +567,7 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
     const q = sum ? toExactQuantity(sum.value, parts.every((p) => p.decimal) ? "decimal" : "fraction") : null;
     if (q === null) {
       // Not representable within the bounds: keep the first amount, report the rest.
-      quantity = n1.ok ? exactOf(n1.value, n1.decimal) : null;
+      quantity = v1 !== null ? exactOf(v1, n1.ok && n1.decimal) : null;
       fx.unassigned++;
     } else {
       quantity = q;
@@ -475,9 +575,9 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
       unitSpan = [smallest.unit.s, smallest.unit.e];
       fx.reasons.push("compound_quantity_summed");
     }
-  } else if (n1.ok) {
-    quantity = exactOf(n1.value, n1.decimal);
-    if (quantity === null) fx.reasons.push(outOfBoundsReason(n1.value));
+  } else if (v1 !== null) {
+    quantity = exactOf(v1, n1.ok && n1.decimal && v1 === n1.value);
+    if (quantity === null) fx.reasons.push(outOfBoundsReason(v1));
   }
   if (bound !== null) {
     // the bound and its number are kept as a note; no amount is given
@@ -485,12 +585,34 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
     if (quantity !== null) fx.reasons.push("quantity_range");
     quantity = null;
   }
+  if (irregular) {
+    // the amount is not clearly one amount: keep what was read, give none
+    if (!fx.reasons.includes("unclassified")) fx.reasons.push("unclassified");
+    quantity = null;
+  }
   if (unit === null && quantity !== null) unit = { canonical: "each", dimension: "count", source: "" };
   slots.quantity = quantity;
   slots.unit = unitRead ? unitRead.unit : null;
 
-  // Second amounts written between the count and the unit.
-  for (const sec of between) placeSecondary(text, slots, sec);
+  // Sizes written between the count and the unit: a container's contents only beside a counted unit
+  // (CONTRACT §7.4: "2 (15 oz) cans"). With no unit yet the engine decides once the whole line is read
+  // ("2 (6-ounce) salmon fillets"); beside a weight or volume ("1 1 cup milk") it is a second amount.
+  let packageProvisional: { marked: boolean } | null = null;
+  for (const { sec, marked } of between) {
+    if (sec.sa.unit.dimension === "imprecise" || (unitRead && unitRead.unit.dimension === "count" && unitRead.unit.canonical !== "each")) {
+      placeSecondary(text, slots, sec);
+    } else if (!unitRead && isMassOrVolume(sec.sa.unit) && sec.sa.approx) {
+      // "2 (about 1 lb) potatoes": an approximate weight of what is counted restates the amount
+      placeSecondary(text, slots, { sa: sec.sa, position: "after" });
+    } else if (!unitRead && isMassOrVolume(sec.sa.unit)) {
+      placeSecondary(text, slots, sec);
+      if (slots.packageSize !== null) packageProvisional = { marked };
+    } else {
+      fx.notes.push({ s: sec.sa.s, text: text.slice(sec.sa.s, sec.sa.e) });
+      fx.unassigned++;
+      if (!marked) slots.quantity = quantity = null;
+    }
+  }
 
   // Restatements and container contents after the unit.
   if (unitRead) {
@@ -527,18 +649,31 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   }
 
   return {
-    quantity,
+    quantity: slots.quantity,
     quantitySpan: [qStart, qEnd],
     amountWritten: true,
     unit,
     unitSpan,
     packageSize: slots.packageSize,
     packageSpan: slots.packageSpan,
+    packageProvisional,
     equivalents: slots.equivalents,
     approximate,
     fromWord: n1.ok && n1.word,
     effects: fx,
     next: k,
+  };
+}
+
+/** A size with no amount ("9-inch", "2 cm"): noted; a counted unit right after it is read ("1-inch piece"); no quantity. */
+function sizeOnly(text: string, toks: readonly Tok[], fx: Effects, s: number, k: number, approximate: boolean): AmountReading {
+  fx.notes.push({ s, text: text.slice(s, toks[k - 1].e) });
+  if (!fx.reasons.includes("quantity_missing")) fx.reasons.push("quantity_missing");
+  const u = readUnit(text, toks, k);
+  const counted = u !== null && u.unit.dimension === "count";
+  return {
+    quantity: null, quantitySpan: null, amountWritten: true, unit: counted ? u.unit : null, unitSpan: counted ? [u.s, u.e] : null, packageSize: null,
+    packageSpan: null, packageProvisional: null, equivalents: [], approximate, fromWord: false, effects: fx, next: counted ? u.next : k,
   };
 }
 

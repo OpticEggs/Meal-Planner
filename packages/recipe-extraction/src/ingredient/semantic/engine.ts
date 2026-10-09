@@ -7,23 +7,28 @@
  * after a comma → assembly (note in source order, flags, alternatives) → status and reasons.
  *
  * Every part that was read is kept when a person must still decide something (useful partial
- * reading); the raw line is never used as the name. A final check runs the contract validator: an
- * output that would not validate (a defect) is replaced by a minimal `needs_review` reading with
- * `unclassified`, so callers always receive valid data.
+ * reading); the raw line is never used as the name. After the amount: a size between a bare count and
+ * the food stands only beside a counted unit; a count before a food that does not read as several
+ * ("Five spice powder", "Three cheese blend, 1 cup") is read again with the number in the name.
+ *
+ * A final check (`guardedParse`) runs the contract validator: a reader that throws, or an output that
+ * would not validate (a defect), is replaced by a minimal `needs_review` reading with `unclassified`, so
+ * callers always receive valid data — and `guardedParse` reports that the net was used, so tests can
+ * prove it never is.
  */
 import { REASONS, type AmountUnstated, type IngredientEngine, type ParsedIngredientV1, type ReasonCode, type SpanField, type UnitV1 } from "../../contract";
-import { fromExactQuantity, toExactQuantity } from "../../rational";
+import { cmp, fromExactQuantity, rational, toExactQuantity } from "../../rational";
 import { validateParsedIngredientV1 } from "../../validate";
-import { amountStartsAt, groupAmount, readAmountPhrase, readStatedAmount, placeSecondary, sumInSmallest, type AmountSlots } from "./amount";
+import { amountStartsAt, groupAmount, isPriceGroup, readAmountPhrase, readStatedAmount, placeSecondary, sumInSmallest, type AmountSlots } from "./amount";
 import { nonIngredientReason, numericLead } from "./classify";
 import { adjacent, isGroup, isNumberish, isSym, isWord, lex, type Tok } from "./lexer";
-import { BULLETS, FUNCTION_WORDS, MEASURE_ADJECTIVES, PREP_ADVERBS, REMARK_WORDS, SIZE_WORDS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
+import { BULLETS, CONTAINER_UNITS, FUNCTION_WORDS, INVARIANT_PLURALS, MEASURE_ADJECTIVES, MODIFIER_WORDS, PREP_ADVERBS, REMARK_WORDS, SIZE_WORDS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
 import { readNameRegion, type NameReading } from "./name";
 import { normalizeLine } from "./normalize";
-import { classifyPiece, splitTopLevel, textOf, trimEdges, unstatedAt } from "./remarks";
-import { distributeOptions, foodHead, isRemarkOption, uniqueOptions } from "./alternatives";
+import { classifyPiece, splitOr, splitTopLevel, textOf, trimEdges, unstatedAt } from "./remarks";
+import { distributeOptions, foodHead, isRemarkOption, kindPhrases, listNamesKinds, modifiersOf, uniqueOptions, withKind } from "./alternatives";
 import { emptyEffects, mergeEffects, type AmountReading } from "./types";
-import { readUnit } from "./unit";
+import { readUnit, type UnitRead } from "./unit";
 
 export const SEMANTIC_ENGINE_ID = "semantic-v1";
 
@@ -35,7 +40,7 @@ const push = (reasons: ReasonCode[], code: ReasonCode) => {
 
 /** A plain amount reading for a line with no amount at all. */
 const noAmount = (): AmountReading => ({
-  quantity: null, quantitySpan: null, amountWritten: false, unit: null, unitSpan: null, packageSize: null, packageSpan: null, equivalents: [],
+  quantity: null, quantitySpan: null, amountWritten: false, unit: null, unitSpan: null, packageSize: null, packageSpan: null, packageProvisional: null, equivalents: [],
   approximate: false, fromWord: false, effects: emptyEffects(), next: 0,
 });
 
@@ -110,13 +115,39 @@ function namesAFood(seg: readonly Tok[]): boolean {
   return ws.some((w) => !DESCRIBING(w.lower) && !TRAILING_PREP_WORDS.has(w.lower) && !PREP_ADVERBS.has(w.lower) && !FUNCTION_WORDS.has(w.lower));
 }
 
+/** True when some word of the name reads as a plural ("eggs", "garlic cloves") or never changes ("shrimp"). */
+function namesSeveral(name: string, trailingUnit: UnitRead | null, text: string): boolean {
+  const words = name.toLowerCase().split(/[^\p{L}'-]+/u).filter((w) => w.length > 0);
+  if (trailingUnit) words.push(text.slice(trailingUnit.s, trailingUnit.e).toLowerCase());
+  return words.some((w) => (w.length > 2 && w.endsWith("s") && !w.endsWith("ss")) || INVARIANT_PLURALS.has(w));
+}
+
+/**
+ * A unit word with no number at the start of a line ("cups flour", "tbsp butter"): read as the unit, no
+ * amount. Singular full spellings that also begin food names ("pound cake", "gram flour", "cup noodles")
+ * and one-letter abbreviations are not taken; nor are imprecise sizes ("inch").
+ */
+function bareUnitAtStart(u: UnitRead, text: string): boolean {
+  const written = text.slice(u.s, u.e).toLowerCase().replace(/\.$/, "");
+  if (written.length <= 1 || ["pound", "gram", "cup", "pint", "quart", "liter", "litre"].includes(written)) return false;
+  return u.unit.dimension === "mass" || u.unit.dimension === "volume";
+}
+
 // --- The engine -------------------------------------------------------------------------------------
 
 interface Reading {
   out: ParsedIngredientV1;
 }
 
-function read(input: unknown): Reading {
+interface ReadOptions {
+  /**
+   * The number at the start belongs to the name ("Five spice powder, to taste", "Three cheese blend, 1 cup"):
+   * the line is read name-first and a person must confirm (`unclassified`).
+   */
+  leadIsName: boolean;
+}
+
+function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Reading {
   const { raw, normalized, truncated } = normalizeLine(input);
   const reasons: ReasonCode[] = [];
   if (truncated) reasons.push("input_truncated");
@@ -149,12 +180,20 @@ function read(input: unknown): Reading {
     }
   }
   if (lexed.unbalanced) push(reasons, "structure_unbalanced");
+  // a price before everything ("($0.02) 1 cup milk") is dropped like any other price annotation
+  while (isGroup(toks[0]) && isPriceGroup(toks[0]) && toks.length > 1) {
+    toks = toks.slice(1);
+    push(reasons, "price_annotation_removed");
+  }
 
   const fx = emptyEffects();
-  // "Optional:" / "(optional)" prefix.
+  // "Optional:" / "(optional)" / "optional 1/2 cup walnuts" prefix.
   if (isWord(toks[0], "optional") && isSym(toks[1], ":", "-", "–")) {
     fx.optional = true;
     toks = toks.slice(2);
+  } else if (isWord(toks[0], "optional") && toks.length > 2 && amountStartsAt(text, toks, 1)) {
+    fx.optional = true;
+    toks = toks.slice(1);
   } else if (isGroup(toks[0]) && toks[0].children.length === 1 && isWord(toks[0].children[0], "optional")) {
     fx.optional = true;
     toks = toks.slice(1);
@@ -194,8 +233,9 @@ function read(input: unknown): Reading {
   let nameFromLabel = false;
   let usedTail = -1;
   let partNote: Tok[] | null = null;
-  let unclassified = false;
-  amount = readAmountPhrase(text, head, 0);
+  let unclassified = opts.leadIsName;
+  amount = opts.leadIsName ? null : readAmountPhrase(text, head, 0);
+  const amountAtStart = amount !== null;
   if (amount) {
     region = head.slice(amount.next);
     if (labelBefore && !region.some((t) => isWord(t) && !SIZE_WORDS.has(t.lower) && t.lower !== "extra")) {
@@ -226,7 +266,7 @@ function read(input: unknown): Reading {
         const rest = tails[0].slice(a.next);
         if (rest.length > 0) {
           const restFx = emptyEffects();
-          const nr = readNameRegion(rest, { text, slots: null, unitWritten: true, hasQuantity: false, dropLeadingOf: true, sizeWordsAreNotes: true }, restFx);
+          const nr = readNameRegion(rest, { text, slots: null, unitWritten: true, hasQuantity: false, dropLeadingOf: true, sizeWordsAreNotes: true, amountRead: false, verbatim: false }, restFx);
           // what follows the amount ("3 medium" → medium) is a remark on the named food
           if (nr.name) restFx.notes.push({ s: rest[0].s, text: nr.name });
           mergeEffects(fx, restFx);
@@ -262,7 +302,8 @@ function read(input: unknown): Reading {
       let k = 0;
       while (isWord(head[k]) && (SIZE_WORDS.has((head[k] as { lower: string }).lower) || MEASURE_ADJECTIVES.has((head[k] as { lower: string }).lower))) k++;
       const u = readUnit(text, head, k);
-      if (u && (isWord(head[u.next], "of") || (u.unit.dimension === "imprecise" && u.unit.canonical !== "drop" && u.unit.canonical !== "inch")) && u.next < head.length) {
+      const taken = u !== null && (isWord(head[u.next], "of") || (u.unit.dimension === "imprecise" && u.unit.canonical !== "drop" && u.unit.canonical !== "inch") || bareUnitAtStart(u, text));
+      if (u && taken && u.next < head.length) {
         amount = { ...noAmount(), unit: u.unit, unitSpan: [u.s, u.e], next: 0 };
         if (k > 0) fx.notes.push({ s: head[0].s, text: textOf(text, head.slice(0, k)) });
         region = head.slice(u.next);
@@ -292,13 +333,49 @@ function read(input: unknown): Reading {
   const hasQuantity = amt.quantity !== null;
   const nr: NameReading = readNameRegion(region, {
     text, slots: amount ? slots : null, unitWritten: amt.unitSpan !== null, hasQuantity, dropLeadingOf: amount !== null && !nameFromLabel,
-    sizeWordsAreNotes: amt.unitSpan === null || amt.unit?.dimension === "count",
+    // size words describe counted items; after a weight, volume or container they name the product
+    sizeWordsAreNotes: amt.unitSpan === null || (amt.unit?.dimension === "count" && !CONTAINER_UNITS.has(amt.unit.canonical)),
+    amountRead: amountAtStart && !nameFromLabel, verbatim: opts.leadIsName,
   }, fx);
   let unit: UnitV1 | null = amt.unit;
   let unitSpan = amt.unitSpan;
   if (nr.trailingUnit && unit && unit.canonical === "each" && unitSpan === null) {
     unit = nr.trailingUnit.unit;
     unitSpan = [nr.trailingUnit.s, nr.trailingUnit.e];
+  }
+  if (nr.amountUnclear) slots.quantity = null; // "1 half cup milk": which number is the amount?
+
+  // A size written between a bare count and the food stands as a package size only when the line counts
+  // a unit ("2 (6-ounce) salmon fillets"); otherwise ("3 4 cups flour", "2 (8 oz) steaks") nobody can say
+  // what it measures: noted, `quantity_unassigned`, and a bare "3 4 cups" leaves no amount at all.
+  const bareCount = amountAtStart && amt.unitSpan === null;
+  if (amt.packageProvisional && slots.packageSize !== null && !(unit && unit.dimension === "count" && unit.canonical !== "each")) {
+    const [ps, pe] = slots.packageSpan ?? [0, 0];
+    if (pe > ps) fx.notes.push({ s: ps, text: text.slice(ps, pe) });
+    slots.packageSize = null;
+    slots.packageSpan = null;
+    const at = fx.reasons.indexOf("package_size_stated");
+    if (at >= 0) fx.reasons.splice(at, 1);
+    fx.unassigned++;
+    if (!amt.packageProvisional.marked) slots.quantity = null;
+  }
+
+  // A number word or count before a food that is not counted ("Five spice powder", "Seven Up", "Three
+  // cheese blend, 1 cup"): the number may be part of the name. With a stated amount or a "to taste" after
+  // a comma, or when the number is a word, the line is read again with the number kept in the name.
+  // (read again only when a plain word follows the number: "10 of rice", "12 (1 stick) can …" are other shapes)
+  const r0 = region[0];
+  const plainNext = r0 !== undefined && r0.kind === "word" && r0.lower !== "of" && readUnit(text, region, 0) === null && !SIZE_WORDS.has(r0.lower);
+  if (!opts.leadIsName && bareCount && slots.packageSize === null && slots.quantity?.kind === "exact" && nr.options === null && nr.name !== null) {
+    const value = fromExactQuantity(slots.quantity)!;
+    if (cmp(value, rational(BigInt(1), BigInt(1))) > 0 && !namesSeveral(nr.name, nr.trailingUnit, text)) {
+      const conflict = tails.some((seg) => {
+        const sa = readStatedAmount(text, seg, 0);
+        return (sa !== null && sa.next === seg.length && sa.unit.dimension !== "imprecise") || phraseOnly(seg);
+      });
+      if ((conflict || amt.fromWord) && plainNext) return read(input, { leadIsName: true });
+      push(fx.reasons, "unclassified"); // "2 tomato": a count, but of what?
+    }
   }
   if (labelBefore) {
     const m = unstatedAt(labelBefore, 0);
@@ -341,14 +418,22 @@ function read(input: unknown): Reading {
     fx.notes.push({ s: noteRun[0].s, text: noteRun.map((n) => n.text).join(", ") });
     noteRun = [];
   };
-  // "cheddar, Monterey Jack, or pepper jack": short food segments that end in an "or" option are options too.
+  // "cheddar, Monterey Jack, or pepper jack", "stock, chicken, beef or vegetable": short food segments that
+  // end in an "or" option are options too.
   const listOptions: { s: number; text: string }[] = [];
   {
     let m = usedTail + 1;
     const run: Tok[][] = [];
-    while (m < tails.length && !isWord(tails[m][0], "or") && namesAFood(tails[m]) && tails[m].length <= 4 && tails[m].every((t) => t.kind === "word")) run.push(tails[m++]);
-    if (run.length > 0 && m < tails.length && isWord(tails[m][0], "or") && nr.name !== null) {
+    const shortItem = (seg: readonly Tok[]) => seg.length > 0 && seg.length <= 4 && seg.every((t) => t.kind === "word") && namesAFood(seg);
+    while (m < tails.length && !isWord(tails[m][0], "or") && shortItem(tails[m]) && splitOr(tails[m]).length === 1) run.push(tails[m++]);
+    const lastParts = m < tails.length && !isWord(tails[m][0], "or") ? splitOr(tails[m]) : [];
+    const pairEnd = lastParts.length === 2 && lastParts.every(shortItem);
+    if (run.length > 0 && m < tails.length && (isWord(tails[m][0], "or") || pairEnd) && nr.name !== null) {
       for (const seg of run) listOptions.push({ s: seg[0].s, text: textOf(text, seg) });
+      if (pairEnd) {
+        for (const seg of lastParts) listOptions.push({ s: seg[0].s, text: textOf(text, seg) });
+        m++;
+      }
       tails = [...tails.slice(0, usedTail + 1), ...tails.slice(m)];
     }
   }
@@ -373,10 +458,16 @@ function read(input: unknown): Reading {
       addPlus(seg);
       return;
     }
-    // A full stated amount after the name ("1 cup flour, 120 g") restates the amount.
+    // A full stated amount after the name ("1 cup flour, 120 g") restates the amount. After a bare count
+    // ("2 chicken breasts, 1 lb") it is a second amount: a weight of what was counted is not a restatement.
     const sa = amount ? readStatedAmount(text, seg, 0) : null;
     if (sa && sa.next === seg.length) {
       flushRun();
+      if (bareCount && sa.unit.dimension !== "imprecise") {
+        fx.notes.push({ s: seg[0].s, text: textOf(text, seg) });
+        fx.unassigned++;
+        return;
+      }
       placeSecondary(text, slots, { sa, position: "after" });
       return;
     }
@@ -400,19 +491,32 @@ function read(input: unknown): Reading {
   const variants = fx.options.filter((o) => o.mode === "variants").map((o) => o.text).filter((x) => x.length > 0);
   const listed = fx.options.filter((o) => o.mode === "list").map((o) => o.text).filter((x) => x.length > 0);
   let base: string[] = nr.options ? [...nr.options] : name ? [name] : [];
-  if (listed.length >= 2) base = listed; // "fresh herbs (parsley, cilantro, or basil)": the list names the food
+  // (an item written with an article is a food of its own: "(cheddar, mozzarella, or a blend)")
+  const articled = fx.options.some((o) => o.mode === "list" && /^an? /i.test(text.slice(o.s)));
+  if (listed.length >= 2 && base.length === 1 && !articled && listNamesKinds(listed, base[0])) base = listed.map((v) => withKind(v, base[0])); // "oil (vegetable, canola, or peanut)"
+  else if (listed.length >= 2) base = listed; // "fresh herbs (parsley, cilantro, or basil)": the list names the food
+  else if (listed.length === 1 && base.length === 1) base = [...base, ...listed];
   else if (variants.length >= 2 && base.length === 1) {
-    const singles = variants.every((v) => !v.includes(" "));
     const plural = variants.some((v) => /[^s]s$/i.test(v));
-    if (singles && !plural) base = variants.map((v) => `${v} ${base[0]}`); // "1 onion, red or white", "broth (chicken or vegetable)"
-    else if (!singles && !base[0].includes(" ")) base = distributeOptions([base[0], ...variants]); // "chicken, beef or vegetable stock"
-    else base = variants; // "nuts (walnuts or pecans)"
+    if (kindPhrases(variants)) base = variants.map((v) => withKind(v, base[0])); // "1 onion, red or white", "vinegar, white or apple cider"
+    else if (modifiersOf([base[0], ...variants.slice(0, -1)])) base = distributeOptions([base[0], ...variants]); // "chicken, beef or vegetable stock"
+    else if (plural) base = variants; // "nuts (walnuts or pecans)"
+    else base = [base[0], ...variants]; // "milk, cream or half-and-half", "potatoes, russet or Yukon gold": as written
   } else if (variants.length >= 2 && base.length === 0) base = variants;
-  const extra = [...listOptions.map((o) => o.text), ...additional.map((o) => (isRemarkOption(o.text) && name ? `${o.text} ${foodHead(name)}` : o.text))];
+  // "fresh thyme (or dried)": a remark word alone names the same food in another form
+  let extra = [...listOptions.map((o) => o.text), ...additional.map((o) => (isRemarkOption(o.text) && name ? `${o.text} ${foodHead(name)}` : o.text))];
+  const named = name;
+  if (listOptions.length > 0 && named !== null) {
+    const kinds = [...listOptions.map((o) => o.text), ...additional.map((o) => o.text)];
+    // "stock, chicken, beef or vegetable": versions of the named food; "chicken, beef, or vegetable stock":
+    // the head is shared; otherwise every option as written
+    base = kindPhrases(kinds) ? kinds.map((v) => withKind(v, named)) : distributeOptions([named, ...kinds]);
+    extra = [];
+  }
   // an option with its own amount ("(or 1 tsp dried)", "(or 2 cups)") is a second amount nobody can place
   if (additional.some((o) => o.hasAmount)) fx.unassigned++;
   let alternatives = uniqueOptions([...base, ...extra]);
-  if (alternatives.length >= 2 && (variants.length >= 2 || listed.length >= 2 || extra.length > 0 || (nr.options !== null && nr.options.length >= 2))) name = null;
+  if (alternatives.length >= 2 && (variants.length >= 2 || listed.length >= 2 || listOptions.length > 0 || extra.length > 0 || (nr.options !== null && nr.options.length >= 2))) name = null;
   else {
     alternatives = [];
     for (const o of additional) if (o.text) fx.notes.push({ s: o.s, text: `or ${o.text}` });
@@ -446,7 +550,8 @@ function read(input: unknown): Reading {
   if (name === null && alternatives.length === 0) push(all, "name_missing");
   if (quantity === null && amountUnstated !== null) push(all, "amount_unstated");
   if (fx.optional) push(all, "optional_ingredient");
-  if (amt.approximate) push(all, "approximate_quantity");
+  const approximate = amt.approximate || (fx.approximate && amt.amountWritten);
+  if (approximate) push(all, "approximate_quantity");
   if (amt.fromWord && quantity !== null) push(all, "quantity_from_word");
   if (unit && unit.dimension === "count" && unit.canonical !== "each") push(all, "count_unit");
   if (unit && unit.dimension === "imprecise") push(all, "imprecise_unit");
@@ -479,7 +584,7 @@ function read(input: unknown): Reading {
   return {
     out: {
       raw, normalized, status, name, quantity, unit: outUnit,
-      packageSize: slots.packageSize, equivalents: slots.equivalents, form: fx.form, note, alternatives, optional: fx.optional, approximate: amt.approximate,
+      packageSize: slots.packageSize, equivalents: slots.equivalents, form: fx.form, note, alternatives, optional: fx.optional, approximate,
       amountUnstated, reasons: all, evidence: { spans },
     },
   };
@@ -490,20 +595,31 @@ export function parseSemanticUnchecked(line: unknown): ParsedIngredientV1 {
   return read(line).out;
 }
 
-/** Reads one line; always returns a contract-valid reading. */
-export function parseSemantic(line: unknown): ParsedIngredientV1 {
+/** Whether the safety net was used: never ("none"), the reader threw ("threw"), or its reading did not validate ("invalid"). */
+export type SafetyNet = "none" | "threw" | "invalid";
+
+/**
+ * Runs a reader behind the safety net and says whether the net was used. `parseSemantic` is this with
+ * the engine's own reader; tests pass a failing reader to prove the net, and check that the engine's own
+ * reader never needs it (a fallback reading is valid, so validity alone could not reveal a defect).
+ */
+export function guardedParse(line: unknown, reader: (line: unknown) => ParsedIngredientV1 = parseSemanticUnchecked): { out: ParsedIngredientV1; net: SafetyNet } {
   let out: ParsedIngredientV1;
   try {
-    out = read(line).out;
+    out = reader(line);
   } catch {
-    out = fallback(line);
-    return out;
+    return { out: fallback(line), net: "threw" };
   }
-  if (validateParsedIngredientV1(out).length === 0) return out;
-  return fallback(line);
+  if (validateParsedIngredientV1(out).length === 0) return { out, net: "none" };
+  return { out: fallback(line), net: "invalid" };
 }
 
-/** A minimal, valid reading used only if the engine produced an invalid one (a defect). */
+/** Reads one line; always returns a contract-valid reading. */
+export function parseSemantic(line: unknown): ParsedIngredientV1 {
+  return guardedParse(line).out;
+}
+
+/** A minimal, valid reading used only if the engine threw or produced an invalid reading (a defect). */
 function fallback(line: unknown): ParsedIngredientV1 {
   const { raw, normalized, truncated } = normalizeLine(line);
   const reasons: ReasonCode[] = truncated ? ["input_truncated", "unclassified"] : ["unclassified"];

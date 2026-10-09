@@ -5,6 +5,10 @@
  * (including non-breaking and ideographic spaces) becomes one space, the ends are trimmed, and the
  * result is capped at LIMITS.maxLineChars. `truncated` is true exactly when the cap cut something
  * (§10.1). A cut never splits a surrogate pair.
+ *
+ * Joiners that never separate words — soft hyphen (U+00AD), zero-width non-joiner/joiner (U+200C/D),
+ * word joiner (U+2060) and a byte-order mark inside the text (U+FEFF) — are removed rather than spaced,
+ * so "jalape\u200dño" reads as one word. A zero-width space (U+200B) still separates words.
  */
 import { LIMITS } from "../../contract";
 
@@ -15,6 +19,8 @@ import { LIMITS } from "../../contract";
  * and the byte-order mark (U+FEFF).
  */
 const CONTROLS = /[\u0000-\u001f\u007f-\u009f؜᠎​-‏‪-‮⁠-⁤⁦-⁩﻿]/g;
+/** Invisible joiners removed outright (they sit inside words). */
+const JOINERS = /[\u00ad\u200c\u200d\u2060\ufeff]/g;
 
 export interface NormalizedLine {
   raw: string;
@@ -24,7 +30,7 @@ export interface NormalizedLine {
 
 export function normalizeLine(input: unknown): NormalizedLine {
   const raw = typeof input === "string" ? input : "";
-  const full = raw.replace(CONTROLS, " ").replace(/\s+/g, " ").trim();
+  const full = raw.replace(JOINERS, "").replace(CONTROLS, " ").replace(/\s+/g, " ").trim();
   if (full.length <= LIMITS.maxLineChars) return { raw, normalized: full, truncated: false };
   let cut = LIMITS.maxLineChars;
   const last = full.charCodeAt(cut - 1);

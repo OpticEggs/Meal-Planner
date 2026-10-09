@@ -101,11 +101,18 @@ describe("restatements: the first amount, the other in equivalents", () => {
     expect(r.reasons).toContain("equivalent_quantity_stated");
   });
 
-  it("a restatement in a count unit is reported but not stored (equivalents hold mass/volume only)", () => {
-    const r = read("1/2 cup (1 stick) butter");
-    expect(core(r)).toEqual({ status: "ready", name: "butter", quantity: "1/2", unit: "cup" });
-    expect(r.equivalents).toEqual([]);
-    expect(r.note).toBeNull();
+  it.each([
+    ["1/2 cup (1 stick) butter", "1/2", "cup", ["1 stick"]],
+    ["1 cup (2 sticks) butter", "1", "cup", ["2 stick"]],
+    ["8 tbsp (1 stick) butter", "8", "tbsp", ["1 stick"]],
+    ["2 1/4 tsp (1 packet) yeast", "2 1/4", "tsp", ["1 packet"]],
+    ["15 oz (1 can) tomato sauce", "15", "oz", ["1 can"]],
+  ])("a restatement in a count unit is stored too (CONTRACT §11.1): %s", (line, q, unit, eqs) => {
+    const r = read(line);
+    expect(r).toMatchObject({ status: "ready", unit: { canonical: unit }, note: null });
+    expect(qText(r.quantity)).toBe(q);
+    expect(r.equivalents.map(amountText)).toEqual(eqs);
+    expect(r.equivalents.every((e) => e.unit.dimension === "count")).toBe(true);
     expect(r.reasons).toContain("equivalent_quantity_stated");
   });
 

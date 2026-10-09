@@ -177,13 +177,33 @@ describe("safety properties", () => {
     expect(bad).toEqual([]);
   });
 
-  it("never stuffs the raw line into the name of a reading that needs review", () => {
+  it("never stuffs the raw line into the name, at any status", () => {
     const bad: string[] = [];
     for (const line of ALL) {
       const r = parse(line);
-      if (r.status !== "needs_review" || r.name === null || r.quantity === null) continue;
-      if (r.name === r.normalized) bad.push(show(line));
+      if (r.name === null) continue;
+      // a line that states an amount or a unit is never its own name
+      if (r.name === r.normalized && (r.quantity !== null || r.unit !== null || r.packageSize !== null || r.equivalents.length > 0)) bad.push(`${show(line)}: whole line`);
       if (bad.length >= 10) break;
+    }
+    expect(bad).toEqual([]);
+  });
+
+  it("a name never begins with the unit, a stray conjunction or article, or a number (unless a person is asked to check)", () => {
+    const bad: string[] = [];
+    const LEADING = /^(?:(?:or|and|nor|with|to|plus|but)(?![-\p{L}])|[&/+])/iu;
+    const CARDINAL = /^(?:\d|[½⅓⅔¼¾⅕⅖⅗⅘⅙⅚⅐⅛⅜⅝⅞]|(?:one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|half|dozen)(?=\s|$))/iu;
+    for (const line of ALL) {
+      const r = parse(line);
+      const names = r.name !== null ? [r.name] : r.alternatives;
+      for (const name of names) {
+        const first = name.split(" ")[0].toLowerCase().replace(/\.$/, "");
+        if (r.unit && r.unit.source !== "" && name.includes(" ") && first === r.unit.source.toLowerCase().replace(/\.$/, "") && r.unit.dimension !== "count") bad.push(`${show(line)}: name starts with the unit "${name}"`);
+        if (LEADING.test(name)) bad.push(`${show(line)}: name starts with a conjunction "${name}"`);
+        if (/^(?:a|an)\s/i.test(name)) bad.push(`${show(line)}: name starts with an article "${name}"`);
+        if (CARDINAL.test(name) && !/^\d+(?:\.\d+)?%/.test(name) && !/^\d+\/\d+ /.test(name) && !(r.status === "needs_review" && r.reasons.includes("unclassified")) && !/^\w*\d\w*[a-z]/i.test(name)) bad.push(`${show(line)}: name starts with a number "${name}"`);
+      }
+      if (bad.length >= 15) break;
     }
     expect(bad).toEqual([]);
   });

@@ -14,8 +14,9 @@
  */
 import type { AmountUnstated } from "../../contract";
 import { allWords, hasNumber, isGroup, isSym, isWord, wordsAt, type GroupTok, type Tok } from "./lexer";
-import { APPLICATION_GERUNDS, FORM_WORDS, FUNCTION_WORDS, IF_DESIRED, REMARK_WORDS, SIZE_WORDS, UNSTATED_PHRASES } from "./lexicon";
+import { APPLICATION_GERUNDS, APPROX_WORDS, LEADING_JUNK, MODIFIER_WORDS, PREP_ADVERBS, TRAILING_PREP_WORDS, FORM_WORDS, FUNCTION_WORDS, IF_DESIRED, REMARK_WORDS, SIZE_WORDS, UNSTATED_PHRASES } from "./lexicon";
 import { amountStartsAt, isPriceGroup, readAmountPhrase } from "./amount";
+import { readUnit } from "./unit";
 import { emptyEffects, mergeEffects, type Effects } from "./types";
 
 // --- Text -------------------------------------------------------------------------------------------
@@ -47,7 +48,13 @@ export function textOf(text: string, toks: readonly Tok[]): string {
 
 /** Trims punctuation (not letters, digits, % or a closing quote) from both ends of a name or note. */
 export function trimEdges(s: string): string {
-  return s.replace(/^[\s,;:.\-–—*•·_/|+&]+/u, "").replace(/[\s,;:\-–—*•·_/|+&]+$/u, "").replace(/(?<![A-Za-z]\.[A-Za-z])\.$/u, "").trim();
+  return s
+    .replace(/^[\s,;:.\-–—*•·_/|+&]+/u, "")
+    .replace(/[\s,;:\-–—*•·_/|+&]+$/u, "")
+    .replace(/(?:\s*(?:[!?…]|\.{2,}))+$/u, "") // "2 eggs!!", "2 eggs ...": emphasis and trailing dots
+    .replace(/(?<![A-Za-z]\.[A-Za-z])\.$/u, "")
+    .replace(/[\s,;:\-–—*•·_/|+&]+$/u, "")
+    .trim();
 }
 
 // --- Phrases ----------------------------------------------------------------------------------------
@@ -120,10 +127,15 @@ export function splitOr(toks: readonly Tok[]): Tok[][] {
 
 const REMARK_OPENER = /^(?:such as|like|preferably|ideally|e\.?\s?g\.?|i\.?\s?e\.?|see|i like|i use|we use|you can use|any|your favou?rite|recipe)\b/i;
 
-/** True when every word of the run is remark vocabulary or a function word (no food is named). */
+/**
+ * True when every word of the run is remark vocabulary, preparation ("minced or pressed") or a function
+ * word (no food is named). A past participle counts as preparation unless it is a product modifier
+ * ("salted", "smoked").
+ */
 export function remarkOnly(toks: readonly Tok[]): boolean {
   const ws = allWords(toks);
-  return ws.length > 0 && ws.every((w) => REMARK_WORDS.has(w) || FUNCTION_WORDS.has(w) || Object.prototype.hasOwnProperty.call(FORM_WORDS, w));
+  const prep = (w: string) => TRAILING_PREP_WORDS.has(w) || PREP_ADVERBS.has(w) || (w.length >= 5 && w.endsWith("ed") && !MODIFIER_WORDS.has(w));
+  return ws.length > 0 && ws.every((w) => REMARK_WORDS.has(w) || FUNCTION_WORDS.has(w) || Object.prototype.hasOwnProperty.call(FORM_WORDS, w) || prep(w));
 }
 
 /** Leading words that introduce a substitute ("or use vegetable broth"). */
@@ -135,8 +147,10 @@ const SUBSTITUTE_LEAD = new Set(["use", "substitute", "try", "even"]);
  */
 export function classifyPiece(text: string, piece: readonly Tok[], fx: Effects): void {
   // Brackets inside the piece: a price is dropped; a group that only carries flags or a choice
-  // ("(optional)", "(or tamari)") is taken out and applied; any other group stays in the text, flattened.
+  // ("(optional)", "(or tamari)") is taken out and applied after the piece's own words, so options stay in
+  // source order ("all-purpose (or bread (or cake))"); any other group stays in the text, flattened.
   const toks: Tok[] = [];
+  const later: Effects[] = [];
   for (const t of piece) {
     if (!isGroup(t)) {
       toks.push(t);
@@ -153,13 +167,27 @@ export function classifyPiece(text: string, piece: readonly Tok[], fx: Effects):
     const sub = emptyEffects();
     classifyGroup(text, t, sub);
     if (sub.notes.length === 0) {
-      mergeEffects(fx, sub);
+      later.push(sub);
       continue;
     }
     fx.optional ||= sub.optional;
     fx.form ??= sub.form;
     toks.push(t);
   }
+  // "all-purpose (or bread (or cake))": one kind word, then only other kinds — every one is a version of the food
+  const kinds = later.flatMap((e) => e.options);
+  const onlyOptions = later.every((e) => e.notes.length === 0 && e.unstated.length === 0 && e.unassigned === 0 && !e.optional && e.form === null);
+  if (toks.length === 1 && isWord(toks[0]) && MODIFIER_WORDS.has(toks[0].lower) && kinds.length > 0 && onlyOptions && kinds.every((o) => o.mode === "additional" && !o.hasAmount && MODIFIER_WORDS.has(o.text.toLowerCase()))) {
+    fx.options.push({ text: toks[0].text, s: toks[0].s, hasAmount: false, mode: "variants", remarkOnly: false });
+    for (const o of kinds) fx.options.push({ ...o, mode: "variants" });
+    for (const e of later) for (const r of e.reasons) if (!fx.reasons.includes(r)) fx.reasons.push(r);
+    return;
+  }
+  classifyBare(text, toks, fx);
+  for (const e of later) mergeEffects(fx, e);
+}
+
+function classifyBare(text: string, toks: readonly Tok[], fx: Effects): void {
   const bare = dropBarePrices(toks, fx);
   if (bare.length === 0) return;
   const s = bare[0].s;
@@ -177,6 +205,15 @@ export function classifyPiece(text: string, piece: readonly Tok[], fx: Effects):
     if (m.optional) fx.optional = true;
     return;
   }
+  // "about", "approx.", "roughly": the amount is approximate (CONTRACT §7.11)
+  if (words.length === 1 && APPROX_WORDS.has(words[0].lower) && bare.every((t) => t.kind === "word" || isSym(t, ".", "~"))) {
+    fx.approximate = true;
+    return;
+  }
+  if (bare.length === 1 && isSym(bare[0], "~")) {
+    fx.approximate = true;
+    return;
+  }
   // cooked / raw alone
   if (bare.length === 1 && isWord(bare[0]) && Object.prototype.hasOwnProperty.call(FORM_WORDS, bare[0].lower)) {
     fx.form ??= FORM_WORDS[bare[0].lower];
@@ -191,18 +228,28 @@ export function classifyPiece(text: string, piece: readonly Tok[], fx: Effects):
     const complete = opts.every((o) => o.length > 0);
     const isRemark = complete && opts.every((o) => remarkOnly(o) && !hasNumber(o));
     const short = opts.every((o) => o.filter((t) => t.kind === "word").length <= 3 && !o.some(isGroup));
-    if (complete && !isRemark && (explicit || short)) {
+    // an option that is a phrase or starts with a conjunction ("container/to taste") is not a food
+    const junk = opts.some((o) => unstatedAt(o, 0) !== null || (isWord(o[0]) && LEADING_JUNK.has(o[0].lower)));
+    if (complete && !isRemark && !junk && (explicit || short)) {
       const read = opts.map((o) => {
         let k = 0;
         while (isWord(o[k]) && SUBSTITUTE_LEAD.has((o[k] as { lower: string }).lower)) k++;
         const amt = amountStartsAt(text, o, k) ? readAmountPhrase(text, o, k) : null;
         let rest = amt ? o.slice(amt.next) : o.slice(k);
         if (isWord(rest[0], "of")) rest = rest.slice(1);
+        // a weight or volume word with no number before the food ("tbl broth") is not part of the food
+        const u = amt ? null : readUnit(text, rest, 0);
+        if (u && u.next < rest.length && (u.unit.dimension === "mass" || u.unit.dimension === "volume")) {
+          if (!fx.reasons.includes("unclassified")) fx.reasons.push("unclassified");
+          rest = rest.slice(u.next);
+          if (isWord(rest[0], "of")) rest = rest.slice(1);
+        }
         if (isWord(rest[0], "a", "an", "the") && rest.length > 1) rest = rest.slice(1);
         return { o, amt, rest };
       });
-      // "(or 1/2 large)", "(or 2 cups)": another amount of the same food — reported, not a choice of foods
-      if (read.every((x) => x.amt !== null && x.rest.every((t) => isWord(t) && SIZE_WORDS.has(t.lower)))) {
+      // "(or 1/2 large)", "(or 2 cups)": another amount of the same food — reported, not a choice of foods;
+      // an option that still starts with a number after its amount is not clearly a food either
+      if (read.every((x) => x.amt !== null && x.rest.every((t) => isWord(t) && SIZE_WORDS.has(t.lower))) || read.some((x) => x.rest.length > 0 && (x.rest[0].kind === "num" || x.rest[0].kind === "vulgar") && !isSym(x.rest[1], "%"))) {
         fx.unassigned++;
         fx.notes.push({ s, text: flat });
         return;
@@ -246,10 +293,17 @@ export function classifyGroup(text: string, g: GroupTok, fx: Effects): void {
     return;
   }
   const pieces = splitTopLevel(g.children).filter((p) => p.length > 0);
-  // "(parsley, cilantro, or basil)": a list of foods ending in an "or" option names the choice
+  // "(parsley, cilantro, or basil)", "(chicken, beef or vegetable)": a list of foods ending in an "or"
+  // option names the choice
   const last = pieces[pieces.length - 1];
-  if (pieces.length >= 3 && isWord(last[0], "or") && [...pieces.slice(0, -1), last.slice(1)].every(plainItem)) {
-    for (const p of [...pieces.slice(0, -1), last.slice(1)]) {
+  const lastParts = last && !isWord(last[0], "or") ? splitOr(last) : [];
+  // ("(penne or rigatoni)", "(heavy or light)": a bracket that only offers a choice of plain words is a list too)
+  const items =
+    pieces.length >= 3 && isWord(last[0], "or") ? [...pieces.slice(0, -1), last.slice(1)]
+    : lastParts.length === 2 || (pieces.length === 1 && lastParts.length > 2) ? [...pieces.slice(0, -1), ...lastParts]
+    : null;
+  if (items !== null && items.every(plainItem)) {
+    for (const p of items) {
       const item = isWord(p[0], "a", "an") && p.length > 1 ? p.slice(1) : p;
       fx.options.push({ text: textOf(text, item), s: p[0].s, hasAmount: false, mode: "list", remarkOnly: false });
     }
