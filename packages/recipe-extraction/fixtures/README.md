@@ -8,7 +8,7 @@ images, nothing copied from a real page. Rights: redistributable with the reposi
 |---|---|
 | `ingredients/dev.jsonl` | Ingredient-line cases for development (182). Engines may be tuned against these. |
 | `ingredients/holdout.jsonl` | Ingredient-line cases held out (128). **Frozen** — never tuned against. |
-| `ingredients/holdout-v2.jsonl` | Holdout-v2 (EVALUATION-PLAN-v2 §9), split `holdout2`, ids `ing-h2-NNNN` (359: 271 ready, 69 needs_review, 19 unsupported). The **fresh** set for the Phase 2 acceptance decision; written blind, never shown to the implementation worker. Draft until label-checked, adjudicated and frozen. |
+| `ingredients/holdout-v2.jsonl` | Holdout-v2 (EVALUATION-PLAN-v2 §9), split `holdout2`, ids `ing-h2-NNNN` (359: 271 ready, 69 needs_review, 19 unsupported). The **fresh** set for the Phase 2 acceptance decision; written blind, never shown to the implementation worker. Label-checked (blind sample 40/40) and adjudicated 2026-10-09 (`LABEL-CHANGES.md`), then frozen in `FREEZE-v2.json`. |
 | `pages/*.html` | Synthetic recipe pages: `dev-*` (10) and `hold-*` (5, frozen). |
 | `pages/labels.json` | What each page states (CONTRACT-v1 §3), one entry per page. |
 | `FREEZE.json` | SHA-256 of every holdout file (and of the holdout page labels), case counts, the freeze rule. |

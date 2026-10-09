@@ -41,3 +41,37 @@ after its first commit is recorded here, newest last. The initial labels (2026-1
   Requested URLs are not scored; the extraction reports `url_invalid` for it and `source.requestedUrl: null`.
   Recorded here as a known artefact; the holdout stays as frozen.
 - **Author / reviewer:** integration owner (Claude); reviewer: Worker B's labels otherwise unchanged.
+
+### 2026-10-09 — holdout-v2 pre-freeze adjudication
+
+- **Context:** draft labels `2f95a2d` (`ingredients/holdout-v2.jsonl` SHA-256
+  `37d64b28f0447acdcaeaaf01b94c39c039b9961799074d344ab502dda36e2c0b`, not frozen). The independent label checker,
+  blind to every parser, labelled a sample of 40 cases (ids 0005, 0014, … every 9th) and agreed on every field
+  (40/40); it verified all 54 `repo_test_input` citations at `8e6bd6e` (and their absence at `cb7b56e`), the
+  arithmetic and the §2.1 consistency, and found no definite error. The coordinator adjudicated the changes below
+  before any candidate engine was evaluated; each is argued from CONTRACT-v1, not from engine output (no engine
+  output for holdout-v2 exists).
+- **ing-h2-0215** `2 tbsp white or yellow miso` — `accept.alternatives`: `[["white","yellow miso"]]` → removed
+  (`accept` now `{}`). Rationale: too generous; §7.8's own example expands the shared noun (`chicken or vegetable
+  broth` → `chicken broth`, `vegetable broth`), so only the expanded options match.
+- **ing-h2-0204** `1 Tbsp. coarsely ground black pepper` — `accept.name`: `["black pepper","ground black pepper"]`
+  → `["ground black pepper"]`; `accept.note`: `["coarsely ground","coarsely"]` → `["coarsely"]`; rationale reworded
+  to match. **ing-h2-0322** `½ tsp freshly ground black pepper` — `accept.name`: `["black pepper","ground black
+  pepper"]` → `["ground black pepper"]`; `accept.note`: `["freshly ground","freshly"]` → `["freshly"]`; rationale
+  reworded. **ing-h2-0325** `ground black pepper` — `accept`: `{"name":["black pepper"],"note":["ground"]}` → `{}`.
+  Rationale: consistency — `ground` is treated as a product-form word, exactly as for ground allspice, cardamom,
+  ginger, turmeric and coriander elsewhere in the set (fixtures README: product forms stay in the name with no
+  alternative).
+- **ing-h2-0212** `Juice of 2 limes` — `accept.note`: `["juice of","juiced"]` → `[null,"juice of","juiced"]`.
+  **ing-h2-0213** `Zest of ½ orange` — `accept.note`: `["zest of","zested"]` → `[null,"zest of","zested"]`.
+  Rationale: the accepted merged names (`lime juice`, `orange zest`) leave nothing for the note, so "no note" must
+  be accepted too (the label format already allows `null` in `accept.note`).
+- **ing-h2-0087** `3 (5.3 oz) cups vanilla Greek yogurt` — label unchanged; rationale extended with "DEBATABLE —
+  PRE-REGISTERED": an engine reading `cups` as the volume unit is scored cross-dimension (S3). The case is listed in
+  `bench/outcomes.ts` `DEBATABLE_CASES`; the report also gives A1–A5 without it, as information only — the
+  acceptance decision stays on all holdout-v2 cases.
+- **Kept as labelled** (adjudicated, no change): every other case, including the CONTRACT AMBIGUITY readings
+  (0071/0143/0317, 0165/0338, 0219, 0226/0227/0229, 0265, 0304, 0113/0166 and the rest).
+- **New hash:** `793507a4b7360fb7a99dad69519fbe337ad97b3c41ad102d0db8b46f6ee6617f` (the file that `FREEZE-v2.json`
+  freezes).
+- **Author:** evaluation worker. **Reviewers:** independent label checker; coordinator.

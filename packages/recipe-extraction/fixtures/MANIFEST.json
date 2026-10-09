@@ -47,7 +47,7 @@
       "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
       "created": "2026-10-09",
       "author": "Evaluation worker (Claude) for the Phase 2 coordinator",
-      "reviewer": "pending — independent label checker assigned by the coordinator; adjudication is logged in LABEL-CHANGES.md before the FREEZE-v2.json freeze"
+      "reviewer": "independent label checker (blind sample 40/40 agreement) + coordinator adjudication, 2026-10-09"
     },
     {
       "path": "ingredients/holdout.jsonl",
