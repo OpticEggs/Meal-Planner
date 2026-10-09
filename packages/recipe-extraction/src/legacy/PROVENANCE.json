@@ -116,10 +116,10 @@
     }
   ],
   "liveTableObserved": {
-    "note": "Table's own ingredient-line parser moved past the baseline in main 8e6bd6e (import overhaul). The frozen copies stay at cb7b56e; parity with the live module is only checked while it is still the baseline file. tests/parity/baseline-snapshot.json keeps proving the frozen engine's outputs are Table import 2's.",
-    "commit": "8e6bd6e",
+    "note": "Table's own ingredient-line parser moved past the baseline in main 8e6bd6e (import overhaul). The frozen copies stay at cb7b56e; parity with the live module is only checked while it is still the baseline file. tests/parity/baseline-snapshot.json keeps proving the frozen engine's outputs are Table import 2's. Updated 2026-10-09 to main bca110e (import-overhaul corrections RIO-01..03: a bare \"pepper\" is a household seasoning only when measured like one; the frozen copies and baseline-snapshot.json are unchanged). Previously recorded later version: main 8e6bd6e, 09f00b2f652cba3725091c0ea2a2bc3f0f87f77d7bb25d01984430fceff199a7.",
+    "commit": "bca110e",
     "files": {
-      "src/server/integrations/recipe-import/ingredient-line.ts": "09f00b2f652cba3725091c0ea2a2bc3f0f87f77d7bb25d01984430fceff199a7"
+      "src/server/integrations/recipe-import/ingredient-line.ts": "4eba6151cb03342207f5797a1af6cd88fe89d68ea4f6107a9942ff94133f0e28"
     }
   }
 }

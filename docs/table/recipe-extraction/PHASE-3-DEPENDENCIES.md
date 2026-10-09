@@ -47,3 +47,23 @@ The package keeps quantities as exact rationals (contract v1). Table stores reci
 (`perServing`, D112 on `main`). An adapter must hand Table the exact whole-recipe amount (as amount text) and let
 `perServing` divide once; it must never pre-round (Phase 1 measured that round-then-divide changes 181/4 680
 per-portion values at 4 dp). The residual error of 12-dp storage is below 5×10⁻¹³ of the unit per serving.
+
+## 4. Reconciliation with `main` `bca110e` (import-overhaul corrections) — 2026-10-09
+
+_Added by the Table app session when it merged `main` into this branch. Nothing above was rewritten, no lab
+engine, contract, corpus, benchmark or plan changed, and the app corrections do not complete or replace the
+extraction engine: Phase 3 still needs its own authorization._
+
+`main` `bca110e` corrected three problems in Table's own import (RIO-01..03, reconstructed by that session
+because the owner's correction package did not reach it):
+
+| Area | `8e6bd6e` (§1) | `bca110e` | Effect on §2–§3 |
+|---|---|---|---|
+| Per serving | non-terminating amounts rounded **half-up** to 12 dp | rounded **toward zero** to 12 dp, so plates never add up to more than the recipe (an extra package was bought) | §3's residual-error statement holds, now one-sided: below 10⁻¹² of the unit per serving, never upward; an adapter must still hand over the exact whole-recipe amount |
+| Seasonings | `isHouseholdSeasoning(name)` | `isHouseholdSeasoning(name, unit)`: a bare "pepper" is table pepper only when measured like a seasoning (spoon/volume or no amount); counted or weighed it is an ingredient | §1's "decided on the name" now reads "decided on the name and the amount's unit"; the §2.2 mapping must pass the unit |
+| Review | compact rows | an unapplied change in an open row holds saving | none for the package |
+
+**Provenance.** `src/legacy/PROVENANCE.json` `liveTableObserved` now records `bca110e`'s `ingredient-line.ts`
+(`4eba6151…`) as the accepted later version, with `8e6bd6e`'s hash kept in its note. The frozen copies, their
+hashes, the baseline commit `cb7b56e` and `tests/parity/baseline-snapshot.json` are unchanged; the lab suite passes
+(920 passed, 1 expected fail, 11 skipped) with `main` merged.
