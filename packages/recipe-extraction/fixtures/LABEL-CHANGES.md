@@ -16,4 +16,21 @@ after its first commit is recorded here, newest last. The initial labels (2026-1
 
 ## Log
 
-_No changes yet._
+### 2026-10-09 — dev page hosts moved off the `.example` TLD (fixture correction, not a meaning change)
+
+- **Pages:** `page-dev-type-array-br`, `page-dev-microdata`, `page-dev-redirect-headings` (dev only) and their
+  HTML files `dev-type-array-br.html`, `dev-microdata.html`.
+- **Change:** `news.example` → `news.example.com`, `cookbook.example` → `cookbook.example.org`,
+  `share.example` → `share.example.net` in every URL (page text, `requestedUrl`, `finalUrl`, `imageUrls`,
+  `declaredUrl`). No title, ingredient, servings, time, author or other semantic value changed.
+- **Rationale:** Table's link validation (`validateLinkUrl`, D86) refuses the reserved `.example` TLD as a
+  non-public name, so on these pages every image and declared URL was unreachable for *any* engine — a
+  fixture artefact, introduced by the integration owner's brief (which listed `*.example` as acceptable),
+  not a property of the pages. The corrected hosts are still reserved example domains (RFC 2606).
+  Found by the first integrated benchmark run; the fix is argued from Table's link rules, not from a score.
+  `tests/contract/fixture-urls.test.ts` now requires every final/image/declared URL to pass Table's link
+  validation.
+- **Not changed (holdout, frozen):** `page-hold-redirect-li-entities` has `requestedUrl` `https://go.example/x/91`.
+  Requested URLs are not scored; the extraction reports `url_invalid` for it and `source.requestedUrl: null`.
+  Recorded here as a known artefact; the holdout stays as frozen.
+- **Author / reviewer:** integration owner (Claude); reviewer: Worker B's labels otherwise unchanged.

@@ -9,7 +9,7 @@
       "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
       "created": "2026-10-09",
       "author": "Worker B (Claude) for the integration owner",
-      "reviewer": "integration owner (Claude) — review pending"
+      "reviewer": "integration owner (Claude) — reviewed 2026-10-09 against CONTRACT-v1 §3/§7; corrections logged in LABEL-CHANGES.md"
     },
     {
       "path": "LABEL-CHANGES.md",
@@ -18,7 +18,7 @@
       "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
       "created": "2026-10-09",
       "author": "Worker B (Claude) for the integration owner",
-      "reviewer": "integration owner (Claude) — review pending"
+      "reviewer": "integration owner (Claude) — reviewed 2026-10-09 against CONTRACT-v1 §3/§7; corrections logged in LABEL-CHANGES.md"
     },
     {
       "path": "README.md",
@@ -27,7 +27,7 @@
       "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
       "created": "2026-10-09",
       "author": "Worker B (Claude) for the integration owner",
-      "reviewer": "integration owner (Claude) — review pending"
+      "reviewer": "integration owner (Claude) — reviewed 2026-10-09 against CONTRACT-v1 §3/§7; corrections logged in LABEL-CHANGES.md"
     },
     {
       "path": "ingredients/dev.jsonl",
@@ -37,7 +37,7 @@
       "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
       "created": "2026-10-09",
       "author": "Worker B (Claude) for the integration owner",
-      "reviewer": "integration owner (Claude) — review pending"
+      "reviewer": "integration owner (Claude) — reviewed 2026-10-09 against CONTRACT-v1 §3/§7; corrections logged in LABEL-CHANGES.md"
     },
     {
       "path": "ingredients/holdout.jsonl",
@@ -47,7 +47,7 @@
       "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
       "created": "2026-10-09",
       "author": "Worker B (Claude) for the integration owner",
-      "reviewer": "integration owner (Claude) — review pending"
+      "reviewer": "integration owner (Claude) — reviewed 2026-10-09 against CONTRACT-v1 §3/§7; corrections logged in LABEL-CHANGES.md"
     },
     {
       "path": "pages/dev-article-nonrecipe.html",
@@ -57,7 +57,7 @@
       "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
       "created": "2026-10-09",
       "author": "Worker B (Claude) for the integration owner",
-      "reviewer": "integration owner (Claude) — review pending"
+      "reviewer": "integration owner (Claude) — reviewed 2026-10-09 against CONTRACT-v1 §3/§7; corrections logged in LABEL-CHANGES.md"
     },
     {
       "path": "pages/dev-entities-relative.html",
@@ -67,7 +67,7 @@
       "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
       "created": "2026-10-09",
       "author": "Worker B (Claude) for the integration owner",
-      "reviewer": "integration owner (Claude) — review pending"
+      "reviewer": "integration owner (Claude) — reviewed 2026-10-09 against CONTRACT-v1 §3/§7; corrections logged in LABEL-CHANGES.md"
     },
     {
       "path": "pages/dev-malformed-plus-valid.html",
@@ -77,7 +77,7 @@
       "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
       "created": "2026-10-09",
       "author": "Worker B (Claude) for the integration owner",
-      "reviewer": "integration owner (Claude) — review pending"
+      "reviewer": "integration owner (Claude) — reviewed 2026-10-09 against CONTRACT-v1 §3/§7; corrections logged in LABEL-CHANGES.md"
     },
     {
       "path": "pages/dev-microdata.html",
@@ -87,7 +87,7 @@
       "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
       "created": "2026-10-09",
       "author": "Worker B (Claude) for the integration owner",
-      "reviewer": "integration owner (Claude) — review pending"
+      "reviewer": "integration owner (Claude) — reviewed 2026-10-09 against CONTRACT-v1 §3/§7; corrections logged in LABEL-CHANGES.md"
     },
     {
       "path": "pages/dev-opengraph-only.html",
@@ -97,7 +97,7 @@
       "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
       "created": "2026-10-09",
       "author": "Worker B (Claude) for the integration owner",
-      "reviewer": "integration owner (Claude) — review pending"
+      "reviewer": "integration owner (Claude) — reviewed 2026-10-09 against CONTRACT-v1 §3/§7; corrections logged in LABEL-CHANGES.md"
     },
     {
       "path": "pages/dev-plain-jsonld.html",
@@ -107,7 +107,7 @@
       "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
       "created": "2026-10-09",
       "author": "Worker B (Claude) for the integration owner",
-      "reviewer": "integration owner (Claude) — review pending"
+      "reviewer": "integration owner (Claude) — reviewed 2026-10-09 against CONTRACT-v1 §3/§7; corrections logged in LABEL-CHANGES.md"
     },
     {
       "path": "pages/dev-redirect-headings.html",
@@ -117,7 +117,7 @@
       "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
       "created": "2026-10-09",
       "author": "Worker B (Claude) for the integration owner",
-      "reviewer": "integration owner (Claude) — review pending"
+      "reviewer": "integration owner (Claude) — reviewed 2026-10-09 against CONTRACT-v1 §3/§7; corrections logged in LABEL-CHANGES.md"
     },
     {
       "path": "pages/dev-two-recipes.html",
@@ -127,7 +127,7 @@
       "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
       "created": "2026-10-09",
       "author": "Worker B (Claude) for the integration owner",
-      "reviewer": "integration owner (Claude) — review pending"
+      "reviewer": "integration owner (Claude) — reviewed 2026-10-09 against CONTRACT-v1 §3/§7; corrections logged in LABEL-CHANGES.md"
     },
     {
       "path": "pages/dev-type-array-br.html",
@@ -137,7 +137,7 @@
       "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
       "created": "2026-10-09",
       "author": "Worker B (Claude) for the integration owner",
-      "reviewer": "integration owner (Claude) — review pending"
+      "reviewer": "integration owner (Claude) — reviewed 2026-10-09 against CONTRACT-v1 §3/§7; corrections logged in LABEL-CHANGES.md"
     },
     {
       "path": "pages/dev-yoast-graph.html",
@@ -147,7 +147,7 @@
       "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
       "created": "2026-10-09",
       "author": "Worker B (Claude) for the integration owner",
-      "reviewer": "integration owner (Claude) — review pending"
+      "reviewer": "integration owner (Claude) — reviewed 2026-10-09 against CONTRACT-v1 §3/§7; corrections logged in LABEL-CHANGES.md"
     },
     {
       "path": "pages/hold-faq-nonrecipe.html",
@@ -157,7 +157,7 @@
       "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
       "created": "2026-10-09",
       "author": "Worker B (Claude) for the integration owner",
-      "reviewer": "integration owner (Claude) — review pending"
+      "reviewer": "integration owner (Claude) — reviewed 2026-10-09 against CONTRACT-v1 §3/§7; corrections logged in LABEL-CHANGES.md"
     },
     {
       "path": "pages/hold-graph-website.html",
@@ -167,7 +167,7 @@
       "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
       "created": "2026-10-09",
       "author": "Worker B (Claude) for the integration owner",
-      "reviewer": "integration owner (Claude) — review pending"
+      "reviewer": "integration owner (Claude) — reviewed 2026-10-09 against CONTRACT-v1 §3/§7; corrections logged in LABEL-CHANGES.md"
     },
     {
       "path": "pages/hold-microdata-og-image.html",
@@ -177,7 +177,7 @@
       "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
       "created": "2026-10-09",
       "author": "Worker B (Claude) for the integration owner",
-      "reviewer": "integration owner (Claude) — review pending"
+      "reviewer": "integration owner (Claude) — reviewed 2026-10-09 against CONTRACT-v1 §3/§7; corrections logged in LABEL-CHANGES.md"
     },
     {
       "path": "pages/hold-redirect-li-entities.html",
@@ -187,7 +187,7 @@
       "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
       "created": "2026-10-09",
       "author": "Worker B (Claude) for the integration owner",
-      "reviewer": "integration owner (Claude) — review pending"
+      "reviewer": "integration owner (Claude) — reviewed 2026-10-09 against CONTRACT-v1 §3/§7; corrections logged in LABEL-CHANGES.md"
     },
     {
       "path": "pages/hold-two-recipes-malformed.html",
@@ -197,7 +197,7 @@
       "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
       "created": "2026-10-09",
       "author": "Worker B (Claude) for the integration owner",
-      "reviewer": "integration owner (Claude) — review pending"
+      "reviewer": "integration owner (Claude) — reviewed 2026-10-09 against CONTRACT-v1 §3/§7; corrections logged in LABEL-CHANGES.md"
     },
     {
       "path": "pages/labels.json",
@@ -206,7 +206,7 @@
       "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
       "created": "2026-10-09",
       "author": "Worker B (Claude) for the integration owner",
-      "reviewer": "integration owner (Claude) — review pending"
+      "reviewer": "integration owner (Claude) — reviewed 2026-10-09 against CONTRACT-v1 §3/§7; corrections logged in LABEL-CHANGES.md"
     }
   ]
 }

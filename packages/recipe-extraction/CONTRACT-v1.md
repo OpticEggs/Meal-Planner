@@ -198,3 +198,23 @@ over unambiguous (`ready`-labelled) lines, with Wilson 95% intervals:
 - pages: recipe detection precision/recall, per-field match, ingredient-list exactness;
 - rights invariants (every fixture in the manifest, reserved example domains only, `retention` always
   `not_decided`); runtime totals (reported separately; excluded from the deterministic report).
+
+## 10. Clarifications recorded during Phase 1 integration (2026-10-09; no change of meaning)
+
+1. `input_truncated` is added when the **normalized** text (controls → spaces, whitespace collapsed, trimmed)
+   is longer than 500 characters — i.e. exactly when something is cut — not when the raw string is merely long.
+2. The `legacy-*` engines are faithful to Table import 2, so on `needs_review` lines their `name` can still
+   contain the amount (`1/3 cup pesto (homemade )`). §2's "never stuffed into `name`" binds new engines; the
+   benchmark scores the legacy behaviour as a name mismatch.
+3. `legacy-table-import-2+suggestion`: a legacy proposal that cannot be carried within the bounds (reduced
+   denominator above 1 000 000, e.g. 0.000001 × 1.5 L) keeps neither amount nor unit and adds `unclassified`
+   (3 of 40 564 parity lines; benchmark-only engine).
+4. Validator: any `unsupported`-class reason makes the status `unsupported` (an empty line that is also
+   truncated stays `unsupported`).
+5. Fixture hosts: only reserved example domains that Table's own link validation accepts
+   (`example.com`/`.org`/`.net` and subdomains). The `.example` TLD is reserved but refused by Table, so an
+   expected URL there is unreachable; the single frozen holdout exception (a requested URL, not scored) is
+   logged in `fixtures/LABEL-CHANGES.md`. `https://schema.org/<Type>` vocabulary identifiers may appear in
+   fixture markup (`@context`, `itemtype`).
+6. Page labels may carry `accept` alternatives for text fields, counted separately from strict matches, as for
+   ingredient labels.

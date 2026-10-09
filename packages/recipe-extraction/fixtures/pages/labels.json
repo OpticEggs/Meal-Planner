@@ -99,8 +99,8 @@
     "id": "page-dev-type-array-br",
     "split": "dev",
     "file": "dev-type-array-br.html",
-    "requestedUrl": "https://news.example/food/blueberry-muffins",
-    "finalUrl": "https://news.example/food/blueberry-muffins",
+    "requestedUrl": "https://news.example.com/food/blueberry-muffins",
+    "finalUrl": "https://news.example.com/food/blueberry-muffins",
     "isRecipe": true,
     "expectedCandidateCount": 1,
     "candidates": [
@@ -126,7 +126,7 @@
         ],
         "instructionCount": 3,
         "imageUrls": [
-          "https://news.example/img/2026/blueberry-muffins.jpg"
+          "https://news.example.com/img/2026/blueberry-muffins.jpg"
         ],
         "declaredUrl": null
       }
@@ -142,8 +142,8 @@
     "id": "page-dev-microdata",
     "split": "dev",
     "file": "dev-microdata.html",
-    "requestedUrl": "https://cookbook.example/recipes/maple-oat-bars",
-    "finalUrl": "https://cookbook.example/recipes/maple-oat-bars",
+    "requestedUrl": "https://cookbook.example.org/recipes/maple-oat-bars",
+    "finalUrl": "https://cookbook.example.org/recipes/maple-oat-bars",
     "isRecipe": true,
     "expectedCandidateCount": 1,
     "candidates": [
@@ -169,9 +169,9 @@
         ],
         "instructionCount": 4,
         "imageUrls": [
-          "https://cookbook.example/img/maple-oat-bars.jpg"
+          "https://cookbook.example.org/img/maple-oat-bars.jpg"
         ],
-        "declaredUrl": "https://cookbook.example/recipes/maple-oat-bars"
+        "declaredUrl": "https://cookbook.example.org/recipes/maple-oat-bars"
       }
     ],
     "expectedDiagnostics": [
@@ -384,7 +384,7 @@
     "id": "page-dev-redirect-headings",
     "split": "dev",
     "file": "dev-redirect-headings.html",
-    "requestedUrl": "https://share.example/r/7Kq2",
+    "requestedUrl": "https://share.example.net/r/7Kq2",
     "finalUrl": "https://www.example.net/kitchen/black-bean-chili/",
     "isRecipe": true,
     "expectedCandidateCount": 1,
