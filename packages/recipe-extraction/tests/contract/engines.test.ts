@@ -21,8 +21,8 @@ const SUGGEST = ENGINES["legacy-table-import-2+suggestion"];
 const show = (s: unknown) => (typeof s === "string" ? JSON.stringify(s.slice(0, 100)) : String(s));
 
 describe("engine registry", () => {
-  it("has exactly the two Phase 1 engines and the faithful one is the default", () => {
-    expect(Object.keys(ENGINES)).toEqual(["legacy-table-import-2", "legacy-table-import-2+suggestion"]);
+  it("has the two Phase 1 engines plus the Phase 2 candidate, and the faithful one is the default", () => {
+    expect(Object.keys(ENGINES)).toEqual(["legacy-table-import-2", "legacy-table-import-2+suggestion", "semantic-v1"]);
     expect(DEFAULT_ENGINE_ID).toBe("legacy-table-import-2");
     expect(getEngine()).toBe(LEGACY);
     expect(getEngine("legacy-table-import-2+suggestion")).toBe(SUGGEST);

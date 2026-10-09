@@ -218,3 +218,7 @@ over unambiguous (`ready`-labelled) lines, with Wilson 95% intervals:
    fixture markup (`@context`, `itemtype`).
 6. Page labels may carry `accept` alternatives for text fields, counted separately from strict matches, as for
    ingredient labels.
+7. (Phase 2, 2026-10-09) `equivalents` may restate the amount in a mass, volume **or count** unit
+   (`1/2 cup (1 stick) butter` → equivalent 1 `stick`); never an imprecise unit. Only `packageSize` is limited to
+   mass/volume (§2.1). The Phase 1 validator had also limited equivalents to mass/volume, which made a dev label
+   unreachable; it now follows this text.

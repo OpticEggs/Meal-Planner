@@ -105,12 +105,15 @@ function unit(u: unknown, path: string, problems: string[], allowed?: readonly D
 
 const AMOUNT_KEYS = ["quantity", "unit"] as const;
 const MASS_OR_VOLUME: readonly Dimension[] = ["mass", "volume"];
+/** CONTRACT §2: an equivalent restates the amount in another unit — mass, volume or a count ("1/2 cup (1 stick)").
+ *  Only packageSize is restricted to mass/volume (§2.1); an imprecise unit is never a restatement. */
+const RESTATEMENT: readonly Dimension[] = ["mass", "volume", "count"];
 
-function statedAmount(v: unknown, path: string, problems: string[]): void {
+function statedAmount(v: unknown, path: string, problems: string[], dims: readonly Dimension[] = MASS_OR_VOLUME): void {
   if (!shape(v, AMOUNT_KEYS, path, problems)) return;
   if (!isObj(v.quantity) || v.quantity.kind !== "exact") problems.push(`${path}.quantity: expected an exact quantity`);
   else exactQuantity(v.quantity, `${path}.quantity`, problems);
-  unit(v.unit, `${path}.unit`, problems, MASS_OR_VOLUME);
+  unit(v.unit, `${path}.unit`, problems, dims);
 }
 
 // --- Ingredient line -----------------------------------------------------------------------------
@@ -142,7 +145,7 @@ export function validateParsedIngredientV1(x: unknown, path = "ingredient"): str
   if (x.packageSize !== null) statedAmount(x.packageSize, `${path}.packageSize`, problems);
 
   if (!Array.isArray(x.equivalents)) problems.push(`${path}.equivalents: expected an array`);
-  else x.equivalents.forEach((e, i) => statedAmount(e, `${path}.equivalents[${i}]`, problems));
+  else x.equivalents.forEach((e, i) => statedAmount(e, `${path}.equivalents[${i}]`, problems, RESTATEMENT));
 
   if (x.form !== null && x.form !== "raw" && x.form !== "cooked") problems.push(`${path}.form: expected "raw", "cooked" or null`);
   if (x.note !== null && !isNonEmptyString(x.note)) problems.push(`${path}.note: expected a non-empty string or null`);

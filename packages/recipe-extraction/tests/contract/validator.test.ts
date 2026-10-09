@@ -66,6 +66,8 @@ describe("validateParsedIngredientV1 accepts valid lines", () => {
     ["needs_review with a range, alternatives and an equivalent", REVIEW],
     ["unsupported", UNSUPPORTED],
     ["ready without an amount that says why", UNSTATED],
+    // CONTRACT §2: an equivalent may restate the amount as a count ("1/2 cup (1 stick) butter").
+    ["an equivalent stated as a count", { ...clone(READY), equivalents: [{ quantity: { kind: "exact", numerator: "1", denominator: "1", display: "1" }, unit: { canonical: "stick", dimension: "count", source: "stick" } }] } as ParsedIngredientV1],
   ])("%s", (_l, x) => expect(validateParsedIngredientV1(x)).toEqual([]));
 });
 
@@ -107,7 +109,7 @@ const ingredientCases: [string, ParsedIngredientV1, Mut, RegExp][] = [
   ["package size as a range", READY, (x) => ((x.packageSize as Record<string, unknown>).quantity = { kind: "range", min: exact("1"), max: exact("2"), display: "1-2" }), /packageSize\.quantity: expected an exact quantity/],
   ["package size missing unit", READY, (x) => (x.packageSize = { quantity: exact("15") }), /packageSize: missing key "unit"/],
   ["equivalents not an array", READY, (x) => (x.equivalents = {}), /equivalents: expected an array/],
-  ["equivalent in an imprecise unit", REVIEW, (x) => (x.equivalents = [{ quantity: exact("1"), unit: unit("pinch", "imprecise") }]), /equivalents\[0\]\.unit: unit must be mass or volume/],
+  ["equivalent in an imprecise unit", REVIEW, (x) => (x.equivalents = [{ quantity: exact("1"), unit: unit("pinch", "imprecise") }]), /equivalents\[0\]\.unit: unit must be mass or volume or count/],
   // other fields
   ["unknown form", READY, (x) => (x.form = "frozen"), /form: expected "raw", "cooked" or null/],
   ["empty note", READY, (x) => (x.note = ""), /note: expected a non-empty string or null/],
