@@ -20,7 +20,10 @@ import * as imports from "@/server/commands/imports";
 import * as sources from "@/server/commands/sources";
 import { applyPlanChangeCommand, createPreviewCommand, setPlateCommand } from "@/server/commands/plan";
 import { saveRecipeVersionCommand } from "@/server/commands/library";
-import { captureHouseholdNeedCommand } from "@/server/commands/groceries";
+import { approvePurchaseLinesCommand, captureHouseholdNeedCommand } from "@/server/commands/groceries";
+import { startPartialHandoff } from "@/server/commands/purchasing";
+import { householdSnapshot } from "@/server/queries/snapshot";
+import { omissionsFor } from "@/domain/groceries/partial-handoff";
 import type { DraftLine } from "@/domain/recipes/import";
 import type { Actor } from "@/server/commands/framework";
 
@@ -63,6 +66,61 @@ describe("import-overhaul corrections (real harness)", () => {
     const rest = Number(before.meal.quantity) - salmon;
     expect(Number(after.meal.quantity)).toBeCloseTo(rest + 2, 6);
     expect(after.packagesNeeded).toBe(Math.ceil(rest + 2 - 1e-9));
+  });
+
+  /** The salad (2 cucumbers for 3 servings) on Friday with `plates` plates; the rest of the week's cucumber is read first. */
+  async function salad(plates: { jon: string; alex: string }) {
+    const env = await fresh();
+    const { fx, jon } = env;
+    const before = await line(fx.weekId, "cucumber");
+    const salmon = Number(before.meal.sources.filter((x: any) => x.cookNight === "2026-10-16").reduce((a: number, x: any) => a + Number(x.quantity), 0));
+    const rest = Number(before.meal.quantity) - salmon;
+    const d = await pasted(jon, "Cucumber salad", 3, "2 each cucumber");
+    const c: any = await imports.confirmImportDraftCommand(jon, op(), { draftId: d.draftId, expectedRevision: d.revision });
+    expect(c.status, JSON.stringify(c)).toBe("accepted");
+    let ev = await onFriday(fx, jon, c.result.versionId);
+    for (const [m, n] of [["jon", plates.jon], ["alex", plates.alex]] as const) {
+      const s: any = await setPlateCommand(jon, op(), { eventId: ev.id, expectedEventRevision: ev.revision, memberId: fx.members[m], night: "2026-10-16", kind: "dinner", componentPortions: { main: n } });
+      expect(s.status, JSON.stringify(s)).toBe("accepted");
+      ev = { ...ev, revision: s.result?.eventRevision ?? (await q<any>("SELECT revision FROM cooking_events WHERE id=$1", [ev.id]))[0].revision };
+    }
+    return { ...env, rest };
+  }
+
+  it("RIO-01b: exactly on a package boundary — the approval, the partial transfer and the retailer request all carry the exact count", async () => {
+    const { fx, jon, rest } = await salad({ jon: "2", alex: "1" }); // 3 plates × ⅔ = exactly 2 cucumbers
+    const l = await line(fx.weekId, "cucumber");
+    const exact = Math.ceil(rest + 2 - 1e-9);
+    expect(l.packagesNeeded).toBe(exact);
+    expect(l.toSend).toBe(exact);
+    const a: any = await approvePurchaseLinesCommand(jon, op(), { weekId: fx.weekId, lines: [{ key: "cucumber", fingerprint: l.fingerprint, packages: l.toSend }] });
+    expect(a.status, JSON.stringify(a)).toBe("accepted");
+    const s: any = await householdSnapshot(jon);
+    const partial = s.groceries.partial;
+    expect(partial.eligible.find((e: any) => e.key === "cucumber")).toMatchObject({ packages: exact });
+    const r: any = await startPartialHandoff(jon, op(), {
+      weekId: fx.weekId, reviewFingerprint: partial.reviewFingerprint, partialFingerprint: partial.partialFingerprint, selectedKeys: ["cucumber"],
+      acknowledgedOmissions: omissionsFor(partial, ["cucumber"]).map((o) => o.key),
+    });
+    expect(r.status, JSON.stringify(r)).toBe("accepted");
+    const [bl] = await q<any>("SELECT packages FROM handoff_batch_lines WHERE ingredient_key='cucumber'");
+    expect(bl.packages).toBe(exact);
+    const [call] = await q<any>("SELECT request_body FROM fake_retailer_calls ORDER BY id DESC LIMIT 1");
+    expect(JSON.stringify(call.request_body)).toContain(`"quantity":${exact}`);
+  });
+
+  it("RIO-01c: a genuine overage still buys another package (four plates need 2⅔ cucumbers)", async () => {
+    const { fx, rest } = await salad({ jon: "2", alex: "2" });
+    const l = await line(fx.weekId, "cucumber");
+    expect(Number(l.meal.quantity)).toBeCloseTo(rest + 8 / 3, 3); // the line shows 3 decimals
+    expect(Number.isInteger(rest)).toBe(true); // the fixture's other cucumbers are whole, so 2 sits on a boundary
+    expect(l.packagesNeeded).toBe(rest + 3); // one more than RIO-01b's exact boundary (rest + 2)
+  });
+
+  it("RIO-01d: one plate below the boundary (two plates, 1⅓ cucumbers) is not rounded up past what it needs", async () => {
+    const { fx, rest } = await salad({ jon: "1", alex: "1" });
+    const l = await line(fx.weekId, "cucumber");
+    expect(l.packagesNeeded).toBe(Math.ceil(rest + 4 / 3));
   });
 
   it("RIO-02: a pepper bought by the piece is an ingredient; table pepper by the spoon is a seasoning", async () => {
