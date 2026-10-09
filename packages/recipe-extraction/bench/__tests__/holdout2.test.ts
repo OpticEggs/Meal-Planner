@@ -183,10 +183,16 @@ describe("FREEZE-v2", () => {
     cleanup = c.cleanup;
     return c.dir;
   };
+  /** Manifest of a fixtures copy without any FREEZE-v2.json entry (works before and after the real freeze). */
+  const manifestWithoutFreezeV2 = (dir: string) => {
+    const m = JSON.parse(readFileSync(path.join(dir, "MANIFEST.json"), "utf8"));
+    m.files = m.files.filter((f: { path: string }) => f.path !== FREEZE_V2_FILE);
+    return m;
+  };
   const freeze = (dir: string, date = "2026-10-10") => {
     const rec = computeFreezeV2(dir, date);
     writeFileSync(path.join(dir, FREEZE_V2_FILE), JSON.stringify(rec, null, 2) + "\n");
-    const m = JSON.parse(readFileSync(path.join(dir, "MANIFEST.json"), "utf8"));
+    const m = manifestWithoutFreezeV2(dir);
     m.files.push({ path: FREEZE_V2_FILE, kind: "freeze_record", provenance: "test", rights: m.files[0].rights, created: date, author: "test", reviewer: "test" });
     writeFileSync(path.join(dir, "MANIFEST.json"), JSON.stringify(m, null, 2) + "\n");
     return rec;
@@ -235,6 +241,7 @@ describe("FREEZE-v2", () => {
   it("the manifest must list holdout-v2 and FREEZE-v2.json; split holdout2 is a valid manifest split", () => {
     const dir = copy();
     writeFileSync(path.join(dir, FREEZE_V2_FILE), JSON.stringify(computeFreezeV2(dir, "2026-10-10")));
+    writeFileSync(path.join(dir, "MANIFEST.json"), JSON.stringify(manifestWithoutFreezeV2(dir)));
     expect(checkInvariants(dir).problems.join("\n")).toMatch(/FREEZE-v2\.json: not listed in MANIFEST\.json/);
     const m = JSON.parse(readFileSync(path.join(dir, "MANIFEST.json"), "utf8"));
     const entry = m.files.find((f: { path: string }) => f.path === "ingredients/holdout-v2.jsonl");
