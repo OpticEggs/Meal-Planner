@@ -2,7 +2,8 @@
  * Public API of @table/recipe-extraction (contract recipe-extraction/v1). Pure: no network, no
  * database, no environment, no logging. See CONTRACT-v1.md.
  *
- * Phase 1: the only engines are the frozen Table import 2 parsers (cb7b56e) translated into v1.
+ * Engines: the frozen Table import 2 parsers (cb7b56e) translated into v1 (Phase 1; the default), and
+ * the Phase 2 candidate `semantic-v1` (by id; not the default).
  */
 import { REASONS, type ParsedIngredientV1 } from "./contract";
 import { getEngine } from "./ingredient/engines";
@@ -19,6 +20,7 @@ export { dimensionOf, isUnitCode, tryUnitV1, UNIT_CODES, unitV1 } from "./units"
 export { isHttpUrl, validateParsedIngredientV1, validateRecipeExtractionV1 } from "./validate";
 export { DEFAULT_ENGINE_ID, ENGINES, getEngine } from "./ingredient/engines";
 export { LEGACY_ENGINE_ID, LEGACY_SUGGESTION_ENGINE_ID } from "./ingredient/legacy";
+export { SEMANTIC_ENGINE_ID } from "./ingredient/semantic/engine";
 export { extractRecipePage, PAGE_ENGINE_ID } from "./page/extract";
 
 /** Reads one ingredient line with the chosen engine (default: DEFAULT_ENGINE_ID). Throws only for an unknown engine id. */

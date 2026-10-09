@@ -77,3 +77,14 @@ describe("hostile lines", () => {
     expect(ms).toBeLessThan(20_000); // generous for slow CI; typical ≈ 0.1 ms per line
   });
 });
+
+describe("public API", () => {
+  it("exports the engine id and registers the engine by it (the default engine is unchanged)", async () => {
+    const api = await import("../../src/index");
+    expect(api.SEMANTIC_ENGINE_ID).toBe("semantic-v1");
+    expect(api.ENGINES["semantic-v1"]).toBe(semanticEngine);
+    expect(api.getEngine("semantic-v1").description).toBe("Phase 2 semantic ingredient reader (contract v1)");
+    expect(api.DEFAULT_ENGINE_ID).toBe("legacy-table-import-2");
+    expect(api.parseIngredientV1("1/3 cup pesto", { engine: "semantic-v1" })).toEqual(semanticEngine.parse("1/3 cup pesto"));
+  });
+});
