@@ -1,0 +1,12 @@
+status 40 /40
+name 40 /40
+quantity 40 /40
+unit 40 /40
+packageSize 40 /40
+alternatives 40 /40
+equivalents 40 /40
+form 40 /40
+note 40 /40
+optional 40 /40
+approximate 40 /40
+amountUnstated 40 /40

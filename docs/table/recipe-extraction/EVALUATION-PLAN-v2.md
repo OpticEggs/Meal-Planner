@@ -113,4 +113,9 @@ publisher content.
 
 ## 10. Change log
 
-_No changes._
+All entries below were made **before any Phase 2 candidate was scored on holdout-v2**; none changes a threshold or the acceptance basis.
+
+1. **Scorer readings adopted** (the evaluation worker's `bench/outcomes.ts` `INTERPRETATION`, reported verbatim in every outcomes section): an engine error or a status outside the contract is a separate class **CE** (stays in every denominator, never C1; A6 requires CE = 0); C3/C5 sub-classes are decided in the order b, c, a, plus **x** (no contradiction, food not named, an amount or unit read — reported separately, still counted in C3/C5); a fabricated amount on a ready label whose unit is null on both sides is high severity; S5 also checks a case's accepted alternatives; S7 compares §9-normalized word sets and never fires on a null engine name; A2 counts a field as accurate whatever the engine status.
+2. **Holdout-v2 is opt-in on the CLI**: `--split all` keeps its Phase 1 meaning (dev + holdout-v1); holdout-v2 is scored only with `--split holdout2` or `--split every`, so a routine run can never expose it.
+3. **Pre-registered sensitivity figures (informational, not the acceptance basis)**, decided at label adjudication from the independent label check: (a) A1–A5 recomputed without the pre-registered debatable cases — `ing-h2-0087` (`3 (5.3 oz) cups vanilla Greek yogurt`, labelled count unit `container` with a 5.3 oz package; an engine reading `cup` as volume would be scored cross-dimension); (b) needs_review-label figures also without the bare no-amount lines (29 of 69 needs_review labels; 17 share one construction), which weight review metrics with one repeated decision.
+4. **Label check record**: an independent checker, blind to every parser, labelled a fixed sample of 40 holdout-v2 cases before seeing the labels — 40/40 agreement on every field — and reviewed all 359: no definite errors; 3 accept-list corrections adjudicated before the freeze (logged in `fixtures/LABEL-CHANGES.md`). Limitation: the labeller and the checker are likely the same model family, so agreement may overstate independence.
