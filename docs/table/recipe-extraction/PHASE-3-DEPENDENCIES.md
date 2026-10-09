@@ -16,6 +16,12 @@ _2026-10-09, coordinator, read-only. Supersedes the "replace Table's parser" pre
 
 ## 2. Remaining Phase 3 questions (to decide before any adapter code)
 
+**Engine readiness first.** Phase 2's candidate `semantic-v1` did **not** meet Gate G2 on the fresh holdout-v2
+(`BENCHMARK-v2.md` §2: C1 93.7 %, 5 high-severity false certainties, S3/S4/S5/S6 non-zero), and the reviewer's
+known defects K1–K4 are open. Option (b) below should not start until a repaired engine meets G2 on a **new** fresh
+holdout (holdout-v2 is now exposed). Option (a), a shadow comparison only, does not need G2 but must not tune the
+engine on Table's test inputs that are holdout-v2 sources.
+
 1. **Replace or feed.** Either (a) Table keeps its own reader and the package is a test oracle / second opinion,
    or (b) `ingredient-line.ts` delegates reading to the package and keeps only Table policy (multiply packages,
    quarts → cups, count words into names, seasonings, review defaults). (b) gives one reader of facts; it needs a

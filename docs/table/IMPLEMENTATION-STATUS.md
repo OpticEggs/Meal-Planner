@@ -1,6 +1,6 @@
 # Table — Implementation status
 
-_Last updated 2026-10-09 (UTC), after the Recipe Extraction Lab Phases 0–1 (package only, branch `claude/quirky-gauss-depmd8`; the app is unchanged by it) merged with the import overhaul and mobile redesign (B28), which followed the bounded pass B10 partial handoff + continuous URL-to-cart journey + phone upgrade rehearsal, which followed the recheck corrections RUC-01/RUC-02 (pilot on Render Free + Neon), which followed the URL-to-cart reprioritization (B25), which followed the multi-source handoff (recipe links, reviewed import, Budget Bytes lane, where to shop, Instacart list link — fixture-only), which followed B21/B22 (database cook-record invariant, stale cooking events) and the free-hosting research, which followed the visual update (B20) and the cook-record idempotency fix
+_Last updated 2026-10-09 (UTC), after the Recipe Extraction Lab Phase 2 (candidate engine `semantic-v1`, registered but not the default — Gate G2 not met; package only, branch `claude/quirky-gauss-depmd8`; the app is unchanged by it), which followed Phases 0–1 merged with the import overhaul and mobile redesign (B28), which followed the bounded pass B10 partial handoff + continuous URL-to-cart journey + phone upgrade rehearsal, which followed the recheck corrections RUC-01/RUC-02 (pilot on Render Free + Neon), which followed the URL-to-cart reprioritization (B25), which followed the multi-source handoff (recipe links, reviewed import, Budget Bytes lane, where to shop, Instacart list link — fixture-only), which followed B21/B22 (database cook-record invariant, stale cooking events) and the free-hosting research, which followed the visual update (B20) and the cook-record idempotency fix
 (B19, delivery review of fb4d771, gate 2), which followed the integration-preparation pass (B9 deployment candidate, B7 nutrition, B5
 Kroger adapter, B8 checklist)._
 
@@ -10,6 +10,7 @@ Kroger adapter, B8 checklist)._
 |---|---|
 | Import overhaul + redesign (B28) | starting `cb7b56e` · `dfb34cc` member photo backend (worker) · `8e6bd6e` parser, review, seasonings, photo policy, design — verified at `8e6bd6e` |
 | Recipe Extraction Lab, Phases 0–1 (package only — **the app is unchanged**; branch `claude/quirky-gauss-depmd8`, not merged to `main`) | `0306af8` contract v1 · `1079db4`, `d928aea` frozen legacy engines, validators, CLI (worker A) · `2b55fda`, `47ebce6` (holdout freeze), `adc1e06` corpus + scorer (worker B) · `3ca998a` integration — package suite and targeted app checks at `3ca998a` (`evidence/2026-10-09-recipe-extraction-lab/verify-3ca998a/`); verify-all not run (no app code changed) |
+| Recipe Extraction Lab, Phase 2 (package only — **the app is unchanged**; same branch, not merged) | `09d574c`, `ee0442f` predeclared evaluation plan · `c106df2`, `363cf6e`, `46a6547` holdout-v2 (blind labels, independent check, freeze; evaluation worker) · `3c19167`…`82ebc0d`, `65912e9`, `56eafe4` engine `semantic-v1` (isolated implementation worker; three independent review rounds) · `16d7995` single holdout-v2 evaluation of `56eafe4` — package suite, deterministic bench, CLI, root typecheck, root vitest 1078/1078 and `next build` at `16d7995` (`evidence/2026-10-09-recipe-extraction-phase2/verify-16d7995/`); Playwright, mutation and verify-all not run (no app code changed) |
 | B10 partial handoff, URL-to-cart journey, Kroger callback same-origin redirect, migration lock | starting `3ac64f6` · `3378e01` migration advisory lock (worker) · `7c79eb6` B10 + journey + callback fix — verified at `7c79eb6` |
 | Recheck corrections RUC-01/RUC-02 + Kroger UI tests | `c9a95b6` — verified at `c9a95b6` |
 | URL to cart (B25) | `184d99f` — one-step import, permitted content, Kroger mapping; verified at `184d99f` |
@@ -72,13 +73,17 @@ browser test (T09) — root-caused to a client race and fixed in `c19bd5a` (D77)
 `verify-4d0e822-FAIL/`. Red-before-green, the local production-mode check and the upgrade check are in
 the same folder (see ACCEPTANCE "Integration preparation").
 
+## Recipe Extraction Lab — Phase 2 (2026-10-09; not wired into the app)
+
+New candidate engine `semantic-v1` in `packages/recipe-extraction` (registered next to the frozen legacy engines; `DEFAULT_ENGINE_ID` stays `legacy-table-import-2`). Reads the pesto line, `1-1/2`, thirds, ranges, nested brackets, alternatives, count units and package sizes with exact rationals. Scored once on a fresh, independently checked 359-line holdout-v2 (frozen `46a6547`): **254/271 clear lines fully correct (93.7 %, 90.2–96.0)**, 6/359 lines wrongly ready (5 high), 13/271 clear lines sent to review, severe errors S3 1 · S4 2 · S5 1 · S6 1; legacy on the same set 73/271 (26.9 %), 21 wrongly ready, 177/271 to review. **Gate G2 not met** (A1–A4 fail; A5–A7 pass), so the default is unchanged. Dev 152/152 and holdout-v1 103/104 are reported but are not fresh evidence (holdout-v1 was exposed in Phase 1). Known open defects K1–K4 from the independent review. Docs: `recipe-extraction/BENCHMARK-v2.md`, `EVALUATION-PLAN-v2.md`, `PHASE-2-PLAN.md`, `PHASE-3-DEPENDENCIES.md`; DECISIONS D122. Users have not received any of this: the app does not import the package.
+
 ## Recipe Extraction Lab — Phases 0–1 (2026-10-09; not wired into the app)
 
 `packages/recipe-extraction`: contract `recipe-extraction/v1` (exact rational quantities, stable reasons), frozen
 parity-proven copy of Table import 2's parsers, fixture-only CLI `recipe-lab`, and an offline benchmark (310 labelled
 ingredient lines with a frozen 128-line holdout, 15 synthetic pages). Baseline = Table import 2 at `cb7b56e` (frozen copy): 35.6% of clear holdout-v1
 lines read fully, 60.6% of clear lines sent to review, 10/310 lines wrongly marked ready, 0 fabricated amounts, 0 oz/fl-oz confusions. The owner's pesto
-line is reproduced (amount inside the name, quantity/unit empty) and **not yet repaired in the package** — Phase 2 (B31); main's import overhaul (8e6bd6e, D112) repaired it separately inside Table. Docs:
+line is reproduced (amount inside the name, quantity/unit empty); the package's Phase 2 engine reads it (above), and main's import overhaul (8e6bd6e, D112) repaired it separately inside Table. Docs:
 `recipe-extraction/SOURCE-AND-CONTRACT-CENSUS.md`, `ADAPTER-IMPACT.md`, `BENCHMARK-v1.md`; DECISIONS D118–D121.
 
 ## URL to cart (B25) — product priority 2026-10-08

@@ -44,9 +44,12 @@ and in Phase 1 **the package's results are the same numbers** — Phase 1 delive
 | Fabricated quantity (amount stated where none exists) | 0/52 | 0/29 | 0/23 |
 | Cross-dimension (e.g. oz vs fl oz) | 0/266 | 0/157 | 0/109 |
 
-95% Wilson intervals in parentheses (all in the report). Reading: today's importer is **safe but unhelpful** —
-it almost never claims a wrong certainty or invents an amount, but it sends 3 of every 5 perfectly clear lines
-to a person, and on those lines the review form is often pre-filled with the amount inside the name.
+95% Wilson intervals in parentheses (all in the report). Reading, as measured rates: Table import 2 marked
+**10/310 lines ready with a wrong reading (3.2 %, 1.8–5.8)** — 1 high, 9 medium (wrong name) — invented no amount
+(0/52, ≤ 6.9 %), made no cross-dimension error (0/266, ≤ 1.4 %), and sent **155/256 clear lines (60.6 %) to a
+person**, where the review form is often pre-filled with the amount inside the name. _(Amended 2026-10-09, Phase 2:
+the original sentence summarised these rates with the word "safe"; the rates are the claim. Phase 2's outcome
+classes re-score the same lines in `BENCHMARK-v2.md`.)_
 
 By category (all 310 lines, core pass): thirds 0/20, nested parentheses 0/9, sourcing remarks 0/13, count units
 0/29, packaged sizes 0/17, compound amounts 0/9, restated amounts 0/11, percentages 0/6, number words 0/14,

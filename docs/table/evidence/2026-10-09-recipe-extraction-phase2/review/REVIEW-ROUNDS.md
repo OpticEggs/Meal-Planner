@@ -31,4 +31,28 @@ or stripped alternatives, a ~100-word food-kind list (`MODIFIER_WORDS`) contradi
 claim, `half and half`, `pound cake`, counts inside names, `1.250 g`, `a 3 lb chicken`, joiners merging digits.
 Probe deltas: S1 2, S2 ≈ 7, S3 ≈ 12, S4 ≈ 34, S5 0, S6 0, S7 0, S8 0; ≈ 20 real ingredients rejected.
 
-## Round 3 — see the final report (fix round on top of `556c28b`, then re-review)
+## Round 3 — candidate `59756ba` (author fix round on top of `556c28b`; ported to the repository as `56eafe4`)
+
+Full report: `ROUND-3-REPORT.md` (verbatim; delivered 22:52Z, before the holdout-v2 run). Probes: `probes/m*.txt`
+(291 new lines), `probes/cmp.py`.
+
+Verdict: **fine to port and score, with four known defect groups expected to fail A3/A4 if the holdout contains
+them.** N1–N8 and SF-c–SF-h fixed and generalising on new probes. Among the round-1 807 probes: 0 silent ready-but-wrong
+lines (round 1: ≈ 69). On 291 new probes: 12 silent ready-but-wrong, 17 S-coded at review status, 24 invented
+alternative sets (review only), 4 C3. Every probe (807 + 454 + 291) parsed twice gave identical, valid JSON; 200 000
+fuzz lines: 0 throws, 0 invalid. Only `src/ingredient/semantic/**` and its tests changed; legacy engines, validator,
+bench and fixtures untouched; default engine unchanged.
+
+Known defects (recorded, **not fixed** — the stopping rule ended author rounds here; none was passed to the author):
+
+| | Shape | Error | Since |
+|---|---|---|---|
+| K1 | unit hyphenated to a fraction word: `a half-cup milk` → 1 `each`, name "half-cup milk" | S2 + S3, ready | `c3c7595` |
+| K2 | package weight with a restatement before the container: `400g (14oz) can chopped tomatoes` → 400 g, "can" in the note | S6 + S3 (+ S1), review | `c3c7595` |
+| K3 | nutrition facts with spelled-out units: `Protein: 20 grams` → ready 20 g | S8, ready | regression vs `556c28b` |
+| K4 | number-word product names without an amount: `Five spice powder` → 5 `each`, "spice powder"; `You will need: 2 baking sheets` → q 2 | S1, review | regression vs `556c28b` |
+
+Should-fix (review lines only): invented alternatives from a one-word option sharing the last option's head (`1 lb ham
+or smoked turkey` → "ham turkey"; 24 probes) and three comma choices downgraded; exact within-system restatement check
+sends `1/3 cup (5 tbsp) butter` to review; `1 pint milk (UK)` ready; `1 m sausage` ready; normalization now removes
+joiners/soft hyphens between letters, beyond CONTRACT §2's wording (recorded in CONTRACT §11 item 2 by the coordinator).

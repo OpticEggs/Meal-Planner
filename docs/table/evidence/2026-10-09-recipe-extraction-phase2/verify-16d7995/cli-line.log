@@ -1,0 +1,101 @@
+{
+  "raw": "1/3 cup pesto (homemade (or store-bought))",
+  "normalized": "1/3 cup pesto (homemade (or store-bought))",
+  "status": "ready",
+  "name": "pesto",
+  "quantity": {
+    "kind": "exact",
+    "numerator": "1",
+    "denominator": "3",
+    "display": "1/3"
+  },
+  "unit": {
+    "canonical": "cup",
+    "dimension": "volume",
+    "source": "cup"
+  },
+  "packageSize": null,
+  "equivalents": [],
+  "form": null,
+  "note": "homemade or store-bought",
+  "alternatives": [],
+  "optional": false,
+  "approximate": false,
+  "amountUnstated": null,
+  "reasons": [],
+  "evidence": {
+    "spans": {
+      "quantity": [
+        0,
+        3
+      ],
+      "unit": [
+        4,
+        7
+      ],
+      "name": [
+        8,
+        13
+      ]
+    }
+  }
+}
+{
+  "raw": "1-1/2 cups milk",
+  "normalized": "1-1/2 cups milk",
+  "status": "ready",
+  "name": "milk",
+  "quantity": {
+    "kind": "exact",
+    "numerator": "3",
+    "denominator": "2",
+    "display": "1 1/2"
+  },
+  "unit": {
+    "canonical": "cup",
+    "dimension": "volume",
+    "source": "cups"
+  },
+  "packageSize": null,
+  "equivalents": [],
+  "form": null,
+  "note": null,
+  "alternatives": [],
+  "optional": false,
+  "approximate": false,
+  "amountUnstated": null,
+  "reasons": [],
+  "evidence": {
+    "spans": {
+      "quantity": [
+        0,
+        5
+      ],
+      "unit": [
+        6,
+        10
+      ],
+      "name": [
+        11,
+        15
+      ]
+    }
+  }
+}
+[
+  {
+    "id": "legacy-table-import-2",
+    "default": true,
+    "description": "Table import 2's ingredient-line parser (frozen copy at cb7b56e) translated into contract v1. Faithful, including its defects; the only deviation is the input_truncated reason when a line is cut at 500 characters."
+  },
+  {
+    "id": "legacy-table-import-2+suggestion",
+    "default": false,
+    "description": "Benchmark only: legacy-table-import-2 with the legacy one-click suggestion filled in (rounded thirds stay 0.3333). Status stays needs_review with legacy_suggestion_applied."
+  },
+  {
+    "id": "semantic-v1",
+    "default": false,
+    "description": "Phase 2 semantic ingredient reader (contract v1)"
+  }
+]

@@ -52,6 +52,9 @@ The author's patches are applied to the branch by the coordinator (`git am`), so
 | 2026-10-09 Phase 1 | coordinator | read every holdout-v1 label; published aggregate holdout-v1 baseline results |
 | Phase 2 | implementation worker | dev only (cases, labels, per-case diagnostics) |
 | Phase 2 | evaluation worker, label checker | holdout-v2 (they write/check it) |
+| Phase 2, from ~20:08 | implementation worker (possible) | **isolation flaw:** the worker wrote probe files into the shared session scratchpad, which held holdout-v1 exports, Phase 1 reports and the evaluation worker's holdout-v2 draft. It reports reading only its own files; audit `evidence/…/isolation-audit/` (12 generic exact matches with holdout-v2, no distinctive construction). From round 2 it used a private scratch directory |
+| Phase 2 | independent reviewer | the author's isolated copy only (no holdout); rounds 1–2 findings went to the author, round 3 findings (K1–K4) did not |
+| 2026-10-09 22:53Z | coordinator | the single holdout-v2 run of candidate `56eafe4`; case-level results published in `evidence/…/evaluation-56eafe4/` and `BENCHMARK-v2.md`. **From here holdout-v2 is exposed** for any later candidate; nothing was repaired after the run |
 
 ## 5. Phase 3 dependencies, restated after `main`'s overhaul
 

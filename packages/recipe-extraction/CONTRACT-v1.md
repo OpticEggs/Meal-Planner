@@ -225,3 +225,9 @@ over unambiguous (`ready`-labelled) lines, with Wilson 95% intervals:
    (`1/2 cup (1 stick) butter` → equivalent 1 `stick`); never an imprecise unit. Only `packageSize` is limited to
    mass/volume (§2.1). The Phase 1 validator had also limited equivalents to mass/volume, which made a dev label
    unreachable; it now follows this text. (Unlike §10, this changed what the validator accepts.)
+2. `normalized` (§2) — invisible joiners: an engine may **remove** a soft hyphen (U+00AD), zero-width
+   non-joiner/joiner (U+200C/D), word joiner (U+2060) or byte-order mark (U+FEFF) when it sits **between two
+   letters** (`jalape\u200dño` → `jalapeño`); anywhere else it becomes a space like other invisible marks, so
+   `1\u00ad2 cups` is never read as 12. `semantic-v1` does this; the legacy engines keep Table import 2's
+   behaviour. Recorded after the Phase 2 evaluation at the independent reviewer's request (round 3); it changes no
+   label, validator rule or score (the validator does not recompute `normalized`).
