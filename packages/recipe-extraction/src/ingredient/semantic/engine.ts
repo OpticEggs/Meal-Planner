@@ -14,7 +14,7 @@
 import { REASONS, type AmountUnstated, type IngredientEngine, type ParsedIngredientV1, type ReasonCode, type SpanField, type UnitV1 } from "../../contract";
 import { fromExactQuantity, toExactQuantity } from "../../rational";
 import { validateParsedIngredientV1 } from "../../validate";
-import { groupAmount, readAmountPhrase, readStatedAmount, placeSecondary, sumInSmallest, type AmountSlots } from "./amount";
+import { amountStartsAt, groupAmount, readAmountPhrase, readStatedAmount, placeSecondary, sumInSmallest, type AmountSlots } from "./amount";
 import { nonIngredientReason, numericLead } from "./classify";
 import { adjacent, isGroup, isNumberish, isSym, isWord, lex, type Tok } from "./lexer";
 import { BULLETS, CARDINALS, FRACTION_WORDS, FUNCTION_WORDS, MEASURE_ADJECTIVES, PREP_ADVERBS, REMARK_WORDS, SIZE_WORDS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
@@ -32,22 +32,6 @@ export const SEMANTIC_ENGINE_ID = "semantic-v1";
 const push = (reasons: ReasonCode[], code: ReasonCode) => {
   if (!reasons.includes(code)) reasons.push(code);
 };
-
-/** "a"/"an" counts as an amount only before a unit, a size word, "dozen" or a fraction word ("a pinch", "a large", "a dozen"). */
-function strongAmountStart(text: string, toks: readonly Tok[], i: number): boolean {
-  const t = toks[i];
-  if (isNumberish(t)) return true;
-  if (!isWord(t)) return false;
-  if (Object.prototype.hasOwnProperty.call(CARDINALS, t.lower) || t.lower === "half") return true;
-  if (t.lower === "a" || t.lower === "an") {
-    let k = i + 1;
-    while (isWord(toks[k]) && (SIZE_WORDS.has((toks[k] as { lower: string }).lower) || MEASURE_ADJECTIVES.has((toks[k] as { lower: string }).lower))) k++;
-    const w = toks[k];
-    if (isNumberish(w) || readUnit(text, toks, k) !== null) return true;
-    return isWord(w) && (w.lower === "dozen" || Object.prototype.hasOwnProperty.call(FRACTION_WORDS, w.lower));
-  }
-  return false;
-}
 
 /** A plain amount reading for a line with no amount at all. */
 const noAmount = (): AmountReading => ({
@@ -195,7 +179,7 @@ function read(input: unknown): Reading {
       if (phraseOnly(post)) {
         head = pre; // "Salt: to taste" — the label is the food
         tails = [post, ...tails];
-      } else if (isSym(head[sep], ":") || strongAmountStart(text, post, 0)) {
+      } else if (isSym(head[sep], ":") || amountStartsAt(text, post, 0)) {
         labelBefore = pre;
         head = post;
       }
@@ -233,7 +217,7 @@ function read(input: unknown): Reading {
       if (found && found.sizeNote.length > 0) fx.notes.push({ s: found.sizeNote[0].s, text: textOf(text, found.sizeNote) });
       region = [...head.slice(0, gi), ...head.slice(gi + 1)];
     }
-    if (!amount && tails.length > 0 && strongAmountStart(text, tails[0], 0)) {
+    if (!amount && tails.length > 0 && amountStartsAt(text, tails[0], 0)) {
       const a = readAmountPhrase(text, tails[0], 0);
       if (a) {
         amount = a;
@@ -260,7 +244,7 @@ function read(input: unknown): Reading {
       }
     }
     if (!amount) {
-      const of = head.findIndex((t, k) => k > 0 && k <= 3 && isWord(t, "of") && readAmountPhrase(text, head, k + 1) !== null);
+      const of = head.findIndex((t, k) => k > 0 && k <= 3 && isWord(t, "of", "from") && readAmountPhrase(text, head, k + 1) !== null);
       if (of > 0 && head.slice(0, of).every((t) => t.kind === "word")) {
         const a = readAmountPhrase(text, head, of + 1);
         if (a && a.next < head.length) {

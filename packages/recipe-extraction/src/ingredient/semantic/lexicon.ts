@@ -102,13 +102,12 @@ export const CONTAINER_UNITS: ReadonlySet<UnitCode> = new Set<UnitCode>([
 
 /**
  * Count nouns that are read as the unit when written AFTER the food ("3 garlic cloves", "4 bacon
- * slices", "2 celery stalks"): portions of a food that is bought as itself. Product-form nouns (sticks,
- * leaves, pods, cubes, sheets, pieces) and packaging are NOT read this way: "4 cinnamon sticks" keeps
- * its name, because "cinnamon" alone could be a different product.
+ * slices", "2 celery stalks"): portions of a food that is bought as itself. Nouns that often ARE the
+ * product after another noun (ribs, strips, wedges, heads, sticks, leaves, pods, cubes, sheets,
+ * pieces) and packaging are NOT read this way: "4 cinnamon sticks" and "1 rack baby back ribs" keep
+ * their names, because the first word alone could be a different product.
  */
-export const TRAILING_COUNT_UNITS: ReadonlySet<UnitCode> = new Set<UnitCode>([
-  "clove", "stalk", "rib", "sprig", "slice", "strip", "fillet", "link", "ear", "head", "bulb", "wedge",
-]);
+export const TRAILING_COUNT_UNITS: ReadonlySet<UnitCode> = new Set<UnitCode>(["clove", "stalk", "sprig", "slice", "fillet", "link", "ear", "bulb"]);
 
 // --- Numbers -------------------------------------------------------------------------------------
 
@@ -154,6 +153,9 @@ export const SIZE_WORDS = setOf(
  * note only when a unit follows them.
  */
 export const MEASURE_ADJECTIVES = setOf("heaping heaped scant level rounded generous good full thick thin small medium large big");
+
+/** Length words: a size, never a unit of the registry ("2 cm piece ginger"). */
+export const LENGTH_WORDS = setOf("cm cms centimeter centimeters centimetre centimetres mm millimeter millimeters millimetre millimetres");
 
 /** cooked / raw words (CONTRACT §7.6: → `form`). */
 export const FORM_WORDS: Readonly<Record<string, "cooked" | "raw">> = Object.assign(Object.create(null), {

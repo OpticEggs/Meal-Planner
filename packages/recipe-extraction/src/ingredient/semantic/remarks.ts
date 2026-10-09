@@ -15,7 +15,7 @@
 import type { AmountUnstated } from "../../contract";
 import { allWords, hasNumber, isGroup, isSym, isWord, wordsAt, type GroupTok, type Tok } from "./lexer";
 import { FORM_WORDS, FUNCTION_WORDS, IF_DESIRED, REMARK_WORDS, SIZE_WORDS, UNSTATED_PHRASES } from "./lexicon";
-import { isPriceGroup, readAmountPhrase } from "./amount";
+import { amountStartsAt, isPriceGroup, readAmountPhrase } from "./amount";
 import { emptyEffects, mergeEffects, type Effects } from "./types";
 
 // --- Text -------------------------------------------------------------------------------------------
@@ -191,9 +191,10 @@ export function classifyPiece(text: string, piece: readonly Tok[], fx: Effects):
       const read = opts.map((o) => {
         let k = 0;
         while (isWord(o[k]) && SUBSTITUTE_LEAD.has((o[k] as { lower: string }).lower)) k++;
-        const amt = readAmountPhrase(text, o, k);
+        const amt = amountStartsAt(text, o, k) ? readAmountPhrase(text, o, k) : null;
         let rest = amt ? o.slice(amt.next) : o.slice(k);
         if (isWord(rest[0], "of")) rest = rest.slice(1);
+        if (isWord(rest[0], "a", "an", "the") && rest.length > 1) rest = rest.slice(1);
         return { o, amt, rest };
       });
       // "(or 1/2 large)", "(or 2 cups)": another amount of the same food — reported, not a choice of foods

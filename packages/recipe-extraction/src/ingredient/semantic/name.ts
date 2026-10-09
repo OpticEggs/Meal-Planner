@@ -13,7 +13,7 @@
  */
 import { adjacent, isGroup, isNumberish, isSym, isWord, type Tok } from "./lexer";
 import { FORM_WORDS, PREP_ADVERBS, SIZE_WORDS, TRAILING_COUNT_UNITS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
-import { groupAmounts, isPriceGroup, placeSecondary, readAmountPhrase, readStatedAmount, type AmountSlots } from "./amount";
+import { amountStartsAt, groupAmounts, isPriceGroup, placeSecondary, readAmountPhrase, readStatedAmount, type AmountSlots } from "./amount";
 import { classifyGroup, classifyPiece, dropBarePrices, splitOr, textOf, trimEdges, unstatedAt } from "./remarks";
 import type { Effects } from "./types";
 import { foodHead, isRemarkOption } from "./alternatives";
@@ -86,7 +86,11 @@ function stopAtNumber(text: string, toks: readonly Tok[], fx: Effects): Tok[] {
       kept.push(t);
       continue;
     }
-    const glued = adjacent(toks[i - 1], t) && isWord(toks[i - 1]);
+    const glued = adjacent(toks[i - 1], t) && isWord(toks[i - 1]); // "V8"
+    if (isSym(toks[i - 1], '"', "'", "“", "‘") && adjacent(toks[i - 1], t)) {
+      kept.push(t); // a quoted grade ('"00" flour')
+      continue;
+    }
     const percent = isSym(toks[i + 1], "%") && adjacent(t, toks[i + 1]);
     if (glued || percent) {
       kept.push(t);
@@ -141,7 +145,7 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
     if (isSym(toks[a], ":")) a++;
   }
   for (let guard = 0; guard < 8 && a < toks.length; guard++) {
-    if (isWord(toks[a], "or", "to") && (isNumberish(toks[a + 1]) || isWord(toks[a + 1], "a", "an"))) {
+    if (isWord(toks[a], "or", "to") && amountStartsAt(text, toks, a + 1)) {
       const alt = readAmountPhrase(text, toks, a + 1);
       if (alt && alt.next < toks.length) {
         fx.unassigned++;
@@ -203,14 +207,15 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
   if (parts.length >= 2) {
     const cleaned = parts.map((o) => {
       // an option with its own amount: the amount is a second amount nobody can place
-      if (isNumberish(o[0]) || isWord(o[0], "a", "an")) {
+      if (amountStartsAt(text, o, 0)) {
         const amt = readAmountPhrase(text, o, 0);
         if (amt && amt.next < o.length) {
           fx.unassigned++;
           return isWord(o[amt.next], "of") ? o.slice(amt.next + 1) : o.slice(amt.next);
         }
       }
-      return stopAtNumber(text, o, fx);
+      // an article opening an option is not part of the food ("a lemon or a lime")
+      return stopAtNumber(text, isWord(o[0], "a", "an", "the") && o.length > 1 ? o.slice(1) : o, fx);
     });
     let texts = distribute(text, cleaned.filter((o) => o.length > 0)).filter((x) => x.length > 0);
     // "fresh thyme or 1 tsp dried": a remark-only option names the first option's food in another form

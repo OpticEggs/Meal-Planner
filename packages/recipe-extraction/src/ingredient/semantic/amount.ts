@@ -16,7 +16,7 @@
 import { UNIT_REGISTRY, type EquivalentV1, type ExactQuantity, type QuantityV1, type ReasonCode, type UnitV1 } from "../../contract";
 import { add, cmp, div, fromDecimalString, mul, toExactQuantity, type Rational } from "../../rational";
 import { adjacent, flatText, isGroup, isSym, isWord, type GroupTok, type Tok } from "./lexer";
-import { APPROX_SYMBOLS, APPROX_WORDS, CARDINALS, CONTAINER_UNITS, MEASURE_ADJECTIVES, RANGE_DASHES, SIZE_WORDS } from "./lexicon";
+import { APPROX_SYMBOLS, APPROX_WORDS, CARDINALS, CONTAINER_UNITS, FRACTION_WORDS, LENGTH_WORDS, MEASURE_ADJECTIVES, RANGE_DASHES, SIZE_WORDS } from "./lexicon";
 import { readNumber, type NumberRead } from "./quantity";
 import { emptyEffects, type AmountReading, type Effects } from "./types";
 import { readUnit, type UnitRead } from "./unit";
@@ -202,6 +202,25 @@ export function placeSecondary(text: string, slots: AmountSlots, sec: Secondary)
   if (!fx.reasons.includes("equivalent_quantity_stated")) fx.reasons.push("equivalent_quantity_stated");
 }
 
+/**
+ * True when an amount clearly starts at `i`: a numeral, a vulgar fraction, a cardinal word or "half" —
+ * or "a"/"an" before a unit, a size word, "dozen" or a fraction word ("a pinch", "a large", "a dozen").
+ * Used where an article is more likely just an article ("or a blend", "olive oil, a drizzle").
+ */
+export function amountStartsAt(text: string, toks: readonly Tok[], i: number): boolean {
+  const t = toks[i];
+  if (t === undefined) return false;
+  if (t.kind === "num" || t.kind === "vulgar") return true;
+  if (!isWord(t)) return false;
+  if (Object.prototype.hasOwnProperty.call(CARDINALS, t.lower) || t.lower === "half") return true;
+  if (t.lower !== "a" && t.lower !== "an") return false;
+  let k = i + 1;
+  while (isWord(toks[k]) && (SIZE_WORDS.has((toks[k] as { lower: string }).lower) || MEASURE_ADJECTIVES.has((toks[k] as { lower: string }).lower))) k++;
+  const w = toks[k];
+  if (w?.kind === "num" || w?.kind === "vulgar" || readUnit(text, toks, k) !== null) return true;
+  return isWord(w) && (w.lower === "dozen" || Object.prototype.hasOwnProperty.call(FRACTION_WORDS, w.lower));
+}
+
 // --- The amount phrase ----------------------------------------------------------------------------
 
 const isRangeSep = (t: Tok | undefined) => (isSym(t) && RANGE_DASHES.has(t.text)) || isWord(t, "to", "or");
@@ -307,9 +326,24 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   // "16-ounce", "15-oz": a unit joined to the number by a hyphen.
   if (hyphen(toks[k]) && adjacent(toks[k - 1], toks[k]) && adjacent(toks[k], toks[k + 1]) && readUnit(text, toks, k + 1)) k++;
 
-  // Size and measure adjectives, then the unit.
+  // "2 cm piece ginger": a length is a size, not an amount of anything bought.
+  const lengthWord = toks[k];
+  if (n1.ok && max === null && between.length === 0 && isWord(lengthWord) && LENGTH_WORDS.has(lengthWord.lower)) {
+    let c = k + 1;
+    if (isSym(toks[c], ".") && adjacent(toks[c - 1], toks[c])) c++;
+    fx.notes.push({ s: n1.s, text: text.slice(n1.s, toks[c - 1].e) });
+    fx.reasons.push("quantity_missing");
+    const u = readUnit(text, toks, c);
+    const counted = u !== null && u.unit.dimension === "count";
+    return {
+      quantity: null, quantitySpan: null, amountWritten: true, unit: counted ? u.unit : null, unitSpan: counted ? [u.s, u.e] : null, packageSize: null,
+      packageSpan: null, equivalents: [], approximate, fromWord: false, effects: fx, next: counted ? u.next : c,
+    };
+  }
+
+  // Size and measure adjectives (also "thumb-sized"), then the unit.
   let a = k;
-  while (isWord(toks[a]) && (MEASURE_ADJECTIVES.has((toks[a] as { lower: string }).lower) || SIZE_WORDS.has((toks[a] as { lower: string }).lower) || isWord(toks[a], "extra"))) a++;
+  while (isWord(toks[a]) && (MEASURE_ADJECTIVES.has((toks[a] as { lower: string }).lower) || SIZE_WORDS.has((toks[a] as { lower: string }).lower) || isWord(toks[a], "extra") || /-sized?$/.test((toks[a] as { lower: string }).lower))) a++;
   let unitRead = readUnit(text, toks, a);
   if (unitRead && a > k) {
     fx.notes.push({ s: toks[k].s, text: text.slice(toks[k].s, toks[a - 1].e) });
