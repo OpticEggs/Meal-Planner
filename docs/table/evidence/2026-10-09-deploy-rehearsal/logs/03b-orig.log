@@ -1,0 +1,25 @@
+[03:23:35.421] variant=orig migrate.ts sha=8e43718c99cc
+[03:23:36.657] holder (psql pid 14948) has the table lock; starting A and B
+[03:23:40.206] while held: lock waits = relation:AccessExclusiveLock(recipe_import_drafts), relation:AccessExclusiveLock(recipe_import_drafts)
+[03:23:40.226] while held: A listening? no  B listening? no
+ pg_sleep 
+----------
+ 
+(1 row)
+
+[03:23:42.204] holder released the lock
+[03:23:43.070] A(pid 14952)=listening  B(pid 14953)=exited:1
+    A | applied: 012_recipe_content.sql
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 195ms
+    B | /tmp/table-w-deploy-run/src/server/db/migrate.ts:34
+    B |         throw new Error(`migration ${f} failed: ${(e as Error).message}`);
+    B |               ^
+    B | Error: migration 012_recipe_content.sql failed: relation "recipe_images" already exists
+    B |     at migrate (/tmp/table-w-deploy-run/src/server/db/migrate.ts:34:15)
+    B |     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    B |     at async <anonymous> (/tmp/table-w-deploy-run/scripts/migrate.ts:4:17)
+    B | Node.js v22.22.0
+[03:23:43.107] health A: {"ok":true,"problems":[]} HTTP 200   health B:  HTTP 000
+[03:23:43.200] schema_migrations rows=12 012 rows=1
+[03:23:43.232] ports free: yes

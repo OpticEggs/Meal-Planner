@@ -1,0 +1,44 @@
+▲ Next.js 16.3.8 (Turbopack)
+✓ Running next.config.ts took 32ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 389ms
+  Running TypeScript ...
+  Finished TypeScript in 3.7s ...
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/3) ...
+✓ Generating static pages using 3 workers (3/3) in 176ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ƒ /api/auth/[...all]
+├ ƒ /api/commands/[name]
+├ ƒ /api/events
+├ ƒ /api/export
+├ ƒ /api/health
+├ ƒ /api/imports
+├ ƒ /api/instacart/retailers
+├ ƒ /api/kroger/callback
+├ ƒ /api/kroger/choose
+├ ƒ /api/kroger/connect
+├ ƒ /api/kroger/products
+├ ƒ /api/kroger/status
+├ ƒ /api/library
+├ ƒ /api/nutrition/food/[fdcId]
+├ ƒ /api/nutrition/search
+├ ƒ /api/recipe-images/[id]
+├ ƒ /api/snapshot
+├ ƒ /cook/[night]
+├ ƒ /explore
+├ ƒ /groceries
+├ ƒ /household
+├ ○ /login
+├ ƒ /recipes
+└ ƒ /recipes/[id]
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

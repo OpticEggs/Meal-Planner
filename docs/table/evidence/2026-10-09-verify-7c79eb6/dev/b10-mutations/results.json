@@ -1,0 +1,40 @@
+{
+  "when": "2026-10-09T03:18:28.808Z",
+  "head": "3ac64f65e34692a011ab5bcd1fdf883792a91854",
+  "restored": true,
+  "pass": true,
+  "results": [
+    {
+      "name": "B10_omissions_not_checked",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: B10-03: a changed omitted line, a changed selected line, a wrong acknowledgement or an unready pick → refused, zero retailer calls"
+    },
+    {
+      "name": "B10_unready_line_selectable",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: B10-03: a changed omitted line, a changed selected line, a wrong acknowledgement or an unready pick → refused, zero retailer calls"
+    },
+    {
+      "name": "B10_all_approvals_consumed",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: B10-02: the exact selected subset is frozen and sent; only its approvals are consumed; the remainder stays outstanding"
+    },
+    {
+      "name": "B10_firm_budget_relaxed",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: B10-04: another way of shopping, a firm budget that can't be confirmed, or a store that isn't ready → no partial send"
+    }
+  ]
+}

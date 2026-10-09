@@ -1,0 +1,14 @@
+
+> table@0.1.0 db:migrate
+> tsx scripts/migrate.ts
+
+/tmp/table-w-deploy-run/src/server/db/migrate.ts:34
+        throw new Error(`migration ${f} failed: ${(e as Error).message}`);
+              ^
+
+Error: migration 012_recipe_content.sql failed: relation "recipe_images" already exists
+    at migrate (/tmp/table-w-deploy-run/src/server/db/migrate.ts:34:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async <anonymous> (/tmp/table-w-deploy-run/scripts/migrate.ts:4:17)
+
+Node.js v22.22.0

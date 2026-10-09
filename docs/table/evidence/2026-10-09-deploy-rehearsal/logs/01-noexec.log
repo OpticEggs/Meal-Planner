@@ -1,0 +1,52 @@
+[03:24:43.521] variant=noexec  code=3ac64f6 migrate.ts sha=2203767c79a0
+[03:24:43.523] Start Command: bash -c 'npm run db:migrate && node_modules/.bin/next start -H 0.0.0.0'
+[03:24:47.465] before: migrations=11 last=011_shopping_destinations.sql
+[03:24:47.467] --- first start (upgrade) ---
+[03:24:48.760] result=listening after 1.285178196 s
+[03:24:48.762] process tree:
+  PID  PPID  PGID   SID STAT COMMAND
+16477 16322 16477 16477 Ssl  next-server (v16.3.8)
+[03:24:48.771] server output:
+    | 
+    | > table@0.1.0 db:migrate
+    | > tsx scripts/migrate.ts
+    | 
+    | applied: 012_recipe_content.sql
+    | ▲ Next.js 16.3.8
+    | - Local:         http://localhost:3602
+    | - Network:       http://0.0.0.0:3602
+    | ✓ Ready in 177ms
+    | ✓ Running next.config.ts took 36ms
+[03:24:48.796] health: {"ok":true,"problems":[]} HTTP 200
+[03:24:48.887] after: migrations=12 012 rows=1
+[03:24:48.975] 012 objects: recipe_images=t draft.content_policy={"basis": null, "photos": false, "instructions": false}
+[03:24:51.846] 011-column digests differ (expected: only schema_migrations, which gained the 012 row):
+54c54
+< schema_migrations=582d72c792c9c1516097b2f7753f2cf9
+---
+> schema_migrations=fae7b28645cbd365d70bfd07277a58c6
+[03:24:52.134] sign-in member 1 (existing 011 credential): HTTP 200  cookie=__Secure-better-auth.session_token
+[03:24:52.281] sign-in member 2: HTTP 200
+[03:24:52.433] wrong password: HTTP 401
+[03:24:52.535] library (member 1): HTTP 200 recipes= 9 bookmarks= 1 keys= ['bookmarks', 'ingredients', 'interests', 'me', 'members', 'recipes']
+[03:24:52.587] snapshot (member 2): }} HTTP 200
+[03:24:52.615] stopped; port free: yes
+[03:24:52.618] --- restart (b) ---
+[03:24:54.187] result=listening after 1.291293913 s
+[03:24:54.189] server output:
+    | 
+    | > table@0.1.0 db:migrate
+    | > tsx scripts/migrate.ts
+    | 
+    | schema up to date
+    | ▲ Next.js 16.3.8
+    | - Local:         http://localhost:3602
+    | - Network:       http://0.0.0.0:3602
+    | ✓ Ready in 179ms
+    | ✓ Running next.config.ts took 40ms
+[03:24:54.211] health: {"ok":true,"problems":[]} HTTP 200
+[03:24:54.687] session from before the restart still reads the library: HTTP 200
+[03:24:54.689] fingerprint before restart: schema=47024b8ca47e7cb3 data=41a7b41020c37047 migrations=12
+[03:24:54.692] fingerprint after  restart (taken after migrate + health, before any signed-in request): schema=47024b8ca47e7cb3 data=41a7b41020c37047 migrations=12
+[03:24:54.720] stopped; port free: yes
+[03:24:54.781] final row counts: account=2 allocations=0 assignments=0 availability_observations=0 change_events=3 command_receipts=3 cook_record_corrections=0 cook_records=0 cooking_events=0 exclusions=0 fake_retailer_calls=0 fake_retailer_script=0 favorites=0 grocery_cycles=0 handoff_batch_lines=0 handoff_batches=0 handoff_status_events=0 household_requests=0 household_settings=1 household_staples=0 households=1 ingredient_nutrition=0 ingredients=19 instacart_list_links=0 interests=0 kroger_auth_states=0 kroger_connection_events=0 kroger_connections=0 leftover_observations=0 member_targets=0 members=2 nutrition_matches=0 order_lines=0 orders=0 previews=0 price_observations=0 product_mappings=0 products=0 proposals=0 purchase_approvals=0 receipt_observations=0 recipe_bookmark_saves=1 recipe_bookmarks=1 recipe_components=19 recipe_images=0 recipe_import_drafts=1 recipe_ingredients=28 recipe_notes=0 recipe_preferences=0 recipe_versions=9 recipes=9 request_contributors=0 requirement_lines=0 schema_migrations=12 session=4 staple_changes=0 staple_product_decisions=0 substitution_validations=0 test_barriers=0 user=2 verification=0 weeks=0

@@ -1,0 +1,10 @@
+
+> table@0.1.0 db:migrate
+> tsx scripts/migrate.ts
+
+schema up to date
+▲ Next.js 16.3.8
+- Local:         http://localhost:3603
+- Network:       http://0.0.0.0:3603
+✓ Ready in 173ms
+✓ Running next.config.ts took 39ms

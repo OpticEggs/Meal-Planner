@@ -50,6 +50,8 @@ fake transport; P2 is bounded by Budget Bytes' permission.
 | P3.3 | Live product search/choice | **owner gates K1–K5** (app, credentials, scopes, store) |
 | P3.4 | Cart writes (pickup cart) | **owner gates K6/K7 + modality** — unchanged, still not ready |
 | — | Dinner choice → consolidated ingredients → approvals → transfer | existing, unchanged (accepted-week contract preserved) |
+| P4.1 | Explicit partial transfer of only the ready lines, left-out lines named and copyable (B10) | **built** (`7c79eb6`, simulated) |
+| P4.2 | The whole journey link → recipe → week → groceries → Kroger products → partial transfer → what remains, through the UI with simulated providers | **tested** (`tests/e2e/journey-url-to-cart.spec.ts`) |
 
 Verified: `184d99f` — `docs/table/evidence/2026-10-08-verify-184d99f/summary.md`: vitest 1095/1095, Playwright 131/131, 83 mutations killed, 0 survived, 0 error.
 
@@ -63,7 +65,7 @@ Verified: `184d99f` — `docs/table/evidence/2026-10-08-verify-184d99f/summary.m
 | **R2** | Ask Budget Bytes for permission (pages, method, photos, feed) | Budget Bytes asks for permission before reuse. |
 | **K1–K5** | Kroger developer app, credentials, scopes, store, then `KROGER_ACTIVATE=products` with `TABLE_RETAILER=kroger` | Real Kroger API access. |
 | **K6/K7 + modality** | Data-retention decision and cart activation once `modality` is documented | Real cart writes to your Kroger account. |
-| **H1/H3** | Hosting choice and approval | Provisioning and possible cost. |
+| **Pilot upgrade** | Run DEPLOYMENT.md §0 on your Render Free + Neon pilot (hosting is already chosen) | Claude does not deploy. |
 
 ## 4. Recheck corrections (review of 988c4d1) — 2026-10-08
 

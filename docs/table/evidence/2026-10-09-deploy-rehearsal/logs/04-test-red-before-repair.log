@@ -1,0 +1,98 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /tmp/table-w-deploy-run
+
+ × tests/integration/migrate-lock.test.ts > migrate(): concurrent start-time runs > two runs at once on the previous release's database: both finish and the newest migration is applied once 754ms
+   → Error: migration 012_recipe_content.sql failed: relation "recipe_images" already exists: expected 'rejected' to be 'fulfilled' // Object.is equality
+ × tests/integration/migrate-lock.test.ts > migrate(): concurrent start-time runs > two runs at once on an empty database: both finish and every migration is applied exactly once 579ms
+   → error: duplicate key value violates unique constraint "pg_type_typname_nsp_index": expected 'rejected' to be 'fulfilled' // Object.is equality
+ × tests/integration/migrate-lock.test.ts > migrate(): concurrent start-time runs > a run that holds the lock makes another wait; the waiter then applies what is still pending 1436ms
+   → expected true to be false // Object.is equality
+ × tests/integration/migrate-lock.test.ts > migrate(): concurrent start-time runs > a failing migration rolls back, reports the file, and leaves the lock free and the schema unchanged 661ms
+   → expected [ { free: null } ] to deeply equal [ { free: true } ]
+ ✓ tests/integration/migrate-lock.test.ts > migrate(): concurrent start-time runs > still refuses a migration file that changed after it was applied 630ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/migrate-lock.test.ts > migrate(): concurrent start-time runs > two runs at once on the previous release's database: both finish and the newest migration is applied once
+AssertionError: Error: migration 012_recipe_content.sql failed: relation "recipe_images" already exists: expected 'rejected' to be 'fulfilled' // Object.is equality
+
+Expected: "fulfilled"
+Received: "rejected"
+
+ ❯ tests/integration/migrate-lock.test.ts:76:32
+     74|       await migrate(url, migrationsDir(LAST)); // the database as the …
+     75|       const [a, b] = await Promise.allSettled([migrate(url), migrate(u…
+     76|       expect(a.status, why(a)).toBe("fulfilled");
+       |                                ^
+     77|       expect(b.status, why(b)).toBe("fulfilled");
+     78|       const runs = [a, b].map((r) => (r as PromiseFulfilledResult<stri…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/integration/migrate-lock.test.ts > migrate(): concurrent start-time runs > two runs at once on an empty database: both finish and every migration is applied exactly once
+AssertionError: error: duplicate key value violates unique constraint "pg_type_typname_nsp_index": expected 'rejected' to be 'fulfilled' // Object.is equality
+
+Expected: "fulfilled"
+Received: "rejected"
+
+ ❯ tests/integration/migrate-lock.test.ts:86:30
+     84|   it("two runs at once on an empty database: both finish and every mig…
+     85|     const [a, b] = await Promise.allSettled([migrate(DB_B), migrate(DB…
+     86|     expect(a.status, why(a)).toBe("fulfilled");
+       |                              ^
+     87|     expect(b.status, why(b)).toBe("fulfilled");
+     88|     const runs = [a, b].map((r) => (r as PromiseFulfilledResult<string…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/integration/migrate-lock.test.ts > migrate(): concurrent start-time runs > a run that holds the lock makes another wait; the waiter then applies what is still pending
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/integration/migrate-lock.test.ts:104:23
+    102|       });
+    103|       await new Promise((r) => setTimeout(r, 800));
+    104|       expect(settled).toBe(false);
+       |                       ^
+    105|       expect(await appliedNames(DB_A)).not.toContain(LAST);
+    106|       await holder.query("SELECT pg_advisory_unlock($1)", [MIGRATION_L…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/integration/migrate-lock.test.ts > migrate(): concurrent start-time runs > a failing migration rolls back, reports the file, and leaves the lock free and the schema unchanged
+AssertionError: expected [ { free: null } ] to deeply equal [ { free: true } ]
+
+- Expected
++ Received
+
+  [
+    {
+-     "free": true,
++     "free": null,
+    },
+  ]
+
+ ❯ tests/integration/migrate-lock.test.ts:122:92
+    120|     expect(await q(DB_A, "SELECT to_regclass('rehearsal_half_done') AS…
+    121|     expect(await q<{ n: string }>(DB_A, "SELECT count(*)::text AS n FR…
+    122|     expect(await q(DB_A, "SELECT pg_try_advisory_lock($1) AS free", [M…
+       |                                                                                            ^
+    123|   });
+    124|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 1 passed (5)
+   Start at  03:27:37
+   Duration  4.36s (tests 97%, transform 2%, import 1%)
+

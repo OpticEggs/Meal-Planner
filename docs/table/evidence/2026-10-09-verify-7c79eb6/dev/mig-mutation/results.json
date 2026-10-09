@@ -1,0 +1,24 @@
+{
+  "when": "2026-10-09T03:43:13.332Z",
+  "head": "3378e01ae6c8544aed41e9b34ed382e6ecfcf572",
+  "restored": true,
+  "pass": true,
+  "results": [
+    {
+      "name": "B10_firm_budget_relaxed",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: B10-04: another way of shopping, a firm budget that can't be confirmed, or a store that isn't ready → no partial send"
+    },
+    {
+      "name": "MIG_no_per_migration_lock",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/5 failed by assertion: two runs at once on the previous release's database: both finish and the newest migration is applied once"
+    }
+  ]
+}

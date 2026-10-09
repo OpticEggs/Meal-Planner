@@ -1,0 +1,43 @@
+[03:24:15.980] scratch app /tmp/claude-0/-home-user/ae3f20b4-8e59-5d3c-9e16-8b697724019c/scratchpad/deploy-rehearsal/app-badmig; migrations: 001_auth.sql 002_table.sql 003_reconciliation.sql 004_staple_products.sql 005_staple_management.sql 006_nutrition_sources.sql 007_kroger.sql 008_cook_record_corrections.sql 009_cook_record_chain.sql 010_recipe_sources.sql 011_shopping_destinations.sql 012_recipe_content.sql 013_rehearsal_bad.sql 
+[03:24:15.985] migrate.ts sha=2203767c79a0
+applied: 012_recipe_content.sql
+[03:24:17.629] [at012] before: schema=47024b8ca47e7cb3 data=5ceb3fa84a618a9b migrations=12 last=012_recipe_content.sql
+[03:24:18.202] [at012] result=exited:1 after .5635 s
+    | 
+    | > table@0.1.0 db:migrate
+    | > tsx scripts/migrate.ts
+    | 
+    | /tmp/table-w-deploy-run/src/server/db/migrate.ts:57
+    |         throw new Error(`migration ${f} failed: ${(e as Error).message}`);
+    |               ^
+    | 
+    | Error: migration 013_rehearsal_bad.sql failed: relation "no_such_table" does not exist
+    |     at migrate (/tmp/table-w-deploy-run/src/server/db/migrate.ts:57:15)
+    |     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    |     at async <anonymous> (/tmp/table-w-deploy-run/scripts/migrate.ts:4:17)
+    | 
+    | Node.js v22.22.0
+[03:24:18.225] [at012] anything on port 3605? no  processes left in its session: 1
+[03:24:18.514] [at012] after:  schema=47024b8ca47e7cb3 data=5ceb3fa84a618a9b migrations=12 last=012_recipe_content.sql
+[03:24:18.652] [at012] rehearsal_half_done exists=f rehearsal_col exists=0 bookmark title=Sheet pan fajitas
+[03:24:18.704] [at012] advisory lock free afterwards: t
+[03:24:20.993] [at011] before: schema=3c21a9741b62e1c1 data=5d48b8d7f663a071 migrations=11 last=011_shopping_destinations.sql
+[03:24:21.567] [at011] result=exited:1 after .5671 s
+    | 
+    | > table@0.1.0 db:migrate
+    | > tsx scripts/migrate.ts
+    | 
+    | /tmp/table-w-deploy-run/src/server/db/migrate.ts:57
+    |         throw new Error(`migration ${f} failed: ${(e as Error).message}`);
+    |               ^
+    | 
+    | Error: migration 013_rehearsal_bad.sql failed: relation "no_such_table" does not exist
+    |     at migrate (/tmp/table-w-deploy-run/src/server/db/migrate.ts:57:15)
+    |     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    |     at async <anonymous> (/tmp/table-w-deploy-run/scripts/migrate.ts:4:17)
+    | 
+    | Node.js v22.22.0
+[03:24:21.586] [at011] anything on port 3605? no  processes left in its session: 0
+[03:24:21.884] [at011] after:  schema=47024b8ca47e7cb3 data=1616309ff4ad2e9a migrations=12 last=012_recipe_content.sql
+[03:24:22.012] [at011] rehearsal_half_done exists=f rehearsal_col exists=0 bookmark title=Sheet pan fajitas
+[03:24:22.054] [at011] advisory lock free afterwards: t

@@ -1,0 +1,10 @@
+
+> table@0.1.0 db:migrate
+> tsx scripts/migrate.ts
+
+applied: 012_recipe_content.sql
+▲ Next.js 16.3.8
+- Local:         http://localhost:3609
+- Network:       http://0.0.0.0:3609
+✓ Ready in 191ms
+✓ Running next.config.ts took 32ms

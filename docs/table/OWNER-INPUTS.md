@@ -11,7 +11,22 @@ Legend — **Decide**: a choice only you can make · **Provide**: something only
 **Hosting is decided (2026-10-08, user-reported):** the pilot runs on **Render Free + Neon** at
 `https://meal-planner-eq58.onrender.com`, with the household provisioned and sign-in working. H1–H6 below
 are kept as history for the paid option and are **not** open decisions. What remains for the pilot is the
-upgrade in `DEPLOYMENT.md` §0 (yours to run) and the separate gates R1, C1/C2, K1–K7.
+upgrade in `DEPLOYMENT.md` §0 (yours to run, from your phone) and the separate gates in §0 below.
+
+## 0. Every open gate, in one list (updated 2026-10-09)
+
+| Gate | Yours to | Blocks | Status |
+|---|---|---|---|
+| Pilot upgrade | Run `DEPLOYMENT.md` §0 (Neon recovery branch, tested Start Command, deploy the verified commit, check health and sign-in) | the pilot getting B10, the Kroger callback fix and the migration lock | not run; Claude does not deploy |
+| R1 | Approve reading recipe pages on the pilot (`TABLE_RECIPE_IMPORT_FETCH=on`) | real recipe links becoming recipes | open |
+| C1 / C2 | Decide household-private keeping of method/photo; record site grants | keeping a page's method or photo | open |
+| R2 | Send the Budget Bytes inquiry (draft in `PROVIDER-INQUIRIES.md`, **not sent**) and decide from the written answer | anything beyond links for Budget Bytes | draft ready |
+| K1–K5 | Kroger developer account, app registration (redirect URI), credentials and assigned scopes in Render, store, one read-only validation | any live Kroger read | open |
+| K6 | Retention: send the Kroger inquiry (draft in `PROVIDER-INQUIRIES.md`, **not sent**) — Kroger's Acceptable Use page lists "storing data derived from items added to a customer's cart" as prohibited, while Table's handoff history (including B10 partial batches and their omission summaries) is append-only | any cart or price activation | draft ready |
+| K7 | One bounded live cart addition (account, product ids, quantities), after Kroger confirms the cart `modality` value and how `soldBy`/quantity work | B6 | open |
+| I1–I3 | Instacart access, provider validation, retention | Instacart list links | open |
+| N1–N2 | FoodData Central key and one observed lookup | B7(b) | open |
+| P1 (B8) | Phone checks with Safari/VoiceOver on the pilot | B8 | open |
 
 ## 1. Hosting (B9) — decided for the pilot (history below)
 
@@ -61,15 +76,15 @@ the simulated-retailer deployment. Each step is a separate gate.
 
 | Gate | Approval needed (in a directive) | Blocks |
 |---|---|---|
-| Hosting | H1 + H3: "Use Render as in DEPLOYMENT.md; I approve ≈ $13.30/month plus usage; provision and deploy" | B9(b)/(c), and therefore B8 on the deployed app |
+| Hosting | ~~H1 + H3~~ decided 2026-10-08: the pilot on Render Free + Neon (user-reported); the upgrade in DEPLOYMENT.md §0 is yours to run | — |
 | Nutrition | N1 key installed by you; N2 one observed lookup | B7(b) |
 | Kroger connection | K1–K4, K5 | B5(b) |
 | Kroger data retention | K6 | any cart or price activation |
 | Kroger cart test | K7, bound to account + product ids + quantities | B6 |
 | Visual update | ~~approval~~ given 2026-10-08; delivered as B20 (`f22f9d5`) | — |
 
-The hosting recommendation is provisional; it is not a host selection or spending authorization until
-H1/H3 are given, and it stays provisional until the hosted checks in DEPLOYMENT.md §9 pass.
+The paid Render recommendation (H1–H7) is history: the household chose the Render Free + Neon pilot. No paid
+plan is approved; hosted checks of the pilot are yours to run (DEPLOYMENT.md §0).
 
 ## 6. What Claude will not do without a new directive
 

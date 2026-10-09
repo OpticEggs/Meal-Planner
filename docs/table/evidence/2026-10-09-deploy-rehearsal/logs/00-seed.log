@@ -1,0 +1,21 @@
+[03:14:45.175] code: 9623de4 (/tmp/table-w-deploy-base-run); migrations on disk: 001_auth.sql 002_table.sql 003_reconciliation.sql 004_staple_products.sql 005_staple_management.sql 006_nutrition_sources.sql 007_kroger.sql 008_cook_record_corrections.sql 009_cook_record_chain.sql 010_recipe_sources.sql 011_shopping_destinations.sql 
+[03:14:45.514] npm run db:migrate (9623de4 runner)
+applied: 001_auth.sql, 002_table.sql, 003_reconciliation.sql, 004_staple_products.sql, 005_staple_management.sql, 006_nutrition_sources.sql, 007_kroger.sql, 008_cook_record_corrections.sql, 009_cook_record_chain.sql, 010_recipe_sources.sql, 011_shopping_destinations.sql
+[03:14:47.930] household d185a740-ca55-4383-8d1e-e4c8d81e124a
+member 68ecfcf5-aeab-460b-bf3d-7b17ddf60e74 created for jon.rehearsal@example.invalid
+member bd005a14-9d4d-45a4-a740-6909972842f7 created for alex.rehearsal@example.invalid
+loaded 8 sample recipes (provenance=sample); ingredient allergen info marked unreviewed
+[03:14:52.714] starting the 9623de4 production build to add a recipe and a saved link through its own API
+[03:14:53.462] server pid 2932: listening
+{"ok":true,"problems":[]} HTTP 200
+[03:14:53.769] sign-in member 1: HTTP 200
+[03:14:53.920] sign-in member 2: HTTP 200
+{"status":"accepted","result":{"recipeId":"50d3840e-d58f-47b4-8a66-fe51183c8b2b","versionId":"379388b5-58b8-4a6c-bd7d-2c67ccac8949","versionNo":1},"operationId":"e53b7cc8-089d-423b-9880-f42e97547c14","command":"SaveRecipeVersion","replayed":false,"seq":1,"acceptedChoiceRevision":null} HTTP 200
+{"status":"accepted","result":{"bookmarkId":"b8084834-db68-4a18-a156-9bbc10c8d81a","existed":false,"restored":false},"operationId":"a0fc826f-58de-41de-bf57-90d5f87b120f","command":"SaveLink","replayed":false,"seq":2,"acceptedChoiceRevision":null} HTTP 200
+{"status":"accepted","result":{"draftId":"b93830e6-fbbf-495b-95b3-cb8f97bc3ec0"},"operationId":"0728c68d-98a3-4a6d-85b3-2d1db6a4d0f9","command":"PasteIngredients","replayed":false,"seq":3,"acceptedChoiceRevision":null} HTTP 200
+[03:14:54.140] library read (member 1):
+{"members":[{"id":"68ecfcf5-aeab-460b-bf3d-7b17ddf60e74","displayName":"Jon (rehearsal)"},{"id":"bd005a14-9d4d-45a4-a740-6909972842f7","displayName":"Alex (rehearsal)"}],"me":"68ecfcf5-aeab-460b-bf3d-7b17ddf60e74","recipes":[{"recipeId":"348b0d35-e143-498f-9659-922dc1ea281a","archived":false,"versio
+[03:14:55.975] server stopped; port free: yes
+[03:14:56.034] schema_migrations: 001_auth.sql 002_table.sql 003_reconciliation.sql 004_staple_products.sql 005_staple_management.sql 006_nutrition_sources.sql 007_kroger.sql 008_cook_record_corrections.sql 009_cook_record_chain.sql 010_recipe_sources.sql 011_shopping_destinations.sql
+[03:14:56.095] row counts: account=2 allocations=0 assignments=0 availability_observations=0 change_events=3 command_receipts=3 cook_record_corrections=0 cook_records=0 cooking_events=0 exclusions=0 fake_retailer_calls=0 fake_retailer_script=0 favorites=0 grocery_cycles=0 handoff_batch_lines=0 handoff_batches=0 handoff_status_events=0 household_requests=0 household_settings=1 household_staples=0 households=1 ingredient_nutrition=0 ingredients=19 instacart_list_links=0 interests=0 kroger_auth_states=0 kroger_connection_events=0 kroger_connections=0 leftover_observations=0 member_targets=0 members=2 nutrition_matches=0 order_lines=0 orders=0 previews=0 price_observations=0 product_mappings=0 products=0 proposals=0 purchase_approvals=0 receipt_observations=0 recipe_bookmark_saves=1 recipe_bookmarks=1 recipe_components=19 recipe_import_drafts=1 recipe_ingredients=28 recipe_notes=0 recipe_preferences=0 recipe_versions=9 recipes=9 request_contributors=0 requirement_lines=0 schema_migrations=11 session=2 staple_changes=0 staple_product_decisions=0 substitution_validations=0 test_barriers=0 user=2 verification=0 weeks=0
+[03:14:56.223] saved /tmp/claude-0/-home-user/ae3f20b4-8e59-5d3c-9e16-8b697724019c/scratchpad/deploy-rehearsal/state/fixture-011.dump (191245 bytes)

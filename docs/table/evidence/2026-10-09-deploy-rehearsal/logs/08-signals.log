@@ -1,0 +1,62 @@
+applied: 012_recipe_content.sql
+[03:26:00.025] === bash -c 'npm run db:migrate && exec node_modules/.bin/next start -H 0.0.0.0'
+[03:26:00.430] tree during db:migrate:
+  PID  PPID  PGID   SID STAT COMMAND
+17433 17387 17433 17433 Ss   bash -c npm run db:migrate && exec node_modules/.bin/next start -H 0.0.0.0
+17435 17433 17433 17433 Sl    \_ npm run db:migrate
+17446 17435 17433 17433 S         \_ sh -c tsx scripts/migrate.ts
+17447 17446 17433 17433 Sl            \_ node /tmp/table-w-deploy-run/node_modules/.bin/tsx scripts/migrate.ts
+17458 17447 17433 17433 Rl                \_ /opt/node22/bin/node --require /tmp/table-w-deploy-run/node_modules/tsx/dist/preflight.cjs --import file:
+[03:26:01.245] ready: listening; tree while serving:
+  PID  PPID  PGID   SID STAT COMMAND
+17433 17387 17433 17433 Ssl  next-server (v16.3.8)
+[03:26:01.885] SIGTERM to top pid 17433 only -> top: exited code 143 after .109 s; port 3608 still serving? no; left in session: 
+    | ✓ Ready in 183ms
+    | ✓ Running next.config.ts took 45ms
+[03:26:01.899] cleanup (group signal): port free: yes
+[03:26:01.901] === bash -c 'npm run db:migrate && node_modules/.bin/next start -H 0.0.0.0'
+[03:26:02.306] tree during db:migrate:
+  PID  PPID  PGID   SID STAT COMMAND
+17522 17387 17522 17522 Ss   bash -c npm run db:migrate && node_modules/.bin/next start -H 0.0.0.0
+17524 17522 17522 17522 Sl    \_ npm run db:migrate
+17535 17524 17522 17522 S         \_ sh -c tsx scripts/migrate.ts
+17536 17535 17522 17522 Rl            \_ node /tmp/table-w-deploy-run/node_modules/.bin/tsx scripts/migrate.ts
+17547 17536 17522 17522 Rl                \_ /opt/node22/bin/node --require /tmp/table-w-deploy-run/node_modules/tsx/dist/preflight.cjs --import file:
+[03:26:03.105] ready: listening; tree while serving:
+  PID  PPID  PGID   SID STAT COMMAND
+17522 17387 17522 17522 Ssl  next-server (v16.3.8)
+[03:26:03.744] SIGTERM to top pid 17522 only -> top: exited code 143 after .109 s; port 3608 still serving? no; left in session: 
+    | ✓ Ready in 177ms
+    | ✓ Running next.config.ts took 34ms
+[03:26:03.756] cleanup (group signal): port free: yes
+[03:26:03.759] === dash -c 'npm run db:migrate && exec node_modules/.bin/next start -H 0.0.0.0'
+[03:26:04.165] tree during db:migrate:
+  PID  PPID  PGID   SID STAT COMMAND
+17611 17387 17611 17611 Ss   dash -c npm run db:migrate && exec node_modules/.bin/next start -H 0.0.0.0
+17613 17611 17611 17611 Sl    \_ npm run db:migrate
+17624 17613 17611 17611 S         \_ sh -c tsx scripts/migrate.ts
+17625 17624 17611 17611 Rl            \_ node /tmp/table-w-deploy-run/node_modules/.bin/tsx scripts/migrate.ts
+17636 17625 17611 17611 Rl                \_ /opt/node22/bin/node --require /tmp/table-w-deploy-run/node_modules/tsx/dist/preflight.cjs --import file:
+[03:26:04.970] ready: listening; tree while serving:
+  PID  PPID  PGID   SID STAT COMMAND
+17611 17387 17611 17611 Ssl  next-server (v16.3.8)
+[03:26:05.610] SIGTERM to top pid 17611 only -> top: exited code 143 after .110 s; port 3608 still serving? no; left in session: 
+    | ✓ Ready in 177ms
+    | ✓ Running next.config.ts took 39ms
+[03:26:05.623] cleanup (group signal): port free: yes
+[03:26:05.625] === dash -c 'npm run db:migrate && node_modules/.bin/next start -H 0.0.0.0'
+[03:26:06.030] tree during db:migrate:
+  PID  PPID  PGID   SID STAT COMMAND
+17700 17387 17700 17700 Ss   dash -c npm run db:migrate && node_modules/.bin/next start -H 0.0.0.0
+17702 17700 17700 17700 Sl    \_ npm run db:migrate
+17713 17702 17700 17700 S         \_ sh -c tsx scripts/migrate.ts
+17714 17713 17700 17700 Rl            \_ node /tmp/table-w-deploy-run/node_modules/.bin/tsx scripts/migrate.ts
+17725 17714 17700 17700 Rl                \_ /opt/node22/bin/node --require /tmp/table-w-deploy-run/node_modules/tsx/dist/preflight.cjs --import file:
+[03:26:06.888] ready: listening; tree while serving:
+  PID  PPID  PGID   SID STAT COMMAND
+17700 17387 17700 17700 Ss   dash -c npm run db:migrate && node_modules/.bin/next start -H 0.0.0.0
+17743 17700 17700 17700 Sl    \_ next-server (v16.3.8)
+[03:26:07.635] SIGTERM to top pid 17700 only -> top: exited code 143 after .007 s; port 3608 still serving? YES; left in session: 17743 next-server (v16.3.8);
+    | ✓ Ready in 176ms
+    | ✓ Running next.config.ts took 44ms
+[03:26:08.980] cleanup (group signal): port free: yes

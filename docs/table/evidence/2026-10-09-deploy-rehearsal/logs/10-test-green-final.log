@@ -1,0 +1,17 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /tmp/table-w-deploy
+
+ ✓ tests/integration/migrate-lock.test.ts > migrate(): concurrent start-time runs > two runs at once on the previous release's database: both finish and the newest migration is applied once 1026ms
+ ✓ tests/integration/migrate-lock.test.ts > migrate(): concurrent start-time runs > two runs at once on an empty database: both finish and every migration is applied exactly once 712ms
+ ✓ tests/integration/migrate-lock.test.ts > migrate(): concurrent start-time runs > a run that holds the lock makes another wait; the waiter then applies what is still pending 1538ms
+ ✓ tests/integration/migrate-lock.test.ts > migrate(): concurrent start-time runs > a failing migration rolls back, reports the file, and leaves the lock free and the schema unchanged 736ms
+ ✓ tests/integration/migrate-lock.test.ts > migrate(): concurrent start-time runs > still refuses a migration file that changed after it was applied 669ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  03:27:42
+   Duration  4.97s (tests 98%, transform 1%, import 1%)
+

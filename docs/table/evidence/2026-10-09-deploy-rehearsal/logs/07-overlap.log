@@ -1,0 +1,33 @@
+[03:25:31.529] old code 9623de4 (migrations on disk: 11); new code 3ac64f6 + repaired migrate.ts sha=2203767c79a0 (on disk: 12)
+[03:25:32.372] old release (pid 16916) on 011: listening; health {"ok":true,"problems":[]} HTTP 200
+[03:25:32.642] old: sign-in member 1 HTTP 200
+[03:25:32.644] --- new release starts with the candidate Start Command while the old one serves ---
+[03:25:33.997] new release (pid 16948): listening
+[03:25:37.798] old release's library reads while the new one migrated (HTTP codes):       1       60 200 
+    new | applied: 012_recipe_content.sql
+    new | ▲ Next.js 16.3.8
+    new | ✓ Ready in 174ms
+[03:25:37.891] schema_migrations now: 12 rows, last 012_recipe_content.sql
+[03:25:37.893] --- old release on the 012 database ---
+[03:25:37.911] old health: {"ok":true,"problems":[]} HTTP 200
+[03:25:37.948] old library (session from before the upgrade): HTTP 200
+[03:25:37.988] old snapshot: HTTP 200
+[03:25:38.125] old sign-in member 2: HTTP 200
+[03:25:38.127] old writes on 012:
+{"status":"accepted","result":{"recipeId":"6bd2a2c8-d187-43ad-a74a-73406a39c703","versionId":"3a1f74f3-019e-4679-9800-42a266040f67","version
+{"status":"accepted","result":{"bookmarkId":"6b8b705b-f17f-4ff2-bbdb-8f01f931327f","existed":false,"restored":false},"operationId":"97827b5c
+{"status":"accepted","result":{"draftId":"4579093d-8cf4-484a-8f17-185f69f00c96"},"operationId":"f890bfa1-c41b-4a24-9941-199eb7acef44","comma
+[03:25:38.318] rows written by the old release carry 012 defaults: draft content_policy={"basis": null, "photos": false, "instructions": false} source_step_count=0
+[03:25:38.320] --- new release reads what the old one wrote ---
+[03:25:38.621] new sign-in member 1: HTTP 200
+[03:25:38.727] new library: HTTP 200 recipes= 10 bookmarks= 2 has old-release recipe: True
+[03:25:38.746] new health: {"ok":true,"problems":[]} HTTP 200
+[03:25:38.779] --- rollback shape: the old code started fresh on 012 with the candidate Start Command ---
+[03:25:39.985] old code on 012 with startup migration: listening
+    old | schema up to date
+    old | ▲ Next.js 16.3.8
+    old | ✓ Ready in 171ms
+[03:25:40.008] old health: {"ok":true,"problems":[]} HTTP 200
+[03:25:40.219] old library (signed in before everything): HTTP 200
+[03:25:40.263] schema_migrations: 12 rows (unchanged)
+[03:25:40.295] ports free: yes

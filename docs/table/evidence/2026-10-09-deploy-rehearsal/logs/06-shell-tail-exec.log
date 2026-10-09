@@ -1,0 +1,15 @@
+lrwxrwxrwx 1 root root 4 Mar 31  2024 /bin/sh -> dash
+GNU bash, version 5.2.21(1)-release (x86_64-pc-linux-gnu)
+== bash -c 'true && sleep 2'   (pid returned by the launcher: 6210)
+  PID  PPID  PGID COMMAND
+ 6210  6206  6210 sleep 2
+== bash -c 'true && exec sleep 2'   (pid returned by the launcher: 6216)
+  PID  PPID  PGID COMMAND
+ 6216  6206  6216 sleep 2
+== dash -c 'true && sleep 2'   (pid returned by the launcher: 6239)
+  PID  PPID  PGID COMMAND
+ 6239  6206  6239 dash -c true && sleep 2
+ 6241  6239  6239 sleep 2
+== dash -c 'true && exec sleep 2'   (pid returned by the launcher: 6243)
+  PID  PPID  PGID COMMAND
+ 6243  6206  6243 sleep 2

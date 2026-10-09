@@ -1,6 +1,6 @@
 # Table — Implementation status
 
-_Last updated 2026-10-08 (UTC), after the recheck corrections RUC-01/RUC-02 (pilot on Render Free + Neon), which followed the URL-to-cart reprioritization (B25), which followed the multi-source handoff (recipe links, reviewed import, Budget Bytes lane, where to shop, Instacart list link — fixture-only), which followed B21/B22 (database cook-record invariant, stale cooking events) and the free-hosting research, which followed the visual update (B20) and the cook-record idempotency fix
+_Last updated 2026-10-09 (UTC), after the bounded pass B10 partial handoff + continuous URL-to-cart journey + phone upgrade rehearsal, which followed the recheck corrections RUC-01/RUC-02 (pilot on Render Free + Neon), which followed the URL-to-cart reprioritization (B25), which followed the multi-source handoff (recipe links, reviewed import, Budget Bytes lane, where to shop, Instacart list link — fixture-only), which followed B21/B22 (database cook-record invariant, stale cooking events) and the free-hosting research, which followed the visual update (B20) and the cook-record idempotency fix
 (B19, delivery review of fb4d771, gate 2), which followed the integration-preparation pass (B9 deployment candidate, B7 nutrition, B5
 Kroger adapter, B8 checklist)._
 
@@ -8,6 +8,7 @@ Kroger adapter, B8 checklist)._
 
 | What | Identity |
 |---|---|
+| B10 partial handoff, URL-to-cart journey, Kroger callback same-origin redirect, migration lock | starting `3ac64f6` · `3378e01` migration advisory lock (worker) · `7c79eb6` B10 + journey + callback fix — verified at `7c79eb6` |
 | Recheck corrections RUC-01/RUC-02 + Kroger UI tests | `c9a95b6` — verified at `c9a95b6` |
 | URL to cart (B25) | `184d99f` — one-step import, permitted content, Kroger mapping; verified at `184d99f` |
 | Previous latest code commit | `68f4549` — multi-source handoff: `c1bf933` (Instacart client, worker), `99c3b99` (import building blocks, worker), `2b9d83a` (integration), `68f4549` (E2E-01/02 tests) |
@@ -19,9 +20,13 @@ Kroger adapter, B8 checklist)._
 | Documentation/evidence commits | the commits after each verified code commit on `main` (docs only — e.g. `git diff --stat 02a3b1a..HEAD`) |
 | Remote | `https://github.com/OpticEggs/Meal-Planner`, branch `main` |
 | Restore | `git clone --branch main <bundle> table` or `git clone <bundle> table` |
-| Migrations | `001`–`012` (`012_recipe_content.sql`: kept-content permission, recipe photos, attribution): `006_nutrition_sources.sql` (B7), `007_kroger.sql` (B5), `008_cook_record_corrections.sql` (B19), `009_cook_record_chain.sql` (B21), `010_recipe_sources.sql`, `011_shopping_destinations.sql` (multi-source); upgrades from a populated 005 database (to 007) a populated 007 database holding duplicate cook records (to 008), a populated 008 database with planted cross-generation violations (to 009), and a populated 009 database (to 011, only `schema_migrations` differs over existing columns) checked |
+| Migrations | `001`–`013` (`013_partial_handoff.sql`: batch scope and omission summary; `012_recipe_content.sql`: kept-content permission, recipe photos, attribution): `006_nutrition_sources.sql` (B7), `007_kroger.sql` (B5), `008_cook_record_corrections.sql` (B19), `009_cook_record_chain.sql` (B21), `010_recipe_sources.sql`, `011_shopping_destinations.sql` (multi-source); upgrades from a populated 005 database (to 007) a populated 007 database holding duplicate cook records (to 008), a populated 008 database with planted cross-generation violations (to 009), and a populated 009 database (to 011, only `schema_migrations` differs over existing columns) checked |
 
-## Verification (measured on c9a95b6)
+## Verification (measured on 7c79eb6)
+
+`scripts/verify-all.sh` → `docs/table/evidence/2026-10-09-verify-7c79eb6/summary.md`: vitest 1129/1129, Playwright 139/139, 93 mutations killed, 0 survived, 0 error.
+
+### Previous run (c9a95b6, recheck corrections)
 
 `scripts/verify-all.sh` → `docs/table/evidence/2026-10-08-verify-c9a95b6/summary.md`: vitest 1117/1117, Playwright 136/136, 88 mutations killed, 0 survived, 0 error.
 
@@ -107,20 +112,24 @@ behind staged activation with all capabilities off (D73), per-household readines
 on scratch databases: sign-in with secure cookies, refused sign-up and cross-site writes, refused test
 conveniences and weak secrets (health 503), restart with sessions kept, backup/restore, light-load memory
 of the Next process (~171 MB), and the upgrade of a populated 005 database to 007 served by the merged
-app. **Not a deployment:** no hosted check has been performed (DEPLOYMENT.md §9).
+app. 2026-10-09: the Render Free start-time migration was rehearsed locally (011 → 012 upgrade, restart, two
+concurrent starts, failing migration, old/new overlap, `exec` and signals) — `evidence/2026-10-09-deploy-rehearsal/`.
+**Not a hosted check:** Claude has run nothing on Render or Neon. The pilot itself is **owner-reported** (Render Free
++ Neon, household provisioned, sign-in working); its commit, Start Command and migration level are not inspected.
 
 **What is provider-verified.** Only three read-only FoodData Central DEMO_KEY requests (one returned a
 genuine 429); documentation of FDC, Render, Fly.io and Kroger was read. Nothing is live-verified.
 
 **Blocked:** live Kroger (no app, credentials, store or authorization; `modality` undocumented),
-production FDC key, hosted deployment (owner approval), WebKit/Safari/VoiceOver and physical devices.
+production FDC key, the pilot upgrade (yours to run, DEPLOYMENT.md §0), WebKit/Safari/VoiceOver and physical devices.
 
 ## Stage reached
 
 **Stages 1–4 implemented against a clearly labeled simulated retailer.** Stage 5 (Kroger): the adapter
 is implemented and fixture-tested behind staged activation, all off; live integration is **BLOCKED**
-(no credentials, no authorization). Stage 6 (household release/deployment): prepared, not provisioned. The code is pushed to the private GitHub
-repository named above (owner-requested); nothing was deployed or sent to a real store.
+(no credentials, no authorization). Stage 6 (household release): the owner runs a pilot on Render Free + Neon
+(user-reported); Claude deployed nothing. The code is pushed to the private GitHub repository named above
+(owner-requested); nothing was sent to a real store.
 
 | Stage | State |
 |---|---|
@@ -129,7 +138,7 @@ repository named above (owner-requested); nothing was deployed or sent to a real
 | 3 Quantities & honest grocery state | Done for the simulated retailer, including the F04–F06 corrections (explicit order/transfer reconciliation, physical package basis, substitution validation, receipt corrections, bound \"Have enough\") and B3 |
 | 4 Household experience | Done for the mock workflow, including F01–F03 and F07 corrections, B14/B15/B17 accessibility, B12 remembered staple products and B16 staple management; Chromium-only validation (WebKit/devices BLOCKED, B8) |
 | 5 Verified Kroger integration | Preparation done: adapter implemented and fixture-tested behind staged activation (all off; cart not ready). Live verification BLOCKED (no app/credentials/authorization; `modality` undocumented) |
-| 6 Household release | Preparation done: deployment candidate, runbook, provisional hosting recommendation, local production-mode and upgrade checks. Provisioning and deployment not authorized |
+| 6 Household release | Hosting selected by the owner: pilot on Render Free + Neon (user-reported). Phone upgrade path rehearsed locally (DEPLOYMENT.md §0); the upgrade is the owner's to run. Claude deploys nothing |
 
 ## What works (mock workflow, two members)
 
@@ -146,7 +155,8 @@ repository named above (owner-requested); nothing was deployed or sent to a real
 - Groceries: consolidated lines with reasons (meals, usual requests with contributors, extras),
   Have enough / Have some (+amount) / Need, product choice and manual products/prices
   (simulated store), per-line approvals, readiness, three cost views with unknowns, simulated
-  Send with frozen batches, uncertain-transfer resolution, order confirmation (explicit contents
+  Send with frozen batches, an explicit **partial** transfer of only the ready lines (B10: every left-out line
+  named with its reason and copyable; not a complete order), uncertain-transfer resolution, order confirmation (explicit contents
   or "contents unknown"), receipts (received / missing / substituted), "Not sent yet" deltas.
 - Our Recipes / Explore: search (focus-stable), filters, sorts by real values with an
   "unknown" group, Sounds good, per-member preferences, favorites, notes, explicit cooking
@@ -172,7 +182,7 @@ Backup/restore: `scripts/backup.sh dump|restore|check` (dumps include auth table
 
 ## Evidence
 
-Current: `docs/table/evidence/2026-10-08-verify-68f4549/` (see Verification above). History:
+Current: `docs/table/evidence/2026-10-09-verify-7c79eb6/` and `2026-10-09-deploy-rehearsal/` (see Verification above). History: `2026-10-08-verify-c9a95b6/`, `2026-10-08-verify-68f4549/`,
 `2026-10-08-verify-579179b/` (B21/B22), `2026-10-08-verify-f22f9d5/` (visual update; rechecked independently in `2026-10-08-independent-recheck-bcb74ed/`), `2026-10-08-verify-02a3b1a/` (cook-record fix), `2026-10-08-verify-c19bd5a/` (integration preparation), `2026-10-08-verify-abdd5a2/` (B17 correction, B18), `2026-10-08-independent-recheck-639c103/`, `2026-10-08-verify-972e368/` (B17), `2026-10-08-verify-5f7b72f/` (B15/B16), `2026-10-08-verify-0804381/` (B14/B12, with sheet
 screenshots), `2026-10-08-verify-2c56267/` (correction pass), `2026-10-08-full-run*.md`,
 `2026-10-08-first-slice-e2e.md`. See ACCEPTANCE.md for per-test status.
@@ -182,10 +192,11 @@ screenshots), `2026-10-08-verify-2c56267/` (correction pass), `2026-10-08-full-r
 1. Kroger: developer app credentials, store location, account authorization, and written
    approval for one live cart addition (B5/B6).
 2. Real devices / Safari / WebKit for X11 device validation (B8).
-3. Hosting decision for Stage 6 (B9). No paid service will be provisioned without approval.
+3. The pilot upgrade on Render Free + Neon is the owner's to run (DEPLOYMENT.md §0); its hosted result is not known here.
 
 ## Next executable task
 
-**Upgrade the pilot that is already running (Render Free + Neon) — yours to run, `DEPLOYMENT.md` §0.** Then, with a
+**Upgrade the pilot that is already running (Render Free + Neon) to `7c79eb6` from your phone — yours to run, `DEPLOYMENT.md` §0.**
+Optionally send the two drafted provider inquiries (`PROVIDER-INQUIRIES.md`, not sent). Then, with a
 separate authorization, **one real recipe import** on the pilot (R1 on; C1/C2 stay off). Kroger product matching follows only
 after its own authorization (K1–K5). No hosting decision is open.

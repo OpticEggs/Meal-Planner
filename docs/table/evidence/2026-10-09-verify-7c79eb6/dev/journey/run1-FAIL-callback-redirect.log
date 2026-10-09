@@ -1,0 +1,49 @@
+
+Running 1 test using 1 worker
+
+  ✘  1 [chromium] › tests/e2e/journey-url-to-cart.spec.ts:95:1 › JOURNEY: link → recipe → Friday → groceries → Kroger products → partial transfer acknowledged → what remains (3.0m)
+
+
+  1) [chromium] › tests/e2e/journey-url-to-cart.spec.ts:95:1 › JOURNEY: link → recipe → Friday → groceries → Kroger products → partial transfer acknowledged → what remains 
+
+    Test timeout of 180000ms exceeded.
+
+    Error: locator.fill: Test ended.
+    Call log:
+      - waiting for getByLabel('Kroger store id')
+
+
+      105 |   await p.getByRole("button", { name: "Connect Kroger account" }).click();
+      106 |   await expect(p.getByTestId("kroger-connection-status")).toContainText("Store: TEST0001", { timeout: 15_000 }).catch(() => undefined);
+    > 107 |   await p.getByLabel("Kroger store id").fill("TEST0001");
+          |                                         ^
+      108 |   await p.getByRole("button", { name: "Save store" }).click();
+      109 |   await expect(p.getByTestId("kroger-cart-readiness")).toContainText("ready");
+      110 |   await expect(p.getByTestId("kroger-cart-readiness")).not.toContainText("not ready");
+        at /home/user/table/tests/e2e/journey-url-to-cart.spec.ts:107:41
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/journey-url-to-cart-JOURNE-2add8-acknowledged-→-what-remains-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/journey-url-to-cart-JOURNE-2add8-acknowledged-→-what-remains-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/journey-url-to-cart-JOURNE-2add8-acknowledged-→-what-remains-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/journey-url-to-cart-JOURNE-2add8-acknowledged-→-what-remains-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/journey-url-to-cart-JOURNE-2add8-acknowledged-→-what-remains-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests/e2e/journey-url-to-cart.spec.ts:95:1 › JOURNEY: link → recipe → Friday → groceries → Kroger products → partial transfer acknowledged → what remains 
+
+To open last HTML report run:
+
+  npx playwright show-report
+

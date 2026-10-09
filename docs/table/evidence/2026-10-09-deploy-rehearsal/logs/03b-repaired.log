@@ -1,0 +1,20 @@
+[03:23:43.249] variant=repaired migrate.ts sha=2203767c79a0
+[03:23:44.490] holder (psql pid 15098) has the table lock; starting A and B
+[03:23:48.037] while held: lock waits = advisory:ExclusiveLock(key 7265012001), relation:AccessExclusiveLock(recipe_import_drafts)
+[03:23:48.055] while held: A listening? no  B listening? no
+ pg_sleep 
+----------
+ 
+(1 row)
+
+[03:23:50.036] holder released the lock
+[03:23:50.920] A(pid 15102)=listening  B(pid 15103)=listening
+    A | applied: 012_recipe_content.sql
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 186ms
+    B | schema up to date
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 186ms
+[03:23:50.969] health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:23:51.063] schema_migrations rows=12 012 rows=1
+[03:23:51.106] ports free: yes

@@ -1,0 +1,10 @@
+$ npx vitest run tests/integration/ms-destinations.test.ts -t "GR-10"
+exit 0 signal 
+--- stdout
+JSON report written to /tmp/table-verify-7c79eb6-20261009T035939Z/mutation/baseline-50.json
+
+--- stderr
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+

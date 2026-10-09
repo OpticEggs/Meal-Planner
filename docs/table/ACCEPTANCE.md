@@ -530,3 +530,52 @@ export exactly and the restored photo bytes match their recorded hash. ALL PASS.
 
 **Not covered:** the pilot itself (its commit, migration level and settings are user-reported only), real recipe
 sites, real Kroger, WebKit/Safari/VoiceOver/devices.
+
+## B10 partial handoff, continuous URL-to-cart journey, phone upgrade rehearsal — added 2026-10-09
+
+Starting `3ac64f6`; migration lock `3378e01` (worker, cherry-picked); B10 + journey + callback fix `7c79eb6`; verified at `7c79eb6` —
+`docs/table/evidence/2026-10-09-verify-7c79eb6/summary.md`: vitest 1129/1129, Playwright 139/139, 93 mutations killed, 0 survived, 0 error.
+
+**B10 behavior (integration fixture `mixed()`: cheese unpriced, cucumber without a product, seven lines approved).** Sendable
+alone: black beans 1 × $1.09, broccoli 2 × $2.49, rice 1 × $3.99, salmon 1 × $10.99, soy sauce 1 × $2.79, tofu 1 × $2.29,
+tortillas 1 × $2.99. Left out with reasons: cheese (price unknown), chicken thighs, Greek yogurt, olive oil, pita (not approved),
+cucumber (no product, amount unknown). Choosing broccoli, rice and salmon sends exactly `SIM-BROCCOLI ×2, SIM-RICE ×1,
+SIM-SALMON ×1`; the other four approvals stay unconsumed and the batch records ten omissions with their codes.
+
+| ID | What | Tests | Status |
+|---|---|---|---|
+| B10-01 | Mixed list: only lines the whole-list Send would send are offered; every other line named with its reason | integration B10-01; mutation B10_unready_line_selectable | PASS |
+| B10-02 | Exact outbound subset; omission summary recorded; only chosen approvals consumed; both members see it | integration B10-02; e2e B10-E1; mutation B10_all_approvals_consumed | PASS |
+| B10-03 | Stale review, changed omissions, unready or duplicate selection → refused, zero calls | integration B10-03; e2e B10-E2; mutation B10_omissions_not_checked | PASS |
+| B10-04 | Another way of shopping, a firm budget over or unknown, a store not ready → refused before any call | integration B10-04; mutation B10_firm_budget_relaxed | PASS |
+| B10-05 | Two partial sends, or partial + full, at once, in every order → one batch, one call | integration B10-05 | PASS |
+| B10-06 | Uncertain partial transfer is never replayed; the untouched remainder can still be sent | integration B10-06 | PASS |
+| B10-07 | A left-out item sent later is a new transfer, never a resend; confirmed-order history unchanged; batches immutable | integration B10-07 | PASS |
+| B10-E1 | Browser: separate action, not-a-complete-order notice, focus, copy of the remaining list (clipboard), acknowledgement, announcement, focus returned | e2e B10-E1 | PASS |
+| — | The whole-list Send is unchanged (disabled while any line is not ready) | e2e B10-E1, journey; existing T-tests | PASS |
+
+**Continuous journey (`tests/e2e/journey-url-to-cart.spec.ts`, test server with the scripted Kroger fake, every external
+browser request aborted and counted — zero).** Kroger connect (Kroger's sign-in answered by a local route) and store
+TEST0001 → add `https://wprm.example.com/skillet-taco-rice/` from its link (method and photo kept under a test grant for
+that site) → the member states rice as 7 oz (the page gives cups; Table never invents a density) and leaves water out →
+recipe stored per serving: black beans 3.75 oz, garlic 0.5 each, long grain rice 1.75 oz, olive oil 0.5 tbsp, onion
+0.25 each, salsa 0.0833 cup → Saturday's tacos replaced through a reviewed preview (accepted revision +1) → Kroger
+products chosen (black beans: Kroger's "15.5 oz" doesn't say weight or fluid, so the member enters it; chicken thighs
+sold by weight: not choosable) → Alex marks salsa as on hand (0 packages) → Jon approves five lines; whole-list Send stays
+disabled → partial review: 5 items, chicken left out ("isn't sold by this store") → cart body exactly
+`0004000000001 ×1, …002 ×1, …003 ×1, …004 ×1, …005 ×1` (fixture modality) → acknowledged → both members see "Transfer 1
+(partial)" and "Left out of this transfer (9): Broccoli, Chicken thighs, Cucumber, Plain Greek yogurt, Pita bread, Jasmine
+rice, Salmon fillet, Soy sauce, Firm tofu"; chicken still "To send: 2 package(s)"; accepted week unchanged.
+
+**Defect found by the journey and fixed in `7c79eb6`:** after Kroger's sign-in the member landed on the login page. The
+callback redirected to an absolute URL built from `req.url`, which carries the server's bind address (`localhost:3105`
+here; `0.0.0.0` behind a host's proxy), where the session cookie isn't sent. It now answers with a same-origin relative
+`Location`. B5's assertion only checked the path suffix (`/household?kroger=…$`) and now pins the exact Location.
+
+**Phone upgrade rehearsal (worker, `evidence/2026-10-09-deploy-rehearsal/`, local production mode only).** Start Command
+`npm run db:migrate && exec node_modules/.bin/next start -H 0.0.0.0` on a 011 database populated by the 011-era code
+(`9623de4`): upgrade + serve, restart (`schema up to date`, fingerprint identical), sign-in and sessions kept, failing
+migration blocks start and leaves nothing half-applied, old code keeps serving on the new schema (its health also says
+200). **Defect found:** two concurrent starts — one exited 1 ("relation recipe_images already exists") in 10 of 20
+trials. Repaired in `3378e01` with a transaction-level advisory lock: 20 of 20 both serve; `migrate-lock.test.ts` 4 of 5
+red on the previous runner, 5 of 5 green; mutation MIG_no_per_migration_lock killed. Not tried on Render or Neon.

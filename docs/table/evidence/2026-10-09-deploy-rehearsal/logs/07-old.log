@@ -1,0 +1,8 @@
+▲ Next.js 16.3.8
+- Local:         http://localhost:3606
+- Network:       http://0.0.0.0:3606
+✓ Ready in 184ms
+✓ Running next.config.ts took 49ms
+{"t":"2026-10-09T03:25:38.168Z","at":"command","command":"SaveRecipeVersion","operationId":"ac25c896-fa0f-412e-b0b7-d316a351c569","status":"accepted","seq":4,"replayed":false}
+{"t":"2026-10-09T03:25:38.197Z","at":"command","command":"SaveLink","operationId":"97827b5c-9fd1-4546-8b99-91c3780f5622","status":"accepted","seq":5,"replayed":false}
+{"t":"2026-10-09T03:25:38.269Z","at":"command","command":"PasteIngredients","operationId":"f890bfa1-c41b-4a24-9941-199eb7acef44","status":"accepted","seq":6,"replayed":false}

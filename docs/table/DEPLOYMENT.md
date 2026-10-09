@@ -1,68 +1,92 @@
 # Table — Private deployment runbook and hosting recommendation (B9)
 
-Prepared 2026-10-08. **Nothing has been provisioned, deployed or paid for.** The recommendation below
-is **provisional**: it is not a host selection or spending authorization, and it stays provisional
-until the owner approves it and a hosted deployment is validated. Creating the services needs the
-owner's approval of the host and its recurring cost (see `OWNER-INPUTS.md`), then a separate explicit
-authorization to provision and deploy.
+Prepared 2026-10-08; §0 updated 2026-10-09. **Hosting is selected:** the household's pilot runs on the owner's
+Render **Free** web service with a **Neon** database (§0, user-reported). Claude has provisioned, deployed and paid
+for nothing. The paid Render runbook in §1–§9 is kept as history for that option; it is not an open decision.
 
 ## 0. The pilot that is already running — Render Free + Neon (owner's setup)
 
 **User-reported, 2026-10-08 (not a hosted check by Claude):** Jon created a Render **Free** web service at
 `https://meal-planner-eq58.onrender.com` connected to a **Neon** database, provisioned the household and signed in
-successfully. **Not verified:** the commit Render is running, the database's migration level, whether Alex's
-account exists, backups taken, and which environment variables are set. Keep the existing household, accounts,
-`BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `DATABASE_URL` and free tier. Never load test fixtures into it and never
-create a new database, household or login as a workaround. The paid Render runbook below (§1–§9) is history for
-that option.
+successfully. **Not verified:** the commit Render is running, the service's Start and Build Commands, the database's
+migration level, whether `DATABASE_URL` is Neon's pooled or direct address, whether Alex's account exists, backups
+taken, and which environment variables are set. Keep the existing household, accounts, `BETTER_AUTH_SECRET`,
+`BETTER_AUTH_URL`, `DATABASE_URL` and free tier. Never load test fixtures into it and never create a new database,
+household or login as a workaround.
 
-What differs on Render Free (Render's docs, read 2026-10-08): **no pre-deploy command** ("available for paid web
+What differs on Render Free (Render's docs, read 2026-10-08/09): **no pre-deploy command** ("available for paid web
 services, private services, and background workers"), **no shell, no one-off jobs**; the service sleeps after
-15 minutes without traffic and takes about a minute to wake. So migrations are run **from your computer** against
-Neon, then the verified commit is deployed straight after. Migration 012 only adds a table, columns and a wider
-check, so a release still running keeps working on it (an older pilot also receives 008–011; deploy right after
-those). The health check answers 503 while any migration is pending.
+15 minutes without traffic and takes about a minute to wake. So the database is updated by the **Start Command**
+itself, before the server starts. The health check answers 503 while a migration this code knows about is pending.
 
-### Upgrade to `c9a95b6` (verified commit) — you run these; Claude does not deploy
+### Upgrade from your phone — `7c79eb6` (verified commit); you run it, Claude does not deploy
 
-1. **Back up.** Neon Console → your project → **Branches** → **New branch** → parent: your main branch, include
-   current data, name it `before-table-upgrade`, and set auto-deletion to a week or turn it off → **Create**.
-   (Neon Free also keeps 6 hours of history for a point-in-time restore.)
-2. **Apply the migrations from your computer**, in your copy of the repository (Node 22).
-   ```bash
-   git fetch origin
+Everything marked **[tested]** was rehearsed locally on 2026-10-09 in production mode (production build,
+`TABLE_ENV=production`, PostgreSQL 16) on a household database at migration 011 created and populated by the
+011-era code (`9623de4`), upgraded to this commit. Nothing was tried on Render or Neon; **[unverified]** marks what
+Render or Neon are expected to do. Evidence: `docs/table/evidence/2026-10-09-deploy-rehearsal/`. You never type
+or paste the database password in these steps.
+
+1. **Recovery point in Neon.** Neon console → your project → **Branches** → **New branch** → parent: your main
+   branch, current data → name `before-table-upgrade` → if the form offers automatic deletion, turn it off or pick
+   a date after you will have checked the upgrade → **Create**. This is a recovery point **inside Neon, not an
+   independent backup**: if the Neon project or account is lost, the branch goes with it. Keep the independent
+   export as a separate step for a trusted computer later (`scripts/backup.sh dump "<Neon connection string>"
+   table-YYYYMMDD.dump`, stored encrypted — it holds password hashes and sessions).
+2. **Read the current Start and Build Commands.** Render → the service → **Settings** → **Build & Deploy**. Write
+   both down exactly (they are what you go back to if needed).
+   - Start Command **with** `npm run db:migrate &&` at the front: the service already updates the database when it
+     starts. Still go to step 3 so it is exactly the tested text.
+   - Start Command **without** `db:migrate` (for example `npm start` or `next start …`): deploying new code with it
+     leaves the database behind and `/api/health` answers 503 `schema_migrations_pending`. Go to step 3.
+   - The start-time update uses a development tool (`tsx`), so the build must install development packages.
+     **[unverified]** whether yours does; a Build Command such as `npm ci --include=dev && npx next build` does.
+     If step 5 shows `tsx: not found`, set that Build Command and deploy again.
+3. **Set the tested Start Command** — type exactly, then **Save**:
    ```
-   ```bash
-   git checkout c9a95b6
+   npm run db:migrate && exec node_modules/.bin/next start -H 0.0.0.0
    ```
-   ```bash
-   npm ci
-   ```
-   Type your Neon connection string into this terminal only (the direct one, without `-pooler` in the host name;
-   never paste it into chat). On macOS or Linux:
-   ```bash
-   export DATABASE_URL='paste-your-Neon-connection-string-here'
-   ```
-   On Windows PowerShell use `$env:DATABASE_URL = 'paste-your-Neon-connection-string-here'` instead. Then:
-   ```bash
-   npm run db:migrate
-   ```
-   Expect `applied: …012_recipe_content.sql` (earlier numbers too if the pilot was older), or `schema up to date`.
-   Close the terminal afterwards so the connection string is gone.
-3. **Deploy that exact commit.** Render Dashboard → the service → **Manual Deploy** → **Deploy a specific
-   commit** → `c9a95b6`. Leave every environment variable as it is.
-4. **Health.** Open `https://meal-planner-eq58.onrender.com/api/health` → `{"ok":true,"problems":[]}` (the first
-   request after a sleep can take about a minute). A 503 naming the schema means step 2 didn't run against this
-   database.
-5. **Sign in as usual** with your existing account. Our Recipes shows **Add a recipe from a link**; pasting a link
-   answers "Reading recipe pages is turned off here" — expected.
-6. **These stay off (do not add them):** `TABLE_RECIPE_IMPORT_FETCH`, `TABLE_RECIPE_CONTENT`,
+   - **[tested]** First start applies the pending migrations, then serves; later starts say `schema up to date`;
+     if a migration fails, the server does not start and nothing of the failed file is kept (each file is one
+     transaction; files before it stay applied).
+   - **[tested]** Two releases starting at once against one database (20 of 20 trials), or a start racing a
+     `npm run db:migrate` from a computer, apply each file exactly once: since this commit the migration runner
+     takes a transaction-level PostgreSQL advisory lock (with the previous runner, one of the two starts exited
+     with "relation … already exists" in 10 of 20 trials). Transaction-level because Neon's pooled connections do
+     not support session-level advisory locks; **[unverified]** behind Neon's pooler itself.
+   - Keep `exec`: the web server then replaces the shell and receives the stop signal. **[tested]** without it,
+     under `/bin/sh`, a stop signal to the shell left the server running. **[unverified]** which shell Render uses.
+   - **[unverified]** whether saving starts a deploy by itself; if one starts, check its commit in **Events** and
+     continue with step 4 either way. Leave every environment variable as it is.
+4. **Deploy the exact commit.** **Manual Deploy** → **Deploy a specific commit** → `7c79eb6` → **Deploy**.
+   (Render's docs say this turns automatic deploys off for the service — what you want for a verified commit.)
+5. **Read the deploy log** (**Events** → the deploy → **Logs**). Expect, in order: `> tsx scripts/migrate.ts`,
+   then `applied: …` ending in `013_partial_handoff.sql` (earlier files too if the pilot is older), or
+   `schema up to date`, then `✓ Ready`. **Stop, don't retry,** on `Error: migration 0NN_….sql failed: …` or
+   `… changed after it was applied`: copy that line (it holds no password) and ask for help. **[unverified]**
+   Render keeps the previous release serving when a deploy fails.
+6. **Health and sign-in.** `https://meal-planner-eq58.onrender.com/api/health` → `{"ok":true,"problems":[]}` (the
+   first request after a sleep can take about a minute). Then sign in as usual at `/login`; Our Recipes still
+   lists your recipes and saved links. **[tested]** accounts and sessions from before the upgrade keep working.
+7. **These stay off (do not add them):** `TABLE_RECIPE_IMPORT_FETCH`, `TABLE_RECIPE_CONTENT`,
    `TABLE_RECIPE_CONTENT_GRANTS`, `TABLE_RECIPE_PHOTO_HOSTS`, `KROGER_ACTIVATE` (with `TABLE_RETAILER` left at
    simulated), `INSTACART_ACTIVATE`, and every test-only switch (`TABLE_*_FIXTURES`, `TABLE_*_FAKE_*`,
    `TABLE_FIXED_NOW`, `TABLE_DISPATCH_TIMEOUT_MS`).
 
-If anything goes wrong: redeploy the previous commit from Render's deploy list (it runs on the 012 schema), or restore
-Neon from the `before-table-upgrade` branch.
+**What can and cannot be undone.**
+- **Code can go back** to an earlier commit from Render's deploy list, but only to one whose migrations are all in
+  the database. **[tested]** the 011-era code served, read and wrote on the upgraded schema and its start said
+  `schema up to date`. **Its `/api/health` still answers 200**, because it checks only the migrations it knows, so a
+  200 does not prove code and database match.
+- **A migration cannot be un-applied.** 012 and 013 only add a table, optional columns, a wider check and two
+  columns with defaults, which is why older code keeps working.
+- **Restoring from the Neon branch** returns the data to step 1: **everything written after it is lost** (recipes,
+  links, plans, sign-ins). **[unverified]** Neon's exact restore screens. Do it only if data is damaged, not because
+  a deploy failed.
+
+**Alternative (needs a computer):** keep any Start Command and run `npm run db:migrate` from your copy of the
+repository at `7c79eb6` with `DATABASE_URL` typed into that terminal only, then deploy the same commit. With
+this commit a start-time migration running at the same moment is safe (the lock above).
 
 ### One real recipe URL (only after you separately approve R1)
 

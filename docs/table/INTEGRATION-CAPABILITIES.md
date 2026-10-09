@@ -78,6 +78,10 @@ id and only the store the household chose. **Open:** Table's append-only purchas
 frozen batch it sends and the acknowledgment evidence permanently, and recording a Kroger price into
 `price_observations` would be data derived from a search. Whether either is permitted is an owner/legal
 decision (OWNER-INPUTS K6) before `cart` or price recording is activated. Behavior is unchanged in this build.
+B10 (2026-10-09) adds one more record of the same kind: a partial batch keeps its omission summary (left-out
+lines, reasons, packages). A drafted, **unsent** question to Kroger covering modality, `soldBy`/quantity and
+retention is in `PROVIDER-INQUIRIES.md`. The 2026-10-08 documentation content ids returned 404 on 2026-10-09;
+the current ids are listed there.
 
 ## Nutrition source — USDA FoodData Central (B7)
 

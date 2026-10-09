@@ -1,0 +1,182 @@
+[03:22:19.328] label=lock code=3ac64f6 migrate.ts sha=2203767c79a0 trials=20
+[03:22:19.330] Start Command (both processes): bash -c 'npm run db:migrate && exec node_modules/.bin/next start -H 0.0.0.0'
+[03:22:21.817] trial 1: A(pid 11779)=listening  B(pid 11780)=listening  (1.443 s)
+    A | applied: 012_recipe_content.sql
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 172ms
+    B | schema up to date
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 165ms
+[03:22:21.862]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:22:21.992]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:22:24.864] trial 2: A(pid 11951)=listening  B(pid 11952)=listening  (1.333 s)
+    A | applied: 012_recipe_content.sql
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 158ms
+    B | schema up to date
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 166ms
+[03:22:24.909]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:22:25.040]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:22:27.252] trial 3: A(pid 12105)=listening  B(pid 12106)=listening  (1.383 s)
+    A | applied: 012_recipe_content.sql
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 186ms
+    B | schema up to date
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 208ms
+[03:22:27.299]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:22:27.431]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:22:29.539] trial 4: A(pid 12258)=listening  B(pid 12259)=listening  (1.303 s)
+    A | applied: 012_recipe_content.sql
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 155ms
+    B | schema up to date
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 159ms
+[03:22:29.578]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:22:29.713]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:22:31.868] trial 5: A(pid 12410)=listening  B(pid 12411)=listening  (1.318 s)
+    A | schema up to date
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 163ms
+    B | applied: 012_recipe_content.sql
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 166ms
+[03:22:31.917]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:22:32.049]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:22:34.199] trial 6: A(pid 12563)=listening  B(pid 12564)=listening  (1.395 s)
+    A | schema up to date
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 172ms
+    B | applied: 012_recipe_content.sql
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 162ms
+[03:22:34.240]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:22:34.367]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:22:36.656] trial 7: A(pid 12716)=listening  B(pid 12717)=listening  (1.431 s)
+    A | applied: 012_recipe_content.sql
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 180ms
+    B | schema up to date
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 180ms
+[03:22:36.711]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:22:36.858]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:22:39.200] trial 8: A(pid 12870)=listening  B(pid 12871)=listening  (1.315 s)
+    A | schema up to date
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 183ms
+    B | applied: 012_recipe_content.sql
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 173ms
+[03:22:39.249]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:22:39.379]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:22:41.569] trial 9: A(pid 13023)=listening  B(pid 13024)=listening  (1.310 s)
+    A | schema up to date
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 157ms
+    B | applied: 012_recipe_content.sql
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 161ms
+[03:22:41.620]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:22:41.766]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:22:44.091] trial 10: A(pid 13177)=listening  B(pid 13178)=listening  (1.387 s)
+    A | schema up to date
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 171ms
+    B | applied: 012_recipe_content.sql
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 169ms
+[03:22:44.141]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:22:44.272]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:22:46.452] trial 11: A(pid 13330)=listening  B(pid 13331)=listening  (1.297 s)
+    A | schema up to date
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 186ms
+    B | applied: 012_recipe_content.sql
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 168ms
+[03:22:46.495]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:22:46.623]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:22:48.826] trial 12: A(pid 13481)=listening  B(pid 13482)=listening  (1.407 s)
+    A | schema up to date
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 167ms
+    B | applied: 012_recipe_content.sql
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 171ms
+[03:22:48.876]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:22:49.004]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:22:51.291] trial 13: A(pid 13634)=listening  B(pid 13635)=listening  (1.387 s)
+    A | applied: 012_recipe_content.sql
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 181ms
+    B | schema up to date
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 185ms
+[03:22:51.341]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:22:51.498]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:22:53.818] trial 14: A(pid 13788)=listening  B(pid 13789)=listening  (1.403 s)
+    A | schema up to date
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 209ms
+    B | applied: 012_recipe_content.sql
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 168ms
+[03:22:53.868]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:22:54.010]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:22:56.252] trial 15: A(pid 13942)=listening  B(pid 13943)=listening  (1.396 s)
+    A | applied: 012_recipe_content.sql
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 170ms
+    B | schema up to date
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 184ms
+[03:22:56.304]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:22:56.457]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:22:58.712] trial 16: A(pid 14110)=listening  B(pid 14111)=listening  (1.395 s)
+    A | applied: 012_recipe_content.sql
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 171ms
+    B | schema up to date
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 165ms
+[03:22:58.757]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:22:58.887]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:23:01.205] trial 17: A(pid 14263)=listening  B(pid 14264)=listening  (1.331 s)
+    A | schema up to date
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 175ms
+    B | applied: 012_recipe_content.sql
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 165ms
+[03:23:01.250]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:23:01.379]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:23:03.576] trial 18: A(pid 14420)=listening  B(pid 14421)=listening  (1.359 s)
+    A | schema up to date
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 173ms
+    B | applied: 012_recipe_content.sql
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 166ms
+[03:23:03.622]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:23:03.755]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:23:06.140] trial 19: A(pid 14573)=listening  B(pid 14574)=listening  (1.388 s)
+    A | schema up to date
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 188ms
+    B | applied: 012_recipe_content.sql
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 174ms
+[03:23:06.188]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:23:06.315]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:23:08.771] trial 20: A(pid 14730)=listening  B(pid 14731)=listening  (1.505 s)
+    A | applied: 012_recipe_content.sql
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 172ms
+    B | schema up to date
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 176ms
+[03:23:08.816]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:23:08.976]   schema_migrations rows=12 012 rows=1 recipe_images exists=t

@@ -1,0 +1,232 @@
+[03:19:41.949] label=nolock code=3ac64f6 migrate.ts sha=8e43718c99cc trials=20
+[03:19:41.951] Start Command (both processes): bash -c 'npm run db:migrate && exec node_modules/.bin/next start -H 0.0.0.0'
+[03:19:44.312] trial 1: A(pid 8012)=listening  B(pid 8013)=listening  (1.622 s)
+    A | schema up to date
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 206ms
+    B | applied: 012_recipe_content.sql
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 194ms
+[03:19:44.381]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:19:44.529]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:19:46.699] trial 2: A(pid 8167)=listening  B(pid 8168)=listening  (1.445 s)
+    A | applied: 012_recipe_content.sql
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 183ms
+    B | schema up to date
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 168ms
+[03:19:46.748]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:19:46.877]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:19:48.975] trial 3: A(pid 8379)=listening  B(pid 8380)=listening  (1.346 s)
+    A | schema up to date
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 168ms
+    B | applied: 012_recipe_content.sql
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 171ms
+[03:19:49.018]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:19:49.147]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:19:50.998] trial 4: A(pid 8533)=exited:1  B(pid 8534)=listening  (1.201 s)
+    A | /tmp/table-w-deploy-run/src/server/db/migrate.ts:34
+    A |         throw new Error(`migration ${f} failed: ${(e as Error).message}`);
+    A |               ^
+    A | Error: migration 012_recipe_content.sql failed: relation "recipe_images" already exists
+    A |     at migrate (/tmp/table-w-deploy-run/src/server/db/migrate.ts:34:15)
+    A |     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    A |     at async <anonymous> (/tmp/table-w-deploy-run/scripts/migrate.ts:4:17)
+    A | Node.js v22.22.0
+    B | applied: 012_recipe_content.sql
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 162ms
+[03:19:51.033]   health A:  HTTP 000   health B: {"ok":true,"problems":[]} HTTP 200
+[03:19:51.162]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:19:53.183] trial 5: A(pid 8688)=listening  B(pid 8689)=listening  (1.355 s)
+    A | applied: 012_recipe_content.sql
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 182ms
+    B | schema up to date
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 174ms
+[03:19:53.228]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:19:53.356]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:19:55.319] trial 6: A(pid 8841)=listening  B(pid 8842)=exited:1  (1.267 s)
+    A | applied: 012_recipe_content.sql
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 168ms
+    B | /tmp/table-w-deploy-run/src/server/db/migrate.ts:34
+    B |         throw new Error(`migration ${f} failed: ${(e as Error).message}`);
+    B |               ^
+    B | Error: migration 012_recipe_content.sql failed: relation "recipe_images" already exists
+    B |     at migrate (/tmp/table-w-deploy-run/src/server/db/migrate.ts:34:15)
+    B |     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    B |     at async <anonymous> (/tmp/table-w-deploy-run/scripts/migrate.ts:4:17)
+    B | Node.js v22.22.0
+[03:19:55.357]   health A: {"ok":true,"problems":[]} HTTP 200   health B:  HTTP 000
+[03:19:55.487]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:19:57.397] trial 7: A(pid 8979)=exited:1  B(pid 8980)=listening  (1.220 s)
+    A | /tmp/table-w-deploy-run/src/server/db/migrate.ts:34
+    A |         throw new Error(`migration ${f} failed: ${(e as Error).message}`);
+    A |               ^
+    A | Error: migration 012_recipe_content.sql failed: relation "recipe_images" already exists
+    A |     at migrate (/tmp/table-w-deploy-run/src/server/db/migrate.ts:34:15)
+    A |     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    A |     at async <anonymous> (/tmp/table-w-deploy-run/scripts/migrate.ts:4:17)
+    A | Node.js v22.22.0
+    B | applied: 012_recipe_content.sql
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 161ms
+[03:19:57.431]   health A:  HTTP 000   health B: {"ok":true,"problems":[]} HTTP 200
+[03:19:57.558]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:19:59.599] trial 8: A(pid 9115)=listening  B(pid 9116)=listening  (1.319 s)
+    A | schema up to date
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 176ms
+    B | applied: 012_recipe_content.sql
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 172ms
+[03:19:59.641]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:19:59.773]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:20:01.944] trial 9: A(pid 9268)=listening  B(pid 9269)=listening  (1.376 s)
+    A | applied: 012_recipe_content.sql
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 174ms
+    B | schema up to date
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 195ms
+[03:20:01.987]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:20:02.114]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:20:04.191] trial 10: A(pid 9422)=listening  B(pid 9423)=listening  (1.397 s)
+    A | schema up to date
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 174ms
+    B | applied: 012_recipe_content.sql
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 164ms
+[03:20:04.238]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:20:04.381]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:20:06.536] trial 11: A(pid 9576)=listening  B(pid 9577)=listening  (1.383 s)
+    A | schema up to date
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 175ms
+    B | applied: 012_recipe_content.sql
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 200ms
+[03:20:06.585]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:20:06.721]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:20:08.882] trial 12: A(pid 9729)=listening  B(pid 9730)=exited:1  (1.343 s)
+    A | applied: 012_recipe_content.sql
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 167ms
+    B | /tmp/table-w-deploy-run/src/server/db/migrate.ts:34
+    B |         throw new Error(`migration ${f} failed: ${(e as Error).message}`);
+    B |               ^
+    B | Error: migration 012_recipe_content.sql failed: relation "recipe_images" already exists
+    B |     at migrate (/tmp/table-w-deploy-run/src/server/db/migrate.ts:34:15)
+    B |     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    B |     at async <anonymous> (/tmp/table-w-deploy-run/scripts/migrate.ts:4:17)
+    B | Node.js v22.22.0
+[03:20:08.919]   health A: {"ok":true,"problems":[]} HTTP 200   health B:  HTTP 000
+[03:20:09.050]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:20:11.209] trial 13: A(pid 9868)=listening  B(pid 9869)=listening  (1.388 s)
+    A | schema up to date
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 164ms
+    B | applied: 012_recipe_content.sql
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 165ms
+[03:20:11.252]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:20:11.379]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:20:13.396] trial 14: A(pid 10021)=listening  B(pid 10022)=exited:1  (1.320 s)
+    A | applied: 012_recipe_content.sql
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 168ms
+    B | /tmp/table-w-deploy-run/src/server/db/migrate.ts:34
+    B |         throw new Error(`migration ${f} failed: ${(e as Error).message}`);
+    B |               ^
+    B | Error: migration 012_recipe_content.sql failed: relation "recipe_images" already exists
+    B |     at migrate (/tmp/table-w-deploy-run/src/server/db/migrate.ts:34:15)
+    B |     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    B |     at async <anonymous> (/tmp/table-w-deploy-run/scripts/migrate.ts:4:17)
+    B | Node.js v22.22.0
+[03:20:13.435]   health A: {"ok":true,"problems":[]} HTTP 200   health B:  HTTP 000
+[03:20:13.570]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:20:15.567] trial 15: A(pid 10178)=exited:1  B(pid 10179)=listening  (1.280 s)
+    A | /tmp/table-w-deploy-run/src/server/db/migrate.ts:34
+    A |         throw new Error(`migration ${f} failed: ${(e as Error).message}`);
+    A |               ^
+    A | Error: migration 012_recipe_content.sql failed: relation "recipe_images" already exists
+    A |     at migrate (/tmp/table-w-deploy-run/src/server/db/migrate.ts:34:15)
+    A |     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    A |     at async <anonymous> (/tmp/table-w-deploy-run/scripts/migrate.ts:4:17)
+    A | Node.js v22.22.0
+    B | applied: 012_recipe_content.sql
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 188ms
+[03:20:15.601]   health A:  HTTP 000   health B: {"ok":true,"problems":[]} HTTP 200
+[03:20:15.727]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:20:17.655] trial 16: A(pid 10316)=listening  B(pid 10317)=listening  (1.278 s)
+    A | applied: 012_recipe_content.sql
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 164ms
+    B | schema up to date
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 158ms
+[03:20:17.706]   health A: {"ok":true,"problems":[]} HTTP 200   health B: {"ok":true,"problems":[]} HTTP 200
+[03:20:17.831]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:20:19.779] trial 17: A(pid 10469)=exited:1  B(pid 10470)=listening  (1.303 s)
+    A | /tmp/table-w-deploy-run/src/server/db/migrate.ts:34
+    A |         throw new Error(`migration ${f} failed: ${(e as Error).message}`);
+    A |               ^
+    A | Error: migration 012_recipe_content.sql failed: relation "recipe_images" already exists
+    A |     at migrate (/tmp/table-w-deploy-run/src/server/db/migrate.ts:34:15)
+    A |     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    A |     at async <anonymous> (/tmp/table-w-deploy-run/scripts/migrate.ts:4:17)
+    A | Node.js v22.22.0
+    B | applied: 012_recipe_content.sql
+    B | ▲ Next.js 16.3.8
+    B | ✓ Ready in 163ms
+[03:20:19.811]   health A:  HTTP 000   health B: {"ok":true,"problems":[]} HTTP 200
+[03:20:19.933]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:20:21.870] trial 18: A(pid 10607)=listening  B(pid 10608)=exited:1  (1.253 s)
+    A | applied: 012_recipe_content.sql
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 163ms
+    B | /tmp/table-w-deploy-run/src/server/db/migrate.ts:34
+    B |         throw new Error(`migration ${f} failed: ${(e as Error).message}`);
+    B |               ^
+    B | Error: migration 012_recipe_content.sql failed: relation "recipe_images" already exists
+    B |     at migrate (/tmp/table-w-deploy-run/src/server/db/migrate.ts:34:15)
+    B |     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    B |     at async <anonymous> (/tmp/table-w-deploy-run/scripts/migrate.ts:4:17)
+    B | Node.js v22.22.0
+[03:20:21.904]   health A: {"ok":true,"problems":[]} HTTP 200   health B:  HTTP 000
+[03:20:22.028]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:20:23.969] trial 19: A(pid 10745)=listening  B(pid 10746)=exited:1  (1.235 s)
+    A | applied: 012_recipe_content.sql
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 165ms
+    B | /tmp/table-w-deploy-run/src/server/db/migrate.ts:34
+    B |         throw new Error(`migration ${f} failed: ${(e as Error).message}`);
+    B |               ^
+    B | Error: migration 012_recipe_content.sql failed: relation "recipe_images" already exists
+    B |     at migrate (/tmp/table-w-deploy-run/src/server/db/migrate.ts:34:15)
+    B |     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    B |     at async <anonymous> (/tmp/table-w-deploy-run/scripts/migrate.ts:4:17)
+    B | Node.js v22.22.0
+[03:20:24.002]   health A: {"ok":true,"problems":[]} HTTP 200   health B:  HTTP 000
+[03:20:24.137]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
+[03:20:26.004] trial 20: A(pid 10883)=listening  B(pid 10884)=exited:1  (1.223 s)
+    A | applied: 012_recipe_content.sql
+    A | ▲ Next.js 16.3.8
+    A | ✓ Ready in 161ms
+    B | /tmp/table-w-deploy-run/src/server/db/migrate.ts:34
+    B |         throw new Error(`migration ${f} failed: ${(e as Error).message}`);
+    B |               ^
+    B | Error: migration 012_recipe_content.sql failed: relation "recipe_images" already exists
+    B |     at migrate (/tmp/table-w-deploy-run/src/server/db/migrate.ts:34:15)
+    B |     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    B |     at async <anonymous> (/tmp/table-w-deploy-run/scripts/migrate.ts:4:17)
+    B | Node.js v22.22.0
+[03:20:26.037]   health A: {"ok":true,"problems":[]} HTTP 200   health B:  HTTP 000
+[03:20:26.171]   schema_migrations rows=12 012 rows=1 recipe_images exists=t
