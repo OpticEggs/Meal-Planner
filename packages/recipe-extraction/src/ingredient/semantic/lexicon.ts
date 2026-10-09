@@ -1,8 +1,10 @@
 /**
- * semantic-v1 · the engine's small, general vocabularies. Every list here is a closed class of
- * measuring or function words (units, number words, size words, preparation participles, remark
- * markers, imperative verbs); none of them names a food. They are documented so a reviewer can see
- * exactly which words change a reading.
+ * semantic-v1 · the engine's small, general vocabularies, documented so a reviewer can see exactly which
+ * words change a reading. Most lists are closed classes of measuring or function words (units, number
+ * words, size and measure words, preparation participles, remark markers, imperative verbs, nutrition
+ * labels). Three lists DO name foods and say so where they are defined: STANDALONE_INGREDIENTS (pantry
+ * staples offered whole as a substitute), INVARIANT_PLURALS (zero-plural nouns) and the food-like
+ * words that RECIPE_PART_WORDS deliberately leaves out. No list was chosen from a label set.
  */
 import type { AmountUnstated, UnitCode } from "../../contract";
 
@@ -12,7 +14,11 @@ const hasOwn = (o: object, k: string) => Object.prototype.hasOwnProperty.call(o,
 
 // --- Units ---------------------------------------------------------------------------------------
 
-/** Unit spellings (lower case, without a trailing period) → canonical code. Plurals listed explicitly. */
+/**
+ * Unit spellings (lower case, without a trailing period) → canonical code. Plurals listed explicitly.
+ * "tub(s)" and "pots" are containers and "bars" a block ("4 125 g pots yogurt", "2 100 g bars chocolate");
+ * the singulars "pot" and "bar" are left out because they begin food names ("pot roast", "bar cookies").
+ */
 const UNIT_SPELLINGS: Record<UnitCode, string> = {
   mg: "mg mgs milligram milligrams milligramme milligrammes",
   g: "g gs gr grs gm gms gram grams gramme grammes",
@@ -32,7 +38,7 @@ const UNIT_SPELLINGS: Record<UnitCode, string> = {
   each: "each ea",
   bag: "bag bags",
   ball: "ball balls",
-  block: "block blocks",
+  block: "block blocks bars",
   bottle: "bottle bottles btl btls",
   box: "box boxes",
   bulb: "bulb bulbs",
@@ -40,7 +46,7 @@ const UNIT_SPELLINGS: Record<UnitCode, string> = {
   can: "can cans",
   carton: "carton cartons ctn ctns",
   clove: "clove cloves",
-  container: "container containers",
+  container: "container containers tub tubs pots",
   cube: "cube cubes",
   ear: "ear ears",
   envelope: "envelope envelopes env envs",
@@ -79,6 +85,12 @@ const UNIT_BY_WORD: Record<string, UnitCode> = Object.create(null);
 for (const [code, spellings] of Object.entries(UNIT_SPELLINGS) as [UnitCode, string][]) {
   for (const w of words(spellings)) UNIT_BY_WORD[w] = code;
 }
+
+/**
+ * Unit spellings that also begin food names ("pound cake", "gram crackers", "gram flour", "cup noodles",
+ * "pint glass"): written with no number of their own, they are read as food, not as a unit.
+ */
+export const UNIT_WORDS_IN_FOOD_NAMES = setOf("pound gram cup pint quart liter litre");
 
 /** Spellings whose case decides the unit: `T` is a tablespoon, `t` a teaspoon (cooking convention). */
 const UNIT_BY_CASED_WORD: Record<string, UnitCode> = Object.assign(Object.create(null), { T: "tbsp", t: "tsp", Tb: "tbsp", TB: "tbsp", Tbs: "tbsp", TBS: "tbsp" });
@@ -163,7 +175,7 @@ export const MEASURE_ADJECTIVES = setOf("heaping heaped scant level rounded gene
  * as stated but cannot be carried without a unit, so the line needs review (`unit_unknown`).
  */
 export const UNKNOWN_MEASURES = setOf(
-  "dsp dsps dessertspoon dessertspoons dollop dollops glug glugs drizzle drizzles squeeze squeezes rasher rashers tub tubs punnet punnets " +
+  "dsp dsps dessertspoon dessertspoons dollop dollops glug glugs drizzle drizzles squeeze squeezes rasher rashers punnet punnets " +
     "sachet sachets glass glasses mug mugs spoonful spoonfuls shot shots jigger jiggers cl cls centiliter centiliters centilitre centilitres " +
     "peck pecks bushel bushels dab dabs pat pats lump lumps sliver slivers twist twists nub nubs smidgen smidgens",
 );
@@ -176,7 +188,10 @@ export const BOUND_PHRASES: readonly (readonly string[])[] = [["up", "to"], ["at
 
 /** Length words: a size, never a unit of the registry ("2 cm piece ginger"). */
 /** Lengths right after a number: sizes, never amounts ("2 cm piece", "6 in. skewers": "in" only directly after the number). */
-export const LENGTH_WORDS = setOf("cm cms centimeter centimeters centimetre centimetres mm millimeter millimeters millimetre millimetres in");
+export const LENGTH_WORDS = setOf(
+  "cm cms centimeter centimeters centimetre centimetres mm millimeter millimeters millimetre millimetres in foot feet ft yard yards yd yds " +
+    "meter meters metre metres",
+);
 
 /** cooked / raw words (CONTRACT §7.6: → `form`). */
 export const FORM_WORDS: Readonly<Record<string, "cooked" | "raw">> = Object.assign(Object.create(null), {
@@ -206,24 +221,40 @@ export const REMARK_WORDS = setOf(
 );
 
 /**
- * Modifiers that, written alone before "or", clearly share the following food ("fresh or frozen peas",
- * "red or white wine vinegar", "light or dark brown sugar"): colours, sweetness, fat, salt, heat, form and
- * sourcing words. A noun before "or" ("chicken or vegetable broth", "butter or olive oil") is kept as written —
- * the grammar alone does not say whether it shares the head.
+ * Adjectives that describe a version of a food — colour, taste, heat, fat and salt level, texture, grade and
+ * processing ("red", "unsalted", "low-fat", "extra-virgin", "rolled"). None of them is a food. With the
+ * structural tests in alternatives.ts (past participles "granulated", "un-"/"non-" forms, "-ing" compounds,
+ * percentages) they tell that the options of a choice are versions of the named food: "sugar (granulated or
+ * powdered)" → granulated sugar, powdered sugar; "1 onion, red or white" → red onion, white onion.
+ * General English adjectives, not chosen from any label set.
  */
-export const MODIFIER_WORDS = setOf(
-  "red white green yellow black brown orange purple golden pink dark light sweet unsweetened sweetened semisweet bittersweet hot mild spicy " +
-    "smoked plain skim low-fat nonfat non-fat fat-free full-fat reduced-fat lowfat low-sodium reduced-sodium salted unsalted regular wild long " +
+export const ADJECTIVE_WORDS = setOf(
+  "red white green yellow black brown purple golden pink orange dark light sweet unsweetened sweetened semisweet bittersweet hot mild spicy " +
+    "smoked plain skim whole low-fat nonfat non-fat fat-free full-fat reduced-fat lowfat low-sodium reduced-sodium salted unsalted regular wild long " +
     "short coarse fine kosher flat-leaf curly seedless unbleached bleached toasted roasted instant quick old-fashioned rolled steel-cut " +
-    "large-curd small-curd extra-virgin virgin light-brown dark-brown fresh frozen dried canned cooked uncooked raw " +
-    // kinds that commonly name a version of the next food ("chicken or vegetable broth", "lemon or lime juice")
-    "chicken beef vegetable veggie pork turkey fish seafood mushroom bone lamb duck lemon lime grapefruit tangerine " +
-    "olive canola peanut sesame coconut avocado sunflower safflower grapeseed almond cashew walnut hazelnut pecan soy oat " +
-    "corn rice wine cider apple balsamic sherry bread cake pastry all-purpose self-rising whole-wheat whole semolina flour sea table grain",
+    "large-curd small-curd extra-virgin virgin light-brown dark-brown fresh frozen dried canned cooked uncooked raw firm soft silken extra-firm " +
+    "thick thin sharp aged mature creamy chunky crunchy smooth natural organic heavy double single strong extra-sharp lean extra-lean ripe " +
+    "bone-in boneless skin-on skinless seedless",
 );
 
-/** Food words whose plural is the same word ("12 shrimp"): a count before them is a count. */
-export const INVARIANT_PLURALS = setOf("shrimp fish salmon trout cod tuna squid sheep deer halibut tilapia moose bison prawn scampi");
+/**
+ * Basic ingredients that are routinely offered WHOLE as a substitute for a compound ingredient ("butter or
+ * olive oil", "honey or maple syrup", "water or chicken stock", "milk or heavy cream"). A word from this
+ * list before "or" is its own option, so the last option's head is not shared with it ("butter oil" and
+ * "honey syrup" would be made up). This is a list of foods, kept short and general (pantry staples and
+ * liquids), not chosen from any label set; any other single word before "or" shares the last option's
+ * head ("maple or agave syrup", "Greek or plain yogurt", "chicken or vegetable broth").
+ */
+export const STANDALONE_INGREDIENTS = setOf(
+  "water butter margarine ghee lard shortening oil honey sugar salt milk cream stock broth wine beer vinegar juice yogurt yoghurt " +
+    "mayonnaise mayo ketchup molasses jam jelly cheese flour cornstarch eggs egg tofu",
+);
+
+/**
+ * Nouns whose plural is the same word (zero plural: "12 shrimp", "4 salmon"). A count before them is a count,
+ * not a number inside a name. A linguistic list (fish, shellfish and game names with zero plurals), general.
+ */
+export const INVARIANT_PLURALS = setOf("shrimp fish salmon trout cod tuna squid sheep deer halibut tilapia moose bison prawn scampi haddock pollock venison");
 
 /** Words that cannot start a food name; at the start of a name they are left-overs of a misread amount or a purpose ("or b", "for topping"). */
 export const LEADING_JUNK = setOf("or and nor with to plus but for");
@@ -238,7 +269,7 @@ export const FUNCTION_WORDS = setOf("a an the or and of in from to your my any i
 export const TRAILING_PREP_WORDS = setOf(
   "chopped diced minced sliced grated shredded crushed peeled cubed halved quartered julienned trimmed seeded cored pitted rinsed drained " +
     "beaten melted softened divided separated sifted toasted juiced zested mashed pureed puréed thawed torn smashed crumbled deveined shelled " +
-    "stemmed hulled scrubbed washed patted squeezed",
+    "stemmed hulled scrubbed washed patted squeezed pressed snipped",
 );
 export const PREP_ADVERBS = setOf("finely thinly roughly coarsely lightly well very thickly freshly");
 
@@ -310,31 +341,38 @@ export const WEAK_INSTRUCTION_VERBS = setOf("season whip line spread roll slice 
 export const YIELD_WORDS = setOf("serves serve makes yields yield servings");
 
 /**
- * Words that label recipe facts rather than food ("Calories: 250", "Serving size: 1 cup", "Special
- * equipment: 2 baking sheets", "Protein 20g"). A line labelled with one of them is not an ingredient.
+ * Nutrition-fact labels. A line is a nutrition fact only when the WHOLE label is made of these words and
+ * the value is only a number with a nutrient unit (FACT_UNITS): "Calories: 250", "Fat: 10 g", "Saturated
+ * fat 3g", "Protein 20g". Any food word makes the line food again ("Protein powder: 1 scoop", "Low sodium
+ * soy sauce: 2 tbsp", "Fat: 2 tbsp bacon grease"); "sugar" alone is food, "sugars" is a nutrient.
  */
-/**
- * Nutrient names: a label made only of these ("Fat: 10 g", "Saturated fat 3g", "Sugars 12 g") is a nutrition
- * fact. A food word in the label makes it an ingredient again ("Duck fat: 2 tbsp"); "sugar" alone is food.
- */
-export const NUTRIENT_WORDS = setOf("fat fats saturated unsaturated monounsaturated polyunsaturated trans sugars added total dietary");
-
-export const META_LABEL_WORDS = setOf(
+export const NUTRIENT_WORDS = setOf(
   "calories calorie kcal kj kilojoules energy nutrition nutritional protein proteins carbs carbohydrates carbohydrate fiber fibre cholesterol " +
-    "sodium serving servings size per portion portions weight total yield yields makes serves equipment need needed time prep " +
-    "note notes tip tips method directions instructions step steps",
+    "sodium potassium calcium iron fat fats saturated unsaturated monounsaturated polyunsaturated trans sugars added total dietary net per serving",
 );
-/** Nouns that, right after a number, make it a count of something other than food ("4 servings", "250 kcal"). */
+/** Units of a nutrition value ("250 kcal", "10 g", "200 mg", "15%"). */
+export const FACT_UNITS = setOf("g mg mcg µg kcal cal calories calorie kj iu % dv");
+
+/**
+ * Serving and size labels ("Serving size: 1 cup", "Per serving: 2 tbsp", "Portion: 200 g", "Total: 2 cups"):
+ * a recipe fact only when the whole label is made of these words and the value is a bare amount with no
+ * food after it. "Per person: 200 g pasta" is food (an amount per person: a person checks it).
+ */
+export const SERVING_LABEL_WORDS = setOf("serving servings size per portion portions weight total yield yields person people makes serves");
+/** Equipment labels: what follows is never food ("Special equipment: 9-inch pan"). */
+export const EQUIPMENT_LABEL_WORDS = setOf("equipment tools utensils");
+/** Nouns that, right after a number and ending the line, count something other than food ("4 servings", "250 kcal"). */
 export const META_NOUNS = setOf("servings serving portions portion people persons person kcal calories calorie cal kj");
 
 /**
- * Words that name a part of a recipe; an all-capitals line made only of these (with "for", "the", "and",
- * "to") is a heading ("TOPPING", "FOR THE SAUCE"). Other all-capitals lines may be food ("SALT", "OLIVE OIL").
+ * Words that name a part or step of a recipe and are never bought as food; an all-capitals line made only
+ * of these (with "for", "the", "and", "to") is a heading ("TOPPING", "FOR THE FILLING"). Parts that can also
+ * be bought or named as food (sauce, crust, dressing, dough, bread, stock, syrup…) are left out: "BREAD" or
+ * "PIE CRUST" may be food, and an unsure line goes to a person rather than being refused.
  */
 export const RECIPE_PART_WORDS = setOf(
-  "topping toppings sauce filling fillings crust dressing garnish garnishes marinade glaze frosting icing batter dough assembly base streusel " +
-    "salad main sides side extras optional serve finish decorate cake pie bread cookies muffins pastry crumb crumble syrup broth stock soup " +
-    "seasoning rub spice mix blend for the and to ingredients ingredient dry wet",
+  "topping toppings filling fillings garnish garnishes marinade glaze frosting icing assembly streusel decoration decorations main sides " +
+    "extras serve serving finish finishing decorate for the and to ingredients ingredient dry wet",
 );
 
 /** Words that, after an opening verb, show the line is an instruction ("Season with…", "Roll into…", "Mix all…"). */

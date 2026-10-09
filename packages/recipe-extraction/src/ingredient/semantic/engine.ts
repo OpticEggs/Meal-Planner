@@ -22,11 +22,11 @@ import { validateParsedIngredientV1 } from "../../validate";
 import { amountStartsAt, groupAmount, isPriceGroup, readAmountPhrase, readStatedAmount, placeSecondary, sumInSmallest, type AmountSlots } from "./amount";
 import { nonIngredientReason, numericLead } from "./classify";
 import { adjacent, isGroup, isNumberish, isSym, isWord, lex, type Tok } from "./lexer";
-import { BULLETS, CONTAINER_UNITS, FUNCTION_WORDS, INVARIANT_PLURALS, MEASURE_ADJECTIVES, MODIFIER_WORDS, PREP_ADVERBS, REMARK_WORDS, SIZE_WORDS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
+import { BULLETS, CONTAINER_UNITS, SERVING_LABEL_WORDS, UNIT_WORDS_IN_FOOD_NAMES, FUNCTION_WORDS, INVARIANT_PLURALS, MEASURE_ADJECTIVES, PREP_ADVERBS, REMARK_WORDS, SIZE_WORDS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
 import { readNameRegion, type NameReading } from "./name";
 import { normalizeLine } from "./normalize";
 import { classifyPiece, splitOr, splitTopLevel, textOf, trimEdges, unstatedAt } from "./remarks";
-import { distributeOptions, foodHead, isRemarkOption, kindPhrases, listNamesKinds, modifiersOf, uniqueOptions, withKind } from "./alternatives";
+import { adjectival, distributeOptions, foodHead, isRemarkOption, plural, uniqueOptions, versionsOf, withKind } from "./alternatives";
 import { emptyEffects, mergeEffects, type AmountReading } from "./types";
 import { readUnit, type UnitRead } from "./unit";
 
@@ -129,7 +129,7 @@ function namesSeveral(name: string, trailingUnit: UnitRead | null, text: string)
  */
 function bareUnitAtStart(u: UnitRead, text: string): boolean {
   const written = text.slice(u.s, u.e).toLowerCase().replace(/\.$/, "");
-  if (written.length <= 1 || ["pound", "gram", "cup", "pint", "quart", "liter", "litre"].includes(written)) return false;
+  if (written.length <= 1 || UNIT_WORDS_IN_FOOD_NAMES.has(written)) return false;
   return u.unit.dimension === "mass" || u.unit.dimension === "volume";
 }
 
@@ -360,9 +360,11 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
     if (!amt.packageProvisional.marked) slots.quantity = null;
   }
 
-  // A number word or count before a food that is not counted ("Five spice powder", "Seven Up", "Three
-  // cheese blend, 1 cup"): the number may be part of the name. With a stated amount or a "to taste" after
-  // a comma, or when the number is a word, the line is read again with the number kept in the name.
+  // A count before a food that does not read as several ("Five spice powder", "Two egg", "2 tomato"): the
+  // count is kept and a person checks. Only when a comma then gives the line's own amount or says "to taste"
+  // ("Five spice powder, to taste", "Three cheese blend, 1 cup", "5 spice powder, 1 tsp") is the number part
+  // of the name, and the line is read again name-first. A weight after a counted food ("2 chicken breast,
+  // about 1 lb") is the weight of what was counted, so the count stays (the weight is a second amount).
   // (read again only when a plain word follows the number: "10 of rice", "12 (1 stick) can …" are other shapes)
   const r0 = region[0];
   const plainNext = r0 !== undefined && r0.kind === "word" && r0.lower !== "of" && readUnit(text, region, 0) === null && !SIZE_WORDS.has(r0.lower);
@@ -370,15 +372,21 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
     const value = fromExactQuantity(slots.quantity)!;
     if (cmp(value, rational(BigInt(1), BigInt(1))) > 0 && !namesSeveral(nr.name, nr.trailingUnit, text)) {
       const conflict = tails.some((seg) => {
+        if (phraseOnly(seg)) return true;
         const sa = readStatedAmount(text, seg, 0);
-        return (sa !== null && sa.next === seg.length && sa.unit.dimension !== "imprecise") || phraseOnly(seg);
+        if (sa === null || sa.next !== seg.length || sa.unit.dimension === "imprecise") return false;
+        return sa.unit.dimension !== "mass" || (amt.fromWord && !sa.approx);
       });
-      if ((conflict || amt.fromWord) && plainNext) return read(input, { leadIsName: true });
-      push(fx.reasons, "unclassified"); // "2 tomato": a count, but of what?
+      if (conflict && plainNext) return read(input, { leadIsName: true });
+      push(fx.reasons, "unclassified"); // "2 tomato", "Two egg": a count, but of what?
     }
   }
   if (labelBefore) {
+    // "Per person: 200 g pasta", "You will need: 2 baking sheets": the label changes what the amount means,
+    // or may introduce something that is not food — a person checks
     const m = unstatedAt(labelBefore, 0);
+    const phraseLabel = m !== null && m.len === labelBefore.length; // "For serving: lemon wedges"
+    if (!phraseLabel && labelBefore.some((t) => isWord(t) && (SERVING_LABEL_WORDS.has(t.lower) || ["need", "needed", "require", "required"].includes(t.lower)))) push(fx.reasons, "unclassified");
     if (m && m.len === labelBefore.length) fx.unstated.push({ kind: m.kind, s: labelBefore[0].s, text: textOf(text, labelBefore), alone: true });
     else if (labelBefore.length === 1 && isWord(labelBefore[0], "garnish", "garnishes")) fx.unstated.push({ kind: "for_garnish", s: labelBefore[0].s, text: textOf(text, labelBefore), alone: true });
     else fx.notes.push({ s: labelBefore[0].s, text: trimEdges(textOf(text, labelBefore)) });
@@ -473,7 +481,13 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
     }
     const pfx = emptyEffects();
     classifyPiece(text, seg, pfx);
-    if (amount && sa) pfx.unassigned++; // "1 cup flour, 2 tbsp sugar": a second amount with a unit
+    if (amount && sa && sa.unit.canonical !== "inch") pfx.unassigned++; // "1 cup flour, 2 tbsp sugar": a second amount with a unit
+    else if (!sa && amountStartsAt(text, seg, 0)) {
+      // "2 eggs, 3", "2 cups flour, 3 eggs", "Seven layer bars, 12": a number after a comma is an amount nobody
+      // can place — the note never holds an amount (CONTRACT §2). A size ("1-inch cubes") is a note.
+      const lead = readAmountPhrase(text, seg, 0);
+      if (lead && (lead.quantity !== null || (lead.amountWritten && lead.effects.notes.length === 0))) pfx.unassigned++;
+    }
     const plain = pfx.notes.length === 1 && !pfx.optional && pfx.unstated.length === 0 && pfx.form === null && pfx.options.length === 0 && pfx.unassigned === 0;
     if (plain) {
       noteRun.push(pfx.notes[0]);
@@ -485,41 +499,78 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
   });
   flushRun();
 
-  // Alternatives (CONTRACT §7.8): every option, in order; the name is then null.
+  // Alternatives (CONTRACT §7.8): every option, in order; the name is then null. Options are completed only
+  // where the grammar says so (alternatives.ts); a word is never invented and an option never dropped.
   let name = nr.name;
   const additional = fx.options.filter((o) => o.mode === "additional");
-  const variants = fx.options.filter((o) => o.mode === "variants").map((o) => o.text).filter((x) => x.length > 0);
+  const variantOpts = fx.options.filter((o) => o.mode === "variants" && o.text.length > 0);
+  const variants = variantOpts.map((o) => o.text);
   const listed = fx.options.filter((o) => o.mode === "list").map((o) => o.text).filter((x) => x.length > 0);
   let base: string[] = nr.options ? [...nr.options] : name ? [name] : [];
+  let choice = nr.options !== null && nr.options.length >= 2;
   // (an item written with an article is a food of its own: "(cheddar, mozzarella, or a blend)")
   const articled = fx.options.some((o) => o.mode === "list" && /^an? /i.test(text.slice(o.s)));
-  if (listed.length >= 2 && base.length === 1 && !articled && listNamesKinds(listed, base[0])) base = listed.map((v) => withKind(v, base[0])); // "oil (vegetable, canola, or peanut)"
-  else if (listed.length >= 2) base = listed; // "fresh herbs (parsley, cilantro, or basil)": the list names the food
-  else if (listed.length === 1 && base.length === 1) base = [...base, ...listed];
-  else if (variants.length >= 2 && base.length === 1) {
-    const plural = variants.some((v) => /[^s]s$/i.test(v));
-    if (kindPhrases(variants)) base = variants.map((v) => withKind(v, base[0])); // "1 onion, red or white", "vinegar, white or apple cider"
-    else if (modifiersOf([base[0], ...variants.slice(0, -1)])) base = distributeOptions([base[0], ...variants]); // "chicken, beef or vegetable stock"
-    else if (plural) base = variants; // "nuts (walnuts or pecans)"
-    else base = [base[0], ...variants]; // "milk, cream or half-and-half", "potatoes, russet or Yukon gold": as written
-  } else if (variants.length >= 2 && base.length === 0) base = variants;
+  if (listed.length >= 2) {
+    // a bracketed choice after the food: "sugar (granulated or powdered)", "nuts (walnuts or pecans)"
+    if (base.length === 1) {
+      const how = articled ? "members" : versionsOf(listed, base[0], true);
+      base = how === "members" ? listed : listed.map((v) => withKind(v, base[0]));
+    } else base = listed;
+    choice = true;
+  } else if (listed.length === 1 && base.length === 1) {
+    base = [...base, ...listed];
+    choice = true;
+  } else if (variants.length >= 2 && base.length === 1) {
+    // a choice after a comma: "1 onion, red or white" (versions), "chicken, beef or vegetable stock" (a shared
+    // head), "greens, spinach or kale" (members); "cheese, cheddar or Swiss" is not decided by the grammar
+    const how = versionsOf(variants, base[0], false);
+    const asWritten = [base[0], ...variants];
+    const shared = distributeOptions(asWritten);
+    const lastModifier = variants[variants.length - 1].split(" ")[0];
+    if (how === "versions") base = variants.map((v) => withKind(v, base[0]));
+    else if (!adjectival(lastModifier) && !plural(base[0]) && shared.some((x, k) => x !== asWritten[k])) base = shared;
+    else if (how === "members") base = variants;
+    else {
+      // unsure: the food stays the name, the choice is a note, and a person decides
+      push(fx.reasons, "unclassified");
+      fx.notes.push({ s: variantOpts[0].s, text: `${variants.slice(0, -1).join(", ")} or ${variants[variants.length - 1]}` });
+      base = [base[0]];
+    }
+    choice = base.length >= 2;
+  } else if (variants.length >= 2 && base.length === 0) {
+    base = variants;
+    choice = true;
+  }
   // "fresh thyme (or dried)": a remark word alone names the same food in another form
   let extra = [...listOptions.map((o) => o.text), ...additional.map((o) => (isRemarkOption(o.text) && name ? `${o.text} ${foodHead(name)}` : o.text))];
   const named = name;
-  if (listOptions.length > 0 && named !== null) {
+  const listTakesAdditional = listOptions.length > 0 && named !== null;
+  if (listTakesAdditional && named !== null) {
+    // "stock, chicken, beef, or vegetable" (versions), "chicken, beef, or vegetable stock" (a shared head);
+    // otherwise every option of the list as written
     const kinds = [...listOptions.map((o) => o.text), ...additional.map((o) => o.text)];
-    // "stock, chicken, beef or vegetable": versions of the named food; "chicken, beef, or vegetable stock":
-    // the head is shared; otherwise every option as written
-    base = kindPhrases(kinds) ? kinds.map((v) => withKind(v, named)) : distributeOptions([named, ...kinds]);
+    const asWritten = [named, ...kinds];
+    const shared = distributeOptions(asWritten);
+    const how = versionsOf(kinds, named, false);
     extra = [];
+    if (how === "versions") base = kinds.map((v) => withKind(v, named));
+    else if (shared.some((x, k) => x !== asWritten[k])) base = shared;
+    else if (how === "members") base = kinds;
+    else if (kinds.every((k) => !k.includes(" "))) {
+      // "stock, chicken, beef, or vegetable", "salt, pepper, or paprika": is the first word one of the options?
+      push(fx.reasons, "unclassified");
+      fx.notes.push({ s: listOptions[0].s, text: `${kinds.slice(0, -1).join(", ")} or ${kinds[kinds.length - 1]}` });
+      base = [named];
+    } else base = asWritten; // "cheddar, Monterey Jack, or pepper jack": full names, every one an option
+    choice = base.length >= 2;
   }
   // an option with its own amount ("(or 1 tsp dried)", "(or 2 cups)") is a second amount nobody can place
   if (additional.some((o) => o.hasAmount)) fx.unassigned++;
   let alternatives = uniqueOptions([...base, ...extra]);
-  if (alternatives.length >= 2 && (variants.length >= 2 || listed.length >= 2 || listOptions.length > 0 || extra.length > 0 || (nr.options !== null && nr.options.length >= 2))) name = null;
+  if (alternatives.length >= 2 && (choice || extra.length > 0)) name = null;
   else {
     alternatives = [];
-    for (const o of additional) if (o.text) fx.notes.push({ s: o.s, text: `or ${o.text}` });
+    if (!listTakesAdditional) for (const o of additional) if (o.text) fx.notes.push({ s: o.s, text: `or ${o.text}` });
   }
 
   // Unstated amount: a flag when no amount was written, otherwise the phrase is a note.

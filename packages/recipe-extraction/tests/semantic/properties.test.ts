@@ -12,7 +12,9 @@
  */
 import { describe, expect, it } from "vitest";
 import type { ParsedIngredientV1 } from "../../src/contract";
+import { UNIT_REGISTRY } from "../../src/contract";
 import { parseSemanticUnchecked, semanticEngine } from "../../src/ingredient/semantic/engine";
+import { UNIT_WORDS_IN_FOOD_NAMES, unitOfWord } from "../../src/ingredient/semantic/lexicon";
 import { validateParsedIngredientV1 } from "../../src/validate";
 import { ingredientCorpus, NON_STRING_INPUTS } from "../parity/corpus";
 import { FOODS, generateLines } from "./generate";
@@ -189,9 +191,10 @@ describe("safety properties", () => {
     expect(bad).toEqual([]);
   });
 
-  it("a name never begins with the unit, a stray conjunction or article, or a number (unless a person is asked to check)", () => {
+  it("a name never begins with the unit, a unit word, an amount, a stray conjunction or article, or a number (unless a person is asked to check)", () => {
     const bad: string[] = [];
     const LEADING = /^(?:(?:or|and|nor|with|to|plus|but)(?![-\p{L}])|[&/+])/iu;
+    const NUMBERISH = /^(?:\d[\d./]*|[½⅓⅔¼¾⅕⅖⅗⅘⅙⅚⅐⅛⅜⅝⅞]|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|twenty|thirty|forty|fifty|hundred|thousand|half|quarter|third|dozen)$/;
     const CARDINAL = /^(?:\d|[½⅓⅔¼¾⅕⅖⅗⅘⅙⅚⅐⅛⅜⅝⅞]|(?:one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|half|dozen)(?=\s|$))/iu;
     for (const line of ALL) {
       const r = parse(line);
@@ -202,6 +205,16 @@ describe("safety properties", () => {
         if (LEADING.test(name)) bad.push(`${show(line)}: name starts with a conjunction "${name}"`);
         if (/^(?:a|an)\s/i.test(name)) bad.push(`${show(line)}: name starts with an article "${name}"`);
         if (CARDINAL.test(name) && !/^\d+(?:\.\d+)?%/.test(name) && !/^\d+\/\d+ /.test(name) && !(r.status === "needs_review" && r.reasons.includes("unclassified")) && !/^\w*\d\w*[a-z]/i.test(name)) bad.push(`${show(line)}: name starts with a number "${name}"`);
+        // at every status, also when no amount was read: never "<number> <unit> …" ("hundred grams flour",
+        // "quarter cup sugar"), never a weight or volume word first ("cups flour")
+        const ws = name.split(" ").map((w) => w.toLowerCase().replace(/\.$/, ""));
+        const unitWord = (w: string | undefined) => {
+          if (w === undefined || w.length <= 1 || UNIT_WORDS_IN_FOOD_NAMES.has(w)) return false;
+          const c = unitOfWord(w);
+          return c !== null && (UNIT_REGISTRY[c].dimension === "mass" || UNIT_REGISTRY[c].dimension === "volume");
+        };
+        if (ws.length >= 2 && NUMBERISH.test(ws[0]) && unitWord(ws[1])) bad.push(`${show(line)}: name holds an amount and unit "${name}"`);
+        if (ws.length >= 2 && unitWord(ws[0])) bad.push(`${show(line)}: name starts with a unit word "${name}"`);
       }
       if (bad.length >= 15) break;
     }

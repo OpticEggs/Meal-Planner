@@ -14,7 +14,7 @@
  * (`quantity_unassigned`), never guessed.
  */
 import { UNIT_REGISTRY, type EquivalentV1, type ExactQuantity, type QuantityV1, type ReasonCode, type UnitV1 } from "../../contract";
-import { add, cmp, div, fromDecimalString, fromExactQuantity, mul, toExactQuantity, type Rational } from "../../rational";
+import { add, cmp, div, fromDecimalString, fromExactQuantity, mul, rational, toExactQuantity, type Rational } from "../../rational";
 import { adjacent, isGroup, isSym, isWord, type GroupTok, type Tok } from "./lexer";
 import {
   APPROX_SYMBOLS, APPROX_WORDS, BOUND_PHRASES, CARDINALS, CONTAINER_UNITS, FORM_WORDS, FRACTION_WORDS, FUNCTION_WORDS, LENGTH_WORDS, MEASURE_ADJECTIVES,
@@ -27,6 +27,11 @@ import { readUnit, type UnitRead } from "./unit";
 const isMassOrVolume = (u: UnitV1) => u.dimension === "mass" || u.dimension === "volume";
 const hyphen = (t: Tok | undefined) => isSym(t, "-", "‐", "‑");
 const LEADING_MEASURE = new Set(["heaping", "heaped", "scant", "generous", "good", "level", "rounded", "full"]);
+/** Measurement systems named beside a unit; all but US change the size of a cup, pint, quart, gallon or spoon. */
+const SYSTEM_WORDS = new Set(["us", "u.s", "american", "uk", "imperial", "british", "australian", "aus", "metric", "canadian"]);
+const OTHER_SYSTEM_WORDS = new Set(["uk", "imperial", "british", "australian", "aus", "metric", "canadian"]);
+/** US customary volume units whose size differs in other systems. */
+const US_VOLUME = new Set(["tsp", "tbsp", "fl_oz", "cup", "pint", "quart", "gallon"]);
 
 function exactOf(value: Rational, decimal: boolean): ExactQuantity | null {
   return toExactQuantity(value, decimal ? "decimal" : "fraction");
@@ -165,12 +170,17 @@ function inBase(q: ExactQuantity, u: UnitV1): Rational | null {
   return b === null || r === null ? null : mul(r, fromDecimalString(b)!);
 }
 
+/** The measurement system of a weight or volume unit: metric, or US customary (avoirdupois and US liquid). */
+const METRIC = new Set(["mg", "g", "kg", "ml", "dl", "l"]);
+const systemOf = (u: UnitV1): "metric" | "us" => (METRIC.has(u.canonical) ? "metric" : "us");
+
 /**
- * The largest relative difference accepted between an amount and its restatement in a related unit of the
- * same dimension: 1/8 (12.5 %). Recipes round cross-system restatements ("1 cup (240 ml)" is 1.4 % off,
- * "1 lb (450 g)" 0.8 %, "1 lb (500 g)" 9.3 %, "4 cups (1 liter)" 5.4 %); a contradiction is far larger
- * ("1 lb (12 oz)" 25 %, "1 cup (8 tbsp)" 50 %, "1 tbsp (1 tsp)" 67 %). Exact arithmetic on the definitional
- * sizes of UNIT_REGISTRY; mass and volume are never compared with each other.
+ * The largest relative difference accepted between an amount and its restatement in the OTHER measurement
+ * system (metric ↔ US customary): 1/8 (12.5 %). Recipes round across systems ("1 cup (240 ml)" is 1.4 % off,
+ * "1 lb (450 g)" 0.8 %, "1 lb (500 g)" 9.3 %, "4 cups (1 liter)" 5.4 %). Within one system the sizes are
+ * definitional (16 oz to the pound, 16 tbsp to the cup, 1000 g to the kilogram), so a restatement there must
+ * be exact (CONTRACT §5): "1 lb (15 oz)", "1 cup (14 tbsp)", "1 quart (3 1/2 cups)" are contradictions.
+ * Exact arithmetic on the definitional sizes of UNIT_REGISTRY; mass and volume are never compared.
  */
 export const RESTATEMENT_TOLERANCE: Rational = { n: BigInt(1), d: BigInt(8) };
 
@@ -181,6 +191,7 @@ export function sameAmount(a: ExactQuantity, ua: UnitV1, b: ExactQuantity, ub: U
   const x = inBase(a, ua);
   const y = inBase(b, ub);
   if (x === null || y === null) return null;
+  if (systemOf(ua) === systemOf(ub)) return cmp(x, y) === 0;
   const big = cmp(x, y) >= 0 ? x : y;
   const small = big === x ? y : x;
   // (big - small) / big ≤ tolerance  ⇔  big - small ≤ tolerance · big
@@ -219,12 +230,22 @@ export function placeSecondary(text: string, slots: AmountSlots, sec: Secondary)
       if (!fx.reasons.includes("package_size_stated")) fx.reasons.push("package_size_stated");
       return;
     }
-    // the contents restated ("1 (12 oz) package frozen peas (about 2 cups)") must agree with the package size
-    if (sameAmount(slots.packageSize.quantity, slots.packageSize.unit, q, sa.unit) === false) {
+    // the contents restated ("2 (15 oz) cans (425 g)") restate the package, not the amount: nothing new to
+    // store; contents that disagree are a second amount nobody can place
+    const agrees = sameAmount(slots.packageSize.quantity, slots.packageSize.unit, q, sa.unit);
+    if (agrees === false) {
       fx.unassigned++;
       return;
     }
-    if (slots.packageSize.unit.canonical === sa.unit.canonical) return;
+    if (agrees === true) return;
+    // in another dimension ("1 (12 oz) package frozen peas (about 2 cups)"): with one package the contents
+    // are the amount; with several, per package or in all? (a person decides)
+    const one = slots.quantity?.kind === "exact" && slots.quantity.numerator === slots.quantity.denominator;
+    if (!one) {
+      fx.notes.push({ s: sa.s, text: text.slice(sa.s, sa.e) });
+      fx.unassigned++;
+      return;
+    }
   } else if (main !== null && slots.quantity?.kind === "exact" && sameAmount(slots.quantity, main, q, sa.unit) === false) {
     fx.unassigned++; // "1 lb (12 oz)", "1 cup (8 tbsp)": not a restatement
     return;
@@ -248,7 +269,8 @@ export function amountStartsAt(text: string, toks: readonly Tok[], i: number): b
   if (t === undefined) return false;
   if (t.kind === "num" || t.kind === "vulgar") return true;
   if (!isWord(t)) return false;
-  if (Object.prototype.hasOwnProperty.call(CARDINALS, t.lower) || t.lower === "half") return true;
+  if (Object.prototype.hasOwnProperty.call(CARDINALS, t.lower) || t.lower === "half") return readNumber(toks, i) !== null;
+  if ((t.lower === "quarter" || t.lower === "third") && readNumber(toks, i) !== null) return true;
   if (t.lower !== "a" && t.lower !== "an") return false;
   let k = i + 1;
   while (isWord(toks[k]) && (SIZE_WORDS.has((toks[k] as { lower: string }).lower) || MEASURE_ADJECTIVES.has((toks[k] as { lower: string }).lower))) k++;
@@ -322,8 +344,11 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
     const sa = readStatedAmount(text, toks, j + 1);
     const hyphenated = n !== null && hyphen(toks[n.next]) && adjacent(toks[n.next - 1], toks[n.next]);
     const container = sa !== null && readUnit(text, toks, sa.next)?.unit.dimension === "count";
-    if (sa !== null && !hyphenated && !container) j++;
+    // (only a fraction: "a 1/2 cup sugar" is half a cup, but "a 3 lb chicken" is one chicken of 3 lb)
+    const fraction = n !== null && n.ok && cmp(n.value, rational(BigInt(1))) < 0;
+    if (sa !== null && !hyphenated && !container && fraction) j++;
   }
+  const article = isWord(toks[j], "a", "an");
   const n1 = readNumber(toks, j);
   if (!n1) return null;
   if (isTemperatureOrTime(toks, n1.next)) return null; // "350°F", "10 minutes" are not amounts
@@ -349,6 +374,8 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   const between: Between[] = [];
   /** Something unexpected sat between the amount and its unit ("1 (15) oz can"): the amount is not clear. */
   let irregular = false;
+  /** A non-US measurement system was named for the unit ("1 (UK) pint", "1 imperial gallon"). */
+  let otherSystem = false;
 
   // Package sizes, size descriptors and remarks written before the unit.
   for (let guard = 0; guard < 6; guard++) {
@@ -358,6 +385,17 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
         if (!fx.reasons.includes("price_annotation_removed")) fx.reasons.push("price_annotation_removed");
         k++;
         continue;
+      }
+      // "2 (or 3) cups", "2 (to 3) cups": the other end of a range, in brackets (CONTRACT §7.2)
+      if (n1.ok && max === null && between.length === 0 && isRangeSep(t.children[0])) {
+        const n2 = rangeEnd(t.children, 1);
+        if (n2 && n2.next === t.children.length) {
+          max = n2;
+          qEnd = t.e;
+          if (!n2.ok && !fx.reasons.includes(n2.reason)) fx.reasons.push(n2.reason);
+          k++;
+          continue;
+        }
       }
       const sa = groupAmount(text, t);
       if (sa && (isMassOrVolume(sa.unit) || sa.unit.dimension === "imprecise")) {
@@ -387,8 +425,9 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
       if (remarkGroup(t)) {
         let a = k + 1;
         while (isWord(toks[a]) && (MEASURE_ADJECTIVES.has((toks[a] as { lower: string }).lower) || SIZE_WORDS.has((toks[a] as { lower: string }).lower))) a++;
-        if (readUnit(text, toks, a)) {
+        if (readUnit(text, toks, a) || (isWord(toks[a]) && UNKNOWN_MEASURES.has((toks[a] as { lower: string }).lower))) {
           const words = t.children.filter((c) => c.kind === "word") as { lower: string }[];
+          if (words.some((w) => OTHER_SYSTEM_WORDS.has(w.lower))) otherSystem = true;
           if (words.length === 1 && APPROX_WORDS.has(words[0].lower)) approximate = true;
           else fx.notes.push({ s: t.s, text: text.slice(t.innerS, t.innerE).trim() });
           k++;
@@ -397,7 +436,15 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
       }
       break;
     }
+    if (isWord(t, "by") && n1.ok && max === null && between.length === 0) {
+      // "9 by 13 inch pan"
+      const dims = dimensionsEnd(text, toks, k);
+      if (dims > k) return sizeOnly(text, toks, fx, n1.s, dims, approximate);
+    }
     if ((isWord(t, "x") || isSym(t, "×")) && n1.ok && max === null) {
+      // "9x13 inch pan", "9 x 13\" dish", "13x9 pan": dimensions are a size, never an amount
+      const dims = dimensionsEnd(text, toks, k);
+      if (dims > k && between.length === 0) return sizeOnly(text, toks, fx, n1.s, dims, approximate);
       const sa = readStatedAmount(text, toks, k + 1);
       if (sa && isMassOrVolume(sa.unit)) {
         between.push({ sec: { sa, position: "between" }, marked: true });
@@ -406,11 +453,17 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
       }
       break;
     }
+    if (t?.kind === "num" && n1.ok && max === null && isSym(toks[k + 1], '"', "″", "”") && adjacent(t, toks[k + 1])) {
+      fx.notes.push({ s: t.s, text: text.slice(t.s, toks[k + 1].e) }); // '2 9" pie crusts': a size of what is counted
+      k += 2;
+      continue;
+    }
     if (t?.kind === "num" && n1.ok && max === null) {
       const sa = readStatedAmount(text, toks, k);
       if (sa && (isMassOrVolume(sa.unit) || sa.unit.canonical === "inch")) {
         const n = readNumber(toks, k);
-        const marked = n !== null && hyphen(toks[n.next]) && adjacent(toks[n.next - 1], toks[n.next]);
+        // marked: hyphenated ("1 15-oz can"), or after an article ("a 3 lb chicken": one, of 3 lb)
+        const marked = article || (n !== null && hyphen(toks[n.next]) && adjacent(toks[n.next - 1], toks[n.next]));
         between.push({ sec: { sa, position: "between" }, marked });
         k = sa.next;
         continue;
@@ -424,6 +477,8 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   if (hyphen(toks[k]) && adjacent(toks[k - 1], toks[k]) && adjacent(toks[k], toks[k + 1]) && readUnit(text, toks, k + 1)) k++;
 
   // "2 cm piece ginger": a length is a size, not an amount of anything bought.
+  // '12" pizza crust', "9″ pie crust": an inch mark after the number is a size
+  if (n1.ok && between.length === 0 && isSym(toks[k], '"', "″", "”", "“") && adjacent(toks[k - 1], toks[k])) return sizeOnly(text, toks, fx, n1.s, k + 1, approximate);
   const lengthWord = toks[k];
   if (n1.ok && between.length === 0 && isWord(lengthWord) && LENGTH_WORDS.has(lengthWord.lower)) {
     let c = k + 1;
@@ -433,7 +488,12 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
 
   // Size and measure adjectives (also "thumb-sized"), then the unit ("1/2 of a cup" too).
   let a = k;
-  while (isWord(toks[a]) && (MEASURE_ADJECTIVES.has((toks[a] as { lower: string }).lower) || SIZE_WORDS.has((toks[a] as { lower: string }).lower) || isWord(toks[a], "extra") || /-sized?$/.test((toks[a] as { lower: string }).lower))) a++;
+  const sizeLike = (t: Tok | undefined) =>
+    isWord(t) && (MEASURE_ADJECTIVES.has(t.lower) || SIZE_WORDS.has(t.lower) || t.lower === "extra" || /-sized?$/.test(t.lower) || SYSTEM_WORDS.has(t.lower));
+  while (sizeLike(toks[a])) a++;
+  // ("1 UK pint": a measurement-system word before the unit is read with it)
+  if (a > k && !readUnit(text, toks, a) && toks.slice(k, a).some((t) => isWord(t) && SYSTEM_WORDS.has(t.lower))) a = k;
+  if (toks.slice(k, a).some((t) => isWord(t) && OTHER_SYSTEM_WORDS.has(t.lower))) otherSystem = true;
   let unitRead = readUnit(text, toks, a);
   if (!unitRead && a === k && isWord(toks[k], "of") && isWord(toks[k + 1], "a", "an") && n1.ok) {
     const u = readUnit(text, toks, k + 2);
@@ -446,6 +506,11 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
     fx.notes.push({ s: toks[k].s, text: text.slice(toks[k].s, toks[a - 1].e) });
   }
   if (unitRead) k = unitRead.next;
+  // "1 pint (UK) milk": the system written right after the unit
+  const afterUnit = toks[k];
+  if (unitRead && isGroup(afterUnit) && afterUnit.children.length === 1 && isWord(afterUnit.children[0]) && OTHER_SYSTEM_WORDS.has(afterUnit.children[0].lower)) otherSystem = true;
+  // A UK, imperial, Australian or metric pint/cup/… is not the US size of UNIT_REGISTRY: a person checks
+  if (unitRead && otherSystem && US_VOLUME.has(unitRead.unit.canonical) && !fx.reasons.includes("unclassified")) fx.reasons.push("unclassified");
 
   // An inch is a size ("9-inch pie crust", "12 inch pizza crust", "1-inch piece ginger"), never an amount bought.
   if (unitRead && unitRead.unit.canonical === "inch" && between.length === 0) return sizeOnly(text, toks, fx, n1.s, k, approximate);
@@ -471,13 +536,16 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   // "a drizzle of olive oil", "2 rashers bacon", "1 dsp sugar", "1 leg of lamb": a measure word that is not
   // a registry unit. The amount cannot be carried without its unit: it is kept in the note, not invented.
   if (!unitRead && n1.ok && max === null && between.length === 0) {
-    const w = toks[k];
+    // (after any measure adjectives: "2 heaping spoonfuls sugar")
+    const w = toks[a];
     const known = isWord(w) && UNKNOWN_MEASURES.has(w.lower);
-    const beforeOf = isWord(w) && isWord(toks[k + 1], "of") && toks[k + 2] !== undefined && !isWord(toks[k + 2], "the") && isPlainNoun(w.lower);
+    const beforeOf = a === k && isWord(w) && isWord(toks[k + 1], "of") && toks[k + 2] !== undefined && !isWord(toks[k + 2], "the") && isPlainNoun(w.lower);
     if (known || beforeOf) {
-      let c = k + 1;
+      let c = a + 1;
       if (isSym(toks[c], ".") && adjacent(toks[c - 1], toks[c])) c++;
-      fx.notes.push({ s: n1.s, text: text.slice(n1.s, toks[c - 1].e) });
+      // (a bracketed remark before it is already a note of its own: "2 (heaping) spoonfuls")
+      const measure = k > n1.next ? `${text.slice(n1.s, n1.e)} ${text.slice(toks[k].s, toks[c - 1].e)}` : text.slice(n1.s, toks[c - 1].e);
+      fx.notes.push({ s: n1.s, text: measure });
       fx.reasons.push("unit_unknown");
       if (isWord(toks[c], "of")) c++;
       return {
@@ -601,9 +669,6 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   for (const { sec, marked } of between) {
     if (sec.sa.unit.dimension === "imprecise" || (unitRead && unitRead.unit.dimension === "count" && unitRead.unit.canonical !== "each")) {
       placeSecondary(text, slots, sec);
-    } else if (!unitRead && isMassOrVolume(sec.sa.unit) && sec.sa.approx) {
-      // "2 (about 1 lb) potatoes": an approximate weight of what is counted restates the amount
-      placeSecondary(text, slots, { sa: sec.sa, position: "after" });
     } else if (!unitRead && isMassOrVolume(sec.sa.unit)) {
       placeSecondary(text, slots, sec);
       if (slots.packageSize !== null) packageProvisional = { marked };
@@ -663,6 +728,29 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
     effects: fx,
     next: k,
   };
+}
+
+/**
+ * The end of a dimensions phrase starting with "x" at `k` ("x13 inch", "x 13\"", "x 9 x 2 cm"), or `k` when
+ * there is none: numbers joined by "x", ending in an inch mark, "inch" or a length word.
+ */
+function dimensionsEnd(text: string, toks: readonly Tok[], k: number): number {
+  let c = k;
+  let glued = true;
+  for (let guard = 0; guard < 3 && (isWord(toks[c], "x", "by") || isSym(toks[c], "×")); guard++) {
+    const n = readNumber(toks, c + 1);
+    if (!n || !n.ok) return k;
+    if (!adjacent(toks[c - 1], toks[c]) || !adjacent(toks[c], toks[c + 1]) || isWord(toks[c], "by")) glued = false;
+    c = n.next;
+    if (hyphen(toks[c]) && adjacent(toks[c - 1], toks[c])) c++;
+  }
+  if (c === k) return k;
+  const u = toks[c];
+  if (isSym(u, '"', "″", "”") && adjacent(toks[c - 1], u)) return c + 1;
+  if (isWord(u) && (LENGTH_WORDS.has(u.lower) || readUnit(text, toks, c)?.unit.canonical === "inch")) return isSym(toks[c + 1], ".") && adjacent(u, toks[c + 1]) ? c + 2 : c + 1;
+  // "13x9 pan": numbers written together with an "x" and no unit are dimensions too
+  if (glued && isWord(u) && readUnit(text, toks, c) === null) return c;
+  return k;
 }
 
 /** A size with no amount ("9-inch", "2 cm"): noted; a counted unit right after it is read ("1-inch piece"); no quantity. */

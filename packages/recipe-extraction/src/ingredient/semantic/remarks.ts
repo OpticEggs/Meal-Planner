@@ -12,9 +12,9 @@
  *                                 ingredients ("(or cream)", ", or water") — never silently dropped
  *   anything else               → note text, nested brackets flattened
  */
-import type { AmountUnstated } from "../../contract";
+import { UNIT_REGISTRY, type AmountUnstated } from "../../contract";
 import { allWords, hasNumber, isGroup, isSym, isWord, wordsAt, type GroupTok, type Tok } from "./lexer";
-import { APPLICATION_GERUNDS, APPROX_WORDS, LEADING_JUNK, MODIFIER_WORDS, PREP_ADVERBS, TRAILING_PREP_WORDS, FORM_WORDS, FUNCTION_WORDS, IF_DESIRED, REMARK_WORDS, SIZE_WORDS, UNSTATED_PHRASES } from "./lexicon";
+import { APPLICATION_GERUNDS, APPROX_WORDS, LEADING_JUNK, PREP_ADVERBS, TRAILING_PREP_WORDS, unitOfWord, FORM_WORDS, FUNCTION_WORDS, IF_DESIRED, REMARK_WORDS, SIZE_WORDS, UNSTATED_PHRASES } from "./lexicon";
 import { amountStartsAt, isPriceGroup, readAmountPhrase } from "./amount";
 import { readUnit } from "./unit";
 import { emptyEffects, mergeEffects, type Effects } from "./types";
@@ -128,15 +128,20 @@ export function splitOr(toks: readonly Tok[]): Tok[][] {
 const REMARK_OPENER = /^(?:such as|like|preferably|ideally|e\.?\s?g\.?|i\.?\s?e\.?|see|i like|i use|we use|you can use|any|your favou?rite|recipe)\b/i;
 
 /**
- * True when every word of the run is remark vocabulary, preparation ("minced or pressed") or a function
- * word (no food is named). A past participle counts as preparation unless it is a product modifier
- * ("salted", "smoked").
+ * True when every word of the run is remark vocabulary (sourcing, form, state: REMARK_WORDS), a listed
+ * preparation word ("minced or pressed": TRAILING_PREP_WORDS) or a function word — no food and no product
+ * version is named. Both lists are explicit: any other word ("granulated or powdered", "evaporated or
+ * condensed") describes a different product, so an "or" between such words is a choice (CONTRACT §7.8).
  */
 export function remarkOnly(toks: readonly Tok[]): boolean {
   const ws = allWords(toks);
-  const prep = (w: string) => TRAILING_PREP_WORDS.has(w) || PREP_ADVERBS.has(w) || (w.length >= 5 && w.endsWith("ed") && !MODIFIER_WORDS.has(w));
-  return ws.length > 0 && ws.every((w) => REMARK_WORDS.has(w) || FUNCTION_WORDS.has(w) || Object.prototype.hasOwnProperty.call(FORM_WORDS, w) || prep(w));
+  const prep = (w: string) => TRAILING_PREP_WORDS.has(w) || PREP_ADVERBS.has(w);
+  const remark = (w: string) => REMARK_WORDS.has(w) && !PRODUCT_CUT_WORDS.has(w);
+  return ws.length > 0 && ws.every((w) => remark(w) || FUNCTION_WORDS.has(w) || Object.prototype.hasOwnProperty.call(FORM_WORDS, w) || prep(w));
 }
+
+/** Remark words that name a different product when offered as a choice ("boneless or bone-in", "whole or ground"). */
+const PRODUCT_CUT_WORDS = new Set(["bone-in", "boneless", "skin-on", "skinless", "whole", "ground", "shelled", "unshelled", "unpeeled"]);
 
 /** Leading words that introduce a substitute ("or use vegetable broth"). */
 const SUBSTITUTE_LEAD = new Set(["use", "substitute", "try", "even"]);
@@ -174,12 +179,13 @@ export function classifyPiece(text: string, piece: readonly Tok[], fx: Effects):
     fx.form ??= sub.form;
     toks.push(t);
   }
-  // "all-purpose (or bread (or cake))": one kind word, then only other kinds — every one is a version of the food
+  // "all-purpose (or bread (or cake))": one plain word, then only other single words offered with "or" —
+  // the same choice written with nested brackets, kept in source order
   const kinds = later.flatMap((e) => e.options);
   const onlyOptions = later.every((e) => e.notes.length === 0 && e.unstated.length === 0 && e.unassigned === 0 && !e.optional && e.form === null);
-  if (toks.length === 1 && isWord(toks[0]) && MODIFIER_WORDS.has(toks[0].lower) && kinds.length > 0 && onlyOptions && kinds.every((o) => o.mode === "additional" && !o.hasAmount && MODIFIER_WORDS.has(o.text.toLowerCase()))) {
-    fx.options.push({ text: toks[0].text, s: toks[0].s, hasAmount: false, mode: "variants", remarkOnly: false });
-    for (const o of kinds) fx.options.push({ ...o, mode: "variants" });
+  if (toks.length === 1 && isWord(toks[0]) && !remarkOnly(toks) && kinds.length > 0 && onlyOptions && kinds.every((o) => o.mode === "additional" && !o.hasAmount && !o.text.includes(" "))) {
+    fx.options.push({ text: toks[0].text, s: toks[0].s, hasAmount: false, mode: "list", remarkOnly: false });
+    for (const o of kinds) fx.options.push({ ...o, mode: "list" });
     for (const e of later) for (const r of e.reasons) if (!fx.reasons.includes(r)) fx.reasons.push(r);
     return;
   }
@@ -229,7 +235,11 @@ function classifyBare(text: string, toks: readonly Tok[], fx: Effects): void {
     const isRemark = complete && opts.every((o) => remarkOnly(o) && !hasNumber(o));
     const short = opts.every((o) => o.filter((t) => t.kind === "word").length <= 3 && !o.some(isGroup));
     // an option that is a phrase or starts with a conjunction ("container/to taste") is not a food
-    const junk = opts.some((o) => unstatedAt(o, 0) !== null || (isWord(o[0]) && LEADING_JUNK.has(o[0].lower)));
+    const junk = opts.some((o) => {
+      if (unstatedAt(o, 0) !== null || (isWord(o[0]) && LEADING_JUNK.has(o[0].lower))) return true;
+      const u = readUnit(text, o, 0);
+      return u !== null && u.next === o.length && u.unit.dimension !== "count"; // "toasted/kg": a unit alone is not a food
+    });
     if (complete && !isRemark && !junk && (explicit || short)) {
       const read = opts.map((o) => {
         let k = 0;
@@ -251,6 +261,13 @@ function classifyBare(text: string, toks: readonly Tok[], fx: Effects): void {
       // an option that still starts with a number after its amount is not clearly a food either
       if (read.every((x) => x.amt !== null && x.rest.every((t) => isWord(t) && SIZE_WORDS.has(t.lower))) || read.some((x) => x.rest.length > 0 && (x.rest[0].kind === "num" || x.rest[0].kind === "vulgar") && !isSym(x.rest[1], "%"))) {
         fx.unassigned++;
+        fx.notes.push({ s, text: flat });
+        return;
+      }
+      // an option left with no food after its amount or unit ("gm to") is not an option: the remark is a note
+      const empty = read.some((x) => x.rest.length === 0 || (isWord(x.rest[0]) && LEADING_JUNK.has(x.rest[0].lower)) || unstatedAt(x.rest, 0) !== null);
+      if (empty && !read.every((x) => x.amt !== null)) {
+        if (!fx.reasons.includes("unclassified")) fx.reasons.push("unclassified");
         fx.notes.push({ s, text: flat });
         return;
       }
@@ -302,17 +319,28 @@ export function classifyGroup(text: string, g: GroupTok, fx: Effects): void {
     pieces.length >= 3 && isWord(last[0], "or") ? [...pieces.slice(0, -1), last.slice(1)]
     : lastParts.length === 2 || (pieces.length === 1 && lastParts.length > 2) ? [...pieces.slice(0, -1), ...lastParts]
     : null;
-  if (items !== null && items.every(plainItem)) {
+  // ("(such as cheddar or Gruyère)", "(preferably …)": a remark that gives examples is a note)
+  if (items !== null && items.every(plainItem) && !REMARK_OPENER.test(textOf(text, g.children))) {
     for (const p of items) {
       const item = isWord(p[0], "a", "an") && p.length > 1 ? p.slice(1) : p;
       fx.options.push({ text: textOf(text, item), s: p[0].s, hasAmount: false, mode: "list", remarkOnly: false });
     }
     return;
   }
-  for (const piece of pieces) classifyPiece(text, piece, fx);
+  // a choice written inside brackets is about the named food: mark its versions as a bracketed list
+  const sub = emptyEffects();
+  for (const piece of pieces) classifyPiece(text, piece, sub);
+  for (const o of sub.options) if (o.mode === "variants") o.mode = "list";
+  mergeEffects(fx, sub);
 }
 
-/** A short run of plain words that is not only remark vocabulary ("cheddar", "a blend", "Monterey Jack"). */
+/** A short run of plain words that is not only remark vocabulary and does not open with a unit ("cheddar", "a blend", "Monterey Jack"). */
 function plainItem(p: readonly Tok[]): boolean {
-  return p.length > 0 && p.length <= 3 && p.every((t) => t.kind === "word") && !remarkOnly(p);
+  const unitFirst = p[0] !== undefined && isWord(p[0]) && /^(?:mass|volume)$/.test(dimensionOfWord(p[0].text));
+  return p.length > 0 && p.length <= 3 && p.every((t) => t.kind === "word") && !remarkOnly(p) && !unitFirst;
+}
+
+function dimensionOfWord(w: string): string {
+  const c = unitOfWord(w);
+  return c === null ? "" : UNIT_REGISTRY[c].dimension;
 }

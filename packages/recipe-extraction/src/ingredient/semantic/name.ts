@@ -12,7 +12,7 @@
  *  - a counted portion written after the food ("3 garlic cloves") is the unit.
  */
 import { adjacent, isGroup, isNumberish, isSym, isWord, type Tok } from "./lexer";
-import { APPROX_WORDS, CARDINALS, CONTAINER_UNITS, FORM_WORDS, LEADING_JUNK, PREP_ADVERBS, SIZE_WORDS, TRAILING_COUNT_UNITS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
+import { APPROX_WORDS, BULLETS, CARDINALS, CONTAINER_UNITS, META_NOUNS, UNIT_WORDS_IN_FOOD_NAMES, FORM_WORDS, LEADING_JUNK, PREP_ADVERBS, SIZE_WORDS, TRAILING_COUNT_UNITS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
 import { amountStartsAt, groupAmounts, isPriceGroup, placeSecondary, readAmountPhrase, readStatedAmount, type AmountSlots } from "./amount";
 import { classifyGroup, classifyPiece, dropBarePrices, remarkOnly, splitOr, textOf, trimEdges, unstatedAt } from "./remarks";
 import { readNumber } from "./quantity";
@@ -197,9 +197,10 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
         continue;
       }
     }
-    if (ctx.amountRead && isWord(t) && a + 1 < toks.length) {
+    if (isWord(t) && a + 1 < toks.length) {
+      // (with no amount read before the name, only a weight or volume word: "ounces (1 lb) water")
       const u = readUnit(text, toks, a);
-      if (u && strayUnitWord(u, ctx.unitWritten)) {
+      if (u && u.next < toks.length && strayUnitWord(text, u, ctx.unitWritten || !ctx.amountRead) && (ctx.amountRead || u.unit.dimension === "mass" || u.unit.dimension === "volume")) {
         // "2 (1 stick) cups butter", "2-15 oz cans black beans": a unit the amount phrase did not take
         flag();
         fx.notes.push({ s: u.s, text: text.slice(u.s, u.e) });
@@ -209,13 +210,38 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
       }
     }
     const lead = unstatedAt(toks, a);
+    if (lead && a + lead.len === toks.length) {
+      // the phrase is all there is ("to taste"): no food is named
+      fx.unstated.push({ kind: lead.kind, s: t.s, text: textOf(text, toks.slice(a, a + lead.len)), alone: true });
+      a += lead.len;
+      continue;
+    }
     if (lead && a + lead.len < toks.length) {
       flag(); // "1 tsp to taste salt": the phrase sits before the food
       fx.unstated.push({ kind: lead.kind, s: t.s, text: textOf(text, toks.slice(a, a + lead.len)), alone: true });
       a += lead.len;
       continue;
     }
-    if (isSym(t, "-", "–", "—", "*", "•", ":", ".", ",", ";", "⁄", "|", "~")) {
+    if (ctx.unitWritten && isWord(t, "heaping", "heaped", "scant", "level", "rounded", "generous", "packed", "loosely", "firmly", "lightly") && a + 1 < toks.length) {
+      // "1 cup heaping flour", "1 cup packed brown sugar": how the unit is filled, not the food
+      let e = a + 1;
+      if (isWord(t, "loosely", "firmly", "lightly") && isWord(toks[e], "packed")) e++;
+      if (e > a + 1 || !isWord(t, "loosely", "firmly", "lightly")) {
+        fx.notes.push({ s: t.s, text: text.slice(t.s, toks[e - 1].e) });
+        a = e;
+        continue;
+      }
+    }
+    if (ctx.amountRead && isWord(t) && META_NOUNS.has(t.lower) && a + 1 < toks.length) {
+      // "2 servings cooked rice": the number counts servings, not the food — a person checks
+      flag();
+      fx.notes.push({ s: t.s, text: t.text });
+      a++;
+      if (isWord(toks[a], "of")) a++;
+      continue;
+    }
+    const bullet = t.kind === "sym" && BULLETS.has(t.text);
+    if (bullet || isSym(t, "-", "–", "—", "*", "•", ":", ".", ",", ";", "⁄", "|", "~")) {
       a++; // punctuation before the food
       continue;
     }
@@ -332,17 +358,17 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
         fx.notes.push({ s: o[0].s, text: textOf(text, o) });
         return false;
       }
-      // a conjunction or a phrase is not a food ("onion or plus", "salt or to")
-      if (o.length > 0 && ((isWord(o[0]) && LEADING_JUNK.has(o[0].lower)) || unstatedAt(o, 0) !== null)) {
+      // a conjunction, a phrase or a bare unit word is not a food ("onion or plus", "salt or to", "beans or floz")
+      if (o.length > 0 && ((isWord(o[0]) && LEADING_JUNK.has(o[0].lower)) || unstatedAt(o, 0) !== null || massOrVolumeWord(text, o, lead))) {
         flag();
         return false;
       }
       return o.length > 0;
     });
     const written = usable.map((o) => nameText(text, o)).filter((x) => x.length > 0);
-    // a shared head only when the earlier options are clearly modifiers ("fresh or frozen peas"), never
-    // when an option had its own amount ("2 cups flour or 1 cup almond flour")
-    let texts = ownAmount ? written : distributeOptions(written);
+    // a shared head ("chicken or vegetable broth", "1 tbsp fresh or 1 tsp dried thyme"); never when the
+    // earlier option is a whole ingredient or already in the head ("2 cups flour or 1 cup almond flour")
+    let texts = distributeOptions(written);
     // "fresh thyme or 1 tsp dried": a remark-only option names the first option's food in another form
     texts = texts.map((x, k) => (k > 0 && isRemarkOption(x) ? `${x} ${foodHead(texts[0])}` : x));
     if (texts.length >= 2) options = texts;
@@ -404,13 +430,17 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
       toks = [];
     }
   }
-  // a number word left at the end ("pre-cooked one"): an amount nobody can place
+  // a number word that is the whole name ("2 cups one"): an amount nobody can place. Inside a name a number
+  // word is part of it ("half and half", "Four seasons pizza").
   const tail = toks[toks.length - 1];
-  if (options === null && !ctx.verbatim && (ctx.hasQuantity || ctx.amountRead || toks.length === 1) && isWord(tail) && (Object.prototype.hasOwnProperty.call(CARDINALS, tail.lower) || tail.lower === "half")) {
+  if (options === null && !ctx.verbatim && toks.length === 1 && isWord(tail) && (Object.prototype.hasOwnProperty.call(CARDINALS, tail.lower) || tail.lower === "half")) {
     fx.unassigned++;
     fx.notes.push({ s: tail.s, text: tail.text });
     toks = toks.slice(0, -1);
   }
+  // a count word after the food ("rice one"): kept in the name, but it may be a misplaced amount
+  const end = toks[toks.length - 1];
+  if (options === null && !ctx.verbatim && toks.length > 1 && isWord(end) && Object.prototype.hasOwnProperty.call(CARDINALS, end.lower) && !isWord(toks[toks.length - 2], "and")) flag();
   // no word left at all ("123456789012"): not a name
   if (options === null && !toks.some((t) => t.kind === "word")) {
     if (toks.some(isNumberish)) {
@@ -424,12 +454,25 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
   return { name: name.length > 0 ? name : null, nameSpan: span, options, trailingUnit, plusRemark, amountUnclear };
 }
 
+/** The option's first word is a weight or volume unit ("floz precooked", "kg"): no food is named by it. */
+function massOrVolumeWord(text: string, o: readonly Tok[], lead: Tok | undefined): boolean {
+  if (lead === undefined || !isWord(lead)) return false;
+  const u = readUnit(text, o, o.indexOf(lead));
+  if (u === null || (u.unit.dimension !== "mass" && u.unit.dimension !== "volume")) return false;
+  const written = text.slice(u.s, u.e).toLowerCase().replace(/\.$/, "");
+  return written.length > 1 && !UNIT_WORDS_IN_FOOD_NAMES.has(written);
+}
+
 /**
  * A unit word that should have been part of the amount: any unit when none was written; after a written
  * unit, only weights, volumes and containers ("2-15 oz cans") — counted portions ("leaf lettuce", "strip
  * steak") may begin a food's name.
  */
-function strayUnitWord(u: UnitRead, unitWritten: boolean): boolean {
+function strayUnitWord(text: string, u: UnitRead, unitWritten: boolean): boolean {
+  // "1 slice pound cake", "1 cup cup noodles", "1 package gram crackers": after a written unit, a unit word that
+  // begins a food name is food. With no unit written yet ("2 (1 stick) cup rolled oats") it is the stray unit.
+  const written = text.slice(u.s, u.e).toLowerCase().replace(/\.$/, "");
+  if (unitWritten && UNIT_WORDS_IN_FOOD_NAMES.has(written)) return false;
   if (!unitWritten) return u.unit.canonical !== "each";
   return u.unit.dimension === "mass" || u.unit.dimension === "volume" || CONTAINER_UNITS.has(u.unit.canonical);
 }

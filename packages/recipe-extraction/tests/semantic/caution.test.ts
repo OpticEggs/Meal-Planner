@@ -11,7 +11,7 @@ describe("measure words that are not registry units", () => {
     ["a dollop of sour cream", "sour cream", "a dollop"],
     ["2 rashers of bacon", "bacon", "2 rashers"],
     ["2 rashers bacon", "bacon", "2 rashers"],
-    ["1 tub of yogurt", "yogurt", "1 tub"],
+    ["1 punnet of strawberries", "strawberries", "1 punnet"],
     ["1 dsp sugar", "sugar", "1 dsp"],
     ["a squeeze of lemon juice", "lemon juice", "a squeeze"],
   ])("%s → needs review (unit_unknown), amount kept in the note, none invented", (line, name, note) => {

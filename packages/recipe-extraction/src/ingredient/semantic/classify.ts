@@ -6,8 +6,8 @@
 import type { ReasonCode } from "../../contract";
 import { hasNumber, isGroup, isNumberish, isSym, isWord, type Tok } from "./lexer";
 import {
-  APPROX_SYMBOLS, APPROX_WORDS, CARDINALS, HEADING_WORDS, INSTRUCTION_CUES, INSTRUCTION_VERBS, META_LABEL_WORDS, META_NOUNS, NOTE_LABELS, NUTRIENT_WORDS, RECIPE_PART_WORDS,
-  WEAK_INSTRUCTION_VERBS, YIELD_WORDS,
+  APPROX_SYMBOLS, APPROX_WORDS, CARDINALS, EQUIPMENT_LABEL_WORDS, FACT_UNITS, HEADING_WORDS, INSTRUCTION_CUES, INSTRUCTION_VERBS, META_NOUNS, NOTE_LABELS, NUTRIENT_WORDS,
+  RECIPE_PART_WORDS, SERVING_LABEL_WORDS, WEAK_INSTRUCTION_VERBS, YIELD_WORDS, unitOfWord,
 } from "./lexicon";
 import { findUnstated, unstatedAt } from "./remarks";
 import { isTemperatureOrTime } from "./amount";
@@ -56,9 +56,18 @@ export function nonIngredientReason(toks: readonly Tok[]): ReasonCode | null {
   if (!toks.some((t) => t.kind === "word" || isNumberish(t) || (isGroup(t) && (wordCount(t.children) > 0 || hasNumber(t.children))))) return "not_an_ingredient";
   if (isNumberish(toks[0]) && temperatureOrTimeAt(toks, 0)) return "not_an_ingredient"; // "350°F oven", "10 minutes"
   if (isNumberish(toks[0]) && metaNounAt(toks, 0)) return "not_an_ingredient"; // "4 servings", "250 kcal"
-  // "Calories: 250", "Serving size: 1 cup", "Special equipment: 2 baking sheets": a recipe fact, not food
+  // "Calories: 250", "Serving size: 1 cup", "Special equipment: 2 baking sheets": a recipe fact, not food —
+  // only when the whole label is a fact label and the value is only a value (no food word after it)
   const colon = toks.findIndex((t) => isSym(t, ":"));
-  if (colon > 0 && words(toks.slice(0, colon)).some((w) => META_LABEL_WORDS.has(w.lower))) return "not_an_ingredient";
+  if (colon > 0) {
+    const label = toks.slice(0, colon);
+    const value = toks.slice(colon + 1);
+    const labelWords = words(label);
+    const only = (set: ReadonlySet<string>) => labelWords.length > 0 && label.every((t) => isWord(t) && (set.has(t.lower) || ["of", "the", "a"].includes(t.lower)));
+    if (labelWords.some((w) => EQUIPMENT_LABEL_WORDS.has(w.lower))) return "not_an_ingredient";
+    if (only(NUTRIENT_WORDS) && factValue(value, true)) return "not_an_ingredient";
+    if (only(SERVING_LABEL_WORDS) && factValue(value, false)) return "not_an_ingredient";
+  }
   if (numericLead(toks)) return null;
   if (hasUrl(toks)) return "not_an_ingredient";
   // "Oven: 350°F", "Prep time: 10 minutes"
@@ -67,11 +76,9 @@ export function nonIngredientReason(toks: readonly Tok[]): ReasonCode | null {
   const ws = words(toks);
   const first = ws[0];
   const last = toks[toks.length - 1];
-  // "Protein 20g", "Calories 250": a labelled fact without a colon
-  if (first && toks[0] === (first as unknown as Tok) && META_LABEL_WORDS.has(first.lower) && hasNumber(toks)) return "not_an_ingredient";
-  // "Fat: 10 g", "Saturated fat 3g": a label made only of nutrient names, then a number
+  // "Protein 20g", "Calories 250", "Saturated fat 3g": a nutrient label, then only a nutrition value
   const lead = toks.findIndex((t) => !isWord(t));
-  if (lead > 0 && toks.slice(0, lead).every((t) => isWord(t) && NUTRIENT_WORDS.has(t.lower)) && hasNumber(toks.slice(lead))) return "not_an_ingredient";
+  if (lead > 0 && toks.slice(0, lead).every((t) => isWord(t) && NUTRIENT_WORDS.has(t.lower)) && factValue(toks.slice(lead), true)) return "not_an_ingredient";
   // headings
   if (isSym(last, ":")) return "section_heading"; // "For the sauce:", "Marinade:"
   if (isSym(toks[0], "#")) return "section_heading";
@@ -107,10 +114,32 @@ function sentenceCue(toks: readonly Tok[]): boolean {
   return toks.some((t, i) => i > 0 && !covered.has(i) && isWord(t) && INSTRUCTION_CUES.has(t.lower));
 }
 
-/** The number at `i` counts servings, people or energy ("4 servings", "250 kcal"). */
+/**
+ * The number at `i` counts servings, people or energy and nothing follows ("4 servings", "250 kcal", "250
+ * kcal per serving"). With a food after it ("2 servings cooked rice") the line may be food.
+ */
 function metaNounAt(toks: readonly Tok[], i: number): boolean {
   let k = i;
   while (k < toks.length && (isNumberish(toks[k]) || isSym(toks[k], "/", "-", "–", "."))) k++;
   const t = toks[k];
-  return isWord(t) && META_NOUNS.has(t.lower);
+  if (!(isWord(t) && META_NOUNS.has(t.lower))) return false;
+  const rest = toks.slice(k + 1);
+  return rest.length === 0 || (isWord(rest[0], "per", "each") && rest.length <= 2);
+}
+
+/**
+ * A recipe-fact value and nothing else: an optional approximation, a number (or range), and a unit —
+ * a nutrient unit ("10 g", "250 kcal", "15%") when `nutrient`, else any unit word ("1 cup", "200 g") — with no
+ * word after it that could name food.
+ */
+function factValue(toks: readonly Tok[], nutrient: boolean): boolean {
+  let k = 0;
+  while (isWord(toks[k]) && APPROX_WORDS.has((toks[k] as { lower: string }).lower)) k++;
+  if (!isNumberish(toks[k])) return false;
+  while (k < toks.length && (isNumberish(toks[k]) || isSym(toks[k], "/", "-", "–", ".", ",", "~"))) k++;
+  const rest = toks.slice(k);
+  const ok = (t: Tok) =>
+    (isSym(t) && ["%", ".", ")", "("].includes(t.text)) ||
+    (isWord(t) && (FACT_UNITS.has(t.lower) || SERVING_LABEL_WORDS.has(t.lower) || ["each", "of", "a", "an"].includes(t.lower) || (!nutrient && unitOfWord(t.text) !== null)));
+  return rest.length <= 3 && rest.every(ok);
 }

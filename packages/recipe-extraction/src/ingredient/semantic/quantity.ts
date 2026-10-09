@@ -9,20 +9,22 @@
  *   vulgar     [int[␣]] vulgar            "1⅓", "1 ½", "½"
  *   fraction   int / int                  "1/3", "1⁄2", "1 / 3"
  *   decimal    "1.5", ".5", "0.75"        exact (0.125 = 1/8)
- *   words      a/an, one … ninety (also "twenty-four"), half (a), a quarter, two thirds, one and a half,
- *              "one-and-a-half", a dozen, a half-dozen, 2 dozen
+ *   words      a/an, one … ninety (also "twenty-four"), hundreds and thousands ("a hundred", "two hundred
+ *              fifty"), half (a), a quarter, quarter/third before a unit, two thirds, one and a half,
+ *              "one-and-a-half", a dozen, a half-dozen, 2 dozen, "1/2-dozen"
  * Refused with an honest reason (no amount is given):
- *   number_format_ambiguous  "1,5", "1,000", "1'000", "1e3", "1 000 g", "1.000", "1.500" (a thousands
- *                            separator or a decimal comma?), "11/2", "13/4" (a lost space in "1 1/2"?)
+ *   number_format_ambiguous  "1,5", "1,000", "1'000", "1e3", "1 000 g", "1.000", "1.250 g" (a thousands
+ *                            separator or a decimal comma?), "11/2", "13/4" (a lost space in "1 1/2"?).
+ *                            "2 400 g cans" is a count and a package size, not a thousands group.
  *   quantity_invalid         "1/0", "1.2.3", "½½", "1//3", "1 3/2"
  *   quantity_implausible     more digits than any amount could need
  * Zero is read (the caller refuses it). Vague words ("a few", "several") are recognised and consumed but
  * never become a number.
  */
-import { type ReasonCode } from "../../contract";
+import { type ReasonCode, UNIT_REGISTRY } from "../../contract";
 import { add, mul, rational, type Rational } from "../../rational";
 import { adjacent, isNumberish, isSym, isWord, type NumTok, type Tok } from "./lexer";
-import { CARDINALS, FRACTION_SLASHES, FRACTION_WORDS, TENS, VAGUE_AMOUNT_WORDS } from "./lexicon";
+import { CARDINALS, FRACTION_SLASHES, FRACTION_WORDS, TENS, VAGUE_AMOUNT_WORDS, unitOfWord } from "./lexicon";
 
 export type NumberRead =
   | {
@@ -88,10 +90,30 @@ function ambiguousFormat(toks: readonly Tok[], i: number): boolean {
   if (isSym(nx, "'", "’") && adjacent(t, nx) && toks[i + 2]?.kind === "num" && adjacent(nx, toks[i + 2])) return true;
   if (isWord(nx) && /^e$/i.test(nx.text) && adjacent(t, nx) && toks[i + 2]?.kind === "num" && adjacent(nx, toks[i + 2])) return true;
   if (t.form === "dec" && /^[1-9]\d{0,2}\.\d00$/.test(t.text)) return true;
+  // "1.250 g", "1.750 kg": a dot before exactly three digits, then a metric unit (a European thousands group?)
+  if (t.form === "dec" && /^[1-9]\d{0,2}\.\d{3}$/.test(t.text) && isWord(nx) && METRIC_CODES.has(unitOfWord(nx.text) ?? "")) return true;
   if (t.form === "int" && !t.script && nx?.kind === "num" && nx.form === "int" && !nx.script && /^\d{3}$/.test(nx.text) && !adjacent(t, nx) && !(isSym(toks[i + 2]) && FRACTION_SLASHES.has((toks[i + 2] as { text: string }).text))) {
-    return true;
+    // "2 400 g cans", "6 150 g salmon fillets": a count, then a package size and the food — not a
+    // thousands group ("1 000 g flour" stays ambiguous: a size never starts with 0)
+    return !(nx.text[0] !== "0" && packageSizeAt(toks, i + 2));
   }
   return false;
+}
+
+const METRIC_CODES = new Set(["mg", "g", "kg", "ml", "dl", "l"]);
+
+/** A weight or volume unit at `k` ("g", "ml", "fl oz") with a word after it: the number before it is a package size. */
+function packageSizeAt(toks: readonly Tok[], k: number): boolean {
+  let u = toks[k];
+  if (isWord(u) && /^(?:fl|fluid)$/i.test(u.text)) {
+    k += isSym(toks[k + 1], ".") ? 2 : 1;
+    u = toks[k];
+  }
+  if (!isWord(u)) return false;
+  const code = unitOfWord(u.text);
+  if (code === null || (UNIT_REGISTRY[code].dimension !== "mass" && UNIT_REGISTRY[code].dimension !== "volume")) return false;
+  const after = isSym(toks[k + 1], ".") ? toks[k + 2] : toks[k + 1];
+  return isWord(after);
 }
 
 /** An int/int fraction at i (int, slash, int — spaces allowed around the slash). */
@@ -128,7 +150,7 @@ interface Part {
   ti: number;
 }
 
-const NUMBER_PARTS = new Set(["a", "an", "and", "of", "dozen", ...Object.keys(CARDINALS), ...Object.keys(FRACTION_WORDS)]);
+const NUMBER_PARTS = new Set(["a", "an", "and", "of", "dozen", "hundred", "thousand", ...Object.keys(CARDINALS), ...Object.keys(FRACTION_WORDS)]);
 
 /**
  * Word parts from token i on: a hyphenated token whose every part is a number word ("one-and-a-half",
@@ -147,14 +169,43 @@ function wordParts(toks: readonly Tok[], i: number): Part[] {
   return out;
 }
 
-/** A cardinal at parts[p]: "seven", "twenty", "twenty four"; [value, next] or null. */
-function cardinalAt(ws: readonly Part[], p: number): [number, number] | null {
+/** A cardinal below one hundred at parts[p]: "seven", "twenty", "twenty four"; [value, next] or null. */
+function smallCardinalAt(ws: readonly Part[], p: number): [number, number] | null {
   const w = ws[p]?.w;
   if (w === undefined || !hasOwn(CARDINALS, w)) return null;
   const v = CARDINALS[w];
   const u = ws[p + 1]?.w;
   if (TENS.has(w) && u !== undefined && hasOwn(CARDINALS, u) && CARDINALS[u] < 10) return [v + CARDINALS[u], p + 2];
   return [v, p + 1];
+}
+
+/**
+ * "hundred" / "thousand" after a count ("one hundred", "two hundred fifty", "three thousand"): the count
+ * multiplied, plus an optional smaller cardinal ("and fifty"). [value, next].
+ */
+function scaled(ws: readonly Part[], v: number, p: number): [number, number] {
+  for (const [word, factor] of [["thousand", 1000], ["hundred", 100]] as const) {
+    if (ws[p]?.w !== word) continue;
+    v *= factor;
+    p++;
+    const q = ws[p]?.w === "and" ? p + 1 : p;
+    const rest = smallCardinalAt(ws, q);
+    if (rest && rest[0] < factor) {
+      v += rest[0];
+      p = rest[1];
+    }
+  }
+  return [v, p];
+}
+
+/**
+ * A cardinal at parts[p]: "seven", "twenty four", "one hundred", "two hundred fifty" (CONTRACT §7.1 lists
+ * one … twelve; the teens, tens, hundreds and thousands are read the same way). [value, next] or null.
+ */
+function cardinalAt(ws: readonly Part[], p: number): [number, number] | null {
+  const c = smallCardinalAt(ws, p);
+  if (c === null) return null;
+  return scaled(ws, c[0], c[1]);
 }
 
 /** "a half", "one third", "two thirds", "three quarters": [value, next] or null. */
@@ -198,9 +249,19 @@ function wordNumber(ws: readonly Part[]): { value: Rational; used: number } | nu
     if (fr) {
       [value, p] = fr;
       if (ws[p]?.w === "of" && (ws[p + 1]?.w === "a" || ws[p + 1]?.w === "an")) p += 2; // "a quarter of a cup"
+    } else if ((w0 === "a" || w0 === "an") && (ws[1]?.w === "hundred" || ws[1]?.w === "thousand")) {
+      // "a hundred grams", "a thousand"
+      const [v, q] = scaled(ws, 1, 1);
+      value = rational(BIG(v));
+      p = q;
     } else if (w0 === "a" || w0 === "an") {
       value = rational(BIG(1));
       p = 1;
+    } else if ((w0 === "quarter" || w0 === "third") && ws.length > 1) {
+      // "quarter cup sugar", "third cup oil": a fraction word with no article (the caller checks a unit follows)
+      value = rational(BIG(1), BIG(FRACTION_WORDS[w0]));
+      p = 1;
+      if (ws[p]?.w === "of" && (ws[p + 1]?.w === "a" || ws[p + 1]?.w === "an")) p += 2;
     } else {
       const c = cardinalAt(ws, 0);
       if (c === null) return null;
@@ -236,10 +297,13 @@ export function andFraction(toks: readonly Tok[], i: number): { value: Rational;
   return null;
 }
 
-/** Optional "dozen" after a numeral: × 12 ("2 dozen", "1/2 dozen"). */
+/** Optional "dozen" after a numeral: × 12 ("2 dozen", "1/2 dozen", "1/2-dozen"). */
 function withDozen(toks: readonly Tok[], r: NumberRead): NumberRead {
-  if (!r.ok || !isWord(toks[r.next], "dozen")) return r;
-  return { ...r, value: mul(r.value, TWELVE), word: true, decimal: false, e: toks[r.next].e, next: r.next + 1 };
+  if (!r.ok) return r;
+  let d = r.next;
+  if (isSym(toks[d], "-", "‐", "‑") && adjacent(toks[d - 1], toks[d]) && isWord(toks[d + 1], "dozen") && adjacent(toks[d], toks[d + 1])) d++;
+  if (!isWord(toks[d], "dozen")) return r;
+  return { ...r, value: mul(r.value, TWELVE), word: true, decimal: false, e: toks[d].e, next: d + 1 };
 }
 
 // --- The reader -------------------------------------------------------------------------------------
@@ -325,6 +389,11 @@ export function readNumber(toks: readonly Tok[], i: number): NumberRead | null {
     if (isWord(toks[next], "of")) next++;
     return fail("quantity_missing", toks, i, next, true);
   }
+
+  // "half and half", "half & half": the dairy product, not an amount
+  if (w === "half" && (isWord(toks[i + 1], "and") || isSym(toks[i + 1], "&")) && isWord(toks[i + 2], "half")) return null;
+  // "quarter" / "third" without an article is an amount only before a unit ("quarter cup", "third cup")
+  if ((w === "quarter" || w === "third") && !(isWord(toks[i + 1]) && (unitOfWord((toks[i + 1] as { text: string }).text) !== null || isWord(toks[i + 1], "of")))) return null;
 
   const ws = wordParts(toks, i);
   const r = wordNumber(ws);

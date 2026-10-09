@@ -68,7 +68,7 @@ const NUMBER = /(?:\d+|(?=\.\d))(?:[.,]\d+)*/y;
 const SUPERSCRIPTS = "⁰¹²³⁴⁵⁶⁷⁸⁹";
 const SUBSCRIPTS = "₀₁₂₃₄₅₆₇₈₉";
 const FULLWIDTH = "０１２３４５６７８９";
-const SCRIPT_DIGITS = /[⁰¹²³⁴⁵⁶⁷⁸⁹]+|[₀₁₂₃₄₅₆₇₈₉]+|[０-９]+/y;
+const SCRIPT_DIGITS = /[⁰¹²³⁴⁵⁶⁷⁸⁹]+|[₀₁₂₃₄₅₆₇₈₉]+|[０-９]+(?:[，．,.][０-９]+)*/y;
 
 export interface Lexed {
   tokens: Tok[];
@@ -127,9 +127,12 @@ export function lex(text: string): Lexed {
     SCRIPT_DIGITS.lastIndex = i;
     m = SCRIPT_DIGITS.exec(text);
     if (m) {
-      const ascii = [...m[0]].map((ch) => String(Math.max(SUPERSCRIPTS.indexOf(ch), SUBSCRIPTS.indexOf(ch), FULLWIDTH.indexOf(ch)))).join("");
+      // full-width digits keep their full-width comma or point ("１，５" reads like "1,5")
+      const ascii = [...m[0]].map((ch) => (ch === "，" || ch === "," ? "," : ch === "．" || ch === "." ? "." : String(Math.max(SUPERSCRIPTS.indexOf(ch), SUBSCRIPTS.indexOf(ch), FULLWIDTH.indexOf(ch))))).join("");
       const script = SUPERSCRIPTS.includes(c) ? "super" : SUBSCRIPTS.includes(c) ? "sub" : "full";
-      top.list.push({ kind: "num", s: i, e: i + m[0].length, text: ascii, form: "int", script });
+      const dots = (ascii.match(/\./g) ?? []).length;
+      const form = ascii.includes(",") ? "comma" : dots > 1 ? "malformed" : dots === 1 ? "dec" : "int";
+      top.list.push({ kind: "num", s: i, e: i + m[0].length, text: ascii, form, script });
       i += m[0].length;
       continue;
     }

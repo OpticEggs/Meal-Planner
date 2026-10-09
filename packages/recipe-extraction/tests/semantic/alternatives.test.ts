@@ -62,13 +62,18 @@ describe("or inside a remark is a note", () => {
     ["1/4 tsp cayenne pepper (or to taste)", "or to taste"],
     ["1/2 tsp red pepper flakes, or more to taste", "or more to taste"],
     ["1 cup cheese, such as cheddar or Gruyère", "such as cheddar or Gruyère"],
-    ["1 tsp cumin seeds, whole or ground", "whole or ground"],
-    ["4 chicken thighs (bone-in or boneless)", "bone-in or boneless"],
     ["1 large yellow onion, chopped or sliced", "large; chopped or sliced"],
   ])("%s → note %s", (line, note) => {
     const r = read(line);
     expect(r).toMatchObject({ status: "ready", note, alternatives: [] });
     expect(r.name).not.toBeNull();
+  });
+
+  it.each([
+    ["1 tsp cumin seeds, whole or ground", ["whole cumin seeds", "ground cumin seeds"]],
+    ["4 chicken thighs (bone-in or boneless)", ["bone-in chicken thighs", "boneless chicken thighs"]],
+  ])("a cut or grind is a different product, so a choice: %s", (line, options) => {
+    expect(read(line)).toMatchObject({ status: "needs_review", name: null, alternatives: options });
   });
 
   it("a long remark that happens to contain 'or' stays a note", () => {

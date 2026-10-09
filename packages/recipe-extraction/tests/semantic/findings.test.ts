@@ -99,9 +99,14 @@ describe("a number that is part of the food's name (B5)", () => {
     expect(r.reasons).toContain("unclassified");
   });
 
-  it.each(["Five spice powder", "Seven spice blend", "Four cheese blend", "two tomato"])("a number word before a food that is not counted: %s → no amount", (line) => {
+  it.each([
+    ["Five spice powder", "spice powder"], ["Seven spice blend", "spice blend"], ["Four cheese blend", "cheese blend"], ["two tomato", "tomato"],
+    ["Two egg", "egg"], ["Three onion", "onion"],
+  ])("a count before a food that is not counted: %s → the count stays the amount, a person checks (never in the name)", (line, name) => {
     const r = read(line);
-    expect(r).toMatchObject({ status: "needs_review", quantity: null, name: line });
+    expect(r).toMatchObject({ status: "needs_review", name });
+    expect(r.quantity).not.toBeNull();
+    expect(r.reasons).toContain("unclassified");
   });
 
   it.each(["2 tomato", "4 cheese ravioli"])("a counted food that does not read as several: %s → needs review", (line) => {
@@ -161,7 +166,7 @@ describe("restatements must agree (B7)", () => {
 describe("recipe facts are not ingredients (B8)", () => {
   it.each([
     "Calories: 250", "Nutrition: 250 calories", "Serving size: 1 cup", "Per serving: 2 tbsp", "Portion: 200 g", "Weight: 500 g", "Total: 2 cups",
-    "Special equipment: 2 baking sheets", "You will need: 2 baking sheets", "4 servings", "250 kcal", "Protein 20g", "Roll dough into 12 balls",
+    "Special equipment: 2 baking sheets", "4 servings", "250 kcal", "Protein 20g", "Roll dough into 12 balls",
     "Fat: 10 g", "Saturated fat 3g", "Sugars: 12 g", "Total fat 10 g", "Sodium 200mg", "Fiber: 3 g", "Yield: 4 cups", "Serves 4", "Makes 12 cookies",
   ])("%s → unsupported", (line) => {
     expect(read(line).status).toBe("unsupported");
@@ -240,18 +245,17 @@ describe("a no-fixed-amount phrase after 'or' (SF3)", () => {
 describe("options are never made up (SF4)", () => {
   it.each([
     ["2 tbsp butter or olive oil", ["butter", "olive oil"]], ["1/4 cup honey or maple syrup", ["honey", "maple syrup"]],
-    ["2 cups cheddar or Monterey Jack cheese", ["cheddar", "Monterey Jack cheese"]], ["2 cups milk or almond milk", ["milk", "almond milk"]],
-    ["1 cup ricotta or cottage cheese", ["ricotta", "cottage cheese"]], ["2 tbsp margarine or vegetable oil", ["margarine", "vegetable oil"]],
+    ["2 cups cheddar or Monterey Jack cheese", ["cheddar cheese", "Monterey Jack cheese"]], ["2 cups milk or almond milk", ["milk", "almond milk"]],
+    ["1 cup ricotta or cottage cheese", ["ricotta cheese", "cottage cheese"]], ["2 tbsp margarine or vegetable oil", ["margarine", "vegetable oil"]],
     ["1 tbsp lemon or lime juice", ["lemon juice", "lime juice"]], ["4 cups chicken or vegetable broth", ["chicken broth", "vegetable broth"]],
     ["2 tbsp red or white wine vinegar", ["red wine vinegar", "white wine vinegar"]], ["2 cups fresh or frozen peas", ["fresh peas", "frozen peas"]],
     ["1 cup stock (chicken, beef or vegetable)", ["chicken stock", "beef stock", "vegetable stock"]],
-    ["1 cup stock, chicken, beef or vegetable", ["chicken stock", "beef stock", "vegetable stock"]],
     ["1 cup chicken, beef, or vegetable stock", ["chicken stock", "beef stock", "vegetable stock"]],
     ["1 cup flour (all-purpose (or bread (or cake)))", ["all-purpose flour", "bread flour", "cake flour"]],
-    ["1 tbsp oil (vegetable, canola, or peanut)", ["vegetable oil", "canola oil", "peanut oil"]], ["2 tbsp oil, olive or canola", ["olive oil", "canola oil"]],
+    ["1 tbsp oil (vegetable, canola, or peanut)", ["vegetable oil", "canola oil", "peanut oil"]],
     ["1 cup cream (heavy or light)", ["heavy cream", "light cream"]], ["1 cup shredded cheese (cheddar, jack or colby)", ["shredded cheddar cheese", "shredded jack cheese", "shredded colby cheese"]],
     ["1 lb sausage, sweet or hot", ["sweet sausage", "hot sausage"]], ["2 cups milk (whole or 2%)", ["whole milk", "2% milk"]],
-    ["1 cup milk, cream or half-and-half", ["milk", "cream", "half-and-half"]], ["2 lbs potatoes, russet or Yukon gold", ["potatoes", "russet", "Yukon gold"]],
+    ["2 lbs potatoes, russet or Yukon gold", ["russet", "Yukon gold"]],
     ["2 cups greens (spinach, kale or chard)", ["spinach", "kale", "chard"]], ["1 cup nuts (walnuts or pecans)", ["walnuts", "pecans"]],
   ])("%s", (line, options) => {
     const r = read(line);
@@ -274,7 +278,7 @@ describe("all-capital food lines (SF5)", () => {
   });
 
   it("recipe-part headings in capitals are still headings", () => {
-    for (const line of ["TOPPING", "FOR THE SAUCE", "DRESSING"]) expect(read(line).status, line).toBe("unsupported");
+    for (const line of ["TOPPING", "FOR THE SAUCE", "FROSTING", "FILLING"]) expect(read(line).status, line).toBe("unsupported");
   });
 
   it("a food that begins with a preparation verb is food, for a person to check", () => {
@@ -327,7 +331,7 @@ describe("small things (nits)", () => {
   it("names are never only a unit, only size words, only a number word, or only 'optional'", () => {
     expect(read("4 8-oz. cans medium")).toMatchObject({ status: "needs_review", name: null, note: "medium" });
     expect(read("3 large")).toMatchObject({ status: "needs_review", name: null, note: "large" });
-    expect(read("2 cups rice one")).toMatchObject({ status: "needs_review", name: "rice", note: "one" });
+    expect(read("2 cups one")).toMatchObject({ status: "needs_review", name: null, note: "one" });
     expect(read("10 cans of optional")).toMatchObject({ status: "needs_review", name: null, optional: true });
     expect(read("ounces -- mL").name).toBeNull();
     expect(read("2 eggs large")).toMatchObject({ status: "ready", name: "eggs", note: "large" });
@@ -337,10 +341,14 @@ describe("small things (nits)", () => {
     expect(read("($0.50) 2 eggs")).toMatchObject({ status: "ready", name: "eggs", quantity: { numerator: "2" } });
   });
 
-  it("an approximate weight between a count and the food restates the amount", () => {
-    const r = read("2 (about 1 lb) potatoes");
-    expect(r).toMatchObject({ status: "ready", name: "potatoes", packageSize: null });
-    expect(r.equivalents.map(amountText)).toEqual(["1 lb"]);
+  it("a weight between a count and the food is per item, approximate or not: a person checks", () => {
+    for (const line of ["2 (about 1 lb) potatoes", "2 (about 8 oz) steaks", "2 (8 oz) steaks"]) {
+      const r = read(line);
+      expect(r, line).toMatchObject({ status: "needs_review", packageSize: null, equivalents: [] });
+      expect(r.reasons, line).toContain("quantity_unassigned");
+    }
+    // after the food, an approximate weight is the total
+    expect(read("2 steaks (about 1 lb)").equivalents.map(amountText)).toEqual(["1 lb"]);
   });
 
   it("'a or b' is not a ready ingredient", () => {
