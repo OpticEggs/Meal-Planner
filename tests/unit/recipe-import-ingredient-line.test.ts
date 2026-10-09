@@ -172,6 +172,25 @@ describe("household seasonings are left out of groceries automatically", () => {
   });
 });
 
+describe("descriptors in parentheses or after a comma decide what salt or pepper is (RIO-02, original cases)", () => {
+  it.each([
+    ["1 tsp salt (smoked)", "smoked salt"], ["1 tsp pepper (white)", "white pepper"], ["1 tsp salt (garlic)", "garlic salt"],
+    ["1 tsp salt (smoked (hickory))", "smoked hickory salt"], ["1/2 tsp kosher salt (smoked), divided", "smoked kosher salt"], ["1 tsp salt, smoked", "smoked salt"],
+  ])("%j → kept as %j", (raw, name) => {
+    const r = parseIngredientLine(raw);
+    expect(r.status).toBe("parsed");
+    expect(r.name).toBe(name);
+    expect(r.unit).toBe("tsp");
+  });
+  it.each([
+    "1 tsp smoked salt", "1 tsp white pepper", "1 red bell pepper, diced",
+  ])("%j (adjective first) is still kept", (raw) => expect(parseIngredientLine(raw).status).toBe("parsed"));
+  it.each([
+    "1 tsp kosher salt (plus more for the pasta water)", "1/2 tsp black pepper (freshly ground)", "salt (to taste)", "1 tsp salt, divided", "1 tsp salt (optional)",
+    "1 tsp kosher salt (Diamond Crystal)", "1 tsp salt (or to taste)",
+  ])("%j → still omitted", (raw) => expect(parseIngredientLine(raw).status).toBe("omitted"));
+});
+
 describe("form and robustness", () => {
   it.each([
     ["3 cups cooked rice", "cooked"],

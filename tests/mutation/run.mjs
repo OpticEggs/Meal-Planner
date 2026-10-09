@@ -302,7 +302,8 @@ MUTATIONS.push(
   { name: "IO_seasoning_bought", file: "src/domain/groceries/projection.ts", suite: SEASON, pattern: "groceries leave", expect: [/salt and black pepper make no grocery line/],
     edits: [["        seasonings.set(l.ingredientKey, sz);\n        continue;", "        seasonings.set(l.ingredientKey, sz);"]] },
   { name: "IO_bell_pepper_is_seasoning", file: "src/domain/groceries/seasonings.ts", suite: SEASON, pattern: "isHouseholdSeasoning", expect: [/not a household seasoning/],
-    edits: [["  if (!words.every((w) => QUALIFIERS.has(w))) return false;", "  if (!words.some((w) => QUALIFIERS.has(w))) return false;"]] },
+    // Re-anchored 2026-10-09 (RIO-02): the line now also admits NEUTRAL words; the injected defect is unchanged.
+    edits: [["  if (!words.every((w) => QUALIFIERS.has(w) || NEUTRAL.has(w))) return false;", "  if (!words.some((w) => QUALIFIERS.has(w) || NEUTRAL.has(w))) return false;"]] },
   { name: "HE_enough_compared_unrounded", file: "src/domain/groceries/projection.ts", suite: SEASON, pattern: "Have enough", expect: [/3-decimal amount/],
     edits: [["reviewed.gte(mealQty.toDecimalPlaces(SHOWN_PLACES))", "reviewed.gte(mealQty)"]] },
   // Import-overhaul corrections (2026-10-09; RIO-01..02 reconstructed — the owner's package did not arrive).
@@ -310,6 +311,10 @@ MUTATIONS.push(
     edits: [["toDecimalPlaces(12, D.ROUND_DOWN)", "toDecimalPlaces(12)"]] },
   { name: "RIO02_bare_pepper_always_seasoning", file: "src/domain/groceries/seasonings.ts", suite: RIO, pattern: "RIO-02", expect: [/RIO-02/],
     edits: [["  if (barePepper && unit && BOUGHT_BY_PIECE_OR_WEIGHT.has(unit)) return false;", "  void barePepper;"]] },
+  { name: "RIO02_descriptors_discarded", file: "src/domain/groceries/seasonings.ts", suite: RIO, pattern: "RIO-02", expect: [/RIO-02a/],
+    edits: [["  return out;\n}", "  return [];\n}"]] },
+  { name: "RIO02_classifier_ignores_descriptors", file: "src/domain/groceries/seasonings.ts", suite: RIO, pattern: "RIO-02", expect: [/RIO-02b/],
+    edits: [["  if (identityDescriptors(name, descriptors).length) return false;", "  void identityDescriptors;"]] },
   { name: "IO_private_mode_copies_photos", file: "src/server/integrations/recipe-import/content-policy.ts", suite: CP, pattern: "CP-02", expect: [/CP-02/],
     edits: [["    return { instructions: true, photos: false, kind: \"owner_mode\"", "    return { instructions: true, photos: true, kind: \"owner_mode\""]] },
 );

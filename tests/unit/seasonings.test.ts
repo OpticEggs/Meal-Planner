@@ -23,6 +23,25 @@ describe("isHouseholdSeasoning", () => {
   ])("%j → not a household seasoning", (name) => expect(isHouseholdSeasoning(name)).toBe(false));
 });
 
+describe("descriptors are part of the identity (RIO-02, original cases)", () => {
+  it.each([
+    "salt (smoked)", "pepper (white)", "salt (garlic)", "salt (smoked (hickory))", "kosher salt (smoked)", "salt (pink Himalayan)", "salt, smoked",
+  ])("%j → not a household seasoning", (name) => {
+    expect(isHouseholdSeasoning(name)).toBe(false);
+    expect(isHouseholdSeasoning(name, "tsp")).toBe(false);
+  });
+  it.each([
+    ["salt", "smoked"], ["pepper", "white"], ["salt", "garlic"], ["salt", "smoked (hickory)"], ["kosher salt", "smoked; divided"],
+  ])("%j with descriptors %j → not a household seasoning", (name, descriptors) => expect(isHouseholdSeasoning(name, "tsp", descriptors)).toBe(false));
+  it.each([
+    "salt (to taste)", "salt (optional)", "kosher salt (plus more for the pasta water)", "black pepper (freshly ground)", "salt (about 1 1/2 teaspoons)",
+    "salt, divided", "kosher salt (Diamond Crystal)", "salt (or to taste)", "pepper (to taste)",
+  ])("%j → still a household seasoning", (name) => expect(isHouseholdSeasoning(name, "tsp")).toBe(true));
+  it.each([
+    ["salt", "to taste"], ["kosher salt", "divided"], ["black pepper", "freshly ground"], ["salt", "plus more for the pasta water"], ["salt", null],
+  ])("%j with descriptors %j → still a household seasoning", (name, descriptors) => expect(isHouseholdSeasoning(name, "tsp", descriptors)).toBe(true));
+});
+
 describe("groceries leave household seasonings out (recipes unchanged)", () => {
   const ingredients = new Map<string, Ingredient>([
     ["chicken", { key: "chicken", name: "Chicken", tags: [], allergenInfoKnown: true }],

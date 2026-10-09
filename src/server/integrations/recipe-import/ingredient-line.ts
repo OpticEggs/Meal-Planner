@@ -1,6 +1,6 @@
 import { KNOWN_UNITS, normalizeUnit } from "@/domain/units";
 import { formatAmount, MAX_AMOUNT, ratCmp, ratInt, ratMul, readLeadingAmount, VULGAR, type Rat } from "@/domain/quantity";
-import { isHouseholdSeasoning } from "@/domain/groceries/seasonings";
+import { identityDescriptors, isHouseholdSeasoning } from "@/domain/groceries/seasonings";
 
 /**
  * Ingredient-line parsing (import overhaul, 2026-10-09). A line is split into an EXACT amount (a rational,
@@ -336,12 +336,23 @@ export function parseIngredientLine(raw: string): IngredientLine {
   }
 
   // 5. Name and note.
-  const { name: rawName, notes, noAmount } = nameAndNote(s);
+  const { name: rawName, notes: allNotes, noAmount } = nameAndNote(s);
   let name = rawName.slice(0, 200);
+  let notes = allNotes;
+  const measuredIn = amount || range ? unit : null;
+  // RIO-02: "salt (smoked)", "pepper (white)", "salt, smoked" — a descriptor that changes WHICH salt or
+  // pepper it is belongs to the name, as in "smoked salt", before the household-seasoning decision.
+  if (isHouseholdSeasoning(name, measuredIn)) {
+    const identity = identityDescriptors(name, notes.join("; "));
+    if (identity.length) {
+      name = `${identity.join(" ")} ${name}`.slice(0, 200);
+      notes = notes.filter((n) => identityDescriptors("", n).join(" ") !== n.toLowerCase().replace(/[(),;]/g, " ").split(/\s+/).filter(Boolean).join(" "));
+    }
+  }
   const note = [...preNotes, ...notes].filter((n, i, all) => all.indexOf(n) === i).join("; ").slice(0, 500) || null;
   const alternatives = alternativesOf(name);
 
-  if (isHouseholdSeasoning(name, amount || range ? unit : null) && !alternatives) {
+  if (isHouseholdSeasoning(name, measuredIn, note) && !alternatives) {
     return out({
       quantity: amount ? fmt(amount, decimal) : null, unit: amount ? unit : null, name, note, status: "omitted",
       reasons: ["Household seasoning — not added to groceries"],
