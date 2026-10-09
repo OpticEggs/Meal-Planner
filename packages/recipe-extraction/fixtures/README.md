@@ -8,6 +8,7 @@ images, nothing copied from a real page. Rights: redistributable with the reposi
 |---|---|
 | `ingredients/dev.jsonl` | Ingredient-line cases for development (182). Engines may be tuned against these. |
 | `ingredients/holdout.jsonl` | Ingredient-line cases held out (128). **Frozen** — never tuned against. |
+| `ingredients/holdout-v2.jsonl` | Holdout-v2 (EVALUATION-PLAN-v2 §9), split `holdout2`, ids `ing-h2-NNNN` (359: 271 ready, 69 needs_review, 19 unsupported). The **fresh** set for the Phase 2 acceptance decision; written blind, never shown to the implementation worker. Draft until label-checked, adjudicated and frozen. |
 | `pages/*.html` | Synthetic recipe pages: `dev-*` (10) and `hold-*` (5, frozen). |
 | `pages/labels.json` | What each page states (CONTRACT-v1 §3), one entry per page. |
 | `FREEZE.json` | SHA-256 of every holdout file (and of the holdout page labels), case counts, the freeze rule. |
@@ -75,6 +76,30 @@ must appear; others may too.
   URLs are the schema.org vocabulary identifiers that structured data needs (`https://schema.org`,
   `https://schema.org/Recipe` as `@context`/`itemtype`); they are identifiers, not links to content.
   `bench/invariants.ts` enforces this, the manifest, the 1 MiB file cap and the freeze.
+
+## Holdout-v2 (`ingredients/holdout-v2.jsonl`)
+
+The fresh set for the Phase 2 acceptance decision (`docs/table/recipe-extraction/EVALUATION-PLAN-v2.md`
+§6, §8–§9). Written by the evaluation worker on 2026-10-09 from CONTRACT-v1 §7 and the conventions above,
+**blind**: no ingredient parser (legacy, candidate or Table's) was run on these inputs and no parser's output
+for them was looked up. It is never shown to the implementation worker.
+
+- Every case carries two extra fields: `source` (`{"kind":"synthetic_pattern","author":…}` or
+  `{"kind":"repo_test_input","file":…,"line":…,"commit":"8e6bd6e"}`, same kind as `provenance`) and
+  `construction` (a short template signature such as `"INT (size) container food, prep"`).
+- Synthetic lines: no construction is used more than twice (swapping the food word is the same
+  construction). Repository inputs: input strings that Table's import overhaul (`8e6bd6e`) added to its own
+  tests, taken only where the exact string is not in those files at `cb7b56e`, not in `dev.jsonl` /
+  `holdout.jsonl` and not in `tests/parity/table-test-literals.ts`; Table's expected values in those tests
+  were ignored (they apply household policy the contract leaves to the adapter).
+- Readings used where §7 does not settle a case (each such case says "CONTRACT AMBIGUITY" in its rationale):
+  a temperature word before the food (`cold`, `warm`) is kept in the name like a leading participle, with the
+  bare food + note accepted; `about` inside a restatement (`(about 1 oz)`) qualifies only the equivalent, so
+  `approximate` stays false; an amount inside a remark that is not a restatement (`(from 1/3 cup dry)`) is a
+  second amount → `needs_review`; a parenthetical naming another ingredient (`(or crushed tomatoes)`) or a
+  product variety (`(red or green)`) is a choice of ingredients; `Juice of 2 limes` / `Zest of ½ orange` →
+  the fruit counted, the part used in the note (juice/zest names accepted); a container written with a unit
+  word (`3 (5.3 oz) cups … yogurt`) is a `container`; `2 x 400 g cans` is package-size form 1.
 
 ## Changing labels
 

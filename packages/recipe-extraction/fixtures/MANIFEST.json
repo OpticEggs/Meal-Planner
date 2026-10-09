@@ -40,6 +40,15 @@
       "reviewer": "integration owner (Claude) — reviewed 2026-10-09 against CONTRACT-v1 §3/§7; corrections logged in LABEL-CHANGES.md"
     },
     {
+      "path": "ingredients/holdout-v2.jsonl",
+      "kind": "ingredient_labels",
+      "provenance": "Holdout-v2 (EVALUATION-PLAN-v2 §9): hand-written labels from CONTRACT-v1 §7, written blind (no parser run on these inputs, no parser output looked up); 305 synthetic_pattern lines written for this corpus and 54 repo_test_input input strings from tests Table's import overhaul added at 8e6bd6e (inputs only; Table's expected values were not used). Per-line source and construction in each case",
+      "rights": "synthetic — written for this repository; no third-party content; redistributable with the repository",
+      "created": "2026-10-09",
+      "author": "Evaluation worker (Claude) for the Phase 2 coordinator",
+      "reviewer": "pending — independent label checker assigned by the coordinator; adjudication is logged in LABEL-CHANGES.md before the FREEZE-v2.json freeze"
+    },
+    {
       "path": "ingredients/holdout.jsonl",
       "kind": "ingredient_labels",
       "split": "holdout",
