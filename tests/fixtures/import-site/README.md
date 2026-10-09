@@ -15,3 +15,7 @@ Source-policy additions (RUC-01, 2026-10-08): `licensed*.html`, `ungranted.html`
 redirect entries (an allowed link redirecting to another site or to Budget Bytes, a same-site redirect,
 photos on a separate CDN host and photos redirecting elsewhere). The Budget Bytes entries exist only so a
 test can prove they are **never requested**; every word is invented.
+
+Import-overhaul additions (2026-10-09): `pesto.html` (lines with an ordinary third, nested parentheses, a mixed
+number, a range, a package size, quarts-style units, household seasonings and a bell pepper) and `pesto-hero.jpg`, a
+**generated illustration** made by `make-pesto-hero.py` (Pillow drawing; not a photograph, not copied from anywhere).

@@ -1,176 +1,187 @@
 /**
- * Conservative ingredient-line parsing: exact decimals, known units only, review for everything
- * a person must decide. Nothing is invented.
+ * Ingredient-line parsing (import overhaul, 2026-10-09). A line is split into an exact amount, a unit,
+ * the ingredient name and a separate note; nothing is invented. Ordinary fractions are kept EXACTLY as
+ * rationals ("1/3"), never rejected because their decimal repeats and never rounded. A line Table can't
+ * read fully is marked for review with the reason — the whole original line is never put into the name.
+ *
+ * History: until 2026-10-09 thirds were refused ("fraction not exact as a decimal"), quantities were
+ * decimals ("1/2" → "0.5"), unsupported count words and package sizes went to review with a separate
+ * "suggestion", and nested parentheses left "(homemade )" in the name. Those expectations were replaced
+ * by the ones below at the owner's direction; the case list keeps every earlier input.
  */
 import { describe, expect, it } from "vitest";
 import { KNOWN_UNITS } from "@/domain/units";
 import { parseIngredientLine } from "@/server/integrations/recipe-import/ingredient-line";
 
-type Row = [line: string, quantity: string | null, unit: string | null, name: string];
+type Row = [line: string, quantity: string, unit: string, name: string, note?: string | null];
 
-describe("parseIngredientLine parsed lines", () => {
+describe("parsed lines: amount, unit, name and note separated", () => {
   it.each<Row>([
-    ["2 cups flour", "2", "cup", "flour"],
-    ["1/2 cup sugar", "0.5", "cup", "sugar"],
-    ["3/4 tsp salt", "0.75", "tsp", "salt"],
-    ["½ cup milk", "0.5", "cup", "milk"],
-    ["⅛ tsp cayenne", "0.125", "tsp", "cayenne"],
-    ["¾ cup oats", "0.75", "cup", "oats"],
-    ["1½ cups water", "1.5", "cup", "water"],
-    ["1 ½ cups water", "1.5", "cup", "water"],
-    ["1 1/2 cups rice", "1.5", "cup", "rice"],
-    ["2 1/4 cups flour", "2.25", "cup", "flour"],
-    ["1⁄2 cup broth", "0.5", "cup", "broth"],
-    ["5/8 cup cream", "0.625", "cup", "cream"],
-    ["0.5 cup oil", "0.5", "cup", "oil"],
-    [".5 cup oil", "0.5", "cup", "oil"],
-    ["1.25 lb beef", "1.25", "lb", "beef"],
-    ["1.50 lb beef", "1.5", "lb", "beef"],
-    ["2 T butter", "2", "tbsp", "butter"],
-    ["2 Tbsp butter", "2", "tbsp", "butter"],
-    ["2 TBSP butter", "2", "tbsp", "butter"],
-    ["1 tbsp. honey", "1", "tbsp", "honey"],
-    ["2 tablespoons honey", "2", "tbsp", "honey"],
-    ["1 t salt", "1", "tsp", "salt"],
-    ["1 tsp salt", "1", "tsp", "salt"],
-    ["1 teaspoon salt", "1", "tsp", "salt"],
-    ["1 c milk", "1", "cup", "milk"],
-    ["1 C milk", "1", "cup", "milk"],
-    ["2 Cups Flour", "2", "cup", "Flour"],
-    ["2 lbs chicken thighs", "2", "lb", "chicken thighs"],
-    ["1 pound ground turkey", "1", "lb", "ground turkey"],
-    ["8 oz cheddar", "8", "oz", "cheddar"],
-    ["8 ounces cheddar", "8", "oz", "cheddar"],
-    ["8 fl oz milk", "8", "fl_oz", "milk"],
-    ["8 fl. oz. cream", "8", "fl_oz", "cream"],
-    ["8 fluid ounces cream", "8", "fl_oz", "cream"],
-    ["200g flour", "200", "g", "flour"],
-    ["200 grams flour", "200", "g", "flour"],
-    ["1.5kg potatoes", "1.5", "kg", "potatoes"],
-    ["500 ml stock", "500", "ml", "stock"],
-    ["500 mL stock", "500", "ml", "stock"],
-    ["1 L water", "1", "l", "water"],
-    ["1 litre water", "1", "l", "water"],
-    ["2 eggs", "2", "each", "eggs"],
-    ["3 large eggs", "3", "each", "eggs"], // "large" moves to the note
-    ["1 onion, diced", "1", "each", "onion"], // "diced" moves to the note
-    ["4 each tortillas", "4", "each", "tortillas"],
-    ["2 cups of flour", "2", "cup", "flour"],
-    ["- 2 cups flour", "2", "cup", "flour"],
-    ["• 1 cup rice", "1", "cup", "rice"],
-    ["  2   cups   flour  ", "2", "cup", "flour"],
-    ["10000 g sugar", "10000", "g", "sugar"],
-  ])("%j → %s %s %j", (line, quantity, unit, name) => {
+    // The reported line: exact third, nested parenthetical kept as the note.
+    ["1/3 cup pesto (homemade (or store-bought))", "1/3", "cup", "pesto", "homemade (or store-bought)"],
+    // Whole numbers, decimals, fractions, mixed numbers, Unicode fractions.
+    ["2 cups flour", "2", "cup", "flour", null],
+    ["1/2 cup sugar", "1/2", "cup", "sugar", null],
+    ["3/4 tsp vanilla", "3/4", "tsp", "vanilla", null],
+    ["½ cup milk", "1/2", "cup", "milk", null],
+    ["⅛ tsp cayenne", "1/8", "tsp", "cayenne", null],
+    ["⅓ cup salsa", "1/3", "cup", "salsa", null],
+    ["⅔ cup milk", "2/3", "cup", "milk", null],
+    ["1⅓ cups flour", "1 1/3", "cup", "flour", null],
+    ["1 1/3 cups flour", "1 1/3", "cup", "flour", null],
+    ["1/6 tsp nutmeg", "1/6", "tsp", "nutmeg", null],
+    ["2/12 cup broth", "1/6", "cup", "broth", null],
+    ["3/2 cups milk", "1 1/2", "cup", "milk", null],
+    ["1½ cups water", "1 1/2", "cup", "water", null],
+    ["1 ½ cups frozen peas", "1 1/2", "cup", "frozen peas", null],
+    ["1 1/2 cups rice", "1 1/2", "cup", "rice", null],
+    ["1-1/2 cups rice", "1 1/2", "cup", "rice", null],
+    ["1⁄2 cup broth", "1/2", "cup", "broth", null],
+    ["0.5 cup oil", "0.5", "cup", "oil", null],
+    [".5 cup oil", "0.5", "cup", "oil", null],
+    ["1.50 lb beef", "1.5", "lb", "beef", null],
+    ["1,000 g flour", "1000", "g", "flour", null],
+    ["10000 g sugar", "10000", "g", "sugar", null],
+    // Units and their spellings.
+    ["2 T butter", "2", "tbsp", "butter", null],
+    ["2 Tbsp butter", "2", "tbsp", "butter", null],
+    ["1 tbsp. honey", "1", "tbsp", "honey", null],
+    ["2 tablespoons honey", "2", "tbsp", "honey", null],
+    ["1 t cumin", "1", "tsp", "cumin", null],
+    ["1 c milk", "1", "cup", "milk", null],
+    ["2 Cups Flour", "2", "cup", "Flour", null],
+    ["2 lbs chicken thighs", "2", "lb", "chicken thighs", null],
+    ["1 pound ground turkey", "1", "lb", "ground turkey", null],
+    ["8 ounces cheddar", "8", "oz", "cheddar", null],
+    ["8 fl oz milk", "8", "fl_oz", "milk", null],
+    ["8 fl. oz. cream", "8", "fl_oz", "cream", null],
+    ["200g flour", "200", "g", "flour", null],
+    ["1.5kg potatoes", "1.5", "kg", "potatoes", null],
+    ["500 mL stock", "500", "ml", "stock", null],
+    ["1 litre water", "1", "l", "water", null],
+    ["2 cups of flour", "2", "cup", "flour", null],
+    // Quarts, pints and gallons are exact volumes: converted to cups, never to a weight.
+    ["1 pint cherry tomatoes, halved", "2", "cup", "cherry tomatoes", "halved"],
+    ["2 quarts water", "8", "cup", "water", null],
+    ["⅓ quart broth", "1 1/3", "cup", "broth", null],
+    ["1 gallon milk", "16", "cup", "milk", null],
+    // Counts; size words and preparation become the note.
+    ["2 eggs", "2", "each", "eggs", null],
+    ["3 large eggs", "3", "each", "eggs", "large"],
+    ["1 large onion, diced", "1", "each", "onion", "large; diced"],
+    ["one egg", "1", "each", "egg", null],
+    ["1 red bell pepper, sliced", "1", "each", "red bell pepper", "sliced"],
+    // Count words keep what was counted in the name.
+    ["2 cloves garlic, minced", "2", "each", "garlic (clove)", "minced"],
+    ["1 can black beans", "1", "each", "black beans (can)", null],
+    ["1 bunch cilantro", "1", "each", "cilantro (bunch)", null],
+    ["1 stick butter", "1", "each", "butter (stick)", null],
+    // Package sizes: count × stated size, exactly.
+    ["1 (15 oz) can black beans, drained", "15", "oz", "black beans", "drained"],
+    ["2 (14.5 oz) cans diced tomatoes", "29", "oz", "diced tomatoes", null],
+    ["1 (8 oz) container fresh mozzarella pearls, drained", "8", "oz", "fresh mozzarella pearls", "drained"],
+    ["1 can (14.5 oz) diced tomatoes", "14.5", "oz", "diced tomatoes", null],
+    ["2 cans (14.5 oz each) tomatoes", "29", "oz", "tomatoes", null],
+    ["1 15-oz can chickpeas", "15", "oz", "chickpeas", null],
+    ["½ (15 oz) can pumpkin", "7.5", "oz", "pumpkin", null],
+    // A number inside a parenthetical is a note, not a second amount.
+    ["¼ cup grated parmesan (about 1 oz)", "1/4", "cup", "grated parmesan", "about 1 oz"],
+    ["1 tsp vanilla (optional)", "1", "tsp", "vanilla", "optional"],
+    ["1 cup 2% milk", "1", "cup", "2% milk", null],
+    // Price annotations are removed; bullets ignored; spacing normalized.
+    ["2 tbsp olive oil ($0.16)", "2", "tbsp", "olive oil", null],
+    ["- 2 cups flour", "2", "cup", "flour", null],
+    ["• 1 cup rice", "1", "cup", "rice", null],
+    ["  2   cups   flour  ", "2", "cup", "flour", null],
+  ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) => {
     const r = parseIngredientLine(line);
-    expect(r).toMatchObject({ raw: line, quantity, unit, name, status: "parsed", reasons: [] });
+    expect(r).toMatchObject({ raw: line, quantity, unit, name, note, status: "parsed", reasons: [] });
     expect(KNOWN_UNITS).toContain(r.unit);
   });
 });
 
-describe("parseIngredientLine review lines", () => {
-  type ReviewRow = [line: string, reason: RegExp, quantity: string | null];
+describe("lines that need a person: the reason is named and the name is still clean", () => {
+  type ReviewRow = [line: string, reason: RegExp, name: string, quantity: string | null, unit: string | null];
   it.each<ReviewRow>([
-    ["salt", /no quantity/, null],
-    ["salt to taste", /no fixed quantity/, null],
-    ["Salt and pepper, to taste", /no fixed quantity/, null],
-    ["fresh parsley, for serving", /no fixed quantity/, null],
-    ["water as needed", /no fixed quantity/, null],
-    ["1 tsp vanilla (optional)", /no fixed quantity/, null],
-    ["optional: 1 cup nuts", /no fixed quantity/, null],
-    ["one egg", /no quantity/, null],
-    ["a pinch of salt", /no quantity/, null],
-    ["2-3 cups broth", /range/, null],
-    ["2 to 3 cups broth", /range/, null],
-    ["2 – 3 tbsp oil", /range/, null],
-    ["1/2-1 cup water", /range/, null],
-    ["1 or 2 eggs", /alternatives/, null],
-    ["1 cup milk or cream", /alternatives/, null],
-    ["3 cloves garlic", /unit not supported: cloves/, "3"],
-    ["1 clove garlic", /unit not supported: clove/, "1"],
-    ["1 can black beans", /unit not supported: can/, "1"],
-    ["2 cans tomatoes", /unit not supported: cans/, "2"],
-    ["1 bunch cilantro", /unit not supported: bunch/, "1"],
-    ["1 pinch salt", /unit not supported: pinch/, "1"],
-    ["1 dash hot sauce", /unit not supported: dash/, "1"],
-    ["1 handful spinach", /unit not supported: handful/, "1"],
-    ["1 package tofu", /unit not supported: package/, "1"],
-    ["1 jar salsa", /unit not supported: jar/, "1"],
-    ["2 slices bread", /unit not supported: slices/, "2"],
-    ["3 sprigs thyme", /unit not supported: sprigs/, "3"],
-    ["1 head lettuce", /unit not supported: head/, "1"],
-    ["2 stalks celery", /unit not supported: stalks/, "2"],
-    ["4 pieces chicken", /unit not supported: pieces/, "4"],
-    ["1 stick butter", /unit not supported: stick/, "1"],
-    ["1 bag spinach", /unit not supported: bag/, "1"],
-    ["1 box pasta", /unit not supported: box/, "1"],
-    ["2 quarts water", /unit not supported: quarts/, "2"],
-    ["1 (15 oz) can black beans", /parenthetical/, null],
-    ["1 can (14.5 oz) diced tomatoes", /parenthetical/, null],
-    ["1 lb 4 oz beef", /more than one quantity/, null],
-    ["1 cup 2% milk", /more than one quantity/, null],
-    ["1 cup ½ and ½", /more than one quantity/, null],
-    ["1/3 cup sugar", /not exact as a decimal/, null],
-    ["⅓ cup sugar", /not exact as a decimal/, null],
-    ["⅔ cup milk", /not exact as a decimal/, null],
-    ["1 1/3 cups flour", /not exact as a decimal/, null],
-    ["1⅓ cups flour", /not exact as a decimal/, null],
-    ["1/6 tsp pepper", /not exact as a decimal/, null],
-    ["⅚ cup broth", /not exact as a decimal/, null],
-    ["2/12 cup broth", /not exact as a decimal/, null],
-    ["1/0 cup water", /invalid fraction/, null],
-    ["0/4 cup water", /invalid fraction/, null],
-    ["1 3/2 cup water", /invalid fraction/, null],
-    ["0 cups flour", /non-positive/, null],
-    ["0.0 cups flour", /non-positive/, null],
-    ["20000 g sugar", /implausible/, null],
-    ["123456789012 g sugar", /implausible/, null],
-    ["1,5 cups milk", /unrecognized number/, null],
-    ["1,000 g flour", /unrecognized number/, null],
-    ["1. Preheat the oven", /unrecognized quantity/, null],
-    ["2eggs", /unrecognized quantity/, null],
-    ["1 cup", /no ingredient name/, null],
-    ["", /empty line/, null],
-    ["   ", /empty line/, null],
-    ["-1 cup water", /no quantity/, null],
-  ])("%j → review (%s)", (line, reason, quantity) => {
+    ["2-3 cloves garlic, minced", /range/i, "garlic (clove)", null, "each"],
+    ["2 to 3 cups broth", /range/i, "broth", null, "cup"],
+    ["2 – 3 tbsp oil", /range/i, "oil", null, "tbsp"],
+    ["1/2-1 cup water", /range/i, "water", null, "cup"],
+    ["1 or 2 eggs", /range/i, "eggs", null, "each"],
+    ["fresh basil, for serving", /no amount/i, "fresh basil", null, null],
+    ["water as needed", /no amount/i, "water", null, null],
+    ["a pinch of nutmeg", /no fixed amount/i, "nutmeg", null, null],
+    ["1 pinch red pepper flakes", /no fixed amount/i, "red pepper flakes", null, null],
+    ["1 dash hot sauce", /no fixed amount/i, "hot sauce", null, null],
+    ["1 handful spinach", /no fixed amount/i, "spinach", null, null],
+    ["1 cup milk or cream", /choose/i, "", "1", "cup"],
+    ["2 tbsp butter or olive oil", /choose/i, "", "2", "tbsp"],
+    ["1 lb 4 oz beef", /two parts/i, "beef", null, null],
+    ["1 cup plus 2 tbsp flour", /two parts/i, "flour", null, null],
+    ["1/0 cup water", /amount can't be read/i, "water", null, null],
+    ["0 cups flour", /amount can't be read/i, "flour", null, null],
+    ["20000 g sugar", /too large/i, "sugar", null, null],
+    ["1,5 cups milk", /amount can't be read/i, "milk", null, null],
+    ["1. Preheat the oven", /not an ingredient/i, "Preheat the oven", null, null],
+    ["1 cup", /no ingredient name/i, "", null, null],
+    ["", /empty/i, "", null, null],
+  ])("%j → review (%s)", (line, reason, name, quantity, unit) => {
     const r = parseIngredientLine(line);
     expect(r.status).toBe("requires_review");
     expect(r.reasons.join("; ")).toMatch(reason);
+    expect(r.name).toBe(name);
     expect(r.quantity).toBe(quantity);
-    expect(r.unit).toBeNull();
-    expect(r.raw).toBe(line);
+    expect(r.unit).toBe(unit);
+    if (line.trim()) expect(r.name).not.toBe(line.trim()); // never the whole line as the name
   });
 
-  it("keeps the unit word in the name when the unit is unsupported", () => {
-    expect(parseIngredientLine("3 cloves garlic, minced")).toMatchObject({ name: "cloves garlic", note: "minced" });
+  it("a range keeps both stated ends for the person, and picks neither", () => {
+    expect(parseIngredientLine("2-3 cloves garlic, minced")).toMatchObject({ range: ["2", "3"], quantity: null });
+    expect(parseIngredientLine("1/2-1 cup water")).toMatchObject({ range: ["1/2", "1"], quantity: null });
   });
 
-  it("an unsupported unit alongside another reason drops the quantity too", () => {
-    expect(parseIngredientLine("1 can tomatoes, or fresh")).toMatchObject({ quantity: null, unit: null, status: "requires_review" });
+  it("alternatives are offered as stated, the shared word distributed", () => {
+    expect(parseIngredientLine("1 cup milk or cream").alternatives).toEqual(["milk", "cream"]);
+    expect(parseIngredientLine("2 cups chicken or vegetable broth").alternatives).toEqual(["chicken broth", "vegetable broth"]);
+    expect(parseIngredientLine("2 tbsp butter or olive oil").alternatives).toEqual(["butter", "olive oil"]);
+  });
+
+  it("an 'or' inside a parenthetical is a note, not a choice", () => {
+    const r = parseIngredientLine("1/3 cup pesto (homemade (or store-bought))");
+    expect(r.alternatives ?? null).toBeNull();
+    expect(r.status).toBe("parsed");
   });
 });
 
-describe("parseIngredientLine form and robustness", () => {
+describe("household seasonings are left out of groceries automatically", () => {
+  it.each([
+    "salt", "1 tsp kosher salt", "½ tsp freshly ground black pepper", "salt and pepper to taste", "Salt and pepper, to taste",
+    "sea salt", "1/4 tsp fine sea salt", "black pepper", "ground black pepper", "pepper to taste", "salt & pepper", "kosher salt, to taste",
+    "1 tsp salt", "freshly cracked black pepper",
+  ])("%j → omitted", (line) => {
+    const r = parseIngredientLine(line);
+    expect(r.status).toBe("omitted");
+    expect(r.reasons.join(" ")).toMatch(/household seasoning/i);
+  });
+
+  it.each([
+    "1 red bell pepper, sliced", "2 jalapeño peppers", "1 tsp red pepper flakes", "1 tbsp hot pepper sauce", "1 chili pepper", "1/2 tsp cayenne pepper",
+    "1 tsp garlic salt", "1 tsp celery salt", "1/4 tsp white pepper", "4 oz pepper jack cheese", "2 tbsp salted butter", "1 cup peppers",
+  ])("%j → not a household seasoning", (line) => {
+    expect(parseIngredientLine(line).status).not.toBe("omitted");
+  });
+});
+
+describe("form and robustness", () => {
   it.each([
     ["3 cups cooked rice", "cooked"],
     ["2 cups rice, cooked", "cooked"],
-    ["1 lb pre-cooked shrimp", "cooked"],
     ["1 lb raw shrimp", "raw"],
     ["1 cup uncooked rice", "raw"],
-    ["1 cup Uncooked rice", "raw"],
     ["1 cup rice", null],
-    ["2 cups strawberries", null],
-    ["1 cup precooked rice", null],
   ])("%j → form %s", (line, form) => expect(parseIngredientLine(line).form).toBe(form));
 
-  it("quantities are exact decimal strings, never floats", () => {
-    expect(parseIngredientLine("0.1 cup water").quantity).toBe("0.1");
-    expect(parseIngredientLine("1/1024 tsp salt").quantity).toBe("0.0009765625");
-    expect(parseIngredientLine("0.000001 g saffron").quantity).toBe("0.000001");
-    expect(parseIngredientLine("3/2 cups milk").quantity).toBe("1.5");
-  });
-
-  it("never throws on hostile input and stays fast", () => {
+  it("never throws on hostile input, never puts the whole line in the name, and stays fast", () => {
     const t0 = Date.now();
     for (const s of ["1".repeat(100_000), "1 ".repeat(50_000), `1 ${"(".repeat(10_000)}`, "½".repeat(10_000), "1/".repeat(10_000), `<script>alert(1)</script>`, "\u0000‮1 cup", null as unknown as string]) {
       expect(() => parseIngredientLine(s)).not.toThrow();

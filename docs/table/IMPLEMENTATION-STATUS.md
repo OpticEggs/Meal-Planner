@@ -1,6 +1,6 @@
 # Table — Implementation status
 
-_Last updated 2026-10-09 (UTC), after the Recipe Extraction Lab Phases 0–1 (package only; the app is unchanged), which followed the bounded pass B10 partial handoff + continuous URL-to-cart journey + phone upgrade rehearsal, which followed the recheck corrections RUC-01/RUC-02 (pilot on Render Free + Neon), which followed the URL-to-cart reprioritization (B25), which followed the multi-source handoff (recipe links, reviewed import, Budget Bytes lane, where to shop, Instacart list link — fixture-only), which followed B21/B22 (database cook-record invariant, stale cooking events) and the free-hosting research, which followed the visual update (B20) and the cook-record idempotency fix
+_Last updated 2026-10-09 (UTC), after the Recipe Extraction Lab Phases 0–1 (package only, branch `claude/quirky-gauss-depmd8`; the app is unchanged by it) merged with the import overhaul and mobile redesign (B28), which followed the bounded pass B10 partial handoff + continuous URL-to-cart journey + phone upgrade rehearsal, which followed the recheck corrections RUC-01/RUC-02 (pilot on Render Free + Neon), which followed the URL-to-cart reprioritization (B25), which followed the multi-source handoff (recipe links, reviewed import, Budget Bytes lane, where to shop, Instacart list link — fixture-only), which followed B21/B22 (database cook-record invariant, stale cooking events) and the free-hosting research, which followed the visual update (B20) and the cook-record idempotency fix
 (B19, delivery review of fb4d771, gate 2), which followed the integration-preparation pass (B9 deployment candidate, B7 nutrition, B5
 Kroger adapter, B8 checklist)._
 
@@ -8,6 +8,7 @@ Kroger adapter, B8 checklist)._
 
 | What | Identity |
 |---|---|
+| Import overhaul + redesign (B28) | starting `cb7b56e` · `dfb34cc` member photo backend (worker) · `8e6bd6e` parser, review, seasonings, photo policy, design — verified at `8e6bd6e` |
 | Recipe Extraction Lab, Phases 0–1 (package only — **the app is unchanged**; branch `claude/quirky-gauss-depmd8`, not merged to `main`) | `0306af8` contract v1 · `1079db4`, `d928aea` frozen legacy engines, validators, CLI (worker A) · `2b55fda`, `47ebce6` (holdout freeze), `adc1e06` corpus + scorer (worker B) · `3ca998a` integration — package suite and targeted app checks at `3ca998a` (`evidence/2026-10-09-recipe-extraction-lab/verify-3ca998a/`); verify-all not run (no app code changed) |
 | B10 partial handoff, URL-to-cart journey, Kroger callback same-origin redirect, migration lock | starting `3ac64f6` · `3378e01` migration advisory lock (worker) · `7c79eb6` B10 + journey + callback fix — verified at `7c79eb6` |
 | Recheck corrections RUC-01/RUC-02 + Kroger UI tests | `c9a95b6` — verified at `c9a95b6` |
@@ -21,9 +22,13 @@ Kroger adapter, B8 checklist)._
 | Documentation/evidence commits | the commits after each verified code commit on `main` (docs only — e.g. `git diff --stat 02a3b1a..HEAD`) |
 | Remote | `https://github.com/OpticEggs/Meal-Planner`, branch `main` |
 | Restore | `git clone --branch main <bundle> table` or `git clone <bundle> table` |
-| Migrations | `001`–`013` (`013_partial_handoff.sql`: batch scope and omission summary; `012_recipe_content.sql`: kept-content permission, recipe photos, attribution): `006_nutrition_sources.sql` (B7), `007_kroger.sql` (B5), `008_cook_record_corrections.sql` (B19), `009_cook_record_chain.sql` (B21), `010_recipe_sources.sql`, `011_shopping_destinations.sql` (multi-source); upgrades from a populated 005 database (to 007) a populated 007 database holding duplicate cook records (to 008), a populated 008 database with planted cross-generation violations (to 009), and a populated 009 database (to 011, only `schema_migrations` differs over existing columns) checked |
+| Migrations | `001`–`014` (`014_member_recipe_photo.sql`: a member's own photo on the recipe; `013_partial_handoff.sql`: batch scope and omission summary; `012_recipe_content.sql`: kept-content permission, recipe photos, attribution): `006_nutrition_sources.sql` (B7), `007_kroger.sql` (B5), `008_cook_record_corrections.sql` (B19), `009_cook_record_chain.sql` (B21), `010_recipe_sources.sql`, `011_shopping_destinations.sql` (multi-source); upgrades from a populated 005 database (to 007) a populated 007 database holding duplicate cook records (to 008), a populated 008 database with planted cross-generation violations (to 009), and a populated 009 database (to 011, only `schema_migrations` differs over existing columns) checked |
 
-## Verification (measured on 7c79eb6)
+## Verification (measured on 8e6bd6e)
+
+`scripts/verify-all.sh` → `docs/table/evidence/2026-10-09-verify-8e6bd6e/summary.md`: vitest 1078/1078, Playwright 143/143, 100 mutations killed, 0 survived, 0 error.
+
+### Previous run (7c79eb6, B10 and the journey)
 
 `scripts/verify-all.sh` → `docs/table/evidence/2026-10-09-verify-7c79eb6/summary.md`: vitest 1129/1129, Playwright 139/139, 93 mutations killed, 0 survived, 0 error.
 
@@ -71,10 +76,10 @@ the same folder (see ACCEPTANCE "Integration preparation").
 
 `packages/recipe-extraction`: contract `recipe-extraction/v1` (exact rational quantities, stable reasons), frozen
 parity-proven copy of Table import 2's parsers, fixture-only CLI `recipe-lab`, and an offline benchmark (310 labelled
-ingredient lines with a frozen 128-line holdout, 15 synthetic pages). Baseline = Table today: 35.6% of clear holdout
-lines read fully, 60.6% of clear lines sent to review, 0 fabricated amounts, 0 oz/fl-oz confusions. The owner's pesto
-line is reproduced (amount inside the name, quantity/unit empty) and **not yet repaired** — Phase 2 (B28). Docs:
-`recipe-extraction/SOURCE-AND-CONTRACT-CENSUS.md`, `ADAPTER-IMPACT.md`, `BENCHMARK-v1.md`; DECISIONS D112–D115.
+ingredient lines with a frozen 128-line holdout, 15 synthetic pages). Baseline = Table import 2 at `cb7b56e` (frozen copy): 35.6% of clear holdout-v1
+lines read fully, 60.6% of clear lines sent to review, 10/310 lines wrongly marked ready, 0 fabricated amounts, 0 oz/fl-oz confusions. The owner's pesto
+line is reproduced (amount inside the name, quantity/unit empty) and **not yet repaired in the package** — Phase 2 (B31); main's import overhaul (8e6bd6e, D112) repaired it separately inside Table. Docs:
+`recipe-extraction/SOURCE-AND-CONTRACT-CENSUS.md`, `ADAPTER-IMPACT.md`, `BENCHMARK-v1.md`; DECISIONS D118–D121.
 
 ## URL to cart (B25) — product priority 2026-10-08
 
@@ -168,6 +173,7 @@ is implemented and fixture-tested behind staged activation, all off; live integr
   Send with frozen batches, an explicit **partial** transfer of only the ready lines (B10: every left-out line
   named with its reason and copyable; not a complete order), uncertain-transfer resolution, order confirmation (explicit contents
   or "contents unknown"), receipts (received / missing / substituted), "Not sent yet" deltas.
+- Import: a pasted link becomes a review where every cleanly read line is already in (exact amounts, ⅓ stays a third), only uncertain lines ask, salt and pepper are left out; recipes show the member's own photo, a permitted source photo or a designed illustration.
 - Our Recipes / Explore: search (focus-stable), filters, sorts by real values with an
   "unknown" group, Sounds good, per-member preferences, favorites, notes, explicit cooking
   history, structured manual recipe entry/edit creating immutable versions.

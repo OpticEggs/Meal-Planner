@@ -71,7 +71,7 @@ export function AddFromLinkForm({ onOpen }: { onOpen: (b: any, el: HTMLElement, 
         onOpen(b, urlRef.current ?? (e.currentTarget as HTMLElement), r);
       }}>
       <label htmlFor={urlId}><strong>Add a recipe from a link</strong></label>
-      <div className="row" style={{ flexWrap: "nowrap" }}>
+      <div className="row link-row">
         <input ref={urlRef} className="grow" type="url" inputMode="url" autoComplete="off" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Paste a recipe page link: https://…" {...fieldProps(urlId, errors)} />
         <button className="btn primary" type="submit" disabled={busy} data-testid="add-from-link-submit">{busy ? "Reading…" : "Add recipe"}</button>
       </div>

@@ -5,12 +5,16 @@
  */
 import { isDeepStrictEqual } from "node:util";
 import { describe, expect, it } from "vitest";
-import * as live from "@/server/integrations/recipe-import/ingredient-line";
+import * as liveModule from "@/server/integrations/recipe-import/ingredient-line";
 import * as liveUnits from "@/domain/units";
 import * as frozen from "../../src/legacy/ingredient-line";
 import * as frozenUnits from "../../src/legacy/units";
 import { ingredientCorpus, NON_STRING_INPUTS, RANDOM_COUNT } from "./corpus";
 import { liveIsBaseline } from "./live-state";
+
+// Typed as the frozen copy: the comparison only runs while the live file IS the baseline (same API).
+// After main 8e6bd6e the live module has a different API, and this suite is skipped.
+const live = liveModule as unknown as typeof frozen;
 
 const show = (s: unknown) => (typeof s === "string" ? JSON.stringify(s.length > 120 ? `${s.slice(0, 120)}…(${s.length})` : s) : String(s));
 

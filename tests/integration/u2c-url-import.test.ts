@@ -16,7 +16,7 @@ import { librarySnapshot } from "@/server/queries/library";
 import { addRecipeFromLink, fixtureDeps, importFromLink, type ImportDeps } from "@/server/recipe-import-service";
 import { exportHousehold, restoreHousehold } from "@/server/export";
 import { migrate } from "@/server/db/migrate";
-import { suggestedDecision, type DraftLine } from "@/domain/recipes/import";
+import type { DraftLine } from "@/domain/recipes/import";
 import type { RecipeContentConfig } from "@/server/env";
 
 const DIR = path.resolve(__dirname, "../fixtures/import-site");
@@ -24,6 +24,9 @@ const MANIFEST = path.join(DIR, "manifest.json");
 const WPRM = "https://wprm.example.com/skillet-taco-rice/";
 const OFF: RecipeContentConfig = { householdPrivate: false, grants: [] };
 const PRIVATE: RecipeContentConfig = { householdPrivate: true, grants: [] };
+// 2026-10-09: the household-private mode no longer keeps the publisher's photo; tests that need a kept photo use a
+// per-site grant for method + photos instead (was PRIVATE).
+const GRANTED = (domain: string): RecipeContentConfig => ({ householdPrivate: false, grants: [{ domain, instructions: true, photos: true }] });
 const count = async (t: string) => (await q<{ n: number }>(`SELECT count(*)::int AS n FROM ${t}`))[0].n;
 
 function deps(content: RecipeContentConfig, calls: { ip: string; hostname: string; path: string }[] = []): ImportDeps {
@@ -50,22 +53,23 @@ describe("one step from a link (U-01..U-04)", () => {
     expect(lib.bookmarks[0]).toMatchObject({ id: r.bookmarkId, status: "import_draft", draft: { siteName: "Example Kitchen", author: "Sam Example", stepCount: 3, stepsKept: false, imageId: null } });
   });
 
-  it("U-02: with the household-private setting, the method is kept as editable steps and one photo is stored (type sniffed, hash recorded); confirming carries both and the attribution", async () => {
+  it("U-02: with a per-site grant for method and photos, the method is kept as editable steps and one photo is stored (type sniffed, hash recorded); confirming carries both and the attribution", async () => {
     const { jon } = await fresh();
-    const r: any = await addRecipeFromLink(jon, { url: WPRM, operationId: op() }, deps(PRIVATE));
+    const r: any = await addRecipeFromLink(jon, { url: WPRM, operationId: op() }, deps(GRANTED("wprm.example.com")));
     const d = await draftRow(r.draftId);
     // RUC-01: provenance names the kind of setting and the source it applies to (was a bare "owner setting" basis).
-    expect(d.content_policy).toEqual({ instructions: true, photos: true, kind: "owner_mode", source: "wprm.example.com", basis: "owner-selected household-private mode (an owner setting, not a publisher licence)" });
+    expect(d.content_policy).toEqual({ instructions: true, photos: true, kind: "owner_recorded_grant", source: "wprm.example.com", basis: "owner-recorded grant for wprm.example.com" });
     expect(d.source_steps).toHaveLength(3);
     expect(d.household_instructions).toBe("Cook:\nWarm the oil in a skillet and soften the onion (synthetic).\nAdd the rice, garlic and water; simmer covered (synthetic).\nFinish:\nFold in the beans and salsa (synthetic).");
     const [img] = await q<any>("SELECT * FROM recipe_images WHERE id=$1", [d.image_id]);
     const png = readFileSync(path.join(DIR, "photo.png"));
-    expect(img).toMatchObject({ content_type: "image/png", source_url: "https://wprm.example.com/img/taco-rice.png", page_url: WPRM, permission: "owner-selected household-private mode (an owner setting, not a publisher licence)" });
+    expect(img).toMatchObject({ content_type: "image/png", source_url: "https://wprm.example.com/img/taco-rice.png", page_url: WPRM, permission: "owner-recorded grant for wprm.example.com" });
     expect(img.sha256).toBe(createHash("sha256").update(png).digest("hex"));
     expect(Buffer.compare(img.bytes, png)).toBe(0);
-    // Decide every line (accept the suggestions), then confirm.
+    // Every line of this page is read cleanly (2026-10-09: no suggestions to accept); confirm as read.
     const lines: DraftLine[] = d.lines;
-    const decisions = lines.map((l, index) => ({ index, decision: l.decision ?? suggestedDecision(l.parsed) ?? { use: false as const } }));
+    expect(lines.every((l) => l.decision !== null)).toBe(true);
+    const decisions = lines.map((l, index) => ({ index, decision: l.decision }));
     expect((await imports.updateImportDraftCommand(jon, op(), { draftId: d.id, expectedRevision: 1, decisions })).status).toBe("accepted");
     const c: any = await imports.confirmImportDraftCommand(jon, op(), { draftId: d.id, expectedRevision: 2 });
     expect(c.status, JSON.stringify(c)).toBe("accepted");
@@ -100,7 +104,7 @@ describe("one step from a link (U-01..U-04)", () => {
 
   it("U-04: a 'photo' that isn't one (HTML served as image/png) is not stored; the draft still opens and says so", async () => {
     const { jon } = await fresh();
-    const r: any = await addRecipeFromLink(jon, { url: "https://fakephoto.example.com/skillet-taco-rice/", operationId: op() }, deps(PRIVATE));
+    const r: any = await addRecipeFromLink(jon, { url: "https://fakephoto.example.com/skillet-taco-rice/", operationId: op() }, deps(GRANTED("fakephoto.example.com")));
     const d = await draftRow(r.draftId);
     expect(d.image_id).toBeNull();
     expect(d.problems).toContain("The page's photo couldn't be kept (not readable as a photo).");
@@ -155,7 +159,7 @@ describe("what stops a read, in words (U-05..U-08)", () => {
     expect(second).toMatchObject({ kind: "draft", draftId: first.draftId, existing: true, bookmarkId: first.bookmarkId });
     expect(calls).toEqual([]);
     const d = await draftRow(first.draftId);
-    const decisions = (d.lines as DraftLine[]).map((l, index) => ({ index, decision: l.decision ?? suggestedDecision(l.parsed) ?? { use: false as const } }));
+    const decisions = (d.lines as DraftLine[]).map((l, index) => ({ index, decision: l.decision ?? { use: false as const } })); // 2026-10-09: no suggestions
     await imports.updateImportDraftCommand(jon, op(), { draftId: d.id, expectedRevision: 1, decisions });
     const c: any = await imports.confirmImportDraftCommand(jon, op(), { draftId: d.id, expectedRevision: 2 });
     expect(c.status).toBe("accepted");
@@ -174,26 +178,24 @@ describe("what stops a read, in words (U-05..U-08)", () => {
 });
 
 describe("human review of uncertain lines (U-10)", () => {
-  it("U-10: lines the reader is unsure of carry a suggestion but no decision; nothing becomes a recipe until each line is decided", async () => {
+  // Rewritten 2026-10-09 (owner direction): there are no suggestions. Lines read cleanly are decided as read
+  // (exact amounts: ⅓ stays 1/3, a can is its stated size, cloves are counted); salt and pepper are left out;
+  // only genuinely uncertain lines stay undecided and block the recipe until a person settles them.
+  it("U-10: clean lines are decided as read, seasonings left out; an uncertain line blocks the recipe until it is decided", async () => {
     const { jon } = await fresh();
     const r: any = await addRecipeFromLink(jon, { url: WPRM, operationId: op() }, deps(OFF));
     const d = await draftRow(r.draftId);
     const byRaw = Object.fromEntries((d.lines as DraftLine[]).map((l) => [l.raw, l]));
-    // Read cleanly: decided as read (a price annotation is not a quantity; prep text is a note).
     expect(byRaw["2 tbsp olive oil ($0.16)"].decision).toMatchObject({ use: true, quantity: "2", unit: "tbsp", name: "olive oil" });
     expect(byRaw["1 large onion, diced"].decision).toMatchObject({ use: true, quantity: "1", unit: "each", name: "onion" });
-    // Uncertain: a suggestion, never applied by itself.
-    for (const raw of ["2 cloves garlic, minced", "1 (15 oz) can black beans, drained", "⅓ cup salsa", "salt and pepper to taste"]) {
-      expect(byRaw[raw].parsed.status, raw).toBe("requires_review");
-      expect(byRaw[raw].decision, raw).toBeNull();
-      expect(suggestedDecision(byRaw[raw].parsed), raw).not.toBeNull();
-    }
-    expect(suggestedDecision(byRaw["1 (15 oz) can black beans, drained"].parsed)).toMatchObject({ use: true, quantity: "15", unit: "oz" });
-    expect(suggestedDecision(byRaw["⅓ cup salsa"].parsed)).toMatchObject({ use: true, quantity: "0.3333", unit: "cup" });
-    expect(suggestedDecision(byRaw["salt and pepper to taste"].parsed)).toEqual({ use: false });
-    const refused: any = await imports.confirmImportDraftCommand(jon, op(), { draftId: d.id, expectedRevision: 1 });
+    expect(byRaw["2 cloves garlic, minced"].decision).toMatchObject({ use: true, quantity: "2", unit: "each", name: "garlic (clove)" });
+    expect(byRaw["1 (15 oz) can black beans, drained"].decision).toMatchObject({ use: true, quantity: "15", unit: "oz", name: "black beans" });
+    expect(byRaw["⅓ cup salsa"].decision).toMatchObject({ use: true, quantity: "1/3", unit: "cup", name: "salsa" });
+    expect(byRaw["salt and pepper to taste"].decision).toEqual({ use: false });
+    const pesto: any = await addRecipeFromLink(jon, { url: "https://pesto.example.com/weeknight-pesto-pasta/", operationId: op() }, deps(OFF));
+    const refused: any = await imports.confirmImportDraftCommand(jon, op(), { draftId: pesto.draftId, expectedRevision: 1 });
     expect(refused).toMatchObject({ status: "rejected", code: "incomplete" });
-    expect(refused.details.problems.join(" ")).toMatch(/4 ingredient lines need a decision/);
+    expect(refused.details.problems.join(" ")).toMatch(/2 ingredient lines need a quick check/);
     expect(await count("recipe_versions WHERE provenance='imported'")).toBe(0);
   });
 });
@@ -201,7 +203,7 @@ describe("human review of uncertain lines (U-10)", () => {
 describe("export and restore keep kept photos (U-11)", () => {
   it("U-11: a stored photo round-trips through the household export as base64 and restores byte-identical", async () => {
     const { jon, fx } = await fresh();
-    const r: any = await addRecipeFromLink(jon, { url: WPRM, operationId: op() }, deps(PRIVATE));
+    const r: any = await addRecipeFromLink(jon, { url: WPRM, operationId: op() }, deps(GRANTED("wprm.example.com")));
     const d = await draftRow(r.draftId);
     const src = new pg.Client({ connectionString: process.env.DATABASE_URL });
     await src.connect();

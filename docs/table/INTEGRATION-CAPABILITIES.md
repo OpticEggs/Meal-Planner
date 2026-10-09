@@ -99,6 +99,11 @@ Research Service. FoodData Central".
 
 ## Recipe sources (multi-source handoff, phases 1–3)
 
+**2026-10-09:** the household-private setting (C1) keeps a page's method only, never its photo; a source photo is
+kept only under a per-site grant (C2). Members may add their own photo (`/api/recipe-photos`, sniffed JPEG/PNG/WebP/GIF
+≤5 MB). Hotlinking publisher images is not built (owner decision PH1). Uncertain ingredient lines no longer carry
+suggestions (D113).
+
 | Capability | Status |
 |---|---|
 | Shared saved links: validation, normalization/de-duplication, attribution, notes, archive/restore, export/restore | implemented, tested (unit, real-PostgreSQL integration, two-member browser) |

@@ -65,15 +65,13 @@ test("URL-12: Jon reads a recipe page, decides the unclear lines, and only then 
   await expect(review.getByTestId("import-review")).toBeVisible();
   await expect(review).toContainText("The method stays on the source site.");
   await expect(review.getByTestId("draft-servings")).toHaveValue("4");
-  await expect(review.getByTestId("import-confirm")).toBeDisabled(); // two lines undecided
-  await expect(review.getByTestId("draft-problems")).toContainText("2 ingredient lines need a decision");
+  // 2026-10-09 (import overhaul): the can is read as its stated size and salt is a household seasoning, so every line
+  // is settled on arrival (was: two lines undecided, decided here by hand).
   const tomatoes = review.locator('[data-testid="draft-line"][data-raw="1 (15 oz) can diced tomatoes"]');
-  await tomatoes.getByRole("radio", { name: "Use" }).check();
-  await tomatoes.getByLabel(/Ingredient name/).fill("diced tomatoes");
-  await tomatoes.getByLabel(/Amount for the whole recipe/).fill("15");
-  await tomatoes.getByLabel(/^Unit/).selectOption("oz");
-  await review.locator('[data-testid="draft-line"][data-raw="salt to taste"]').getByRole("radio", { name: "Leave out of groceries" }).check();
-  await expect(tomatoes).toContainText("3.75 oz per serving");
+  await expect(tomatoes).toContainText("15 oz diced tomatoes");
+  await expect(review.locator('[data-testid="draft-line"][data-raw="salt to taste"]')).toHaveAttribute("data-state", "out");
+  await expect(review.getByTestId("draft-problems")).toHaveCount(0);
+  await expect(review.getByTestId("import-confirm")).toBeEnabled();
   expect(await count("recipe_versions WHERE provenance='imported'")).toBe(0);
   await review.getByTestId("import-confirm").click();
   await expect(review).toBeHidden();

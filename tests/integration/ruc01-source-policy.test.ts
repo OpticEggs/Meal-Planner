@@ -10,7 +10,7 @@ import path from "node:path";
 import { fresh, op, q } from "./helpers";
 import * as imports from "@/server/commands/imports";
 import { addRecipeFromLink, fixtureDeps, type ImportDeps } from "@/server/recipe-import-service";
-import { suggestedDecision, type DraftLine } from "@/domain/recipes/import";
+import type { DraftLine } from "@/domain/recipes/import";
 import type { RecipeContentConfig } from "@/server/env";
 
 const MANIFEST = path.resolve(__dirname, "../fixtures/import-site/manifest.json");
@@ -29,7 +29,7 @@ const count = async (t: string) => (await q<{ n: number }>(`SELECT count(*)::int
 
 async function confirm(actor: any, draftId: string) {
   const d = await draftOf(draftId);
-  const decisions = (d.lines as DraftLine[]).map((l, index) => ({ index, decision: l.decision ?? suggestedDecision(l.parsed) ?? { use: false as const } }));
+  const decisions = (d.lines as DraftLine[]).map((l, index) => ({ index, decision: l.decision ?? { use: false as const } })); // 2026-10-09: no suggestions; uncertain lines are left out here
   expect((await imports.updateImportDraftCommand(actor, op(), { draftId, expectedRevision: d.revision, decisions })).status).toBe("accepted");
   const c: any = await imports.confirmImportDraftCommand(actor, op(), { draftId, expectedRevision: d.revision + 1 });
   expect(c.status, JSON.stringify(c)).toBe("accepted");
@@ -94,18 +94,20 @@ describe("RUC-01 what may be kept belongs to the site that supplied the content"
     expect(d.content_policy).toMatchObject({ instructions: false, photos: false, basis: null, source: "ungranted.example.com" });
   });
 
+  // Changed 2026-10-09 (owner direction): the household-private mode keeps the method only; the publisher's photo
+  // is neither requested nor stored (was: photo stored with an "owner-selected" permission).
   it("R1-06: the owner-selected household-private mode applies to the actual source and is labelled as an owner mode, not a publisher licence", async () => {
     const { jon } = await fresh();
     const calls: Call[] = [];
     const r: any = await addRecipeFromLink(jon, { url: "https://licensed.example.com/to-ungranted", operationId: op() }, deps(PRIVATE, calls));
     const d = await draftOf(r.draftId);
-    expect(d.content_policy).toMatchObject({ instructions: true, photos: true, kind: "owner_mode", source: "ungranted.example.com" });
+    expect(d.content_policy).toMatchObject({ instructions: true, photos: false, kind: "owner_mode", source: "ungranted.example.com" });
     expect(d.content_policy.basis).toMatch(/owner-selected/);
     expect(d.content_policy.basis).not.toMatch(/permission|licen[cs]e granted/i);
     expect(d.source_steps[0].text).toBe("SYNTHETIC STEP FROM Ungranted Kitchen.");
-    const [img] = await q<any>("SELECT source_url, permission FROM recipe_images WHERE id=$1", [d.image_id]);
-    expect(img.source_url).toBe("https://ungranted.example.com/img/photo.png");
-    expect(img.permission).toMatch(/owner-selected/);
+    expect(d.image_id).toBeNull();
+    expect(calls.map((c) => c.path)).not.toContain("/img/photo.png");
+    expect((await q<any>("SELECT count(*)::int AS n FROM recipe_images"))[0].n).toBe(0);
   });
 
   it("R1-07: a same-site redirect keeps the grant; a photo on another host is not requested unless that host is authorized for the grant", async () => {

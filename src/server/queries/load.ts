@@ -89,10 +89,17 @@ export async function loadNutrition(c: Db, householdId: string): Promise<Map<str
 
 /** Loads recipe versions by id (pinned versions) or, with ids=null, every current version. */
 export async function loadRecipeVersions(c: Db, householdId: string, ids: string[] | null): Promise<Map<string, RecipeVersion>> {
+  // The recipe's own photo (recipe-level) comes along with each version, pinned versions included.
+  const photo = "r.member_photo_id, r.photo_revision, pm.display_name AS member_photo_by";
+  const photoJoin = "LEFT JOIN recipe_images pi ON pi.id=r.member_photo_id LEFT JOIN members pm ON pm.id=pi.created_by";
   const vr = ids
-    ? await c.query("SELECT * FROM recipe_versions WHERE household_id=$1 AND id = ANY($2::uuid[])", [householdId, ids])
+    ? await c.query(
+        `SELECT v.*, ${photo} FROM recipe_versions v JOIN recipes r ON r.id=v.recipe_id ${photoJoin}
+         WHERE v.household_id=$1 AND v.id = ANY($2::uuid[])`,
+        [householdId, ids],
+      )
     : await c.query(
-        `SELECT v.* FROM recipe_versions v JOIN recipes r ON r.current_version_id=v.id
+        `SELECT v.*, ${photo} FROM recipe_versions v JOIN recipes r ON r.current_version_id=v.id ${photoJoin}
          WHERE r.household_id=$1 AND r.archived_at IS NULL`,
         [householdId],
       );
@@ -106,6 +113,7 @@ export async function loadRecipeVersions(c: Db, householdId: string, ids: string
       effortMinutes: v.effort_minutes, effortLevel: v.effort_level, leftoverFriendly: v.leftover_friendly, instructions: v.instructions,
       reheatInstructions: v.reheat_instructions, provenance: v.provenance, sourceLabel: v.source_label, sourceUrl: v.source_url ?? null, estimate: v.estimate,
       sourceAuthor: v.source_author ?? null, sourceSiteName: v.source_site_name ?? null, imageId: v.image_id ?? null,
+      memberPhotoId: v.member_photo_id ?? null, memberPhotoBy: v.member_photo_by ?? null, photoRevision: v.photo_revision ?? 0,
       components: comps.rows.filter((x) => x.recipe_version_id === v.id).map((x) => ({ key: x.key, name: x.name, sort: x.sort })),
       ingredients: ings.rows
         .filter((x) => x.recipe_version_id === v.id)

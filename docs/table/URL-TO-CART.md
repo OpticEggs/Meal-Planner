@@ -42,7 +42,8 @@ fake transport; P2 is bounded by Budget Bytes' permission.
 | P1.7 | Failure classification (refused / gone / rate-limited / server error / no recipe data / no ingredients) with passing problems not recorded on the link and retry allowed | **built** |
 | P1.8 | Live reader tested against a local TLS server (certificate/host checks, gzip, size cap, redirects, photo mode) | **built** |
 | P1.9 | Turn page reading on in the deployed app | **owner gate R1** |
-| P1.10 | Decide what may be kept (C1 or per-site C2) | **owner gate C1/C2** |
+| P1.10 | Decide what may be kept (C1 = method only; per-site C2 may include photos) | **owner gate C1/C2** |
+| P1.11 | Exact amounts, review defaults without suggestions, household seasonings left out, member photos (D112–D115) | **built** (`8e6bd6e`) |
 | P2.1 | Budget Bytes lane: site search (opens Budget Bytes), index link, add-from-link → paste with a name from the link, saved/imported states | **built** (search URL pattern unverified — site returned 403) |
 | P2.2 | Reading Budget Bytes pages, its feed, method or photos | **owner gate R2** (permission from Budget Bytes) |
 | P3.1 | Kroger product search at the household's store from the product dialog; bulk "Match products at Kroger" (≤12 lines, member chooses each) | **built** (fake transport) |

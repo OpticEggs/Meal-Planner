@@ -1,0 +1,1877 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/table
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts (124 tests | 75 failed) 121ms
+   ❯ parsed lines: amount, unit, name and note separated (67)
+     × "1/3 cup pesto (homemade (or store-bought))" → 1/3 cup "pesto" ("homemade (or store-bought)") 17ms
+     × "1/2 cup sugar" → 1/2 cup "sugar" (null) 4ms
+     × "3/4 tsp vanilla" → 3/4 tsp "vanilla" (null) 2ms
+     × "½ cup milk" → 1/2 cup "milk" (null) 2ms
+     × "⅛ tsp cayenne" → 1/8 tsp "cayenne" (null) 2ms
+     × "⅓ cup salsa" → 1/3 cup "salsa" (null) 2ms
+     × "⅔ cup milk" → 2/3 cup "milk" (null) 1ms
+     × "1⅓ cups flour" → 1 1/3 cup "flour" (null) 2ms
+     × "1 1/3 cups flour" → 1 1/3 cup "flour" (null) 2ms
+     × "1/6 tsp nutmeg" → 1/6 tsp "nutmeg" (null) 4ms
+     × "2/12 cup broth" → 1/6 cup "broth" (null) 1ms
+     × "3/2 cups milk" → 1 1/2 cup "milk" (null) 1ms
+     × "1½ cups water" → 1 1/2 cup "water" (null) 1ms
+     × "1 ½ cups frozen peas" → 1 1/2 cup "frozen peas" (null) 1ms
+     × "1 1/2 cups rice" → 1 1/2 cup "rice" (null) 1ms
+     × "1-1/2 cups rice" → 1 1/2 cup "rice" (null) 1ms
+     × "1⁄2 cup broth" → 1/2 cup "broth" (null) 1ms
+     × "1,000 g flour" → 1000 g "flour" (null) 1ms
+     × "1 pint cherry tomatoes, halved" → 2 cup "cherry tomatoes" ("halved") 1ms
+     × "2 quarts water" → 8 cup "water" (null) 1ms
+     × "⅓ quart broth" → 1 1/3 cup "broth" (null) 3ms
+     × "1 gallon milk" → 16 cup "milk" (null) 1ms
+     × "one egg" → 1 each "egg" (null) 1ms
+     × "2 cloves garlic, minced" → 2 each "garlic (clove)" ("minced") 1ms
+     × "1 can black beans" → 1 each "black beans (can)" (null) 1ms
+     × "1 bunch cilantro" → 1 each "cilantro (bunch)" (null) 1ms
+     × "1 stick butter" → 1 each "butter (stick)" (null) 1ms
+     × "1 (15 oz) can black beans, drained" → 15 oz "black beans" ("drained") 1ms
+     × "2 (14.5 oz) cans diced tomatoes" → 29 oz "diced tomatoes" (null) 1ms
+     × "1 (8 oz) container fresh mozzarella pearls, drained" → 8 oz "fresh mozzarella pearls" ("drained") 1ms
+     × "1 can (14.5 oz) diced tomatoes" → 14.5 oz "diced tomatoes" (null) 1ms
+     × "2 cans (14.5 oz each) tomatoes" → 29 oz "tomatoes" (null) 1ms
+     × "1 15-oz can chickpeas" → 15 oz "chickpeas" (null) 1ms
+     × "½ (15 oz) can pumpkin" → 7.5 oz "pumpkin" (null) 1ms
+     × "¼ cup grated parmesan (about 1 oz)" → 1/4 cup "grated parmesan" ("about 1 oz") 1ms
+     × "1 tsp vanilla (optional)" → 1 tsp "vanilla" ("optional") 1ms
+     × "1 cup 2% milk" → 1 cup "2% milk" (null) 1ms
+   ❯ lines that need a person: the reason is named and the name is still clean (25)
+     × "2-3 cloves garlic, minced" → review (/range/i) 3ms
+     × "2 to 3 cups broth" → review (/range/i) 1ms
+     × "2 – 3 tbsp oil" → review (/range/i) 1ms
+     × "1/2-1 cup water" → review (/range/i) 1ms
+     × "1 or 2 eggs" → review (/range/i) 1ms
+     × "fresh basil, for serving" → review (/no amount/i) 1ms
+     × "water as needed" → review (/no amount/i) 1ms
+     × "a pinch of nutmeg" → review (/no fixed amount/i) 1ms
+     × "1 pinch red pepper flakes" → review (/no fixed amount/i) 1ms
+     × "1 dash hot sauce" → review (/no fixed amount/i) 0ms
+     × "1 handful spinach" → review (/no fixed amount/i) 0ms
+     × "1 cup milk or cream" → review (/choose/i) 1ms
+     × "2 tbsp butter or olive oil" → review (/choose/i) 0ms
+     × "1 lb 4 oz beef" → review (/two parts/i) 1ms
+     × "1 cup plus 2 tbsp flour" → review (/two parts/i) 0ms
+     × "1/0 cup water" → review (/amount can't be read/i) 0ms
+     × "0 cups flour" → review (/amount can't be read/i) 0ms
+     × "20000 g sugar" → review (/too large/i) 0ms
+     × "1,5 cups milk" → review (/amount can't be read/i) 0ms
+     × "1. Preheat the oven" → review (/not an ingredient/i) 1ms
+     × "1 cup" → review (/no ingredient name/i) 1ms
+     × a range keeps both stated ends for the person, and picks neither 1ms
+     × alternatives are offered as stated, the shared word distributed 1ms
+     × an 'or' inside a parenthetical is a note, not a choice 1ms
+   ❯ household seasonings are left out of groceries automatically (26)
+     × "salt" → omitted 2ms
+     × "1 tsp kosher salt" → omitted 1ms
+     × "½ tsp freshly ground black pepper" → omitted 0ms
+     × "salt and pepper to taste" → omitted 1ms
+     × "Salt and pepper, to taste" → omitted 0ms
+     × "sea salt" → omitted 0ms
+     × "1/4 tsp fine sea salt" → omitted 0ms
+     × "black pepper" → omitted 3ms
+     × "ground black pepper" → omitted 0ms
+     × "pepper to taste" → omitted 0ms
+     × "salt & pepper" → omitted 0ms
+     × "kosher salt, to taste" → omitted 0ms
+     × "1 tsp salt" → omitted 1ms
+     × "freshly cracked black pepper" → omitted 0ms
+ ❯ tests/integration/import-overhaul.test.ts (5 tests | 5 failed) 5947ms
+   ❯ import overhaul (5)
+     × IO-01: clean lines default to Use with exact amounts; only genuinely uncertain lines wait; seasonings are left out 3068ms
+     × IO-02: correct the two uncertain lines, confirm: exact amounts per serving, source kept, seasonings not in the recipe 667ms
+     × IO-03: an exact fraction may be typed; something that isn't an amount is refused with the line named 779ms
+     × IO-04: no suggestion workflow is stored on a draft 779ms
+     × IO-05: household-private mode keeps the method but not the publisher's photo; a per-site photo grant still keeps it 651ms
+ ❯ tests/unit/seasonings.test.ts (0 test)
+ ❯ tests/unit/quantity.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/quantity.test.ts [ tests/unit/quantity.test.ts ]
+Error: Cannot find package '@/domain/quantity' imported from /home/user/table/tests/unit/quantity.test.ts
+ ❯ tests/unit/quantity.test.ts:7:1
+      5|  */
+      6| import { describe, expect, it } from "vitest";
+      7| import { displayAmount, parseAmount, perServing } from "@/domain/quant…
+       | ^
+      8|
+      9| describe("parseAmount", () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/82]⎯
+
+ FAIL  tests/unit/seasonings.test.ts [ tests/unit/seasonings.test.ts ]
+Error: Cannot find package '@/domain/groceries/seasonings' imported from /home/user/table/tests/unit/seasonings.test.ts
+ ❯ tests/unit/seasonings.test.ts:8:1
+      6|  */
+      7| import { describe, expect, it } from "vitest";
+      8| import { isHouseholdSeasoning } from "@/domain/groceries/seasonings";
+       | ^
+      9| import { computeProjection, type ProjectionInput } from "@/domain/groc…
+     10| import type { Allocation, Ingredient, RecipeVersion } from "@/domain/t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/82]⎯
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 80 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/import-overhaul.test.ts > import overhaul > IO-01: clean lines default to Use with exact amounts; only genuinely uncertain lines wait; seasonings are left out
+AssertionError: expected null to deeply equal { use: true, name: 'pesto', …(3) }
+
+- Expected:
+{
+  "form": "raw",
+  "name": "pesto",
+  "quantity": "1/3",
+  "unit": "cup",
+  "use": true,
+}
+
++ Received:
+null
+
+ ❯ tests/integration/import-overhaul.test.ts:41:63
+     39|     const { byRaw } = await pestoDraft();
+     40|     const use = (raw: string) => byRaw[raw].decision;
+     41|     expect(use("1/3 cup pesto (homemade (or store-bought))")).toEqual(…
+       |                                                               ^
+     42|     expect(byRaw["1/3 cup pesto (homemade (or store-bought))"].parsed)…
+     43|     expect(use("12 oz penne pasta")).toMatchObject({ use: true, quanti…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/82]⎯
+
+ FAIL  tests/integration/import-overhaul.test.ts > import overhaul > IO-02: correct the two uncertain lines, confirm: exact amounts per serving, source kept, seasonings not in the recipe
+AssertionError: {"status":"rejected","code":"incomplete","message":"This import isn't complete yet, so no recipe was made. The link stays saved.","details":{"problems":["4 ingredient lines need a decision: an amount and unit, or leave it out."]},"operationId":"op-fe9d8264-9a4e-40e2-b2c7-b89114f34a77","command":"ConfirmImportDraft","replayed":false,"seq":null}: expected 'rejected' to be 'accepted' // Object.is equality
+
+Expected: "accepted"
+Received: "rejected"
+
+ ❯ tests/integration/import-overhaul.test.ts:71:41
+     69|     expect(u.status, JSON.stringify(u)).toBe("accepted");
+     70|     const c: any = await imports.confirmImportDraftCommand(jon, op(), …
+     71|     expect(c.status, JSON.stringify(c)).toBe("accepted");
+       |                                         ^
+     72|     const [v] = await q<any>("SELECT * FROM recipe_versions WHERE id=$…
+     73|     expect(v.source_url).toBe(PESTO);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/82]⎯
+
+ FAIL  tests/integration/import-overhaul.test.ts > import overhaul > IO-03: an exact fraction may be typed; something that isn't an amount is refused with the line named
+AssertionError: expected 'rejected' to be 'accepted' // Object.is equality
+
+Expected: "accepted"
+Received: "rejected"
+
+ ❯ tests/integration/import-overhaul.test.ts:98:23
+     96|       draftId: d.id, expectedRevision: 1, decisions: [{ index: garlic,…
+     97|     });
+     98|     expect(ok.status).toBe("accepted");
+       |                       ^
+     99|     for (const quantity of ["1/0", "abc", "0", "-1"]) {
+    100|       const bad: any = await imports.updateImportDraftCommand(jon, op(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/82]⎯
+
+ FAIL  tests/integration/import-overhaul.test.ts > import overhaul > IO-04: no suggestion workflow is stored on a draft
+AssertionError: expected '[{"raw":"12 oz penne pasta","parsed":…' not to match /suggestion/
+
+- Expected:
+/suggestion/
+
++ Received:
+"[{\"raw\":\"12 oz penne pasta\",\"parsed\":{\"form\":null,\"name\":\"penne pasta\",\"note\":null,\"unit\":\"oz\",\"status\":\"parsed\",\"reasons\":[],\"quantity\":\"12\",\"suggestion\":null,\"suggestionNote\":null},\"decision\":{\"use\":true,\"form\":\"raw\",\"name\":\"penne pasta\",\"unit\":\"oz\",\"quantity\":\"12\"}},{\"raw\":\"1/3 cup pesto (homemade (or store-bought))\",\"parsed\":{\"form\":null,\"name\":\"1/3 cup pesto (homemade )\",\"note\":\"or store-bought\",\"unit\":null,\"status\":\"requires_review\",\"reasons\":[\"alternatives (or)\",\"fraction not exact as a decimal\"],\"quantity\":null,\"suggestion\":null,\"suggestionNote\":null},\"decision\":null},{\"raw\":\"1 ½ cups frozen peas\",\"parsed\":{\"form\":null,\"name\":\"frozen peas\",\"note\":null,\"unit\":\"cup\",\"status\":\"parsed\",\"reasons\":[],\"quantity\":\"1.5\",\"suggestion\":null,\"suggestionNote\":null},\"decision\":{\"use\":true,\"form\":\"raw\",\"name\":\"frozen peas\",\"unit\":\"cup\",\"quantity\":\"1.5\"}},{\"raw\":\"1 pint cherry tomatoes, halved\",\"parsed\":{\"form\":null,\"name\":\"pint cherry tomatoes\",\"note\":\"halved\",\"unit\":null,\"status\":\"requires_review\",\"reasons\":[\"unit not supported: pint\"],\"quantity\":\"1\",\"suggestion\":{\"use\":true,\"form\":\"raw\",\"name\":\"cherry tomatoes\",\"unit\":\"cup\",\"quantity\":\"2\"},\"suggestionNote\":\"1 pint = 2 cups\"},\"decision\":null},{\"raw\":\"2-3 cloves garlic, minced\",\"parsed\":{\"form\":null,\"name\":\"2-3 cloves garlic\",\"note\":\"minced\",\"unit\":null,\"status\":\"requires_review\",\"reasons\":[\"quantity range\"],\"quantity\":null,\"suggestion\":{\"use\":true,\"form\":\"raw\",\"name\":\"garlic (clove)\",\"unit\":\"each\",\"quantity\":\"3\"},\"suggestionNote\":\"range: used the larger amount; counted as cloves\"},\"decision\":null},{\"raw\":\"1 (8 oz) container fresh mozzarella pearls, drained\",\"parsed\":{\"form\":null,\"name\":\"1 (8 oz) container fresh mozzarella pearls\",\"note\":\"drained\",\"unit\":null,\"status\":\"requires_review\",\"reasons\":[\"parenthetical package size or note with numbers\",\"more than one quantity\"],\"quantity\":null,\"suggestion\":{\"use\":true,\"form\":\"raw\",\"name\":\"fresh mozzarella pearls\",\"unit\":\"oz\",\"quantity\":\"8\"},\"suggestionNote\":\"1 container × 8 oz\"},\"decision\":null},{\"raw\":\"¼ cup grated parmesan (about 1 oz)\",\"parsed\":{\"form\":null,\"name\":\"¼ cup grated parmesan (about 1 oz)\",\"note\":null,\"unit\":null,\"status\":\"requires_review\",\"reasons\":[\"parenthetical package size or note with numbers\",\"more than one quantity\"],\"quantity\":null,\"suggestion\":{\"use\":true,\"form\":\"raw\",\"name\":\"grated parmesan\",\"unit\":\"cup\",\"quantity\":\"0.25\"},\"suggestionNote\":\"kept the first amount; dropped (about 1 oz)\"},\"decision\":null},{\"raw\":\"1 red bell pepper, sliced\",\"parsed\":{\"form\":null,\"name\":\"red bell pepper\",\"note\":\"sliced\",\"unit\":\"each\",\"status\":\"parsed\",\"reasons\":[],\"quantity\":\"1\",\"suggestion\":null,\"suggestionNote\":null},\"decision\":{\"use\":true,\"form\":\"raw\",\"name\":\"red bell pepper\",\"unit\":\"each\",\"quantity\":\"1\"}},{\"raw\":\"1 tbsp olive oil\",\"parsed\":{\"form\":null,\"name\":\"olive oil\",\"note\":null,\"unit\":\"tbsp\",\"status\":\"parsed\",\"reasons\":[],\"quantity\":\"1\",\"suggestion\":null,\"suggestionNote\":null},\"decision\":{\"use\":true,\"form\":\"raw\",\"name\":\"olive oil\",\"unit\":\"tbsp\",\"quantity\":\"1\"}},{\"raw\":\"1 tsp kosher salt\",\"parsed\":{\"form\":null,\"name\":\"kosher salt\",\"note\":null,\"unit\":\"tsp\",\"status\":\"parsed\",\"reasons\":[],\"quantity\":\"1\",\"suggestion\":null,\"suggestionNote\":null},\"decision\":{\"use\":true,\"form\":\"raw\",\"name\":\"kosher salt\",\"unit\":\"tsp\",\"quantity\":\"1\"}},{\"raw\":\"½ tsp freshly ground black pepper\",\"parsed\":{\"form\":null,\"name\":\"freshly ground black pepper\",\"note\":null,\"unit\":\"tsp\",\"status\":\"parsed\",\"reasons\":[],\"quantity\":\"0.5\",\"suggestion\":null,\"suggestionNote\":null},\"decision\":{\"use\":true,\"form\":\"raw\",\"name\":\"freshly ground black pepper\",\"unit\":\"tsp\",\"quantity\":\"0.5\"}},{\"raw\":\"fresh basil, for serving\",\"parsed\":{\"form\":null,\"name\":\"fresh basil\",\"note\":\"for serving\",\"unit\":null,\"status\":\"requires_review\",\"reasons\":[\"no fixed quantity\",\"no quantity\"],\"quantity\":null,\"suggestion\":{\"use\":false},\"suggestionNote\":\"no fixed amount: leave it out of grocery amounts\"},\"decision\":null}]"
+
+ ❯ tests/integration/import-overhaul.test.ts:110:41
+    108|   it("IO-04: no suggestion workflow is stored on a draft", async () =>…
+    109|     const { d } = await pestoDraft();
+    110|     expect(JSON.stringify(d.lines)).not.toMatch(/suggestion/);
+       |                                         ^
+    111|   });
+    112|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/82]⎯
+
+ FAIL  tests/integration/import-overhaul.test.ts > import overhaul > IO-05: household-private mode keeps the method but not the publisher's photo; a per-site photo grant still keeps it
+AssertionError: expected { kind: 'owner_mode', …(4) } to match object { instructions: true, …(2) }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "instructions": true,
+    "kind": "owner_mode",
+-   "photos": false,
++   "photos": true,
+  }
+
+ ❯ tests/integration/import-overhaul.test.ts:117:31
+    115|     const priv: any = await addRecipeFromLink(f.jon, { url: PESTO, ope…
+    116|     const d1 = await draftRow(priv.draftId);
+    117|     expect(d1.content_policy).toMatchObject({ instructions: true, phot…
+       |                               ^
+    118|     expect(d1.source_steps).toHaveLength(3);
+    119|     expect(d1.image_id).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "1/3 cup pesto (homemade (or store-bought))" → 1/3 cup "pesto" ("homemade (or store-bought)")
+AssertionError: expected { …(10) } to match object { …(7) }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "pesto",
+-   "note": "homemade (or store-bought)",
+-   "quantity": "1/3",
++   "name": "1/3 cup pesto (homemade )",
++   "note": "or store-bought",
++   "quantity": null,
+    "raw": "1/3 cup pesto (homemade (or store-bought))",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "cup",
++   "reasons": [
++     "alternatives (or)",
++     "fraction not exact as a decimal",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "1/2 cup sugar" → 1/2 cup "sugar" (null)
+AssertionError: expected { raw: '1/2 cup sugar', …(9) } to match object { raw: '1/2 cup sugar', …(6) }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "name": "sugar",
+    "note": null,
+-   "quantity": "1/2",
++   "quantity": "0.5",
+    "raw": "1/2 cup sugar",
+    "reasons": [],
+    "status": "parsed",
+    "unit": "cup",
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "3/4 tsp vanilla" → 3/4 tsp "vanilla" (null)
+AssertionError: expected { raw: '3/4 tsp vanilla', …(9) } to match object { raw: '3/4 tsp vanilla', …(6) }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "name": "vanilla",
+    "note": null,
+-   "quantity": "3/4",
++   "quantity": "0.75",
+    "raw": "3/4 tsp vanilla",
+    "reasons": [],
+    "status": "parsed",
+    "unit": "tsp",
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "½ cup milk" → 1/2 cup "milk" (null)
+AssertionError: expected { raw: '½ cup milk', …(9) } to match object { raw: '½ cup milk', …(6) }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "name": "milk",
+    "note": null,
+-   "quantity": "1/2",
++   "quantity": "0.5",
+    "raw": "½ cup milk",
+    "reasons": [],
+    "status": "parsed",
+    "unit": "cup",
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "⅛ tsp cayenne" → 1/8 tsp "cayenne" (null)
+AssertionError: expected { raw: '⅛ tsp cayenne', …(9) } to match object { raw: '⅛ tsp cayenne', …(6) }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "name": "cayenne",
+    "note": null,
+-   "quantity": "1/8",
++   "quantity": "0.125",
+    "raw": "⅛ tsp cayenne",
+    "reasons": [],
+    "status": "parsed",
+    "unit": "tsp",
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "⅓ cup salsa" → 1/3 cup "salsa" (null)
+AssertionError: expected { raw: '⅓ cup salsa', …(9) } to match object { raw: '⅓ cup salsa', …(6) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "salsa",
++   "name": "⅓ cup salsa",
+    "note": null,
+-   "quantity": "1/3",
++   "quantity": null,
+    "raw": "⅓ cup salsa",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "cup",
++   "reasons": [
++     "fraction not exact as a decimal",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "⅔ cup milk" → 2/3 cup "milk" (null)
+AssertionError: expected { raw: '⅔ cup milk', …(9) } to match object { raw: '⅔ cup milk', …(6) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "milk",
++   "name": "⅔ cup milk",
+    "note": null,
+-   "quantity": "2/3",
++   "quantity": null,
+    "raw": "⅔ cup milk",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "cup",
++   "reasons": [
++     "fraction not exact as a decimal",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "1⅓ cups flour" → 1 1/3 cup "flour" (null)
+AssertionError: expected { raw: '1⅓ cups flour', …(9) } to match object { raw: '1⅓ cups flour', …(6) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "flour",
++   "name": "1⅓ cups flour",
+    "note": null,
+-   "quantity": "1 1/3",
++   "quantity": null,
+    "raw": "1⅓ cups flour",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "cup",
++   "reasons": [
++     "fraction not exact as a decimal",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "1 1/3 cups flour" → 1 1/3 cup "flour" (null)
+AssertionError: expected { raw: '1 1/3 cups flour', …(9) } to match object { raw: '1 1/3 cups flour', …(6) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "flour",
++   "name": "1 1/3 cups flour",
+    "note": null,
+-   "quantity": "1 1/3",
++   "quantity": null,
+    "raw": "1 1/3 cups flour",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "cup",
++   "reasons": [
++     "fraction not exact as a decimal",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "1/6 tsp nutmeg" → 1/6 tsp "nutmeg" (null)
+AssertionError: expected { raw: '1/6 tsp nutmeg', …(9) } to match object { raw: '1/6 tsp nutmeg', …(6) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "nutmeg",
++   "name": "1/6 tsp nutmeg",
+    "note": null,
+-   "quantity": "1/6",
++   "quantity": null,
+    "raw": "1/6 tsp nutmeg",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "tsp",
++   "reasons": [
++     "fraction not exact as a decimal",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "2/12 cup broth" → 1/6 cup "broth" (null)
+AssertionError: expected { raw: '2/12 cup broth', …(9) } to match object { raw: '2/12 cup broth', …(6) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "broth",
++   "name": "2/12 cup broth",
+    "note": null,
+-   "quantity": "1/6",
++   "quantity": null,
+    "raw": "2/12 cup broth",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "cup",
++   "reasons": [
++     "fraction not exact as a decimal",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "3/2 cups milk" → 1 1/2 cup "milk" (null)
+AssertionError: expected { raw: '3/2 cups milk', …(9) } to match object { raw: '3/2 cups milk', …(6) }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "name": "milk",
+    "note": null,
+-   "quantity": "1 1/2",
++   "quantity": "1.5",
+    "raw": "3/2 cups milk",
+    "reasons": [],
+    "status": "parsed",
+    "unit": "cup",
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "1½ cups water" → 1 1/2 cup "water" (null)
+AssertionError: expected { raw: '1½ cups water', …(9) } to match object { raw: '1½ cups water', …(6) }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "name": "water",
+    "note": null,
+-   "quantity": "1 1/2",
++   "quantity": "1.5",
+    "raw": "1½ cups water",
+    "reasons": [],
+    "status": "parsed",
+    "unit": "cup",
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "1 ½ cups frozen peas" → 1 1/2 cup "frozen peas" (null)
+AssertionError: expected { raw: '1 ½ cups frozen peas', …(9) } to match object { raw: '1 ½ cups frozen peas', …(6) }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "name": "frozen peas",
+    "note": null,
+-   "quantity": "1 1/2",
++   "quantity": "1.5",
+    "raw": "1 ½ cups frozen peas",
+    "reasons": [],
+    "status": "parsed",
+    "unit": "cup",
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "1 1/2 cups rice" → 1 1/2 cup "rice" (null)
+AssertionError: expected { raw: '1 1/2 cups rice', …(9) } to match object { raw: '1 1/2 cups rice', …(6) }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "name": "rice",
+    "note": null,
+-   "quantity": "1 1/2",
++   "quantity": "1.5",
+    "raw": "1 1/2 cups rice",
+    "reasons": [],
+    "status": "parsed",
+    "unit": "cup",
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "1-1/2 cups rice" → 1 1/2 cup "rice" (null)
+AssertionError: expected { raw: '1-1/2 cups rice', …(9) } to match object { raw: '1-1/2 cups rice', …(6) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "rice",
++   "name": "1-1/2 cups rice",
+    "note": null,
+-   "quantity": "1 1/2",
++   "quantity": null,
+    "raw": "1-1/2 cups rice",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "cup",
++   "reasons": [
++     "quantity range",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "1⁄2 cup broth" → 1/2 cup "broth" (null)
+AssertionError: expected { raw: '1⁄2 cup broth', …(9) } to match object { raw: '1⁄2 cup broth', …(6) }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "name": "broth",
+    "note": null,
+-   "quantity": "1/2",
++   "quantity": "0.5",
+    "raw": "1⁄2 cup broth",
+    "reasons": [],
+    "status": "parsed",
+    "unit": "cup",
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "1,000 g flour" → 1000 g "flour" (null)
+AssertionError: expected { raw: '1,000 g flour', …(9) } to match object { raw: '1,000 g flour', …(6) }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "flour",
+-   "note": null,
+-   "quantity": "1000",
++   "name": "1",
++   "note": "000 g flour",
++   "quantity": null,
+    "raw": "1,000 g flour",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "g",
++   "reasons": [
++     "unrecognized number format",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "1 pint cherry tomatoes, halved" → 2 cup "cherry tomatoes" ("halved")
+AssertionError: expected { …(10) } to match object { …(7) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "cherry tomatoes",
++   "name": "pint cherry tomatoes",
+    "note": "halved",
+-   "quantity": "2",
++   "quantity": "1",
+    "raw": "1 pint cherry tomatoes, halved",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "cup",
++   "reasons": [
++     "unit not supported: pint",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "2 quarts water" → 8 cup "water" (null)
+AssertionError: expected { raw: '2 quarts water', …(9) } to match object { raw: '2 quarts water', …(6) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "water",
++   "name": "quarts water",
+    "note": null,
+-   "quantity": "8",
++   "quantity": "2",
+    "raw": "2 quarts water",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "cup",
++   "reasons": [
++     "unit not supported: quarts",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "⅓ quart broth" → 1 1/3 cup "broth" (null)
+AssertionError: expected { raw: '⅓ quart broth', …(9) } to match object { raw: '⅓ quart broth', …(6) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "broth",
++   "name": "⅓ quart broth",
+    "note": null,
+-   "quantity": "1 1/3",
++   "quantity": null,
+    "raw": "⅓ quart broth",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "cup",
++   "reasons": [
++     "fraction not exact as a decimal",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "1 gallon milk" → 16 cup "milk" (null)
+AssertionError: expected { raw: '1 gallon milk', …(9) } to match object { raw: '1 gallon milk', …(6) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "milk",
++   "name": "gallon milk",
+    "note": null,
+-   "quantity": "16",
++   "quantity": "1",
+    "raw": "1 gallon milk",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "cup",
++   "reasons": [
++     "unit not supported: gallon",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "one egg" → 1 each "egg" (null)
+AssertionError: expected { Object (raw, quantity, ...) } to match object { raw: 'one egg', quantity: '1', …(5) }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "egg",
++   "name": "one egg",
+    "note": null,
+-   "quantity": "1",
++   "quantity": null,
+    "raw": "one egg",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "each",
++   "reasons": [
++     "no quantity",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "2 cloves garlic, minced" → 2 each "garlic (clove)" ("minced")
+AssertionError: expected { …(10) } to match object { Object (raw, quantity, ...) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "garlic (clove)",
++   "name": "cloves garlic",
+    "note": "minced",
+    "quantity": "2",
+    "raw": "2 cloves garlic, minced",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "each",
++   "reasons": [
++     "unit not supported: cloves",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "1 can black beans" → 1 each "black beans (can)" (null)
+AssertionError: expected { raw: '1 can black beans', …(9) } to match object { raw: '1 can black beans', …(6) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "black beans (can)",
++   "name": "can black beans",
+    "note": null,
+    "quantity": "1",
+    "raw": "1 can black beans",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "each",
++   "reasons": [
++     "unit not supported: can",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "1 bunch cilantro" → 1 each "cilantro (bunch)" (null)
+AssertionError: expected { raw: '1 bunch cilantro', …(9) } to match object { raw: '1 bunch cilantro', …(6) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "cilantro (bunch)",
++   "name": "bunch cilantro",
+    "note": null,
+    "quantity": "1",
+    "raw": "1 bunch cilantro",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "each",
++   "reasons": [
++     "unit not supported: bunch",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "1 stick butter" → 1 each "butter (stick)" (null)
+AssertionError: expected { raw: '1 stick butter', …(9) } to match object { raw: '1 stick butter', …(6) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "butter (stick)",
++   "name": "stick butter",
+    "note": null,
+    "quantity": "1",
+    "raw": "1 stick butter",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "each",
++   "reasons": [
++     "unit not supported: stick",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "1 (15 oz) can black beans, drained" → 15 oz "black beans" ("drained")
+AssertionError: expected { …(10) } to match object { …(7) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "black beans",
++   "name": "1 (15 oz) can black beans",
+    "note": "drained",
+-   "quantity": "15",
++   "quantity": null,
+    "raw": "1 (15 oz) can black beans, drained",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "oz",
++   "reasons": [
++     "parenthetical package size or note with numbers",
++     "more than one quantity",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "2 (14.5 oz) cans diced tomatoes" → 29 oz "diced tomatoes" (null)
+AssertionError: expected { …(10) } to match object { …(7) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "diced tomatoes",
++   "name": "2 (14.5 oz) cans diced tomatoes",
+    "note": null,
+-   "quantity": "29",
++   "quantity": null,
+    "raw": "2 (14.5 oz) cans diced tomatoes",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "oz",
++   "reasons": [
++     "parenthetical package size or note with numbers",
++     "more than one quantity",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "1 (8 oz) container fresh mozzarella pearls, drained" → 8 oz "fresh mozzarella pearls" ("drained")
+AssertionError: expected { …(10) } to match object { …(7) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "fresh mozzarella pearls",
++   "name": "1 (8 oz) container fresh mozzarella pearls",
+    "note": "drained",
+-   "quantity": "8",
++   "quantity": null,
+    "raw": "1 (8 oz) container fresh mozzarella pearls, drained",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "oz",
++   "reasons": [
++     "parenthetical package size or note with numbers",
++     "more than one quantity",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "1 can (14.5 oz) diced tomatoes" → 14.5 oz "diced tomatoes" (null)
+AssertionError: expected { …(10) } to match object { …(7) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "diced tomatoes",
++   "name": "can (14.5 oz) diced tomatoes",
+    "note": null,
+-   "quantity": "14.5",
++   "quantity": null,
+    "raw": "1 can (14.5 oz) diced tomatoes",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "oz",
++   "reasons": [
++     "parenthetical package size or note with numbers",
++     "unit not supported: can",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[38/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "2 cans (14.5 oz each) tomatoes" → 29 oz "tomatoes" (null)
+AssertionError: expected { …(10) } to match object { …(7) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "tomatoes",
++   "name": "cans (14.5 oz each) tomatoes",
+    "note": null,
+-   "quantity": "29",
++   "quantity": null,
+    "raw": "2 cans (14.5 oz each) tomatoes",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "oz",
++   "reasons": [
++     "parenthetical package size or note with numbers",
++     "unit not supported: cans",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "1 15-oz can chickpeas" → 15 oz "chickpeas" (null)
+AssertionError: expected { raw: '1 15-oz can chickpeas', …(9) } to match object { raw: '1 15-oz can chickpeas', …(6) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "chickpeas",
++   "name": "1 15-oz can chickpeas",
+    "note": null,
+-   "quantity": "15",
++   "quantity": null,
+    "raw": "1 15-oz can chickpeas",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "oz",
++   "reasons": [
++     "more than one quantity",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[40/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "½ (15 oz) can pumpkin" → 7.5 oz "pumpkin" (null)
+AssertionError: expected { raw: '½ (15 oz) can pumpkin', …(9) } to match object { raw: '½ (15 oz) can pumpkin', …(6) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "pumpkin",
++   "name": "½ (15 oz) can pumpkin",
+    "note": null,
+-   "quantity": "7.5",
++   "quantity": null,
+    "raw": "½ (15 oz) can pumpkin",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "oz",
++   "reasons": [
++     "parenthetical package size or note with numbers",
++     "more than one quantity",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[41/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "¼ cup grated parmesan (about 1 oz)" → 1/4 cup "grated parmesan" ("about 1 oz")
+AssertionError: expected { …(10) } to match object { …(7) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "grated parmesan",
+-   "note": "about 1 oz",
+-   "quantity": "1/4",
++   "name": "¼ cup grated parmesan (about 1 oz)",
++   "note": null,
++   "quantity": null,
+    "raw": "¼ cup grated parmesan (about 1 oz)",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "cup",
++   "reasons": [
++     "parenthetical package size or note with numbers",
++     "more than one quantity",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[42/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "1 tsp vanilla (optional)" → 1 tsp "vanilla" ("optional")
+AssertionError: expected { …(10) } to match object { …(7) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "vanilla",
++   "name": "1 tsp vanilla",
+    "note": "optional",
+-   "quantity": "1",
++   "quantity": null,
+    "raw": "1 tsp vanilla (optional)",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "tsp",
++   "reasons": [
++     "no fixed quantity",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[43/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > parsed lines: amount, unit, name and note separated > "1 cup 2% milk" → 1 cup "2% milk" (null)
+AssertionError: expected { raw: '1 cup 2% milk', …(9) } to match object { raw: '1 cup 2% milk', …(6) }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "2% milk",
++   "name": "1 cup 2% milk",
+    "note": null,
+-   "quantity": "1",
++   "quantity": null,
+    "raw": "1 cup 2% milk",
+-   "reasons": [],
+-   "status": "parsed",
+-   "unit": "cup",
++   "reasons": [
++     "more than one quantity",
++   ],
++   "status": "requires_review",
++   "unit": null,
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:98:15
+     96|   ])("%j → %s %s %j (%j)", (line, quantity, unit, name, note = null) =…
+     97|     const r = parseIngredientLine(line);
+     98|     expect(r).toMatchObject({ raw: line, quantity, unit, name, note, s…
+       |               ^
+     99|     expect(KNOWN_UNITS).toContain(r.unit);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[44/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > "2-3 cloves garlic, minced" → review (/range/i)
+AssertionError: expected '2-3 cloves garlic' to be 'garlic (clove)' // Object.is equality
+
+Expected: "garlic (clove)"
+Received: "2-3 cloves garlic"
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:132:20
+    130|     expect(r.status).toBe("requires_review");
+    131|     expect(r.reasons.join("; ")).toMatch(reason);
+    132|     expect(r.name).toBe(name);
+       |                    ^
+    133|     expect(r.quantity).toBe(quantity);
+    134|     expect(r.unit).toBe(unit);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[45/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > "2 to 3 cups broth" → review (/range/i)
+AssertionError: expected '2 to 3 cups broth' to be 'broth' // Object.is equality
+
+Expected: "broth"
+Received: "2 to 3 cups broth"
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:132:20
+    130|     expect(r.status).toBe("requires_review");
+    131|     expect(r.reasons.join("; ")).toMatch(reason);
+    132|     expect(r.name).toBe(name);
+       |                    ^
+    133|     expect(r.quantity).toBe(quantity);
+    134|     expect(r.unit).toBe(unit);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[46/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > "2 – 3 tbsp oil" → review (/range/i)
+AssertionError: expected '2 – 3 tbsp oil' to be 'oil' // Object.is equality
+
+Expected: "oil"
+Received: "2 – 3 tbsp oil"
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:132:20
+    130|     expect(r.status).toBe("requires_review");
+    131|     expect(r.reasons.join("; ")).toMatch(reason);
+    132|     expect(r.name).toBe(name);
+       |                    ^
+    133|     expect(r.quantity).toBe(quantity);
+    134|     expect(r.unit).toBe(unit);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[47/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > "1/2-1 cup water" → review (/range/i)
+AssertionError: expected '1/2-1 cup water' to be 'water' // Object.is equality
+
+Expected: "water"
+Received: "1/2-1 cup water"
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:132:20
+    130|     expect(r.status).toBe("requires_review");
+    131|     expect(r.reasons.join("; ")).toMatch(reason);
+    132|     expect(r.name).toBe(name);
+       |                    ^
+    133|     expect(r.quantity).toBe(quantity);
+    134|     expect(r.unit).toBe(unit);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[48/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > "1 or 2 eggs" → review (/range/i)
+AssertionError: expected '1 or 2 eggs' to be 'eggs' // Object.is equality
+
+Expected: "eggs"
+Received: "1 or 2 eggs"
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:132:20
+    130|     expect(r.status).toBe("requires_review");
+    131|     expect(r.reasons.join("; ")).toMatch(reason);
+    132|     expect(r.name).toBe(name);
+       |                    ^
+    133|     expect(r.quantity).toBe(quantity);
+    134|     expect(r.unit).toBe(unit);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[49/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > "fresh basil, for serving" → review (/no amount/i)
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > "water as needed" → review (/no amount/i)
+AssertionError: expected 'no fixed quantity; no quantity' to match /no amount/i
+
+- Expected:
+/no amount/i
+
++ Received:
+"no fixed quantity; no quantity"
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:131:34
+    129|     const r = parseIngredientLine(line);
+    130|     expect(r.status).toBe("requires_review");
+    131|     expect(r.reasons.join("; ")).toMatch(reason);
+       |                                  ^
+    132|     expect(r.name).toBe(name);
+    133|     expect(r.quantity).toBe(quantity);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[50/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > "a pinch of nutmeg" → review (/no fixed amount/i)
+AssertionError: expected 'no quantity' to match /no fixed amount/i
+
+- Expected:
+/no fixed amount/i
+
++ Received:
+"no quantity"
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:131:34
+    129|     const r = parseIngredientLine(line);
+    130|     expect(r.status).toBe("requires_review");
+    131|     expect(r.reasons.join("; ")).toMatch(reason);
+       |                                  ^
+    132|     expect(r.name).toBe(name);
+    133|     expect(r.quantity).toBe(quantity);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[51/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > "1 pinch red pepper flakes" → review (/no fixed amount/i)
+AssertionError: expected 'unit not supported: pinch' to match /no fixed amount/i
+
+- Expected:
+/no fixed amount/i
+
++ Received:
+"unit not supported: pinch"
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:131:34
+    129|     const r = parseIngredientLine(line);
+    130|     expect(r.status).toBe("requires_review");
+    131|     expect(r.reasons.join("; ")).toMatch(reason);
+       |                                  ^
+    132|     expect(r.name).toBe(name);
+    133|     expect(r.quantity).toBe(quantity);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[52/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > "1 dash hot sauce" → review (/no fixed amount/i)
+AssertionError: expected 'unit not supported: dash' to match /no fixed amount/i
+
+- Expected:
+/no fixed amount/i
+
++ Received:
+"unit not supported: dash"
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:131:34
+    129|     const r = parseIngredientLine(line);
+    130|     expect(r.status).toBe("requires_review");
+    131|     expect(r.reasons.join("; ")).toMatch(reason);
+       |                                  ^
+    132|     expect(r.name).toBe(name);
+    133|     expect(r.quantity).toBe(quantity);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[53/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > "1 handful spinach" → review (/no fixed amount/i)
+AssertionError: expected 'unit not supported: handful' to match /no fixed amount/i
+
+- Expected:
+/no fixed amount/i
+
++ Received:
+"unit not supported: handful"
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:131:34
+    129|     const r = parseIngredientLine(line);
+    130|     expect(r.status).toBe("requires_review");
+    131|     expect(r.reasons.join("; ")).toMatch(reason);
+       |                                  ^
+    132|     expect(r.name).toBe(name);
+    133|     expect(r.quantity).toBe(quantity);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[54/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > "1 cup milk or cream" → review (/choose/i)
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > "2 tbsp butter or olive oil" → review (/choose/i)
+AssertionError: expected 'alternatives (or)' to match /choose/i
+
+- Expected:
+/choose/i
+
++ Received:
+"alternatives (or)"
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:131:34
+    129|     const r = parseIngredientLine(line);
+    130|     expect(r.status).toBe("requires_review");
+    131|     expect(r.reasons.join("; ")).toMatch(reason);
+       |                                  ^
+    132|     expect(r.name).toBe(name);
+    133|     expect(r.quantity).toBe(quantity);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[55/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > "1 lb 4 oz beef" → review (/two parts/i)
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > "1 cup plus 2 tbsp flour" → review (/two parts/i)
+AssertionError: expected 'more than one quantity' to match /two parts/i
+
+- Expected:
+/two parts/i
+
++ Received:
+"more than one quantity"
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:131:34
+    129|     const r = parseIngredientLine(line);
+    130|     expect(r.status).toBe("requires_review");
+    131|     expect(r.reasons.join("; ")).toMatch(reason);
+       |                                  ^
+    132|     expect(r.name).toBe(name);
+    133|     expect(r.quantity).toBe(quantity);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[56/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > "1/0 cup water" → review (/amount can't be read/i)
+AssertionError: expected 'invalid fraction' to match /amount can't be read/i
+
+- Expected:
+/amount can't be read/i
+
++ Received:
+"invalid fraction"
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:131:34
+    129|     const r = parseIngredientLine(line);
+    130|     expect(r.status).toBe("requires_review");
+    131|     expect(r.reasons.join("; ")).toMatch(reason);
+       |                                  ^
+    132|     expect(r.name).toBe(name);
+    133|     expect(r.quantity).toBe(quantity);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[57/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > "0 cups flour" → review (/amount can't be read/i)
+AssertionError: expected 'non-positive quantity' to match /amount can't be read/i
+
+- Expected:
+/amount can't be read/i
+
++ Received:
+"non-positive quantity"
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:131:34
+    129|     const r = parseIngredientLine(line);
+    130|     expect(r.status).toBe("requires_review");
+    131|     expect(r.reasons.join("; ")).toMatch(reason);
+       |                                  ^
+    132|     expect(r.name).toBe(name);
+    133|     expect(r.quantity).toBe(quantity);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[58/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > "20000 g sugar" → review (/too large/i)
+AssertionError: expected 'implausible quantity' to match /too large/i
+
+- Expected:
+/too large/i
+
++ Received:
+"implausible quantity"
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:131:34
+    129|     const r = parseIngredientLine(line);
+    130|     expect(r.status).toBe("requires_review");
+    131|     expect(r.reasons.join("; ")).toMatch(reason);
+       |                                  ^
+    132|     expect(r.name).toBe(name);
+    133|     expect(r.quantity).toBe(quantity);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[59/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > "1,5 cups milk" → review (/amount can't be read/i)
+AssertionError: expected 'unrecognized number format' to match /amount can't be read/i
+
+- Expected:
+/amount can't be read/i
+
++ Received:
+"unrecognized number format"
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:131:34
+    129|     const r = parseIngredientLine(line);
+    130|     expect(r.status).toBe("requires_review");
+    131|     expect(r.reasons.join("; ")).toMatch(reason);
+       |                                  ^
+    132|     expect(r.name).toBe(name);
+    133|     expect(r.quantity).toBe(quantity);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[60/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > "1. Preheat the oven" → review (/not an ingredient/i)
+AssertionError: expected 'unrecognized quantity' to match /not an ingredient/i
+
+- Expected:
+/not an ingredient/i
+
++ Received:
+"unrecognized quantity"
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:131:34
+    129|     const r = parseIngredientLine(line);
+    130|     expect(r.status).toBe("requires_review");
+    131|     expect(r.reasons.join("; ")).toMatch(reason);
+       |                                  ^
+    132|     expect(r.name).toBe(name);
+    133|     expect(r.quantity).toBe(quantity);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[61/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > "1 cup" → review (/no ingredient name/i)
+AssertionError: expected '1 cup' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ 1 cup
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:132:20
+    130|     expect(r.status).toBe("requires_review");
+    131|     expect(r.reasons.join("; ")).toMatch(reason);
+    132|     expect(r.name).toBe(name);
+       |                    ^
+    133|     expect(r.quantity).toBe(quantity);
+    134|     expect(r.unit).toBe(unit);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[62/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > a range keeps both stated ends for the person, and picks neither
+AssertionError: expected { …(10) } to match object { range: [ '2', '3' ], quantity: null }
+(14 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "quantity": null,
+-   "range": [
+-     "2",
+-     "3",
+-   ],
+  }
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:139:62
+    137|
+    138|   it("a range keeps both stated ends for the person, and picks neither…
+    139|     expect(parseIngredientLine("2-3 cloves garlic, minced")).toMatchOb…
+       |                                                              ^
+    140|     expect(parseIngredientLine("1/2-1 cup water")).toMatchObject({ ran…
+    141|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[63/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > alternatives are offered as stated, the shared word distributed
+AssertionError: expected undefined to deeply equal [ 'milk', 'cream' ]
+
+- Expected:
+[
+  "milk",
+  "cream",
+]
+
++ Received:
+undefined
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:144:69
+    142|
+    143|   it("alternatives are offered as stated, the shared word distributed"…
+    144|     expect(parseIngredientLine("1 cup milk or cream").alternatives).to…
+       |                                                                     ^
+    145|     expect(parseIngredientLine("2 cups chicken or vegetable broth").al…
+    146|     expect(parseIngredientLine("2 tbsp butter or olive oil").alternati…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[64/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > lines that need a person: the reason is named and the name is still clean > an 'or' inside a parenthetical is a note, not a choice
+AssertionError: expected 'requires_review' to be 'parsed' // Object.is equality
+
+Expected: "parsed"
+Received: "requires_review"
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:152:22
+    150|     const r = parseIngredientLine("1/3 cup pesto (homemade (or store-b…
+    151|     expect(r.alternatives ?? null).toBeNull();
+    152|     expect(r.status).toBe("parsed");
+       |                      ^
+    153|   });
+    154| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[65/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > household seasonings are left out of groceries automatically > "salt" → omitted
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > household seasonings are left out of groceries automatically > "salt and pepper to taste" → omitted
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > household seasonings are left out of groceries automatically > "Salt and pepper, to taste" → omitted
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > household seasonings are left out of groceries automatically > "sea salt" → omitted
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > household seasonings are left out of groceries automatically > "black pepper" → omitted
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > household seasonings are left out of groceries automatically > "ground black pepper" → omitted
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > household seasonings are left out of groceries automatically > "pepper to taste" → omitted
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > household seasonings are left out of groceries automatically > "salt & pepper" → omitted
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > household seasonings are left out of groceries automatically > "kosher salt, to taste" → omitted
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > household seasonings are left out of groceries automatically > "freshly cracked black pepper" → omitted
+AssertionError: expected 'requires_review' to be 'omitted' // Object.is equality
+
+Expected: "omitted"
+Received: "requires_review"
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:163:22
+    161|   ])("%j → omitted", (line) => {
+    162|     const r = parseIngredientLine(line);
+    163|     expect(r.status).toBe("omitted");
+       |                      ^
+    164|     expect(r.reasons.join(" ")).toMatch(/household seasoning/i);
+    165|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[66/82]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > household seasonings are left out of groceries automatically > "1 tsp kosher salt" → omitted
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > household seasonings are left out of groceries automatically > "½ tsp freshly ground black pepper" → omitted
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > household seasonings are left out of groceries automatically > "1/4 tsp fine sea salt" → omitted
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > household seasonings are left out of groceries automatically > "1 tsp salt" → omitted
+AssertionError: expected 'parsed' to be 'omitted' // Object.is equality
+
+Expected: "omitted"
+Received: "parsed"
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:163:22
+    161|   ])("%j → omitted", (line) => {
+    162|     const r = parseIngredientLine(line);
+    163|     expect(r.status).toBe("omitted");
+       |                      ^
+    164|     expect(r.reasons.join(" ")).toMatch(/household seasoning/i);
+    165|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[67/82]⎯
+
+
+ Test Files  4 failed (4)
+      Tests  80 failed | 49 passed (129)
+   Start at  17:38:34
+   Duration  8.90s (tests 80%, transform 13%, import 7%)
+

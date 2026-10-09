@@ -24,7 +24,7 @@ export function CookScreen({ night }: { night: string }) {
       <Link href="/" className="small">‹ Week</Link>
       <span className="chip">{n.dayName} · {isCook ? "Cook" : "Reheat and serve"}</span>
       <div className="row" style={{ alignItems: "flex-start", flexWrap: "nowrap" }}>
-        <PlaceholderTile title={n.recipe.title} large imageId={n.recipe.imageId} />
+        <PlaceholderTile title={n.recipe.title} large imageId={n.recipe.photo?.imageId ?? n.recipe.imageId} />
         <h2 className="page-title grow" data-testid="cook-title">{n.recipe.title}</h2>
       </div>
       <SourceLine v={n.recipe} />
