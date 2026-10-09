@@ -1,0 +1,20 @@
+{
+  "name": "@table/recipe-extraction",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Pure, offline recipe-page and ingredient-line extraction for Table (contract recipe-extraction/v1). No network, database, secrets or Table server state.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --config vitest.config.ts",
+    "lab": "tsx bin/recipe-lab.ts",
+    "bench": "tsx bin/recipe-lab.ts bench"
+  }
+}
