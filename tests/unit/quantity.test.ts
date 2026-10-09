@@ -23,14 +23,16 @@ describe("perServing", () => {
   });
   it("keeps 12 decimal places otherwise and says so", () => {
     expect(perServing("1/3", 4)).toEqual({ value: "0.083333333333", exact: false });
-    expect(perServing("2/3", 1)).toEqual({ value: "0.666666666667", exact: false });
+    // RIO-01 (2026-10-09): rounded toward zero, so plates never add up to more than the recipe (was "0.666666666667").
+    expect(perServing("2/3", 1)).toEqual({ value: "0.666666666666", exact: false });
+    expect(perServing("2", 3)).toEqual({ value: "0.666666666666", exact: false });
   });
   it("refuses what isn't an amount", () => expect(perServing("x", 4)).toBeNull());
 });
 
 describe("displayAmount", () => {
   it.each([
-    ["0.5", "½"], ["0.333333333333", "⅓"], ["0.666666666667", "⅔"], ["1.5", "1 ½"], ["0.083333333333", "1/12"], ["0.375", "⅜"], ["2", "2"],
+    ["0.5", "½"], ["0.333333333333", "⅓"], ["0.666666666667", "⅔"], ["0.666666666666", "⅔"], ["1.5", "1 ½"], ["0.083333333333", "1/12"], ["0.375", "⅜"], ["2", "2"],
     ["0.0833", "1/12"], ["0.08", "0.08"], ["1.333333333333", "1 ⅓"], ["0.1", "0.1"], ["12.25", "12 ¼"], ["0.2", "⅕"], ["1/3", "⅓"], ["1 1/2", "1 ½"],
   ])("%j → %s", (q, shown) => expect(displayAmount(q)).toBe(shown));
 });

@@ -13,7 +13,14 @@ const QUALIFIERS = new Set([
   "and", "&", "plus", "or", "to", "taste", "as", "needed", "for", "seasoning", "season", "more", "some", "a", "pinch", "of", "salt", "pepper",
 ]);
 
-export function isHouseholdSeasoning(name: string): boolean {
+// A bare "pepper" (no "black", "ground", "cracked"… and no salt beside it) is table pepper only when it is
+// measured like a seasoning — by the spoon, or with no amount ("pepper to taste"). Counted or weighed, it is
+// a pepper you buy ("1 pepper, diced"; RIO-02).
+const TABLE_PEPPER_WORDS = new Set(["black", "ground", "cracked", "freshly", "salt"]);
+const BOUGHT_BY_PIECE_OR_WEIGHT = new Set(["each", "g", "kg", "oz", "lb"]);
+
+/** `unit` is the amount's unit when known (a recipe line's, or a grocery demand's base unit). */
+export function isHouseholdSeasoning(name: string, unit?: string | null): boolean {
   const words = String(name ?? "")
     .toLowerCase()
     .replace(/\([^)]*\)/g, " ")
@@ -25,5 +32,7 @@ export function isHouseholdSeasoning(name: string): boolean {
   if (!words.every((w) => QUALIFIERS.has(w))) return false;
   // "black" only describes pepper; "sea", "kosher"... only describe salt.
   if (words.includes("black") && !words.includes("pepper")) return false;
+  const barePepper = words.includes("pepper") && !words.some((w) => TABLE_PEPPER_WORDS.has(w));
+  if (barePepper && unit && BOUGHT_BY_PIECE_OR_WEIGHT.has(unit)) return false;
   return true;
 }

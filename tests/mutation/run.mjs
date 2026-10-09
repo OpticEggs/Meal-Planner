@@ -47,6 +47,7 @@ const THEME = "tests/unit/theme-contrast.test.ts";
 const B2122 = "tests/integration/b21-b22.test.ts";
 const MSS = "tests/integration/ms-sources.test.ts";
 const IO = "tests/integration/import-overhaul.test.ts";
+const RIO = "tests/integration/rio-corrections.test.ts";
 const PARSE = "tests/unit/recipe-import-ingredient-line.test.ts";
 const SEASON = "tests/unit/seasonings.test.ts";
 const CP = "tests/unit/u2c-content-policy.test.ts";
@@ -304,6 +305,11 @@ MUTATIONS.push(
     edits: [["  if (!words.every((w) => QUALIFIERS.has(w))) return false;", "  if (!words.some((w) => QUALIFIERS.has(w))) return false;"]] },
   { name: "HE_enough_compared_unrounded", file: "src/domain/groceries/projection.ts", suite: SEASON, pattern: "Have enough", expect: [/3-decimal amount/],
     edits: [["reviewed.gte(mealQty.toDecimalPlaces(SHOWN_PLACES))", "reviewed.gte(mealQty)"]] },
+  // Import-overhaul corrections (2026-10-09; RIO-01..02 reconstructed — the owner's package did not arrive).
+  { name: "RIO01_per_serving_rounded_half_up", file: "src/domain/quantity.ts", suite: RIO, pattern: "RIO-01", expect: [/RIO-01/],
+    edits: [["toDecimalPlaces(12, D.ROUND_DOWN)", "toDecimalPlaces(12)"]] },
+  { name: "RIO02_bare_pepper_always_seasoning", file: "src/domain/groceries/seasonings.ts", suite: RIO, pattern: "RIO-02", expect: [/RIO-02/],
+    edits: [["  if (barePepper && unit && BOUGHT_BY_PIECE_OR_WEIGHT.has(unit)) return false;", "  void barePepper;"]] },
   { name: "IO_private_mode_copies_photos", file: "src/server/integrations/recipe-import/content-policy.ts", suite: CP, pattern: "CP-02", expect: [/CP-02/],
     edits: [["    return { instructions: true, photos: false, kind: \"owner_mode\"", "    return { instructions: true, photos: true, kind: \"owner_mode\""]] },
 );

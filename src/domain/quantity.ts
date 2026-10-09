@@ -92,14 +92,16 @@ export function formatAmount(r: Rat, preferDecimal = false): string {
   return whole > ZERO ? `${whole} ${rest}/${r.d}` : `${rest}/${r.d}`;
 }
 
-/** The amount for ONE serving: exact when the division terminates, else 12 decimal places (exact: false). */
+/** The amount for ONE serving: exact when the division terminates, else 12 decimal places (exact: false),
+ *  rounded TOWARD ZERO — so the plates of a whole recipe never add up to more than the recipe and never
+ *  tip a package count over (RIO-01: 2 ÷ 3 rounded half-up, times 3 plates, was 2.000000000001). */
 export function perServing(amount: string, servings: number): { value: string; exact: boolean } | null {
   const r = parseAmount(amount);
   if (!r || !Number.isInteger(servings) || servings < 1) return null;
   const each = ratDiv(r, ratInt(servings));
   const dec = exactDecimal(each);
   if (dec) return { value: dec, exact: true };
-  return { value: new D(each.n.toString()).div(each.d.toString()).toDecimalPlaces(12).toFixed(), exact: false };
+  return { value: new D(each.n.toString()).div(each.d.toString()).toDecimalPlaces(12, D.ROUND_DOWN).toFixed(), exact: false };
 }
 
 const GLYPH: Record<string, string> = Object.fromEntries(Object.entries(VULGAR).map(([g, [n, d]]) => [`${n}/${d}`, g]));

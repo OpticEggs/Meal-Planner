@@ -93,3 +93,11 @@ describe("'Have enough' binds to the amount shown (found by the URL-to-cart jour
     expect(more.lines.find((l) => l.key === "salsa")!.unresolved.join(" ")).toMatch(/Needed amount increased/);
   });
 });
+
+describe("a bare 'pepper' depends on how it is measured (RIO-02, 2026-10-09)", () => {
+  it.each([[null, true], [undefined, true], ["tsp", true], ["tbsp", true], ["ml", true], ["each", false], ["g", false], ["oz", false], ["lb", false]] as const)(
+    "pepper measured in %s → seasoning %s", (unit, expected) => expect(isHouseholdSeasoning("pepper", unit)).toBe(expected));
+  it("named table pepper and salt stay seasonings however they are measured", () => {
+    for (const n of ["black pepper", "ground pepper", "freshly cracked pepper", "salt and pepper", "kosher salt"]) expect(isHouseholdSeasoning(n, "each"), n).toBe(true);
+  });
+});

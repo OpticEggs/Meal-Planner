@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { useStore } from "./store";
 import { ModalSheet } from "./a11y";
 import { FormAlert } from "./forms";
@@ -118,6 +118,30 @@ function DraftReview({ b, onDone }: { b: any; onDone: () => void }) {
   const [problems, setProblems] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
   const own = useRef<number | null>(null);
+  // RIO-03: rows whose editor holds a change not yet applied with "Use" (index → ingredient name). Saving
+  // is held while there are any, so a typed change is never silently dropped.
+  const [pending, setPending] = useState<Record<number, string>>({});
+  const [held, setHeld] = useState(false);
+  const [reveal, setReveal] = useState<{ i: number; tick: number } | null>(null);
+  const onPending = useCallback((i: number, name: string | null) => setPending((p) => {
+    if ((p[i] ?? null) === name) return p;
+    const next = { ...p };
+    if (name === null) delete next[i];
+    else next[i] = name;
+    return next;
+  }), []);
+  const pendingList = Object.entries(pending).map(([i, n]) => ({ i: Number(i), n })).sort((a, b) => a.i - b.i);
+  useEffect(() => {
+    if (!pendingList.length) setHeld(false);
+  }, [pendingList.length]);
+  /** True (and the first such row is shown and focused) when a row has an unapplied change. */
+  const holdForPending = () => {
+    if (!pendingList.length) return false;
+    setHeld(true);
+    setReveal((r) => ({ i: pendingList[0].i, tick: (r?.tick ?? 0) + 1 }));
+    return true;
+  };
+  const heldMessages = pendingList.map(({ i, n }) => `Line ${i + 1}${n ? ` (${n})` : ""} has a change you haven't applied — use it or cancel it.`);
   const changedElsewhere = d.revision !== base && d.revision !== own.current;
   useEffect(() => {
     if (d.revision === own.current) setBase(d.revision);
@@ -173,21 +197,21 @@ function DraftReview({ b, onDone }: { b: any; onDone: () => void }) {
         <section aria-labelledby="check-h" className="group">
           <h3 id="check-h" className="group-title">Needs a quick check</h3>
           <ol className="rows" data-testid="draft-check">
-            {check.map(({ l, i }) => <LineRow key={i} i={i} line={l} onChange={(dec) => setDecision(i, dec)} openByDefault />)}
+            {check.map(({ l, i }) => <LineRow key={i} i={i} line={l} onChange={(dec) => setDecision(i, dec)} onPending={onPending} reveal={reveal?.i === i ? reveal.tick : 0} openByDefault />)}
           </ol>
         </section>
       )}
       <section aria-labelledby="ing-h" className="group">
         <h3 id="ing-h" className="group-title">Ingredients</h3>
         <ol className="rows" data-testid="draft-lines">
-          {using.map(({ l, i }) => <LineRow key={i} i={i} line={l} onChange={(dec) => setDecision(i, dec)} />)}
+          {using.map(({ l, i }) => <LineRow key={i} i={i} line={l} onChange={(dec) => setDecision(i, dec)} onPending={onPending} reveal={reveal?.i === i ? reveal.tick : 0} />)}
         </ol>
       </section>
       {left.length > 0 && (
         <section aria-labelledby="left-h" className="group">
           <h3 id="left-h" className="group-title">Not added to groceries</h3>
           <ol className="rows" data-testid="draft-left-out">
-            {left.map(({ l, i }) => <LineRow key={i} i={i} line={l} onChange={(dec) => setDecision(i, dec)} />)}
+            {left.map(({ l, i }) => <LineRow key={i} i={i} line={l} onChange={(dec) => setDecision(i, dec)} onPending={onPending} reveal={reveal?.i === i ? reveal.tick : 0} />)}
           </ol>
         </section>
       )}
@@ -198,13 +222,14 @@ function DraftReview({ b, onDone }: { b: any; onDone: () => void }) {
         <textarea id="draft-instructions" rows={d.stepsKept ? 8 : 3} value={edit.instructions} onChange={(e) => setEdit({ ...edit, instructions: e.target.value })} />
       </details>
 
-      {(live.length > 0 || problems.length > 0) && (
+      {((held && heldMessages.length > 0) || live.length > 0 || problems.length > 0) && (
         <ul className="small warn problems" data-testid="draft-problems" aria-label="Before this can become a recipe">
-          {(problems.length ? problems : live).map((p) => <li key={p}>{p}</li>)}
+          {(held && heldMessages.length ? heldMessages : problems.length ? problems : live).map((p) => <li key={p}>{p}</li>)}
         </ul>
       )}
       <div className="review-actions">
         <button type="button" className="btn primary big" disabled={busy || changedElsewhere || live.length > 0} data-testid="import-confirm" onClick={async () => {
+          if (holdForPending()) return;
           setBusy(true);
           const rev = await save();
           if (rev !== null) {
@@ -221,7 +246,7 @@ function DraftReview({ b, onDone }: { b: any; onDone: () => void }) {
         }}>Save recipe</button>
       </div>
       <div className="row between review-secondary">
-          <button type="button" className="btn quiet" disabled={busy || changedElsewhere} onClick={async () => { setBusy(true); await save(); setBusy(false); }}>Save review for later</button>
+          <button type="button" className="btn quiet" disabled={busy || changedElsewhere} onClick={async () => { if (holdForPending()) return; setBusy(true); await save(); setBusy(false); }}>Save review for later</button>
           <button type="button" className="btn quiet danger-text" disabled={busy} onClick={async () => {
             const r = await command("DiscardImportDraft", { draftId: d.id, expectedRevision: base });
             if (r.status !== "accepted") setError(r.message);
@@ -242,8 +267,12 @@ function lineStatus(line: DraftLine): string | null {
   return r.replace(/^No amount given \((.*)\)$/, "No amount given ($1)");
 }
 
-function LineRow({ i, line, onChange, openByDefault }: { i: number; line: DraftLine; onChange: (d: LineDecision | null) => void; openByDefault?: boolean }) {
+function LineRow({ i, line, onChange, onPending, reveal, openByDefault }: {
+  i: number; line: DraftLine; onChange: (d: LineDecision | null) => void; onPending: (i: number, name: string | null) => void; reveal: number; openByDefault?: boolean;
+}) {
   const [open, setOpen] = useState(!!openByDefault);
+  const applyRef = useRef<HTMLButtonElement>(null);
+  const amountRef = useRef<HTMLInputElement>(null);
   const id = useId();
   const dec = line.decision;
   const p = line.parsed;
@@ -256,6 +285,18 @@ function LineRow({ i, line, onChange, openByDefault }: { i: number; line: DraftL
   useEffect(() => setForm(draft), [JSON.stringify(dec)]); // eslint-disable-line react-hooks/exhaustive-deps
   const amountOk = !!parseAmount(form.quantity) && KNOWN_UNITS.includes(form.unit) && form.name.trim().length > 0;
   const kind = !dec ? "check" : dec.use ? "use" : "out";
+  // A change is pending when what the editor holds differs from what is decided (an undecided line counts
+  // only once something was typed into it).
+  const dirty = (["quantity", "unit", "name", "form"] as const).some((k) => String(form[k] ?? "").trim() !== String(draft[k] ?? "").trim());
+  useEffect(() => {
+    onPending(i, dirty ? (form.name.trim() || name || null) ?? "" : null);
+  }, [dirty, form.name, i, name, onPending]);
+  useEffect(() => () => onPending(i, null), [i, onPending]);
+  useEffect(() => {
+    if (!reveal) return;
+    setOpen(true);
+    requestAnimationFrame(() => (applyRef.current && !applyRef.current.disabled ? applyRef.current : amountRef.current)?.focus());
+  }, [reveal]);
   return (
     <li className={`row-item ${kind}`} data-testid="draft-line" data-raw={line.raw} data-state={kind}>
       <button type="button" className="row-main" aria-expanded={open} aria-controls={`${id}-ed`} onClick={() => setOpen((o) => !o)}>
@@ -266,7 +307,7 @@ function LineRow({ i, line, onChange, openByDefault }: { i: number; line: DraftL
             <span className="line1"><span className="nm">{summary}</span></span>
           )}
           {use && p.note ? <span className="note">{p.note}</span> : null}
-          {status ? <span className={`why ${kind}`}>{status}</span> : null}
+          {dirty && !open ? <span className="why check">Change not applied yet</span> : status ? <span className={`why ${kind}`}>{status}</span> : null}
         </span>
         <span className="chev" aria-hidden="true">{open ? "▴" : "▾"}</span>
         <span className="sr-only">{open ? "Close" : kind === "check" ? "Fix" : "Change"} line {i + 1}</span>
@@ -282,7 +323,7 @@ function LineRow({ i, line, onChange, openByDefault }: { i: number; line: DraftL
             </div>
           ) : null}
           <div className="editor-grid">
-            <label className="amount">Amount<input inputMode="text" value={form.quantity} placeholder={p.range ? `${p.range[0]}–${p.range[1]}` : "e.g. 1/3"} onChange={(e) => setForm({ ...form, quantity: e.target.value })} aria-label={`Amount for the whole recipe, line ${i + 1}`} /></label>
+            <label className="amount">Amount<input ref={amountRef} inputMode="text" value={form.quantity} placeholder={p.range ? `${p.range[0]}–${p.range[1]}` : "e.g. 1/3"} onChange={(e) => setForm({ ...form, quantity: e.target.value })} aria-label={`Amount for the whole recipe, line ${i + 1}`} /></label>
             <label className="unit">Unit<select value={form.unit} onChange={(e) => setForm({ ...form, unit: e.target.value })} aria-label={`Unit, line ${i + 1}`}>
               <option value="">Choose…</option>{KNOWN_UNITS.map((u) => <option key={u} value={u}>{u === "fl_oz" ? "fl oz" : u}</option>)}
             </select></label>
@@ -293,8 +334,9 @@ function LineRow({ i, line, onChange, openByDefault }: { i: number; line: DraftL
           </div>
           {!amountOk && form.quantity && !parseAmount(form.quantity) && <p className="field-error small">Use a number or fraction, like 2, 1/3 or 1 1/2.</p>}
           <div className="row">
-            <button type="button" className="btn primary small" disabled={!amountOk} onClick={() => { onChange({ ...form, use: true, quantity: form.quantity.trim() }); setOpen(false); }} aria-label={`Use line ${i + 1}: ${line.raw}`}>Use</button>
+            <button ref={applyRef} type="button" className="btn primary small" disabled={!amountOk} onClick={() => { onChange({ ...form, use: true, quantity: form.quantity.trim() }); setOpen(false); }} aria-label={`Use line ${i + 1}: ${line.raw}`}>Use</button>
             <button type="button" className="btn line small" onClick={() => { onChange({ use: false }); setOpen(false); }} aria-label={`Leave out line ${i + 1}: ${line.raw}`}>Leave out</button>
+            <button type="button" className="btn quiet small" onClick={() => { setForm(draft); setOpen(false); }} aria-label={`Cancel changes to line ${i + 1}`}>Cancel</button>
           </div>
         </div>
       )}

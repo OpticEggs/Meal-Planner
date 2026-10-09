@@ -215,7 +215,7 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
     const { lines } = eventDemand(recipe, allocations);
     for (const l of lines) {
       const ingName = input.ingredients.get(l.ingredientKey)?.name ?? l.ingredientKey.replace(/_/g, " ");
-      if (isHouseholdSeasoning(ingName)) {
+      if (isHouseholdSeasoning(ingName, l.unit)) {
         const sz = seasonings.get(l.ingredientKey) ?? { key: l.ingredientKey, name: ingName, recipes: [] };
         if (!sz.recipes.includes(recipe.title)) sz.recipes.push(recipe.title);
         seasonings.set(l.ingredientKey, sz);

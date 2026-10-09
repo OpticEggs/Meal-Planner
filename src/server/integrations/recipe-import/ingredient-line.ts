@@ -341,7 +341,7 @@ export function parseIngredientLine(raw: string): IngredientLine {
   const note = [...preNotes, ...notes].filter((n, i, all) => all.indexOf(n) === i).join("; ").slice(0, 500) || null;
   const alternatives = alternativesOf(name);
 
-  if (isHouseholdSeasoning(name) && !alternatives) {
+  if (isHouseholdSeasoning(name, amount || range ? unit : null) && !alternatives) {
     return out({
       quantity: amount ? fmt(amount, decimal) : null, unit: amount ? unit : null, name, note, status: "omitted",
       reasons: ["Household seasoning — not added to groceries"],
