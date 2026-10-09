@@ -51,6 +51,7 @@ const B5C = "tests/integration/b5.kroger-connection.test.ts";
 const B5D = "tests/integration/b5.kroger-dispatch.test.ts";
 const B7U = "tests/unit/fdc-normalize.test.ts";
 const B7I = "tests/integration/b7.nutrition.test.ts";
+const MP = "tests/integration/member-photo.test.ts";
 
 /** expect: regexes over failing test full names; at least one must fail by assertion. */
 const MUTATIONS = [
@@ -279,6 +280,11 @@ MUTATIONS.push(
   // A start-time migration (the pilot's Start Command) must never let two processes apply one file.
   { name: "MIG_no_per_migration_lock", file: "src/server/db/migrate.ts", suite: MIG, pattern: "concurrent start-time runs", expect: [/makes another wait|previous release/],
     edits: [["      await client.query(\"SELECT pg_advisory_xact_lock($1)\", [MIGRATION_LOCK_KEY]);\n      // Re-read under the lock", "      // Re-read under the lock"]] },
+);
+// A member's own recipe photo: the bytes decide the type (the declared type never does).
+MUTATIONS.push(
+  { name: "MP_unsniffed_photo_accepted", file: "src/server/recipe-photo-service.ts", suite: MP, pattern: "MP-02", expect: [/MP-02/],
+    edits: [["  const contentType = sniffImage(bytes);", "  const contentType = sniffImage(bytes) ?? \"image/png\";"]] },
 );
 // A harmless change that MUST be classified SURVIVED (proves the classifier can say so).
 const CONTROLS_LIST = [

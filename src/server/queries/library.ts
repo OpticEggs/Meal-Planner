@@ -4,6 +4,7 @@ import type { Actor } from "../commands/framework";
 import { computeProjection } from "@/domain/groceries/projection";
 import { checkRecipe } from "@/domain/planning/constraints";
 import { defaultPlate, plateNutrition } from "@/domain/recipes/plate";
+import { recipePhoto } from "@/domain/recipes/photo";
 import { convert, D } from "@/domain/units";
 import { localDate, weekStartOf } from "@/domain/dates";
 import { projectionInput } from "../groceries/recompute";
@@ -100,6 +101,10 @@ export async function librarySnapshot(actor: Actor) {
       recipes.push({
         recipeId: r.id,
         archived: !!r.archived_at,
+        // The recipe's own photo (member) first, else the version's kept source photo, else none.
+        memberPhotoId: rv.memberPhotoId ?? null,
+        photoRevision: rv.photoRevision ?? 0,
+        photo: recipePhoto(rv),
         version: {
           id: rv.id, versionNo: rv.versionNo, title: rv.title, cuisine: rv.cuisine, summary: rv.summary, effortMinutes: rv.effortMinutes, effortLevel: rv.effortLevel,
           leftoverFriendly: rv.leftoverFriendly, instructions: rv.instructions, reheatInstructions: rv.reheatInstructions, provenance: rv.provenance,

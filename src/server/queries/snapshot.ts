@@ -8,6 +8,7 @@ import { closureStale } from "@/domain/planning/operations";
 import { computeCoverage, mealsChosen } from "@/domain/planning/coverage";
 import { checkPlan } from "@/domain/planning/constraints";
 import { plateNutrition } from "@/domain/recipes/plate";
+import { recipePhoto } from "@/domain/recipes/photo";
 import { D } from "@/domain/units";
 import type { Destination, RequirementLine } from "@/domain/groceries/projection";
 import { partialReview } from "@/domain/groceries/partial-handoff";
@@ -335,6 +336,8 @@ function recipeSummary(r: import("@/domain/types").RecipeVersion) {
     effortLevel: r.effortLevel, leftoverFriendly: r.leftoverFriendly, instructions: r.instructions, reheatInstructions: r.reheatInstructions,
     provenance: r.provenance, estimate: r.estimate, sourceLabel: r.sourceLabel, components: r.components,
     sourceUrl: r.sourceUrl ?? null, sourceAuthor: r.sourceAuthor ?? null, sourceSiteName: r.sourceSiteName ?? null, imageId: r.imageId ?? null,
+    // The recipe's own photo (member) first, else the version's kept source photo, else none.
+    memberPhotoId: r.memberPhotoId ?? null, photoRevision: r.photoRevision ?? 0, photo: recipePhoto(r),
   };
 }
 

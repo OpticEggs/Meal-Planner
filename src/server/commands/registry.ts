@@ -18,6 +18,7 @@ import { addExclusionCommand, removeExclusionCommand, setTargetsCommand, updateS
 import { disconnectKrogerCommand, setKrogerLocationCommand } from "./kroger";
 import { archiveLinkCommand, saveLinkCommand } from "./sources";
 import { prepareInstacartListCommand, setShoppingDestinationCommand } from "./destinations";
+import { setRecipePhotoCommand } from "./photos";
 import { confirmImportDraftCommand, discardImportDraftCommand, pasteIngredientsCommand, updateImportDraftCommand } from "./imports";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -68,6 +69,8 @@ export const COMMANDS: Record<string, Handler> = {
   SetShoppingDestination: setShoppingDestinationCommand,
   PrepareInstacartList: (a, o, p) => prepareInstacartListCommand(a, o, p),
   ArchiveRecipe: archiveRecipeCommand,
+  // Select or remove a recipe's own photo. Uploading one is the server route /api/recipe-photos (bytes never in a command).
+  SetRecipePhoto: setRecipePhotoCommand,
   ReviewIngredient: reviewIngredientCommand,
   UpdateSettings: updateSettingsCommand,
   SetTargets: setTargetsCommand,

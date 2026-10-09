@@ -39,6 +39,11 @@ export interface RecipeVersion {
   sourceSiteName?: string | null;
   /** A photo kept under a recorded content permission (served only to the household). */
   imageId?: string | null;
+  /** Recipe-level, not part of the version (loaded with it): the member's own photo of the dish, who
+   *  added it, and the photo revision a change must name. Shown on every version, pinned ones too. */
+  memberPhotoId?: string | null;
+  memberPhotoBy?: string | null;
+  photoRevision?: number;
   estimate: boolean;
   components: RecipeComponent[];
   ingredients: RecipeIngredient[];
