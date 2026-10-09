@@ -50,7 +50,7 @@ const UNIT_SPELLINGS: Record<UnitCode, string> = {
   leaf: "leaf leaves",
   link: "link links",
   loaf: "loaf loaves",
-  package: "package packages pkg pkgs pack packs",
+  package: "package packages pkg pkgs pk pks pck pack packs",
   packet: "packet packets pkt pkts",
   piece: "piece pieces pc pcs",
   pod: "pod pods",
@@ -153,6 +153,22 @@ export const SIZE_WORDS = setOf(
  * note only when a unit follows them.
  */
 export const MEASURE_ADJECTIVES = setOf("heaping heaped scant level rounded generous good full thick thin small medium large big");
+
+/**
+ * Measure nouns that are NOT in UNIT_REGISTRY ("a drizzle of", "2 rashers", "1 dsp"): the amount is read
+ * as stated but cannot be carried without a unit, so the line needs review (`unit_unknown`).
+ */
+export const UNKNOWN_MEASURES = setOf(
+  "dsp dsps dessertspoon dessertspoons dollop dollops glug glugs drizzle drizzles squeeze squeezes rasher rashers tub tubs punnet punnets " +
+    "sachet sachets glass glasses mug mugs spoonful spoonfuls shot shots jigger jiggers cl cls centiliter centiliters centilitre centilitres " +
+    "peck pecks bushel bushels dab dabs pat pats lump lumps sliver slivers twist twists nub nubs smidgen smidgens",
+);
+
+/** Words after a number that make it a temperature or a time, never an amount ("350°F", "10 minutes"). */
+export const TIME_WORDS = setOf("minute minutes min mins hour hours hr hrs second seconds sec secs degree degrees");
+
+/** Bounds that make an amount open-ended ("up to 1 cup", "at least 2 cups"): no single amount is stated. */
+export const BOUND_PHRASES: readonly (readonly string[])[] = [["up", "to"], ["at", "least"], ["at", "most"], ["no", "more", "than"], ["not", "more", "than"], ["no", "less", "than"]];
 
 /** Length words: a size, never a unit of the registry ("2 cm piece ginger"). */
 export const LENGTH_WORDS = setOf("cm cms centimeter centimeters centimetre centimetres mm millimeter millimeters millimetre millimetres");

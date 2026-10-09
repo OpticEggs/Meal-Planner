@@ -94,7 +94,7 @@ export function splitTopLevel(toks: readonly Tok[]): Tok[][] {
   return out;
 }
 
-/** Splits a run on the word "or" (and "and/or"); empty options are kept so the caller can refuse them. */
+/** Splits a run on the word "or" (and "and/or", and a slash between words); empty options are kept so the caller can refuse them. */
 export function splitOr(toks: readonly Tok[]): Tok[][] {
   const out: Tok[][] = [[]];
   for (let i = 0; i < toks.length; i++) {
@@ -106,6 +106,11 @@ export function splitOr(toks: readonly Tok[]): Tok[][] {
     if (isWord(t, "and") && isSym(toks[i + 1], "/") && isWord(toks[i + 2], "or")) {
       out.push([]);
       i += 2;
+      continue;
+    }
+    // "butter/ghee", "chicken / vegetable stock": a slash between words offers a choice ("w/" means with)
+    if (isSym(t, "/") && isWord(toks[i - 1]) && isWord(toks[i + 1]) && !isWord(toks[i - 1], "w") && !isWord(toks[i + 1], "or")) {
+      out.push([]);
       continue;
     }
     out[out.length - 1].push(t);

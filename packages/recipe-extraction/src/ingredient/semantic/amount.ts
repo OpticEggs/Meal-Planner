@@ -16,7 +16,10 @@
 import { UNIT_REGISTRY, type EquivalentV1, type ExactQuantity, type QuantityV1, type ReasonCode, type UnitV1 } from "../../contract";
 import { add, cmp, div, fromDecimalString, mul, toExactQuantity, type Rational } from "../../rational";
 import { adjacent, isGroup, isSym, isWord, type GroupTok, type Tok } from "./lexer";
-import { APPROX_SYMBOLS, APPROX_WORDS, CARDINALS, CONTAINER_UNITS, FRACTION_WORDS, LENGTH_WORDS, MEASURE_ADJECTIVES, RANGE_DASHES, SIZE_WORDS } from "./lexicon";
+import {
+  APPROX_SYMBOLS, APPROX_WORDS, BOUND_PHRASES, CARDINALS, CONTAINER_UNITS, FORM_WORDS, FRACTION_WORDS, FUNCTION_WORDS, LENGTH_WORDS, MEASURE_ADJECTIVES,
+  RANGE_DASHES, REMARK_WORDS, SIZE_WORDS, TIME_WORDS, UNKNOWN_MEASURES,
+} from "./lexicon";
 import { readNumber, type NumberRead } from "./quantity";
 import { emptyEffects, type AmountReading, type Effects } from "./types";
 import { readUnit, type UnitRead } from "./unit";
@@ -185,10 +188,14 @@ export function placeSecondary(text: string, slots: AmountSlots, sec: Secondary)
       slots.packageSize = { quantity: q, unit: sa.unit };
       slots.packageSpan = [sa.s, sa.e];
       if (!fx.reasons.includes("package_size_stated")) fx.reasons.push("package_size_stated");
-    } else if (!(slots.packageSize.unit.canonical === sa.unit.canonical && slots.packageSize.quantity.numerator === q.numerator && slots.packageSize.quantity.denominator === q.denominator)) {
-      fx.unassigned++;
+      return;
     }
-    return;
+    const same = slots.packageSize.quantity.numerator === q.numerator && slots.packageSize.quantity.denominator === q.denominator;
+    if (slots.packageSize.unit.canonical === sa.unit.canonical) {
+      if (!same) fx.unassigned++;
+      return;
+    }
+    // "1 (12 oz) package frozen peas (about 2 cups)": the contents restated in another unit
   }
   if (main !== null && main.canonical === sa.unit.canonical && slots.quantity?.kind === "exact") {
     if (!(slots.quantity.numerator === q.numerator && slots.quantity.denominator === q.denominator)) fx.unassigned++;
@@ -260,8 +267,18 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
       j++;
     } else break;
   }
+  // "up to 1 cup", "at least 2 cups": an open-ended amount — no single amount is stated
+  let bound: number | null = null;
+  for (const seq of BOUND_PHRASES) {
+    if (seq.every((w, q) => isWord(toks[j + q], w)) && readNumber(toks, j + seq.length)) {
+      bound = toks[j].s;
+      j += seq.length;
+      break;
+    }
+  }
   const n1 = readNumber(toks, j);
   if (!n1) return null;
+  if (isTemperatureOrTime(toks, n1.next)) return null; // "350°F", "10 minutes" are not amounts
 
   let qStart = n1.s;
   let qEnd = n1.e;
@@ -371,6 +388,25 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
     }
   }
 
+  // "a drizzle of olive oil", "2 rashers bacon", "1 dsp sugar", "1 leg of lamb": a measure word that is not
+  // a registry unit. The amount cannot be carried without its unit: it is kept in the note, not invented.
+  if (!unitRead && n1.ok && max === null && between.length === 0) {
+    const w = toks[k];
+    const known = isWord(w) && UNKNOWN_MEASURES.has(w.lower);
+    const beforeOf = isWord(w) && isWord(toks[k + 1], "of") && toks[k + 2] !== undefined && !isWord(toks[k + 2], "the") && isPlainNoun(w.lower);
+    if (known || beforeOf) {
+      let c = k + 1;
+      if (isSym(toks[c], ".") && adjacent(toks[c - 1], toks[c])) c++;
+      fx.notes.push({ s: n1.s, text: text.slice(n1.s, toks[c - 1].e) });
+      fx.reasons.push("unit_unknown");
+      if (isWord(toks[c], "of")) c++;
+      return {
+        quantity: null, quantitySpan: null, amountWritten: true, unit: null, unitSpan: null, packageSize: null, packageSpan: null, equivalents: [],
+        approximate, fromWord: false, effects: fx, next: c,
+      };
+    }
+  }
+
   const parts: Part[] = [];
   if (unitRead && n1.ok) parts.push({ value: n1.value, decimal: n1.decimal, unit: unitRead });
 
@@ -443,6 +479,12 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
     quantity = exactOf(n1.value, n1.decimal);
     if (quantity === null) fx.reasons.push(outOfBoundsReason(n1.value));
   }
+  if (bound !== null) {
+    // the bound and its number are kept as a note; no amount is given
+    fx.notes.push({ s: bound, text: text.slice(bound, qEnd) });
+    if (quantity !== null) fx.reasons.push("quantity_range");
+    quantity = null;
+  }
   if (unit === null && quantity !== null) unit = { canonical: "each", dimension: "count", source: "" };
   slots.quantity = quantity;
   slots.unit = unitRead ? unitRead.unit : null;
@@ -498,6 +540,17 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
     effects: fx,
     next: k,
   };
+}
+
+/** True when the number ending before `k` is a temperature or a time ("350°F", "350 degrees", "10 minutes"). */
+export function isTemperatureOrTime(toks: readonly Tok[], k: number): boolean {
+  const t = toks[k];
+  return isSym(t, "°", "℉", "℃") || (isWord(t) && TIME_WORDS.has(t.lower));
+}
+
+/** A word that can be a measure noun before "of" (not a size, form, remark or function word). */
+function isPlainNoun(w: string): boolean {
+  return !SIZE_WORDS.has(w) && !MEASURE_ADJECTIVES.has(w) && !REMARK_WORDS.has(w) && !FUNCTION_WORDS.has(w) && !Object.prototype.hasOwnProperty.call(FORM_WORDS, w) && w !== "each";
 }
 
 /** Exact sum of amounts in related units (same dimension, mass or volume), in the smallest stated unit. */

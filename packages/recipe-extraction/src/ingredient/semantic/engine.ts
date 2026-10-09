@@ -224,7 +224,7 @@ function read(input: unknown): Reading {
         const rest = tails[0].slice(a.next);
         if (rest.length > 0) {
           const restFx = emptyEffects();
-          const nr = readNameRegion(rest, { text, slots: null, unitWritten: true, hasQuantity: false, dropLeadingOf: true }, restFx);
+          const nr = readNameRegion(rest, { text, slots: null, unitWritten: true, hasQuantity: false, dropLeadingOf: true, sizeWordsAreNotes: true }, restFx);
           // what follows the amount ("3 medium" → medium) is a remark on the named food
           if (nr.name) restFx.notes.push({ s: rest[0].s, text: nr.name });
           mergeEffects(fx, restFx);
@@ -290,6 +290,7 @@ function read(input: unknown): Reading {
   const hasQuantity = amt.quantity !== null;
   const nr: NameReading = readNameRegion(region, {
     text, slots: amount ? slots : null, unitWritten: amt.unitSpan !== null, hasQuantity, dropLeadingOf: amount !== null && !nameFromLabel,
+    sizeWordsAreNotes: amt.unitSpan === null || amt.unit?.dimension === "count",
   }, fx);
   let unit: UnitV1 | null = amt.unit;
   let unitSpan = amt.unitSpan;
@@ -436,9 +437,10 @@ function read(input: unknown): Reading {
   if (alternatives.length >= 2) push(all, "ingredient_alternatives");
   if (fx.unassigned > 0) push(all, "quantity_unassigned");
   if (unclassified) push(all, "unclassified");
-  if (quantity === null && amountUnstated === null && !all.some((r) => r === "quantity_not_positive" || r === "quantity_invalid" || r === "quantity_implausible" || r === "number_format_ambiguous" || r === "quantity_missing")) {
-    push(all, "quantity_missing");
-  }
+  // No amount and nothing that says why: quantity_missing (an amount that was written but refused, open-ended or
+  // without a known unit already has its own reason).
+  const explained: ReasonCode[] = ["quantity_not_positive", "quantity_invalid", "quantity_implausible", "number_format_ambiguous", "quantity_missing", "quantity_range", "unit_unknown"];
+  if (quantity === null && amountUnstated === null && !all.some((r) => explained.includes(r))) push(all, "quantity_missing");
   if (name === null && alternatives.length === 0) push(all, "name_missing");
   if (quantity === null && amountUnstated !== null) push(all, "amount_unstated");
   if (fx.optional) push(all, "optional_ingredient");

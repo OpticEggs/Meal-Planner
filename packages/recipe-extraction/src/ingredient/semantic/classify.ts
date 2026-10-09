@@ -7,14 +7,22 @@ import type { ReasonCode } from "../../contract";
 import { hasNumber, isGroup, isNumberish, isSym, isWord, type Tok } from "./lexer";
 import { APPROX_SYMBOLS, APPROX_WORDS, CARDINALS, HEADING_WORDS, INSTRUCTION_VERBS, NOTE_LABELS, YIELD_WORDS } from "./lexicon";
 import { findUnstated } from "./remarks";
+import { isTemperatureOrTime } from "./amount";
 
 /** True when the line opens with a numeral, a vulgar fraction or a cardinal/fraction word (after "about", "~"). */
 export function numericLead(toks: readonly Tok[]): boolean {
   let i = 0;
   while ((isWord(toks[i]) && APPROX_WORDS.has((toks[i] as { lower: string }).lower)) || (isSym(toks[i]) && APPROX_SYMBOLS.has((toks[i] as { text: string }).text))) i++;
   const t = toks[i];
-  if (isNumberish(t)) return true;
+  if (isNumberish(t)) return !temperatureOrTimeAt(toks, i);
   return isWord(t) && (Object.prototype.hasOwnProperty.call(CARDINALS, t.lower) || t.lower === "half");
+}
+
+/** The number at `i` is a temperature or a time ("350°F", "10 minutes"), possibly a written fraction or range. */
+function temperatureOrTimeAt(toks: readonly Tok[], i: number): boolean {
+  let k = i;
+  while (k < toks.length && (isNumberish(toks[k]) || isSym(toks[k], "/", "-", "–", "."))) k++;
+  return isTemperatureOrTime(toks, k);
 }
 
 const words = (toks: readonly Tok[]) => toks.filter((t) => t.kind === "word") as { lower: string; text: string }[];
@@ -43,8 +51,12 @@ function hasUrl(toks: readonly Tok[]): boolean {
 export function nonIngredientReason(toks: readonly Tok[]): ReasonCode | null {
   if (toks.length === 0) return "empty_line";
   if (!toks.some((t) => t.kind === "word" || isNumberish(t) || (isGroup(t) && (wordCount(t.children) > 0 || hasNumber(t.children))))) return "not_an_ingredient";
+  if (isNumberish(toks[0]) && temperatureOrTimeAt(toks, 0)) return "not_an_ingredient"; // "350°F oven", "10 minutes"
   if (numericLead(toks)) return null;
   if (hasUrl(toks)) return "not_an_ingredient";
+  // "Oven: 350°F", "Prep time: 10 minutes"
+  const colon = toks.findIndex((t) => isSym(t, ":"));
+  if (colon > 0 && isNumberish(toks[colon + 1]) && temperatureOrTimeAt(toks, colon + 1)) return "not_an_ingredient";
 
   const ws = words(toks);
   const first = ws[0];
@@ -53,6 +65,8 @@ export function nonIngredientReason(toks: readonly Tok[]): ReasonCode | null {
   if (isSym(last, ":")) return "section_heading"; // "For the sauce:", "Marinade:"
   if (isSym(toks[0], "#")) return "section_heading";
   if (first && HEADING_WORDS.has(first.lower) && !hasNumber(toks)) return "section_heading";
+  const lastWord = ws[ws.length - 1];
+  if (lastWord && HEADING_WORDS.has(lastWord.lower) && ws.length <= 4 && !hasNumber(toks) && !toks.some(isGroup)) return "section_heading"; // "Dry ingredients"
   const noComma = !toks.some((t) => isSym(t, ",", ";"));
   if (first && first.lower === "for" && noComma && !hasNumber(toks) && wordCount(toks) <= 6 && findUnstated(toks)?.at !== 0) return "section_heading";
   const letters = ws.map((w) => w.text).join("");

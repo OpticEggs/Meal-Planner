@@ -29,6 +29,11 @@ export interface NameContext {
   hasQuantity: boolean;
   /** The amount phrase ended with a unit or an amount word, so a leading "of" belongs to it. */
   dropLeadingOf: boolean;
+  /**
+   * Size words describe counted items ("2 large eggs", "1 medium onion") and go to the note; after a mass
+   * or volume unit they usually name a product ("1 cup small curd cottage cheese") and stay in the name.
+   */
+  sizeWordsAreNotes: boolean;
 }
 
 export interface NameReading {
@@ -75,6 +80,13 @@ function stopAtNumber(text: string, toks: readonly Tok[], fx: Effects): Tok[] {
       continue;
     }
     const glued = adjacent(toks[i - 1], t) && isWord(toks[i - 1]); // "V8"
+    // a lean-to-fat ratio ("80/20 ground beef") is part of the product
+    const den = toks[i + 2];
+    if (t.kind === "num" && t.form === "int" && isSym(toks[i + 1], "/") && den?.kind === "num" && den.form === "int" && adjacent(t, toks[i + 1]) && adjacent(toks[i + 1], den) && Number(t.text) + Number(den.text) === 100) {
+      kept.push(t, toks[i + 1], den);
+      i += 2;
+      continue;
+    }
     if (isSym(toks[i - 1], '"', "'", "“", "‘") && adjacent(toks[i - 1], t)) {
       kept.push(t); // a quoted grade ('"00" flour')
       continue;
@@ -143,7 +155,7 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
         continue;
       }
     }
-    const size = isSizeWordAt(toks, a);
+    const size = ctx.sizeWordsAreNotes ? isSizeWordAt(toks, a) : 0;
     if (size > 0) {
       fx.notes.push({ s: toks[a].s, text: text.slice(toks[a].s, toks[a + size - 1].e) });
       a += size;
