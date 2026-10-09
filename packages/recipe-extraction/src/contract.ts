@@ -151,7 +151,7 @@ export interface PackageSizeV1 {
   unit: UnitV1; // mass or volume only
 }
 
-/** The same amount restated in another unit ("1 cup (120 g) flour" → 120 g). Not used for arithmetic. */
+/** The same amount restated in another unit — mass, volume or a count ("1 cup (120 g) flour" → 120 g; "1/2 cup (1 stick)" → 1 stick). Never an imprecise unit. Not used for arithmetic. */
 export interface EquivalentV1 {
   quantity: ExactQuantity;
   unit: UnitV1;
