@@ -24,7 +24,8 @@ export interface BenchReport {
   schema: typeof REPORT_SCHEMA;
   package: { name: string; version: string };
   contract: string;
-  selection: { split: Split | "all"; case: string | null; pages: boolean };
+  /** `all` = dev + holdout (Phase 1); `every` = dev + holdout + holdout2. */
+  selection: { split: Split | "all" | "every"; case: string | null; pages: boolean };
   corpus: { files: CorpusFile[]; ingredientCases: Partial<Record<Split, number>>; pages: Partial<Record<Split, number>> };
   freeze: { verified: boolean; problems: string[] };
   ingredientEngines: IngredientScore[];
@@ -239,6 +240,30 @@ function outcomeGroupTable(groups: [string, OutcomeAggregate | undefined][]): st
   return out;
 }
 
+/** Pre-registered sensitivity figures of one set — clearly labelled as information only. */
+function sensitivityMarkdown(s: OutcomeSetReport): string[] {
+  const z = s.sensitivity;
+  const out = [`##### Sensitivity — ${s.status} (${z.note})`, ""];
+  if (z.excludingDebatable) {
+    const d = z.excludingDebatable;
+    out.push(
+      `A1–A5 recomputed without the pre-registered debatable case(s) ${d.excludedIds.join(", ") || "(none present)"} (${d.lines} lines). The acceptance decision above uses every case.`,
+      "",
+      "| # | Evidence | Status (informational) |",
+      "|---|---|---|",
+    );
+    for (const c of d.acceptance.criteria.slice(0, 5)) out.push(`| ${c.id} | ${cell(Object.entries(c.evidence).map(([k, r]) => `${k} ${brief(r)}`).join("; "))} | ${c.status} |`);
+    out.push("");
+  }
+  const n = z.needsReviewExcludingBareFoods;
+  out.push(
+    `needs_review labels without bare foods with no amount (only quantity_missing and/or seasoning tags): ${n.excluded} excluded${n.excluded > 0 ? ` (${idList(n.excludedIds)})` : ""}, ${n.needsReview} kept — ` +
+      `C5 ${brief(n.C5)} · C5a ${fraction(n.C5a)} · C5b ${fraction(n.C5b)} · C5c ${fraction(n.C5c)} · C5x ${fraction(n.C5x)} · C6 ${brief(n.C6)} · S4 ${brief(n.S4)}.`,
+    "",
+  );
+  return out;
+}
+
 /** The "Outcomes (EVALUATION-PLAN-v2)" Markdown section. Deterministic. */
 export function outcomesMarkdown(section: OutcomesSection): string[] {
   const out: string[] = [];
@@ -292,6 +317,7 @@ export function outcomesMarkdown(section: OutcomesSection): string[] {
         }
         out.push("", `A1 (point) and A2–A5 all met: **${s.acceptance.a1ToA5Met ? "yes" : "no"}** (A6/A7 are recorded outside the scorer).`, "");
       }
+      out.push(...sensitivityMarkdown(s));
     }
   }
   return out;

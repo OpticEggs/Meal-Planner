@@ -5,9 +5,9 @@
  * split, with the acceptance checks on holdout-v2.
  */
 import { describe, expect, it } from "vitest";
-import { outcomeControlEngines } from "../controls";
+import { engineFromLabels, outcomeControlEngines } from "../controls";
 import { loadIngredientCases } from "../labels";
-import { engineOutcomes, type EngineOutcomes, type OutcomeSetReport, type SevereCode } from "../outcomes";
+import { DEBATABLE_CASES, engineOutcomes, type EngineOutcomes, type OutcomeSetReport, type SevereCode } from "../outcomes";
 import { normalizeText } from "../compare";
 import { SPLITS, parseLabelQuantity, type IngredientCase, type Split } from "../types";
 import { FIXTURES } from "./helpers";
@@ -182,6 +182,36 @@ describe("saboteurs trip their class or code on exactly the lines they touch", (
       expect(a.anySevere.num, s).toBe(0);
     }
     expect(statusOf(e, "A5")).toBe("not met");
+  });
+
+  it("sensitivity: a saboteur that only reads the debatable case's 'cups' as volume fails A3/A4, which pass without the debatable cases (informational)", () => {
+    const e = engineOutcomes(
+      cases,
+      engineFromLabels("control:debatable-cup", "ing-h2-0087 read as volume cups", cases, (r, c) =>
+        DEBATABLE_CASES.includes(c.id) ? { ...r, unit: { canonical: "cup", dimension: "volume", source: "cups" } } : r),
+    );
+    const h = e.sets.holdout2!;
+    expect(h.caseIds.S3).toEqual([...DEBATABLE_CASES]);
+    expect(statusOf(e, "A3")).toBe("not met");
+    expect(statusOf(e, "A4")).toBe("not met");
+    const d = h.sensitivity.excludingDebatable!;
+    expect(d.excludedIds).toEqual([...DEBATABLE_CASES]);
+    expect(d.acceptance.criteria.slice(0, 5).map((c) => c.status)).toEqual(["met with confidence", "met with confidence", "met", "met", "met"]);
+  });
+
+  it("sensitivity: needs_review figures without bare foods leave out exactly the needs_review labels tagged only quantity_missing/seasoning", () => {
+    const e = run("readyOnNeedsReview");
+    const bare = (c: IngredientCase) => c.expect.status === "needs_review" && c.categories.every((t) => ["quantity_missing", "seasoning_ordinary", "seasoning_lookalike"].includes(t));
+    for (const s of SPLITS) {
+      const n = e.sets[s]!.sensitivity.needsReviewExcludingBareFoods;
+      expect(n.excludedIds, s).toEqual(ids(bare, s));
+      expect(n.needsReview + n.excluded, s).toBe(e.sets[s]!.aggregate.needsReview);
+      expect(n.S4.num, s).toBe(n.needsReview);
+      expect(n.C5.num, s).toBe(0);
+    }
+    expect(e.sets.holdout2!.sensitivity.needsReviewExcludingBareFoods.excluded).toBeGreaterThanOrEqual(15);
+    const o = run("oracle").sets.holdout2!.sensitivity.needsReviewExcludingBareFoods;
+    expect(o.C5a.num).toBe(o.needsReview);
   });
 
   it("every saboteur is distinguishable from the oracle on holdout-v2", () => {

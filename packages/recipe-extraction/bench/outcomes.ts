@@ -409,6 +409,70 @@ export const SET_STATUS: Record<Split, string> = {
   holdout2: "holdout-v2 (fresh)",
 };
 
+// --- Pre-registered sensitivity figures (coordinator adjudication 2026-10-09) -----------------------
+
+/**
+ * holdout-v2 cases pre-registered as debatable before any candidate was evaluated. The acceptance
+ * decision stays on ALL holdout-v2 cases; A1–A5 without these are reported as information only.
+ */
+export const DEBATABLE_CASES: readonly string[] = ["ing-h2-0087"];
+/** A needs_review label whose only category tags are among these is a bare food with no amount. */
+export const BARE_FOOD_TAGS: readonly Category[] = ["quantity_missing", "seasoning_ordinary", "seasoning_lookalike"];
+export const SENSITIVITY_NOTE = "informational, not the acceptance basis" as const;
+
+export const isBareFoodNeedsReview = (x: LineOutcome) =>
+  x.labelStatus === "needs_review" && x.categories.length > 0 && x.categories.every((c) => BARE_FOOD_TAGS.includes(c));
+
+export interface NeedsReviewSensitivity {
+  /** needs_review-labelled lines left out: only quantity_missing and/or seasoning tags (bare foods, no amount). */
+  excludedIds: string[];
+  excluded: number;
+  /** needs_review-labelled lines kept (the denominator below). */
+  needsReview: number;
+  /** Of the kept needs_review lines. */
+  C5: Rate;
+  C5a: Rate;
+  C5b: Rate;
+  C5c: Rate;
+  C5x: Rate;
+  C6: Rate;
+  S4: Rate;
+}
+
+export interface Sensitivity {
+  note: typeof SENSITIVITY_NOTE;
+  /** holdout2 only: A1–A5 recomputed without DEBATABLE_CASES. */
+  excludingDebatable: { excludedIds: string[]; lines: number; acceptance: AcceptanceReport } | null;
+  needsReviewExcludingBareFoods: NeedsReviewSensitivity;
+}
+
+export function sensitivity(set: Split, lines: readonly LineOutcome[]): Sensitivity {
+  const bare = lines.filter(isBareFoodNeedsReview);
+  const kept = lines.filter((x) => x.labelStatus === "needs_review" && !isBareFoodNeedsReview(x));
+  const k = aggregate(kept);
+  let excludingDebatable: Sensitivity["excludingDebatable"] = null;
+  if (set === "holdout2") {
+    const rest = lines.filter((x) => !DEBATABLE_CASES.includes(x.id));
+    excludingDebatable = { excludedIds: lines.filter((x) => DEBATABLE_CASES.includes(x.id)).map((x) => x.id), lines: rest.length, acceptance: acceptance(aggregate(rest)) };
+  }
+  return {
+    note: SENSITIVITY_NOTE,
+    excludingDebatable,
+    needsReviewExcludingBareFoods: {
+      excludedIds: bare.map((x) => x.id),
+      excluded: bare.length,
+      needsReview: kept.length,
+      C5: k.outcomes.C5,
+      C5a: k.outcomes.C5a,
+      C5b: k.outcomes.C5b,
+      C5c: k.outcomes.C5c,
+      C5x: k.outcomes.C5x,
+      C6: k.outcomes.C6,
+      S4: k.severe.S4,
+    },
+  };
+}
+
 export interface OutcomeSetReport {
   set: Split;
   status: string;
@@ -417,8 +481,10 @@ export interface OutcomeSetReport {
   byCategory: Partial<Record<Category, OutcomeAggregate>>;
   /** holdout2 only (per provenance source), else null. */
   bySourceKind: Partial<Record<ProvenanceKind, OutcomeAggregate>> | null;
-  /** holdout2 only, else null. */
+  /** holdout2 only, else null. The acceptance basis: every holdout-v2 case. */
   acceptance: AcceptanceReport | null;
+  /** Pre-registered sensitivity figures — informational, not the acceptance basis. */
+  sensitivity: Sensitivity;
 }
 
 export interface EngineOutcomes {
@@ -456,7 +522,16 @@ export function setReport(set: Split, lines: readonly LineOutcome[]): OutcomeSet
     }
   }
   const agg = aggregate(lines);
-  return { set, status: SET_STATUS[set], aggregate: agg, caseIds: caseIds(lines), byCategory, bySourceKind, acceptance: set === "holdout2" ? acceptance(agg) : null };
+  return {
+    set,
+    status: SET_STATUS[set],
+    aggregate: agg,
+    caseIds: caseIds(lines),
+    byCategory,
+    bySourceKind,
+    acceptance: set === "holdout2" ? acceptance(agg) : null,
+    sensitivity: sensitivity(set, lines),
+  };
 }
 
 /** Outcomes of one engine on every set present in `cases` (per set; sets are never pooled). */

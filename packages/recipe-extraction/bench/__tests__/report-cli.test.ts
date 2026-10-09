@@ -8,12 +8,9 @@ import { controlEngines, oraclePageExtractor } from "../controls";
 import { ENGINES_UNAVAILABLE, EnginesUnavailableError, availableIngredientEngines, pageExtractor } from "../engines";
 import { loadIngredientCases, loadPageLabels } from "../labels";
 import { renderMarkdown } from "../report";
-import { rate } from "../stats";
-import { SPLITS } from "../types";
 import { FIXTURES } from "./helpers";
 
-// All splits (dev, holdout-v1, holdout-v2): the default `--split all` run now includes holdout-v2.
-const cases = loadIngredientCases(FIXTURES, SPLITS);
+const cases = loadIngredientCases(FIXTURES);
 const pages = loadPageLabels(FIXTURES);
 const ctl = controlEngines(cases);
 
@@ -68,7 +65,7 @@ describe("report determinism", () => {
     expect(report.package).toEqual({ name: "@table/recipe-extraction", version: "0.1.0" });
     expect(report.contract).toBe("recipe-extraction/v1");
     expect(report.ingredientEngines.map((e: { engine: { id: string } }) => e.engine.id)).toEqual(["control:oracle", "control:oz-swap", "control:rounded-third"]);
-    expect(report.corpus.ingredientCases).toEqual({ dev: 182, holdout: 128, holdout2: cases.filter((c) => c.split === "holdout2").length });
+    expect(report.corpus.ingredientCases).toEqual({ dev: 182, holdout: 128 });
     const files = report.corpus.files.map((f: { path: string }) => f.path);
     expect(files).toContain("fixtures/ingredients/holdout.jsonl");
     expect(files).toContain("fixtures/pages/labels.json");
@@ -79,9 +76,8 @@ describe("report determinism", () => {
     expect(report.pages[0].requestedIngredientEngine).toBeNull();
     // Per-split figures are always present, with numerators and denominators.
     const oracle = report.ingredientEngines[0];
-    expect(Object.keys(oracle.splits)).toEqual(["dev", "holdout", "holdout2"]);
-    expect(oracle.splits.dev.metrics.corePass.all.strict.num + oracle.splits.holdout.metrics.corePass.all.strict.num).toBe(310);
-    expect(oracle.overall.metrics.corePass.all.strict).toEqual({ num: cases.length, den: cases.length, rate: 1, ci95: rate(cases.length, cases.length).ci95 });
+    expect(Object.keys(oracle.splits)).toEqual(["dev", "holdout"]);
+    expect(oracle.overall.metrics.corePass.all.strict).toEqual({ num: 310, den: 310, rate: 1, ci95: [0.9878, 1] });
   });
 
   it("the JSON written to --out-json is the deterministic text; the Markdown carries timing in its own section", async () => {

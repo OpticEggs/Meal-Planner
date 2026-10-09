@@ -101,10 +101,14 @@ for them was looked up. It is never shown to the implementation worker.
   product variety (`(red or green)`) is a choice of ingredients; `Juice of 2 limes` / `Zest of ½ orange` →
   the fruit counted, the part used in the note (juice/zest names accepted); a container written with a unit
   word (`3 (5.3 oz) cups … yogurt`) is a `container`; `2 x 400 g cans` is package-size form 1.
-- Scoring: `npx tsx bench/cli.ts --split holdout2` (also part of `--split all`). Besides the CONTRACT §9
-  figures, every report has an "Outcomes (EVALUATION-PLAN-v2)" section (`bench/outcomes.ts`): one class per
-  line (C1–C8), the severe errors S1–S8, per set / category / source kind, and on holdout-v2 the Gate G2
-  criteria A1–A5. Until `FREEZE-v2.json` exists the report says holdout-v2 is **not frozen**.
+- Scoring is **opt-in**: `npx tsx bench/cli.ts --split holdout2`, or `--split every` (dev + holdout-v1 +
+  holdout-v2). The default `--split all` is dev + holdout-v1 exactly as in Phase 1, so a plain `npm run bench`
+  never scores holdout-v2. Besides the CONTRACT §9 figures, every report has an "Outcomes (EVALUATION-PLAN-v2)"
+  section (`bench/outcomes.ts`): one class per line (C1–C8), the severe errors S1–S8, per set / category /
+  source kind, and on holdout-v2 the Gate G2 criteria A1–A5 over **all** holdout-v2 cases. Pre-registered
+  sensitivity figures follow, labelled "informational, not the acceptance basis": A1–A5 without the debatable
+  cases in `DEBATABLE_CASES` (`ing-h2-0087`), and the needs_review figures without bare foods with no amount.
+  Until `FREEZE-v2.json` exists the report says holdout-v2 is **not frozen**.
 - Freeze (after the label check and adjudication, EVALUATION-PLAN-v2 §8.1): print the record with
   `npx tsx bench/cli.ts --print-freeze-v2 <YYYY-MM-DD>`, save it as `FREEZE-v2.json`, add that file to
   `MANIFEST.json` (kind `freeze_record`), and commit it on its own. From then on every run verifies it.

@@ -19,7 +19,7 @@ import { engineOutcomes, memoizeEngine, outcomesSection, type EngineOutcomes } f
 import { buildReport, renderMarkdown, reportJson, type BenchReport, type CorpusFile, type PageRun, type TimingEntry } from "./report";
 import { scoreIngredients, scorePages, type IngredientScore } from "./score";
 import { fraction } from "./stats";
-import { PAGE_SPLITS, SPLITS, type IngredientCase, type PageLabel, type Split } from "./types";
+import { PAGE_SPLITS, SPLITS, V1_SPLITS, type IngredientCase, type PageLabel, type Split } from "./types";
 
 export const PACKAGE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const FIXTURES_DIR = path.join(PACKAGE_ROOT, "fixtures");
@@ -28,9 +28,10 @@ export const USAGE = `Recipe extraction benchmark (local fixtures only; no netwo
 
 Usage: tsx bench/cli.ts [options]
   --engine <id>          ingredient engine to score (repeatable; default: every registered engine)
-  --split dev|holdout|holdout2|all
-                         cases to score (default all = dev, holdout-v1 and holdout-v2; per-split
-                         figures are always reported; outcomes are never pooled across sets)
+  --split dev|holdout|holdout2|all|every
+                         cases to score (default all = dev + holdout-v1, as in Phase 1; holdout-v2 is
+                         opt-in only: holdout2 alone, or every = dev + holdout-v1 + holdout-v2;
+                         per-split figures are always reported; outcomes are never pooled across sets)
   --pages                also score the synthetic recipe pages with extractRecipePage
   --case <id>            score one ingredient case or page and print its details
   --out-json <file>      write the deterministic JSON report
@@ -42,9 +43,19 @@ Usage: tsx bench/cli.ts [options]
 
 export class UsageError extends Error {}
 
+/** `all` = the Phase 1 splits (dev + holdout); `every` adds holdout2. holdout2 is never scored by default. */
+export type SplitSelection = Split | "all" | "every";
+
+/** The splits a selection scores. */
+export function splitsFor(selection: SplitSelection): Split[] {
+  if (selection === "all") return [...V1_SPLITS];
+  if (selection === "every") return [...SPLITS];
+  return [selection];
+}
+
 export interface CliOptions {
   engines: string[];
-  split: Split | "all";
+  split: SplitSelection;
   pages: boolean;
   caseId: string | null;
   outJson: string | null;
@@ -70,8 +81,8 @@ export function parseArgs(argv: readonly string[]): CliOptions {
         break;
       case "--split": {
         const v = value();
-        if (v !== "all" && !(SPLITS as readonly string[]).includes(v)) throw new UsageError(`--split must be dev, holdout, holdout2 or all (got ${v})`);
-        o.split = v as Split | "all";
+        if (v !== "all" && v !== "every" && !(SPLITS as readonly string[]).includes(v)) throw new UsageError(`--split must be dev, holdout, holdout2, all or every (got ${v})`);
+        o.split = v as SplitSelection;
         break;
       }
       case "--pages":
@@ -199,7 +210,7 @@ export async function run(opts: CliOptions, deps: RunDeps): Promise<RunResult> {
     return noReport(1);
   }
 
-  const splits: Split[] = opts.split === "all" ? [...SPLITS] : [opts.split];
+  const splits: Split[] = splitsFor(opts.split);
   let cases: IngredientCase[];
   let pages: PageLabel[] = [];
   try {

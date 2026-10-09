@@ -298,6 +298,42 @@ describe("acceptance statuses (§6)", () => {
   });
 });
 
+describe("pre-registered sensitivity figures (informational, not the acceptance basis)", () => {
+  const yogurt = mk("3 (5.3 oz) cups vanilla Greek yogurt", { name: "vanilla Greek yogurt", quantity: "3", unit: "container", packageSize: { quantity: "5 3/10", unit: "oz" } }, { id: "ing-h2-0087" });
+  const bareSalt = mk("sea salt", { status: "needs_review", name: "sea salt" }, { categories: ["quantity_missing", "seasoning_ordinary"] });
+  const bareFood = mk("vanilla ice cream", { status: "needs_review", name: "vanilla ice cream" }, { categories: ["quantity_missing"] });
+  const notBare = mk("large eggs", { status: "needs_review", name: "eggs", note: "large" }, { categories: ["quantity_missing", "size_word"] });
+  const lines = [
+    one(flour, read(flour)),
+    one(yogurt, read(yogurt, { unit: u("cup", "volume", "cups") })), // the debatable reading: S3, C2 high
+    one(bareSalt, read(bareSalt, { status: "ready", amountUnstated: "to_taste", reasons: [] })), // S4 on a bare food
+    one(bareFood, read(bareFood, { name: null })), // C5c
+    one(notBare, read(notBare)), // C5a
+    one(range, read(range, { status: "unsupported", name: null, quantity: null, unit: null, reasons: ["not_an_ingredient"] })), // C6
+  ];
+
+  it("lists the debatable cases in a constant and recomputes A1–A5 without them on holdout2 only", () => {
+    const s = setReport("holdout2", lines);
+    expect(s.sensitivity.note).toBe("informational, not the acceptance basis");
+    expect(s.acceptance!.criteria.find((c) => c.id === "A4")!.status).toBe("not met");
+    const d = s.sensitivity.excludingDebatable!;
+    expect(d.excludedIds).toEqual(["ing-h2-0087"]);
+    expect(d.lines).toBe(lines.length - 1);
+    expect(d.acceptance.criteria.find((c) => c.id === "A3")!.status).toBe("not met"); // the bare-food S4 line is still there
+    expect(d.acceptance.criteria.find((c) => c.id === "A4")!.evidence.S3.num).toBe(0);
+    expect(setReport("dev", lines).sensitivity.excludingDebatable).toBeNull();
+  });
+
+  it("reports needs_review figures without bare foods (only quantity_missing and/or seasoning tags), with counts", () => {
+    const n = setReport("holdout2", lines).sensitivity.needsReviewExcludingBareFoods;
+    expect(n.excludedIds).toEqual([bareSalt.id, bareFood.id]);
+    expect([n.excluded, n.needsReview]).toEqual([2, 2]);
+    expect([n.C5.num, n.C5.den, n.C5a.num, n.C5c.num, n.C6.num, n.S4.num, n.S4.den]).toEqual([1, 2, 1, 0, 1, 0, 2]);
+    const all = setReport("holdout2", lines).aggregate;
+    expect([all.outcomes.C5.num, all.outcomes.C5.den, all.outcomes.C5c.num, all.severe.S4.num]).toEqual([2, 4, 1, 1]);
+  });
+});
+
 describe("engine plumbing", () => {
   it("memoizeEngine parses each input once and replays results and errors", () => {
     let calls = 0;

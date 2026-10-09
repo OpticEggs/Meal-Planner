@@ -7,11 +7,13 @@ import { readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { TABLE_TEST_LITERALS } from "../../tests/parity/table-test-literals";
-import { parseArgs, run, type RunDeps } from "../cli";
-import { outcomeControlEngines } from "../controls";
+import { parseArgs, run, splitsFor, type RunDeps } from "../cli";
+import { compareIngredient } from "../compare";
+import { labelToReading, outcomeControlEngines } from "../controls";
 import { FREEZE_V2_FILE, FREEZE_V2_RULE, computeFreezeV2, freezeV2Status, verifyFreezeV2 } from "../freeze";
 import { checkInvariants } from "../invariants";
 import { LabelValidationError, loadIngredientCases, parseIngredientJsonl } from "../labels";
+import { DEBATABLE_CASES } from "../outcomes";
 import { renderMarkdown } from "../report";
 import { CATEGORIES, SPLITS, V1_SPLITS } from "../types";
 import { copyFixtures, FIXTURES } from "./helpers";
@@ -126,6 +128,50 @@ describe("source and construction fields", () => {
   });
 });
 
+describe("pre-freeze adjudication (2026-10-09)", () => {
+  const byId = (id: string) => v2.find((c) => c.id === id)!;
+
+  it("accept.note may hold null (no note): the merged names of 0212/0213 pass the note field too", () => {
+    for (const [id, name] of [["ing-h2-0212", "lime juice"], ["ing-h2-0213", "orange zest"]]) {
+      const c = byId(id);
+      expect(c.accept.note, id).toContain(null);
+      const r = compareIngredient(c, { ...labelToReading(c), name, note: null });
+      expect(r.fields.name, id).toEqual({ strict: false, accepted: true });
+      expect(r.fields.note, id).toEqual({ strict: false, accepted: true });
+      expect(r.fullPass.accepted, id).toBe(true);
+    }
+    const line = JSON.parse(readFileSync(path.join(FIXTURES, "ingredients/holdout-v2.jsonl"), "utf8").split("\n")[0]);
+    const check = (accept: unknown) => {
+      try {
+        parseIngredientJsonl(JSON.stringify({ ...line, accept }) + "\n", "holdout2", "t.jsonl");
+        return "";
+      } catch (e) {
+        return (e as LabelValidationError).errors.join("\n");
+      }
+    };
+    expect(check({ note: [null] })).toBe("");
+    expect(check({ note: [null, "chopped"] })).toBe("");
+    expect(check({ note: [3] })).toMatch(/accept\.note: must be a non-empty array of strings or null/);
+    expect(check({ name: [null] })).toMatch(/accept\.name: must be a non-empty array of non-empty strings/);
+  });
+
+  it("'ground' is a product form: bare 'black pepper' is not accepted on 0204/0322/0325; 0215 accepts only the expanded options", () => {
+    for (const id of ["ing-h2-0204", "ing-h2-0322", "ing-h2-0325"]) {
+      const c = byId(id);
+      expect(c.accept.name ?? [], id).not.toContain("black pepper");
+      expect(compareIngredient(c, { ...labelToReading(c), name: "black pepper" }).fields.name.accepted, id).toBe(false);
+    }
+    const miso = byId("ing-h2-0215");
+    expect(miso.accept).toEqual({});
+    expect(compareIngredient(miso, { ...labelToReading(miso), alternatives: ["white", "yellow miso"] }).fields.alternatives.accepted).toBe(false);
+  });
+
+  it("the pre-registered debatable cases exist in holdout-v2 and say so in their rationale", () => {
+    expect(DEBATABLE_CASES).toEqual(["ing-h2-0087"]);
+    for (const id of DEBATABLE_CASES) expect(byId(id).rationale).toMatch(/DEBATABLE — PRE-REGISTERED/);
+  });
+});
+
 describe("FREEZE-v2", () => {
   let cleanup: (() => void) | null = null;
   afterEach(() => {
@@ -223,7 +269,34 @@ describe("command line: --split holdout2, --print-freeze-v2 and the outcomes sec
     expect(parseArgs(["--print-freeze-v2", "2026-10-10"]).printFreezeV2).toBe("2026-10-10");
     expect(parseArgs([]).printFreezeV2).toBeUndefined();
     expect(() => parseArgs(["--print-freeze-v2", "soon"])).toThrow(/YYYY-MM-DD/);
-    expect(() => parseArgs(["--split", "holdout3"])).toThrow(/dev, holdout, holdout2 or all/);
+    expect(() => parseArgs(["--split", "holdout3"])).toThrow(/dev, holdout, holdout2, all or every/);
+    expect(parseArgs(["--split", "every"]).split).toBe("every");
+  });
+
+  it("holdout2 is opt-in: the default and --split all are dev + holdout exactly as in Phase 1; every adds holdout2", () => {
+    expect(parseArgs([]).split).toBe("all");
+    expect(splitsFor("all")).toEqual(["dev", "holdout"]);
+    expect(splitsFor("every")).toEqual(["dev", "holdout", "holdout2"]);
+    expect(splitsFor("holdout2")).toEqual(["holdout2"]);
+    expect(splitsFor("dev")).toEqual(["dev"]);
+  });
+
+  it("a default run never loads or scores holdout-v2", async () => {
+    const { d } = deps();
+    let seen = 0;
+    const counting: RunDeps = {
+      ...d,
+      ingredientEngines: (ids) =>
+        d.ingredientEngines(ids).map((e) => ({ ...e, parse: (line: string) => (v2.some((c) => c.input === line) && seen++, e.parse(line)) })),
+    };
+    for (const argv of [[], ["--split", "all"]]) {
+      const r = (await run(parseArgs(argv), counting)).report!;
+      expect(Object.keys(r.corpus.ingredientCases)).toEqual(["dev", "holdout"]);
+      expect(r.corpus.files.map((f) => f.path)).not.toContain("fixtures/ingredients/holdout-v2.jsonl");
+      expect(Object.keys(r.outcomes!.engines[0].sets)).toEqual(["dev", "holdout"]);
+      expect(r.outcomes!.holdout2Freeze).toBeNull();
+    }
+    expect(seen).toBe(0);
   });
 
   it("--print-freeze-v2 prints the record computed from the file", async () => {
@@ -267,8 +340,9 @@ describe("command line: --split holdout2, --print-freeze-v2 and the outcomes sec
     expect(md).toMatch(/\| \*\*S8 ready on a non-ingredient\*\* \(of N\) \| 0\/\d+ \| 0\.0% \| ≤ \d+\.\d% \|/);
   });
 
-  it("--split all reports dev, holdout-v1 and holdout-v2 separately (never pooled) in the outcomes section", async () => {
-    const r = (await run(parseArgs(["--engine", "control:oracle"]), deps().d)).report!;
+  it("--split every reports dev, holdout-v1 and holdout-v2 separately (never pooled) in the outcomes section", async () => {
+    const r = (await run(parseArgs(["--split", "every", "--engine", "control:oracle"]), deps().d)).report!;
+    expect(r.selection.split).toBe("every");
     expect(Object.keys(r.corpus.ingredientCases)).toEqual(["dev", "holdout", "holdout2"]);
     expect(Object.keys(r.outcomes!.engines[0].sets)).toEqual(["dev", "holdout", "holdout2"]);
     expect(r.outcomes!.engines[0].sets.dev!.status).toBe("dev (development; diagnostics only)");
