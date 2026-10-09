@@ -2,13 +2,14 @@
  * The owner-reported line `1/3 cup pesto (homemade (or store-bought))`.
  *
  * (i) The recorded baseline: what Table import 2 (frozen at cb7b56e) produces today, in contract v1.
- * (ii) The Phase 2 target, written with `it.fails` against the DEFAULT engine: it is expected to fail
- *      while the default engine is the legacy one. When Phase 2 makes it pass, `it.fails` turns red —
- *      that is the signal to change `it.fails` to `it` (and to re-record the baseline section if the
- *      default engine changed).
+ * (ii) The Phase 2 target, now a normal test against the Phase 2 engine `semantic-v1` by id (the
+ *      default engine is unchanged until the predeclared acceptance criteria are met; when the default
+ *      changes, this section can be pointed at the default again).
+ * (iii) Regression: the hyphenated mixed number `1-1/2 cups milk` is exactly 3/2 cup and ready — not a
+ *      range (the legacy reading, whose suggestion was the wrong amount 1 cup).
  */
 import { describe, expect, it } from "vitest";
-import { DEFAULT_ENGINE_ID, ENGINES, parseIngredientV1, validateParsedIngredientV1 } from "../../src/index";
+import { ENGINES, parseIngredientV1, validateParsedIngredientV1 } from "../../src/index";
 
 const LINE = "1/3 cup pesto (homemade (or store-bought))";
 
@@ -43,16 +44,47 @@ describe("pesto: recorded baseline (legacy-table-import-2)", () => {
   });
 });
 
-describe("pesto: Phase 2 target (default engine)", () => {
-  // Expected to FAIL in Phase 1 (the default engine is the faithful legacy one). When a Phase 2 engine
-  // becomes the default and reads this line correctly, this `it.fails` turns red and must become `it`.
-  it.fails(`${DEFAULT_ENGINE_ID} reads it as 1/3 cup pesto, note "homemade or store-bought"`, () => {
-    const r = parseIngredientV1(LINE);
+describe("pesto: Phase 2 target (semantic-v1)", () => {
+  it("semantic-v1 reads it as exactly 1/3 cup pesto, note \"homemade or store-bought\", no alternatives", () => {
+    const r = parseIngredientV1(LINE, { engine: "semantic-v1" });
     expect(r.status).toBe("ready");
     expect(r.name).toBe("pesto");
-    expect(r.quantity).toMatchObject({ kind: "exact", numerator: "1", denominator: "3" });
-    expect(r.unit).toMatchObject({ canonical: "cup" });
+    expect(r.quantity).toEqual({ kind: "exact", numerator: "1", denominator: "3", display: "1/3" });
+    expect(r.unit).toEqual({ canonical: "cup", dimension: "volume", source: "cup" });
     expect(r.note).toBe("homemade or store-bought");
     expect(r.alternatives).toEqual([]);
+    expect(r.packageSize).toBeNull();
+    expect(r.reasons).toEqual([]);
+    expect(validateParsedIngredientV1(r)).toEqual([]);
+    expect(ENGINES["semantic-v1"].parse(LINE)).toEqual(r);
+  });
+
+  it("the same line with 1/2, and its legacy-defect variants, read cleanly too", () => {
+    expect(parseIngredientV1("1/2 cup pesto (homemade (or store-bought))", { engine: "semantic-v1" })).toMatchObject({
+      status: "ready", name: "pesto", quantity: { numerator: "1", denominator: "2" }, note: "homemade or store-bought", alternatives: [],
+    });
+    expect(parseIngredientV1("⅓ cup pesto (homemade or store-bought)", { engine: "semantic-v1" })).toMatchObject({
+      status: "ready", name: "pesto", quantity: { numerator: "1", denominator: "3" }, note: "homemade or store-bought",
+    });
+  });
+});
+
+describe("regression: 1-1/2 cups milk (semantic-v1)", () => {
+  it("is exactly 3/2 cup and ready — a mixed number, not a range", () => {
+    const r = parseIngredientV1("1-1/2 cups milk", { engine: "semantic-v1" });
+    expect(r).toMatchObject({
+      status: "ready",
+      name: "milk",
+      quantity: { kind: "exact", numerator: "3", denominator: "2", display: "1 1/2" },
+      unit: { canonical: "cup", dimension: "volume", source: "cups" },
+      reasons: [],
+    });
+    expect(r.reasons).not.toContain("quantity_range");
+    expect(validateParsedIngredientV1(r)).toEqual([]);
+  });
+
+  it("the legacy reading of the same line is recorded for contrast: a range, no amount", () => {
+    const r = ENGINES["legacy-table-import-2"].parse("1-1/2 cups milk");
+    expect(r).toMatchObject({ status: "needs_review", quantity: null, reasons: ["quantity_range"] });
   });
 });

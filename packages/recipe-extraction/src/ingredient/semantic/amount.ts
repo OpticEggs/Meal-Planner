@@ -38,6 +38,8 @@ export interface StatedAmount {
   value: Rational;
   decimal: boolean;
   unit: UnitV1;
+  /** Span of the unit word(s). */
+  unitSpan: [number, number];
   s: number;
   e: number;
   next: number;
@@ -74,7 +76,7 @@ export function readStatedAmount(text: string, toks: readonly Tok[], i: number):
     total = true;
     k += 2;
   }
-  return { value: n.value, decimal: n.decimal, unit: u.unit, s: toks[j].s, e: toks[k - 1].e, next: k, each, total, approx };
+  return { value: n.value, decimal: n.decimal, unit: u.unit, unitSpan: [u.s, u.e], s: toks[j].s, e: toks[k - 1].e, next: k, each, total, approx };
 }
 
 /** The stated amount a bracket group consists of, exactly and only ("(15 oz)", "(about 1 lb)"), or null. */
@@ -301,7 +303,9 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
     const container = measured && CONTAINER_UNITS.has(c.unit.canonical) && isMassOrVolume(unitRead.unit);
     const sized = measured && unitRead.unit.canonical === "inch";
     if (c && (container || sized)) {
-      const size: StatedAmount = { value: n1.value, decimal: n1.decimal, unit: unitRead.unit, s: n1.s, e: unitRead.e, next: c.next, each: false, total: false, approx: false };
+      const size: StatedAmount = {
+        value: n1.value, decimal: n1.decimal, unit: unitRead.unit, unitSpan: [unitRead.s, unitRead.e], s: n1.s, e: unitRead.e, next: c.next, each: false, total: false, approx: false,
+      };
       fx.reasons.push("quantity_missing");
       const slots0: AmountSlots = { quantity: null, unit: c.unit, packageSize: null, packageSpan: null, equivalents: [], effects: fx };
       placeSecondary(text, slots0, { sa: size, position: "between" });

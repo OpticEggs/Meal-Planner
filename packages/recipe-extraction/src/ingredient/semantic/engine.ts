@@ -202,7 +202,8 @@ function read(input: unknown): Reading {
   } else {
     // Name first: an amount in brackets ("Parmesan (1/2 cup)"), after the first comma ("flour, 2 cups"),
     // at the end ("flour 2 cups"), or "juice of 1 lemon".
-    const gi = head.findIndex((t) => isGroup(t) && (groupAmount(text, t) !== null || amountWithSizeWords(text, t.children) !== null));
+    // (a bracket glued to a word, as in "alert(1)", is not an amount written after a name)
+    const gi = head.findIndex((t, k) => k > 0 && isGroup(t) && !adjacent(head[k - 1], t) && (groupAmount(text, t) !== null || amountWithSizeWords(text, t.children) !== null));
     if (gi >= 0) {
       const g = head[gi] as Extract<Tok, { kind: "group" }>;
       const found = amountWithSizeWords(text, g.children);
@@ -307,10 +308,8 @@ function read(input: unknown): Reading {
       if (sum && exact) {
         quantity = exact;
         if (sum.unit.canonical !== unit.canonical) {
-          unit = sum.unit;
-          unitSpan = [sa.s, sa.e];
-          const u = readUnit(text, body, sa.next - 1);
-          if (u) unit = u.unit;
+          unit = sa.unit;
+          unitSpan = sa.unitSpan;
         }
         push(fx.reasons, "compound_quantity_summed");
         return;
@@ -425,15 +424,31 @@ function read(input: unknown): Reading {
 
   const status = all.some((r) => REASONS[r].class === "review") ? "needs_review" : "ready";
 
+  // A package size always sits beside a counted unit (a bare count when none is written); an implicit
+  // "each" with no amount and no package is not a reading of anything.
+  let outUnit: UnitV1 | null = unit;
+  if (outUnit === null && slots.packageSize !== null) outUnit = { canonical: "each", dimension: "count", source: "" };
+  if (quantity === null && outUnit?.canonical === "each" && unitSpan === null && slots.packageSize === null) outUnit = null;
+
+  // Evidence spans; a span that would overlap one already given (a name around a bracketed amount) is left
+  // out. A compound amount's unit lies inside its quantity span ("1 lb 4 oz" → unit "oz").
   const spans: Partial<Record<SpanField, [number, number]>> = {};
-  if (quantity !== null && amt.quantitySpan) spans.quantity = amt.quantitySpan;
-  if (unit !== null && unitSpan) spans.unit = unitSpan;
-  if (slots.packageSize !== null && slots.packageSpan) spans.packageSize = slots.packageSpan;
-  if (name !== null && nr.nameSpan) spans.name = nr.nameSpan;
+  const given: [number, number][] = [];
+  const give = (field: SpanField, span: [number, number] | null, inside: [number, number] | null = null) => {
+    if (span === null) return;
+    const within = inside !== null && inside[0] <= span[0] && span[1] <= inside[1];
+    if (!within && given.some(([s, e]) => span[0] < e && s < span[1])) return;
+    spans[field] = span;
+    given.push(span);
+  };
+  if (quantity !== null) give("quantity", amt.quantitySpan);
+  if (outUnit !== null) give("unit", unitSpan, spans.quantity ?? null);
+  if (slots.packageSize !== null) give("packageSize", slots.packageSpan);
+  if (name !== null) give("name", nr.nameSpan);
 
   return {
     out: {
-      raw, normalized, status, name, quantity, unit: quantity === null && unit?.canonical === "each" && unitSpan === null ? null : unit,
+      raw, normalized, status, name, quantity, unit: outUnit,
       packageSize: slots.packageSize, equivalents: slots.equivalents, form: fx.form, note, alternatives, optional: fx.optional, approximate: amt.approximate,
       amountUnstated, reasons: all, evidence: { spans },
     },

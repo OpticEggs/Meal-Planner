@@ -63,6 +63,7 @@ function nameText(text: string, toks: readonly Tok[]): string {
 
 /** "chicken or vegetable broth": a one-word option shares the last option's words after its first. */
 function distribute(text: string, options: Tok[][]): string[] {
+  if (options.length < 2) return options.map((o) => nameText(text, o));
   const words = (o: Tok[]) => o.filter((t) => t.kind === "word" || t.kind === "num");
   const last = options[options.length - 1];
   const lastWords = words(last);

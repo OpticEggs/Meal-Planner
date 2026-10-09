@@ -1,0 +1,34 @@
+/**
+ * semantic-v1 on the dev label set (fixtures/ingredients/dev.jsonl, development examples): a safety
+ * regression guard, not a score target — no false certainty of any severity, no fabricated amount, no
+ * cross-dimension unit, no engine error, and every reading validates. Exact match rates are reported
+ * by the benchmark, not pinned here.
+ */
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { describe, expect, it } from "vitest";
+import { parseIngredientJsonl } from "../../bench/labels";
+import { scoreIngredients } from "../../bench/score";
+import { semanticEngine } from "../../src/ingredient/semantic/engine";
+import { validateParsedIngredientV1 } from "../../src/validate";
+
+const file = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../fixtures/ingredients/dev.jsonl");
+const cases = parseIngredientJsonl(readFileSync(file, "utf8"), "dev", "ingredients/dev.jsonl");
+
+describe("semantic-v1 on the dev labels: safety", () => {
+  const score = scoreIngredients(cases, semanticEngine);
+  const m = score.overall.metrics;
+
+  it("has no engine errors and every reading validates", () => {
+    expect(m.engineErrors).toBe(0);
+    for (const c of cases) expect(validateParsedIngredientV1(semanticEngine.parse(c.input)), c.id).toEqual([]);
+  });
+
+  it("is never falsely certain, never fabricates an amount, never crosses dimensions", () => {
+    expect(m.falseCertainty.total.num).toBe(0);
+    expect(m.fabricatedQuantity.num).toBe(0);
+    expect(m.crossDimension.num).toBe(0);
+    expect(score.mismatches.filter((x) => x.falseCertainty !== null)).toEqual([]);
+  });
+});
