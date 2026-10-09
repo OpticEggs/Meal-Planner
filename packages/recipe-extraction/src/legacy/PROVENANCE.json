@@ -1,0 +1,118 @@
+{
+  "description": "Frozen copies of Table import 2's recipe-import parsers, for parity tests and benchmark baselines. Undo the listed edits of a 'verbatim' or 'copy' file (in reverse order) to get the baseline file byte for byte (checked by tests/parity/provenance.test.ts).",
+  "baselineCommit": "cb7b56eaa01832b75b2bdbf74031f9f45c75ec13",
+  "files": [
+    {
+      "copy": "link.ts",
+      "source": "src/server/integrations/recipe-import/url.ts",
+      "baselineCommit": "cb7b56eaa01832b75b2bdbf74031f9f45c75ec13",
+      "baselineSha256": "6fcc37849e928273da30555ecdd85ee8d0bd8fde16d7efdaeaaf12ab57adeacb",
+      "copySha256": "3f62bd60428cb9b927efc5bbcebfdd659ea95298cb500cae44bd179af59b90fa",
+      "relation": "verbatim",
+      "edits": [
+        {
+          "kind": "prepend",
+          "text": "// FROZEN COPY of src/server/integrations/recipe-import/url.ts at cb7b56e for parity and baselines. Do not improve here; improvements go in new engines.\n// Provenance, baseline hash and the exact list of edits: ./PROVENANCE.json\n",
+          "why": "frozen-copy header comment"
+        }
+      ]
+    },
+    {
+      "copy": "jsonld.ts",
+      "source": "src/server/integrations/recipe-import/jsonld.ts",
+      "baselineCommit": "cb7b56eaa01832b75b2bdbf74031f9f45c75ec13",
+      "baselineSha256": "ca668ffcbef2e03f66e4a123753320a5a64a4fbaa601472b5c5917b7d41a61ef",
+      "copySha256": "5321bd4468ce9eb8a368741f98651acc414ab14ebdb9f7808e0683dacb7a382c",
+      "relation": "copy",
+      "edits": [
+        {
+          "kind": "replace",
+          "from": "import { validateLinkUrl } from \"./url\";\n",
+          "to": "import { validateLinkUrl } from \"./link\";\n",
+          "why": "the frozen copy of url.ts is ./link.ts"
+        },
+        {
+          "kind": "prepend",
+          "text": "// FROZEN COPY of src/server/integrations/recipe-import/jsonld.ts at cb7b56e for parity and baselines. Do not improve here; improvements go in new engines.\n// Provenance, baseline hash and the exact list of edits: ./PROVENANCE.json\n",
+          "why": "frozen-copy header comment"
+        }
+      ]
+    },
+    {
+      "copy": "ingredient-line.ts",
+      "source": "src/server/integrations/recipe-import/ingredient-line.ts",
+      "baselineCommit": "cb7b56eaa01832b75b2bdbf74031f9f45c75ec13",
+      "baselineSha256": "f3db537f497d154902b4cfb8592148d23f229a85be8be16856b9a6496d5fc863",
+      "copySha256": "f4b12b34c8e9a20ea97bc7eb8ed2eddfb6a312f512dd8ed1268c71f2355e131a",
+      "relation": "copy",
+      "edits": [
+        {
+          "kind": "replace",
+          "from": "import { D, KNOWN_UNITS, normalizeUnit } from \"@/domain/units\";\n",
+          "to": "import { D } from \"./decimal\";\nimport { KNOWN_UNITS, normalizeUnit } from \"./units\";\n",
+          "why": "the package has no decimal.js dependency and never imports Table modules: D comes from ./decimal (BigInt), the unit table from ./units"
+        },
+        {
+          "kind": "prepend",
+          "text": "// FROZEN COPY of src/server/integrations/recipe-import/ingredient-line.ts at cb7b56e for parity and baselines. Do not improve here; improvements go in new engines.\n// Provenance, baseline hash and the exact list of edits: ./PROVENANCE.json\n",
+          "why": "frozen-copy header comment"
+        }
+      ],
+      "note": "Parser body textually identical to the baseline (every line after the import line)."
+    },
+    {
+      "copy": "units.ts",
+      "source": "src/domain/units.ts",
+      "baselineCommit": "cb7b56eaa01832b75b2bdbf74031f9f45c75ec13",
+      "baselineSha256": "e2ab3e10aa8e1bfd45e5b54a8cc4ab0d9ab2ae946d7151716c77c516b0e48ecf",
+      "copySha256": "3ee917870dccb1a39c5c401522a0d0e6a9585a6d8a9e6fad194c81861975706b",
+      "relation": "excerpt",
+      "edits": [
+        {
+          "kind": "excerpt",
+          "kept": [
+            "type Dimension",
+            "UNITS table (same keys, dimensions and factors, same order)",
+            "KNOWN_UNITS = Object.keys(UNITS)",
+            "normalizeUnit (verbatim)"
+          ],
+          "removed": [
+            "import Decimal from \"decimal.js\"",
+            "D / Dec (replaced by ./decimal.ts)",
+            "dimensionOf",
+            "convert",
+            "baseUnit",
+            "packagesFor",
+            "fmtQty"
+          ],
+          "why": "only what the frozen ingredient-line parser imports; no decimal.js in the package"
+        }
+      ]
+    },
+    {
+      "copy": "decimal.ts",
+      "source": "src/domain/units.ts",
+      "baselineCommit": "cb7b56eaa01832b75b2bdbf74031f9f45c75ec13",
+      "baselineSha256": "e2ab3e10aa8e1bfd45e5b54a8cc4ab0d9ab2ae946d7151716c77c516b0e48ecf",
+      "copySha256": "16514a2c06b3b4f2e122d70bbaa7864243ce2ad50b142f2c413974382998b5d5",
+      "relation": "replacement",
+      "edits": [
+        {
+          "kind": "replacement",
+          "replaces": "export const D = Decimal.clone({ precision: 40, rounding: Decimal.ROUND_HALF_UP })",
+          "implements": [
+            "new D(number | string)",
+            "div (rounded to 40 significant digits, half-up)",
+            "plus (same)",
+            "toFixed() (plain text)",
+            "toDecimalPlaces(dp) (half-up)",
+            "lte",
+            "gt",
+            "eq"
+          ],
+          "why": "a BigInt rational stand-in for the decimal.js operations the parser uses; differential tests in tests/parity/decimal.test.ts"
+        }
+      ]
+    }
+  ]
+}
