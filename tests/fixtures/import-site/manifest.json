@@ -66,6 +66,9 @@
     ],
     "elsewhere.example.org": [
       "93.184.215.14"
+    ],
+    "pesto.example.com": [
+      "93.184.215.14"
     ]
   },
   "pages": {
@@ -251,6 +254,20 @@
         "content-type": "image/png"
       },
       "file": "photo.png"
+    },
+    "https://pesto.example.com/weeknight-pesto-pasta/": {
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8"
+      },
+      "file": "pesto.html"
+    },
+    "https://pesto.example.com/img/pesto-hero.jpg": {
+      "status": 200,
+      "headers": {
+        "content-type": "image/jpeg"
+      },
+      "file": "pesto-hero.jpg"
     }
   }
 }

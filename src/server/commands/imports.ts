@@ -6,6 +6,7 @@ import { writeRecipeVersion } from "./library";
 import { parseIngredientLine } from "../integrations/recipe-import/ingredient-line";
 import { draftProblems, initialDecision, perPortion, decisionProblem, type DraftLine, type LineDecision, type ParsedLine } from "@/domain/recipes/import";
 import { normalizeUnit } from "@/domain/units";
+import { formatAmount, parseAmount } from "@/domain/quantity";
 import { NOTHING_KEPT, type ContentUse } from "../integrations/recipe-import/content-policy";
 
 /**
@@ -17,7 +18,7 @@ import { NOTHING_KEPT, type ContentUse } from "../integrations/recipe-import/con
  * household's own instructions. Nutrition claims are never used.
  */
 
-export const EXTRACTOR_VERSION = "table-import-2";
+export const EXTRACTOR_VERSION = "table-import-3";
 const MAX_LINES = 100;
 
 function draftLines(raws: string[]): DraftLine[] {
@@ -25,7 +26,7 @@ function draftLines(raws: string[]): DraftLine[] {
     const parsed = parseIngredientLine(raw);
     const p: ParsedLine = {
       quantity: parsed.quantity, unit: parsed.unit, name: parsed.name, form: parsed.form, status: parsed.status, reasons: parsed.reasons,
-      note: parsed.note ?? null, suggestion: parsed.status === "requires_review" ? (parsed.suggestion ?? null) : null, suggestionNote: parsed.suggestionNote ?? null,
+      note: parsed.note ?? null, range: parsed.range, alternatives: parsed.alternatives,
     };
     return { raw: String(raw).slice(0, 500), parsed: p, decision: initialDecision(p) };
   });
@@ -168,12 +169,15 @@ export function updateImportDraftCommand(actor: Actor, operationId: string, p: D
       if (!Number.isInteger(x.index) || x.index < 0 || x.index >= lines.length) throw new Reject("invalid", "Unknown ingredient line");
       let dec: LineDecision | null = null;
       if (x.decision && x.decision.use === true) {
+        const typed = String(x.decision.quantity ?? "").trim().replace(/\s+/g, " ");
         dec = {
-          use: true, name: String(x.decision.name ?? "").trim().slice(0, 80), quantity: String(x.decision.quantity ?? "").trim(),
+          use: true, name: String(x.decision.name ?? "").trim().slice(0, 80), quantity: typed,
           unit: normalizeUnit(String(x.decision.unit ?? "")), form: x.decision.form === "cooked" ? "cooked" : "raw",
         };
         const problem = decisionProblem(dec);
         if (problem) throw new Reject("invalid", `Line ${x.index + 1} ${problem}.`, { field: `line-${x.index}` });
+        // Canonical exact text: "2/4" → "1/2", "1½" → "1 1/2"; a typed decimal stays a decimal.
+        dec.quantity = formatAmount(parseAmount(typed)!, /\./.test(typed));
       } else if (x.decision && x.decision.use === false) dec = { use: false };
       lines[x.index] = { ...lines[x.index], decision: dec };
     }

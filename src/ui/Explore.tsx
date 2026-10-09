@@ -120,7 +120,7 @@ export function ExploreScreen() {
 function RecipeCard({ r, onSave }: { r: any; onSave: () => void }) {
   return (
     <li className="card recipe" data-testid="recipe-card" data-title={r.version.title}>
-      <PlaceholderTile title={r.version.title} imageId={r.version.imageId} />
+      <PlaceholderTile title={r.version.title} imageId={r.photo?.imageId ?? r.version.imageId} />
       <div className="grow">
         <Link href={`/recipes/${r.recipeId}`}><strong>{r.version.title}</strong></Link>
         <div className="faint small">

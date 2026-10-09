@@ -46,6 +46,10 @@ const MIG = "tests/integration/migrate-lock.test.ts";
 const THEME = "tests/unit/theme-contrast.test.ts";
 const B2122 = "tests/integration/b21-b22.test.ts";
 const MSS = "tests/integration/ms-sources.test.ts";
+const IO = "tests/integration/import-overhaul.test.ts";
+const PARSE = "tests/unit/recipe-import-ingredient-line.test.ts";
+const SEASON = "tests/unit/seasonings.test.ts";
+const CP = "tests/unit/u2c-content-policy.test.ts";
 const MSD = "tests/integration/ms-destinations.test.ts";
 const B5C = "tests/integration/b5.kroger-connection.test.ts";
 const B5D = "tests/integration/b5.kroger-dispatch.test.ts";
@@ -221,9 +225,9 @@ MUTATIONS.push(
     edits: [["    if (preview.fingerprint !== p.listFingerprint) throw", "    if (false) throw"]] },
   // Visual update: the contrast check reads the shipped tokens; a too-light or too-dark text token must fail it.
   { name: "UI_light_text_too_faint", file: "src/app/globals.css", suite: THEME, pattern: "theme contrast", expect: [/theme contrast — light/],
-    edits: [["--muted: #574e45; --faint: #6b6157;", "--muted: #574e45; --faint: #9a8f84;"]] },
+    edits: [["--muted: #5a4e44; --faint: #685c51;", "--muted: #5a4e44; --faint: #9a8f84;"]] }, // re-targeted 2026-10-09 (new palette)
   { name: "UI_dark_text_too_faint", file: "src/app/globals.css", suite: THEME, pattern: "theme contrast", expect: [/theme contrast — dark/],
-    edits: [["--muted: #c2b6aa; --faint: #a3978b;", "--muted: #c2b6aa; --faint: #6f655b;"]] },
+    edits: [["--muted: #cfc2b4; --faint: #ada092;", "--muted: #cfc2b4; --faint: #6f655b;"]] }, // re-targeted 2026-10-09 (new palette)
   { name: "B9_reset_keeps_sessions", file: "src/server/provision.ts", suite: B9R, pattern: "B9", expect: [/ends that member's sessions/],
     edits: [["  await ctx.internalAdapter.deleteUserSessions(userId);", "  // (mutated) sessions kept"]] },
   { name: "B9_reset_any_account", file: "src/server/provision.ts", suite: B9R, pattern: "B9", expect: [/non-member account/],
@@ -237,8 +241,10 @@ MUTATIONS.push(
     edits: [["  return { ...NOTHING_KEPT, source };\n}", "  return { instructions: true, photos: true, basis: \"(mutated)\", kind: \"owner_mode\", source };\n}"]] },
   { name: "U2C_photo_not_sniffed", file: "src/server/recipe-import-service.ts", suite: U2C, pattern: "U-04", expect: [/U-04/],
     edits: [["const type = sniffImage(got.bytes);", "const type = sniffImage(got.bytes) ?? \"image/png\";"]] },
-  { name: "U2C_suggestion_applied_unreviewed", file: "src/server/commands/imports.ts", suite: U2C, pattern: "U-10", expect: [/U-10/],
-    edits: [["return { raw: String(raw).slice(0, 500), parsed: p, decision: initialDecision(p) };", "return { raw: String(raw).slice(0, 500), parsed: p, decision: initialDecision(p) ?? p.suggestion ?? null };"]] },
+  // Re-targeted 2026-10-09: the suggestion workflow was removed by the owner. The forbidden behaviour is now an
+  // uncertain line (a range, no amount) silently counted as Use with a guessed amount.
+  { name: "U2C_uncertain_line_used_unreviewed", file: "src/domain/recipes/import.ts", suite: IO, pattern: "IO-01", expect: [/IO-01/],
+    edits: [["  if (p.status !== \"parsed\" || !p.quantity || !p.unit || !p.name) return null;", "  if (!p.name) return null;\n  if (p.status !== \"parsed\") return { use: true, name: p.name, quantity: p.range?.[1] ?? \"1\", unit: p.unit ?? \"each\", form: \"raw\" };"]] },
   { name: "U2C_passing_problem_recorded", file: "src/server/recipe-import-service.ts", suite: U2C, pattern: "U-06", expect: [/U-06/],
     edits: [["      return h.transient\n", "      return false\n"]] },
   { name: "LT_certificate_not_verified", file: "src/server/integrations/recipe-import/fetcher.ts", suite: LT, pattern: "LT-02", expect: [/LT-02/],
@@ -285,6 +291,21 @@ MUTATIONS.push(
 MUTATIONS.push(
   { name: "MP_unsniffed_photo_accepted", file: "src/server/recipe-photo-service.ts", suite: MP, pattern: "MP-02", expect: [/MP-02/],
     edits: [["  const contentType = sniffImage(bytes);", "  const contentType = sniffImage(bytes) ?? \"image/png\";"]] },
+);
+// Import overhaul (2026-10-09): exact fractions, clean names, household seasonings, publisher photos only by grant.
+MUTATIONS.push(
+  { name: "IO_thirds_rounded", file: "src/domain/quantity.ts", suite: PARSE, pattern: "pesto", expect: [/pesto/],
+    edits: [["  if (r.d === BigInt(1)) return r.n.toString();\n  if (preferDecimal) {", "  if (r.d === BigInt(1)) return r.n.toString();\n  if (true) {"], ["  if (dec) return dec;\n  }", "  if (dec) return dec;\n    return new D(r.n.toString()).div(r.d.toString()).toDecimalPlaces(4).toFixed();\n  }"]] },
+  { name: "IO_nested_note_left_in_name", file: "src/server/integrations/recipe-import/ingredient-line.ts", suite: PARSE, pattern: "pesto", expect: [/pesto/],
+    edits: [["      if (depth === 0) start = i;\n      depth++;", "      if (depth === 0) start = i;\n      depth = 1;"]] },
+  { name: "IO_seasoning_bought", file: "src/domain/groceries/projection.ts", suite: SEASON, pattern: "groceries leave", expect: [/salt and black pepper make no grocery line/],
+    edits: [["        seasonings.set(l.ingredientKey, sz);\n        continue;", "        seasonings.set(l.ingredientKey, sz);"]] },
+  { name: "IO_bell_pepper_is_seasoning", file: "src/domain/groceries/seasonings.ts", suite: SEASON, pattern: "isHouseholdSeasoning", expect: [/not a household seasoning/],
+    edits: [["  if (!words.every((w) => QUALIFIERS.has(w))) return false;", "  if (!words.some((w) => QUALIFIERS.has(w))) return false;"]] },
+  { name: "HE_enough_compared_unrounded", file: "src/domain/groceries/projection.ts", suite: SEASON, pattern: "Have enough", expect: [/3-decimal amount/],
+    edits: [["reviewed.gte(mealQty.toDecimalPlaces(SHOWN_PLACES))", "reviewed.gte(mealQty)"]] },
+  { name: "IO_private_mode_copies_photos", file: "src/server/integrations/recipe-import/content-policy.ts", suite: CP, pattern: "CP-02", expect: [/CP-02/],
+    edits: [["    return { instructions: true, photos: false, kind: \"owner_mode\"", "    return { instructions: true, photos: true, kind: \"owner_mode\""]] },
 );
 // A harmless change that MUST be classified SURVIVED (proves the classifier can say so).
 const CONTROLS_LIST = [

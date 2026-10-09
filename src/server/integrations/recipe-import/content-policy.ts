@@ -55,7 +55,10 @@ export function contentUse(sourceHost: string, cfg: RecipeContentConfig): Conten
     };
   }
   if (cfg.householdPrivate) {
-    return { instructions: true, photos: true, kind: "owner_mode", source, basis: "owner-selected household-private mode (an owner setting, not a publisher licence)" };
+    // The method text only. A household-private setting is not permission to copy or host a publisher's
+    // photograph (owner direction 2026-10-09): a photo is kept only under a per-site grant, or is the
+    // member's own photo.
+    return { instructions: true, photos: false, kind: "owner_mode", source, basis: "owner-selected household-private mode (an owner setting, not a publisher licence)" };
   }
   return { ...NOTHING_KEPT, source };
 }

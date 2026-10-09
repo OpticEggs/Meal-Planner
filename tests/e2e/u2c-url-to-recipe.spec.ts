@@ -23,12 +23,13 @@ test("U2C-E1: paste a link on Our Recipes → review with source and suggestions
   await expect(review.getByTestId("draft-kept")).toContainText("The method stays on the source site. The recipe links to it (3 steps).");
   await expect(review.getByTestId("draft-kept")).toContainText("Its photo isn't kept");
   await expect(review.getByTestId("draft-servings")).toHaveValue("4");
-  await expect(review.getByTestId("import-confirm")).toBeDisabled();
-  const beans = review.locator('[data-testid="draft-line"][data-raw="1 (15 oz) can black beans, drained"]');
-  await expect(beans.getByTestId("line-suggestion")).toContainText("15 oz black beans");
-  await expect(review.getByTestId("draft-suggestions")).toContainText("4 lines have a suggestion");
-  expect(await count("recipe_versions WHERE provenance='imported'")).toBe(0); // nothing applied, nothing created
-  await review.getByTestId("accept-suggestions").click();
+  // 2026-10-09 (import overhaul): no suggestion workflow. Every line of this page is read cleanly and is already in as
+  // Use with its exact amount; salt and pepper are left out as household seasonings.
+  await expect(review.locator('[data-testid="draft-line"][data-raw="1 (15 oz) can black beans, drained"]')).toContainText("15 oz black beans");
+  await expect(review.locator('[data-testid="draft-line"][data-raw="⅓ cup salsa"]')).toContainText("⅓ cup salsa");
+  await expect(review.locator('[data-testid="draft-line"][data-raw="salt and pepper to taste"]')).toHaveAttribute("data-state", "out");
+  await expect(review.getByText(/suggestion/i)).toHaveCount(0);
+  expect(await count("recipe_versions WHERE provenance='imported'")).toBe(0); // nothing created until saved
   await expect(review.getByTestId("draft-problems")).toHaveCount(0);
   await review.getByTestId("import-confirm").click();
   await expect(review).toBeHidden();

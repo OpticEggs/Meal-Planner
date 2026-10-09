@@ -78,7 +78,7 @@ describe("import drafts (URL-10/11)", () => {
       { raw: "1 cup rice", parsed: parsed({ status: "parsed" }), decision: { use: true, name: "rice", quantity: "1", unit: "cup", form: "raw" } },
       { raw: "1 can tomatoes", parsed: parsed({}), decision: null },
     ];
-    expect(draftProblems({ title: "R", servings: null, lines }).join(" ")).toMatch(/servings.*1 ingredient line needs a decision/s);
+    expect(draftProblems({ title: "R", servings: null, lines }).join(" ")).toMatch(/servings.*1 ingredient line needs a quick check/s); // wording 2026-10-09 (was "needs a decision")
     const bad: DraftLine[] = [{ raw: "1 can x", parsed: parsed({}), decision: { use: true, name: "x", quantity: "1", unit: "can", form: "raw" } }];
     expect(draftProblems({ title: "R", servings: 2, lines: bad }).join(" ")).toMatch(/needs a unit Table knows/);
     const skipped: DraftLine[] = [{ raw: "salt", parsed: parsed({}), decision: { use: false } }];
@@ -86,9 +86,13 @@ describe("import drafts (URL-10/11)", () => {
     expect(draftProblems({ title: "R", servings: 2, lines: [lines[0]] })).toEqual([]);
   });
 
+  // Changed 2026-10-09 (exact amounts): a non-terminating per-serving amount keeps 12 decimal places (was 4), and a
+  // whole-recipe amount may be an exact fraction; so a tiny amount is no longer "too small to split".
   it("per-serving amounts are exact when they terminate and say when they were rounded", () => {
     expect(perPortion("1.5", 4)).toEqual({ value: "0.375", rounded: false });
-    expect(perPortion("1", 3)).toEqual({ value: "0.3333", rounded: true });
-    expect(draftProblems({ title: "R", servings: 100, lines: [{ raw: "x", parsed: parsed({}), decision: { use: true, name: "x", quantity: "0.001", unit: "g", form: "raw" } }] }).join(" ")).toMatch(/too small/);
+    expect(perPortion("1", 3)).toEqual({ value: "0.333333333333", rounded: true });
+    expect(perPortion("1/3", 4)).toEqual({ value: "0.083333333333", rounded: true });
+    expect(perPortion("1 1/2", 2)).toEqual({ value: "0.75", rounded: false });
+    expect(draftProblems({ title: "R", servings: 100, lines: [{ raw: "x", parsed: parsed({}), decision: { use: true, name: "x", quantity: "0.001", unit: "g", form: "raw" } }] })).toEqual([]);
   });
 });

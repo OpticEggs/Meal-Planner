@@ -1,25 +1,28 @@
-import { D, KNOWN_UNITS, normalizeUnit } from "../units";
+import { KNOWN_UNITS, normalizeUnit } from "../units";
+import { parseAmount, perServing } from "../quantity";
 
 /**
- * Import drafts (reviewed structured import). A draft is never a recipe: a member decides every
- * ingredient line — use it with a quantity and unit, or leave it out of grocery quantities — and
- * enters servings; only then can it be confirmed into a recipe version. Nothing here invents a
- * quantity: a line the parser could not read stays undecided until a member decides it.
+ * Import drafts (reviewed structured import). A draft is never a recipe. Every line the reader read
+ * cleanly starts as "Use" with its exact amount; ordinary salt and pepper start left out (household
+ * seasonings); only a line whose amount or ingredient is genuinely uncertain waits for a person, who
+ * corrects it or leaves it out. Nothing invents an amount, and there are no "suggestions" to accept.
  */
 
 export interface ParsedLine {
+  /** Exact amount for the whole recipe ("1/3", "1 1/2", "12", "0.5"); null when a person must give it. */
   quantity: string | null;
   unit: string | null;
   name: string;
   form: "raw" | "cooked" | null;
-  status: "parsed" | "requires_review";
+  /** "omitted": a household seasoning, left out of groceries. Drafts made before 2026-10-09 only know the first two. */
+  status: "parsed" | "requires_review" | "omitted";
   reasons: string[];
-  /** Preparation text split off the name ("diced", "large"). Absent on drafts made before import 2. */
+  /** Preparation and parenthetical text split off the name ("diced", "homemade (or store-bought)"). */
   note?: string | null;
-  /** For a line that needs review: what the reader proposes (never applied until a member accepts it). */
-  suggestion?: LineDecision | null;
-  /** What the proposal did, in words ("2 cans × 14.5 oz"). */
-  suggestionNote?: string | null;
+  /** A range the line states ("2", "3"): shown to the person, never picked for them. */
+  range?: [string, string] | null;
+  /** Ingredients the line offers a choice between ("milk", "cream"). */
+  alternatives?: string[] | null;
 }
 
 export type LineDecision =
@@ -32,27 +35,19 @@ export interface DraftLine {
   decision: LineDecision | null;
 }
 
-/** A parsed line starts as a proposal to use it as read; a line that needs review starts undecided. */
+/** A cleanly read line starts as Use; a household seasoning starts left out; an uncertain line is undecided. */
 export function initialDecision(p: ParsedLine): LineDecision | null {
+  if (p.status === "omitted") return { use: false };
   if (p.status !== "parsed" || !p.quantity || !p.unit || !p.name) return null;
-  return { use: true, name: p.name, quantity: p.quantity, unit: p.unit, form: p.form ?? "raw" };
-}
-
-/** A suggestion a member may accept with one action — only if it would itself be a valid decision. */
-export function suggestedDecision(p: ParsedLine): LineDecision | null {
-  const s = p.suggestion;
-  if (!s || p.status !== "requires_review") return null;
-  if (!s.use) return { use: false };
-  const d: LineDecision = { use: true, name: s.name, quantity: s.quantity, unit: s.unit, form: s.form === "cooked" ? "cooked" : "raw" };
+  const d: LineDecision = { use: true, name: p.name, quantity: p.quantity, unit: p.unit, form: p.form ?? "raw" };
   return decisionProblem(d) ? null : d;
 }
 
-const QTY = /^\d+(\.\d+)?$/;
-/** A decision to use a line must carry a positive exact quantity and a unit Table converts. */
+/** A decision to use a line must carry a positive exact amount (a fraction is fine) and a unit Table converts. */
 export function decisionProblem(d: LineDecision): string | null {
   if (!d.use) return null;
   if (!String(d.name ?? "").trim()) return "needs an ingredient name";
-  if (!QTY.test(String(d.quantity)) || new D(d.quantity).lte(0)) return "needs a positive amount (for example 1.5)";
+  if (!parseAmount(String(d.quantity ?? ""))) return "needs an amount (for example 2, 1/3 or 1 1/2)";
   if (!KNOWN_UNITS.includes(normalizeUnit(String(d.unit ?? "")))) return `needs a unit Table knows (${KNOWN_UNITS.join(", ")})`;
   return null;
 }
@@ -69,13 +64,10 @@ export function draftProblems(d: DraftForReview): string[] {
   if (!d.title || !d.title.trim()) out.push("Give the recipe a name.");
   if (!d.servings || !Number.isInteger(d.servings) || d.servings < 1) out.push("Enter how many servings the ingredient amounts make.");
   const undecided = d.lines.filter((l) => !l.decision).length;
-  if (undecided) out.push(`${undecided} ingredient ${undecided === 1 ? "line needs" : "lines need"} a decision: an amount and unit, or leave it out.`);
+  if (undecided) out.push(`${undecided} ingredient ${undecided === 1 ? "line needs" : "lines need"} a quick check: give an amount, or leave it out.`);
   d.lines.forEach((l, i) => {
     const p = l.decision ? decisionProblem(l.decision) : null;
     if (p) out.push(`Line ${i + 1} (${l.raw}) ${p}.`);
-    else if (l.decision?.use && d.servings && d.servings >= 1 && new D(perPortion(l.decision.quantity, d.servings).value).lte(0)) {
-      out.push(`Line ${i + 1} (${l.raw}) is too small to split into ${d.servings} servings.`);
-    }
   });
   if (!d.lines.some((l) => l.decision?.use)) out.push("Use at least one ingredient.");
   return out;
@@ -83,13 +75,13 @@ export function draftProblems(d: DraftForReview): string[] {
 
 /**
  * Recipe ingredient quantities in Table are per ONE portion. A source states amounts for the whole
- * recipe, so a used amount is divided by the servings. Kept exact when the division terminates
- * within 4 decimal places; otherwise rounded to 4 places and reported, so the review shows it.
+ * recipe, so a used amount (an exact rational) is divided by the servings: exact when the division
+ * terminates, otherwise kept to 12 decimal places (`rounded`).
  */
 export function perPortion(quantity: string, servings: number): { value: string; rounded: boolean } {
-  const exact = new D(quantity).div(servings);
-  const four = exact.toDecimalPlaces(4);
-  return { value: four.toString(), rounded: !four.eq(exact) };
+  const r = perServing(quantity, servings);
+  if (!r) throw new Error(`not an amount: ${quantity}`);
+  return { value: r.value, rounded: !r.exact };
 }
 
 /** A starting name for a recipe from its link's last path segment ("/easy-one-pot-chili/" → "Easy one pot chili").

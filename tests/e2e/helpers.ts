@@ -1,4 +1,4 @@
-import { expect, type Browser, type BrowserContext, type Page } from "@playwright/test";
+import { expect, type Browser, type BrowserContext, type Locator, type Page } from "@playwright/test";
 import pg from "pg";
 import { seedFixture, USERS, type Fixture } from "../fixtures/household";
 
@@ -103,4 +103,24 @@ export async function foreground(ctx: BrowserContext, page: Page) {
     document.dispatchEvent(new Event("visibilitychange"));
     window.dispatchEvent(new Event("online"));
   });
+}
+
+/** Import review (2026-10-09 overhaul): open a line's editor by its source text (unless it is already open). */
+async function openLine(review: Locator, raw: string) {
+  const row = review.locator(`[data-testid="draft-line"][data-raw="${raw.replace(/"/g, '\\"')}"]`);
+  const main = row.locator(".row-main");
+  if ((await main.getAttribute("aria-expanded")) !== "true") await main.click();
+  return row;
+}
+/** Correct a line's amount (and unit) and use it. */
+export async function useLine(review: Locator, raw: string, amount: string, unit?: string) {
+  const row = await openLine(review, raw);
+  await row.getByRole("textbox", { name: /Amount for the whole recipe/ }).fill(amount);
+  if (unit) await row.getByRole("combobox", { name: /^Unit, line/ }).selectOption(unit);
+  await row.getByRole("button", { name: /^Use line/ }).click();
+}
+/** Leave a line out of groceries. */
+export async function leaveOutLine(review: Locator, raw: string) {
+  const row = await openLine(review, raw);
+  await row.getByRole("button", { name: /^Leave out line/ }).click();
 }

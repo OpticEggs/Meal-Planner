@@ -158,13 +158,14 @@ describe("reviewed import (URL-05..15)", () => {
     expect(d).toMatchObject({ method: "json_ld", title: "Weeknight Bean Chili", servings: 4, effort_minutes: 45, source_has_instructions: true, source_has_nutrition: true });
     expect(JSON.stringify(d)).not.toMatch(/Synthetic step text|999 kcal|169\.254|alert\(|Ignore previous/);
     const byRaw = Object.fromEntries(d.lines.map((l: any) => [l.raw, l]));
-    expect(byRaw["1 1/2 cups dried black beans"].parsed).toMatchObject({ quantity: "1.5", unit: "cup", status: "parsed" });
-    expect(byRaw["1 1/2 cups dried black beans"].decision).toMatchObject({ use: true, quantity: "1.5", unit: "cup" });
-    for (const raw of ["1 (15 oz) can diced tomatoes", "salt to taste"]) {
-      expect(byRaw[raw].parsed.status, raw).toBe("requires_review");
-      expect(byRaw[raw].decision, raw).toBeNull();
-    }
-    expect(byRaw["½ cup cooked rice"].parsed).toMatchObject({ quantity: "0.5", unit: "cup", form: "cooked" });
+    // 2026-10-09 (import overhaul): amounts are exact rationals ("1 1/2", was "1.5"); a can with a stated size is read
+    // as that size and decided as read; salt is a household seasoning, left out (both used to wait for review).
+    expect(byRaw["1 1/2 cups dried black beans"].parsed).toMatchObject({ quantity: "1 1/2", unit: "cup", status: "parsed" });
+    expect(byRaw["1 1/2 cups dried black beans"].decision).toMatchObject({ use: true, quantity: "1 1/2", unit: "cup" });
+    expect(byRaw["1 (15 oz) can diced tomatoes"].decision).toMatchObject({ use: true, quantity: "15", unit: "oz", name: "diced tomatoes" });
+    expect(byRaw["salt to taste"].parsed.status).toBe("omitted");
+    expect(byRaw["salt to taste"].decision).toEqual({ use: false });
+    expect(byRaw["½ cup cooked rice"].parsed).toMatchObject({ quantity: "1/2", unit: "cup", form: "cooked" });
     // a draft is not a recipe and changes nothing planned or bought
     const after = await untouched(fx.weekId);
     expect(after).toEqual(before);
@@ -189,13 +190,16 @@ describe("reviewed import (URL-05..15)", () => {
     await importFromLink(jon, { bookmarkId: b, operationId: op() }, fixtureDeps(MANIFEST));
     const d = (await q<any>("SELECT id, revision, lines FROM recipe_import_drafts"))[0];
     const before = await protectedState(fx.weekId);
-    const early = await cmd(imports.confirmImportDraftCommand(alex, op(), { draftId: d.id, expectedRevision: d.revision }));
-    expect(early.code).toBe("incomplete");
-    expect(early.details.problems.join(" ")).toMatch(/2 ingredient lines need a decision/);
-    expect(await count("recipe_versions WHERE provenance='imported'")).toBe(0);
+    // 2026-10-09: every line of this page is now read cleanly, so the draft is made incomplete by undeciding a line
+    // (was: two lines started undecided).
     const idx = (raw: string) => d.lines.findIndex((l: any) => l.raw === raw);
+    const undecide = await cmd(imports.updateImportDraftCommand(alex, op(), { draftId: d.id, expectedRevision: d.revision, decisions: [{ index: idx("1 (15 oz) can diced tomatoes"), decision: null }] }));
+    const early = await cmd(imports.confirmImportDraftCommand(alex, op(), { draftId: d.id, expectedRevision: undecide.result.revision }));
+    expect(early.code).toBe("incomplete");
+    expect(early.details.problems.join(" ")).toMatch(/1 ingredient line needs a quick check/);
+    expect(await count("recipe_versions WHERE provenance='imported'")).toBe(0);
     const upd = await cmd(imports.updateImportDraftCommand(alex, op(), {
-      draftId: d.id, expectedRevision: d.revision, householdInstructions: "Our way: simmer longer.",
+      draftId: d.id, expectedRevision: undecide.result.revision, householdInstructions: "Our way: simmer longer.",
       decisions: [
         { index: idx("1 (15 oz) can diced tomatoes"), decision: { use: true, name: "diced tomatoes", quantity: "15", unit: "oz", form: "raw" } },
         { index: idx("salt to taste"), decision: { use: false } },

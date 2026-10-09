@@ -1,8 +1,11 @@
+import { isHouseholdSeasoning } from "./seasonings";
 import { hashOf } from "../hash";
 import { D, Dec, convert, normalizeUnit, packagesFor } from "../units";
 import { eventDemand } from "../recipes/plate";
 import { dayName } from "../dates";
 import type { Allocation, CookingEvent, Ingredient, RecipeVersion } from "../types";
+/** Decimal places of a meal amount as shown to (and confirmed by) a member. */
+const SHOWN_PLACES = 3;
 
 /**
  * Current grocery requirements, derived from accepted choices plus facts. Pure: no I/O.
@@ -190,6 +193,8 @@ export interface ProjectionResult {
   /** Still to buy after orders, receipts and transfers already accounted for. */
   outstandingPurchase: CostView;
   budget: { status: "unset" | "within" | "over" | "unknown"; scope: string | null; limitMinor: number | null; firm: boolean };
+  /** Salt and black pepper the planned dinners use: left off the list (the household has them). */
+  householdSeasonings: { key: string; name: string; recipes: string[] }[];
 }
 
 function costFrom(values: (number | null)[], currency: string): CostView {
@@ -203,10 +208,19 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
   // 1. Meal demand from accepted, scheduled cooking events.
   type MealSource = { eventId: string; cookNight: string; recipeTitle: string; quantity: string; unit: string };
   const meal = new Map<string, { byUnit: Map<string, Dec>; sources: MealSource[] }>();
+  // Ordinary salt and black pepper: never bought (the household has them); recipes keep them.
+  const seasonings = new Map<string, { key: string; name: string; recipes: string[] }>();
   for (const { event, recipe, allocations } of input.events) {
     if (event.status !== "scheduled" || !event.cookNight) continue;
     const { lines } = eventDemand(recipe, allocations);
     for (const l of lines) {
+      const ingName = input.ingredients.get(l.ingredientKey)?.name ?? l.ingredientKey.replace(/_/g, " ");
+      if (isHouseholdSeasoning(ingName)) {
+        const sz = seasonings.get(l.ingredientKey) ?? { key: l.ingredientKey, name: ingName, recipes: [] };
+        if (!sz.recipes.includes(recipe.title)) sz.recipes.push(recipe.title);
+        seasonings.set(l.ingredientKey, sz);
+        continue;
+      }
       const m = meal.get(l.ingredientKey) ?? { byUnit: new Map<string, Dec>(), sources: [] as MealSource[] };
       m.byUnit.set(l.unit, (m.byUnit.get(l.unit) ?? new D(0)).plus(l.quantity));
       m.sources.push({ eventId: event.id, cookNight: event.cookNight, recipeTitle: recipe.title, quantity: l.quantity.toDecimalPlaces(3).toString(), unit: l.unit });
@@ -273,7 +287,10 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
     if (avail && mealQty && mealUnit) {
       if (avail.state === "enough") {
         const reviewed = avail.reviewedDemand && avail.reviewedUnit ? convert(avail.reviewedDemand, avail.reviewedUnit, mealUnit) : null;
-        if (reviewed && reviewed.gte(mealQty)) {
+        // "Have enough" binds to the amount the member was shown, which is the demand to 3 decimal places
+        // (`meal.quantity` below). Comparing it with the unrounded demand would call 1.333 fl oz too little
+        // for 1.3333… fl oz and put the line back on the list although nothing changed.
+        if (reviewed && reviewed.gte(mealQty.toDecimalPlaces(SHOWN_PLACES))) {
           homeSupply = mealQty;
         } else {
           homeSupply = reviewed ?? new D(0);
@@ -462,7 +479,7 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
       key,
       ingredientKey,
       name: ing?.name ?? reqs[0]?.text ?? key,
-      meal: mealQty && mealUnit ? { quantity: mealQty.toDecimalPlaces(3).toString(), unit: normalizeUnit(mealUnit), sources: m!.sources } : null,
+      meal: mealQty && mealUnit ? { quantity: mealQty.toDecimalPlaces(SHOWN_PLACES).toString(), unit: normalizeUnit(mealUnit), sources: m!.sources } : null,
       mealUnitConflict,
       requests: reqs.map((r) => ({ id: r.id, kind: r.kind, packages: r.packages, text: r.text, contributors: r.contributors, productId: r.productId ?? null })),
       availability: avail,
@@ -541,5 +558,6 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
     pickupSpending,
     outstandingPurchase,
     budget: { status: budgetStatus, scope: input.budget.scope, limitMinor: input.budget.limitMinor, firm: input.budget.firm },
+    householdSeasonings: [...seasonings.values()].sort((a, b) => a.key.localeCompare(b.key)),
   };
 }

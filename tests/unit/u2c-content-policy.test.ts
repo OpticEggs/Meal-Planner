@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import { recipeContentConfig } from "@/server/env";
 import { configProblems } from "@/server/deploy";
 import { contentUse, NOTHING_KEPT, photoHostAllowed, readRefusal, sameSite } from "@/server/integrations/recipe-import/content-policy";
-import { budgetBytesSearchUrl, suggestedDecision, titleFromUrl, type ParsedLine } from "@/domain/recipes/import";
+import { budgetBytesSearchUrl, initialDecision, titleFromUrl, type ParsedLine } from "@/domain/recipes/import";
 
 describe("content policy", () => {
   it("CP-01: nothing is kept unless the owner turned it on", () => {
@@ -15,10 +15,12 @@ describe("content policy", () => {
     expect(contentUse("example.com", cfg)).toEqual({ ...NOTHING_KEPT, source: "example.com" });
   });
 
-  it("CP-02: the household-private setting keeps method and photo for any readable site — never Budget Bytes", () => {
+  // Changed 2026-10-09 (owner direction): the household-private setting no longer copies the publisher's photo;
+  // only a per-site grant (or the member's own photo) keeps one. Was: `photos: true`.
+  it("CP-02: the household-private setting keeps the method (not the photo) for any readable site — never Budget Bytes", () => {
     const cfg = recipeContentConfig({ TABLE_RECIPE_CONTENT: "household_private" });
     // RUC-01 labels: an owner-selected mode, not a publisher licence.
-    expect(contentUse("www.example.com", cfg)).toEqual({ instructions: true, photos: true, kind: "owner_mode", source: "www.example.com", basis: "owner-selected household-private mode (an owner setting, not a publisher licence)" });
+    expect(contentUse("www.example.com", cfg)).toEqual({ instructions: true, photos: false, kind: "owner_mode", source: "www.example.com", basis: "owner-selected household-private mode (an owner setting, not a publisher licence)" });
     expect(contentUse("www.budgetbytes.com", cfg)).toMatchObject({ instructions: false, photos: false, basis: null });
   });
 
@@ -70,13 +72,15 @@ describe("review helpers", () => {
     expect(budgetBytesSearchUrl("  black beans & rice ")).toBe("https://www.budgetbytes.com/?s=black%20beans%20%26%20rice");
   });
 
-  it("RH-02: a suggestion is offered only on a line that needs review, and only if it would be a valid decision", () => {
+  // Rewritten 2026-10-09 (owner direction): the suggestion workflow was removed. A cleanly read line starts as
+  // Use, a household seasoning starts left out, and an uncertain line starts undecided — never a guess.
+  it("RH-02: what a line starts as: Use when read cleanly, left out when a seasoning, undecided when uncertain", () => {
     const line = (p: Partial<ParsedLine>): ParsedLine => ({ quantity: null, unit: null, name: "x", form: null, status: "requires_review", reasons: [], ...p });
-    expect(suggestedDecision(line({ suggestion: { use: true, name: "salsa", quantity: "0.3333", unit: "cup", form: "raw" } }))).toEqual({ use: true, name: "salsa", quantity: "0.3333", unit: "cup", form: "raw" });
-    expect(suggestedDecision(line({ suggestion: { use: false } }))).toEqual({ use: false });
-    expect(suggestedDecision(line({ status: "parsed", suggestion: { use: false } }))).toBeNull();
-    expect(suggestedDecision(line({ suggestion: { use: true, name: "x", quantity: "1", unit: "can", form: "raw" } }))).toBeNull();
-    expect(suggestedDecision(line({ suggestion: { use: true, name: "x", quantity: "0", unit: "cup", form: "raw" } }))).toBeNull();
-    expect(suggestedDecision(line({}))).toBeNull();
+    expect(initialDecision(line({ status: "parsed", name: "salsa", quantity: "1/3", unit: "cup" }))).toEqual({ use: true, name: "salsa", quantity: "1/3", unit: "cup", form: "raw" });
+    expect(initialDecision(line({ status: "omitted", name: "kosher salt", quantity: "1", unit: "tsp" }))).toEqual({ use: false });
+    expect(initialDecision(line({ status: "requires_review", name: "garlic (clove)", unit: "each", range: ["2", "3"] }))).toBeNull();
+    expect(initialDecision(line({ status: "parsed", quantity: "1", unit: "can" }))).toBeNull(); // not a unit Table converts
+    expect(initialDecision(line({ status: "parsed", quantity: "0", unit: "cup" }))).toBeNull();
+    expect(initialDecision(line({}))).toBeNull();
   });
 });

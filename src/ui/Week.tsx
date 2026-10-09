@@ -5,7 +5,7 @@ import { useStore } from "./store";
 import { ModalSheet, focusFirst, nightFallback } from "./a11y";
 import { AlsoNeed } from "./AlsoNeed";
 import { budgetText, costView, dateLabel, effortText, money, nutrient, preferenceText } from "./format";
-import { PlaceholderTile } from "./Tile";
+import { RecipeHero, PlaceholderTile } from "./Tile";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -197,13 +197,11 @@ function NextDinner({ night }: { night: any }) {
   const label = night.kind === "cook" ? night.recipe?.title : night.kind === "leftover" ? `Leftovers: ${night.recipe?.title}` : night.kind === "out" ? "Dinner out" : "No dinner chosen";
   return (
     <div className="tonight card" data-testid="next-dinner">
-      <div className="row" style={{ alignItems: "flex-start", flexWrap: "nowrap" }}>
-        <PlaceholderTile title={night.recipe?.title} large imageId={night.recipe?.imageId} />
-        <div className="grow">
-          <span className="chip">Next dinner · {night.dayName}</span>
-          <h2>{label}</h2>
-          {night.recipe && <div className="meta">{effortText(night.recipe)}{night.recipe.cuisine ? ` · ${night.recipe.cuisine}` : ""}</div>}
-        </div>
+      {night.recipe && <RecipeHero title={night.recipe.title} imageId={photoId(night.recipe)} compact />}
+      <div className="tonight-body">
+        <span className="chip">Next dinner · {night.dayName}</span>
+        <h2>{label}</h2>
+        {night.recipe && <div className="meta">{effortText(night.recipe)}{night.recipe.cuisine ? ` · ${night.recipe.cuisine}` : ""}</div>}
       </div>
       <p className="muted small">
         {night.kind === "cook" && night.batch
@@ -218,6 +216,9 @@ function NextDinner({ night }: { night: any }) {
     </div>
   );
 }
+
+/** The picture a recipe shows: the member's own photo, else a kept source photo (D-overhaul). */
+const photoId = (r: any): string | null => r?.photo?.imageId ?? r?.imageId ?? null;
 
 function coverageText(c: any) {
   return c.status === "covered" ? "Covered" : c.status === "out" ? "Out" : c.status === "uncovered" ? "No dinner" : "Unresolved";
@@ -236,7 +237,7 @@ function NightRow({ n, open, onOpen, onClose }: { n: any; open: boolean; onOpen:
   }
   return (
     <li className={`night ${n.night === snapshot.clock.nextDinner ? "is-next" : ""}`} data-testid={`night-${n.night}`} data-kind={n.kind} data-revision={n.revision}>
-      <PlaceholderTile title={n.recipe?.title} imageId={n.recipe?.imageId} />
+      <PlaceholderTile title={n.recipe?.title} imageId={photoId(n.recipe)} />
       <div className="grow">
         <div className="day" aria-hidden="true">{n.dayName.slice(0, 3)}</div>
         <span className="sr-only">{n.dayName}: </span>

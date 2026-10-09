@@ -21,7 +21,7 @@ import { householdSnapshot } from "@/server/queries/snapshot";
 import { addRecipeFromLink, fixtureDeps } from "@/server/recipe-import-service";
 import { exportHousehold, restoreHousehold } from "@/server/export";
 import { migrate } from "@/server/db/migrate";
-import { suggestedDecision, type DraftLine } from "@/domain/recipes/import";
+import type { DraftLine } from "@/domain/recipes/import";
 
 const session = vi.hoisted(() => ({ actor: null as Actor | null }));
 vi.mock("@/server/session", async (importOriginal) => ({
@@ -51,13 +51,14 @@ function upload(fields: { recipeId: string; expectedRevision: number | string; o
   return new Request("http://localhost:3000/api/recipe-photos", { method: "POST", body: form, headers: { host: "localhost:3000", origin: "http://localhost:3000", "sec-fetch-site": "same-origin", ...headers } });
 }
 
-/** An imported recipe whose version keeps the page's photo (household-private content setting). */
+/** An imported recipe whose version keeps the page's photo (a per-site grant for photos; since 2026-10-09 the
+ *  household-private setting no longer keeps a publisher's photo). */
 async function importedWithSourcePhoto(jon: Actor) {
-  const deps = { ...fixtureDeps(path.join(DIR, "manifest.json")), content: () => ({ householdPrivate: true, grants: [] }) };
+  const deps = { ...fixtureDeps(path.join(DIR, "manifest.json")), content: () => ({ householdPrivate: false, grants: [{ domain: "wprm.example.com", instructions: false, photos: true }] }) };
   const r: any = await addRecipeFromLink(jon, { url: "https://wprm.example.com/skillet-taco-rice/", operationId: op() }, deps);
   const d = (await q<any>("SELECT * FROM recipe_import_drafts WHERE id=$1", [r.draftId]))[0];
   const lines: DraftLine[] = d.lines;
-  const decisions = lines.map((l, index) => ({ index, decision: l.decision ?? suggestedDecision(l.parsed) ?? { use: false as const } }));
+  const decisions = lines.map((l, index) => ({ index, decision: l.decision ?? { use: false as const } }));
   expect((await imports.updateImportDraftCommand(jon, op(), { draftId: d.id, expectedRevision: 1, decisions })).status).toBe("accepted");
   const c: any = await imports.confirmImportDraftCommand(jon, op(), { draftId: d.id, expectedRevision: 2 });
   expect(c.status, JSON.stringify(c)).toBe("accepted");

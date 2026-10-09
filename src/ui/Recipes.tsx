@@ -5,7 +5,8 @@ import { useStore } from "./store";
 import { money, nutrient } from "./format";
 import { focusFirst, tabKeyTarget } from "./a11y";
 import { RecipeEditorDialog } from "./RecipeEditor";
-import { PlaceholderTile, SourceLine } from "./Tile";
+import { PlaceholderTile, RecipeHero, SourceLine } from "./Tile";
+import { amountText } from "./ImportReview";
 import { AddFromLinkForm, SaveLinkForm, SavedLinksList } from "./SavedLinks";
 import { ImportReviewDialog } from "./ImportReview";
 
@@ -33,7 +34,12 @@ export function RecipesScreen() {
     filter === "favorites" ? r.favoriteOf.includes(me.memberId) : filter === "sounds_good" ? !!r.interest : !r.archived,
   );
   return (
-    <section aria-label="Our recipes">
+    <section aria-label="Our recipes" className="recipes-screen">
+      <div className="screen-head">
+        <h2 className="page-title">Our Recipes</h2>
+        <button className="btn line small" aria-haspopup="dialog" onClick={(e) => setCreating(e.currentTarget)} data-testid="new-recipe">New recipe</button>
+      </div>
+      <div className="add-link card"><AddFromLinkForm onOpen={(b, el, result) => setImporting({ b, el, result })} /></div>
       <div className="row">
         <div className="tabs" role="tablist" aria-label="Show recipes">
           {FILTERS.map((f) => (
@@ -51,9 +57,7 @@ export function RecipesScreen() {
             </button>
           ))}
         </div>
-        <button className="btn line small" aria-haspopup="dialog" onClick={(e) => setCreating(e.currentTarget)} data-testid="new-recipe">New recipe</button>
       </div>
-      <div className="card"><AddFromLinkForm onOpen={(b, el, result) => setImporting({ b, el, result })} /></div>
       {creating && (
         <RecipeEditorDialog recipeId={null} onClose={() => setCreating(null)}
           returnFocus={() => focusFirst(creating, () => document.querySelector<HTMLElement>('[data-testid="new-recipe"]'))} />
@@ -76,19 +80,19 @@ export function RecipesScreen() {
       {list.length === 0 && <p className="small muted">{filter === "favorites" ? "No favorites yet." : filter === "sounds_good" ? "No saved ideas yet." : "No recipes yet."}</p>}
       <ul className="recipes" data-testid="recipe-list">
         {list.map((r: any) => (
-          <li key={r.recipeId} className="card recipe" data-testid="recipe-row" data-title={r.version.title}>
-            <PlaceholderTile title={r.version.title} imageId={r.version.imageId} />
+          <li key={r.recipeId} className="recipe" data-testid="recipe-row" data-title={r.version.title}>
+            <PlaceholderTile title={r.version.title} imageId={r.photo?.imageId ?? r.version.imageId} />
             <div className="grow">
-              <Link href={`/recipes/${r.recipeId}`}><strong>{r.version.title}</strong></Link>
+              <Link href={`/recipes/${r.recipeId}`} className="recipe-link"><strong>{r.version.title}</strong></Link>
               <div className="faint small">
-                v{r.version.versionNo} · {r.version.provenance}
+                {[r.version.effortMinutes ? `${r.version.effortMinutes} min` : null, r.version.provenance === "fixture" ? "test recipe" : r.version.provenance === "imported" ? `imported${r.version.sourceSiteName ? ` from ${r.version.sourceSiteName}` : ""}` : "ours"].filter(Boolean).join(" · ")}
                 {r.interest ? ` · Sounds good (${r.interest.display_name ?? r.interest.by ?? ""})` : ""}
-                {r.preferences[me.memberId] ? ` · you: ${PREFS.find((p) => p.v === r.preferences[me.memberId])?.label}` : " · you: no feedback yet"}
+                {r.preferences[me.memberId] ? ` · you: ${PREFS.find((p) => p.v === r.preferences[me.memberId])?.label}` : ""}
               </div>
             </div>
             {r.interest && <button className="btn line small" aria-label={`Clear the idea ${r.version.title}`} onClick={() => command("ArchiveInterest", { interestId: r.interest.id })}>Clear idea</button>}
-            <button className="btn line small" aria-label={`Favorite ${r.version.title}`} aria-pressed={r.favoriteOf.includes(me.memberId)} onClick={() => command("SetFavorite", { recipeId: r.recipeId, favorite: !r.favoriteOf.includes(me.memberId) })}>
-              <span aria-hidden="true">{r.favoriteOf.includes(me.memberId) ? "★" : "☆"}</span> Favorite
+            <button className={`icon-btn fav ${r.favoriteOf.includes(me.memberId) ? "on" : ""}`} aria-label={`Favorite ${r.version.title}`} aria-pressed={r.favoriteOf.includes(me.memberId)} onClick={() => command("SetFavorite", { recipeId: r.recipeId, favorite: !r.favoriteOf.includes(me.memberId) })}>
+              <span aria-hidden="true">{r.favoriteOf.includes(me.memberId) ? "★" : "☆"}</span>
             </button>
           </li>
         ))}
@@ -113,12 +117,13 @@ export function RecipeDetail({ recipeId }: { recipeId: string }) {
   const v = r.version;
   return (
     <article className="stack" data-testid="recipe-detail">
-      <Link href="/recipes" className="small">‹ Our Recipes</Link>
-      <div className="row" style={{ alignItems: "flex-start", flexWrap: "nowrap" }}>
-        <PlaceholderTile title={v.title} large imageId={v.imageId} />
-        <h2 className="page-title grow" data-testid="recipe-title">{v.title}</h2>
-      </div>
+      <Link href="/recipes" className="small back">‹ Our Recipes</Link>
+      <RecipeHero title={v.title} imageId={r.photo?.imageId ?? null}
+        credit={r.photo ? (r.photo.kind === "member" ? r.photo.label : `Photo: ${r.photo.label}`) : null}
+        href={r.photo?.kind === "source" ? v.sourceUrl : null} />
+      <h2 className="page-title recipe-title" data-testid="recipe-title">{v.title}</h2>
       <SourceLine v={v} />
+      <PhotoControls r={r} />
       <p className="faint small">
         Version {v.versionNo} · {v.provenance === "fixture" ? "test fixture" : v.provenance}{v.sourceLabel ? ` · ${v.sourceLabel}` : ""}{v.estimate ? " · amounts/times are estimates" : ""}
       </p>
@@ -162,7 +167,7 @@ export function RecipeDetail({ recipeId }: { recipeId: string }) {
             <strong>{c.name}</strong>
             <ul className="amounts small">
               {v.ingredients.filter((i: any) => i.componentKey === c.key).map((i: any, k: number) => (
-                <li key={k}><span>{i.name}</span><span className="muted">{i.quantity} {i.unit}</span></li>
+                <li key={k}><span>{i.name}</span><span className="muted">{amountText(String(i.quantity), i.unit)}</span></li>
               ))}
             </ul>
           </li>
@@ -216,4 +221,46 @@ export function Steps({ text, testId, sourceUrl }: { text: string | null | undef
   // Steps written as "1. …" are shown in the numbered list without repeating their own number.
   const numbered = lines.every((l) => /^\d+[.)]\s+/.test(l));
   return <ol className="steps" data-testid={testId}>{lines.map((l, i) => <li key={i}>{numbered ? l.replace(/^\d+[.)]\s+/, "") : l}</li>)}</ol>;
+}
+
+/** The household's own photo of a dish: add, replace or remove it. A photo from a recipe page is shown only
+ *  under a recorded permission; a photo you took needs none. */
+function PhotoControls({ r }: { r: any }) {
+  const { loadLibrary, command, announce } = useStore();
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const file = useRef<HTMLInputElement>(null);
+  const upload = async (f: File) => {
+    setBusy(true);
+    setErr(null);
+    const body = new FormData();
+    body.set("recipeId", r.recipeId);
+    body.set("expectedRevision", String(r.photoRevision ?? 0));
+    body.set("operationId", `photo-${crypto.randomUUID()}`);
+    body.set("photo", f);
+    const res = await fetch("/api/recipe-photos", { method: "POST", body }).then((x) => x.json(), () => ({ error: "Table couldn't be reached. Nothing changed." }));
+    setBusy(false);
+    if (res.status === "accepted") {
+      announce("Photo added.");
+      await loadLibrary();
+    } else setErr(res.message ?? res.error ?? "The photo wasn't saved.");
+    if (file.current) file.current.value = "";
+  };
+  const mine = r.photo?.kind === "member";
+  return (
+    <div className="photo-controls">
+      {/* A visible button opens the picker; the file input itself is never in the tab order. */}
+      <button type="button" className="btn line small" disabled={busy} onClick={() => file.current?.click()}>{mine ? "Change your photo" : "Add your own photo"}</button>
+      <input ref={file} type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden tabIndex={-1} aria-hidden="true" disabled={busy} data-testid="photo-input"
+        onChange={(e) => { const f = e.target.files?.[0]; if (f) void upload(f); }} />
+      {mine && (
+        <button className="btn quiet small" disabled={busy} onClick={async () => {
+          const x = await command("SetRecipePhoto", { recipeId: r.recipeId, imageId: null, expectedRevision: r.photoRevision ?? 0 });
+          if (x.status === "accepted") { announce("Photo removed."); await loadLibrary(); } else setErr(x.message);
+        }}>Remove photo</button>
+      )}
+      {busy && <span className="small muted" role="status">Saving photo…</span>}
+      {err && <p className="field-error small" role="alert" data-testid="photo-error">{err}</p>}
+    </div>
+  );
 }

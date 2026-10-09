@@ -209,7 +209,7 @@ export async function recomputeProjection(c: Db, householdId: string, weekId: st
       {
         reviewFingerprint: result.reviewFingerprint, payloadHash: result.payloadHash, payload: result.payload, ready: result.ready,
         readyBlockers: result.readyBlockers, dinnerIngredientCost: result.dinnerIngredientCost, pickupSpending: result.pickupSpending,
-        outstandingPurchase: result.outstandingPurchase, budget: result.budget,
+        outstandingPurchase: result.outstandingPurchase, budget: result.budget, householdSeasonings: result.householdSeasonings,
       },
     ],
   );

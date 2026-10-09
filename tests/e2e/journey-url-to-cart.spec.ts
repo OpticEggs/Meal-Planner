@@ -19,7 +19,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { TEST_ENV } from "../../playwright.config";
 import { NIGHT } from "../fixtures/household";
-import { member, previewReplace, q, seed } from "./helpers";
+import { leaveOutLine, member, previewReplace, q, seed, useLine } from "./helpers";
 
 const PORT = 3105;
 const BASE = `http://127.0.0.1:${PORT}`;
@@ -120,12 +120,12 @@ test("JOURNEY: link → recipe → Saturday → groceries → Kroger products �
   await expect(review.getByTestId("draft-kept")).toContainText("The page's method (3 steps) was kept (owner-recorded grant for wprm.example.com)");
   await expect(review.getByTestId("draft-kept")).toContainText("Its photo was kept");
   await expect(review.getByTestId("draft-servings")).toHaveValue("4");
-  await review.getByTestId("accept-suggestions").click();
-  // The page gives rice by volume; stores sell it by weight and Table never invents a density. The
-  // member states the amount by weight themself (1 cup dry ≈ 7 oz, their own reading of the bag).
-  await review.getByLabel("Amount for the whole recipe, line 1").fill("7");
-  await review.getByLabel("Unit, line 1").selectOption("oz");
-  await review.locator('[data-testid="draft-line"][data-raw="2 cups water"]').getByRole("radio", { name: "Leave out of groceries" }).check();
+  // 2026-10-09: every line is read cleanly and starts as Use (no suggestions to accept); salt and pepper are left
+  // out as household seasonings. The page gives rice by volume; stores sell it by weight and Table never invents a
+  // density, so the member states the amount by weight themself (1 cup dry ≈ 7 oz, their own reading of the bag).
+  await expect(review.locator('[data-testid="draft-line"][data-raw="salt and pepper to taste"]')).toHaveAttribute("data-state", "out");
+  await useLine(review, "1 cup long grain rice", "7", "oz");
+  await leaveOutLine(review, "2 cups water");
   await review.getByTestId("import-confirm").click();
   await expect(review).toBeHidden();
   const [v] = await q<any>("SELECT v.id, v.image_id, v.instructions, v.source_url FROM recipe_versions v WHERE v.title='Skillet Taco Rice'");
@@ -134,7 +134,7 @@ test("JOURNEY: link → recipe → Saturday → groceries → Kroger products �
   expect(v.instructions).toContain("Fold in the beans and salsa (synthetic).");
   const ings = await q<any>("SELECT ingredient_key, quantity, unit FROM recipe_ingredients WHERE recipe_version_id=$1 ORDER BY ingredient_key", [v.id]);
   expect(ings.map((i) => [i.ingredient_key, Number(i.quantity), i.unit])).toEqual([
-    ["black_beans", 3.75, "oz"], ["garlic_clove", 0.5, "each"], ["long_grain_rice", 1.75, "oz"], ["olive_oil", 0.5, "tbsp"], ["onion", 0.25, "each"], ["salsa", 0.0833, "cup"],
+    ["black_beans", 3.75, "oz"], ["garlic_clove", 0.5, "each"], ["long_grain_rice", 1.75, "oz"], ["olive_oil", 0.5, "tbsp"], ["onion", 0.25, "each"], ["salsa", 0.083333333333, "cup"],
   ]);
 
   // 3. Swap Saturday's tacos for it deliberately (Change sheet → preview → apply).

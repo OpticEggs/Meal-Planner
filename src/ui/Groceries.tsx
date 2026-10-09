@@ -123,6 +123,7 @@ export function GroceriesScreen() {
 
   return (
     <section aria-label="Groceries" data-testid="groceries" data-projection-revision={g.projectionRevision}>
+      <h2 className="page-title">Groceries</h2>
       {delta && (
         // Not a live region: the announcer says once that approved lines need review again; this
         // is the readable detail, and it never takes focus from what the member is doing.
@@ -190,6 +191,11 @@ export function GroceriesScreen() {
       <ul className="lines">
         {g.lines.map((l: any) => <Line key={l.key} l={l} open={open} />)}
       </ul>
+      {(s.householdSeasonings ?? []).length > 0 && (
+        <p className="small muted seasonings" data-testid="household-seasonings">
+          Not on the list: {s.householdSeasonings.map((x: any) => x.name).join(", ")} — household seasonings you already have.
+        </p>
+      )}
       <Transfers open={open} />
       <Order open={open} />
       {dialog && <DialogFor d={dialog.d} onClose={() => setDialog(null)} returnFocus={() => focusFirst(dialog.opener) ?? groceryFallback(dialog.d)} />}
