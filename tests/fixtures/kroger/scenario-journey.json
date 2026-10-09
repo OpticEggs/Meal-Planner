@@ -1,0 +1,13 @@
+{
+  "_note": "TEST-ONLY synthetic Kroger answers for the continuous browser journey (TABLE_KROGER_FAKE_SCENARIO). Every product, price, token and the cart acknowledgment are invented; nothing here is a Kroger value.",
+  "cart": { "status": 204 },
+  "products": [
+    { "productId": "0004000000001", "upc": "0004000000001", "description": "Synthetic Long Grain Rice 2 lb bag", "items": [{ "size": "2 lb", "soldBy": "UNIT", "price": { "regular": 2.99 }, "fulfillment": { "curbside": true } }] },
+    { "productId": "0004000000002", "upc": "0004000000002", "description": "Synthetic Olive Oil 500 ml", "items": [{ "size": "500 ml", "soldBy": "UNIT", "price": { "regular": 6.99 }, "fulfillment": { "curbside": true } }] },
+    { "productId": "0004000000003", "upc": "0004000000003", "description": "Synthetic Yellow Onion", "items": [{ "size": "1 each", "soldBy": "UNIT", "price": { "regular": 0.89 }, "fulfillment": { "curbside": true } }] },
+    { "productId": "0004000000004", "upc": "0004000000004", "description": "Synthetic Garlic Bulb", "items": [{ "size": "1 each", "soldBy": "UNIT", "price": { "regular": 0.59 }, "fulfillment": { "curbside": true } }] },
+    { "productId": "0004000000005", "upc": "0004000000005", "description": "Synthetic Black Beans can", "items": [{ "size": "15.5 oz", "soldBy": "UNIT", "price": { "regular": 1.09 }, "fulfillment": { "curbside": true } }] },
+    { "productId": "0004000000006", "upc": "0004000000006", "description": "Synthetic Chunky Salsa", "items": [{ "size": "16 fl oz", "soldBy": "UNIT", "price": { "regular": 3.49 }, "fulfillment": { "curbside": true } }] },
+    { "productId": "0004000000007", "upc": "0004000000007", "description": "Synthetic Chicken Thighs by weight", "items": [{ "size": "per lb", "soldBy": "WEIGHT", "price": { "regular": 4.99 }, "fulfillment": { "curbside": true } }] }
+  ]
+}

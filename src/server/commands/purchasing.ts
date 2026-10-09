@@ -6,6 +6,7 @@ import { Reject, runCommand, type Actor, type CommandReceipt } from "./framework
 import { batchStatuses, ensureCycle, recomputeProjection } from "../groceries/recompute";
 import { currentLines } from "./groceries";
 import { retailer, waitForBarrier } from "../integrations/retailer";
+import { omissionsFor, partialReview, selectionProblem } from "@/domain/groceries/partial-handoff";
 
 /**
  * Grocery handoff in three short transactions with a clear dispatch boundary:
@@ -74,6 +75,83 @@ export async function startHandoff(actor: Actor, operationId: string, p: StartHa
       status: "accepted",
       result: { batchId, items: payload.length, adapter: adapter.mode, simulated: !adapter.live },
       change: { weekId: p.weekId, summary: { type: "handoff", text: `${actor.displayName} approved sending ${payload.length} item(s) to ${adapter.label}` } },
+      recomputeWeeks: [p.weekId],
+    };
+  });
+  if (receipt.status !== "accepted" || receipt.replayed) return receipt;
+  const dispatch = await dispatchBatch(actor.householdId, String(receipt.result.batchId), p.weekId);
+  return { ...receipt, dispatch };
+}
+
+export interface StartPartialHandoffPayload {
+  weekId: string;
+  /** The whole list's review identity and the partial review's identity the member saw. */
+  reviewFingerprint: string;
+  partialFingerprint: string;
+  /** Lines to send now (each must be ready on its own). */
+  selectedKeys: string[];
+  /** Every line that will NOT be sent, as the member acknowledged it (must equal what is actually left out). */
+  acknowledgedOmissions: string[];
+}
+
+/**
+ * B10 — send a reviewed subset of the grocery lines, deliberately. Same safeguards as StartHandoff
+ * (household lock, idempotency, retailer readiness before anything is frozen, purchasing-revision and
+ * review checks, approvals consumed once, re-validation before dispatch, bounded dispatch, uncertain never
+ * replayed) plus: the subset and the reviewed omissions are recomputed from the stored projection and must
+ * match what the member saw; only selected, approved, store-sold, priced lines enter the frozen payload;
+ * only their approvals are consumed; the omissions are recorded with the batch. Whole-list readiness is
+ * not required and not changed: this never turns the ordinary Send into a partial one.
+ */
+export async function startPartialHandoff(actor: Actor, operationId: string, p: StartPartialHandoffPayload): Promise<CommandReceipt & { dispatch?: unknown }> {
+  const adapter = retailer();
+  const receipt = await runCommand(actor, "StartPartialHandoff", operationId, p, async (c) => {
+    const st = adapter.readiness ? await adapter.readiness(actor.householdId) : adapter.status();
+    if (!st.ready) throw new Reject("retailer_not_ready", st.reason);
+    const w = await c.query("SELECT 1 FROM weeks WHERE id=$1 AND household_id=$2", [p?.weekId, actor.householdId]);
+    if (!w.rowCount) throw new Reject("not_found", "Week not found");
+    const cycleId = await ensureCycle(c, actor.householdId, p.weekId);
+    const cyc = await c.query(
+      "SELECT g.projection_summary, g.projection_inputs_revision, g.destination, h.purchasing_revision FROM grocery_cycles g JOIN households h ON h.id=g.household_id WHERE g.id=$1",
+      [cycleId],
+    );
+    const summary = cyc.rows[0].projection_summary;
+    if (Number(cyc.rows[0].projection_inputs_revision) !== Number(cyc.rows[0].purchasing_revision)) {
+      throw new Reject("stale_review", "Household products or prices changed; review again. Nothing was sent.");
+    }
+    const lines = await currentLines(c, cycleId);
+    const review = partialReview({ lines, reviewFingerprint: summary.reviewFingerprint, budget: summary.budget }, cyc.rows[0].destination ?? "retailer_cart", adapter.mode);
+    if (summary.reviewFingerprint !== p.reviewFingerprint || review.partialFingerprint !== p.partialFingerprint) {
+      throw new Reject("stale_review", "Groceries changed since this review. Nothing was sent; review the items again.", { currentPartialFingerprint: review.partialFingerprint });
+    }
+    if (review.blockers.length) throw new Reject("not_ready", review.blockers.join("; "), { blockers: review.blockers });
+    const problem = selectionProblem(review, p.selectedKeys, p.acknowledgedOmissions);
+    if (problem) throw new Reject("invalid_selection", problem);
+    const chosen = review.eligible.filter((e) => p.selectedKeys.includes(e.key));
+    const payload = chosen.map((e) => ({ productRef: e.productRef, ingredientKey: e.key, packages: e.packages })).sort((a, b) => a.productRef.localeCompare(b.productRef));
+    const omissions = omissionsFor(review, p.selectedKeys);
+    const batch = await c.query(
+      `INSERT INTO handoff_batches(household_id, cycle_id, adapter, review_fingerprint, payload, payload_hash, authorized_by, operation_id, scope, omissions)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'partial',$9) RETURNING id`,
+      [actor.householdId, cycleId, adapter.mode, p.reviewFingerprint, JSON.stringify(payload), hashOf(payload), actor.memberId, operationId,
+        JSON.stringify({ partialFingerprint: review.partialFingerprint, omitted: omissions })],
+    );
+    const batchId = batch.rows[0].id;
+    for (const e of chosen) {
+      // Only the approvals of the lines actually sent are consumed; every other approval stays valid.
+      const ap = await c.query("SELECT id FROM purchase_approvals WHERE id=$1 AND cycle_id=$2 AND ingredient_key=$3 AND state='active'", [e.approvalId, cycleId, e.key]);
+      if (!ap.rowCount) throw new Reject("stale_review", `${e.name} is not approved for this quantity.`);
+      await c.query(
+        "INSERT INTO handoff_batch_lines(batch_id, ingredient_key, product_id, product_ref, packages, line_fingerprint, approval_id) VALUES ($1,$2,$3,$4,$5,$6,$7)",
+        [batchId, e.key, e.productId, e.productRef, e.packages, e.lineFingerprint, e.approvalId],
+      );
+      await c.query("UPDATE purchase_approvals SET state='consumed', state_changed_at=now(), consumed_by_batch=$2 WHERE id=$1", [e.approvalId, batchId]);
+    }
+    await c.query("INSERT INTO handoff_status_events(batch_id, status, evidence) VALUES ($1,'authorized',$2)", [batchId, { by: actor.displayName, scope: "partial", leftOut: omissions.length }]);
+    return {
+      status: "accepted",
+      result: { batchId, items: payload.length, leftOut: omissions.length, adapter: adapter.mode, simulated: !adapter.live },
+      change: { weekId: p.weekId, summary: { type: "handoff", text: `${actor.displayName} approved sending ${payload.length} item(s) to ${adapter.label} — a partial transfer; ${omissions.length} item(s) left out` } },
       recomputeWeeks: [p.weekId],
     };
   });

@@ -5,7 +5,7 @@ import { AlsoNeed } from "./AlsoNeed";
 import { budgetText, costView, money, qty } from "./format";
 import { focusFirst } from "./a11y";
 import {
-  CartCheckDialog, ConfirmOrderDialog, CorrectReceiptDialog, KrogerMatchDialog, ProductDialog, RemoveRequestDialog, SubstituteDialog, ValidateSubstituteDialog,
+  CartCheckDialog, ConfirmOrderDialog, CorrectReceiptDialog, KrogerMatchDialog, PartialHandoffDialog, ProductDialog, RemoveRequestDialog, SubstituteDialog, ValidateSubstituteDialog,
   type GroceryDialog,
 } from "./GroceryDialogs";
 import { InstacartPanel, ShoppingListCard, WhereToShop, destinationLabel } from "./WhereToShop";
@@ -174,6 +174,10 @@ export function GroceriesScreen() {
         <button className="btn primary" disabled={!s.ready || !writesAllowed || !snapshot.retailer.ready} onClick={send} data-testid="send">
           Send to {snapshot.retailer.live ? snapshot.retailer.label : "Simulated retailer"}
         </button>
+        {g.partial?.eligible.length > 0 && !s.ready && (
+          <button className="btn line" aria-haspopup="dialog" disabled={!writesAllowed || !snapshot.retailer.ready} data-testid="prepare-partial"
+            onClick={(e) => open({ kind: "partial" }, e)}>Prepare supported items…</button>
+        )}
       </div>}
       {storeCart && !snapshot.retailer.ready && <p className="warn small">{snapshot.retailer.reason}</p>}
       {storeCart && g.shoppingList && <ShoppingListCard />}
@@ -204,6 +208,7 @@ function DialogFor({ d, onClose, returnFocus }: { d: GroceryDialog; onClose: () 
     case "correct": return <CorrectReceiptDialog receiptId={d.receiptId} {...common} />;
     case "cart-check": return <CartCheckDialog batchId={d.batchId} {...common} />;
     case "kroger-match": return <KrogerMatchDialog {...common} />;
+    case "partial": return <PartialHandoffDialog {...common} />;
   }
 }
 
@@ -333,7 +338,10 @@ function Transfers({ open }: { open: Opener }) {
       <ul className="lines">
         {batches.map((b: any, i: number) => (
           <li key={b.id} className="small" data-testid="batch" data-status={b.status}>
-            <strong>Transfer {i + 1}: {BATCH_STATUS[b.status] ?? b.status}</strong> · approved by {b.authorizedBy} · {b.payload.map((x: any) => `${x.ingredientKey} ×${x.packages}`).join(", ")}
+            <strong>Transfer {i + 1}{b.scope === "partial" ? " (partial)" : ""}: {BATCH_STATUS[b.status] ?? b.status}</strong> · approved by {b.authorizedBy} · {b.payload.map((x: any) => `${x.ingredientKey} ×${x.packages}`).join(", ")}
+            {b.scope === "partial" && (
+              <div data-testid="batch-left-out">Left out of this transfer ({b.omitted.length}): {b.omitted.map((o: any) => o.name).join(", ")} — still on your list.</div>
+            )}
             <div className="faint">{b.history.map((h: any) => BATCH_STATUS[h.status] ?? h.status).join(" → ")}{b.status === "acknowledged" ? " (batch-level acknowledgment; not an order confirmation)" : ""}</div>
             {b.status === "uncertain" && (
               <div className="row">

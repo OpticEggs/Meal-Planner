@@ -14,7 +14,7 @@ test("B5: Kroger connect start follows the command route rules and stores nothin
   expect((await request.get("/api/kroger/status")).status()).toBe(401);
   const anonCb = await request.get("/api/kroger/callback?code=fake-code&state=fake-state", { maxRedirects: 0 });
   expect(anonCb.status()).toBe(303);
-  expect(anonCb.headers().location).toMatch(/\/household\?kroger=refused$/);
+  expect(anonCb.headers().location).toBe("/household?kroger=refused"); // same origin as the browser, never the bind address
 
   const jon = await member(browser, "jon");
   const evil = await jon.context.request.post("/api/kroger/connect", { headers: { origin: "https://evil.example", "content-type": "application/json" }, data: {} });
@@ -32,7 +32,7 @@ test("B5: Kroger connect start follows the command route rules and stores nothin
 
   const cb = await jon.context.request.get("/api/kroger/callback?code=fake-code&state=fake-state", { maxRedirects: 0 });
   expect(cb.status()).toBe(303);
-  expect(cb.headers().location).toMatch(/\/household\?kroger=not_activated$/);
+  expect(cb.headers().location).toBe("/household?kroger=not_activated");
   expect(cb.headers().location).not.toContain("fake-code");
 
   const status = await jon.page.evaluate(async () => (await fetch("/api/kroger/status")).json());

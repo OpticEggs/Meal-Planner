@@ -7,7 +7,7 @@ import {
   addProductCommand, approvePurchaseLinesCommand, approveStapleProductCommand, captureHouseholdNeedCommand, chooseProductCommand, confirmOrderCommand, mapRequestCommand,
   recordAvailabilityCommand, recordPriceCommand, recordReceiptCommand, removeRequestCommand, validateSubstitutionCommand,
 } from "./groceries";
-import { resolveUncertainTransferCommand, startHandoff } from "./purchasing";
+import { resolveUncertainTransferCommand, startHandoff, startPartialHandoff } from "./purchasing";
 import { addStapleCommand, setStapleActiveCommand, updateStapleCommand } from "./staples";
 import {
   addRecipeNoteCommand, archiveInterestCommand, archiveRecipeCommand, reviewIngredientCommand, saveInterestCommand, saveRecipeVersionCommand,
@@ -47,6 +47,7 @@ export const COMMANDS: Record<string, Handler> = {
   UpdateStaple: updateStapleCommand,
   SetStapleActive: setStapleActiveCommand,
   StartHandoff: startHandoff,
+  StartPartialHandoff: startPartialHandoff,
   ResolveUncertainTransfer: resolveUncertainTransferCommand,
   ConfirmOrder: confirmOrderCommand,
   RecordReceipt: recordReceiptCommand,

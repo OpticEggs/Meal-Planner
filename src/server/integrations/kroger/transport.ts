@@ -107,19 +107,26 @@ const recordingFake: KrogerTransport = {
  * so it may read its answers from a fixture file and append each request to a log file the test reads:
  *   TABLE_KROGER_FAKE_SCENARIO=<json: { products: [...] }>  TABLE_KROGER_FAKE_LOG=<jsonl path>
  * Honoured only together with TABLE_KROGER_FAKE_TRANSPORT (TABLE_ENV=test); production refuses both
- * (deploy.ts). No endpoint exposes or controls the fake. Answers: an app token, product searches over
- * the fixture (term words or product ids); anything else — including any cart call — is a 404, and is
- * logged so a test can prove it never happened.
+ * (deploy.ts). No endpoint exposes or controls the fake. Answers: placeholder tokens, product searches
+ * over the fixture (term words or product ids), and — only if the scenario declares `cart` — a cart add
+ * with that status; anything else (including a cart call the scenario doesn't declare) is a 404, and is
+ * logged so a test can prove what was and wasn't requested.
  */
 function scenarioResponder(): FakeResponder | null {
   const file = process.env.TABLE_KROGER_FAKE_SCENARIO;
   if (!file) return null;
   assertFake();
-  const scenario = JSON.parse(readFileSync(file, "utf8")) as { products: { productId: string; description?: string }[] };
+  const scenario = JSON.parse(readFileSync(file, "utf8")) as { products: { productId: string; description?: string }[]; cart?: { status: number } };
   const json = (status: number, b: unknown): TransportResponse => ({ status, headers: { "content-type": "application/json" }, bodyText: JSON.stringify(b) });
+  let n = 0;
   return (call) => {
     const u = new URL(call.url);
-    if (u.pathname.endsWith("/token")) return json(200, { access_token: "fake-scenario-app-token", expires_in: 1800, token_type: "bearer" });
+    if (u.pathname.endsWith("/token")) {
+      // App tokens and (for the authorization-code and refresh grants) fake customer tokens — placeholders only.
+      n += 1;
+      return json(200, { access_token: `fake-scenario-access-${n}`, refresh_token: `fake-scenario-refresh-${n}`, expires_in: 1800, token_type: "bearer" });
+    }
+    if (u.pathname === "/v1/cart/add" && call.method === "PUT" && scenario.cart) return { status: scenario.cart.status, headers: {}, bodyText: "" };
     if (u.pathname === "/v1/products" && call.method === "GET") {
       const ids = u.searchParams.get("filter.productId");
       const words = (u.searchParams.get("filter.term") ?? "").toLowerCase().split(/\s+/).filter(Boolean);
@@ -136,8 +143,10 @@ function logFakeCall(call: RecordedCall) {
   const file = process.env.TABLE_KROGER_FAKE_LOG;
   if (!file) return;
   const u = new URL(call.url);
-  // Method and path only — never headers (they would carry the fake token).
-  appendFileSync(file, `${JSON.stringify({ method: call.method, path: u.pathname, query: Object.fromEntries(u.searchParams) })}\n`);
+  // Method and path only — never headers (they would carry the fake token) and never token-request bodies.
+  // A cart request's body (UPCs, quantities, modality) is kept so a test can assert exactly what was sent.
+  const body = /\/cart\//.test(u.pathname) && call.body ? JSON.parse(call.body) : undefined;
+  appendFileSync(file, `${JSON.stringify({ method: call.method, path: u.pathname, query: Object.fromEntries(u.searchParams), ...(body ? { body } : {}) })}\n`);
 }
 
 /** Called ONLY after the capability gate has passed. */

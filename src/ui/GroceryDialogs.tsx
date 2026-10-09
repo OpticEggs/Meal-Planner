@@ -4,6 +4,7 @@ import { useStore } from "./store";
 import { ModalSheet } from "./a11y";
 import { FieldError, FormAlert, fieldProps, focusFirstInvalid, isDecimal, isWhole, type Errors } from "./forms";
 import { money } from "./format";
+import { shoppingListText } from "@/domain/groceries/shopping-list-format";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -23,7 +24,8 @@ export type GroceryDialog =
   | { kind: "validate"; receiptId: string }
   | { kind: "correct"; receiptId: string }
   | { kind: "cart-check"; batchId: string }
-  | { kind: "kroger-match" };
+  | { kind: "kroger-match" }
+  | { kind: "partial" };
 
 export const UNIT_CHOICES = ["each", "oz", "lb", "g", "kg", "fl_oz", "ml", "l", "cup", "tbsp", "tsp"];
 
@@ -656,6 +658,97 @@ export function KrogerMatchDialog({ onClose, returnFocus }: Common) {
           </section>
         ))}
         {result?.capped && <p className="small faint">Only the first 12 items were searched; run it again for the rest.</p>}
+      </div>
+    </ModalSheet>
+  );
+}
+
+// -------------------------------------------------------------------------------------------
+// B10 — send only the items that are ready on their own. A separate, explicit action: the member sees
+// exactly what goes (product, packages, price), every item left out and why, and a copyable list of
+// what remains; confirms that the rest is left out; and only then sends. Never a complete order.
+
+export function PartialHandoffDialog({ onClose, returnFocus }: Common) {
+  const { snapshot, command, writesAllowed, announce } = useStore();
+  const g = snapshot.groceries;
+  const [review] = useState(() => g.partial);
+  const [selected, setSelected] = useState<string[]>(() => review.eligible.map((e: any) => e.key));
+  const [ack, setAck] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const live = g.partial;
+  const changed = live.partialFingerprint !== review.partialFingerprint;
+  const chosen = review.eligible.filter((e: any) => selected.includes(e.key));
+  const leftOut = [
+    ...review.eligible.filter((e: any) => !selected.includes(e.key)).map((e: any) => ({ key: e.key, name: e.name, toSend: e.packages, reason: "Left out by you" })),
+    ...review.omitted,
+  ].sort((a: any, b: any) => a.key.localeCompare(b.key));
+  const subtotal = chosen.reduce((a: number, e: any) => a + e.packages * e.priceMinor, 0);
+  const remaining = { ...g.shoppingList, items: g.shoppingList.items.filter((i: any) => leftOut.some((o: any) => o.key === i.key)) };
+  const remainingText = () => shoppingListText(remaining, { title: "Still to get (not in this transfer)", destinationLabel: "any store", priceLabel: null });
+  return (
+    <ModalSheet title="Send only the ready items" subtitle="Not a complete grocery order" closeLabel="Close partial send" onClose={onClose} returnFocus={returnFocus} testId="partial-dialog">
+      <div className="stack">
+        <p className="warnbox" data-testid="partial-not-complete">
+          This sends only the items you check to {snapshot.retailer.live ? snapshot.retailer.label : "the simulated retailer"}. It is <strong>not a complete grocery order</strong> and
+          not a pickup reservation: {leftOut.length} {leftOut.length === 1 ? "item stays" : "items stay"} on your list.
+        </p>
+        {changed && (
+          <div className="warnbox" role="status" data-testid="partial-changed">
+            The list changed while this was open. Nothing was sent. <button type="button" className="btn line small" onClick={onClose}>Close and review again</button>
+          </div>
+        )}
+        <FormAlert message={error} testId="partial-error" />
+        {review.blockers.length > 0 ? (
+          <ul className="small warn" data-testid="partial-blockers">{review.blockers.map((b: string) => <li key={b}>{b}</li>)}</ul>
+        ) : (
+          <fieldset className="stack" data-testid="partial-included">
+            <legend>Send these ({chosen.length})</legend>
+            {review.eligible.map((e: any, i: number) => (
+              <label key={e.key} className="option-row" data-testid="partial-item" data-key={e.key}>
+                <input type="checkbox" checked={selected.includes(e.key)} data-autofocus={i === 0 ? "" : undefined}
+                  onChange={(ev) => setSelected((s) => (ev.target.checked ? [...s, e.key] : s.filter((k) => k !== e.key)))} />
+                <span>{e.name}: {e.productName} ×{e.packages} · {money(e.priceMinor)} each{e.priceKind === "promo" ? " (sale)" : ""}{e.estimate ? " · weight varies, price is an estimate" : ""}</span>
+              </label>
+            ))}
+            <p className="small" style={{ margin: 0 }} data-testid="partial-subtotal">Subtotal for these: {money(subtotal)} — this doesn&apos;t show whether the whole week fits your budget.</p>
+          </fieldset>
+        )}
+        <section className="stack" aria-labelledby="partial-left-h" data-testid="partial-left-out">
+          <h3 id="partial-left-h" className="section-label">Left out ({leftOut.length})</h3>
+          <ul className="plain small">{leftOut.map((o: any) => <li key={o.key} data-key={o.key}><strong>{o.name}</strong>{o.toSend ? ` ×${o.toSend}` : ""} — {o.reason}</li>)}</ul>
+          <button type="button" className="btn line small" data-testid="copy-remaining" onClick={async () => {
+            try {
+              await navigator.clipboard.writeText(remainingText());
+              announce("List of the items left out copied.");
+            } catch {
+              announce("Copying isn't allowed here.");
+            }
+          }}>Copy the items left out</button>
+        </section>
+        {review.blockers.length === 0 && (
+          <>
+            <label className="row small"><input type="checkbox" checked={ack} onChange={(e) => setAck(e.target.checked)} data-testid="partial-ack" />
+              I understand the {leftOut.length} {leftOut.length === 1 ? "item" : "items"} above are not sent and stay on our list.</label>
+            <button type="button" className="btn primary" data-testid="partial-send" disabled={busy || changed || !writesAllowed || !ack || chosen.length === 0}
+              onClick={async () => {
+                setBusy(true);
+                const r = await command("StartPartialHandoff", {
+                  weekId: snapshot.week.id, reviewFingerprint: review.reviewFingerprint, partialFingerprint: review.partialFingerprint,
+                  selectedKeys: chosen.map((e: any) => e.key), acknowledgedOmissions: leftOut.map((o: any) => o.key),
+                });
+                setBusy(false);
+                if (r.status !== "accepted") {
+                  setError(r.message);
+                  return;
+                }
+                announce(`Partial transfer ${r.dispatch?.status ?? "recorded"}: ${r.result.items} item(s) sent, ${r.result.leftOut} left on your list.${snapshot.retailer.live ? "" : " Simulated; nothing reached a store."}`);
+                onClose();
+              }}>
+              Send {chosen.length} {chosen.length === 1 ? "item" : "items"} only
+            </button>
+          </>
+        )}
       </div>
     </ModalSheet>
   );

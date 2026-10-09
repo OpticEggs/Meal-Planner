@@ -41,6 +41,8 @@ const KM = "tests/integration/u2c-kroger-mapping.test.ts";
 const LT = "tests/unit/recipe-import-live-transport.test.ts";
 const RUC1 = "tests/integration/ruc01-source-policy.test.ts";
 const RUC2 = "tests/integration/ruc02-purchase-basis.test.ts";
+const B10 = "tests/integration/b10-partial-handoff.test.ts";
+const MIG = "tests/integration/migrate-lock.test.ts";
 const THEME = "tests/unit/theme-contrast.test.ts";
 const B2122 = "tests/integration/b21-b22.test.ts";
 const MSS = "tests/integration/ms-sources.test.ts";
@@ -262,6 +264,21 @@ MUTATIONS.push(
     edits: [["    if (basis === \"weight\") {", "    if (false) {"]] },
   { name: "RUC02_unknown_basis_accepted", file: "src/server/commands/groceries.ts", suite: RUC2, pattern: "R2-02", expect: [/R2-02/],
     edits: [["    if (basis === \"unknown\") {", "    if (false) {"]] },
+);
+// B10: a partial send is bound to the reviewed omissions, sends only ready lines, consumes only the
+// approvals it uses, and never relaxes a firm budget.
+MUTATIONS.push(
+  { name: "B10_omissions_not_checked", file: "src/domain/groceries/partial-handoff.ts", suite: B10, pattern: "B10-03", expect: [/B10-03/],
+    edits: [["  if (want.length !== got.length || want.some((k, i) => k !== got[i])) return", "  if (false) return"]] },
+  { name: "B10_unready_line_selectable", file: "src/domain/groceries/partial-handoff.ts", suite: B10, pattern: "B10-03", expect: [/B10-03/],
+    edits: [["  if (bad.length) return `Not ready to send on its own", "  if (false) return `Not ready to send on its own"]] },
+  { name: "B10_all_approvals_consumed", file: "src/server/commands/purchasing.ts", suite: B10, pattern: "B10-02", expect: [/B10-02/],
+    edits: [["    for (const e of chosen) {\n      // Only the approvals", "    for (const e of review.eligible) {\n      // Only the approvals"]] },
+  { name: "B10_firm_budget_relaxed", file: "src/domain/groceries/partial-handoff.ts", suite: B10, pattern: "B10-04", expect: [/B10-04/],
+    edits: [["  if (result.budget.firm && result.budget.status === \"unknown\") blockers.push", "  if (false) blockers.push"]] },
+  // A start-time migration (the pilot's Start Command) must never let two processes apply one file.
+  { name: "MIG_no_per_migration_lock", file: "src/server/db/migrate.ts", suite: MIG, pattern: "concurrent start-time runs", expect: [/makes another wait|previous release/],
+    edits: [["      await client.query(\"SELECT pg_advisory_xact_lock($1)\", [MIGRATION_LOCK_KEY]);\n      // Re-read under the lock", "      // Re-read under the lock"]] },
 );
 // A harmless change that MUST be classified SURVIVED (proves the classifier can say so).
 const CONTROLS_LIST = [

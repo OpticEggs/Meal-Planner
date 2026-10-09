@@ -1,7 +1,7 @@
 import { readSnapshot, type Db } from "../db/pool";
 import { fdcStatus, nowInstant } from "../env";
 import { nutritionSources } from "./nutrition";
-import { retailerSummary } from "../integrations/retailer";
+import { retailer, retailerSummary } from "../integrations/retailer";
 import type { Actor } from "../commands/framework";
 import { addDays, dayName, localDate, nextDinnerDate, nightsOf, weekStartOf } from "@/domain/dates";
 import { closureStale } from "@/domain/planning/operations";
@@ -10,6 +10,7 @@ import { checkPlan } from "@/domain/planning/constraints";
 import { plateNutrition } from "@/domain/recipes/plate";
 import { D } from "@/domain/units";
 import type { Destination, RequirementLine } from "@/domain/groceries/projection";
+import { partialReview } from "@/domain/groceries/partial-handoff";
 import { buildShoppingList } from "@/domain/groceries/shopping-list";
 import { instacartPreview } from "../groceries/instacart-list";
 import { instacartCapabilities } from "../integrations/instacart/config";
@@ -268,12 +269,15 @@ async function groceriesFor(c: Db, householdId: string, weekId: string, accepted
     const lines: RequirementLine[] = (await c.query("SELECT line FROM requirement_lines WHERE cycle_id=$1 ORDER BY ingredient_key", [cycle.id])).rows.map((r) => r.line);
     const batches = (
       await c.query(
-        `SELECT b.id, b.adapter, b.payload, b.payload_hash, b.authorized_at, m.display_name,
+        `SELECT b.id, b.adapter, b.payload, b.payload_hash, b.authorized_at, b.scope, b.omissions, m.display_name,
            (SELECT json_agg(json_build_object('status', s.status, 'at', s.at, 'evidence', s.evidence) ORDER BY s.id) FROM handoff_status_events s WHERE s.batch_id=b.id) AS history
          FROM handoff_batches b JOIN members m ON m.id=b.authorized_by WHERE b.cycle_id=$1 ORDER BY b.authorized_at`,
         [cycle.id],
       )
-    ).rows.map((b) => ({ id: b.id, adapter: b.adapter, payload: b.payload, payloadHash: b.payload_hash, authorizedAt: b.authorized_at.toISOString(), authorizedBy: b.display_name, history: b.history, status: b.history.at(-1).status }));
+    ).rows.map((b) => ({
+      id: b.id, adapter: b.adapter, payload: b.payload, payloadHash: b.payload_hash, authorizedAt: b.authorized_at.toISOString(), authorizedBy: b.display_name,
+      history: b.history, status: b.history.at(-1).status, scope: b.scope ?? "full", omitted: b.omissions?.omitted ?? [],
+    }));
     const orderQ = await c.query(
       `SELECT o.*, m.display_name FROM orders o JOIN members m ON m.id=o.confirmed_by WHERE o.cycle_id=$1 ORDER BY o.confirmed_at DESC LIMIT 1`,
       [cycle.id],
@@ -319,6 +323,8 @@ async function groceriesFor(c: Db, householdId: string, weekId: string, accepted
     return {
       cycleId: cycle.id, projectionRevision: cycle.projection_revision, projectionAcceptedRevision: cycle.projection_accepted_revision,
       summary: cycle.projection_summary, lines, batches, order, where, shoppingList,
+      // B10: what could be sent on its own now, and what would be left out (server-computed; the client never hashes).
+      partial: partialReview({ lines, reviewFingerprint: cycle.projection_summary.reviewFingerprint, budget: cycle.projection_summary.budget }, destination, retailer().mode),
       products: productsQ.rows.map((p) => ({ id: p.id, ref: p.product_ref, name: p.name, ingredientKey: p.ingredient_key, packageQty: p.package_qty, packageUnit: p.package_unit, retailer: p.retailer, fixture: p.fixture })),
     };
 }
