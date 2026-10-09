@@ -7,10 +7,17 @@ export function canonicalJson(value: unknown): string {
   return write(value, "$", null, "");
 }
 
-/** The same canonical value, indented with two spaces, with a trailing newline. */
+/**
+ * The same canonical value, indented with two spaces, with a trailing newline. "Leaf" containers (an
+ * object or array whose members are primitives or arrays of primitives, such as a rate
+ * `{"ci95":[0,1],"den":4,"num":4,"rate":1}`) stay on one line in compact canonical form.
+ */
 export function canonicalJsonPretty(value: unknown): string {
   return write(value, "$", "  ", "") + "\n";
 }
+
+const isPrimitive = (v: unknown) => v === null || typeof v !== "object";
+const isLeaf = (v: object) => Object.values(v).every((m) => m === undefined || isPrimitive(m) || (Array.isArray(m) && m.every(isPrimitive)));
 
 function write(value: unknown, where: string, indent: string | null, pad: string): string {
   if (value === null) return "null";
@@ -23,6 +30,7 @@ function write(value: unknown, where: string, indent: string | null, pad: string
       if (!Number.isFinite(value)) throw new TypeError(`${where}: non-finite number is not JSON`);
       return JSON.stringify(value);
     case "object": {
+      if (indent !== null && isLeaf(value as object)) return write(value, where, null, "");
       const inner = indent === null ? "" : pad + indent;
       const open = indent === null ? "" : "\n" + inner;
       const sep = indent === null ? "," : ",\n" + inner;
