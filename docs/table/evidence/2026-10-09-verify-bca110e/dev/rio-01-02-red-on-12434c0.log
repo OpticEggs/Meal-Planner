@@ -1,0 +1,62 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/table
+
+ ❯ tests/integration/rio-corrections.test.ts (2 tests | 2 failed) 2119ms
+   ❯ import-overhaul corrections (real harness) (2)
+     × RIO-01: a whole recipe planned as its servings buys its packages, not one more 1226ms
+     × RIO-02: a pepper bought by the piece is an ingredient; table pepper by the spoon is a seasoning 891ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/rio-corrections.test.ts > import-overhaul corrections (real harness) > RIO-01: a whole recipe planned as its servings buys its packages, not one more
+AssertionError: expected 4 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 4
+
+ ❯ tests/integration/rio-corrections.test.ts:63:34
+     61|     const rest = Number(before.meal.quantity) - salmon;
+     62|     expect(Number(after.meal.quantity)).toBeCloseTo(rest + 2, 6);
+     63|     expect(after.packagesNeeded).toBe(Math.ceil(rest + 2 - 1e-9));
+       |                                  ^
+     64|   });
+     65|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/integration/rio-corrections.test.ts > import-overhaul corrections (real harness) > RIO-02: a pepper bought by the piece is an ingredient; table pepper by the spoon is a seasoning
+AssertionError: expected { use: false } to match object { use: true, name: 'pepper', …(2) }
+
+- Expected
++ Received
+
+  {
+-   "name": "pepper",
+-   "quantity": "1",
+-   "unit": "each",
+-   "use": true,
++   "use": false,
+  }
+
+ ❯ tests/integration/rio-corrections.test.ts:70:47
+     68|     const d = await pasted(jon, "Stuffed pepper", 2, "1 pepper, diced\…
+     69|     const byRaw = Object.fromEntries(d.lines.map((l) => [l.raw, l]));
+     70|     expect(byRaw["1 pepper, diced"].decision).toMatchObject({ use: tru…
+       |                                               ^
+     71|     expect(byRaw["1 large green pepper"].decision).toMatchObject({ use…
+     72|     expect(byRaw["1 tsp pepper"].decision).toEqual({ use: false });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  20:20:48
+   Duration  3.62s (tests 61%, transform 25%, import 14%)
+

@@ -615,3 +615,37 @@ wording ("needs a quick check"), the journey's salsa amount (0.083333333333). Th
 **Defects found while testing:** the "Have enough" rounding (D117, journey); text inside the fallback illustration did
 not follow the text size (B18 sweep — now ordinary text); a visually hidden file input took keyboard focus (B18 sweep —
 now a visible button opens the picker).
+
+## Import-overhaul corrections RIO-01..03 — added 2026-10-09
+
+**The correction package did not arrive.** The owner's `Table-Import-Overhaul-Correction-12434c0.zip` (with its
+`CLAUDE-NEXT-PROMPT.txt`) was not present in this session's uploads, the repository or any branch. RIO-01..03 below
+are **reconstructed** from the three problems the owner named (package rounding, seasoning classification, pending
+row edits); their wording and acceptance must be reconciled with the package when it is available.
+
+Starting `12434c0`; corrections `bca110e`; verified at `bca110e` — `docs/table/evidence/2026-10-09-verify-bca110e/summary.md`: vitest 1091/1091, Playwright 145/145, mutation self-test PASS, 102 killed / 0 survived / 0 error.
+Red on `12434c0` in the real harness: `evidence/2026-10-09-verify-bca110e/dev/` (integration RIO-01/02 against PostgreSQL
+commands; browser RIO-03a/b against the production build; after RIO-03a the database held the old ⅓ cup although ½ cup
+had been typed).
+
+| ID | What | Tests | Status |
+|---|---|---|---|
+| RIO-01 | Package rounding: 2 cucumbers for 3 servings, planned as 3 plates, bought 4 cucumbers for the week instead of 3 (12-dp half-up per serving summed to 2.000000000001). Per-serving amounts now round toward zero; package counting itself is unchanged (24.000000001 oz is still two 24 oz packages) | integration RIO-01; unit quantity; mutation RIO01_per_serving_rounded_half_up | PASS |
+| RIO-02 | Seasoning classification: "1 pepper, diced" was left out of the import and a "pepper" bought by the piece vanished from groceries. A bare "pepper" is a seasoning only by the spoon/volume or with no amount; counted or weighed it is an ingredient; named table pepper and salt unchanged | integration RIO-02; unit seasonings (pepper by unit); mutation RIO02_bare_pepper_always_seasoning | PASS |
+| RIO-03 | Pending row edits: a typed but unapplied change in an open review row was dropped by Save. Saving and Save-for-later are held, the row is named, reopened and focused; Cancel restores it; applying then saving keeps the new amount | e2e RIO-03a, RIO-03b | PASS |
+| — | The pesto import and the redesigned screens are unchanged | e2e IO-E1, screens-overhaul, ui-screens, B18 sweeps; integration IO-01..05 | PASS |
+
+**Changed assertions (transparent):** `tests/unit/quantity.test.ts` per-serving `2/3` is now `0.666666666666` (was
+`…667`, half-up). A first attempt also tolerated a billionth of a package in `packagesFor`; it broke the normative
+`24.000000001 oz → 2 packages` test and was withdrawn, not the test.
+
+**Not fixed (pre-existing, recorded):** recipes saved before `8e6bd6e` carry per-serving amounts rounded half-up to 4
+places (e.g. 0.6667 for ⅔); such a recipe planned as exactly its servings can still round a package up. Correcting it
+needs a reviewed data change, which is not authorized.
+
+**Recipe Extraction Lab (separate workstream, branch `claude/quirky-gauss-depmd8`).** Kept isolated: no lab code,
+contract, corpus, benchmark or plan was changed. Its deliberate guard on Table's live `ingredient-line.ts` failed after
+merging `main` (the only failure); the branch received a merge of `main` and one reconciliation commit that records
+`bca110e`'s file hash as the accepted later version (the `8e6bd6e` hash kept in the note) and appends §4 to
+`docs/table/recipe-extraction/PHASE-3-DEPENDENCIES.md`. Lab suite with `main` merged: 920 passed, 1 expected fail, 11
+skipped. These app corrections do not complete or replace the extraction engine; its Phase 3 is unauthorized.

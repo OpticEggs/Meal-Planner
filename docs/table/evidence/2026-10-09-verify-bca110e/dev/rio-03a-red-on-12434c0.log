@@ -1,0 +1,46 @@
+
+Running 1 test using 1 worker
+
+[1A[2K[1/1] [chromium] › tests/e2e/rio-pending-edit.spec.ts:28:1 › RIO-03a: an unapplied change in an open row holds Save, names the row, and is kept when applied
+[1A[2K  1) [chromium] › tests/e2e/rio-pending-edit.spec.ts:28:1 › RIO-03a: an unapplied change in an open row holds Save, names the row, and is kept when applied 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoContainText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByRole('dialog', { name: 'Review the import' }).getByTestId('draft-problems')
+    Expected substring: [32m"Line 2 (pesto) has a change you haven't applied"[39m
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toContainText" with timeout 10000ms[22m
+    [2m  - waiting for getByRole('dialog', { name: 'Review the import' }).getByTestId('draft-problems')[22m
+
+
+      33 |   await review.getByTestId("import-confirm").click();
+      34 |   await expect(review).toBeVisible();
+    > 35 |   await expect(review.getByTestId("draft-problems")).toContainText("Line 2 (pesto) has a change you haven't applied");
+         |                                                      ^
+      36 |   await expect(row.getByRole("button", { name: /^Use line 2/ })).toBeFocused();
+      37 |   expect(await pestoPerServing()).toBeNull(); // nothing was saved with the old amount
+      38 |   await row.getByRole("button", { name: /^Use line 2/ }).click();
+        at /home/user/table/tests/e2e/rio-pending-edit.spec.ts:35:54
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/rio-pending-edit-RIO-03a-a-d2ca1-ow-and-is-kept-when-applied-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/rio-pending-edit-RIO-03a-a-d2ca1-ow-and-is-kept-when-applied-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/rio-pending-edit-RIO-03a-a-d2ca1-ow-and-is-kept-when-applied-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/rio-pending-edit-RIO-03a-a-d2ca1-ow-and-is-kept-when-applied-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[1A[2K  1 failed
+    [chromium] › tests/e2e/rio-pending-edit.spec.ts:28:1 › RIO-03a: an unapplied change in an open row holds Save, names the row, and is kept when applied 
+--- database after the run: pesto per serving saved as:
+0.083333333333
