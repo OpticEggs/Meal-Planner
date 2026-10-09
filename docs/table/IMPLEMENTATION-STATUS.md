@@ -1,6 +1,6 @@
 # Table — Implementation status
 
-_Last updated 2026-10-08 (UTC), after the URL-to-cart reprioritization (B25), which followed the multi-source handoff (recipe links, reviewed import, Budget Bytes lane, where to shop, Instacart list link — fixture-only), which followed B21/B22 (database cook-record invariant, stale cooking events) and the free-hosting research, which followed the visual update (B20) and the cook-record idempotency fix
+_Last updated 2026-10-08 (UTC), after the recheck corrections RUC-01/RUC-02 (pilot on Render Free + Neon), which followed the URL-to-cart reprioritization (B25), which followed the multi-source handoff (recipe links, reviewed import, Budget Bytes lane, where to shop, Instacart list link — fixture-only), which followed B21/B22 (database cook-record invariant, stale cooking events) and the free-hosting research, which followed the visual update (B20) and the cook-record idempotency fix
 (B19, delivery review of fb4d771, gate 2), which followed the integration-preparation pass (B9 deployment candidate, B7 nutrition, B5
 Kroger adapter, B8 checklist)._
 
@@ -8,6 +8,7 @@ Kroger adapter, B8 checklist)._
 
 | What | Identity |
 |---|---|
+| Recheck corrections RUC-01/RUC-02 + Kroger UI tests | `c9a95b6` — verified at `c9a95b6` |
 | URL to cart (B25) | `184d99f` — one-step import, permitted content, Kroger mapping; verified at `184d99f` |
 | Previous latest code commit | `68f4549` — multi-source handoff: `c1bf933` (Instacart client, worker), `99c3b99` (import building blocks, worker), `2b9d83a` (integration), `68f4549` (E2E-01/02 tests) |
 | B21/B22 | `5250e62` + test correction `579179b`, verified at `579179b` |
@@ -20,7 +21,11 @@ Kroger adapter, B8 checklist)._
 | Restore | `git clone --branch main <bundle> table` or `git clone <bundle> table` |
 | Migrations | `001`–`012` (`012_recipe_content.sql`: kept-content permission, recipe photos, attribution): `006_nutrition_sources.sql` (B7), `007_kroger.sql` (B5), `008_cook_record_corrections.sql` (B19), `009_cook_record_chain.sql` (B21), `010_recipe_sources.sql`, `011_shopping_destinations.sql` (multi-source); upgrades from a populated 005 database (to 007) a populated 007 database holding duplicate cook records (to 008), a populated 008 database with planted cross-generation violations (to 009), and a populated 009 database (to 011, only `schema_migrations` differs over existing columns) checked |
 
-## Verification (measured on 184d99f)
+## Verification (measured on c9a95b6)
+
+`scripts/verify-all.sh` → `docs/table/evidence/2026-10-08-verify-c9a95b6/summary.md`: vitest 1117/1117, Playwright 136/136, 88 mutations killed, 0 survived, 0 error.
+
+### Previous run (184d99f, URL to cart)
 
 `scripts/verify-all.sh` → `docs/table/evidence/2026-10-08-verify-184d99f/summary.md`: vitest 1095/1095, Playwright 131/131, 83 mutations killed, 0 survived, 0 error.
 
@@ -181,4 +186,6 @@ screenshots), `2026-10-08-verify-2c56267/` (correction pass), `2026-10-08-full-r
 
 ## Next executable task
 
-**The next steps on the priority path all need you** (`URL-TO-CART.md` §3): **R1** turn on page reading and **C1/C2** decide what of a page may be kept; **K1–K5** Kroger products; then **K6/K7** for the pickup cart. They are useful only on a deployed app, so the first is still **H1/H3: choose and authorize the host** (paid Render or the $0 Oracle option, `HOSTING-FREE-OPTIONS.md`). Everything credential-independent on the path is built.
+**Upgrade the pilot that is already running (Render Free + Neon) — yours to run, `DEPLOYMENT.md` §0.** Then, with a
+separate authorization, **one real recipe import** on the pilot (R1 on; C1/C2 stay off). Kroger product matching follows only
+after its own authorization (K1–K5). No hosting decision is open.

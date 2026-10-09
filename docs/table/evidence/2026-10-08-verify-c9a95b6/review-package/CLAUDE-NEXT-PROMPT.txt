@@ -1,0 +1,36 @@
+Table — targeted URL-to-cart corrections and existing-pilot preparation
+
+Repository: OpticEggs/Meal-Planner
+Reviewed delivery: 988c4d146169c95b0e478feaa16744337c87333e
+Reviewed implementation: 184d99f4c02ec502a1d8b1d20ade18a8b56e19d7
+
+Read REVIEW.md, the probe source, and evidence/probes.json completely. Read current maintained repository guidance and preserve newer work. This is a bounded correction assignment, not another architecture or visual-design phase.
+
+IMPORTANT CONTEXT
+Jon already set up Table on Render Free with a Neon database at:
+https://meal-planner-eq58.onrender.com
+He reported successful sign-in. Do not ask him to choose a host or authorize the old $13.30/month plan again. The reviewer has not read Render's actual deployed commit or current migration level. Distinguish these user-reported pilot facts from hosted verification. Preserve the existing household, accounts, auth secret, database and free-tier choice. Do not copy test household data into it.
+
+RUC-01 — SOURCE POLICY THROUGH REDIRECTS
+Reproduce the actual importer following an allowed starting URL to a blocked site and transferring the initial domain's content grant to a different final domain. The attached probe uses fake responses only and stages the target's instructions under the wrong source's grant.
+Implement policy evaluation before every request, including redirect targets and applicable photo redirects. Bind stored content and source attribution to the actual source and permission scope; do not inherit a grant from an unrelated entry URL. Preserve safe same-source redirects and explicitly authorized CDN arrangements. Keep network safety, reading permission, and retention permission distinct.
+Test the blocked-target case with exact transport call counts: the blocked hostname must receive zero requests. Test facts-only, granted, ungranted, and authorized redirect/photo cases. Do not weaken SSRF, HTTPS, certificate, DNS-pinning, size/decompression or timeout protections.
+
+RUC-02 — FIXED PACKAGE VS VARIABLE/UNKNOWN PURCHASE BASIS
+Reproduce a non-unit candidate with no fixed package receiving a manually entered 2-lb amount, then being written as variable_weight=false with the raw 499-minor-unit provider price attached as the package price.
+Do not infer a fixed package or price basis from a user's entered amount. Distinguish fixed-unit, variable-weight, and unknown sale/price basis. A bounded refusal for unsupported weight semantics is acceptable; an invented complete price is not. Preserve fixed-unit success and current uncertainty/budget safeguards. Add downstream projection tests and ensure previous orders and immutable price history are not rewritten.
+
+KROGER MATCHING UI COVERAGE
+Close the declared browser-test gap using a test-only server wired to the existing fake, or an equally isolated approach. Real credentials are not required for this work. Ensure production refuses all test conveniences. Cover search, product selection, package errors, stale selection after a household change, actual focus, large text, and zero cart calls. Preserve the server-side reread and review checks. Distinguish product-data calls from cart writes in assertions.
+
+EVIDENCE AND DELIVERY
+Run expected-correctness regressions against the reviewed baseline first. The supplied probes characterize failures and are not passing-behavior tests. Use real PostgreSQL and browser tests for the fixes. Run the complete verification pipeline and mutation harness with actual assertion failures, preserve failed runs, and bind evidence to the exact clean tested commit. Check the populated migration/export/restore path with real household-shaped data in disposable databases, including photos.
+Commit and push scoped verified code using the established workflow; add docs/evidence separately and deliver a restorable bundle with checksum.
+Update URL-TO-CART, ACCEPTANCE, OWNER-INPUTS, IMPLEMENTATION-STATUS and the deployment runbook. Label household_private as an owner-selected use mode, not evidence that a publisher granted a licence. Do not invent permission records or decide that all private copying is automatically permitted or automatically forbidden.
+Finish with one exact, brief existing-service upgrade checklist: backup, required migrations, deploy the verified commit, health and existing sign-in, and which switches remain off. Keep the manual steps beginner-friendly: one command per block where input is required; do not show shell prompts as commands or ask for secrets in chat.
+
+AUTHORITY
+This directive authorizes the scoped code/test/docs corrections and established repository delivery. It does not authorize deploying to Render, changing live Neon data, provisioning services, spending, rotating credentials, reading real recipe sites, enabling broad content reuse, or any real Kroger/Instacart operation. Current read/content/provider gates remain off until separately approved. Do not issue a new database, household or login as a workaround.
+
+COMPLETION
+Return the two finding dispositions, exact code identity, new real-harness reproductions, full verification results, remaining specific limits, and the short upgrade checklist. The next product milestone is one working real recipe import on the pilot already online, followed by separately authorized Kroger matching—not further optional development.

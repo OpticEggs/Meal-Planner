@@ -1,0 +1,293 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/table
+
+ ❯ tests/integration/ruc01-source-policy.test.ts (9 tests | 8 failed) 7721ms
+   ❯ RUC-01 a site that is never read stays unread through redirects (3)
+     × R1-02: an allowed link that redirects to Budget Bytes: zero requests to it, no draft, nothing credited to the first site's grant 963ms
+     × R1-03: a photo that redirects to Budget Bytes is never requested there 671ms
+   ❯ RUC-01 what may be kept belongs to the site that supplied the content (6)
+     × R1-04: granted site → ungranted site: facts read from the actual page, nothing kept, attribution to the actual source 736ms
+     × R1-05: facts-only mode, same redirect: the same facts and the same truthful attribution 887ms
+     × R1-06: the owner-selected household-private mode applies to the actual source and is labelled as an owner mode, not a publisher licence 790ms
+     × R1-07: a same-site redirect keeps the grant; a photo on another host is not requested unless that host is authorized for the grant 700ms
+     × R1-08: with the CDN host authorized for that grant, the photo is read from it and recorded with its own source 723ms
+     × R1-09: a photo redirect to an unauthorized host is refused before the request 677ms
+ ❯ tests/integration/ruc02-purchase-basis.test.ts (5 tests | 5 failed) 3804ms
+   ❯ RUC-02 a weight-priced or unknown-basis product is never recorded as a fixed, fully priced package (5)
+     × R2-01: sold by weight + a typed 2 lb → refused with a reason; nothing written; the line and its estimate are unchanged 892ms
+     × R2-02: no sale basis, or one Table doesn't know → refused; a typed size doesn't make it a package 779ms
+     × R2-03: search shows the basis and why such products can't be chosen yet 628ms
+     × R2-04: fixed unit still works — readable size with a promotion, a member-stated size for a unit item, and no price stays unknown and keeps the estimate incomplete 716ms
+     × R2-05: choosing products never rewrites earlier products or price history 785ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 13 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/ruc01-source-policy.test.ts > RUC-01 a site that is never read stays unread through redirects > R1-02: an allowed link that redirects to Budget Bytes: zero requests to it, no draft, nothing credited to the first site's grant
+AssertionError: expected [ 'licensed.example.com', …(2) ] to deeply equal [ 'licensed.example.com' ]
+
+- Expected
++ Received
+
+  [
+    "licensed.example.com",
++   "www.budgetbytes.com",
++   "www.budgetbytes.com",
+  ]
+
+ ❯ tests/integration/ruc01-source-policy.test.ts:52:26
+     50|     const calls: Call[] = [];
+     51|     const r: any = await addRecipeFromLink(jon, { url: "https://licens…
+     52|     expect(hosts(calls)).toEqual(["licensed.example.com"]);
+       |                          ^
+     53|     expect(hosts(calls)).not.toContain("www.budgetbytes.com");
+     54|     expect(r).toMatchObject({ kind: "not_read", status: "permission_bl…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/13]⎯
+
+ FAIL  tests/integration/ruc01-source-policy.test.ts > RUC-01 a site that is never read stays unread through redirects > R1-03: a photo that redirects to Budget Bytes is never requested there
+AssertionError: expected [ 'www.licensed.example.com', …(2) ] to not include 'www.budgetbytes.com'
+ ❯ tests/integration/ruc01-source-policy.test.ts:66:30
+     64|     const r: any = await addRecipeFromLink(jon, { url: "https://www.li…
+     65|     expect(r.kind).toBe("draft");
+     66|     expect(hosts(calls)).not.toContain("www.budgetbytes.com");
+       |                              ^
+     67|     expect((await draftOf(r.draftId)).image_id).toBeNull();
+     68|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/13]⎯
+
+ FAIL  tests/integration/ruc01-source-policy.test.ts > RUC-01 what may be kept belongs to the site that supplied the content > R1-04: granted site → ungranted site: facts read from the actual page, nothing kept, attribution to the actual source
+AssertionError: expected [ 'licensed.example.com', …(2) ] to deeply equal [ 'licensed.example.com', …(1) ]
+
+- Expected
++ Received
+
+  [
+    "licensed.example.com",
+    "ungranted.example.com",
++   "ungranted.example.com",
+  ]
+
+ ❯ tests/integration/ruc01-source-policy.test.ts:77:26
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/13]⎯
+
+ FAIL  tests/integration/ruc01-source-policy.test.ts > RUC-01 what may be kept belongs to the site that supplied the content > R1-05: facts-only mode, same redirect: the same facts and the same truthful attribution
+AssertionError: expected { basis: null, photos: false, …(1) } to match object { instructions: false, …(3) }
+
+- Expected
++ Received
+
+  {
+    "basis": null,
+    "instructions": false,
+    "photos": false,
+-   "source": "ungranted.example.com",
+  }
+
+ ❯ tests/integration/ruc01-source-policy.test.ts:94:30
+     92|     const d = await draftOf(r.draftId);
+     93|     expect(d).toMatchObject({ fetched_url: "https://ungranted.example.…
+     94|     expect(d.content_policy).toMatchObject({ instructions: false, phot…
+       |                              ^
+     95|   });
+     96|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/13]⎯
+
+ FAIL  tests/integration/ruc01-source-policy.test.ts > RUC-01 what may be kept belongs to the site that supplied the content > R1-06: the owner-selected household-private mode applies to the actual source and is labelled as an owner mode, not a publisher licence
+AssertionError: expected { …(3) } to match object { instructions: true, …(3) }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "instructions": true,
+-   "kind": "owner_mode",
+    "photos": true,
+-   "source": "ungranted.example.com",
+  }
+
+ ❯ tests/integration/ruc01-source-policy.test.ts:102:30
+    100|     const r: any = await addRecipeFromLink(jon, { url: "https://licens…
+    101|     const d = await draftOf(r.draftId);
+    102|     expect(d.content_policy).toMatchObject({ instructions: true, photo…
+       |                              ^
+    103|     expect(d.content_policy.basis).toMatch(/owner-selected/);
+    104|     expect(d.content_policy.basis).not.toMatch(/permission|licen[cs]e …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/13]⎯
+
+ FAIL  tests/integration/ruc01-source-policy.test.ts > RUC-01 what may be kept belongs to the site that supplied the content > R1-07: a same-site redirect keeps the grant; a photo on another host is not requested unless that host is authorized for the grant
+AssertionError: expected [ 'licensed.example.com', …(2) ] to deeply equal [ 'licensed.example.com', …(1) ]
+
+- Expected
++ Received
+
+  [
+    "licensed.example.com",
+    "www.licensed.example.com",
++   "img.licensed-cdn.example.net",
+  ]
+
+ ❯ tests/integration/ruc01-source-policy.test.ts:115:26
+    113|     const calls: Call[] = [];
+    114|     const r: any = await addRecipeFromLink(jon, { url: "https://licens…
+    115|     expect(hosts(calls)).toEqual(["licensed.example.com", "www.license…
+       |                          ^
+    116|     const d = await draftOf(r.draftId);
+    117|     expect(d.content_policy).toMatchObject({ instructions: true, photo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/13]⎯
+
+ FAIL  tests/integration/ruc01-source-policy.test.ts > RUC-01 what may be kept belongs to the site that supplied the content > R1-08: with the CDN host authorized for that grant, the photo is read from it and recorded with its own source
+AssertionError: expected { …(2) } to deeply equal { …(2) }
+
+- Expected
++ Received
+
+  {
+-   "page_url": "https://www.licensed.example.com/recipe",
++   "page_url": "https://licensed.example.com/moved",
+    "source_url": "https://img.licensed-cdn.example.net/photo.png",
+  }
+
+ ❯ tests/integration/ruc01-source-policy.test.ts:131:17
+    129|     const d = await draftOf(r.draftId);
+    130|     const [img] = await q<any>("SELECT source_url, page_url FROM recip…
+    131|     expect(img).toEqual({ source_url: "https://img.licensed-cdn.exampl…
+       |                 ^
+    132|   });
+    133|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/13]⎯
+
+ FAIL  tests/integration/ruc01-source-policy.test.ts > RUC-01 what may be kept belongs to the site that supplied the content > R1-09: a photo redirect to an unauthorized host is refused before the request
+AssertionError: expected [ 'www.licensed.example.com', …(2) ] to deeply equal [ 'www.licensed.example.com', …(1) ]
+
+- Expected
++ Received
+
+  [
+    "www.licensed.example.com",
+    "www.licensed.example.com",
++   "elsewhere.example.org",
+  ]
+
+ ❯ tests/integration/ruc01-source-policy.test.ts:138:26
+    136|     const calls: Call[] = [];
+    137|     const r: any = await addRecipeFromLink(jon, { url: "https://www.li…
+    138|     expect(hosts(calls)).toEqual(["www.licensed.example.com", "www.lic…
+       |                          ^
+    139|     expect(hosts(calls)).not.toContain("elsewhere.example.org");
+    140|     expect((await draftOf(r.draftId)).image_id).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/13]⎯
+
+ FAIL  tests/integration/ruc02-purchase-basis.test.ts > RUC-02 a weight-priced or unknown-basis product is never recorded as a fixed, fully priced package > R2-01: sold by weight + a typed 2 lb → refused with a reason; nothing written; the line and its estimate are unchanged
+AssertionError: {"status":"accepted","result":{"productId":"903293aa-c48f-4c22-b6fe-fb5d1e26b279","priced":true,"package":{"quantity":"2","unit":"lb"}},"operationId":"op-04de33ea-a87e-48ee-95ec-486a395be91f","command":"ChooseKrogerProduct","replayed":false,"seq":2,"acceptedChoiceRevision":1}: expected { status: 'accepted', …(6) } to match object { status: 'rejected', …(1) }
+(9 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "code": "sold_by_weight",
+-   "status": "rejected",
++   "status": "accepted",
+  }
+
+ ❯ tests/integration/ruc02-purchase-basis.test.ts:68:36
+     66|     for (const extra of [{ packageQty: "2", packageUnit: "lb" }, {}]) {
+     67|       const r: any = await chooseKrogerProduct(jon, op(), { weekId: fx…
+     68|       expect(r, JSON.stringify(r)).toMatchObject({ status: "rejected",…
+       |                                    ^
+     69|       expect(r.message).toMatch(/weight/);
+     70|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/13]⎯
+
+ FAIL  tests/integration/ruc02-purchase-basis.test.ts > RUC-02 a weight-priced or unknown-basis product is never recorded as a fixed, fully priced package > R2-02: no sale basis, or one Table doesn't know → refused; a typed size doesn't make it a package
+AssertionError: 0002000000002: expected { status: 'accepted', …(6) } to match object { status: 'rejected', …(1) }
+(9 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "code": "sold_basis_unknown",
+-   "status": "rejected",
++   "status": "accepted",
+  }
+
+ ❯ tests/integration/ruc02-purchase-basis.test.ts:82:28
+     80|     for (const productId of ["0002000000002", "0002000000003"]) {
+     81|       const r: any = await chooseKrogerProduct(jon, op(), { weekId: fx…
+     82|       expect(r, productId).toMatchObject({ status: "rejected", code: "…
+       |                            ^
+     83|     }
+     84|     expect(await written()).toEqual(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/13]⎯
+
+ FAIL  tests/integration/ruc02-purchase-basis.test.ts > RUC-02 a weight-priced or unknown-basis product is never recorded as a fixed, fully priced package > R2-03: search shows the basis and why such products can't be chosen yet
+AssertionError: expected { productId: '0002000000001', …(11) } to match object { basis: 'weight', choosable: false }
+(11 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "basis": "weight",
+-   "choosable": false,
++   "choosable": true,
+  }
+
+ ❯ tests/integration/ruc02-purchase-basis.test.ts:91:33
+     89|     const r: any = await searchKrogerForIngredient(jon, { term: "chick…
+     90|     const by = Object.fromEntries(r.candidates.map((c: any) => [c.prod…
+     91|     expect(by["0002000000001"]).toMatchObject({ basis: "weight", choos…
+       |                                 ^
+     92|     expect(by["0002000000001"].notChoosable).toMatch(/weight/);
+     93|     expect(by["0002000000002"]).toMatchObject({ basis: "unknown", choo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/13]⎯
+
+ FAIL  tests/integration/ruc02-purchase-basis.test.ts > RUC-02 a weight-priced or unknown-basis product is never recorded as a fixed, fully priced package > R2-04: fixed unit still works — readable size with a promotion, a member-stated size for a unit item, and no price stays unknown and keeps the estimate incomplete
+AssertionError: {"status":"rejected","code":"package_needed","message":"Kroger describes the package as \"24 oz\", which Table can't read as an amount. Enter the package size you'll buy.","details":{"sizeText":"24 oz","field":"packageQty"},"operationId":"op-a2ea207d-a33f-4a0e-9299-b606042015c7","command":"ChooseKrogerProduct","replayed":false,"seq":null}: expected 'rejected' to be 'accepted' // Object.is equality
+
+Expected: "accepted"
+Received: "rejected"
+
+ ❯ tests/integration/ruc02-purchase-basis.test.ts:102:49
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/13]⎯
+
+ FAIL  tests/integration/ruc02-purchase-basis.test.ts > RUC-02 a weight-priced or unknown-basis product is never recorded as a fixed, fully priced package > R2-05: choosing products never rewrites earlier products or price history
+AssertionError: expected 'rejected' to be 'accepted' // Object.is equality
+
+Expected: "accepted"
+Received: "rejected"
+
+ ❯ tests/integration/ruc02-purchase-basis.test.ts:121:22
+    119|     const before = await written();
+    120|     const r: any = await chooseKrogerProduct(jon, op(), { weekId: fx.w…
+    121|     expect(r.status).toBe("accepted");
+       |                      ^
+    122|     const after = await written();
+    123|     for (const p of before.products) expect(after.products).toContainE…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/13]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  13 failed | 1 passed (14)
+   Start at  22:49:06
+   Duration  14.43s (tests 82%, import 9%, transform 9%)
+

@@ -6,6 +6,73 @@ until the owner approves it and a hosted deployment is validated. Creating the s
 owner's approval of the host and its recurring cost (see `OWNER-INPUTS.md`), then a separate explicit
 authorization to provision and deploy.
 
+## 0. The pilot that is already running — Render Free + Neon (owner's setup)
+
+**User-reported, 2026-10-08 (not a hosted check by Claude):** Jon created a Render **Free** web service at
+`https://meal-planner-eq58.onrender.com` connected to a **Neon** database, provisioned the household and signed in
+successfully. **Not verified:** the commit Render is running, the database's migration level, whether Alex's
+account exists, backups taken, and which environment variables are set. Keep the existing household, accounts,
+`BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `DATABASE_URL` and free tier. Never load test fixtures into it and never
+create a new database, household or login as a workaround. The paid Render runbook below (§1–§9) is history for
+that option.
+
+What differs on Render Free (Render's docs, read 2026-10-08): **no pre-deploy command** ("available for paid web
+services, private services, and background workers"), **no shell, no one-off jobs**; the service sleeps after
+15 minutes without traffic and takes about a minute to wake. So migrations are run **from your computer** against
+Neon, then the verified commit is deployed straight after. Migration 012 only adds a table, columns and a wider
+check, so a release still running keeps working on it (an older pilot also receives 008–011; deploy right after
+those). The health check answers 503 while any migration is pending.
+
+### Upgrade to `c9a95b6` (verified commit) — you run these; Claude does not deploy
+
+1. **Back up.** Neon Console → your project → **Branches** → **New branch** → parent: your main branch, include
+   current data, name it `before-table-upgrade`, and set auto-deletion to a week or turn it off → **Create**.
+   (Neon Free also keeps 6 hours of history for a point-in-time restore.)
+2. **Apply the migrations from your computer**, in your copy of the repository (Node 22).
+   ```bash
+   git fetch origin
+   ```
+   ```bash
+   git checkout c9a95b6
+   ```
+   ```bash
+   npm ci
+   ```
+   Type your Neon connection string into this terminal only (the direct one, without `-pooler` in the host name;
+   never paste it into chat). On macOS or Linux:
+   ```bash
+   export DATABASE_URL='paste-your-Neon-connection-string-here'
+   ```
+   On Windows PowerShell use `$env:DATABASE_URL = 'paste-your-Neon-connection-string-here'` instead. Then:
+   ```bash
+   npm run db:migrate
+   ```
+   Expect `applied: …012_recipe_content.sql` (earlier numbers too if the pilot was older), or `schema up to date`.
+   Close the terminal afterwards so the connection string is gone.
+3. **Deploy that exact commit.** Render Dashboard → the service → **Manual Deploy** → **Deploy a specific
+   commit** → `c9a95b6`. Leave every environment variable as it is.
+4. **Health.** Open `https://meal-planner-eq58.onrender.com/api/health` → `{"ok":true,"problems":[]}` (the first
+   request after a sleep can take about a minute). A 503 naming the schema means step 2 didn't run against this
+   database.
+5. **Sign in as usual** with your existing account. Our Recipes shows **Add a recipe from a link**; pasting a link
+   answers "Reading recipe pages is turned off here" — expected.
+6. **These stay off (do not add them):** `TABLE_RECIPE_IMPORT_FETCH`, `TABLE_RECIPE_CONTENT`,
+   `TABLE_RECIPE_CONTENT_GRANTS`, `TABLE_RECIPE_PHOTO_HOSTS`, `KROGER_ACTIVATE` (with `TABLE_RETAILER` left at
+   simulated), `INSTACART_ACTIVATE`, and every test-only switch (`TABLE_*_FIXTURES`, `TABLE_*_FAKE_*`,
+   `TABLE_FIXED_NOW`, `TABLE_DISPATCH_TIMEOUT_MS`).
+
+If anything goes wrong: redeploy the previous commit from Render's deploy list (it runs on the 012 schema), or restore
+Neon from the `before-table-upgrade` branch.
+
+### One real recipe URL (only after you separately approve R1)
+
+Render → Environment → add `TABLE_RECIPE_IMPORT_FETCH` = `on` → save (Render redeploys). On your phone, paste one
+recipe link from a site other than Budget Bytes. Expect the review with the site, author and ingredient lines;
+nothing of the page's method or photo is kept (C1/C2 stay off) — the recipe links to the original. A refusal (for
+example "the site refused to let Table read the page (HTTP 403)") is a real result, not something to work
+around. Create the recipe or discard it; to stop reading pages again, delete the variable.
+
+
 **Evidence categories used here — never substitute one for another:**
 *configuration inspection* (reading code and provider documentation), *local execution* (this build
 container, production build and `TABLE_ENV=production`, PostgreSQL 16 on scratch databases), and

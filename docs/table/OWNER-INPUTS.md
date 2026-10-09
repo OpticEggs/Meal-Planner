@@ -8,7 +8,12 @@ yourself.
 Legend — **Decide**: a choice only you can make · **Provide**: something only you can obtain ·
 **Approve**: written permission for an action with cost or real-world effect.
 
-## 1. Hosting (B9) — needed first
+**Hosting is decided (2026-10-08, user-reported):** the pilot runs on **Render Free + Neon** at
+`https://meal-planner-eq58.onrender.com`, with the household provisioned and sign-in working. H1–H6 below
+are kept as history for the paid option and are **not** open decisions. What remains for the pilot is the
+upgrade in `DEPLOYMENT.md` §0 (yours to run) and the separate gates R1, C1/C2, K1–K7.
+
+## 1. Hosting (B9) — decided for the pilot (history below)
 
 | # | What | Why | Who | Where it goes | Cost |
 |---|---|---|---|---|---|
@@ -80,8 +85,8 @@ where-to-shop and the copyable list all work with no credentials. Each item is a
 | # | What | Why | Who | Where it goes / how validated | Cost |
 |---|---|---|---|---|---|
 | R1 | **Approve** reading recipe pages in the deployed app (`TABLE_RECIPE_IMPORT_FETCH=on`), after a review of the production fetcher (pinned connection, no proxy environment, Node connection path) and a source-policy list | The fetcher is fixture-tested only; reading third-party pages is a product and rights decision | Jon | directive; validated by one owner-chosen page read on the deployed app | none |
-| C1 | **Decide** whether Table may keep a household-private copy of each imported page's method and one photo (`TABLE_RECIPE_CONTENT=household_private`) | Without it, imported recipes keep ingredients, servings, times and attribution and link to the original for the method; no photos | Jon | directive naming the setting; can be withdrawn (already-kept copies stay unless you ask to remove them) | none |
-| C2 | **Provide** sites that have permitted reuse (licence or written permission) and what they allow (`TABLE_RECIPE_CONTENT_GRANTS=site=instructions+photos`) | Keeps only what a named site allows, independent of C1 | Jon | the permission text, recorded here, then a directive | per site |
+| C1 | **Decide** whether Table may keep a household-private copy of each imported page's method and one photo (`TABLE_RECIPE_CONTENT=household_private`). This is an **owner-selected use mode, not a licence from the publisher**; Table records it as such and does not decide whether private copying is permitted | Without it, imported recipes keep ingredients, servings, times and attribution and link to the original for the method; no photos | Jon | directive naming the setting; can be withdrawn (already-kept copies stay unless you ask to remove them) | none |
+| C2 | **Provide** sites that have permitted reuse (licence or written permission) and what they allow (`TABLE_RECIPE_CONTENT_GRANTS=site=instructions+photos`; photo hosts such as a site's CDN in `TABLE_RECIPE_PHOTO_HOSTS=site=host+host`). Table records these as **owner-recorded grants**: it does not verify the permission document, and a grant covers only the named site — never a site a link redirects to | Keeps only what a named site allows, independent of C1 | Jon | the permission text, recorded here, then a directive | per site |
 | R2 | **Decide/Provide** Budget Bytes permission if you want more than links (their FAQ: case-by-case permission; commercial use needs a license) | Table reads no Budget Bytes page and copies no photos or methods | Jon | written permission from Budget Bytes, then a directive | possibly a license |
 | I1 | **Provide** Instacart Developer Platform access (development environment first) and an API key — never in chat | Required for nearby retailers and shopping-list links | Jon | host secret store: `INSTACART_API_KEY`, `INSTACART_ENV=development`, `INSTACART_ACTIVATE=retailers` then `list` | Instacart's terms (not determined) |
 | I2 | **Approve** provider validation: one nearby-retailer lookup for a ZIP you choose and one shopping list for a reviewed week, in the development environment | Converts "fixture-tested" into "provider-read"; confirms the link domain and error bodies the docs do not state | Jon | directive naming the ZIP; redacted evidence | none expected |

@@ -1,0 +1,55 @@
+
+Running 5 tests using 1 worker
+
+  ✓  1 [chromium] › tests/e2e/kroger-matching.spec.ts:78:1 › KM-E1: search at the store, choose a unit product — focus returns, the line shows it with its store price, no cart request (6.9s)
+  ✓  2 [chromium] › tests/e2e/kroger-matching.spec.ts:103:1 › KM-E2: a unit product whose size Kroger states in words needs the size — the error is on the field and focused; then it is chosen (4.8s)
+  ✓  3 [chromium] › tests/e2e/kroger-matching.spec.ts:127:1 › KM-E3: weight-sold and unknown-basis products are shown with the reason and can't be chosen (RUC-02) (4.5s)
+  ✓  4 [chromium] › tests/e2e/kroger-matching.spec.ts:148:1 › KM-E4: a choice made while the other member changed the item is held back until reviewed; nothing is replaced silently (6.7s)
+  ✘  5 [chromium] › tests/e2e/kroger-matching.spec.ts:174:1 › KM-E5: matching several items at once, and the dialogs at 320 px with 200% text, without horizontal scrolling (14.0s)
+
+
+  1) [chromium] › tests/e2e/kroger-matching.spec.ts:174:1 › KM-E5: matching several items at once, and the dialogs at 320 px with 200% text, without horizontal scrolling 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('dialog', { name: 'Match products at Kroger' }).getByRole('heading', { name: /Jasmine rice — chose Synthetic Jasmine Rice 2 lb bag/ })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for getByRole('dialog', { name: 'Match products at Kroger' }).getByRole('heading', { name: /Jasmine rice — chose Synthetic Jasmine Rice 2 lb bag/ })
+
+
+      188 |   expect(await p.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
+      189 |   await riceSection.locator('[data-product-id="0003000000001"]').getByRole("button", { name: /Use Synthetic Jasmine Rice 2 lb bag/ }).click();
+    > 190 |   await expect(dialog.getByRole("heading", { name: /Jasmine rice — chose Synthetic Jasmine Rice 2 lb bag/ })).toBeVisible();
+          |                                                                                                               ^
+      191 |   expect(await q("SELECT 1 FROM products WHERE retailer='kroger'")).toHaveLength(1); // only what was chosen
+      192 |   const calls = krogerCalls();
+      193 |   expect(calls.products.length).toBeGreaterThan(1);
+        at /home/user/table/tests/e2e/kroger-matching.spec.ts:190:111
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/kroger-matching-KM-E5-matc-8c8c7-ithout-horizontal-scrolling-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/kroger-matching-KM-E5-matc-8c8c7-ithout-horizontal-scrolling-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/kroger-matching-KM-E5-matc-8c8c7-ithout-horizontal-scrolling-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/kroger-matching-KM-E5-matc-8c8c7-ithout-horizontal-scrolling-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests/e2e/kroger-matching.spec.ts:174:1 › KM-E5: matching several items at once, and the dialogs at 320 px with 200% text, without horizontal scrolling 
+  4 passed (43.4s)
+
+To open last HTML report run:
+
+  npx playwright show-report
+

@@ -64,3 +64,16 @@ Verified: `184d99f` — `docs/table/evidence/2026-10-08-verify-184d99f/summary.m
 | **K1–K5** | Kroger developer app, credentials, scopes, store, then `KROGER_ACTIVATE=products` with `TABLE_RETAILER=kroger` | Real Kroger API access. |
 | **K6/K7 + modality** | Data-retention decision and cart activation once `modality` is documented | Real cart writes to your Kroger account. |
 | **H1/H3** | Hosting choice and approval | Provisioning and possible cost. |
+
+## 4. Recheck corrections (review of 988c4d1) — 2026-10-08
+
+| Finding | Disposition | Commit |
+|---|---|---|
+| **RUC-01** — redirects bypassed the no-read policy and inherited the first site's grant | **Fixed.** Read policy asked before every request (each redirect hop and photo request); retention decided for the page actually read; photos only from that site or owner-listed photo hosts; provenance labels the owner-selected mode and owner-recorded grants as what they are (D102–D104) | `c9a95b6` |
+| **RUC-02** — a typed amount turned a weight-sold (or unknown-basis) product into a fixed, priced package | **Fixed** (bounded refusal): only products sold by the unit become packages with a price; weight and unknown basis are refused with a reason (D105) | `c9a95b6` |
+| Kroger matching UI had no browser test | **Closed** with a test-only scripted fake on a test server (D106); found and fixed a bulk-match staleness bug | `c9a95b6` |
+
+**Hosting is no longer an open decision:** the pilot runs on Render Free + Neon (user-reported). The owner table in
+§3 changes accordingly — instead of H1/H3: **upgrade the existing pilot** (`DEPLOYMENT.md` §0). Next milestone: one
+real recipe import on the pilot (R1, separately approved; C1/C2 off), then Kroger matching after its own approval.
+Verified: `docs/table/evidence/2026-10-08-verify-c9a95b6/summary.md`: vitest 1117/1117, Playwright 136/136, 88 mutations killed, 0 survived, 0 error.

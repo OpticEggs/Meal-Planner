@@ -1,0 +1,38 @@
+// Upgrade check, step 1 (base code 9623de4, migrations 001-011): a household-shaped database.
+import pg from "pg";
+import path from "node:path";
+import { migrate } from "./src/server/db/migrate";
+import { seedFixture, USERS } from "./tests/fixtures/household";
+import * as sources from "./src/server/commands/sources";
+import * as imports from "./src/server/commands/imports";
+import { fixtureDeps, importFromLink } from "./src/server/recipe-import-service";
+const URL_ = process.env.DATABASE_URL!;
+// A fresh disposable database (the e2e test database; the browser suite re-seeds it before every test).
+const admin = new pg.Client({ connectionString: URL_.replace(/\/table_e2e$/, "/postgres") });
+await admin.connect();
+await admin.query("DROP DATABASE IF EXISTS table_e2e WITH (FORCE)");
+await admin.query("CREATE DATABASE table_e2e");
+await admin.end();
+console.log("migrated:", (await migrate(URL_)).join(" "));
+const fx = await seedFixture(URL_);
+const jon = { memberId: fx.members.jon, householdId: fx.householdId, displayName: USERS.jon.name };
+const alex = { memberId: fx.members.alex, householdId: fx.householdId, displayName: USERS.alex.name };
+const op = () => `up-${crypto.randomUUID()}`;
+const ok = (r: any) => { if (r.status !== "accepted") throw new Error(JSON.stringify(r)); return r.result; };
+const MAN = path.resolve("tests/fixtures/import-site/manifest.json");
+const b1 = ok(await sources.saveLinkCommand(jon, op(), { url: "https://recipes.example.com/chili", note: "Friday?" })).bookmarkId;
+ok(await sources.saveLinkCommand(alex, op(), { url: "https://www.budgetbytes.com/some-synthetic-recipe/", note: "cheap" }));
+const imp: any = await importFromLink(jon, { bookmarkId: b1, operationId: op() }, fixtureDeps(MAN));
+if (imp.kind !== "draft") throw new Error(JSON.stringify(imp));
+const c2 = new pg.Client({ connectionString: URL_ }); await c2.connect();
+const d = (await c2.query("SELECT * FROM recipe_import_drafts WHERE id=$1", [imp.draftId])).rows[0];
+const decisions = d.lines.map((l: any, index: number) => ({ index, decision: l.decision ?? { use: false } }));
+ok(await imports.updateImportDraftCommand(jon, op(), { draftId: d.id, expectedRevision: 1, servings: 4, decisions }));
+ok(await imports.confirmImportDraftCommand(jon, op(), { draftId: d.id, expectedRevision: 2 }));
+const b3 = ok(await sources.saveLinkCommand(alex, op(), { url: "https://plain.example.com/page" })).bookmarkId;
+ok(await imports.pasteIngredientsCommand(alex, op(), { bookmarkId: b3, text: "1 cup rice\nsalt to taste", title: "Pasted, still in review" }));
+const counts = Object.fromEntries((await c2.query(`SELECT relname, n_live_tup FROM pg_stat_user_tables`)).rows.map((r) => [r.relname, Number(r.n_live_tup)]));
+const exact: Record<string, number> = {};
+for (const tbl of Object.keys(counts).sort()) exact[tbl] = Number((await c2.query(`SELECT count(*) FROM "${tbl}"`)).rows[0].count);
+console.log(JSON.stringify({ householdId: fx.householdId, schema: (await c2.query("SELECT name FROM schema_migrations ORDER BY name")).rows.map((r) => r.name), counts: exact }));
+await c2.end();

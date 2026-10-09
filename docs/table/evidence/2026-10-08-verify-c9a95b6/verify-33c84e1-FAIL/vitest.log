@@ -1,0 +1,1136 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/table
+
+ ✓ tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01a: an empty recipe collection yields a draft of seven open nights that cannot be adopted 791ms
+ ✓ tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01b: too few eligible recipes leaves named open nights; adoption refused 743ms
+ ✓ tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01c: a submitted proposal with an uncovered Thursday or missing plates is refused at the server 761ms
+ ✓ tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01d: a complete, fully priced proposal that is known to exceed a firm budget is refused 798ms
+ ✓ tests/integration/review-regressions.test.ts > R-F01 whole-week adoption admission > R-F01e: complete coverage with unknown prices is adoptable; grocery readiness stays unproven 788ms
+ ✓ tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02a: a locked Thursday leftover keeps its Wednesday source through a whole-week adoption 858ms
+ ✓ tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02b: a locked Wednesday source keeps its dependent plates consistent through adoption 760ms
+ ✓ tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02c: moving Wednesday's cooking after Alex's reserved Thursday lunch discloses and resolves the lunch before Apply 837ms
+ ✓ tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02d: a move and a lunch edit on the same cooking conflict in either order (move first) 897ms
+ ✓ tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02d: a move and a lunch edit on the same cooking conflict in either order (lunch edit first) 862ms
+ ✓ tests/integration/review-regressions.test.ts > R-F02 dependency closure across sources, leftovers, lunches and locks > R-F02e: independent Friday and Sunday edits still both survive 841ms
+ ✓ tests/integration/review-regressions.test.ts > R-F03 current exclusions apply to every newly scheduled choice > R-F03a: placing a deferred dinner that now violates an exclusion is refused 793ms
+ ✓ tests/integration/review-regressions.test.ts > R-F03 current exclusions apply to every newly scheduled choice > R-F03b: adding an eater to a dinner checks that eater's personal exclusions 754ms
+ ✓ tests/integration/review-regressions.test.ts > R-F04 order and transfer reconciliation > R-F04a: a transfer acknowledged after the order is still counted; the same demand is not offered again 1022ms
+ ✓ tests/integration/review-regressions.test.ts > R-F04 order and transfer reconciliation > R-F04b: 'contents unknown' does not clear an uncertain transfer hold 850ms
+ ✓ tests/integration/review-regressions.test.ts > R-F04 order and transfer reconciliation > R-F04c: an acknowledged transfer stays counted when the order's contents are unknown, and is flagged 863ms
+ ✓ tests/integration/review-regressions.test.ts > R-F04 order and transfer reconciliation > R-F04d: a known order reconciles its pre-order transfers exactly once (no double count) 903ms
+ ✓ tests/integration/review-regressions.test.ts > R-F05 receipts, substitutions and package identity > R-F05a: an unvalidated substitution does not cover the original need 968ms
+ ✓ tests/integration/review-regressions.test.ts > R-F05 receipts, substitutions and package identity > R-F05b: an unsuitable substitution leaves the need actionable; a suitable smaller one covers only its amount 1859ms
+ ✓ tests/integration/review-regressions.test.ts > R-F05 receipts, substitutions and package identity > R-F05c: ordered packages keep their own size when the product mapping later changes 979ms
+ ✓ tests/integration/review-regressions.test.ts > R-F05 receipts, substitutions and package identity > R-F05d: a mistaken 'missing' is corrected by a new observation without rewriting history 899ms
+ ✓ tests/integration/review-regressions.test.ts > R-F06 'Have enough' is bound to what the reviewer saw > R-F06a: a concurrent increase cannot enlarge Alex's assertion (change first) 790ms
+ ✓ tests/integration/review-regressions.test.ts > R-F06 'Have enough' is bound to what the reviewer saw > R-F06a: a concurrent increase cannot enlarge Alex's assertion (observation first) 842ms
+ ✓ tests/integration/review-regressions.test.ts > R-F06 'Have enough' is bound to what the reviewer saw > R-F06b: 'Have enough' without the reviewed amount is refused; an unchanged review covers the need 717ms
+ ✓ tests/integration/review-regressions.test.ts > R-F07 capture lifecycle > R-F07a: Also need works before any week is adopted and reports its destination 726ms
+ ✓ tests/integration/review-regressions.test.ts > R-F07 capture lifecycle > R-F07b: after this week's order is confirmed, a new need goes to the next pickup, not the confirmed order 891ms
+ ✓ tests/integration/review-regressions.test.ts > R-F07 capture lifecycle > R-F07c: a remembered usual quantity is reused by later staple taps 736ms
+ ✓ tests/integration/review-regressions.test.ts > R-F08 household-wide purchasing inputs reach every active week > R-F08a: a price change made from week B invalidates week A's old review; old Send makes zero calls 837ms
+ ✓ tests/integration/review-regressions.test.ts > R-F08 household-wide purchasing inputs reach every active week > R-F08b: a product mapping change from week B reaches week A's quantities 731ms
+ ✓ tests/integration/ms-sources.test.ts > saved links (URL-01..04, BB-02, SEC-01) > URL-01: saving a link writes one shared bookmark and nothing else; both members see it 1050ms
+ ✓ tests/integration/ms-sources.test.ts > saved links (URL-01..04, BB-02, SEC-01) > URL-02: both members save tracking variants of one page at once — one bookmark, both notes kept (Jon first) 793ms
+ ✓ tests/integration/ms-sources.test.ts > saved links (URL-01..04, BB-02, SEC-01) > URL-02: both members save tracking variants of one page at once — one bookmark, both notes kept (Alex first) 729ms
+ ✓ tests/integration/ms-sources.test.ts > saved links (URL-01..04, BB-02, SEC-01) > URL-02: the same operation id replays the same receipt 635ms
+ ✓ tests/integration/ms-sources.test.ts > saved links (URL-01..04, BB-02, SEC-01) > URL-03: a social-media post saves and opens, labeled as not importable 728ms
+ ✓ tests/integration/ms-sources.test.ts > saved links (URL-01..04, BB-02, SEC-01) > URL-04: file:///etc/passwd is refused and writes nothing 685ms
+ ✓ tests/integration/ms-sources.test.ts > saved links (URL-01..04, BB-02, SEC-01) > URL-04: javascript:alert(1) is refused and writes nothing 671ms
+ ✓ tests/integration/ms-sources.test.ts > saved links (URL-01..04, BB-02, SEC-01) > URL-04: data:text/html,hi is refused and writes nothing 646ms
+ ✓ tests/integration/ms-sources.test.ts > saved links (URL-01..04, BB-02, SEC-01) > URL-04: https://user:pw@recipes.example.com/x is refused and writes nothing 707ms
+ ✓ tests/integration/ms-sources.test.ts > saved links (URL-01..04, BB-02, SEC-01) > URL-04: https://localhost/x is refused and writes nothing 692ms
+ ✓ tests/integration/ms-sources.test.ts > saved links (URL-01..04, BB-02, SEC-01) > URL-04: http://127.0.0.1/x is refused and writes nothing 667ms
+ ✓ tests/integration/ms-sources.test.ts > saved links (URL-01..04, BB-02, SEC-01) > URL-04: https://intranet/x is refused and writes nothing 732ms
+ ✓ tests/integration/ms-sources.test.ts > saved links (URL-01..04, BB-02, SEC-01) > URL-04: not a url is refused and writes nothing 651ms
+ ✓ tests/integration/ms-sources.test.ts > saved links (URL-01..04, BB-02, SEC-01) > SEC-01: another household can't archive, import or review this household's link or draft 730ms
+ ✓ tests/integration/ms-sources.test.ts > reviewed import (URL-05..15) > URL-05: links resolving to private, mixed, metadata or mapped addresses, or redirecting there, are refused before any connection 680ms
+ ✓ tests/integration/ms-sources.test.ts > reviewed import (URL-05..15) > URL-03/06: a page that refuses (login) or has no recipe stays a saved link with a clear state 706ms
+ ✓ tests/integration/ms-sources.test.ts > reviewed import (URL-05..15) > URL-08/07/10: JSON-LD is read as data — ingredients, yield, time; no method, nutrition or script; unclear lines need review 869ms
+ ✓ tests/integration/ms-sources.test.ts > reviewed import (URL-05..15) > URL-09: a page with several recipes asks which one; it never mixes them 626ms
+ ✓ tests/integration/ms-sources.test.ts > reviewed import (URL-05..15) > URL-11/12: an incomplete draft can't be confirmed; a complete one becomes one imported version with its source, changing no plan 900ms
+ ✓ tests/integration/ms-sources.test.ts > reviewed import (URL-05..15) > URL-14: both members edit the same draft at once — the second is refused, nothing is overwritten (Jon first) 684ms
+ ✓ tests/integration/ms-sources.test.ts > reviewed import (URL-05..15) > URL-14: both members edit the same draft at once — the second is refused, nothing is overwritten (Alex first) 738ms
+ ✓ tests/integration/ms-sources.test.ts > reviewed import (URL-05..15) > URL-13/15: editing an imported recipe keeps a scheduled dinner on its version; archiving the link keeps the recipe and dinner 719ms
+ ✓ tests/integration/ms-sources.test.ts > Budget Bytes lane (BB-02..04) > BB-02/03: a Budget Bytes link is saved once, attributed, and never read — the member pastes or types the ingredients 690ms
+ ✓ tests/integration/ms-sources.test.ts > Budget Bytes lane (BB-02..04) > BB-04: the member's own pasted list becomes a household recipe after review; its source stays linked 643ms
+ ✓ tests/integration/ms-sources.test.ts > URL-16: export and restore keep links, saves, drafts and imported provenance, in reverse row order 983ms
+ ✓ tests/integration/plan.contract.test.ts > T01 preview Friday while the other member reviews groceries; cancel > leaves accepted week, portions and active requirements unchanged with no household edit or external call 1003ms
+ ✓ tests/integration/plan.contract.test.ts > T02 either member adopts the displayed week > creates one shared accepted plan and no order, cooking or consumption record 810ms
+ ✓ tests/integration/plan.contract.test.ts > T03 Sounds good and preference changes > persist without changing accepted assignments, portions or requirements 828ms
+ ✓ tests/integration/plan.contract.test.ts > T04 previews affecting leftovers or a locked night > shows consequences before Apply, cancellation changes nothing, protected dinners are not moved 952ms
+ ✓ tests/integration/plan.contract.test.ts > T07 record less left than planned > makes the dependent night unresolved, keeps the selected dinner, proposes but does not apply recovery 746ms
+ ✓ tests/integration/plan.contract.test.ts > T08 (server boundary) other member changes Friday while a Friday preview is open > reports the current Friday and stale draft from the snapshot before Apply; the old draft cannot apply 820ms
+ ✓ tests/integration/plan.contract.test.ts > T10 concurrent independent Friday and Sunday replacements — Jon (Sunday) first > both survive, neither restores other nights, groceries are recalculated 945ms
+ ✓ tests/integration/plan.contract.test.ts > T10 concurrent independent Friday and Sunday replacements — Alex (Friday) first > both survive, neither restores other nights, groceries are recalculated 969ms
+ ✓ tests/integration/plan.contract.test.ts > T11 concurrent replacements of the same target — Jon first > one commits; the other makes no accepted write and keeps its draft 866ms
+ ✓ tests/integration/plan.contract.test.ts > T11 concurrent replacements of the same target — Alex first > one commits; the other makes no accepted write and keeps its draft 803ms
+ ✓ tests/integration/plan.contract.test.ts > T12 adopt a whole proposal after a newer accepted change — adoption first > never restores an obsolete seven-day snapshot 781ms
+ ✓ tests/integration/plan.contract.test.ts > T12 adopt a whole proposal after a newer accepted change — Friday change first > never restores an obsolete seven-day snapshot 898ms
+ ✓ tests/integration/plan.contract.test.ts > T15 (plan commands) duplicate click or retry > returns the same recorded result with no duplicate edit; reused id with different payload is refused 822ms
+ ✓ tests/integration/plan.contract.test.ts > T21 edit a recipe in the library after adopting it > keeps the accepted assignment on its pinned recipe version 925ms
+ ✓ tests/integration/plan.contract.test.ts > T22 two night edits interacting through a real dependency > leftover source: conflict in either order (Wednesday first) 776ms
+ ✓ tests/integration/plan.contract.test.ts > T22 two night edits interacting through a real dependency > leftover source: conflict in either order (Thursday first) 751ms
+ ✓ tests/integration/plan.contract.test.ts > T22 two night edits interacting through a real dependency > destination lock: a move onto a night that was locked meanwhile is stopped, never overwritten 684ms
+ ✓ tests/integration/plan.contract.test.ts > T22 two night edits interacting through a real dependency > firm constraint: each change fits a firm budget alone, the combination does not, and is not silently relaxed 869ms
+ ✓ tests/integration/plan.contract.test.ts > X01 (commands) household isolation > another household cannot read or write plans, drafts or purchases by id substitution, with no side effects 866ms
+ ✓ tests/integration/plan.contract.test.ts > X03 (command identity) > same id + same payload returns the original; same id + different payload is rejected with no write 737ms
+ ✓ tests/integration/plan.contract.test.ts > Negative control: a stale target is rejected > a lock request bound to an old revision makes no write 692ms
+ ✓ tests/integration/groceries.contract.test.ts > Fixture arithmetic (explicit expected grocery lines) > computes the specified quantities and packages 812ms
+ ✓ tests/integration/groceries.contract.test.ts > T05 dinners covered, product/price unresolved > shows meals chosen without asserting grocery readiness or budget compliance 769ms
+ ✓ tests/integration/groceries.contract.test.ts > T13 accepted meal change while the other member's grocery review is open > shows the delta, keeps unaffected approvals, and stale Send makes zero outbound calls 1393ms
+ ✓ tests/integration/groceries.contract.test.ts > T14 replacement after order confirmation > changes current requirements but never the confirmed order; new chicken is not sent; stale Send makes zero calls 1384ms
+ ✓ tests/integration/groceries.contract.test.ts > T15 (handoff) duplicate click or retry > one batch and one outbound call for one operation id 779ms
+ ✓ tests/integration/groceries.contract.test.ts > X03 purchase deduplication across different operation ids > concurrent sends of the same review produce one transfer (first wins) 819ms
+ ✓ tests/integration/groceries.contract.test.ts > X03 purchase deduplication across different operation ids > concurrent sends of the same review produce one transfer (second wins) 814ms
+ ✓ tests/integration/groceries.contract.test.ts > T16 / X05 external transfer times out after possible acceptance > is uncertain and never replayed automatically; granularity stays batch-level 1140ms
+ ✓ tests/integration/groceries.contract.test.ts > T16 / X05 external transfer times out after possible acceptance > a process stop after dispatch-started becomes uncertain on recovery, with no replay 848ms
+ ✓ tests/integration/groceries.contract.test.ts > T17 / X04 plan change after a valid batch has started sending > keeps the exact started payload; revised needs are a separate delta; nothing is reversed 871ms
+ ✓ tests/integration/groceries.contract.test.ts > T17 / X04 plan change after a valid batch has started sending > superseded queued work is canceled before dispatch-started (other race order) 857ms
+ ✓ tests/integration/groceries.contract.test.ts > T18 repeated staple taps, overlapping recipe need, explicit extra > dedupes the usual request with names, keeps reasons, keeps the extra 842ms
+ ✓ tests/integration/groceries.contract.test.ts > T19 'Have some' without a quantity, or reviewed demand increases > never invents a pantry subtraction and reopens review visibly 721ms
+ ✓ tests/integration/groceries.contract.test.ts > T20 confirm an order, then receive one item and report another missing > confirmation does not imply receipt; received resolves; missing stays actionable 1464ms
+ ✓ tests/integration/groceries.contract.test.ts > X09 capture after confirmation > identifies a staple already in the confirmed order before creating a duplicate; Add another is an explicit extra 934ms
+ ✓ tests/integration/groceries.contract.test.ts > Expected supply respects pickup timing (plan §6.4) > ordered goods support only dinners on or after pickup; unknown pickup is unresolved, not proof 1551ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > B16a: add, view, rename and set a usual amount in packages or a measured unit; future taps use it 951ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > B16b: adding validates the item and product; an explicit product is a recorded decision 824ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > B16c: removing hides the shortcut only; restore brings it back; a removed staple cannot be edited or re-pointed 805ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario A: concurrent edits of one staple — the first decision survives, the second sees a conflict with the current value — Jon first 735ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario A: an edit racing a removal — whichever commits second is refused — Jon first 700ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario A: concurrent edits of one staple — the first decision survives, the second sees a conflict with the current value — Alex first 706ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario A: an edit racing a removal — whichever commits second is refused — Alex first 649ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario B: staple changes during Alex's grocery review leave the reviewed purchase intact and sendable 948ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario B: choosing the new product for this pickup withdraws only that line's approval; the old review cannot authorize Send 893ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario B/E: two product choices for the same pickup line made against the same view — Jon first 813ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario B/E: two product choices for the same pickup line made against the same view — Alex first 806ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario C: removing a staple with outstanding demand removes its shortcut, not the grocery need 862ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > Scenario D: after an order is confirmed and received, staple changes leave product identities, quantities, receipts and transfers unchanged 1149ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > re-pointing a staple with a measured usual amount re-expresses it in the new product's packages, or refuses an unconvertible product 854ms
+ ✓ tests/integration/b16.staple-management.test.ts > B16 staple management > line product issues are explicit: none chosen, unavailable, conflicting 845ms
+ ✓ tests/integration/b16.staple-management.test.ts > B15/B16 review regressions > a product choice naming another household's week is refused without revealing that week's product 737ms
+ ✓ tests/integration/b16.staple-management.test.ts > B15/B16 review regressions > 'last changed by' includes product decisions 730ms
+ ✓ tests/integration/b16.staple-management.test.ts > B15/B16 review regressions > a substitution decision made against an older view is refused, not silently replaced 893ms
+ ✓ tests/integration/b16.staple-management.test.ts > B15/B16 review regressions > removing a request is refused when someone joined it after the confirmation was shown 740ms
+ ✓ tests/integration/b16.staple-management.test.ts > B15/B16 review regressions > the household export covers every household table (staples included) and restores them 679ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 authorization start > stores a single-use state bound to household, member and redirect URI — hash only, verifier sealed — and builds a PKCE S256 URL 778ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 authorization start > absent configuration or activation refuses to start and stores nothing 673ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 authorization callback > exchanges the code once with Basic auth and stores tokens sealed (raw columns hold no token) 670ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 authorization callback > a replayed state is refused with no exchange and nothing changed 772ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 authorization callback > an expired state is refused and nothing is stored 719ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 authorization callback > another member's or another household's state is refused without consuming it; unknown and missing states are refused 700ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 authorization callback > a different redirect URI configured at callback time does not match the bound state 636ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 authorization callback > denied access is recorded as not connected, with no exchange and no tokens 619ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 authorization callback > a callback while connect is not activated stores nothing and leaves the state unused 648ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 authorization callback > a failed exchange stores no tokens 725ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 token refresh coordination > two concurrent callers with an expired token cause exactly one refresh and share its result 1028ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 token refresh coordination > an unknown expiry is treated as expired: refresh before use 670ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 token refresh coordination > a failed refresh (400 invalid refresh token) marks needs_reauthorization once and never loops 783ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 token refresh coordination > a failed refresh (a timeout (the token may have been consumed)) marks needs_reauthorization once and never loops 772ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 token refresh coordination > a failed refresh (a 500) marks needs_reauthorization once and never loops 761ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 token refresh coordination > a refresh needs the connect capability: with it deactivated nothing is sent 671ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 household isolation, disconnect, location > one household's tokens can never be used for another, even if copied 675ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 household isolation, disconnect, location > disconnect discards the sealed tokens; location is per household and validated 663ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 export and logging never carry secrets > the household export excludes tokens, verifiers and states but keeps the non-secret history 686ms
+ ✓ tests/integration/b5.kroger-connection.test.ts > B5 export and logging never carry secrets > logs redact Authorization, tokens, codes, verifiers and the client secret 706ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 cart handoff readiness > stays false with full credentials present and no activation; zero calls, nothing frozen 1188ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 cart handoff readiness > per household: no connection or no store location means not ready and nothing sent 977ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 cart handoff readiness > a household that is not ready is refused before anything is frozen (integration: startHandoff asks the household's readiness) 968ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 dispatch through startHandoff with the Kroger adapter > 204: one PUT built from the frozen batch bytes; approvals consumed once; batch-level acknowledgment only; no order 1144ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 dispatch through startHandoff with the Kroger adapter > a stale grocery review makes no transport call 1023ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 dispatch through startHandoff with the Kroger adapter > a timeout is uncertain at batch level and never replayed 1093ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 dispatch through startHandoff with the Kroger adapter > a network error after sending is uncertain at batch level and never replayed 1044ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 dispatch through startHandoff with the Kroger adapter > a 500 is uncertain at batch level and never replayed 1004ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 dispatch through startHandoff with the Kroger adapter > an undocumented 200 with a body is uncertain at batch level and never replayed 1009ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 dispatch through startHandoff with the Kroger adapter > a documented 400 is a definite failure of the whole batch 1003ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 dispatch through startHandoff with the Kroger adapter > a 401 fails without retrying the write and requires the household to connect again 1017ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 dispatch through startHandoff with the Kroger adapter > an expired access token is refreshed before the single PUT 934ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 dispatch through startHandoff with the Kroger adapter > a refresh failure at send time means nothing was sent: failed, not uncertain 1007ms
+ ✓ tests/integration/b5.kroger-dispatch.test.ts > B5 household isolation at the adapter > another household's send never uses this household's connection, tokens or location 792ms
+ ✓ tests/integration/b21-b22.test.ts > B21: one effective cooking record per event, enforced by the database > a direct insert of a second effective record under a different generation is refused 773ms
+ ✓ tests/integration/b21-b22.test.ts > B21: one effective cooking record per event, enforced by the database > two writers outside the command framework, concurrently, different generations (READ COMMITTED): at most one commits 705ms
+ ✓ tests/integration/b21-b22.test.ts > B21: one effective cooking record per event, enforced by the database > two writers outside the command framework, concurrently, different generations (REPEATABLE READ): at most one commits 675ms
+ ✓ tests/integration/b21-b22.test.ts > B21: one effective cooking record per event, enforced by the database > two writers outside the command framework, concurrently, different generations (SERIALIZABLE): at most one commits 657ms
+ ✓ tests/integration/b21-b22.test.ts > B21: one effective cooking record per event, enforced by the database > a correction followed by legitimate re-recording still succeeds, and only the new record is effective 824ms
+ ✓ tests/integration/b21-b22.test.ts > B21: one effective cooking record per event, enforced by the database > a direct re-record names the corrected record it replaces; naming an uncorrected one, or a second successor, is refused 942ms
+ ✓ tests/integration/b21-b22.test.ts > B21: one effective cooking record per event, enforced by the database > two writers re-record the same corrected record concurrently: one succeeds 882ms
+ ✓ tests/integration/b21-b22.test.ts > B21: one effective cooking record per event, enforced by the database > a re-record racing an uncommitted correction is refused; after the correction commits it is accepted 1042ms
+ ✓ tests/integration/b21-b22.test.ts > B21: one effective cooking record per event, enforced by the database > corrections and records stay append-only 881ms
+ ✓ tests/integration/b21-b22.test.ts > B21: one effective cooking record per event, enforced by the database > export and restore keep a corrected chain and a historical duplicate, in the worst row order 1299ms
+ ✓ tests/integration/b21-b22.test.ts > B22: cooking is recorded only for a dinner still scheduled in its accepted plan > an event no longer scheduled — replaced (Friday gets another recipe) — is refused as stale; the week and history are unchanged and the event is not restored 1122ms
+ ✓ tests/integration/b21-b22.test.ts > B22: cooking is recorded only for a dinner still scheduled in its accepted plan > an event no longer scheduled — set aside as a backup (deferred) — is refused as stale; the week and history are unchanged and the event is not restored 1113ms
+ ✓ tests/integration/b21-b22.test.ts > B22: cooking is recorded only for a dinner still scheduled in its accepted plan > an event no longer scheduled — removed (Friday set to out) — is refused as stale; the week and history are unchanged and the event is not restored 1074ms
+ ✓ tests/integration/b21-b22.test.ts > B22: cooking is recorded only for a dinner still scheduled in its accepted plan > a dinner moved to another night is still scheduled and can be recorded 925ms
+ ✓ tests/integration/b21-b22.test.ts > B22: cooking is recorded only for a dinner still scheduled in its accepted plan > a past dinner still scheduled in its accepted week can be recorded retrospectively, on its own date 1137ms
+ ✓ tests/integration/b21-b22.test.ts > B22: cooking is recorded only for a dinner still scheduled in its accepted plan > replacement and recording at the same moment — replacement first 857ms
+ ✓ tests/integration/b21-b22.test.ts > B22: cooking is recorded only for a dinner still scheduled in its accepted plan > replacement and recording at the same moment — recording first 916ms
+ ✓ tests/integration/ms-destinations.test.ts > where to shop (GR-01..12) > GR-01: by default the store cart is kept; the list can be built for copying; Instacart is not set up and nothing is called 1051ms
+ ✓ tests/integration/ms-destinations.test.ts > where to shop (GR-01..12) > GR-02/03/06: switching to another store keeps meals, drops store products and prices, stales approvals and makes the old Send do nothing 1136ms
+ ✓ tests/integration/ms-destinations.test.ts > where to shop (GR-01..12) > GR-04: an open plan preview stays an unapplied idea; nothing in the accepted week or requests changes 908ms
+ ✓ tests/integration/ms-destinations.test.ts > where to shop (GR-01..12) > GR-05/11: after a transfer and a confirmed order, switching changes no history; a new need shows as still to buy, no second order 1127ms
+ ✓ tests/integration/ms-destinations.test.ts > where to shop (GR-01..12) > GR-07: an unpriced line keeps the total incomplete and a firm budget unconfirmed 746ms
+ ✓ tests/integration/ms-destinations.test.ts > where to shop (GR-01..12) > GR-09: Jon switches while Alex is approving — Alex's approval of the old review is refused 751ms
+ ✓ tests/integration/ms-destinations.test.ts > where to shop (GR-01..12) > GR-10: both members choose at once — the later choice is refused, nothing is lost silently (Jon first) 821ms
+ ✓ tests/integration/ms-destinations.test.ts > where to shop (GR-01..12) > GR-10: both members choose at once — the later choice is refused, nothing is lost silently (Alex first) 828ms
+ ✓ tests/integration/ms-destinations.test.ts > where to shop (GR-01..12) > GR-12: a nearby lookup without Instacart access returns nothing and calls nothing 2ms
+ ✓ tests/integration/ms-destinations.test.ts > Instacart shopping-list link (IC-01..06, SEC-02/03) > IC-01: nearby retailers are brands with keys, nothing about a branch, pickup or price 2ms
+ ✓ tests/integration/ms-destinations.test.ts > Instacart shopping-list link (IC-01..06, SEC-02/03) > IC-02: a link is prepared from the frozen reviewed list — measurements, no product ids, no cart batch, no order 853ms
+ ✓ tests/integration/ms-destinations.test.ts > Instacart shopping-list link (IC-01..06, SEC-02/03) > IC-03: a stale list or a changed destination makes zero provider calls 956ms
+ ✓ tests/integration/ms-destinations.test.ts > Instacart shopping-list link (IC-01..06, SEC-02/03) > IC-04: a server error or timeout is uncertain and is not repeated; the same operation id replays without a call 1199ms
+ ✓ tests/integration/ms-destinations.test.ts > Instacart shopping-list link (IC-01..06, SEC-02/03) > IC-05/SEC-02: 401/403 and an untrusted link are failures with no link stored; the key appears nowhere in the database or export 952ms
+ ✓ tests/integration/ms-destinations.test.ts > Instacart shopping-list link (IC-01..06, SEC-02/03) > IC-06: outside the test fake, an unconfigured installation refuses before recording or calling anything 735ms
+ ✓ tests/integration/ms-destinations.test.ts > Instacart shopping-list link (IC-01..06, SEC-02/03) > SEC-03: an unreadable success body is uncertain — no link, no acknowledgement invented 790ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 persistence and history > a confirmed match writes history + the current row with provenance; a portion and a clear append; history is immutable 1008ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 persistence and history > values describing another form than the recipe uses become not applicable (unknown) 787ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 persistence and history > refusals write nothing: invalid input, unknown portion, an unusable basis, and every lookup failure 808ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 persistence and history > a replayed operation is answered from its receipt without contacting FoodData Central 667ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 household authorization > another household's ingredient is not_found, nothing is fetched, written or revealed 670ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 competing match changes (two members, both commit orders) > two matches made from the same revision: the first wins, the second is refused stale with nothing written (jon-first) 868ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 competing match changes (two members, both commit orders) > a clear racing a match from the same revision: one wins, the other is refused stale (jon-first) 886ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 competing match changes (two members, both commit orders) > two matches made from the same revision: the first wins, the second is refused stale with nothing written (alex-first) 952ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 competing match changes (two members, both commit orders) > a clear racing a match from the same revision: one wins, the other is refused stale (alex-first) 926ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 changed since review > values that differ from the reviewed ones are refused with nothing written; the new values can then be reviewed and used 843ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 nutrition never rewrites plans, recipes, targets or allergen information > accepted dinners, recipe versions and member targets are byte-identical; only calculated nutrition changes 1171ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 nutrition never rewrites plans, recipes, targets or allergen information > nutrition data is not allergen clearance: allergen flags, tags and exclusions are untouched 889ms
+ ✓ tests/integration/b7.nutrition.test.ts > B7 export > includes the match history and current rows, and never a key 1002ms
+ ✓ tests/integration/u2c-kroger-mapping.test.ts > P3 Kroger matching is gated > KM-01: with the simulated store, or the products capability off, nothing is requested 836ms
+ ✓ tests/integration/u2c-kroger-mapping.test.ts > P3 Kroger matching is gated > KM-02: no store chosen and none configured → asked to choose one; nothing requested 746ms
+ ✓ tests/integration/u2c-kroger-mapping.test.ts > P3 search and choose > KM-03: search asks Kroger for the term at the household's store and shows size, price and pickup — no cart call 792ms
+ ✓ tests/integration/u2c-kroger-mapping.test.ts > P3 search and choose > KM-04: choosing re-reads the product by id and records product (UPC), package, the store price (promo as promo) and the mapping 870ms
+ ✓ tests/integration/u2c-kroger-mapping.test.ts > P3 search and choose > KM-05: the price recorded is Kroger's, whatever the client sends — the command only accepts a product the server re-read 857ms
+ ✓ tests/integration/u2c-kroger-mapping.test.ts > P3 search and choose > KM-06: a size Kroger states in words needs the member's package size; nothing is written until it is given 792ms
+ ✓ tests/integration/u2c-kroger-mapping.test.ts > P3 search and choose > KM-07: no UPC, gone from the store, or an unknown ingredient → refused and nothing written 737ms
+ ✓ tests/integration/u2c-kroger-mapping.test.ts > P3 search and choose > KM-08: a choice made against an outdated view of the line is refused (B15), and a new choice withdraws the line's approval 881ms
+ ✓ tests/integration/u2c-kroger-mapping.test.ts > P3 search and choose > KM-09: the command refuses when the store isn't Kroger (direct call), and replaying an operation writes once 850ms
+ ✓ tests/integration/u2c-kroger-mapping.test.ts > P3 search and choose > KM-11: the store changed after the search — the choice is re-read and priced at the store current when it is made 789ms
+ ✓ tests/integration/u2c-kroger-mapping.test.ts > P3 search and choose > KM-10: matching several lines searches each (capped at 12) and chooses nothing by itself 768ms
+ ✓ tests/integration/u2c-url-import.test.ts > one step from a link (U-01..U-04) > U-01: pasting a link saves it and reads it at once; attribution, description and counts are kept, the method and photo are not (default) 965ms
+ ✓ tests/integration/u2c-url-import.test.ts > one step from a link (U-01..U-04) > U-02: with the household-private setting, the method is kept as editable steps and one photo is stored (type sniffed, hash recorded); confirming carries both and the attribution 828ms
+ ✓ tests/integration/u2c-url-import.test.ts > one step from a link (U-01..U-04) > U-03: a per-site grant keeps only what that site permitted; another site's grant keeps nothing 785ms
+ ✓ tests/integration/u2c-url-import.test.ts > one step from a link (U-01..U-04) > U-04: a 'photo' that isn't one (HTML served as image/png) is not stored; the draft still opens and says so 741ms
+ ✓ tests/integration/u2c-url-import.test.ts > what stops a read, in words (U-05..U-08) > U-05: Budget Bytes is never read, even with the household-private setting; the link stays and paste is offered 671ms
+ ✓ tests/integration/u2c-url-import.test.ts > what stops a read, in words (U-05..U-08) > U-06: 404 is recorded on the link; 429 and 500 are passing problems (not recorded; retry allowed); a page without recipe data says so 741ms
+ ✓ tests/integration/u2c-url-import.test.ts > what stops a read, in words (U-05..U-08) > U-07: an older-markup (microdata) page becomes a draft marked as such 655ms
+ ✓ tests/integration/u2c-url-import.test.ts > what stops a read, in words (U-05..U-08) > U-08: adding the same link again opens the review in progress (no second read); once confirmed it points at the recipe 756ms
+ ✓ tests/integration/u2c-url-import.test.ts > what stops a read, in words (U-05..U-08) > U-09: with page reading off, the link is saved and paste is offered; an invalid link saves nothing 641ms
+ ✓ tests/integration/u2c-url-import.test.ts > human review of uncertain lines (U-10) > U-10: lines the reader is unsure of carry a suggestion but no decision; nothing becomes a recipe until each line is decided 681ms
+ ✓ tests/integration/u2c-url-import.test.ts > export and restore keep kept photos (U-11) > U-11: a stored photo round-trips through the household export as base64 and restores byte-identical 1261ms
+ ✓ tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > a process starting while another is still sending does not mark that transfer uncertain 1226ms
+ ✓ tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > an outcome that arrives after the transfer was marked uncertain never overwrites it 1081ms
+ ✓ tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > a store that never answers becomes uncertain within the dispatch bound, and a later answer does not change it 1560ms
+ ✓ tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > a member's check of the cart is never overwritten by a late answer from the store 1157ms
+ ✓ tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > a timeout is not a rejection: the send stays uncertain (packages not offered again), a new send is refused, nothing is replayed 1546ms
+ ✓ tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > recovery is repeatable: running it again changes nothing, sends nothing and rewrites no history 1064ms
+stdout | tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > while the server keeps running, the periodic sweep marks a send whose process stopped, without a restart
+{"at":"recovery-sweep","uncertainBatches":1}
+
+ ✓ tests/integration/b9.dispatch-overlap.test.ts > B9 overlapping server processes and interrupted-dispatch recovery > while the server keeps running, the periodic sweep marks a send whose process stopped, without a restart 1078ms
+ ✓ tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > a second press by the same member (a new operation id) adds nothing and reports who recorded it and when 913ms
+ ✓ tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > replaying the same operation id returns the original receipt and adds nothing 818ms
+ ✓ tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > both members press at the same moment: exactly one record, the other is told it is already recorded — Jon first 787ms
+ ✓ tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > both members press at the same moment: exactly one record, the other is told it is already recorded — Alex first 778ms
+ ✓ tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > the household snapshot shows the night as already cooked, by whom 734ms
+ ✓ tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > a mistaken record is corrected by an appended correction; history and 'new to you' ignore it; cooking can then be recorded again 936ms
+ ✓ tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > a correction is refused for a record already corrected, another household's record, or an unknown reason — and writes nothing 735ms
+ ✓ tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > the database refuses a second effective record for one event even if a command were bypassed 784ms
+ ✓ tests/integration/cook-records.test.ts > cook-record idempotency: one effective record per cooking event > export and restore keep corrections and pre-existing duplicates, in any row order 1202ms
+ ✓ tests/integration/b12.staple-products.test.ts > B12 remembered staple products > B12a: approving a different product updates the remembered product and its revision, records the decision, and both members see it 1101ms
+ ✓ tests/integration/b12.staple-products.test.ts > B12 remembered staple products > B12b: future one-tap requests use the latest approved product and usual quantity; the outstanding purchase and its approval are untouched 1261ms
+ ✓ tests/integration/b12.staple-products.test.ts > B12 remembered staple products > B12c: confirmed orders and transfers stay unchanged; later needs route to the next pickup with the new product 1182ms
+ ✓ tests/integration/b12.staple-products.test.ts > B12 remembered staple products > B12d: concurrent approvals cannot silently overwrite a newer decision — Jon first 939ms
+ ✓ tests/integration/b12.staple-products.test.ts > B12 remembered staple products > B12d: concurrent approvals cannot silently overwrite a newer decision — Alex first 943ms
+ ✓ tests/integration/b12.staple-products.test.ts > B12 remembered staple products > B12e: unknown or unavailable products are refused, and a remembered product that is unavailable leaves the line unresolved 1001ms
+ ✓ tests/integration/b12.staple-products.test.ts > B12 remembered staple products > B12f: remembering a usual quantity never changes the remembered product 757ms
+ ✓ tests/integration/ruc01-source-policy.test.ts > RUC-01 a site that is never read stays unread through redirects > R1-01: a direct Budget Bytes link receives zero requests 805ms
+ ✓ tests/integration/ruc01-source-policy.test.ts > RUC-01 a site that is never read stays unread through redirects > R1-02: an allowed link that redirects to Budget Bytes: zero requests to it, no draft, nothing credited to the first site's grant 664ms
+ ✓ tests/integration/ruc01-source-policy.test.ts > RUC-01 a site that is never read stays unread through redirects > R1-03: a photo that redirects to Budget Bytes is never requested there 700ms
+ ✓ tests/integration/ruc01-source-policy.test.ts > RUC-01 what may be kept belongs to the site that supplied the content > R1-04: granted site → ungranted site: facts read from the actual page, nothing kept, attribution to the actual source 706ms
+ ✓ tests/integration/ruc01-source-policy.test.ts > RUC-01 what may be kept belongs to the site that supplied the content > R1-05: facts-only mode, same redirect: the same facts and the same truthful attribution 692ms
+ ✓ tests/integration/ruc01-source-policy.test.ts > RUC-01 what may be kept belongs to the site that supplied the content > R1-06: the owner-selected household-private mode applies to the actual source and is labelled as an owner mode, not a publisher licence 681ms
+ ✓ tests/integration/ruc01-source-policy.test.ts > RUC-01 what may be kept belongs to the site that supplied the content > R1-07: a same-site redirect keeps the grant; a photo on another host is not requested unless that host is authorized for the grant 694ms
+ ✓ tests/integration/ruc01-source-policy.test.ts > RUC-01 what may be kept belongs to the site that supplied the content > R1-08: with the CDN host authorized for that grant, the photo is read from it and recorded with its own source 689ms
+ ✓ tests/integration/ruc01-source-policy.test.ts > RUC-01 what may be kept belongs to the site that supplied the content > R1-09: a photo redirect to an unauthorized host is refused before the request 760ms
+ ✓ tests/integration/household.more.test.ts > Backup and deferred dinners > keeps the original as a deferred dinner, never stacked, and it can be placed deliberately later 1145ms
+ ✓ tests/integration/household.more.test.ts > Proposal controls > Fewer sessions and Different dinners revise open nights only and explain the actual change 934ms
+ ✓ tests/integration/household.more.test.ts > X08 new exclusion flags, never replaces > flags Friday's salmon after a fish exclusion and leaves the accepted dinner in place 922ms
+ ✓ tests/integration/household.more.test.ts > Separate per-person targets and portions > each member sets their own daily and dinner targets; plates show nutrition against the dinner target only 886ms
+ ✓ tests/integration/household.more.test.ts > Separate per-person targets and portions > settings are saved inputs with revision checks; nothing starts set 871ms
+ ✓ tests/integration/x12.environment.test.ts > X12 test helpers are blocked outside the test environment > refuses a fixed clock, fixture seeding and test barriers in production 5ms
+ ✓ tests/integration/x12.environment.test.ts > X12 incomplete real retailer configuration never reports mock success as live > Kroger mode without configuration (or without verified authorization) refuses handoff with zero calls 952ms
+ ✓ tests/integration/x12.environment.test.ts > X12 export omits secrets and round-trips into an isolated database > exports household data without credentials and restores it faithfully 1411ms
+ ✓ tests/integration/x12.environment.test.ts > X12 export omits secrets and round-trips into an isolated database > an export lists rows in the same order whatever plan the database chooses (index or sequential scan) 1646ms
+ ✓ tests/integration/ruc02-purchase-basis.test.ts > RUC-02 a weight-priced or unknown-basis product is never recorded as a fixed, fully priced package > R2-01: sold by weight + a typed 2 lb → refused with a reason; nothing written; the line and its estimate are unchanged 975ms
+ ✓ tests/integration/ruc02-purchase-basis.test.ts > RUC-02 a weight-priced or unknown-basis product is never recorded as a fixed, fully priced package > R2-02: no sale basis, or one Table doesn't know → refused; a typed size doesn't make it a package 971ms
+ ✓ tests/integration/ruc02-purchase-basis.test.ts > RUC-02 a weight-priced or unknown-basis product is never recorded as a fixed, fully priced package > R2-03: search shows the basis and why such products can't be chosen yet 796ms
+ ✓ tests/integration/ruc02-purchase-basis.test.ts > RUC-02 a weight-priced or unknown-basis product is never recorded as a fixed, fully priced package > R2-04: fixed unit still works — readable size with a promotion, a member-stated size for a unit item, and no price stays unknown and keeps the estimate incomplete 946ms
+ ✓ tests/integration/ruc02-purchase-basis.test.ts > RUC-02 a weight-priced or unknown-basis product is never recorded as a fixed, fully priced package > R2-05: choosing products never rewrites earlier products or price history 883ms
+ ✓ tests/integration/b17.recipes.test.ts > B17 recipe versions are edited against the version seen > two edits made from the same version: the first saves, the second is refused with who saved what — Jon first 930ms
+ ✓ tests/integration/b17.recipes.test.ts > B17 recipe versions are edited against the version seen > two edits made from the same version: the first saves, the second is refused with who saved what — Alex first 780ms
+ ✓ tests/integration/b17.recipes.test.ts > B17 recipe versions are edited against the version seen > RB17-03: an edit of an existing recipe must name its version; missing, malformed and stale ones write nothing 840ms
+ ✓ tests/integration/b17.recipes.test.ts > B17 recipe versions are edited against the version seen > RB17-02: repeated occurrences of one ingredient in a component are stored as separate rows, with their own form and note 772ms
+stderr | tests/integration/b9.account-recovery.test.ts > B9 operator password reset > replaces the member's password, ends that member's sessions, and leaves the other member alone
+[2m2026-10-08T23:11:05.609Z[0m [33mWARN[0m [1m[Better Auth]:[0m Invalid password
+
+ ✓ tests/integration/b9.account-recovery.test.ts > B9 operator password reset > replaces the member's password, ends that member's sessions, and leaves the other member alone 1843ms
+ ✓ tests/integration/b9.account-recovery.test.ts > B9 operator password reset > refuses an unknown address, a non-member account and a short password, changing nothing 1034ms
+ ✓ tests/integration/b3.received-goods.test.ts > B3 received goods and genuine additional purchasing > labels and favors options that use received, unallocated goods; extra cost excludes goods already received 1821ms
+ ✓ tests/integration/b3.received-goods.test.ts > B3 received goods and genuine additional purchasing > with no purchasing history, additional basket cost equals the full extra purchase 785ms
+ ✓ tests/integration/ms-flow.test.ts > multi-source end to end > E2E-01: Budget Bytes link → reviewed recipe → Sounds good → next-week proposal → adoption → another way to shop; the current week never changes 1400ms
+ ✓ tests/integration/ms-flow.test.ts > multi-source end to end > E2E-02: an incomplete import never becomes a recipe or a dinner; an unpriced line keeps the budget unconfirmed 802ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch success path and request shape > pins the connection to the validated address and sends only the fixed headers 8ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch success path and request shape > accepts the JSON content types and charset spellings 3ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch success path and request shape > decodes malformed UTF-8 with replacement characters instead of failing 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch success path and request shape > decodes gzip, deflate and brotli bodies 11ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > http://example.com/r → refused:import_requires_https, with no resolution and no transport call 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > https://example.com:8443/r → refused:nonstandard_port, with no resolution and no transport call 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > https://localhost/r → refused:invalid_host, with no resolution and no transport call 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > https://127.0.0.1/r → refused:invalid_host, with no resolution and no transport call 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > https://[::1]/r → refused:invalid_host, with no resolution and no transport call 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > https://u:p@example.com/r → refused:credentials_in_url, with no resolution and no transport call 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > file:///etc/passwd → refused:unsupported_scheme, with no resolution and no transport call 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > javascript:alert(1) → refused:unsupported_scheme, with no resolution and no transport call 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > resolution ["127.0.0.1"] → refused:private_address and the transport is never invoked 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > resolution ["10.0.0.5"] → refused:private_address and the transport is never invoked 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > resolution ["169.254.169.254"] → refused:private_address and the transport is never invoked 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > resolution ["::1"] → refused:private_address and the transport is never invoked 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > resolution ["::ffff:192.168.0.1"] → refused:private_address and the transport is never invoked 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > resolution ["64:ff9b::a9fe:a9fe"] → refused:private_address and the transport is never invoked 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > resolution ["2002:0a00:0001::1"] → refused:private_address and the transport is never invoked 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > resolution ["fe80::1%eth0"] → refused:private_address and the transport is never invoked 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > resolution ["93.184.215.14","10.0.0.5"] → refused:private_address and the transport is never invoked 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > resolution ["192.168.1.1","93.184.215.14"] → refused:private_address and the transport is never invoked 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > resolution ["2606:4700:4700::1111","fd00::1"] → refused:private_address and the transport is never invoked 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > resolution ["not-an-ip"] → refused:private_address and the transport is never invoked 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > resolution [] → refused:no_public_address and the transport is never invoked 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > a resolver failure is dns_failed, a non-array answer is no_public_address 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch refusals before any connection > considers at most maxDnsAnswers answers and pins the first 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch redirects > follows a relative redirect after re-validating and re-resolving it 2ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch redirects > DNS rebinding: a redirect target that now resolves privately is refused before connecting 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch redirects > DNS rebinding on the same host: every hop resolves again 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch redirects > refuses a redirect to http://a.example.com/plain (downgrade to http) without connecting again 2ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch redirects > refuses a redirect to https://localhost/admin (local host) without connecting again 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch redirects > refuses a redirect to https://169.254.169.254/latest/meta-data/ (metadata IP literal) without connecting again 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch redirects > refuses a redirect to https://[::1]/ (IPv6 literal) without connecting again 2ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch redirects > refuses a redirect to https://a.example.com:8443/ (nonstandard port) without connecting again 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch redirects > refuses a redirect to https://user:pw@a.example.com/ (credentials) without connecting again 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch redirects > refuses a redirect to javascript:alert(1) (script scheme) without connecting again 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch redirects > refuses a redirect to file:///etc/passwd (file scheme) without connecting again 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch redirects > refuses a redirect to https://exa mple.com/ (invalid URL) without connecting again 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch redirects > follows at most 3 redirects; a loop ends as too_many_redirects 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch redirects > a redirect without Location is bad_redirect; other 3xx are http_status 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch response limits > HTTP 404 is failed:http_status with the status 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch response limits > HTTP 500 is failed:http_status with the status 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch response limits > HTTP 403 is failed:http_status with the status 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch response limits > HTTP 204 is failed:http_status with the status 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch response limits > HTTP 206 is failed:http_status with the status 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch response limits > content type "image/png" → failed:unsupported_content_type 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch response limits > content type "application/octet-stream" → failed:unsupported_content_type 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch response limits > content type "text/plain" → failed:unsupported_content_type 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch response limits > content type "application/javascript" → failed:unsupported_content_type 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch response limits > content type "" → failed:unsupported_content_type 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch response limits > content type "text/html; charset=iso-8859-1" → failed:unsupported_charset 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch response limits > content type "text/html; charset=utf-16" → failed:unsupported_charset 0ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch response limits > an unknown or corrupt content encoding fails 3ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch response limits > stops reading a plain body at the cap 2ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch response limits > caps the compressed byte count too 5ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch response limits > a gzip bomb aborts at the decoded cap without inflating the rest 912ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch response limits > a brotli bomb aborts at the decoded cap 48ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch response limits > times out on a stalled body, a stalled transport and a stalled resolver 153ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch response limits > an injected clock past the deadline stops the operation before any connection 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch response limits > a transport error is connect_failed 1ms
+ ✓ tests/unit/recipe-import-fetcher.test.ts > safeFetch concurrency > allows 2 imports in flight; the next caller is told busy without resolving 55ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > price annotations > "1 Tbsp olive oil ($0.16)" is parsed; the price is not a quantity 6ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > price annotations > "1 yellow onion, diced ($0.42)" is parsed; the price is not a quantity 2ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > price annotations > "1 tsp smoked paprika ($.10)" is parsed; the price is not a quantity 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > price annotations > "2 cups long grain rice ($1.23*)" is parsed; the price is not a quantity 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > price annotations > "1/2 tsp salt ( $0.02 )" is parsed; the price is not a quantity 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > price annotations > "($0.50) 2 eggs" is parsed; the price is not a quantity 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > price annotations > "1 cup milk ($0.25) ($0.25)" is parsed; the price is not a quantity 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > price annotations > "1 cup milk ($0.25 each)": only a price-only parenthetical is removed 2ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > price annotations > "1 cup milk (about $1)": only a price-only parenthetical is removed 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > price annotations > "1 cup milk $0.25": only a price-only parenthetical is removed 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > price annotations > "1 (15 oz) can beans ($0.89)": only a price-only parenthetical is removed 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > name and note > "1 large onion, diced" → name "onion", note "large; diced" (parsed) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > name and note > "2 cups flour (packed)" → name "flour", note "packed" (parsed) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > name and note > "1 cup walnuts, chopped, toasted" → name "walnuts", note "chopped, toasted" (parsed) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > name and note > "2 medium carrots" → name "carrots", note "medium" (parsed) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > name and note > "3 small potatoes" → name "potatoes", note "small" (parsed) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > name and note > "3 extra large eggs" → name "eggs", note "extra large" (parsed) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > name and note > "2 Extra-Large eggs (room temperature)" → name "eggs", note "extra-large; room temperature" (parsed) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > name and note > "1 lb chicken thighs (boneless, skinless), cubed" → name "chicken thighs", note "boneless, skinless; cubed" (parsed) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > name and note > "1 large onion (yellow), diced" → name "onion", note "large; yellow; diced" (parsed) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > name and note > "2 cups flour" → name "flour", note null (parsed) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > name and note > "2 large" → name "large", note null (parsed) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > name and note > "1 cup largest berries" → name "largest berries", note null (parsed) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > name and note > "2 cups broth," → name "broth", note null (parsed) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > name and note > review lines are split too, and raw is untouched 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > name and note > splitNote keeps text when nothing would be left of the name 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "⅓ cup sugar" → 0.3333 cup "sugar" (⅓ rounded to 0.3333) 3ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "⅔ cup milk" → 0.6667 cup "milk" (⅔ rounded to 0.6667) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1/3 cup sugar" → 0.3333 cup "sugar" (1/3 rounded to 0.3333) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 1/3 cups flour" → 1.3333 cup "flour" (1 1/3 rounded to 1.3333) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1⅓ cups flour" → 1.3333 cup "flour" (1⅓ rounded to 1.3333) 3ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1/6 tsp pepper" → 0.1667 tsp "pepper" (1/6 rounded to 0.1667) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "⅚ cup broth" → 0.8333 cup "broth" (⅚ rounded to 0.8333) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "2/12 cup broth" → 0.1667 cup "broth" (2/12 rounded to 0.1667) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1/7 cup oats" → 0.1429 cup "oats" (1/7 rounded to 0.1429) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1/3 cup chopped parsley ($0.30)" → 0.3333 cup "chopped parsley" (1/3 rounded to 0.3333) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "2 quarts water" → 8 cup "water" (1 quart = 4 cups) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 qt. stock" → 4 cup "stock" (1 quart = 4 cups) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 pint cream" → 2 cup "cream" (1 pint = 2 cups) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1/2 gallon milk" → 8 cup "milk" (1 gallon = 16 cups) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1/3 quart broth" → 1.3333 cup "broth" (rounded to 1.3333; 1 quart = 4 cups) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 (15 oz) can black beans" → 15 oz "black beans" (1 can × 15 oz) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 (15 oz.) can black beans, drained ($0.89)" → 15 oz "black beans" (1 can × 15 oz) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "2 (14.5-ounce) cans diced tomatoes" → 29 oz "diced tomatoes" (2 cans × 14.5 oz) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "2 (14.5 oz) cans diced tomatoes ($1.78*)" → 29 oz "diced tomatoes" (2 cans × 14.5 oz) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 can (15 oz) black beans" → 15 oz "black beans" (1 can × 15 oz) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 can (14.5 oz) diced tomatoes" → 14.5 oz "diced tomatoes" (1 can × 14.5 oz) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "2 cans (14.5 oz each) tomatoes" → 29 oz "tomatoes" (2 cans × 14.5 oz) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 15-oz can chickpeas" → 15 oz "chickpeas" (1 can × 15 oz) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "2 28 ounce cans crushed tomatoes" → 56 oz "crushed tomatoes" (2 cans × 28 oz) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 12 fl oz bottle beer" → 12 fl_oz "beer" (1 bottle × 12 fl oz) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 (12 fl. oz) bottle seltzer" → 12 fl_oz "seltzer" (1 bottle × 12 fl oz) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 (400 g) tin chickpeas" → 400 g "chickpeas" (1 tin × 400 g) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 (1 lb) bag frozen peas" → 1 lb "frozen peas" (1 bag × 1 lb) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "2 (500 ml) cartons stock" → 1000 ml "stock" (2 cartons × 500 ml) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 (1.5 L) bottle water" → 1.5 l "water" (1 bottle × 1.5 l) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "3 (0.25 oz) packets yeast" → 0.75 oz "yeast" (3 packets × 0.25 oz) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 pkg (8 oz) cream cheese, softened" → 8 oz "cream cheese" (1 package × 8 oz) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "2 (6-ounce) salmon fillets" → 12 oz "salmon fillets" (2 × 6 oz) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "½ (15 oz) can beans" → 7.5 oz "beans" (½ can × 15 oz) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1/3 (15 oz) can beans" → 5 oz "beans" (1/3 can × 15 oz) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 (2/3 oz) packet gelatin" → 0.6667 oz "gelatin" (rounded to 0.6667; 1 packet × 2/3 oz) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "3 cloves garlic, minced" → 3 each "garlic (clove)" (counted as cloves) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 clove garlic" → 1 each "garlic (clove)" (counted as cloves) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "2 cloves of garlic" → 2 each "garlic (clove)" (counted as cloves) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 can black beans" → 1 each "black beans (can)" (counted as cans) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "2 cans tomatoes" → 2 each "tomatoes (can)" (counted as cans) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 bunch cilantro" → 1 each "cilantro (bunch)" (counted as bunches) 2ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 head lettuce" → 1 each "lettuce (head)" (counted as heads) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "2 stalks celery" → 2 each "celery (stalk)" (counted as stalks) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "3 sprigs thyme" → 3 each "thyme (sprig)" (counted as sprigs) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "2 slices bread" → 2 each "bread (slice)" (counted as slices) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "4 pieces chicken" → 4 each "chicken (piece)" (counted as pieces) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 stick butter" → 1 each "butter (stick)" (counted as sticks) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "2 ears corn" → 2 each "corn (ear)" (counted as ears) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "3 leaves basil" → 3 each "basil (leaf)" (counted as leaves) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 loaf bread" → 1 each "bread (loaf)" (counted as loaves) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 package tofu" → 1 each "tofu (package)" (counted as packages) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 jar salsa" → 1 each "salsa (jar)" (counted as jars) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 bag spinach" → 1 each "spinach (bag)" (counted as bags) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 box pasta" → 1 each "pasta (box)" (counted as boxes) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "2 fillets cod" → 2 each "cod (fillet)" (counted as fillets) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 block tofu" → 1 each "tofu (block)" (counted as blocks) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "⅓ bunch parsley" → 0.3333 each "parsley (bunch)" (⅓ rounded to 0.3333; counted as bunches) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "2-3 cups broth" → 3 cup "broth" (range: used the larger amount) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "2 to 3 cups broth" → 3 cup "broth" (range: used the larger amount) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "2 – 3 tbsp oil" → 3 tbsp "oil" (range: used the larger amount) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1/2-1 cup water" → 1 cup "water" (range: used the larger amount) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "3-2 tbsp oil" → 3 tbsp "oil" (range: used the larger amount) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 or 2 eggs" → 2 each "eggs" (range: used the larger amount) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "2-3 cloves garlic" → 3 each "garlic (clove)" (range: used the larger amount; counted as cloves) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1-2 quarts water" → 8 cup "water" (range: used the larger amount; 1 quart = 4 cups) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "⅓-⅔ cup sugar" → 0.6667 cup "sugar" (⅔ rounded to 0.6667; range: used the larger amount) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 cup milk or cream" → 1 cup "milk" (alternatives: used the first (milk)) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "2 tbsp butter or 1 tbsp oil" → 2 tbsp "butter" (alternatives: used the first (butter)) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 cup whole milk or cream" → 1 cup "whole milk" (alternatives: used the first (whole milk)) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 cup (240 ml) milk" → 1 cup "milk" (kept the first amount; dropped (240 ml)) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 lb (450 g) chicken" → 1 lb "chicken" (kept the first amount; dropped (450 g)) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "2 (about 1 lb) potatoes" → 2 each "potatoes" (kept the first amount; dropped (about 1 lb)) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 pint (2 cups) cream" → 2 cup "cream" (1 pint = 2 cups; kept the first amount; dropped (2 cups)) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 tsp vanilla (optional)" → 1 tsp "vanilla" (used the stated amount) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 tsp salt, or to taste" → 1 tsp "salt" (used the stated amount) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 tsp salt to taste" → 1 tsp "salt" (used the stated amount) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 cup broth, or water" → 1 cup "broth" (used the stated amount) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > "1 can tomatoes, or fresh" → 1 each "tomatoes (can)" (counted as cans) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > carries the form 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: use > never touches the parsed fields of a review line 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: leave out > "salt to taste" → leave out (no fixed amount: leave it out of grocery amounts) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: leave out > "Salt and pepper, to taste" → leave out (no fixed amount: leave it out of grocery amounts) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: leave out > "fresh parsley, for serving" → leave out (no fixed amount: leave it out of grocery amounts) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: leave out > "lime wedges, for garnish" → leave out (no fixed amount: leave it out of grocery amounts) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: leave out > "water as needed" → leave out (no fixed amount: leave it out of grocery amounts) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: leave out > "flour, for dusting" → leave out (no fixed amount: leave it out of grocery amounts) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: leave out > "oil for frying" → leave out (no fixed amount: leave it out of grocery amounts) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: leave out > "chili flakes (optional)" → leave out (no fixed amount: leave it out of grocery amounts) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: leave out > "a pinch of salt" → leave out (a pinch: no fixed amount; leave it out of grocery amounts) 1ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: leave out > "Pinch of saffron" → leave out (a pinch: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: leave out > "1 pinch salt" → leave out (a pinch: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: leave out > "2 pinches salt" → leave out (a pinch: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: leave out > "1 dash hot sauce" → leave out (a dash: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: leave out > "a few drops vanilla" → leave out (a drop: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: leave out > "2-3 drops food coloring" → leave out (a drop: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: leave out > "a splash of milk" → leave out (a splash: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: leave out > "2 splashes milk" → leave out (a splash: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: leave out > "1 handful spinach" → leave out (a handful: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: leave out > "a small handful of herbs" → leave out (a handful: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: leave out > "a sprinkle of sesame seeds" → leave out (a sprinkle: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: leave out > "2 sprinkles salt" → leave out (a sprinkle: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "salt" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "one egg" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "Juice of 1 lemon" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "optional: 1 cup nuts" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "1 cup plus 2 tbsp flour" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "1 cup flour, plus 2 tbsp" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "1 onion, cut into 8 wedges" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "1 lb 4 oz beef" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "1 cup 2% milk" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "1 cup ½ and ½" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "1 cup chicken or vegetable broth" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "2 tbsp butter or olive oil" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "1 inch ginger" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "1 knob butter" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "2 scoops protein powder" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "1/0 cup water" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "0/4 cup water" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "1 3/2 cup water" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "0 cups flour" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "20000 g sugar" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "1,5 cups milk" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "1,000 g flour" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "1. Preheat the oven" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "2eggs" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "1 cup" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "1 (15 oz) can" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "-1 cup water" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "1 (15 oz) can beans (2 cups)" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "   " → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "⅓ cup flour (" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "1 (" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "1 ..." → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "2 8 oz steaks" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "1 15-oz can, crushed tomatoes" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > suggestions: none when unclear > "1/30000 cup salt" → no suggestion 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > parsed lines never carry a suggestion > a name needs at least one letter 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > parsed lines never carry a suggestion > "2 cups flour" 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > parsed lines never carry a suggestion > "1/2 cup sugar" 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > parsed lines never carry a suggestion > "1½ cups water" 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > parsed lines never carry a suggestion > "200g flour" 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > parsed lines never carry a suggestion > "8 fl oz milk" 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > parsed lines never carry a suggestion > "2 eggs" 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > parsed lines never carry a suggestion > "3 large eggs" 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > parsed lines never carry a suggestion > "1 onion, diced" 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > parsed lines never carry a suggestion > "1 Tbsp olive oil ($0.16)" 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > parsed lines never carry a suggestion > "1/1024 tsp salt" 0ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > property-style sweep > every line keeps the contract and every proposal satisfies the invariants 761ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > property-style sweep > a proposal's quantity is an exact decimal or carries a rounding note 2ms
+ ✓ tests/unit/recipe-import-ingredient-suggest.test.ts > hostile input > never throws, stays bounded and keeps the invariants 18ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > WordPress / Yoast @graph page > reads the Recipe node with its linked Person, WebSite and ImageObject nodes 13ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > WordPress / Yoast @graph page > gives the same result without a base URL (all links are absolute) 3ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > microdata fallback > reads a microdata-only page: nested items skipped, author name nested, scope ends with the Recipe element 5ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > microdata fallback > is used only when JSON-LD gave no Recipe 1ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > microdata fallback > finds the Recipe element by itemtype="https://schema.org/Recipe" 1ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > microdata fallback > finds the Recipe element by itemtype="http://schema.org/Recipe" 0ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > microdata fallback > finds the Recipe element by itemtype='HTTP://SCHEMA.ORG/RECIPE' 0ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > microdata fallback > finds the Recipe element by itemtype="https://schema.org/Recipe/" 0ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > microdata fallback > finds the Recipe element by itemtype="https://schema.org/Thing https://schema.org/Recipe" 1ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > microdata fallback > finds the Recipe element by ITEMTYPE=https://schema.org/recipe 1ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > microdata fallback > ignores itemtype="https://schema.org/RecipeCollection" 0ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > microdata fallback > ignores itemtype="https://example.com/schema.org/Recipe" 0ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > microdata fallback > ignores data-itemtype="https://schema.org/Recipe" 0ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > microdata fallback > ignores itemtype="schema.org/Recipe" 0ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > microdata fallback > reads attributes, nested same-name tags, void elements and li steps 1ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > microdata fallback > an unclosed property element has no text; a script inside the recipe is not read 0ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > microdata fallback > caps itemprop elements and reports it 14ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > microdata fallback > reads at most 512 KiB from the Recipe element 2ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > microdata fallback > hostile text comes back plain 1ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > microdata fallback > stays linear and bounded on hostile microdata 477ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > Open Graph page meta > an Open Graph-only page has no candidates but a title, site name and image 1ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > Open Graph page meta > fills a recipe's missing image and site name, never replacing stated ones 1ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > Open Graph page meta > reads property or name, any attribute order and case; the first value wins 0ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > Open Graph page meta > ignores meta-like text inside comments and scripts, and tags with no content 0ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > Open Graph page meta > cleans text and validates the image link 1ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > Open Graph page meta > reads at most 500 meta tags 3ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > Open Graph page meta > is linear on hostile markup and tolerates non-string input 69ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > method steps (recipeInstructions) > splits a string on newlines, <br>, <li>, </p> 1ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > method steps (recipeInstructions) > reads arrays of strings, HowToStep text before name, and a step's own list 1ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > method steps (recipeInstructions) > keeps HowToSection names as the section, including untyped name + list nodes 0ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > method steps (recipeInstructions) > walks at most 3 levels of nesting 1ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > method steps (recipeInstructions) > caps steps at 60 and each step at 1000 characters 2ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > method steps (recipeInstructions) > ignores junk and strips markup 1ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > method steps (recipeInstructions) > counts against the shared node budget 24ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > method steps (recipeInstructions) > hasInstructions follows the steps found 1ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > images > reads strings, ImageObjects and arrays; deduplicates; keeps document order without widths 1ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > images > orders by width (numbers, numeric strings, QuantitativeValue) when every width is known, and keeps at most 5 2ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > images > resolves {"@id"} references to ImageObject nodes in the same block, one hop only 1ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > images > resolves relative links against the page and drops unsafe ones 1ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > author, site name, category, cuisine, description > author resolves an @id to a Person (or Organization) node; other targets and misses are dropped 2ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > author, site name, category, cuisine, description > site name: publisher (inline or @id), then WebSite, then Organization, then og:site_name 1ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > author, site name, category, cuisine, description > recipeCategory / recipeCuisine "Dinner" → "Dinner" 0ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > author, site name, category, cuisine, description > recipeCategory / recipeCuisine ["Dinner","Lunch"] → "Dinner" 0ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > author, site name, category, cuisine, description > recipeCategory / recipeCuisine ["",null,3,"  ","Second"] → "Second" 0ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > author, site name, category, cuisine, description > recipeCategory / recipeCuisine "Breakfast, Brunch" → "Breakfast" 0ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > author, site name, category, cuisine, description > recipeCategory / recipeCuisine "<b>Bold</b> &amp; Co" → "Bold & Co" 0ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > author, site name, category, cuisine, description > recipeCategory / recipeCuisine {"name":"obj"} → null 1ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > author, site name, category, cuisine, description > recipeCategory / recipeCuisine [] → null 1ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > author, site name, category, cuisine, description > recipeCategory / recipeCuisine undefined → null 0ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > author, site name, category, cuisine, description > caps category, cuisine and description 1ms
+ ✓ tests/unit/recipe-import-extract-details.test.ts > stats > counts JSON-LD blocks and Recipe nodes read 1ms
+ ✓ tests/unit/recipe-import-live-transport.test.ts > live transport against a local TLS server > LT-01: verifies the certificate for the host name, sends SNI/Host, drops cookies, and safeFetch decodes the gzip page 42ms
+ ✓ tests/unit/recipe-import-live-transport.test.ts > live transport against a local TLS server > LT-02: refuses a certificate that isn't for the host, and one not signed by a trusted root (the system roots, as in production) 16ms
+ ✓ tests/unit/recipe-import-live-transport.test.ts > live transport against a local TLS server > LT-03: size cap, HTTP status, refused redirect target and photo mode all hold on the real transport 48ms
+ ✓ tests/unit/recipe-import-live-transport.test.ts > live transport against a local TLS server > LT-04: the transport refuses to resolve names itself (needs a pinned address); the system resolver answers from the OS (localhost, no network) 4ms
+ ✓ tests/unit/recipe-import-live-transport.test.ts > photo sniffing > knows JPEG, PNG, GIF and WebP by their bytes, and nothing else 0ms
+ ✓ tests/unit/fdc-client.test.ts > B7 adapter typed outcomes > ok: search and detail through the labeled fetched-demo records, with provenance and rate-limit headers 12ms
+ ✓ tests/unit/fdc-client.test.ts > B7 adapter typed outcomes > no_matches: an empty search, and a food id FDC does not have (404) 2ms
+ ✓ tests/unit/fdc-client.test.ts > B7 adapter typed outcomes > not_configured: no key means nothing is attempted 1ms
+ ✓ tests/unit/fdc-client.test.ts > B7 adapter typed outcomes > invalid_key: 403 API_KEY_INVALID / API_KEY_MISSING 2ms
+ ✓ tests/unit/fdc-client.test.ts > B7 adapter typed outcomes > rate_limited: the genuine 429 OVER_RATE_LIMIT record keeps its X-RateLimit values; no retry 3ms
+ ✓ tests/unit/fdc-client.test.ts > B7 adapter typed outcomes > timeout: the request is aborted after the bounded time, even if the transport ignores the signal 303ms
+ ✓ tests/unit/fdc-client.test.ts > B7 adapter typed outcomes > unavailable: 5xx and network failure 2ms
+ ✓ tests/unit/fdc-client.test.ts > B7 adapter typed outcomes > malformed: a body that is not JSON, valid JSON in the wrong shape, and the wrong food 2ms
+ ✓ tests/unit/fdc-client.test.ts > B7 live transport: server-side key, documented request shapes, nothing leaks > sends the key only as the api_key query parameter to api.nal.usda.gov/fdc 56ms
+ ✓ tests/unit/fdc-client.test.ts > B7 live transport: server-side key, documented request shapes, nothing leaks > errors and logs never carry the key or a keyed URL 2ms
+ ✓ tests/unit/fdc-client.test.ts > B7 configuration > the fixture switch is test-only; a real key is ignored in the test environment 1ms
+ ✓ tests/unit/fdc-client.test.ts > B7 configuration > fetched-demo records are byte-for-byte what the manifest hashes; every fixture directory is labeled 4ms
+ ✓ tests/unit/fdc-client.test.ts > B7 configuration > no browser module can reach the key: client components never import server code 3ms
+ ✓ tests/unit/instacart-client.test.ts > off by default: no transport call > no activation -> unavailable for both capabilities 5ms
+ ✓ tests/unit/instacart-client.test.ts > off by default: no transport call > activation without a key -> unavailable (not configured) 1ms
+ ✓ tests/unit/instacart-client.test.ts > off by default: no transport call > activating one capability does not open the other 1ms
+ ✓ tests/unit/instacart-client.test.ts > off by default: no transport call > the fake switch outside test refuses the call (config_refused) 1ms
+ ✓ tests/unit/instacart-client.test.ts > nearbyRetailers (GET /idp/v1/retailers) > valid ZIP -> retailer brands, documented request, no location fields 3ms
+ ✓ tests/unit/instacart-client.test.ts > nearbyRetailers (GET /idp/v1/retailers) > accepts ZIP+4 and Canadian A1A 1A1 1ms
+ ✓ tests/unit/instacart-client.test.ts > nearbyRetailers (GET /idp/v1/retailers) > refuses "9410"/US before any transport call 0ms
+ ✓ tests/unit/instacart-client.test.ts > nearbyRetailers (GET /idp/v1/retailers) > refuses "941050"/US before any transport call 0ms
+ ✓ tests/unit/instacart-client.test.ts > nearbyRetailers (GET /idp/v1/retailers) > refuses "94105-12"/US before any transport call 1ms
+ ✓ tests/unit/instacart-client.test.ts > nearbyRetailers (GET /idp/v1/retailers) > refuses "K1A 0B1"/US before any transport call 0ms
+ ✓ tests/unit/instacart-client.test.ts > nearbyRetailers (GET /idp/v1/retailers) > refuses "94105"/CA before any transport call 1ms
+ ✓ tests/unit/instacart-client.test.ts > nearbyRetailers (GET /idp/v1/retailers) > refuses "K1A-0B1"/CA before any transport call 0ms
+ ✓ tests/unit/instacart-client.test.ts > nearbyRetailers (GET /idp/v1/retailers) > refuses ""/US before any transport call 0ms
+ ✓ tests/unit/instacart-client.test.ts > nearbyRetailers (GET /idp/v1/retailers) > refuses "94105"/GB before any transport call 0ms
+ ✓ tests/unit/instacart-client.test.ts > nearbyRetailers (GET /idp/v1/retailers) > unauthorized401 -> failed with no results 1ms
+ ✓ tests/unit/instacart-client.test.ts > nearbyRetailers (GET /idp/v1/retailers) > forbidden403 -> failed with no results 1ms
+ ✓ tests/unit/instacart-client.test.ts > nearbyRetailers (GET /idp/v1/retailers) > rateLimited429 -> failed with no results 0ms
+ ✓ tests/unit/instacart-client.test.ts > nearbyRetailers (GET /idp/v1/retailers) > serverError500 -> failed with no results 1ms
+ ✓ tests/unit/instacart-client.test.ts > nearbyRetailers (GET /idp/v1/retailers) > malformed body (not json) -> failed, never fabricated 1ms
+ ✓ tests/unit/instacart-client.test.ts > nearbyRetailers (GET /idp/v1/retailers) > malformed body (no retailers array) -> failed, never fabricated 0ms
+ ✓ tests/unit/instacart-client.test.ts > nearbyRetailers (GET /idp/v1/retailers) > malformed body (retailers not an array) -> failed, never fabricated 0ms
+ ✓ tests/unit/instacart-client.test.ts > nearbyRetailers (GET /idp/v1/retailers) > entries without key or name are dropped and counted, not invented 0ms
+ ✓ tests/unit/instacart-client.test.ts > nearbyRetailers (GET /idp/v1/retailers) > timeout and network errors -> failed 22ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > prepares a link with line_item_measurements and exact decimals 5ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > preserves precision exactly in the reviewed preview (strings) 1ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > refuses the WHOLE request when any line is unsupported, listing every offending line; no request 1ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > refuses invalid input (0: { title: ' ', lines: [Array] }) before any request 1ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > refuses invalid input (1: { title: 't', lines: [] }) before any request 0ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > refuses invalid input (2: { …(3) }) before any request 1ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > refuses invalid input (3: { …(4) }) before any request 1ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > refuses invalid input (4: { …(4) }) before any request 1ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > refuses invalid input (5: { title: 't', lines: [ [Object] ] }) before any request 0ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > refuses invalid input (6: { title: 't', lines: [ [Object] ] }) before any request 3ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > expires_in is sent only when asked, and expiresAt is computed from it 1ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > 400 -> failed with the documented error summary, no retry 1ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > unauthorized401 -> failed, transport called once 1ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > forbidden403 -> failed, transport called once 1ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > rateLimited429 -> failed, transport called once 0ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > timeout -> uncertain (list MAY exist), transport called exactly once, never retried 22ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > network error -> uncertain (list MAY exist), transport called exactly once, never retried 1ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > 500 -> uncertain (list MAY exist), transport called exactly once, never retried 1ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > 503 -> uncertain (list MAY exist), transport called exactly once, never retried 1ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > 302 -> uncertain (list MAY exist), transport called exactly once, never retried 0ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > 201 -> uncertain (list MAY exist), transport called exactly once, never retried 1ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > 200 unreadable -> uncertain (list MAY exist), transport called exactly once, never retried 0ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > a transport that ignores its abort signal still times out at the bound 22ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > untrusted returned URL (example.com placeholder) -> failed untrusted_link 1ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > untrusted returned URL (http) -> failed untrusted_link 0ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > untrusted returned URL (look-alike host) -> failed untrusted_link 0ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > untrusted returned URL (credentials) -> failed untrusted_link 0ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > untrusted returned URL (port) -> failed untrusted_link 0ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > untrusted returned URL (not a url) -> failed untrusted_link 0ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > untrusted fixture (docs' example.com placeholder) -> failed untrusted_link 1ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > request hash: stable for the same payload, changes with quantity, ignores the key and environment 1ms
+ ✓ tests/unit/instacart-client.test.ts > createShoppingListLink (POST /idp/v1/products/products_link) > outcome kinds never read as a cart write or an order 1ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > extractRecipes fixtures > plain Recipe: fields, durations, servings, presence flags and a cleaned source URL 7ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > extractRecipes fixtures > @graph with WebPage + Recipe, case-varied script tag, non-JSON-LD scripts ignored 2ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > extractRecipes fixtures > @type arrays, full schema.org IRIs, single-quoted type and mainEntity nesting 1ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > extractRecipes fixtures > multiple Recipe nodes are all returned; non-serving yields give no servings 1ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > extractRecipes fixtures > unrelated JSON-LD only (and a wrong-case type) yields nothing 1ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > extractRecipes fixtures > malformed JSON is a problem and the next block (comment-wrapped) still counts 1ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > extractRecipes fixtures > hostile deep nesting is refused before JSON.parse; later blocks survive 1ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > extractRecipes fixtures > script, event-handler and prompt-injection text comes back as inert plain text 3ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > extractRecipes fixtures > HTML entities: named, numeric, hex, fractions; invalid code points replaced; single decode 1ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > extractRecipes fixtures > a string recipeIngredient (legacy `ingredients`) splits on <br> and newlines; bad durations are null 1ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > extractRecipes scanner edge cases > finds the type among other attributes, odd spacing, case and parameters 4ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > extractRecipes scanner edge cases > a literal </script> inside JSON ends the block, as in a browser 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > extractRecipes scanner edge cases > an unterminated script tag is read to the end of the page 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > extractRecipes scanner edge cases > caps blocks, block size, candidates and nodes 9ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > extractRecipes scanner edge cases > does not descend into arbitrary properties (only @graph and mainEntity) 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > extractRecipes scanner edge cases > caps strings at 500 characters and ingredients at 100 2ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > extractRecipes scanner edge cases > non-string fields never leak structure 1ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > extractRecipes scanner edge cases > source URL: relative resolved against baseUrl, cleaned; non-http(s) and local hosts dropped 1ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > extractRecipes scanner edge cases > presence flags look for real content 1ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > extractRecipes scanner edge cases > is linear on hostile markup 29ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > extractRecipes scanner edge cases > tolerates non-string input 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > "PT15M" → 15 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > "PT1H" → 60 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > "PT1H30M" → 90 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > "pt45m" → 45 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > "P0DT0H10M" → 10 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > "P1DT2H" → 1560 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > "PT90S" → 2 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > "PT30S" → 1 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > "PT0M" → 0 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > "PT" → null 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > "P" → null 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > "" → null 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > "1 hour" → null 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > "PT1.5H" → null 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > "P1W" → null 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > "PT-5M" → null 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > "PT1H30" → null 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > "PT99999H" → null 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > " PT20M " → 20 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > 15 → null 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > null → null 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > "PT11111111111111111111111111111111111111111111111111M" → null 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > recipeYield "4" → servings 4 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > recipeYield "4 servings" → servings 4 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > recipeYield "Serves 6" → servings 6 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > recipeYield "Servings: 2" → servings 2 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > recipeYield "1 serving" → servings 1 1ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > recipeYield ["4","4 servings"] → servings 4 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > recipeYield 4 → servings 4 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > recipeYield ["4","6"] → servings null 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > recipeYield "4-6" → servings null 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > recipeYield "4 to 6 servings" → servings null 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > recipeYield "12 cookies" → servings null 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > recipeYield "Makes 1 loaf" → servings null 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > recipeYield 4.5 → servings null 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > recipeYield "0" → servings null 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > recipeYield "500" → servings null 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > recipeYield "about 4" → servings null 0ms
+ ✓ tests/unit/recipe-import-jsonld.test.ts > durations and text cleaning > cleanText strips tags twice around entity decoding and collapses whitespace 0ms
+ ✓ tests/integration/b9.deploy-health.test.ts > B9 production configuration > a complete production configuration has no problems; development and test are not judged by it 4ms
+ ✓ tests/integration/b9.deploy-health.test.ts > B9 production configuration > refuses missing or weak secrets, a non-HTTPS or path-bearing auth URL, and every test convenience 4ms
+ ✓ tests/integration/b9.deploy-health.test.ts > B9 health route > reports ready when the database answers and every migration on disk is applied (test environment) 63ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "2 cups flour" → 2 cup "flour" 6ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "1/2 cup sugar" → 0.5 cup "sugar" 2ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "3/4 tsp salt" → 0.75 tsp "salt" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "½ cup milk" → 0.5 cup "milk" 1ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "⅛ tsp cayenne" → 0.125 tsp "cayenne" 1ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "¾ cup oats" → 0.75 cup "oats" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "1½ cups water" → 1.5 cup "water" 1ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "1 ½ cups water" → 1.5 cup "water" 1ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "1 1/2 cups rice" → 1.5 cup "rice" 1ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "2 1/4 cups flour" → 2.25 cup "flour" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "1⁄2 cup broth" → 0.5 cup "broth" 1ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "5/8 cup cream" → 0.625 cup "cream" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "0.5 cup oil" → 0.5 cup "oil" 1ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > ".5 cup oil" → 0.5 cup "oil" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "1.25 lb beef" → 1.25 lb "beef" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "1.50 lb beef" → 1.5 lb "beef" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "2 T butter" → 2 tbsp "butter" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "2 Tbsp butter" → 2 tbsp "butter" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "2 TBSP butter" → 2 tbsp "butter" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "1 tbsp. honey" → 1 tbsp "honey" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "2 tablespoons honey" → 2 tbsp "honey" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "1 t salt" → 1 tsp "salt" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "1 tsp salt" → 1 tsp "salt" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "1 teaspoon salt" → 1 tsp "salt" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "1 c milk" → 1 cup "milk" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "1 C milk" → 1 cup "milk" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "2 Cups Flour" → 2 cup "Flour" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "2 lbs chicken thighs" → 2 lb "chicken thighs" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "1 pound ground turkey" → 1 lb "ground turkey" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "8 oz cheddar" → 8 oz "cheddar" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "8 ounces cheddar" → 8 oz "cheddar" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "8 fl oz milk" → 8 fl_oz "milk" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "8 fl. oz. cream" → 8 fl_oz "cream" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "8 fluid ounces cream" → 8 fl_oz "cream" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "200g flour" → 200 g "flour" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "200 grams flour" → 200 g "flour" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "1.5kg potatoes" → 1.5 kg "potatoes" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "500 ml stock" → 500 ml "stock" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "500 mL stock" → 500 ml "stock" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "1 L water" → 1 l "water" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "1 litre water" → 1 l "water" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "2 eggs" → 2 each "eggs" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "3 large eggs" → 3 each "eggs" 3ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "1 onion, diced" → 1 each "onion" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "4 each tortillas" → 4 each "tortillas" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "2 cups of flour" → 2 cup "flour" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "- 2 cups flour" → 2 cup "flour" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "• 1 cup rice" → 1 cup "rice" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "  2   cups   flour  " → 2 cup "flour" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine parsed lines > "10000 g sugar" → 10000 g "sugar" 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "salt" → review (/no quantity/) 2ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "salt to taste" → review (/no fixed quantity/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "Salt and pepper, to taste" → review (/no fixed quantity/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "fresh parsley, for serving" → review (/no fixed quantity/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "water as needed" → review (/no fixed quantity/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 tsp vanilla (optional)" → review (/no fixed quantity/) 1ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "optional: 1 cup nuts" → review (/no fixed quantity/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "one egg" → review (/no quantity/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "a pinch of salt" → review (/no quantity/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "2-3 cups broth" → review (/range/) 1ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "2 to 3 cups broth" → review (/range/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "2 – 3 tbsp oil" → review (/range/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1/2-1 cup water" → review (/range/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 or 2 eggs" → review (/alternatives/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 cup milk or cream" → review (/alternatives/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "3 cloves garlic" → review (/unit not supported: cloves/) 1ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 clove garlic" → review (/unit not supported: clove/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 can black beans" → review (/unit not supported: can/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "2 cans tomatoes" → review (/unit not supported: cans/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 bunch cilantro" → review (/unit not supported: bunch/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 pinch salt" → review (/unit not supported: pinch/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 dash hot sauce" → review (/unit not supported: dash/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 handful spinach" → review (/unit not supported: handful/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 package tofu" → review (/unit not supported: package/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 jar salsa" → review (/unit not supported: jar/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "2 slices bread" → review (/unit not supported: slices/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "3 sprigs thyme" → review (/unit not supported: sprigs/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 head lettuce" → review (/unit not supported: head/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "2 stalks celery" → review (/unit not supported: stalks/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "4 pieces chicken" → review (/unit not supported: pieces/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 stick butter" → review (/unit not supported: stick/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 bag spinach" → review (/unit not supported: bag/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 box pasta" → review (/unit not supported: box/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "2 quarts water" → review (/unit not supported: quarts/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 (15 oz) can black beans" → review (/parenthetical/) 1ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 can (14.5 oz) diced tomatoes" → review (/parenthetical/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 lb 4 oz beef" → review (/more than one quantity/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 cup 2% milk" → review (/more than one quantity/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 cup ½ and ½" → review (/more than one quantity/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1/3 cup sugar" → review (/not exact as a decimal/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "⅓ cup sugar" → review (/not exact as a decimal/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "⅔ cup milk" → review (/not exact as a decimal/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 1/3 cups flour" → review (/not exact as a decimal/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1⅓ cups flour" → review (/not exact as a decimal/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1/6 tsp pepper" → review (/not exact as a decimal/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "⅚ cup broth" → review (/not exact as a decimal/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "2/12 cup broth" → review (/not exact as a decimal/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1/0 cup water" → review (/invalid fraction/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "0/4 cup water" → review (/invalid fraction/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 3/2 cup water" → review (/invalid fraction/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "0 cups flour" → review (/non-positive/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "0.0 cups flour" → review (/non-positive/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "20000 g sugar" → review (/implausible/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "123456789012 g sugar" → review (/implausible/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1,5 cups milk" → review (/unrecognized number/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1,000 g flour" → review (/unrecognized number/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1. Preheat the oven" → review (/unrecognized quantity/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "2eggs" → review (/unrecognized quantity/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "1 cup" → review (/no ingredient name/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "" → review (/empty line/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "   " → review (/empty line/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > "-1 cup water" → review (/no quantity/) 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > keeps the unit word in the name when the unit is unsupported 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine review lines > an unsupported unit alongside another reason drops the quantity too 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine form and robustness > "3 cups cooked rice" → form cooked 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine form and robustness > "2 cups rice, cooked" → form cooked 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine form and robustness > "1 lb pre-cooked shrimp" → form cooked 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine form and robustness > "1 lb raw shrimp" → form raw 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine form and robustness > "1 cup uncooked rice" → form raw 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine form and robustness > "1 cup Uncooked rice" → form raw 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine form and robustness > "1 cup rice" → form null 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine form and robustness > "2 cups strawberries" → form null 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine form and robustness > "1 cup precooked rice" → form null 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine form and robustness > quantities are exact decimal strings, never floats 0ms
+ ✓ tests/unit/recipe-import-ingredient-line.test.ts > parseIngredientLine form and robustness > never throws on hostile input and stays fast 9ms
+ ✓ tests/unit/domain.test.ts > X06 portion, unit and nutrition arithmetic > component-only changes affect only that component's ingredients 7ms
+ ✓ tests/unit/domain.test.ts > X06 portion, unit and nutrition arithmetic > a leftover batch is counted once: plates on later nights draw from the same cooking 1ms
+ ✓ tests/unit/domain.test.ts > X06 portion, unit and nutrition arithmetic > rounds packages up exactly and never with binary floating point 1ms
+ ✓ tests/unit/domain.test.ts > X06 portion, unit and nutrition arithmetic > mass ounces are not fluid ounces; custom units only match themselves 1ms
+ ✓ tests/unit/domain.test.ts > X06 portion, unit and nutrition arithmetic > missing nutrition or conversion stays unknown, never zero 2ms
+ ✓ tests/unit/domain.test.ts > X07 cost scopes and unknowns > keeps dinner ingredient cost, pickup spending and unknown prices distinct 14ms
+ ✓ tests/unit/domain.test.ts > X07 cost scopes and unknowns > a firm budget cannot be proven by unknown prices, and a known excess is 'over' 4ms
+ ✓ tests/unit/domain.test.ts > X07 cost scopes and unknowns > usual replenishment is a minimum, shared with recipe demand; explicit extras add 1ms
+ ✓ tests/unit/domain.test.ts > X08 dates, DST, locks, exclusions > uses household-local dates across local midnight and daylight-saving transitions 13ms
+ ✓ tests/unit/domain.test.ts > X08 dates, DST, locks, exclusions > a new exclusion flags the current dinner without replacing it 1ms
+ ✓ tests/unit/domain.test.ts > X08 dates, DST, locks, exclusions > unknown ingredient information cannot pass a hard-exclusion check for a new choice 2ms
+ ✓ tests/unit/domain.test.ts > X08 dates, DST, locks, exclusions > locks are never overwritten; leftovers never precede their cooking 2ms
+ ✓ tests/unit/domain.test.ts > X08 dates, DST, locks, exclusions > closure staleness is per target: an unrelated night's revision does not stale a preview 1ms
+ ✓ tests/unit/domain.test.ts > Proposal engine (deterministic, explainable) > is deterministic and applies hard eligibility before preference 3ms
+ ✓ tests/unit/domain.test.ts > Proposal engine (deterministic, explainable) > keeps locked nights unchanged 2ms
+ ✓ tests/unit/kroger-security.test.ts > B5 sealing (AES-256-GCM) and key handling > round-trips, binds to its associated data, and never contains the plaintext 7ms
+ ✓ tests/unit/kroger-security.test.ts > B5 sealing (AES-256-GCM) and key handling > accepts only 32 random bytes in base64 2ms
+ ✓ tests/unit/kroger-security.test.ts > B5 PKCE (S256, as documented) and state > derives the challenge from the verifier with SHA-256 / base64url (S256 = base64url(SHA-256(verifier))) 2ms
+ ✓ tests/unit/kroger-security.test.ts > B5 PKCE (S256, as documented) and state > state is random and only its hash is meant for storage 2ms
+ ✓ tests/unit/kroger-security.test.ts > B5 PKCE (S256, as documented) and state > authorize URL carries exactly the documented parameters plus state 2ms
+ ✓ tests/unit/kroger-security.test.ts > B5 PKCE (S256, as documented) and state > token requests use Basic auth and form bodies; the code exchange sends the verifier 2ms
+ ✓ tests/unit/kroger-security.test.ts > B5 PKCE (S256, as documented) and state > parses token responses; a missing expires_in is unknown, not a default 2ms
+ ✓ tests/unit/kroger-security.test.ts > B5 redaction > removes Authorization, tokens, codes, verifiers, state and the client secret 3ms
+ ✓ tests/unit/kroger-security.test.ts > B5 staged activation matrix > absent activation = nothing active; full credentials are not enough 4ms
+ ✓ tests/unit/kroger-security.test.ts > B5 staged activation matrix > each capability is independent: connect alone never enables products or cart writes 2ms
+ ✓ tests/unit/kroger-security.test.ts > B5 staged activation matrix > cart stays not-ready while modality is unsettled, even fully activated and configured 1ms
+ ✓ tests/unit/kroger-security.test.ts > B5 staged activation matrix > missing configuration is named per capability 1ms
+ ✓ tests/unit/kroger-security.test.ts > B5 staged activation matrix > the retailer must be kroger for any capability to be active 1ms
+ ✓ tests/unit/kroger-security.test.ts > B5 staged activation matrix > status never claims live-verified 2ms
+ ✓ tests/unit/kroger-security.test.ts > B5 staged activation matrix > unknown activation names fail loudly 1ms
+ ✓ tests/unit/kroger-security.test.ts > B5 staged activation matrix > production refuses activation unless TABLE_RETAILER=kroger, and refuses the test fake 2ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 FDC detail mapping per data type > SR Legacy (fetched demo r3): per 100 g, energy 208 kcal, macros with units, offered portions, raw hint 7ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 FDC detail mapping per data type > Foundation (official example 747448): portion from portionDescription; numeric modifier is not a unit; spec's example nutrient number 305 maps to nothing 2ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 FDC detail mapping per data type > SR Legacy and Survey official examples map; Survey's `datatype` spelling is accepted 1ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 FDC detail mapping per data type > Survey (synthetic): values per 100 g; portions described only by text become their own units 1ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 FDC detail mapping per data type > Branded (official example 534358): label values are per serving; never used as per-100 values 1ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 serving is not 100 g; ml is not grams > a 30 g label serving is offered as a portion; default values stay per 100 g 2ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 serving is not 100 g; ml is not grams > a serving in ml has no gram weight and leaves the per-100 basis unknown 3ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 energy, missing and bad units > no 208: energy from 958 (Atwater specific), and the number used is recorded; kJ is never converted 1ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 energy, missing and bad units > no 208 or 958: energy from 957; a missing nutrient is unknown, never zero; unit case is ignored 1ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 energy, missing and bad units > a non-kcal energy or non-g macro is bad_unit and unknown 1ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 portions > a chosen portion scales every known value exactly by its gram weight; unknown stays unknown 1ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 portions > a portion without a positive gram weight is never offered; an unknown portion id is refused 0ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 search mapping and schema mismatch > live search shape (fetched demo r1): items with data type and published date 2ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 search mapping and schema mismatch > the spec's array form is accepted; unsupported data types are left out; no foods is empty 1ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 search mapping and schema mismatch > wrong shapes are malformed, never partially used 1ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 review digest and form > the digest covers exactly the shown values 3ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 review digest and form > description words are only a hint 0ms
+ ✓ tests/unit/fdc-normalize.test.ts > B7 review digest and form > values for another form than the recipe uses are not applicable (unknown), not converted 1ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 0.0.0.0 is not public 2ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 0.1.2.3 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 10.0.0.1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 10.255.255.255 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 100.64.0.1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 100.127.255.255 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 127.0.0.1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 127.255.255.254 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 169.254.169.254 is not public 1ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 172.16.0.1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 172.31.255.255 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 192.0.0.1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 192.0.2.10 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 192.88.99.1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 192.168.1.1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 198.18.0.1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 198.19.255.255 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 198.51.100.7 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 203.0.113.9 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 224.0.0.1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 239.255.255.255 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 240.0.0.1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 255.255.255.255 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 1.1.1.1 is public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 8.8.8.8 is public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 93.184.215.14 is public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 100.63.255.255 is public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 100.128.0.0 is public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 172.15.255.255 is public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 172.32.0.0 is public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 192.0.1.1 is public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 192.169.0.1 is public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 198.17.255.255 is public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 198.20.0.0 is public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > 223.255.255.255 is public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > unparseable "" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > unparseable "1.2.3" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > unparseable "1.2.3.4.5" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > unparseable "256.1.1.1" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > unparseable "01.2.3.4" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > unparseable "0x7f.0.0.1" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > unparseable "2130706433" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > unparseable "1.2.3.4 " is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > unparseable " 1.2.3.4" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > unparseable "1.2.3.-4" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv4 > unparseable "a.b.c.d" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > :: is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > ::1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 0:0:0:0:0:0:0:1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > fc00::1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > fd12:3456::1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > fe80::1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > febf::1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > fec0::1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > ff02::1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > ff0e::1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 2001:db8::1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 2001:0db8:85a3::8a2e:370:7334 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 100::1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 100::ffff:ffff:ffff:ffff is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 2001::1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 2001:0:4136:e378:8000:63bf:3fff:fdd2 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 2001:1ff::1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 3fff::1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 64:ff9b:1::1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 1::1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 4000::1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > ::ffff:127.0.0.1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > ::ffff:7f00:1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > ::ffff:10.0.0.1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > ::ffff:169.254.169.254 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > ::127.0.0.1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > ::10.1.2.3 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 64:ff9b::127.0.0.1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 64:ff9b::a00:1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 64:ff9b::192.168.0.1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 2002:7f00:1:: is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 2002:c0a8:101::1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 2002:a9fe:a9fe::1 is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 2606:4700:4700::1111 is public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 2a00:1450:4001::200e is public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 2001:4860:4860::8888 is public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 2001:200::1 is public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 2400::1 is public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > ::ffff:8.8.8.8 is public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > ::ffff:0808:0808 is public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 64:ff9b::8.8.8.8 is public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > 2002:0808:0808::1 is public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > ::8.8.8.8 is public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > unparseable "fe80::1%eth0" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > unparseable "::1%lo" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > unparseable "[::1]" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > unparseable "1:2:3:4:5:6:7:8:9" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > unparseable "1::2::3" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > unparseable "12345::1" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > unparseable "g::1" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > unparseable ":1:2:3:4:5:6:7" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > unparseable "1:2:3:4:5:6:7:" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > unparseable "1:2:3:4:5:6:7" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > unparseable "::ffff:256.0.0.1" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > unparseable "::ffff:1.2.3" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > unparseable "1.2.3.4::" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > unparseable ":::" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > unparseable "::ffff:8.8.8.8:1" is not public 0ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > parses compression and embedded quads exactly 1ms
+ ✓ tests/unit/recipe-import-ip.test.ts > isPublicAddress IPv6 > refuses non-strings 0ms
+ ✓ tests/unit/ms-domain.test.ts > shopping list (GR-08) > states every amount exactly, keeps unknowns unknown and says what it is not 20ms
+ ✓ tests/unit/ms-domain.test.ts > shopping list (GR-08) > CSV quotes every cell, writes unknown as unknown and neutralizes spreadsheet formulas 2ms
+ ✓ tests/unit/ms-domain.test.ts > shopping list (GR-08) > the store cart shows packages and prices only where known; another destination never carries them 1ms
+ ✓ tests/unit/ms-domain.test.ts > shopping list (GR-08) > a line stored before net amounts existed falls back to the full meal amount, never to 'have enough' 1ms
+ ✓ tests/unit/ms-domain.test.ts > import drafts (URL-10/11) > only a cleanly parsed line starts as a proposal; anything else waits for a member 1ms
+ ✓ tests/unit/ms-domain.test.ts > import drafts (URL-10/11) > a draft without servings, with an undecided line or with an unknown unit can't be confirmed 2ms
+ ✓ tests/unit/ms-domain.test.ts > import drafts (URL-10/11) > per-serving amounts are exact when they terminate and say when they were rounded 1ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl normalization > cleans the stored URL: trims, lowercases scheme and host, drops default port, fragment and tracking 3ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl normalization > dedupes tracking, scheme, www, trailing-slash, fragment and param-order variants of one page 2ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl normalization > keeps different pages apart 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl normalization > root path keeps its slash and an emptied query disappears 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl normalization > preserves the encoding of kept params in the stored URL; the key re-encodes them consistently 1ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl normalization > labels known sources 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl normalization > accepts an IDN host in its punycode form 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals >  → invalid_url 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals >     → invalid_url 1ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > example.com/recipe → invalid_url 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > not a url → invalid_url 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > javascript:alert(1) → unsupported_scheme 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > JaVaScRiPt:alert(1) → unsupported_scheme 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > data:text/html,<script>alert(1)</script> → unsupported_scheme 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > file:///etc/passwd → unsupported_scheme 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > ftp://example.com/x → unsupported_scheme 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > blob:https://example.com/uuid → unsupported_scheme 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > ws://example.com/ → unsupported_scheme 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > http://user:pass@example.com/ → credentials_in_url 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > https://user@example.com/ → credentials_in_url 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > https://:pw@example.com/ → credentials_in_url 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > http://localhost/ → invalid_host 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > http://localhost:3000/admin → invalid_host 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > http://intranet/ → invalid_host 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > http://printer.local/ → invalid_host 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > http://app.localhost/ → invalid_host 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > http://db.internal/ → invalid_host 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > http://router.home.arpa/ → invalid_host 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > http://1.0.0.127.in-addr.arpa/ → invalid_host 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > http://nas.lan/ → invalid_host 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > http://127.0.0.1/ → invalid_host 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > http://2130706433/ → invalid_host 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > http://0x7f.1/ → invalid_host 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > http://0177.0.0.1/ → invalid_host 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > http://8.8.8.8/ → invalid_host 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > http://[::1]/ → invalid_host 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > http://[::ffff:127.0.0.1]/ → invalid_host 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > http://[2606:4700::1111]/ → invalid_host 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > http://exa_mple.com/ → invalid_host 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > http://-bad.example.com/ → invalid_host 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > http://example.123/ → invalid_url 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > https://a..example.com/ → invalid_host 0ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > refuses over-long links before and after cleaning 2ms
+ ✓ tests/unit/recipe-import-url.test.ts > validateLinkUrl refusals > never throws on hostile input 2ms
+ ✓ tests/unit/recipe-import-url.test.ts > checkImportUrl > requires https on the default port 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 products mapping > maps documented fields with a location; unknown stays null, never zero 6ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 products mapping > without a locationId, price, fulfillment and stock are not claimed even if present 1ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 products mapping > product details (single object) and junk are handled without inventing data 1ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 products mapping > dollars become exact integer cents only when unambiguous 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 products mapping > maps locations from the documented shape 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "1 gal" -> 3785.411784 ml 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "1/2 Gallon" -> 1892.705892 ml 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "2 lb" -> 2 lb 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "12 fl oz" -> 12 fl_oz 1ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "16 FL. OZ." -> 16 fl_oz 1ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "500 ml" -> 500 ml 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "1.5 l" -> 1.5 l 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "454 g" -> 454 g 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "each" -> 1 each 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "10 ct" -> 10 each 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "1 qt" -> 946.352946 ml 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "16 oz" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "6 ct / 12 oz" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "about 1.5 lb" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "per lb" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "1.5 lb avg" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "2-3 lb" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "12 oz pack" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "0 lb" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "1/0 gal" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "Family Size" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "2 x 8 oz" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 package size parsing (only when unambiguous) > "1 bunch" stays unknown 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 cart add request and outcome mapping > builds PUT /v1/cart/add from exactly the given lines 0ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 cart add request and outcome mapping > 204 is a batch-level acknowledgment only — no per-line result, no order 1ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 cart add request and outcome mapping > documented 4xx -> failed; 401 -> failed needing reauthorization, never retried 1ms
+ ✓ tests/unit/kroger-mapping.test.ts > B5 cart add request and outcome mapping > 5xx, undocumented statuses and unreadable responses are uncertain 0ms
+ ✓ tests/unit/recipe-rebase.test.ts > rebase: a draft brought up to a newer version (RB17-01) > takes the newer steps and reheat text for fields the member did not touch, and keeps the member's title 4ms
+ ✓ tests/unit/recipe-rebase.test.ts > rebase: a draft brought up to a newer version (RB17-01) > never reverts fields the editor does not show: summary, source label, ingredient form and note 1ms
+ ✓ tests/unit/recipe-rebase.test.ts > rebase: a draft brought up to a newer version (RB17-01) > does not decide for the member when both changed the same field; the explicit choice is applied as made 1ms
+ ✓ tests/unit/recipe-rebase.test.ts > rebase: a draft brought up to a newer version (RB17-01) > is not a conflict when both reached the same value, and nothing is taken when the other version changed nothing 1ms
+ ✓ tests/unit/recipe-rebase.test.ts > rebase: a draft brought up to a newer version (RB17-01) > a third version rebases again from the second: changes since the second are taken, earlier choices stand 0ms
+ ✓ tests/unit/recipe-rebase.test.ts > ingredient comparison by occurrence (RB17-02) > a change to the first of two occurrences is reported, not lost 1ms
+ ✓ tests/unit/recipe-rebase.test.ts > ingredient comparison by occurrence (RB17-02) > units, forms and notes of one occurrence are compared 1ms
+ ✓ tests/unit/recipe-rebase.test.ts > ingredient comparison by occurrence (RB17-02) > adding or removing one of several identical occurrences is counted 0ms
+ ✓ tests/unit/recipe-rebase.test.ts > ingredient comparison by occurrence (RB17-02) > a reorder is reported as a reorder 1ms
+ ✓ tests/unit/recipe-rebase.test.ts > ingredient comparison by occurrence (RB17-02) > rebase keeps both occurrences when the member did not touch the ingredients 1ms
+ ✓ tests/unit/recipe-rebase.test.ts > ingredient comparison by occurrence (RB17-02) > blank scaffolding rows in a draft are not a change 0ms
+ ✓ tests/unit/recipe-rebase.test.ts > comparison by identity, not display name (RB17-02) > a shared-list rename of an ingredient (same key) is not a recipe change; a different ingredient key is 0ms
+ ✓ tests/unit/recipe-rebase.test.ts > comparison by identity, not display name (RB17-02) > moving an occurrence to a different component with the same name is a change 0ms
+ ✓ tests/unit/recipe-rebase.test.ts > editor state: rebases and keystrokes in order (RB17-01) > a keystroke after a rebase applies to the merged draft and never restores the replaced content 1ms
+ ✓ tests/unit/recipe-rebase.test.ts > editor state: rebases and keystrokes in order (RB17-01) > an undecided field survives a later version that changes something else; Save stays held 1ms
+ ✓ tests/unit/recipe-rebase.test.ts > editor state: rebases and keystrokes in order (RB17-01) > a version that is not newer than the draft's base is ignored (late or out-of-order responses) 0ms
+ ✓ tests/unit/recipe-rebase.test.ts > editor state: rebases and keystrokes in order (RB17-01) > start over discards edits, decisions and the record of rebases; unsaved changes are measured by content 1ms
+ ✓ tests/unit/recipe-rebase.test.ts > compared as a save would store it (RB17-01) > values a save would store identically are not changes: re-typed names, whitespace, unit spellings, number forms 0ms
+ ✓ tests/unit/recipe-rebase.test.ts > compared as a save would store it (RB17-01) > an edit that comes back to the stored value is not unsaved, and does not turn the other member's change into a conflict 2ms
+ ✓ tests/unit/kroger-lookup.test.ts > B5 product and location lookup > not activated (or retailer simulated): answers not_activated with zero transport calls 6ms
+ ✓ tests/unit/kroger-lookup.test.ts > B5 product and location lookup > activated: client-credentials token with the configured scopes, then GET /products with the location; candidates mapped 7ms
+ ✓ tests/unit/kroger-lookup.test.ts > B5 product and location lookup > locations need their own (undocumented) scope configured; invalid inputs never reach the network 2ms
+ ✓ tests/unit/kroger-lookup.test.ts > B5 product and location lookup > a token or search failure is reported, not turned into an empty result 2ms
+ ✓ tests/unit/instacart-config.test.ts > Instacart configuration (staged, all off by default) > nothing is activated or configured with an empty environment 3ms
+ ✓ tests/unit/instacart-config.test.ts > Instacart configuration (staged, all off by default) > documented base URLs per environment 1ms
+ ✓ tests/unit/instacart-config.test.ts > Instacart configuration (staged, all off by default) > activation without a key (or environment) is not configured 1ms
+ ✓ tests/unit/instacart-config.test.ts > Instacart configuration (staged, all off by default) > activated + key + environment is configured_not_verified, never verified 1ms
+ ✓ tests/unit/instacart-config.test.ts > Instacart configuration (staged, all off by default) > only the activated capability is configured 0ms
+ ✓ tests/unit/instacart-config.test.ts > Instacart configuration (staged, all off by default) > the fake transport in tests reports configured_fixture_only 0ms
+ ✓ tests/unit/instacart-config.test.ts > Instacart configuration (staged, all off by default) > an unknown capability or environment refuses everything 0ms
+ ✓ tests/unit/instacart-config.test.ts > TABLE_INSTACART_FAKE_TRANSPORT is test-only > is listed as test-only 0ms
+ ✓ tests/unit/instacart-config.test.ts > TABLE_INSTACART_FAKE_TRANSPORT is test-only > is honored in test 1ms
+ ✓ tests/unit/instacart-config.test.ts > TABLE_INSTACART_FAKE_TRANSPORT is test-only > is refused in production (throws, is a config problem, keeps capabilities off) 2ms
+ ✓ tests/unit/instacart-config.test.ts > TABLE_INSTACART_FAKE_TRANSPORT is test-only > is refused in development (throws, is a config problem, keeps capabilities off) 1ms
+ ✓ tests/unit/instacart-config.test.ts > TABLE_INSTACART_FAKE_TRANSPORT is test-only > is refused when NODE_ENV=production and TABLE_ENV is absent 0ms
+ ✓ tests/unit/instacart-config.test.ts > TABLE_INSTACART_FAKE_TRANSPORT is test-only > routes transportFor to the shared recording fake only under the switch 2ms
+ ✓ tests/unit/instacart-config.test.ts > Table unit -> Instacart unit (documented strings only) > covers exactly Table's units 0ms
+ ✓ tests/unit/instacart-config.test.ts > Table unit -> Instacart unit (documented strings only) > maps to documented strings and refuses fl_oz 1ms
+ ✓ tests/unit/kroger-fake-scenario.test.ts > file-scripted Kroger fake (browser tests only) > KF-01: production refuses the scenario and log switches 6ms
+ ✓ tests/unit/kroger-fake-scenario.test.ts > file-scripted Kroger fake (browser tests only) > KF-02: with the test switch, it answers product reads from the file, 404s anything else, and logs method and path only 4ms
+ ✓ tests/unit/kroger-fake-scenario.test.ts > file-scripted Kroger fake (browser tests only) > KF-03: outside the test environment the fake switch is refused 2ms
+ ✓ tests/unit/u2c-content-policy.test.ts > content policy > CP-01: nothing is kept unless the owner turned it on 3ms
+ ✓ tests/unit/u2c-content-policy.test.ts > content policy > CP-02: the household-private setting keeps method and photo for any readable site — never Budget Bytes 2ms
+ ✓ tests/unit/u2c-content-policy.test.ts > content policy > CP-03: per-site grants keep only what was granted, for that site and its subdomains only, and win over the general setting 1ms
+ ✓ tests/unit/u2c-content-policy.test.ts > content policy > CP-04: malformed settings are errors, and production reports them before start 3ms
+ ✓ tests/unit/u2c-content-policy.test.ts > RUC-01 read policy and photo hosts > CP-05: reading is refused for Budget Bytes hosts only; photos come from the content's own site or a host the owner listed for it 1ms
+ ✓ tests/unit/u2c-content-policy.test.ts > review helpers > RH-01: a starting name from the link's address only 1ms
+ ✓ tests/unit/u2c-content-policy.test.ts > review helpers > RH-02: a suggestion is offered only on a line that needs review, and only if it would be a valid decision 1ms
+ ✓ tests/unit/ruc01-fetch-policy.test.ts > RUC-01 source policy in the fetcher > FP-01: a refused first address: no DNS lookup, no request 7ms
+ ✓ tests/unit/ruc01-fetch-policy.test.ts > RUC-01 source policy in the fetcher > FP-02: a redirect to a refused host stops before resolving or requesting it 2ms
+ ✓ tests/unit/ruc01-fetch-policy.test.ts > RUC-01 source policy in the fetcher > FP-03: allowed redirects still pass every network-safety check (a private target is refused as before) 2ms
+ ✓ tests/unit/theme-contrast.test.ts > theme contrast — light > defines every token the pairs use 4ms
+ ✓ tests/unit/theme-contrast.test.ts > theme contrast — light > text pairs meet 4.5:1 and the focus outline meets 3:1 2ms
+ ✓ tests/unit/theme-contrast.test.ts > theme contrast — dark > defines every token the pairs use 0ms
+ ✓ tests/unit/theme-contrast.test.ts > theme contrast — dark > text pairs meet 4.5:1 and the focus outline meets 3:1 1ms
+ ✓ tests/unit/theme-contrast.test.ts > the two themes differ (a dark-mode block exists and overrides the light tokens) 1ms
+
+ Test Files  46 passed (46)
+      Tests  1117 passed (1117)
+   Start at  23:07:01
+   Duration  261.52s (tests 94%, import 5%, transform 1%)
+
+JSON report written to /tmp/table-verify-33c84e1-20261008T230652Z/vitest.json

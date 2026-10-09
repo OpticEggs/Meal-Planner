@@ -1,0 +1,24 @@
+{
+  "when": "2026-10-08T23:37:09.578Z",
+  "head": "33c84e14c9dc79226e5fd514fcbb1feaf9d8728f",
+  "restored": true,
+  "pass": true,
+  "results": [
+    {
+      "name": "MS_budget_bytes_page_read",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/16 failed by assertion: BB-02/03: a Budget Bytes link is saved once, attributed, and never read — the member pastes or types the ingredients"
+    },
+    {
+      "name": "U2C_content_kept_without_permission",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/4 failed by assertion: U-01: pasting a link saves it and reads it at once; attribution, description and counts are kept, the method and photo are not (default) | U-03: a per-site grant keeps only what that site permitted; another site's grant keeps nothing"
+    }
+  ]
+}

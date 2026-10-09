@@ -1,0 +1,51 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/table
+
+ ❯ tests/integration/ruc01-source-policy.test.ts (9 tests | 9 failed) 36ms
+   ❯ RUC-01 a site that is never read stays unread through redirects (3)
+     × R1-01: a direct Budget Bytes link receives zero requests 13ms
+     × R1-02: an allowed link that redirects to Budget Bytes: zero requests to it, no draft, nothing credited to the first site's grant 2ms
+     × R1-03: a photo that redirects to Budget Bytes is never requested there 2ms
+   ❯ RUC-01 what may be kept belongs to the site that supplied the content (6)
+     × R1-04: granted site → ungranted site: facts read from the actual page, nothing kept, attribution to the actual source 1ms
+     × R1-05: facts-only mode, same redirect: the same facts and the same truthful attribution 2ms
+     × R1-06: the owner-selected household-private mode applies to the actual source and is labelled as an owner mode, not a publisher licence 1ms
+     × R1-07: a same-site redirect keeps the grant; a photo on another host is not requested unless that host is authorized for the grant 2ms
+     × R1-08: with the CDN host authorized for that grant, the photo is read from it and recorded with its own source 3ms
+     × R1-09: a photo redirect to an unauthorized host is refused before the request 6ms
+ ❯ tests/integration/ruc02-purchase-basis.test.ts (5 tests | 5 failed) 27ms
+   ❯ RUC-02 a weight-priced or unknown-basis product is never recorded as a fixed, fully priced package (5)
+     × R2-01: sold by weight + a typed 2 lb → refused with a reason; nothing written; the line and its estimate are unchanged 13ms
+     × R2-02: no sale basis, or one Table doesn't know → refused; a typed size doesn't make it a package 3ms
+     × R2-03: search shows the basis and why such products can't be chosen yet 3ms
+     × R2-04: fixed unit still works — readable size with a promotion, a member-stated size for a unit item, and no price stays unknown and keeps the estimate incomplete 2ms
+     × R2-05: choosing products never rewrites earlier products or price history 3ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 14 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/ruc01-source-policy.test.ts > RUC-01 a site that is never read stays unread through redirects > R1-01: a direct Budget Bytes link receives zero requests
+ FAIL  tests/integration/ruc01-source-policy.test.ts > RUC-01 a site that is never read stays unread through redirects > R1-02: an allowed link that redirects to Budget Bytes: zero requests to it, no draft, nothing credited to the first site's grant
+ FAIL  tests/integration/ruc01-source-policy.test.ts > RUC-01 a site that is never read stays unread through redirects > R1-03: a photo that redirects to Budget Bytes is never requested there
+ FAIL  tests/integration/ruc01-source-policy.test.ts > RUC-01 what may be kept belongs to the site that supplied the content > R1-04: granted site → ungranted site: facts read from the actual page, nothing kept, attribution to the actual source
+ FAIL  tests/integration/ruc01-source-policy.test.ts > RUC-01 what may be kept belongs to the site that supplied the content > R1-05: facts-only mode, same redirect: the same facts and the same truthful attribution
+ FAIL  tests/integration/ruc01-source-policy.test.ts > RUC-01 what may be kept belongs to the site that supplied the content > R1-06: the owner-selected household-private mode applies to the actual source and is labelled as an owner mode, not a publisher licence
+ FAIL  tests/integration/ruc01-source-policy.test.ts > RUC-01 what may be kept belongs to the site that supplied the content > R1-07: a same-site redirect keeps the grant; a photo on another host is not requested unless that host is authorized for the grant
+ FAIL  tests/integration/ruc01-source-policy.test.ts > RUC-01 what may be kept belongs to the site that supplied the content > R1-08: with the CDN host authorized for that grant, the photo is read from it and recorded with its own source
+ FAIL  tests/integration/ruc01-source-policy.test.ts > RUC-01 what may be kept belongs to the site that supplied the content > R1-09: a photo redirect to an unauthorized host is refused before the request
+ FAIL  tests/integration/ruc02-purchase-basis.test.ts > RUC-02 a weight-priced or unknown-basis product is never recorded as a fixed, fully priced package > R2-01: sold by weight + a typed 2 lb → refused with a reason; nothing written; the line and its estimate are unchanged
+ FAIL  tests/integration/ruc02-purchase-basis.test.ts > RUC-02 a weight-priced or unknown-basis product is never recorded as a fixed, fully priced package > R2-02: no sale basis, or one Table doesn't know → refused; a typed size doesn't make it a package
+ FAIL  tests/integration/ruc02-purchase-basis.test.ts > RUC-02 a weight-priced or unknown-basis product is never recorded as a fixed, fully priced package > R2-03: search shows the basis and why such products can't be chosen yet
+ FAIL  tests/integration/ruc02-purchase-basis.test.ts > RUC-02 a weight-priced or unknown-basis product is never recorded as a fixed, fully priced package > R2-04: fixed unit still works — readable size with a promotion, a member-stated size for a unit item, and no price stays unknown and keeps the estimate incomplete
+ FAIL  tests/integration/ruc02-purchase-basis.test.ts > RUC-02 a weight-priced or unknown-basis product is never recorded as a fixed, fully priced package > R2-05: choosing products never rewrites earlier products or price history
+Error: connect ECONNREFUSED 127.0.0.1:54329
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/14]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  14 failed (14)
+   Start at  22:48:51
+   Duration  3.45s (import 56%, transform 42%, tests 2%)
+

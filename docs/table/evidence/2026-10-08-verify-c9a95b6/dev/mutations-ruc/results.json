@@ -1,0 +1,48 @@
+{
+  "when": "2026-10-08T23:00:19.167Z",
+  "head": "988c4d146169c95b0e478feaa16744337c87333e",
+  "restored": true,
+  "pass": true,
+  "results": [
+    {
+      "name": "RUC01_redirect_skips_read_policy",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: R1-02: an allowed link that redirects to Budget Bytes: zero requests to it, no draft, nothing credited to the first site's grant"
+    },
+    {
+      "name": "RUC01_grant_from_entry_url",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: R1-04: granted site → ungranted site: facts read from the actual page, nothing kept, attribution to the actual source"
+    },
+    {
+      "name": "RUC01_photo_from_any_host",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: R1-07: a same-site redirect keeps the grant; a photo on another host is not requested unless that host is authorized for the grant"
+    },
+    {
+      "name": "RUC02_weight_sold_accepted",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: R2-01: sold by weight + a typed 2 lb → refused with a reason; nothing written; the line and its estimate are unchanged"
+    },
+    {
+      "name": "RUC02_unknown_basis_accepted",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: R2-02: no sale basis, or one Table doesn't know → refused; a typed size doesn't make it a package"
+    }
+  ]
+}

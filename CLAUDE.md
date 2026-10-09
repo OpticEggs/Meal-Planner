@@ -42,11 +42,11 @@ tests/mutation/selftest.sh          # proves runner failures are ERROR (never "k
 scripts/make-bundle.sh <dir>        # restorable bundle (HEAD + main), SHA-256, and a tested restore
 TABLE_NEW_PASSWORD=... npm run member:reset-password -- <email>   # operator account recovery (ends that member's sessions)
 ```
-Deployment: `docs/table/DEPLOYMENT.md` (provisional Render recommendation, runbook; nothing provisioned),
+Deployment: `docs/table/DEPLOYMENT.md` (§0: the owner's pilot on Render Free + Neon, upgrade steps; the paid Render runbook below it),
 templates in `deploy/`, `/api/health` for the host. Owner gates: `docs/table/OWNER-INPUTS.md`.
 Device checks: `docs/table/DEVICE-CHECKLIST.md`. Test-only switches refused in production:
 `TABLE_FIXED_NOW`, `TABLE_DISPATCH_TIMEOUT_MS`, `TABLE_FDC_FIXTURES`, `TABLE_KROGER_FAKE_TRANSPORT`,
-`TABLE_RECIPE_FETCH_FIXTURES`, `TABLE_INSTACART_FAKE_TRANSPORT` (+ `TABLE_INSTACART_FAKE_SCENARIO`). Off unless set: `TABLE_RECIPE_IMPORT_FETCH=on` (real page reading — owner gate R1), `TABLE_RECIPE_CONTENT=household_private` / `TABLE_RECIPE_CONTENT_GRANTS` (keeping a page's method/photo — owner gates C1/C2), `INSTACART_ACTIVATE` (owner gates I1–I3).
+`TABLE_RECIPE_FETCH_FIXTURES`, `TABLE_INSTACART_FAKE_TRANSPORT` (+ `TABLE_INSTACART_FAKE_SCENARIO`), `TABLE_KROGER_FAKE_SCENARIO`, `TABLE_KROGER_FAKE_LOG`. Off unless set: `TABLE_RECIPE_IMPORT_FETCH=on` (real page reading — owner gate R1), `TABLE_RECIPE_CONTENT=household_private` / `TABLE_RECIPE_CONTENT_GRANTS` / `TABLE_RECIPE_PHOTO_HOSTS` (keeping a page's method/photo — owner gates C1/C2; decided for the page actually read, never inherited through a redirect), `INSTACART_ACTIVATE` (owner gates I1–I3).
 Never run vitest and Playwright against the same database at the same time (they use table_test / table_e2e).
 Remote: https://github.com/OpticEggs/Meal-Planner (`main`). Restore a bundle with `git clone --branch main <bundle> table`.
 Review corrections and regressions: `docs/table/CORRECTIONS-89f3ea9.md`.

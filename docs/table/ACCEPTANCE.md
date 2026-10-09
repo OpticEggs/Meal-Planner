@@ -468,3 +468,65 @@ Defects found by these tests before the commit: on Our Recipes the add-from-link
 that couldn't be read showed no reason (e2e U2C-E2; fixed); a browser test's closing page could leave a live
 refresh holding locks while the next test's reset ran, and PostgreSQL chose the reset as deadlock victim (test
 reset now retries only on `40P01`).
+
+## Recheck corrections RUC-01 / RUC-02 and Kroger matching UI (review of 988c4d1) — added 2026-10-08
+
+Reviewed delivery `988c4d1` (implementation `184d99f`); corrections `33c84e1` + mutation-harness fix `c9a95b6`, verified at
+`c9a95b6` — `docs/table/evidence/2026-10-08-verify-c9a95b6/summary.md`: vitest 1117/1117, Playwright 136/136, 88 mutations killed, 0 survived, 0 error.
+
+**Failed run kept:** verify-all on `33c84e1` FAILED (`verify-33c84e1-FAIL/`): vitest 1117/1117 and Playwright 136/136
+passed, but the mutation step had 1 ERROR (`U2C_content_kept_without_permission`: its anchor disappeared when
+`content-policy.ts` was rewritten) and 1 SURVIVED (`MS_budget_bytes_page_read`: RUC-01 added a second, independent
+Budget Bytes check, so removing only the first no longer broke a test). Both were re-targeted in `c9a95b6` (the second now
+removes the shared predicate, i.e. both layers) and the whole pipeline re-run on `c9a95b6`.
+The reviewer's probes (`probes/recheck.cjs`) characterize the defects and were **not** copied into the suite; the
+regressions below are expected-correctness tests in the real harness (PostgreSQL, in-process fixture transport,
+Kroger recording fake, Chromium).
+
+**Red on the reviewed baseline.** `red/ruc-red-on-988c4d1.log`: with the reviewed code and the new tests, 11 failed
+for the reported reasons (a redirect reached `www.budgetbytes.com` twice; the ungranted target's method was staged
+under "permission recorded for licensed.example.com"; a WEIGHT product with a typed 2 lb was accepted as a fixed,
+priced package), while the guards passed (direct Budget Bytes link: zero requests; fixed-unit success; history kept).
+Two earlier attempts are kept and labelled invalid: `INVALID-ruc-red-db-down.log` (PostgreSQL had stopped) and
+`INVALID-ruc-red-test-fixture-bug.log` (a fixture used a bare "oz" size, which Table deliberately treats as
+ambiguous — corrected in the test, not the product).
+
+| ID | What | Tests | Status |
+|---|---|---|---|
+| RUC-01 | Direct blocked source: zero requests | integration R1-01; unit FP-01 | PASS |
+| RUC-01 | Allowed link → Budget Bytes: zero requests to it, no draft, link marked permission_blocked | integration R1-02; unit FP-02; mutation RUC01_redirect_skips_read_policy | PASS |
+| RUC-01 | Photo redirect to a blocked or unlisted host: refused before the request | integration R1-03, R1-09 | PASS |
+| RUC-01 | Granted → ungranted site: facts from the page actually read, nothing kept, source and label of that page | integration R1-04, R1-05 (facts-only); mutation RUC01_grant_from_entry_url | PASS |
+| RUC-01 | Owner-selected household-private mode applies to the actual source and is labelled as an owner mode | integration R1-06; unit CP-02 | PASS |
+| RUC-01 | Same-site redirect keeps the grant; another photo host only when the owner listed it | integration R1-07, R1-08; unit CP-05; mutation RUC01_photo_from_any_host | PASS |
+| RUC-01 | Network safety unchanged (private redirect target refused, same-site redirect followed) | unit FP-03, LT-01..04, recipe-import-fetcher | PASS |
+| RUC-02 | Sold by weight + typed amount → refused, nothing written, line and estimate unchanged | integration R2-01; mutation RUC02_weight_sold_accepted | PASS |
+| RUC-02 | Absent or unfamiliar sale basis → refused | integration R2-02; mutation RUC02_unknown_basis_accepted | PASS |
+| RUC-02 | Search shows the basis and why it can't be chosen | integration R2-03; e2e KM-E3 | PASS |
+| RUC-02 | Fixed unit still works: readable size with a promotion; a member-stated size for a unit item; no price stays unknown and the estimate stays incomplete | integration R2-04, KM-04, KM-06 | PASS |
+| RUC-02 | Earlier products and price history never rewritten | integration R2-05 | PASS |
+| UI | Search, choose, focus back on the opener, store price shown, zero cart requests (product reads counted separately) | e2e KM-E1 | PASS |
+| UI | Unreadable size: error on the field and focused, then chosen | e2e KM-E2 | PASS |
+| UI | Weight / unknown basis not choosable, with the reason | e2e KM-E3 | PASS |
+| UI | Other member's change while open: held back until reviewed | e2e KM-E4; integration KM-08 | PASS |
+| UI | Bulk match, 320 px at 200% text, no horizontal scroll | e2e KM-E5 | PASS |
+| — | Store changed after the search: re-read and priced at the store current at choice | integration KM-11 | PASS |
+| — | Test-only scripted fake refused in production; log has no headers | unit KF-01..03 | PASS |
+
+**Defect found by the new browser test before the commit:** the bulk "Match products at Kroger" dialog told the
+server the member saw no product, so a choice for an item that already showed one was refused as stale (KM-E5,
+first run `dev/km-e2e-1.log`); it now sends the product each item showed.
+
+**Changed existing assertions (transparent):** U-02, U-03 and CP-01..03 pinned the old provenance wording
+("household-private copy (owner setting)", "permission recorded for …") and the old three-field policy; they now
+pin the corrected labels and `kind`/`source` (D103). No other assertion was weakened.
+
+**Populated upgrade, export and restore with a photo** (`upgrade-012/`, disposable databases): a database built by
+the reviewed-era code at migrations 001–011 (fixture household, an accepted week, saved links incl. Budget Bytes, a
+confirmed import, an open pasted draft) was migrated by `c9a95b6`: only `012` applied, a second run applied nothing, **no
+existing row or column value changed**, existing drafts read as nothing kept, the library loads; a new import with a
+photo kept under the owner mode was confirmed; export → restore into a second database → export reproduced the
+export exactly and the restored photo bytes match their recorded hash. ALL PASS.
+
+**Not covered:** the pilot itself (its commit, migration level and settings are user-reported only), real recipe
+sites, real Kroger, WebKit/Safari/VoiceOver/devices.

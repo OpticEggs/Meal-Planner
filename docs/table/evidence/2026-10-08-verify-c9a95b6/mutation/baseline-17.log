@@ -1,0 +1,10 @@
+$ npx vitest run tests/integration/b12.staple-products.test.ts -t "B12"
+exit 0 signal 
+--- stdout
+JSON report written to /tmp/table-verify-c9a95b6-20261008T233722Z/mutation/baseline-17.json
+
+--- stderr
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
