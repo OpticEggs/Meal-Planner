@@ -13,6 +13,7 @@ import * as liveLd from "@/server/integrations/recipe-import/jsonld";
 import * as frozenLine from "../../src/legacy/ingredient-line";
 import * as frozenLd from "../../src/legacy/jsonld";
 import { extractRecipePage, ENGINES, validateParsedIngredientV1, validateRecipeExtractionV1 } from "../../src/index";
+import { liveIsBaseline } from "./live-state";
 
 const FIXTURES = path.resolve(import.meta.dirname, "../../fixtures");
 
@@ -30,7 +31,8 @@ describe("benchmark corpus parity (frozen legacy vs live Table)", () => {
     expect(pages.length).toBeGreaterThanOrEqual(10);
   });
 
-  it("parseIngredientLine is deep-equal on every benchmark line", () => {
+  // While Table's live parser is the baseline; afterwards baseline-snapshot.test.ts covers these lines.
+  it.skipIf(!liveIsBaseline("ingredient-line.ts"))("parseIngredientLine is deep-equal on every benchmark line", () => {
     const bad = lines.filter((l) => !isDeepStrictEqual(liveLine.parseIngredientLine(l), frozenLine.parseIngredientLine(l)));
     expect(bad).toEqual([]);
   });

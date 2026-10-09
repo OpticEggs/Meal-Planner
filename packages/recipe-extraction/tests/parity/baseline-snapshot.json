@@ -1,0 +1,36 @@
+{
+  "description": "SHA-256 of frozen parseIngredientLine outputs (JSON, one per line) per input segment, recorded while the live Table module was the pinned baseline and deep-equal on every input.",
+  "baselineCommit": "cb7b56eaa01832b75b2bdbf74031f9f45c75ec13",
+  "liveSourceSha256AtRecording": "f3db537f497d154902b4cfb8592148d23f229a85be8be16856b9a6496d5fc863",
+  "recordedOn": "2026-10-09",
+  "segments": {
+    "literals": {
+      "count": 564,
+      "sha256": "bf9e34177ae8010db658f682cf9cdde0973680903d9945276261edabc0820ff5"
+    },
+    "sweep": {
+      "count": 15972,
+      "sha256": "a9301df428de4e79e93439cbaededc3987a3de8cac24cd69faf94dfc40b577b6"
+    },
+    "hostile": {
+      "count": 28,
+      "sha256": "3dbf75695d56c46bb6c76369af5b3f2a4d3d5e7936cf74585fb3384c5b7837e0"
+    },
+    "random": {
+      "count": 24000,
+      "sha256": "bdf4989a989a302312ac574bca29a17b5dffe011da530762feb5c122e4c8eccd"
+    },
+    "nonString": {
+      "count": 10,
+      "sha256": "f7266d3368cf9acd183053f84cc782e7bee0f3b1c7f963001932f7dc94b78b44"
+    },
+    "benchmark-dev-v1": {
+      "count": 182,
+      "sha256": "7ddbb99b32c55933765c03c280e1452f8d8fe5147301d82e9e0dca4cb0461e81"
+    },
+    "benchmark-holdout-v1": {
+      "count": 128,
+      "sha256": "d640d1ef76cda913973b1af9b2a9ca7c6d73a2c7b64242e6d7a050cdf31489e9"
+    }
+  }
+}

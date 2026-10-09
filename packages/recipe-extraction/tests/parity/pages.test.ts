@@ -21,7 +21,7 @@ describe("page parity (frozen copy vs live Table module)", () => {
   const mutations = mutatedPages(PAGE_SEED, fixtures);
 
   it("reads every fixture of both fixture directories", () => {
-    expect(fixtures.length).toBe(24);
+    expect(fixtures.length).toBeGreaterThanOrEqual(24); // 24 at cb7b56e; main 8e6bd6e added pesto.html
     expect(mutations.length).toBeGreaterThan(fixtures.length * 15);
   });
 

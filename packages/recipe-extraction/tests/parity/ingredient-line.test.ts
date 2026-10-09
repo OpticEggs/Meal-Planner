@@ -10,6 +10,7 @@ import * as liveUnits from "@/domain/units";
 import * as frozen from "../../src/legacy/ingredient-line";
 import * as frozenUnits from "../../src/legacy/units";
 import { ingredientCorpus, NON_STRING_INPUTS, RANDOM_COUNT } from "./corpus";
+import { liveIsBaseline } from "./live-state";
 
 const show = (s: unknown) => (typeof s === "string" ? JSON.stringify(s.length > 120 ? `${s.slice(0, 120)}…(${s.length})` : s) : String(s));
 
@@ -26,7 +27,9 @@ function mismatches<T>(inputs: readonly unknown[], a: (x: never) => T, b: (x: ne
   return out;
 }
 
-describe("ingredient-line parity (frozen copy vs live Table module)", () => {
+// Runs only while Table's live module is still the baseline file; after main 8e6bd6e it is not, and
+// baseline-snapshot.test.ts guards the frozen engine with the outputs recorded while it was.
+describe.skipIf(!liveIsBaseline("ingredient-line.ts"))("ingredient-line parity (frozen copy vs live Table module)", () => {
   const corpus = ingredientCorpus();
 
   it("the corpus has the promised sizes", () => {

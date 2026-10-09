@@ -114,5 +114,12 @@
         }
       ]
     }
-  ]
+  ],
+  "liveTableObserved": {
+    "note": "Table's own ingredient-line parser moved past the baseline in main 8e6bd6e (import overhaul). The frozen copies stay at cb7b56e; parity with the live module is only checked while it is still the baseline file. tests/parity/baseline-snapshot.json keeps proving the frozen engine's outputs are Table import 2's.",
+    "commit": "8e6bd6e",
+    "files": {
+      "src/server/integrations/recipe-import/ingredient-line.ts": "09f00b2f652cba3725091c0ea2a2bc3f0f87f77d7bb25d01984430fceff199a7"
+    }
+  }
 }

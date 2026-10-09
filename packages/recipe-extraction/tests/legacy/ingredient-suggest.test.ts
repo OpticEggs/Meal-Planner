@@ -6,7 +6,7 @@
  * invents an amount the line does not state. All lines are synthetic.
  */
 import { describe, expect, it } from "vitest";
-import { decisionProblem } from "@/domain/recipes/import";
+import { decisionProblem } from "./baseline-decision"; // baseline (cb7b56e) rules, frozen
 import { KNOWN_UNITS } from "../../src/legacy/units";
 import { MAX_QUANTITY, parseIngredientLine, splitNote, type IngredientLine } from "../../src/legacy/ingredient-line";
 
