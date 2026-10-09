@@ -67,3 +67,7 @@ because the owner's correction package did not reach it):
 (`4eba6151…`) as the accepted later version, with `8e6bd6e`'s hash kept in its note. The frozen copies, their
 hashes, the baseline commit `cb7b56e` and `tests/parity/baseline-snapshot.json` are unchanged; the lab suite passes
 (920 passed, 1 expected fail, 11 skipped) with `main` merged.
+
+_Applied by the lab session as `034f2c3` after merging `main` `8c9fd8c` (`54c5629`), on top of the Phase 2 work; the
+lab suite there reads 1917 passed, 11 skipped (the pesto case is now a passing regression, so there is no expected
+failure). The 920 above is the count measured on the earlier lab head `dee4ed0`._
