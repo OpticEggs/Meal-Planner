@@ -1,6 +1,7 @@
 /**
  * Strict loading and validation of the benchmark label files (CONTRACT-v1 §8):
- * `fixtures/ingredients/{dev,holdout}.jsonl` and `fixtures/pages/labels.json`.
+ * `fixtures/ingredients/{dev,holdout,holdout-v2}.jsonl` and `fixtures/pages/labels.json`.
+ * holdout-v2 cases (split `holdout2`, EVALUATION-PLAN-v2 §9) also carry `source` and `construction`.
  *
  * Validation is all-or-nothing: every problem is collected and reported with its case id, and any
  * problem is fatal (`LabelValidationError`). The validate/parse functions are pure; only the `load*`
@@ -17,15 +18,18 @@ import {
   PAGE_ACCEPT_FIELDS,
   PAGE_CANDIDATE_FIELDS,
   PROVENANCE_KINDS,
+  PAGE_SPLITS,
   SEASONING_CLASSES,
   SEVERITIES,
   SPLITS,
   STATUSES,
+  V1_SPLITS,
   isUnitCode,
   parseLabelExact,
   parseLabelQuantity,
   type IngredientCase,
   type PageLabel,
+  type PageSplit,
   type Split,
 } from "./types";
 
@@ -50,7 +54,32 @@ function checkKeys(o: Obj, required: readonly string[], optional: readonly strin
 }
 
 const CASE_FIELDS = ["id", "split", "categories", "input", "expect", "severity", "seasoningClass", "provenance", "rationale"] as const;
-const SPLIT_PREFIX: Record<Split, string> = { dev: "ing-dev-", holdout: "ing-hold-" };
+/** Optional everywhere, except that holdout2 requires `source` and `construction`. */
+const OPTIONAL_CASE_FIELDS = ["accept", "source", "construction"] as const;
+const SPLITS_REQUIRING_SOURCE: readonly Split[] = ["holdout2"];
+const SPLIT_PREFIX: Record<Split, string> = { dev: "ing-dev-", holdout: "ing-hold-", holdout2: "ing-h2-" };
+export const MAX_CONSTRUCTION_CHARS = 120;
+
+function checkSource(v: unknown, provenanceKind: unknown, where: string, errors: string[]) {
+  if (!isObj(v)) {
+    errors.push(`${where}.source: must be an object`);
+    return;
+  }
+  if (!(PROVENANCE_KINDS as readonly unknown[]).includes(v.kind)) {
+    errors.push(`${where}.source.kind: must be one of ${PROVENANCE_KINDS.join(", ")}`);
+    return;
+  }
+  if (v.kind !== provenanceKind) errors.push(`${where}.source.kind: '${String(v.kind)}' differs from provenance.kind '${String(provenanceKind)}'`);
+  if (v.kind === "repo_test_input") {
+    checkKeys(v, ["kind", "file", "line", "commit"], [], `${where}.source`, errors);
+    if (!isNonEmptyString(v.file) || v.file.startsWith("/") || v.file.includes("..") || v.file.includes("\\")) errors.push(`${where}.source.file: must be a repository-relative path`);
+    if (!Number.isInteger(v.line) || (v.line as number) < 1) errors.push(`${where}.source.line: must be a positive integer`);
+    if (typeof v.commit !== "string" || !/^[0-9a-f]{7,40}$/.test(v.commit)) errors.push(`${where}.source.commit: must be a commit hash (7–40 hex digits)`);
+  } else {
+    checkKeys(v, ["kind", "author"], [], `${where}.source`, errors);
+    if (!isNonEmptyString(v.author)) errors.push(`${where}.source.author: must be a non-empty string`);
+  }
+}
 
 function checkAmount(v: unknown, where: string, errors: string[], massOrVolumeOnly: boolean) {
   if (!isObj(v)) {
@@ -141,7 +170,10 @@ export function validateIngredientCase(raw: unknown, split: Split, position: str
     return null;
   }
   const id = typeof raw.id === "string" ? raw.id : `${position} (no id)`;
-  checkKeys(raw, CASE_FIELDS, ["accept"], id, errors);
+  checkKeys(raw, CASE_FIELDS, OPTIONAL_CASE_FIELDS, id, errors);
+  if (SPLITS_REQUIRING_SOURCE.includes(split)) {
+    for (const k of ["source", "construction"] as const) if (!has(raw, k)) errors.push(`${id}: missing field '${k}' (required for ${split})`);
+  }
   if (typeof raw.id !== "string" || !new RegExp(`^${SPLIT_PREFIX[split]}\\d{4}$`).test(raw.id)) errors.push(`${id}: id must match ${SPLIT_PREFIX[split]}NNNN for the ${split} file`);
   if (raw.split !== split) errors.push(`${id}: split '${String(raw.split)}' does not match the file (${split})`);
   if (!Array.isArray(raw.categories) || raw.categories.length === 0) errors.push(`${id}: categories must be a non-empty array`);
@@ -155,6 +187,9 @@ export function validateIngredientCase(raw: unknown, split: Split, position: str
   if (!(SEVERITIES as readonly unknown[]).includes(raw.severity)) errors.push(`${id}: severity must be one of ${SEVERITIES.join(", ")}`);
   if (!(raw.seasoningClass === null || (SEASONING_CLASSES as readonly unknown[]).includes(raw.seasoningClass))) errors.push(`${id}: seasoningClass must be one of ${SEASONING_CLASSES.join(", ")} or null`);
   checkProvenance(raw.provenance, id, errors);
+  if (has(raw, "source")) checkSource(raw.source, isObj(raw.provenance) ? raw.provenance.kind : undefined, id, errors);
+  if (has(raw, "construction") && !(isNonEmptyString(raw.construction) && raw.construction.length <= MAX_CONSTRUCTION_CHARS))
+    errors.push(`${id}: construction must be a non-empty string of at most ${MAX_CONSTRUCTION_CHARS} characters`);
   if (!isNonEmptyString(raw.rationale)) errors.push(`${id}: rationale must be a non-empty string`);
   if (errors.length !== before) return null;
   return { ...(raw as unknown as IngredientCase), accept: (raw.accept as IngredientCase["accept"]) ?? {} };
@@ -207,11 +242,15 @@ export function checkCorpus(cases: IngredientCase[]): void {
   if (errors.length > 0) throw new LabelValidationError("ingredient corpus", errors);
 }
 
-export const INGREDIENT_FILES: Record<Split, string> = { dev: "ingredients/dev.jsonl", holdout: "ingredients/holdout.jsonl" };
+export const INGREDIENT_FILES: Record<Split, string> = { dev: "ingredients/dev.jsonl", holdout: "ingredients/holdout.jsonl", holdout2: "ingredients/holdout-v2.jsonl" };
 export const PAGE_LABELS_FILE = "pages/labels.json";
 
-/** Read and validate the ingredient cases of the given splits (file order; dev before holdout). */
-export function loadIngredientCases(fixturesDir: string, splits: readonly Split[] = SPLITS): IngredientCase[] {
+/**
+ * Read and validate the ingredient cases of the given splits (file order; dev, holdout, holdout2).
+ * The default is the Phase 1 splits (dev + holdout), so existing callers are unchanged; pass `SPLITS`
+ * (or `["holdout2"]`) for holdout-v2.
+ */
+export function loadIngredientCases(fixturesDir: string, splits: readonly Split[] = V1_SPLITS): IngredientCase[] {
   const all: IngredientCase[] = [];
   for (const split of SPLITS) {
     if (!splits.includes(split)) continue;
@@ -226,7 +265,7 @@ export function loadIngredientCases(fixturesDir: string, splits: readonly Split[
 // --- Pages ---------------------------------------------------------------------------------------
 
 const PAGE_FIELDS = ["id", "split", "file", "requestedUrl", "finalUrl", "isRecipe", "expectedCandidateCount", "candidates", "expectedDiagnostics", "provenance", "rationale"] as const;
-const PAGE_PREFIX: Record<Split, { id: string; file: string }> = { dev: { id: "page-dev-", file: "dev-" }, holdout: { id: "page-hold-", file: "hold-" } };
+const PAGE_PREFIX: Record<PageSplit, { id: string; file: string }> = { dev: { id: "page-dev-", file: "dev-" }, holdout: { id: "page-hold-", file: "hold-" } };
 
 function isHttpUrl(v: unknown): boolean {
   if (typeof v !== "string") return false;
@@ -279,8 +318,8 @@ export function validatePageLabels(raw: unknown, fileLabel = PAGE_LABELS_FILE): 
     }
     const id = typeof p.id === "string" ? p.id : `${fileLabel}[${i}] (no id)`;
     checkKeys(p, PAGE_FIELDS, [], id, errors);
-    const split = p.split as Split;
-    if (!(SPLITS as readonly unknown[]).includes(p.split)) errors.push(`${id}: split must be dev or holdout`);
+    const split = p.split as PageSplit;
+    if (!(PAGE_SPLITS as readonly unknown[]).includes(p.split)) errors.push(`${id}: split must be dev or holdout`);
     else {
       if (typeof p.id !== "string" || !new RegExp(`^${PAGE_PREFIX[split].id}[a-z0-9-]+$`).test(p.id)) errors.push(`${id}: id must match ${PAGE_PREFIX[split].id}<slug>`);
       if (typeof p.file !== "string" || !new RegExp(`^${PAGE_PREFIX[split].file}[a-z0-9-]+\\.html$`).test(p.file)) errors.push(`${id}: file must be ${PAGE_PREFIX[split].file}<slug>.html (no directories)`);
@@ -311,7 +350,7 @@ export function validatePageLabels(raw: unknown, fileLabel = PAGE_LABELS_FILE): 
 }
 
 /** Read and validate the page labels; every labelled file must exist under fixtures/pages/. */
-export function loadPageLabels(fixturesDir: string, splits: readonly Split[] = SPLITS): PageLabel[] {
+export function loadPageLabels(fixturesDir: string, splits: readonly Split[] = PAGE_SPLITS): PageLabel[] {
   const raw: unknown = JSON.parse(readFileSync(path.join(fixturesDir, PAGE_LABELS_FILE), "utf8"));
   const labels = validatePageLabels(raw);
   const missing = labels.filter((p) => !existsSync(path.join(fixturesDir, "pages", p.file))).map((p) => `${p.id}: file pages/${p.file} does not exist`);

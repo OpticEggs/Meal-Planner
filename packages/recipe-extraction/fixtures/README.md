@@ -12,6 +12,7 @@ images, nothing copied from a real page. Rights: redistributable with the reposi
 | `pages/*.html` | Synthetic recipe pages: `dev-*` (10) and `hold-*` (5, frozen). |
 | `pages/labels.json` | What each page states (CONTRACT-v1 §3), one entry per page. |
 | `FREEZE.json` | SHA-256 of every holdout file (and of the holdout page labels), case counts, the freeze rule. |
+| `FREEZE-v2.json` | (Created at the holdout-v2 freeze.) SHA-256 of `ingredients/holdout-v2.jsonl`, case counts by status and source kind, `frozenAt`, the rule. Verified on every benchmark run once it exists. |
 | `MANIFEST.json` | Every file here: kind, split, provenance, rights, author, reviewer. |
 | `LABEL-CHANGES.md` | The log every label change must be recorded in. |
 
@@ -100,6 +101,13 @@ for them was looked up. It is never shown to the implementation worker.
   product variety (`(red or green)`) is a choice of ingredients; `Juice of 2 limes` / `Zest of ½ orange` →
   the fruit counted, the part used in the note (juice/zest names accepted); a container written with a unit
   word (`3 (5.3 oz) cups … yogurt`) is a `container`; `2 x 400 g cans` is package-size form 1.
+- Scoring: `npx tsx bench/cli.ts --split holdout2` (also part of `--split all`). Besides the CONTRACT §9
+  figures, every report has an "Outcomes (EVALUATION-PLAN-v2)" section (`bench/outcomes.ts`): one class per
+  line (C1–C8), the severe errors S1–S8, per set / category / source kind, and on holdout-v2 the Gate G2
+  criteria A1–A5. Until `FREEZE-v2.json` exists the report says holdout-v2 is **not frozen**.
+- Freeze (after the label check and adjudication, EVALUATION-PLAN-v2 §8.1): print the record with
+  `npx tsx bench/cli.ts --print-freeze-v2 <YYYY-MM-DD>`, save it as `FREEZE-v2.json`, add that file to
+  `MANIFEST.json` (kind `freeze_record`), and commit it on its own. From then on every run verifies it.
 
 ## Changing labels
 
@@ -109,4 +117,6 @@ for them was looked up. It is never shown to the implementation worker.
 3. **Holdout:** a change also needs an independent reviewer and a new freeze: print the new record with
    `npx tsx bench/cli.ts --print-freeze <YYYY-MM-DD>`, replace `FREEZE.json`, and copy the old hashes into
    the log entry. A holdout case that has been tuned against cannot be "un-seen": move it to dev instead.
+   **Holdout-v2** the same, with `--print-freeze-v2` and `FREEZE-v2.json`; a change after a candidate has been
+   scored on holdout-v2 makes that candidate's holdout-v2 results exposed, not fresh (EVALUATION-PLAN-v2 §8.5).
 4. New files must be added to `MANIFEST.json`. Run `npm test` (label validation, invariants, freeze).

@@ -1,0 +1,284 @@
+/**
+ * Holdout-v2 (EVALUATION-PLAN-v2 §8–§9): the label file's composition and provenance, the `source` /
+ * `construction` fields, the FREEZE-v2 record and its verification, and the CLI's holdout2 split.
+ * Only label-built control engines are used here — never a parser on holdout-v2 inputs.
+ */
+import { readFileSync, rmSync, writeFileSync } from "node:fs";
+import path from "node:path";
+import { afterEach, describe, expect, it } from "vitest";
+import { TABLE_TEST_LITERALS } from "../../tests/parity/table-test-literals";
+import { parseArgs, run, type RunDeps } from "../cli";
+import { outcomeControlEngines } from "../controls";
+import { FREEZE_V2_FILE, FREEZE_V2_RULE, computeFreezeV2, freezeV2Status, verifyFreezeV2 } from "../freeze";
+import { checkInvariants } from "../invariants";
+import { LabelValidationError, loadIngredientCases, parseIngredientJsonl } from "../labels";
+import { renderMarkdown } from "../report";
+import { CATEGORIES, SPLITS, V1_SPLITS } from "../types";
+import { copyFixtures, FIXTURES } from "./helpers";
+
+const v2 = loadIngredientCases(FIXTURES, ["holdout2"]);
+const status = (s: string) => v2.filter((c) => c.expect.status === s).length;
+
+describe("holdout-v2 composition (§9)", () => {
+  it("meets the minimums: ≥ 260 lines, ≥ 200 ready, ≥ 40 needs_review, ≥ 15 unsupported", () => {
+    expect(v2.length).toBeGreaterThanOrEqual(260);
+    expect(status("ready")).toBeGreaterThanOrEqual(200);
+    expect(status("needs_review")).toBeGreaterThanOrEqual(40);
+    expect(status("unsupported")).toBeGreaterThanOrEqual(15);
+    expect(v2.map((c) => c.id)).toEqual(v2.map((_, i) => `ing-h2-${String(i + 1).padStart(4, "0")}`));
+  });
+
+  it("represents every CONTRACT category tag at least three times", () => {
+    for (const cat of CATEGORIES) expect(v2.filter((c) => c.categories.includes(cat)).length, cat).toBeGreaterThanOrEqual(3);
+  });
+
+  it("records source and construction on every case; source.kind equals provenance.kind", () => {
+    for (const c of v2) {
+      expect(c.source, c.id).toBeDefined();
+      expect(c.source!.kind, c.id).toBe(c.provenance.kind);
+      expect(c.construction?.trim(), c.id).toBeTruthy();
+    }
+  });
+
+  it("synthetic lines use no construction more than twice", () => {
+    const counts = new Map<string, number>();
+    for (const c of v2.filter((x) => x.source!.kind === "synthetic_pattern")) counts.set(c.construction!, (counts.get(c.construction!) ?? 0) + 1);
+    expect([...counts].filter(([, n]) => n > 2)).toEqual([]);
+    expect(counts.size).toBeGreaterThanOrEqual(100);
+  });
+
+  it("has ≥ 40 repository test inputs from the import overhaul (8e6bd6e), each with file and line", () => {
+    const repo = v2.filter((c) => c.source!.kind === "repo_test_input");
+    expect(repo.length).toBeGreaterThanOrEqual(40);
+    for (const c of repo) {
+      const s = c.source as { file: string; line: number; commit: string };
+      expect(s.commit, c.id).toBe("8e6bd6e");
+      expect(s.file, c.id).toMatch(/^tests\//);
+      expect(s.line, c.id).toBeGreaterThan(0);
+    }
+  });
+
+  it("no input repeats a dev, holdout-v1 or parity-corpus input (exact string)", () => {
+    const old = new Set(loadIngredientCases(FIXTURES, V1_SPLITS).map((c) => c.input));
+    const parity = new Set(TABLE_TEST_LITERALS);
+    expect(v2.filter((c) => old.has(c.input)).map((c) => c.id)).toEqual([]);
+    expect(v2.filter((c) => parity.has(c.input)).map((c) => c.id)).toEqual([]);
+    expect(new Set(v2.map((c) => c.input)).size).toBe(v2.length);
+  });
+
+  it("loading all splits checks uniqueness across dev, holdout-v1 and holdout-v2; the default stays dev + holdout", () => {
+    expect(loadIngredientCases(FIXTURES, SPLITS).length).toBe(loadIngredientCases(FIXTURES).length + v2.length);
+    expect(new Set(loadIngredientCases(FIXTURES).map((c) => c.split))).toEqual(new Set(["dev", "holdout"]));
+  });
+});
+
+describe("source and construction fields", () => {
+  const base = () => JSON.parse(readFileSync(path.join(FIXTURES, "ingredients/holdout-v2.jsonl"), "utf8").split("\n")[0]) as Record<string, unknown>;
+  const errs = (o: Record<string, unknown>, split: "dev" | "holdout2" = "holdout2") => {
+    try {
+      parseIngredientJsonl(JSON.stringify(o) + "\n", split, "t.jsonl");
+      return "";
+    } catch (e) {
+      expect(e).toBeInstanceOf(LabelValidationError);
+      return (e as LabelValidationError).errors.join("\n");
+    }
+  };
+
+  it("a real holdout-v2 case validates", () => {
+    expect(errs(base())).toBe("");
+  });
+
+  it.each([
+    ["source required for holdout2", (o: Record<string, unknown>) => delete o.source, /missing field 'source' \(required for holdout2\)/],
+    ["construction required for holdout2", (o: Record<string, unknown>) => delete o.construction, /missing field 'construction'/],
+    ["construction non-empty", (o: Record<string, unknown>) => (o.construction = " "), /construction must be a non-empty string/],
+    ["construction length", (o: Record<string, unknown>) => (o.construction = "x".repeat(121)), /at most 120 characters/],
+    ["source kind", (o: Record<string, unknown>) => (o.source = { kind: "scraped", author: "x" }), /source\.kind: must be one of/],
+    ["source kind equals provenance kind", (o: Record<string, unknown>) => (o.source = { kind: "repo_test_input", file: "tests/x.ts", line: 1, commit: "8e6bd6e" }), /differs from provenance\.kind/],
+    ["synthetic source needs an author", (o: Record<string, unknown>) => (o.source = { kind: "synthetic_pattern" }), /missing field 'author'/],
+    ["unknown source field", (o: Record<string, unknown>) => (o.source = { kind: "synthetic_pattern", author: "a", url: "x" }), /unknown field 'url'/],
+    ["id prefix", (o: Record<string, unknown>) => (o.id = "ing-hold-0001"), /id must match ing-h2-NNNN/],
+  ])("rejects: %s", (_n, mutate, pattern) => {
+    const o = base();
+    mutate(o);
+    expect(errs(o)).toMatch(pattern);
+  });
+
+  it("repo sources need a relative file, a positive line and a commit hash", () => {
+    const o = base();
+    o.provenance = { kind: "repo_test_input", source: "t" };
+    o.source = { kind: "repo_test_input", file: "/abs/x.ts", line: 0, commit: "HEAD" };
+    const e = errs(o);
+    expect(e).toMatch(/source\.file: must be a repository-relative path/);
+    expect(e).toMatch(/source\.line: must be a positive integer/);
+    expect(e).toMatch(/source\.commit: must be a commit hash/);
+  });
+
+  it("the fields are optional for dev and holdout, and validated when present", () => {
+    const o = base();
+    o.id = "ing-dev-0001";
+    o.split = "dev";
+    delete o.source;
+    delete o.construction;
+    expect(errs(o, "dev")).toBe("");
+    o.construction = "";
+    expect(errs(o, "dev")).toMatch(/construction must be a non-empty string/);
+  });
+});
+
+describe("FREEZE-v2", () => {
+  let cleanup: (() => void) | null = null;
+  afterEach(() => {
+    cleanup?.();
+    cleanup = null;
+  });
+  const copy = () => {
+    const c = copyFixtures();
+    cleanup = c.cleanup;
+    return c.dir;
+  };
+  const freeze = (dir: string, date = "2026-10-10") => {
+    const rec = computeFreezeV2(dir, date);
+    writeFileSync(path.join(dir, FREEZE_V2_FILE), JSON.stringify(rec, null, 2) + "\n");
+    const m = JSON.parse(readFileSync(path.join(dir, "MANIFEST.json"), "utf8"));
+    m.files.push({ path: FREEZE_V2_FILE, kind: "freeze_record", provenance: "test", rights: m.files[0].rights, created: date, author: "test", reviewer: "test" });
+    writeFileSync(path.join(dir, "MANIFEST.json"), JSON.stringify(m, null, 2) + "\n");
+    return rec;
+  };
+
+  it("records the file hash, the case counts by status and by source kind, the date and the rule", () => {
+    const rec = computeFreezeV2(FIXTURES, "2026-10-10");
+    expect(rec.ingredients.file).toBe("ingredients/holdout-v2.jsonl");
+    expect(rec.ingredients.cases).toBe(v2.length);
+    expect(rec.ingredients.byStatus).toEqual({ needs_review: status("needs_review"), ready: status("ready"), unsupported: status("unsupported") });
+    expect(Object.values(rec.ingredients.bySourceKind).reduce((a, b) => a + b, 0)).toBe(v2.length);
+    expect(rec.rule).toBe(FREEZE_V2_RULE);
+    expect(rec.rule).toMatch(/never tuned against engine output/);
+    expect(rec.ingredients.sha256).toMatch(/^[0-9a-f]{64}$/);
+  });
+
+  it("before the freeze there is nothing to verify; the status says not frozen", () => {
+    const dir = copy();
+    rmSync(path.join(dir, FREEZE_V2_FILE), { force: true });
+    expect(verifyFreezeV2(dir)).toEqual([]);
+    expect(freezeV2Status(dir)).toEqual({ frozen: false, frozenAt: null, sha256: null });
+  });
+
+  it("once frozen it is verified on every run: edits, added or removed cases, a missing file and a changed rule are caught", () => {
+    const dir = copy();
+    const rec = freeze(dir);
+    expect(verifyFreezeV2(dir)).toEqual([]);
+    expect(checkInvariants(dir).problems).toEqual([]);
+    expect(freezeV2Status(dir)).toEqual({ frozen: true, frozenAt: "2026-10-10", sha256: rec.ingredients.sha256 });
+    const file = path.join(dir, "ingredients/holdout-v2.jsonl");
+    const text = readFileSync(file, "utf8");
+    writeFileSync(file, text.replace('"name":"baby arugula"', '"name":"arugula"'));
+    expect(verifyFreezeV2(dir).join("\n")).toMatch(/holdout-v2\.jsonl: SHA-256 differs from FREEZE-v2\.json/);
+    expect(checkInvariants(dir).problems.join("\n")).toMatch(/holdout-v2\.jsonl: SHA-256 differs/);
+    writeFileSync(file, text.split("\n").slice(1).join("\n"));
+    expect(verifyFreezeV2(dir).join("\n")).toMatch(/\d+ cases, FREEZE-v2\.json records \d+/);
+    rmSync(file);
+    expect(verifyFreezeV2(dir)).toEqual(["ingredients/holdout-v2.jsonl: recorded in FREEZE-v2.json but missing"]);
+    writeFileSync(file, text);
+    writeFileSync(path.join(dir, FREEZE_V2_FILE), JSON.stringify({ ...rec, rule: "anything goes" }));
+    expect(verifyFreezeV2(dir).join("\n")).toMatch(/rule text differs/);
+    writeFileSync(path.join(dir, FREEZE_V2_FILE), "{not json");
+    expect(verifyFreezeV2(dir)[0]).toMatch(/FREEZE-v2\.json: cannot be read/);
+  });
+
+  it("the manifest must list holdout-v2 and FREEZE-v2.json; split holdout2 is a valid manifest split", () => {
+    const dir = copy();
+    writeFileSync(path.join(dir, FREEZE_V2_FILE), JSON.stringify(computeFreezeV2(dir, "2026-10-10")));
+    expect(checkInvariants(dir).problems.join("\n")).toMatch(/FREEZE-v2\.json: not listed in MANIFEST\.json/);
+    const m = JSON.parse(readFileSync(path.join(dir, "MANIFEST.json"), "utf8"));
+    const entry = m.files.find((f: { path: string }) => f.path === "ingredients/holdout-v2.jsonl");
+    expect(entry.split).toBe("holdout2");
+    m.files = m.files.filter((f: { path: string }) => f.path !== "ingredients/holdout-v2.jsonl");
+    writeFileSync(path.join(dir, "MANIFEST.json"), JSON.stringify(m));
+    expect(checkInvariants(dir).problems.join("\n")).toMatch(/ingredients\/holdout-v2\.jsonl: not listed in MANIFEST\.json/);
+  });
+});
+
+describe("command line: --split holdout2, --print-freeze-v2 and the outcomes section", () => {
+  const all = loadIngredientCases(FIXTURES, SPLITS);
+  const ctl = outcomeControlEngines(all);
+  const deps = (fixturesDir = FIXTURES) => {
+    const out: string[] = [];
+    const d: RunDeps = {
+      fixturesDir,
+      ingredientEngines: (ids) => (ids.length === 0 ? [ctl.oracle, ctl.ozSwap] : [ctl.oracle, ctl.ozSwap].filter((e) => ids.includes(e.id))),
+      pageExtractor: () => {
+        throw new Error("no pages in these tests");
+      },
+      stdout: (t) => out.push(t),
+      stderr: (t) => out.push(t),
+      writeFile: () => {},
+      now: () => 0,
+    };
+    return { d, out };
+  };
+
+  it("parses --split holdout2 and --print-freeze-v2", () => {
+    expect(parseArgs(["--split", "holdout2"]).split).toBe("holdout2");
+    expect(parseArgs(["--print-freeze-v2", "2026-10-10"]).printFreezeV2).toBe("2026-10-10");
+    expect(parseArgs([]).printFreezeV2).toBeUndefined();
+    expect(() => parseArgs(["--print-freeze-v2", "soon"])).toThrow(/YYYY-MM-DD/);
+    expect(() => parseArgs(["--split", "holdout3"])).toThrow(/dev, holdout, holdout2 or all/);
+  });
+
+  it("--print-freeze-v2 prints the record computed from the file", async () => {
+    const { d, out } = deps();
+    expect((await run(parseArgs(["--print-freeze-v2", "2026-10-10"]), d)).code).toBe(0);
+    expect(JSON.parse(out.join("\n"))).toEqual(computeFreezeV2(FIXTURES, "2026-10-10"));
+  });
+
+  it("--split holdout2 scores holdout-v2 only, with outcomes, acceptance and the freeze status; JSON is deterministic", async () => {
+    const a = await run(parseArgs(["--split", "holdout2", "--engine", "control:oracle"]), deps().d);
+    const b = await run(parseArgs(["--split", "holdout2", "--engine", "control:oracle"]), deps().d);
+    expect(a.code).toBe(0);
+    expect(a.json).toBe(b.json);
+    const r = a.report!;
+    expect(r.corpus.ingredientCases).toEqual({ holdout2: v2.length });
+    expect(r.corpus.files.map((f) => f.path)).toEqual(["fixtures/ingredients/holdout-v2.jsonl"]);
+    expect(r.corpus.pages).toEqual({});
+    expect(Object.keys(r.ingredientEngines[0].splits)).toEqual(["holdout2"]);
+    const o = r.outcomes!;
+    expect(o.plan).toBe("EVALUATION-PLAN-v2");
+    expect(o.z).toBe(1.959964);
+    expect(o.holdout2Freeze).toEqual(freezeV2Status(FIXTURES));
+    expect(Object.keys(o.engines[0].sets)).toEqual(["holdout2"]);
+    expect(o.engines[0].sets.holdout2!.acceptance!.a1ToA5Met).toBe(true);
+    const md = renderMarkdown(r);
+    expect(md).toContain("## Outcomes (EVALUATION-PLAN-v2)");
+    expect(md).toContain("#### holdout-v2 (fresh)");
+    expect(md).toContain("##### Acceptance — Gate G2 on holdout-v2 (fresh), engine `control:oracle`");
+    expect(md).toContain("| A1 | C1 on R ≥ 98 % |");
+    expect(md).toContain("**met with confidence**");
+    expect(md).toContain("##### By source — holdout-v2 (fresh)");
+    if (!o.holdout2Freeze!.frozen) expect(md).toContain("Holdout-v2 freeze: **NOT FROZEN**");
+  });
+
+  it("an oz/fl_oz saboteur fails A4 in the report; zero counts state their upper bound", async () => {
+    const r = (await run(parseArgs(["--split", "holdout2", "--engine", "control:oz-swap"]), deps().d)).report!;
+    const acc = r.outcomes!.engines[0].sets.holdout2!.acceptance!;
+    expect(acc.criteria.find((c) => c.id === "A4")!.status).toBe("not met");
+    const md = renderMarkdown(r);
+    expect(md).toMatch(/\| \*\*S3 cross-dimension\*\* \(of N\) \| [1-9]\d*\/\d+ \|/);
+    expect(md).toMatch(/\| \*\*S8 ready on a non-ingredient\*\* \(of N\) \| 0\/\d+ \| 0\.0% \| ≤ \d+\.\d% \|/);
+  });
+
+  it("--split all reports dev, holdout-v1 and holdout-v2 separately (never pooled) in the outcomes section", async () => {
+    const r = (await run(parseArgs(["--engine", "control:oracle"]), deps().d)).report!;
+    expect(Object.keys(r.corpus.ingredientCases)).toEqual(["dev", "holdout", "holdout2"]);
+    expect(Object.keys(r.outcomes!.engines[0].sets)).toEqual(["dev", "holdout", "holdout2"]);
+    expect(r.outcomes!.engines[0].sets.dev!.status).toBe("dev (development; diagnostics only)");
+    expect(r.outcomes!.engines[0].sets.holdout!.status).toBe("holdout-v1 (previously exposed)");
+  });
+
+  it("a dev-only run has an outcomes section without holdout-v2 freeze status or acceptance", async () => {
+    const r = (await run(parseArgs(["--split", "dev", "--engine", "control:oracle"]), deps().d)).report!;
+    expect(r.outcomes!.holdout2Freeze).toBeNull();
+    expect(r.outcomes!.engines[0].sets.dev!.acceptance).toBeNull();
+    expect(renderMarkdown(r)).not.toContain("Holdout-v2 freeze");
+  });
+});

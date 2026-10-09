@@ -12,13 +12,14 @@ import type { IngredientEngine } from "../src/contract";
 import { canonicalJsonPretty } from "./canonical";
 import { compareIngredient } from "./compare";
 import { pageExtractor, selectIngredientEngines, type PageExtractor } from "./engines";
-import { computeFreeze, sha256Hex } from "./freeze";
+import { computeFreeze, computeFreezeV2, freezeV2Status, sha256Hex } from "./freeze";
 import { checkInvariants } from "./invariants";
 import { INGREDIENT_FILES, PAGE_LABELS_FILE, loadIngredientCases, loadPageLabels } from "./labels";
+import { engineOutcomes, memoizeEngine, outcomesSection, type EngineOutcomes } from "./outcomes";
 import { buildReport, renderMarkdown, reportJson, type BenchReport, type CorpusFile, type PageRun, type TimingEntry } from "./report";
 import { scoreIngredients, scorePages, type IngredientScore } from "./score";
 import { fraction } from "./stats";
-import { SPLITS, type IngredientCase, type PageLabel, type Split } from "./types";
+import { PAGE_SPLITS, SPLITS, type IngredientCase, type PageLabel, type Split } from "./types";
 
 export const PACKAGE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const FIXTURES_DIR = path.join(PACKAGE_ROOT, "fixtures");
@@ -27,13 +28,16 @@ export const USAGE = `Recipe extraction benchmark (local fixtures only; no netwo
 
 Usage: tsx bench/cli.ts [options]
   --engine <id>          ingredient engine to score (repeatable; default: every registered engine)
-  --split dev|holdout|all
-                         cases to score (default all; per-split figures are always reported)
+  --split dev|holdout|holdout2|all
+                         cases to score (default all = dev, holdout-v1 and holdout-v2; per-split
+                         figures are always reported; outcomes are never pooled across sets)
   --pages                also score the synthetic recipe pages with extractRecipePage
   --case <id>            score one ingredient case or page and print its details
   --out-json <file>      write the deterministic JSON report
   --out-md <file>        write the Markdown report (with a non-deterministic runtime section)
   --print-freeze <date>  print the holdout freeze record computed from the files (writes nothing)
+  --print-freeze-v2 <date>
+                         print the holdout-v2 freeze record (FREEZE-v2.json) computed from the file
   --help                 this text`;
 
 export class UsageError extends Error {}
@@ -46,6 +50,8 @@ export interface CliOptions {
   outJson: string | null;
   outMd: string | null;
   printFreeze: string | null;
+  /** Set only by --print-freeze-v2 (absent otherwise). */
+  printFreezeV2?: string;
   help: boolean;
 }
 
@@ -64,8 +70,8 @@ export function parseArgs(argv: readonly string[]): CliOptions {
         break;
       case "--split": {
         const v = value();
-        if (v !== "dev" && v !== "holdout" && v !== "all") throw new UsageError(`--split must be dev, holdout or all (got ${v})`);
-        o.split = v;
+        if (v !== "all" && !(SPLITS as readonly string[]).includes(v)) throw new UsageError(`--split must be dev, holdout, holdout2 or all (got ${v})`);
+        o.split = v as Split | "all";
         break;
       }
       case "--pages":
@@ -84,6 +90,12 @@ export function parseArgs(argv: readonly string[]): CliOptions {
         const v = value();
         if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) throw new UsageError("--print-freeze needs a date YYYY-MM-DD");
         o.printFreeze = v;
+        break;
+      }
+      case "--print-freeze-v2": {
+        const v = value();
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) throw new UsageError("--print-freeze-v2 needs a date YYYY-MM-DD");
+        o.printFreezeV2 = v;
         break;
       }
       case "--help":
@@ -147,6 +159,25 @@ function summaryLine(s: IngredientScore): string[] {
   return out;
 }
 
+/** One stdout line per set: the EVALUATION-PLAN-v2 outcome classes, severe errors and (holdout2) Gate G2. */
+function outcomeLines(e: EngineOutcomes | undefined): string[] {
+  if (!e) return [];
+  const out: string[] = [];
+  for (const split of SPLITS) {
+    const s = e.sets[split];
+    if (!s) continue;
+    const o = s.aggregate.outcomes;
+    const severe = s.aggregate.severe;
+    const sev = (["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"] as const).map((k) => `${k}:${severe[k].num}`).join(" ");
+    const g2 = s.acceptance ? `  G2 ${s.acceptance.criteria.slice(0, 5).map((c) => `${c.id} ${c.status}`).join(", ")}` : "";
+    out.push(
+      `  outcomes ${split.padEnd(8)} C1 ${fraction(o.C1)}  C1+ ${fraction(o.C1plus)}  C2 ${o.C2.num} (H${o.C2High.num}/M${o.C2Medium.num})  C3+C4 ${fraction(o.C3plusC4)}  ` +
+        `C5 ${fraction(o.C5)}  C7 ${fraction(o.C7)}  CE ${o.CE.num}  ${sev}${g2}`,
+    );
+  }
+  return out;
+}
+
 /** The benchmark run behind `main`. */
 export async function run(opts: CliOptions, deps: RunDeps): Promise<RunResult> {
   if (opts.help) {
@@ -155,6 +186,10 @@ export async function run(opts: CliOptions, deps: RunDeps): Promise<RunResult> {
   }
   if (opts.printFreeze) {
     deps.stdout(JSON.stringify(computeFreeze(deps.fixturesDir, opts.printFreeze), null, 2));
+    return noReport(0);
+  }
+  if (opts.printFreezeV2) {
+    deps.stdout(JSON.stringify(computeFreezeV2(deps.fixturesDir, opts.printFreezeV2), null, 2));
     return noReport(0);
   }
 
@@ -190,7 +225,8 @@ export async function run(opts: CliOptions, deps: RunDeps): Promise<RunResult> {
   let engines: IngredientEngine[] = [];
   let extract: PageExtractor | null = null;
   try {
-    if (cases.length > 0) engines = deps.ingredientEngines(opts.engines);
+    // Memoized: the §9 scorer and the outcome scorer see the same single reading of each line.
+    if (cases.length > 0) engines = deps.ingredientEngines(opts.engines).map(memoizeEngine);
     if (scorePagesToo) extract = deps.pageExtractor();
   } catch (err) {
     deps.stderr((err as Error).message);
@@ -199,9 +235,11 @@ export async function run(opts: CliOptions, deps: RunDeps): Promise<RunResult> {
 
   const timing: TimingEntry[] = [];
   const scores: IngredientScore[] = [];
+  const outcomes: EngineOutcomes[] = [];
   for (const engine of engines) {
     const t0 = deps.now();
     scores.push(scoreIngredients(cases, engine));
+    outcomes.push(engineOutcomes(cases, engine));
     timing.push({ label: `ingredients · ${engine.id}`, items: cases.length, totalMs: deps.now() - t0 });
   }
 
@@ -230,7 +268,7 @@ export async function run(opts: CliOptions, deps: RunDeps): Promise<RunResult> {
     const allLabels = loadPageLabels(deps.fixturesDir);
     files.push(corpusFile(deps.fixturesDir, PAGE_LABELS_FILE, allLabels.length));
     for (const p of pages) files.push(corpusFile(deps.fixturesDir, `pages/${p.file}`, 1));
-    for (const s of splits) pageCounts[s] = pages.filter((p) => p.split === s).length;
+    for (const s of splits) if ((PAGE_SPLITS as readonly Split[]).includes(s)) pageCounts[s] = pages.filter((p) => p.split === s).length;
   }
 
   const report = buildReport({
@@ -241,6 +279,7 @@ export async function run(opts: CliOptions, deps: RunDeps): Promise<RunResult> {
     freezeProblems: [],
     ingredientScores: scores,
     pageRuns,
+    outcomes: outcomesSection(outcomes, splits.includes("holdout2") ? freezeV2Status(deps.fixturesDir) : null),
   });
   const json = reportJson(report);
   const markdown = renderMarkdown(report, timing);
@@ -265,7 +304,7 @@ export async function run(opts: CliOptions, deps: RunDeps): Promise<RunResult> {
   }
 
   deps.stdout(`Recipe extraction benchmark — ${cases.length} ingredient case(s), split ${opts.split}`);
-  for (const s of scores) deps.stdout([`${s.engine.id}:`, ...summaryLine(s)].join("\n"));
+  scores.forEach((s, i) => deps.stdout([`${s.engine.id}:`, ...summaryLine(s), ...outcomeLines(outcomes[i])].join("\n")));
   for (const r of pageRuns) {
     const o = r.score.overall;
     deps.stdout(

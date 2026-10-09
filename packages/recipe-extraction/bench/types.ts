@@ -5,8 +5,17 @@
 import { UNIT_REGISTRY, type AmountUnstated, type DiagnosticCode, type Dimension, type IngredientStatus, type UnitCode } from "../src/contract";
 import { cmp, parseRationalText, withinBounds, type Rational } from "../src/rational";
 
-export const SPLITS = ["dev", "holdout"] as const;
+/**
+ * Every ingredient split, in report order. `holdout2` is the fresh holdout-v2 (EVALUATION-PLAN-v2 §9);
+ * `dev` and `holdout` (holdout-v1, previously exposed) are the Phase 1 splits.
+ */
+export const SPLITS = ["dev", "holdout", "holdout2"] as const;
 export type Split = (typeof SPLITS)[number];
+/** The Phase 1 ingredient splits: the default of `loadIngredientCases` (unchanged behaviour for its callers). */
+export const V1_SPLITS = ["dev", "holdout"] as const satisfies readonly Split[];
+/** Page labels exist for these splits only. */
+export const PAGE_SPLITS = ["dev", "holdout"] as const satisfies readonly Split[];
+export type PageSplit = (typeof PAGE_SPLITS)[number];
 
 /** Corpus category tags (snake_case). A case may carry several. */
 export const CATEGORIES = [
@@ -111,6 +120,15 @@ export interface Provenance {
   source: string;
 }
 
+/**
+ * Structured origin of a case (required for holdout2 cases, optional elsewhere): who wrote a synthetic
+ * line, or the file, line and commit of a repository test input. `kind` equals `provenance.kind`.
+ */
+export type CaseSource =
+  | { kind: "synthetic_pattern"; author: string }
+  | { kind: "owner_reported_line"; author: string }
+  | { kind: "repo_test_input"; file: string; line: number; commit: string };
+
 export interface IngredientCase {
   id: string;
   split: Split;
@@ -121,6 +139,10 @@ export interface IngredientCase {
   severity: Severity;
   seasoningClass: SeasoningClass | null;
   provenance: Provenance;
+  /** Required for holdout2 (EVALUATION-PLAN-v2 §9), optional elsewhere. */
+  source?: CaseSource;
+  /** A short template signature of the line's construction ("N unit food, prep"); required for holdout2. */
+  construction?: string;
   rationale: string;
 }
 
@@ -173,7 +195,7 @@ export interface PageCandidateLabel {
 
 export interface PageLabel {
   id: string;
-  split: Split;
+  split: PageSplit;
   /** File name under fixtures/pages/. */
   file: string;
   requestedUrl: string;

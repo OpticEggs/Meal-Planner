@@ -8,12 +8,14 @@
  *   which are identifiers, not links to content. Anything else fails, including localhost and IPs.
  * - No fixture file is larger than 1 MiB; only text formats (.jsonl, .json, .md, .html); no symlinks.
  * - Every ingredient case and page label has provenance.
- * - FREEZE.json matches the holdout files.
+ * - FREEZE.json matches the holdout files; once FREEZE-v2.json exists it matches holdout-v2.jsonl.
+ * - holdout-v2.jsonl and FREEZE-v2.json, like every file, must be listed in MANIFEST.json (split `holdout2`
+ *   is a valid manifest split).
  */
 import { lstatSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { verifyFreeze } from "./freeze";
-import { PROVENANCE_KINDS } from "./types";
+import { verifyFreeze, verifyFreezeV2 } from "./freeze";
+import { PROVENANCE_KINDS, SPLITS } from "./types";
 
 export const MANIFEST_FILE = "MANIFEST.json";
 export const MAX_FIXTURE_BYTES = 1024 * 1024;
@@ -91,7 +93,7 @@ function manifestProblems(fixturesDir: string, files: string[]): string[] {
     if (listed.has(e.path)) problems.push(`${where}: listed twice`);
     listed.add(e.path);
     if (typeof e.kind !== "string" || !MANIFEST_KINDS.has(e.kind)) problems.push(`${where}: kind must be one of ${[...MANIFEST_KINDS].join(", ")}`);
-    if (e.split !== undefined && e.split !== "dev" && e.split !== "holdout") problems.push(`${where}: split must be dev or holdout`);
+    if (e.split !== undefined && !(SPLITS as readonly unknown[]).includes(e.split)) problems.push(`${where}: split must be one of ${SPLITS.join(", ")}`);
     for (const k of ["provenance", "created", "author", "reviewer"]) if (typeof e[k] !== "string" || (e[k] as string).trim() === "") problems.push(`${where}: ${k} missing`);
     if (e.rights !== FIXTURE_RIGHTS) problems.push(`${where}: rights must be "${FIXTURE_RIGHTS}"`);
   });
@@ -154,5 +156,6 @@ export function checkInvariants(fixturesDir: string): InvariantResult {
   problems.push(...manifestProblems(fixturesDir, files));
   problems.push(...provenanceProblems(fixturesDir, files));
   problems.push(...verifyFreeze(fixturesDir));
+  problems.push(...verifyFreezeV2(fixturesDir));
   return { ok: problems.length === 0, problems };
 }

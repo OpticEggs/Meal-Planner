@@ -165,6 +165,68 @@ export function controlEngines(cases: readonly IngredientCase[]): Record<string,
   };
 }
 
+const nullCore = (r: ParsedIngredientV1): ParsedIngredientV1 => ({
+  ...r,
+  name: null,
+  quantity: null,
+  unit: null,
+  packageSize: null,
+  equivalents: [],
+  form: null,
+  note: null,
+  alternatives: [],
+  optional: false,
+  approximate: false,
+  amountUnstated: null,
+});
+
+/**
+ * Mutation controls for the EVALUATION-PLAN-v2 outcome scorer (bench/outcomes.ts): the oracle and one
+ * saboteur per outcome class / severe code it must trip (bench/__tests__/outcome-controls.test.ts).
+ */
+export function outcomeControlEngines(cases: readonly IngredientCase[]): Record<string, IngredientEngine> {
+  const mk = (id: string, description: string, t?: Sabotage) => engineFromLabels(id, description, cases, t);
+  return {
+    oracle: mk("control:oracle", "Returns every label exactly."),
+    dropAmount: mk("control:drop-amount", "Ready-labelled lines with an amount come back ready with quantity null (S2).", (r, c) =>
+      c.expect.status === "ready" && c.expect.quantity !== null ? { ...r, quantity: null } : r),
+    ozSwap: mk("control:oz-swap", "oz and fl_oz exchanged in unit, package size and equivalents (S3).", (r) => ({
+      ...r,
+      unit: swapOz(r.unit),
+      packageSize: r.packageSize ? { ...r.packageSize, unit: swapOz(r.packageSize.unit)! } : null,
+      equivalents: r.equivalents.map((x) => ({ ...x, unit: swapOz(x.unit)! })),
+    })),
+    readyOnNeedsReview: mk("control:ready-on-needs-review", "needs_review labels come back ready, fields as labelled (S4).", (r, c) =>
+      c.expect.status === "needs_review" ? { ...r, status: "ready", reasons: [] } : r),
+    readyOnUnsupported: mk("control:ready-on-unsupported", "unsupported labels come back ready with the line as the name (S8).", (r, c) =>
+      c.expect.status === "unsupported" ? { ...r, status: "ready", name: r.normalized === "" ? "(empty)" : r.normalized, amountUnstated: "other", reasons: [] } : r),
+    inventAmount: mk("control:invent-amount", "Every ingredient line without a labelled amount gets 1 (each when no unit) (S1).", (r, c) =>
+      c.expect.quantity === null && c.expect.status !== "unsupported" ? { ...r, quantity: exact(rational(BigInt(1))), unit: r.unit ?? unit("each") } : r),
+    firstAlternative: mk("control:first-alternative", "A choice of ingredients comes back ready as its first option, no alternatives (S5).", (r, c) =>
+      c.expect.alternatives.length >= 2 ? { ...r, status: "ready", name: c.expect.alternatives[0], alternatives: [], reasons: [] } : r),
+    foldPackage: mk("control:fold-package", "count × package size folded into the size's unit; package size dropped (S6).", (r, c) => {
+      const p = c.expect.packageSize;
+      const q = c.expect.quantity === null ? null : parseLabelQuantity(c.expect.quantity);
+      if (!p || !q || q.kind !== "exact") return r;
+      const size = parseLabelExact(p.quantity)!;
+      return { ...r, quantity: exact(rational(q.value.n * size.n, q.value.d * size.d)), unit: unit(p.unit), packageSize: null };
+    }),
+    dropQualifier: mk("control:drop-qualifier", "Ready labels with a multi-word name lose the name's first word (S7 unless the shorter name is accepted).", (r, c) => {
+      const words = (c.expect.name ?? "").trim().split(/\s+/u);
+      return c.expect.status === "ready" && words.length >= 2 ? { ...r, name: words.slice(1).join(" ") } : r;
+    }),
+    collapseRange: mk("control:collapse-range", "A range comes back ready as its lower end (S2, S4).", (r) =>
+      r.quantity?.kind === "range" ? { ...r, status: "ready", quantity: r.quantity.min, reasons: [] } : r),
+    allNeedsReviewPartials: mk("control:all-needs-review-partials", "Every line needs_review (unclassified), every field as labelled: useful partials (C3a/C5a/C8).", (r) => ({
+      ...r,
+      status: "needs_review",
+      reasons: ["unclassified"],
+    })),
+    allAbstain: mk("control:all-abstain", "Every line needs_review with nothing read (C3c/C5c/C8).", (r) => ({ ...nullCore(r), status: "needs_review", reasons: ["unclassified"] })),
+    allUnsupported: mk("control:all-unsupported", "Every line unsupported, nothing read (C4/C6/C7).", (r) => ({ ...nullCore(r), status: "unsupported", reasons: ["not_an_ingredient"] })),
+  };
+}
+
 // --- Page oracle --------------------------------------------------------------------------------
 
 export type PageCandidateSabotage = (c: RecipeCandidateV1, label: PageLabel) => RecipeCandidateV1;

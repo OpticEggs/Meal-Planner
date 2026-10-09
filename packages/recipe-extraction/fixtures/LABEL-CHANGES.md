@@ -13,6 +13,13 @@ after its first commit is recorded here, newest last. The initial labels (2026-1
   and a re-freeze: new `FREEZE.json` (new hashes and `frozenAt`), with the previous hashes copied into the
   entry. A holdout case that someone has tuned against is moved to dev, not edited in place.
 - Contract changes that alter label meaning are versioned in the contract first; relabelling follows.
+- **Holdout-v2** (`ingredients/holdout-v2.jsonl`): the draft labels are commit `2f95a2d` ("holdout-v2 draft
+  labels (pre-check)"). Every change after that commit — including each adjudicated finding of the
+  independent label check (EVALUATION-PLAN-v2 §8.1) — is an entry here with the case id, old → new, the
+  rationale (never engine output; the checker sees none), the checker's finding and the adjudicator. The
+  freeze (`FREEZE-v2.json`) follows the adjudication; later changes need a re-freeze with the previous hash
+  copied into the entry, and after a candidate has been scored on holdout-v2 they make its holdout-v2 results
+  exposed, not fresh (§8.5).
 
 ## Log
 
