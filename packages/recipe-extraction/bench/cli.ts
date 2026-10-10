@@ -12,6 +12,8 @@ import type { IngredientEngine } from "../src/contract";
 import { canonicalJsonPretty } from "./canonical";
 import { compareIngredient } from "./compare";
 import { pageExtractor, selectIngredientEngines, type PageExtractor } from "./engines";
+import { loadExposureAudit } from "./exposure-audit";
+import { computePins } from "./pins";
 import { computeFreeze, computeFreezeV2, computeFreezeV3, freezeV2Status, freezeV3Status, sha256Hex } from "./freeze";
 import { checkInvariants } from "./invariants";
 import { INGREDIENT_FILES, PAGE_LABELS_FILE, loadIngredientCases, loadPageLabels } from "./labels";
@@ -35,6 +37,7 @@ import {
   type AcceptanceSplit,
   type EngineOutcomes,
   type HoldoutFreezeStatus,
+  type OutcomeOptions,
   type OutcomeSetReport,
   type ScorerIdentity,
 } from "./outcomes";
@@ -45,6 +48,8 @@ import { EVERY_SPLITS, PAGE_SPLITS, SPLITS, V1_SPLITS, type IngredientCase, type
 
 export const PACKAGE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const FIXTURES_DIR = path.join(PACKAGE_ROOT, "fixtures");
+/** The repository root (the package lives at packages/recipe-extraction). */
+export const REPO_ROOT = path.resolve(PACKAGE_ROOT, "../..");
 
 export const USAGE = `Recipe extraction benchmark (local fixtures only; no network).
 
@@ -323,8 +328,11 @@ export async function run(opts: CliOptions, deps: RunDeps): Promise<RunResult> {
   const splits: Split[] = splitsFor(opts.split);
   let cases: IngredientCase[];
   let pages: PageLabel[] = [];
+  const outcomeOptions: OutcomeOptions = {};
   try {
     cases = loadIngredientCases(deps.fixturesDir, splits);
+    // Data the holdout-v3 sensitivity (d) needs; absent file = no figure (checked by the invariants above).
+    if (splits.includes("holdout3")) outcomeOptions.exposureAudit = loadExposureAudit(deps.fixturesDir);
     if (opts.pages || opts.caseId) pages = loadPageLabels(deps.fixturesDir, splits);
   } catch (err) {
     deps.stderr((err as Error).message);
@@ -371,7 +379,7 @@ export async function run(opts: CliOptions, deps: RunDeps): Promise<RunResult> {
       const observations = observeAll(cases, raw);
       const engine = replayEngine(raw, observations);
       scores.push(scoreIngredients(cases, engine));
-      outcomes.push(engineOutcomes(cases, raw, observations));
+      outcomes.push(engineOutcomes(cases, raw, observations, outcomeOptions));
       engines.push(engine);
     }
     timing.push({ label: `ingredients · ${raw.id}`, items: cases.length, totalMs: deps.now() - t0 });
@@ -417,6 +425,8 @@ export async function run(opts: CliOptions, deps: RunDeps): Promise<RunResult> {
       scorer === "outcomes-v2"
         ? outcomesSectionV2(outcomes as EngineOutcomesV2[], splits.includes("holdout2") ? freezeV2Status(deps.fixturesDir) : null)
         : outcomesSection(outcomes as EngineOutcomes[], acceptanceFreezes(deps.fixturesDir, splits), scorerIdentityOf(PACKAGE_ROOT)),
+    // The archived v2 mode carries no pins, so it reproduces the historical report byte-for-byte.
+    pins: scorer === "outcomes-v2" ? undefined : computePins(PACKAGE_ROOT, REPO_ROOT),
   });
   const json = reportJson(report);
   const markdown = renderMarkdown(report, timing);

@@ -5,14 +5,17 @@
  */
 import { PACKAGE_NAME, PACKAGE_VERSION, SCHEMA_VERSION } from "../src/contract";
 import { canonicalJsonPretty } from "./canonical";
+import type { ReportPins } from "./pins";
 import { outcomesMarkdownV2 } from "./archive/report-outcomes-v2";
 import type { OutcomesSection as OutcomesSectionV2 } from "./archive/outcomes-v2";
 import {
   ACCEPTANCE_SPLITS,
   SEVERE_CODES,
   type AcceptanceSplit,
+  NO_CONTRACT12_ITEM,
   type CaseIdKey,
   type EngineOutcomes,
+  type ExclusionSensitivity,
   type OutcomeAggregate,
   type OutcomeSetReport,
   type OutcomesSection,
@@ -20,7 +23,7 @@ import {
 } from "./outcomes";
 import type { IngredientMetrics, IngredientScore, IngredientSplitReport, PageScore, PageSplitReport, StrictAccepted } from "./score";
 import { fraction, percent, type Rate } from "./stats";
-import { CATEGORIES, EXPECT_FIELDS, PAGE_CANDIDATE_FIELDS, PROVENANCE_KINDS, SPLITS, type Split } from "./types";
+import { CATEGORIES, CONTRACT12_ITEMS, EXPECT_FIELDS, FAMILIES, PAGE_CANDIDATE_FIELDS, PROVENANCE_KINDS, SPLITS, type Split } from "./types";
 
 export const REPORT_SCHEMA = "recipe-extraction-bench/v1";
 
@@ -48,6 +51,8 @@ export interface BenchReport {
    * outcomes v2 (bench/archive/, EVALUATION-PLAN-v2) for reproductions. Every other section is the same.
    */
   outcomes?: OutcomesSection | OutcomesSectionV2;
+  /** outcomes v3 runs only (absent in archived v2 reproductions): plan, scorer and source identities (bench/pins.ts). */
+  pins?: ReportPins;
 }
 
 export interface PageRun {
@@ -65,6 +70,8 @@ export interface BuildReportInput {
   pageRuns: PageRun[];
   /** Omitted → no `outcomes` key in the report. */
   outcomes?: OutcomesSection | OutcomesSectionV2;
+  /** Omitted → no `pins` key (archived v2 mode). */
+  pins?: ReportPins;
 }
 
 export function buildReport(input: BuildReportInput): BenchReport {
@@ -79,6 +86,7 @@ export function buildReport(input: BuildReportInput): BenchReport {
     ingredientEngines: input.ingredientScores,
     pages: input.pageRuns,
     outcomes: input.outcomes,
+    pins: input.pins,
   };
 }
 
@@ -250,8 +258,8 @@ function outcomeTable(s: OutcomeSetReport): string[] {
   ];
   for (const c of SEVERE_CODES) lines.push(orow(`**${SEVERE_NAMES[c]}** (of N)`, s.aggregate.severe[c], every(c)));
   lines.push(orow("Any severe error (of N)", s.aggregate.anySevere, ""));
-  lines.push(orow("Invented option — review-only pre-fill, informational (of N)", p.inventedOption, ids("inventedOption")));
-  lines.push(orow("Dropped option — review-only pre-fill, informational (of N)", p.droppedOption, ids("droppedOption")));
+  lines.push(orow("Invented option — an engine option matching no label (or accepted) option; review-only, informational (of N)", p.inventedOption, ids("inventedOption")));
+  lines.push(orow("Dropped option — a label option missing from an engine list that invents none; review-only, informational (of N)", p.droppedOption, ids("droppedOption")));
   return lines;
 }
 
@@ -284,15 +292,15 @@ function ceTable(s: OutcomeSetReport): string[] {
   return out;
 }
 
-const OUTCOME_COLUMNS = "| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 high/medium | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |";
+const OUTCOME_COLUMNS = "| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 (high/medium) | C3 + C4 (of R) | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |";
 
 function outcomeRow(name: string, a: OutcomeAggregate): string {
   const o = a.outcomes;
-  return `| ${cell(name)} | ${a.lines} | ${a.ready}/${a.needsReview}/${a.unsupported} | ${fraction(o.C1)} | ${fraction(o.C1plus)} | ${o.C2High.num}/${o.C2Medium.num} | ${o.C3a.num}/${o.C3b.num}/${o.C3c.num}/${o.C3x.num} | ${o.C4.num} | ${fraction(o.C5)} | ${o.C6.num} | ${fraction(o.C7)} | ${o.C8.num} | ${o.CE.num} | ${severeSummary(a)} |`;
+  return `| ${cell(name)} | ${a.lines} | ${a.ready}/${a.needsReview}/${a.unsupported} | ${fraction(o.C1)} | ${fraction(o.C1plus)} | ${o.C2.num} (${o.C2High.num}/${o.C2Medium.num}) | ${fraction(o.C3plusC4)} | ${o.C3a.num}/${o.C3b.num}/${o.C3c.num}/${o.C3x.num} | ${o.C4.num} | ${fraction(o.C5)} | ${o.C6.num} | ${fraction(o.C7)} | ${o.C8.num} | ${o.CE.num} | ${severeSummary(a)} |`;
 }
 
 function outcomeGroupTable(groups: [string, OutcomeAggregate | undefined][]): string[] {
-  const out = [OUTCOME_COLUMNS, "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"];
+  const out = [OUTCOME_COLUMNS, "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"];
   for (const [name, a] of groups) if (a) out.push(outcomeRow(name, a));
   return out;
 }
@@ -301,23 +309,43 @@ function outcomeGroupTable(groups: [string, OutcomeAggregate | undefined][]): st
 function sensitivityMarkdown(s: OutcomeSetReport): string[] {
   const z = s.sensitivity;
   const out = [`##### Sensitivity — ${s.status} (${z.note})`, ""];
-  if (z.excludingDebatable) {
-    const d = z.excludingDebatable;
+  const exclusion = (d: ExclusionSensitivity, extra = "") => {
     out.push(
-      `A1–A5 recomputed without the pre-registered debatable case(s) ${d.excludedIds.join(", ") || "(none present)"} (${d.lines} lines). The acceptance table above uses every case.`,
+      `A1–A5 ${d.definition}${extra}: ${d.excludedIds.length} excluded${d.excludedIds.length > 0 ? ` (${idList(d.excludedIds, true)})` : ""}, ${d.lines} lines kept. The acceptance table above uses every case.`,
       "",
       "| # | Evidence | Status (informational) |",
       "|---|---|---|",
     );
     for (const c of d.acceptance.criteria.slice(0, 5)) out.push(`| ${c.id} | ${cell(Object.entries(c.evidence).map(([k, r]) => `${k} ${brief(r)}`).join("; "))} | ${c.status} |`);
     out.push("");
-  }
+  };
+  if (z.excludingDebatable) exclusion(z.excludingDebatable);
+  if (z.excludingNewReadings) exclusion(z.excludingNewReadings);
+  if (z.excludingExposureAudit) exclusion(z.excludingExposureAudit, ` (audit of ${z.excludingExposureAudit.auditedAt}, ${z.excludingExposureAudit.matchedCaseIds} matched id(s); method: ${z.excludingExposureAudit.method})`);
+  else if (s.set === "holdout3") out.push("(d) exposure audit: no fixtures/EXPOSURE-AUDIT-v3.json — no figure.", "");
   const n = z.needsReviewExcludingBareNoAmount;
   out.push(
     `${n.definition}: ${n.excluded} excluded${n.excluded > 0 ? ` (${idList(n.excludedIds, true)})` : ""}, ${n.needsReview} needs_review lines kept — ` +
       `C5 ${brief(n.C5)} · C5a ${fraction(n.C5a)} · C5b ${fraction(n.C5b)} · C5c ${fraction(n.C5c)} · C5x ${fraction(n.C5x)} · C6 ${brief(n.C6)} · S4 ${brief(n.S4)}.`,
     "",
   );
+  return out;
+}
+
+/** Per-construction summary: the counts, then every construction with a line that is not C1, C5a or C7, or has an S code. */
+function constructionMarkdown(s: OutcomeSetReport): string[] {
+  const b = s.byConstruction!;
+  const out = [`##### By construction — ${s.status}`, "", `${b.distinct} distinct construction(s); at most ${b.maxUses} line(s) per construction (the JSON report lists every construction).`, ""];
+  const flagged = Object.keys(b.groups)
+    .sort()
+    .filter((k) => b.groups[k].severe.length > 0 || b.groups[k].classes.some((c) => !["C1", "C5a", "C7"].includes(c)));
+  if (flagged.length === 0) return [...out, "Every construction: C1, C5a or C7 on every line, no S code.", ""];
+  out.push("| Construction | Cases | Classes | Severe |", "|---|---|---|---|");
+  for (const k of flagged) {
+    const g = b.groups[k];
+    out.push(`| ${cell(k)} | ${g.caseIds.join(", ")} | ${g.classes.join(", ")} | ${g.severe.join(" ") || "—"} |`);
+  }
+  out.push("");
   return out;
 }
 
@@ -378,6 +406,10 @@ export function outcomesMarkdown(section: OutcomesSection): string[] {
       );
       out.push(`##### By category — ${s.status}`, "", ...outcomeGroupTable(CATEGORIES.map((c) => [c, s.byCategory[c]])), "");
       if (s.bySourceKind) out.push(`##### By source — ${s.status}`, "", ...outcomeGroupTable(PROVENANCE_KINDS.map((k) => [k, s.bySourceKind![k]])), "");
+      if (s.byFamily) out.push(`##### By repair family — ${s.status}`, "", ...outcomeGroupTable(FAMILIES.map((f) => [f, s.byFamily![f]])), "");
+      if (s.byContract12)
+        out.push(`##### By CONTRACT-v1 §12 item exercised — ${s.status}`, "", ...outcomeGroupTable(([...CONTRACT12_ITEMS, NO_CONTRACT12_ITEM] as const).map((k) => [k === NO_CONTRACT12_ITEM ? "no §12 item" : `§${k}`, s.byContract12![k]])), "");
+      if (s.byConstruction) out.push(...constructionMarkdown(s));
       if (s.acceptance) {
         out.push(
           `##### Acceptance — Gate G2 on ${s.status}, engine \`${cell(e.engine.id)}\``,
@@ -415,6 +447,14 @@ export function renderMarkdown(report: BenchReport, timing?: TimingEntry[], opti
   out.push(`# Recipe extraction benchmark`, "");
   out.push(`${report.package.name}@${report.package.version} · contract ${report.contract} · split ${report.selection.split}${report.selection.case ? ` · case ${report.selection.case}` : ""}`, "");
   out.push(`Holdout freeze: ${report.freeze.verified ? "verified" : `**NOT VERIFIED** (${report.freeze.problems.length} problem(s))`}`, "");
+  if (report.pins) {
+    const p = report.pins;
+    const h = (x: string | null) => (x === null ? "(absent)" : `\`${x}\``);
+    out.push(
+      `Pins: plan \`${p.planFile}\` SHA-256 ${h(p.planSha256)} · scorer \`bench/outcomes.ts\` SHA-256 ${h(p.scorerSha256)} · package \`src/\` digest ${h(p.packageSourceDigest)} · engine sources ${Object.keys(p.engineSourceDigests).sort().map((k) => `${k} ${h(p.engineSourceDigests[k])}`).join(", ")}.`,
+      "",
+    );
+  }
   out.push("| Corpus file | Entries | SHA-256 |", "|---|---|---|");
   for (const f of report.corpus.files) out.push(`| ${cell(f.path)} | ${f.entries} | \`${f.sha256.slice(0, 16)}…\` |`);
   out.push("");

@@ -167,7 +167,7 @@ describe("pre-freeze adjudication (2026-10-09)", () => {
   });
 
   it("the pre-registered debatable cases exist in holdout-v2 and say so in their rationale", () => {
-    expect(DEBATABLE_CASES).toEqual({ holdout2: ["ing-h2-0087"], holdout3: [] });
+    expect(DEBATABLE_CASES).toEqual({ holdout2: ["ing-h2-0087"] }); // holdout-v3's are data (debatable: true)
     for (const id of DEBATABLE_CASES.holdout2) expect(byId(id).rationale).toMatch(/DEBATABLE — PRE-REGISTERED/);
   });
 });

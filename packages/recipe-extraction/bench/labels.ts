@@ -14,6 +14,10 @@ import { DIAGNOSTICS, UNIT_REGISTRY } from "../src/contract";
 import {
   ACCEPT_FIELDS,
   AMOUNT_UNSTATED,
+  CONTRACT12_ITEMS,
+  CONTRACT12_RESTATED_ONLY,
+  FAMILIES,
+  HOLDOUT3_CASE_FIELDS,
   CATEGORIES,
   EXPECT_FIELDS,
   PAGE_ACCEPT_FIELDS,
@@ -55,8 +59,12 @@ function checkKeys(o: Obj, required: readonly string[], optional: readonly strin
 }
 
 const CASE_FIELDS = ["id", "split", "categories", "input", "expect", "severity", "seasoningClass", "provenance", "rationale"] as const;
-/** Optional everywhere, except that holdout2 and holdout3 require `source` and `construction`. */
-const OPTIONAL_CASE_FIELDS = ["accept", "source", "construction"] as const;
+/**
+ * Optional everywhere, except that holdout2 and holdout3 require `source` and `construction`; the holdout-v3
+ * metadata (`family`, `contract12`, `reliesOnNewReading`, `debatable`) is required for holdout3 and rejected
+ * in every other split.
+ */
+const OPTIONAL_CASE_FIELDS = ["accept", "source", "construction", ...HOLDOUT3_CASE_FIELDS] as const;
 const SPLITS_REQUIRING_SOURCE: readonly Split[] = ["holdout2", "holdout3"];
 const SPLIT_PREFIX: Record<Split, string> = { dev: "ing-dev-", holdout: "ing-hold-", holdout2: "ing-h2-", holdout3: "ing-h3-" };
 export const MAX_CONSTRUCTION_CHARS = 120;
@@ -163,6 +171,24 @@ function checkAccept(a: unknown, where: string, errors: string[]) {
     errors.push(`${where}.alternatives: must be a non-empty array of option lists (each ≥ 2 non-empty strings)`);
 }
 
+/** The holdout-v3 metadata: required and validated for holdout3, rejected elsewhere. */
+function checkHoldout3Metadata(raw: Obj, split: Split, id: string, errors: string[]) {
+  if (split !== "holdout3") {
+    for (const k of HOLDOUT3_CASE_FIELDS) if (has(raw, k)) errors.push(`${id}: field '${k}' is only for holdout3 cases`);
+    return;
+  }
+  for (const k of HOLDOUT3_CASE_FIELDS) if (!has(raw, k)) errors.push(`${id}: missing field '${k}' (required for holdout3)`);
+  if (has(raw, "family") && !(FAMILIES as readonly unknown[]).includes(raw.family)) errors.push(`${id}: family must be one of ${FAMILIES.join(", ")}`);
+  if (has(raw, "contract12")) {
+    const items = raw.contract12;
+    if (!Array.isArray(items) || !items.every((x) => (CONTRACT12_ITEMS as readonly unknown[]).includes(x))) errors.push(`${id}: contract12 must be an array of CONTRACT-v1 §12 items "12.1" … "12.14"`);
+    else if (new Set(items).size !== items.length) errors.push(`${id}: contract12 lists an item twice`);
+  }
+  for (const k of ["reliesOnNewReading", "debatable"] as const) if (has(raw, k) && typeof raw[k] !== "boolean") errors.push(`${id}: ${k} must be a boolean`);
+  if (raw.reliesOnNewReading === true && Array.isArray(raw.contract12) && !raw.contract12.some((x) => !CONTRACT12_RESTATED_ONLY.includes(x as never)))
+    errors.push(`${id}: reliesOnNewReading needs a §12 item with new content in contract12 (not only ${CONTRACT12_RESTATED_ONLY.join(", ")}, which only restate §7)`);
+}
+
 /** Validate one parsed ingredient case object. Problems are appended to `errors`, prefixed with the case id. */
 export function validateIngredientCase(raw: unknown, split: Split, position: string, errors: string[]): IngredientCase | null {
   const before = errors.length;
@@ -191,6 +217,7 @@ export function validateIngredientCase(raw: unknown, split: Split, position: str
   if (has(raw, "source")) checkSource(raw.source, isObj(raw.provenance) ? raw.provenance.kind : undefined, id, errors);
   if (has(raw, "construction") && !(isNonEmptyString(raw.construction) && raw.construction.length <= MAX_CONSTRUCTION_CHARS))
     errors.push(`${id}: construction must be a non-empty string of at most ${MAX_CONSTRUCTION_CHARS} characters`);
+  checkHoldout3Metadata(raw, split, id, errors);
   if (!isNonEmptyString(raw.rationale)) errors.push(`${id}: rationale must be a non-empty string`);
   if (errors.length !== before) return null;
   return { ...(raw as unknown as IngredientCase), accept: (raw.accept as IngredientCase["accept"]) ?? {} };

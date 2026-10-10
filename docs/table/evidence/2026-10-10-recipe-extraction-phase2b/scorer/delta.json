@@ -1133,14 +1133,14 @@
   "new": {
     "plan": "EVALUATION-PLAN-v3",
     "scorer": {
-      "dependencies": {"bench/canonical.ts":"a57b6257bae644c26727ab1ae6306fdd215fd45b73873e2d233c425f99f584fd","bench/compare.ts":"0250be6a35a7a8356cfa5a10c193a083eadf6143571445c50bd9d79ca63e1ffd","bench/stats.ts":"352d61fd4bdc33dc162a18504dbbc9f2481a5584caf8c1149ba3d0b6db3d5281","bench/types.ts":"4e68154dfe5e189da350ac181c5d4d265b86ad71990eddd5bf2ff2564308406f","src/validate.ts":"09ad87a3cfe4bd6278252776572f874082a016800774f8d98f1ba800c8286989"},
+      "dependencies": {"bench/canonical.ts":"a57b6257bae644c26727ab1ae6306fdd215fd45b73873e2d233c425f99f584fd","bench/compare.ts":"0250be6a35a7a8356cfa5a10c193a083eadf6143571445c50bd9d79ca63e1ffd","bench/stats.ts":"352d61fd4bdc33dc162a18504dbbc9f2481a5584caf8c1149ba3d0b6db3d5281","bench/types.ts":"ae63a7c000edd888300df646b0a41c7637f2e4b80d87b3ab280b0d8e6eeaf862","src/validate.ts":"09ad87a3cfe4bd6278252776572f874082a016800774f8d98f1ba800c8286989"},
       "id": "outcomes",
       "plan": "EVALUATION-PLAN-v3",
-      "sha256": "f339477410bd9dc161811823700ec1a25173cf16b32c480e3324d8bca2407313",
+      "sha256": "7821e8532eb123e9694291c6d0deac6bdac40f96715d06a4d2aa2161fc3a3892",
       "source": "bench/outcomes.ts",
       "version": "v3"
     },
-    "sha256": "26f5d3bd19564739c4820bbd275b009b0287c000d3d1365ad1aa5c8771cedd07"
+    "sha256": "6642e665270952f5e1d76052d38e93ddb3cad6fe051cfd3cb0d340daa5cbfe6b"
   },
   "newFigures": [
     {"engine":"legacy-table-import-2","figure":"validity.engineError","set":"dev","value":"0/182"},

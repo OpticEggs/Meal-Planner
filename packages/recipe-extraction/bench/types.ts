@@ -132,6 +132,28 @@ export type CaseSource =
   | { kind: "owner_reported_line"; author: string }
   | { kind: "repo_test_input"; file: string; line: number; commit: string };
 
+/**
+ * Holdout-v3 case metadata (EVALUATION-PLAN-v3 §7–§8), frozen with the labels: the Phase 2B repair family
+ * (A quantity syntax, B alternatives and notes, C count, package and qualifiers, D non-ingredients, or plain).
+ */
+export const FAMILIES = ["A", "B", "C", "D", "plain"] as const;
+export type Family = (typeof FAMILIES)[number];
+/** CONTRACT-v1 §12 item numbers a case may exercise, "12.1" … "12.14". */
+export const CONTRACT12_ITEMS = ["12.1", "12.2", "12.3", "12.4", "12.5", "12.6", "12.7", "12.8", "12.9", "12.10", "12.11", "12.12", "12.13", "12.14"] as const;
+export type Contract12Item = (typeof CONTRACT12_ITEMS)[number];
+/** §12 items marked only *(restated)*: a label that relies on a reading §7 alone does not give must exercise another item. */
+export const CONTRACT12_RESTATED_ONLY: readonly Contract12Item[] = ["12.5", "12.12"];
+/** The holdout3-only case fields (required there, rejected in every other split). */
+export const HOLDOUT3_CASE_FIELDS = ["family", "contract12", "reliesOnNewReading", "debatable"] as const;
+
+/** The post-freeze exposure audit of holdout-v3 (`fixtures/EXPOSURE-AUDIT-v3.json`, EVALUATION-PLAN-v3 §9.4). */
+export interface ExposureAudit {
+  /** holdout-v3 case ids whose input matched a string the implementation side could have seen. */
+  matchedCaseIds: string[];
+  method: string;
+  auditedAt: string;
+}
+
 export interface IngredientCase {
   id: string;
   split: Split;
@@ -146,6 +168,14 @@ export interface IngredientCase {
   source?: CaseSource;
   /** A short template signature of the line's construction ("N unit food, prep"); required for holdout2 and holdout3. */
   construction?: string;
+  /** holdout3 only (required there): Phase 2B repair family. */
+  family?: Family;
+  /** holdout3 only (required there): the CONTRACT-v1 §12 items the label exercises (possibly none). */
+  contract12?: Contract12Item[];
+  /** holdout3 only (required there): the label would differ under CONTRACT-v1 §7 alone. */
+  reliesOnNewReading?: boolean;
+  /** holdout3 only (required there): pre-registered as debatable at adjudication (sensitivity (a)). */
+  debatable?: boolean;
   rationale: string;
 }
 

@@ -3,14 +3,15 @@
   "scorer": "outcomes v3 (bench/outcomes.ts) for EVALUATION-PLAN-v3",
   "readme": [
     "Hand-calculated oracles for the outcome scorer. Each oracle is one ingredient label, what an engine returned for it, and the expected outcome, worked out by hand from the plan text — never from the scorer's output. bench/__tests__/oracles-v3.test.ts asserts that the production scorer agrees with every oracle.",
-    "Plan references: '§n' = EVALUATION-PLAN-v2 §n, which EVALUATION-PLAN-v3 carries unchanged (§3 denominators and core fields, §4 outcome classes, §5 severe errors and false-certainty severity, §6 acceptance) except SCORE-01 (sensitivity 3(b): a needs_review label with label quantity, unit and alternatives all null is 'bare no-amount', whatever its category tags) and SCORE-02 (CE: the engine threw, or its complete output fails the contract validator src/validate.ts / CONTRACT-v1 §2.1, or two parses of the line differ; a CE line gets no C1–C8 class, no sub-class, no severity and no S code). 'reading n' = EVALUATION-PLAN-v2 change log 1 as listed in the scorer's INTERPRETATION. '§9 C' = CONTRACT-v1 §9 field comparison (name: NFKC, lowercase, collapsed spaces, trimmed edge punctuation; note: token bag; quantity: exact rational; unit: canonical code; packageSize: code + exact amount; alternatives: set).",
+    "Plan references: '§n' = EVALUATION-PLAN-v2 §n, which EVALUATION-PLAN-v3 carries unchanged (§3 denominators and core fields, §4 outcome classes, §5 severe errors and false-certainty severity, §6 acceptance) except SCORE-01 (sensitivity 3(b): a needs_review label with label quantity, unit and alternatives all null is 'bare no-amount', whatever its category tags) and SCORE-02 (CE: the engine threw on either parse, or either complete output fails the contract validator src/validate.ts / CONTRACT-v1 §2.1, or two parses of the line differ in any field or in their thrown messages; a CE line gets no C1–C8 class, no sub-class, no severity and no S code). 'reading n' = EVALUATION-PLAN-v2 change log 1 as listed in the scorer's INTERPRETATION. 'CL2(a/b/c)' = EVALUATION-PLAN-v3 change log 2: (a) both parses are validated; (b) S6 fires whether or not the engine states a quantity; (c) two different thrown messages are nondeterministic. Invented option = an engine option matching no label (or accepted) option; dropped option = a label option missing from an engine list that invents none; both judged only on an engine list matching neither the label's options nor an accepted list (CL2). '§9 C' = CONTRACT-v1 §9 field comparison (name: NFKC, lowercase, collapsed spaces, trimmed edge punctuation; note: token bag; quantity: exact rational; unit: canonical code; packageSize: code + exact amount; alternatives: set).",
     "Core fields (§3) = status, name, quantity, unit, packageSize. Accepted matching (a value listed in the label's accept counts) is the basis; strict matching is reported too.",
     "label: { input, categories, expect, accept? }. expect uses the fixture label format of CONTRACT-v1 §8; omitted expect fields are: name null, quantity null, unit null, packageSize null, equivalents [], form null, note null, alternatives [], optional false, approximate false, amountUnstated null. accept omitted = {}.",
     "engine: exactly one of — output: one ParsedIngredientV1 returned by both parses of the line; throws: message of an Error thrown by both parses (recorded as 'Error: <message>'); parses: [first, second], each { output } or { throws }, for a line whose two parses differ.",
     "An output lists only the fields that differ from these defaults: raw = normalized = the label input; name, quantity, unit, packageSize, form, note, amountUnstated null; equivalents [], alternatives []; optional, approximate false; evidence { spans: {} }; reasons [] for status ready, ['unclassified'] for needs_review, ['not_an_ingredient'] for unsupported, [] for any other status.",
     "Shorthands in an output: quantity 'n', 'n/d' or 'w n/d' = an ExactQuantity of that exact (reduced) value; 'a..b' = a RangeQuantity; unit 'code' = { canonical: code, dimension: the CONTRACT-v1 unit registry's dimension (oz mass, fl_oz volume, cup volume, container count…), source: code }; packageSize and each equivalents entry '<quantity> <unit>' = { quantity, unit } built the same way (the unit is the last word). Any field given as a JSON object, array, number or a key outside the contract is used verbatim — that is how invalid outputs are written.",
     "expected: outcome (C1…C8 or CE); partial (C3/C5 sub-class a/b/c/x, else null; reading 1 order b, c, a, x); c1plus (C1 and every field matches); detailMismatch (C1 but not C1+); falseCertainty (C2 only: high/medium); severe (S codes in S1…S8 order); optional: strict { outcome, c1plus } when strict matching differs from accepted, ce { engineError, invalid, nondeterministic } for CE lines (all false when omitted), bareNoAmount (SCORE-01 label property; false when omitted), inventedOption / droppedOption (informational review pre-fills; false when omitted).",
-    "covers: the situations an oracle was written for (also checked for coverage by the test). calc: the one-line hand calculation."
+    "covers: the situations an oracle was written for (also checked for coverage by the test). calc: the one-line hand calculation.",
+    "Provenance: O01–O71 written by the scorer worker; P01–P14 proposed by the independent oracle checker R1 (evidence/2026-10-10-recipe-extraction-phase2b/scorer/oracle-check-r1/), each rechecked against the plan by the scorer worker (P02's category tag changed from 'unit_unknown', which is not a corpus category, to 'integer_decimal'; no expected value changed); O72–O74 pin plan v3 change log 2."
   ],
   "oracles": [
     {
@@ -207,7 +208,7 @@
       "label": { "input": "1 cup kale or Swiss chard", "categories": ["ingredient_alternatives"], "expect": { "status": "needs_review", "quantity": "1", "unit": "cup", "alternatives": ["kale", "Swiss chard"] } },
       "engine": { "output": { "status": "needs_review", "quantity": "1", "unit": "cup", "alternatives": ["kale chard", "Swiss chard"], "reasons": ["ingredient_alternatives"] } },
       "expected": { "outcome": "C5", "partial": "b", "c1plus": false, "detailMismatch": false, "falseCertainty": null, "severe": [], "inventedOption": true },
-      "calc": "A non-empty options list that does not match contradicts the label → C5b; 'kale chard' is not a label option → invented option (informational); no S code (alternatives present, not ready)."
+      "calc": "A non-empty options list that does not match contradicts the label → C5b; 'kale chard' is not a label option → invented option (informational). 'kale' is missing too, but a dropped option needs a list that invents none (CL2), so droppedOption is false; no S code (alternatives present, not ready)."
     },
     {
       "id": "O29", "covers": ["C5b", "dropped option"],
@@ -326,7 +327,7 @@
       "label": { "input": "fresh parsley", "categories": ["quantity_missing"], "expect": { "status": "needs_review", "name": "fresh parsley" } },
       "engine": { "output": { "status": "needs_review", "name": "fresh parsley", "quantity": "1", "unit": "each" } },
       "expected": { "outcome": "C5", "partial": "b", "c1plus": false, "detailMismatch": false, "falseCertainty": null, "severe": ["S1"], "bareNoAmount": true },
-      "calc": "Label quantity null, output 1 → S1 at any status; the invented quantity contradicts → C5b; label unit null → no S3."
+      "calc": "Label quantity null, output 1 → S1 at any status; the invented quantity contradicts → C5b; label unit null → no S3; SCORE-01: same label as O16 → bare no-amount."
     },
     {
       "id": "O46", "covers": ["C6", "unsupported input"],
@@ -445,7 +446,7 @@
       "label": { "input": "0 cups flour", "categories": ["integer_decimal"], "expect": { "status": "needs_review", "name": "flour", "unit": "cup" } },
       "engine": { "output": { "status": "needs_review", "name": "flour", "quantity": "1", "unit": "oz" } },
       "expected": { "outcome": "C5", "partial": "b", "c1plus": false, "detailMismatch": false, "falseCertainty": null, "severe": ["S1", "S3"] },
-      "calc": "CONTRACT-v1 §7.1: zero → no quantity, needs_review, unit cup kept. Output 1 → S1; cup (volume) vs oz (mass) → S3; contradictions → C5b; SCORE-01: the label has a unit → not bare no-amount."
+      "calc": "CONTRACT-v1 §7.1: zero → no quantity, needs_review; the stated unit cup stays in the label by the frozen convention (ing-dev-0021 '0 cups shredded coconut', ing-hold-0006, ing-h2-0017/0018), not by §7.1. Output 1 → S1; cup (volume) vs oz (mass) → S3; contradictions → C5b; SCORE-01: the label has a unit → not bare no-amount."
     },
     {
       "id": "O63", "covers": ["S2", "S3", "overlap", "C2 high"],
@@ -509,6 +510,125 @@
       "engine": { "output": { "status": "ready", "name": "black beans", "quantity": "2", "unit": "can", "packageSize": "15 oz" } },
       "expected": { "outcome": "C1", "partial": null, "c1plus": true, "detailMismatch": false, "falseCertainty": null, "severe": [] },
       "calc": "Count and package size kept separately and equal to the label → C1+."
+    },
+    {
+      "id": "P01", "covers": ["C5a", "SCORE-01 alternatives arm", "bare no-amount negative"],
+      "label": { "input": "Butter or oil, for greasing", "categories": ["ingredient_alternatives", "unstated_amount"], "expect": { "status": "needs_review", "alternatives": ["butter", "oil"], "amountUnstated": "other" } },
+      "engine": { "output": { "status": "needs_review", "alternatives": ["butter", "oil"], "amountUnstated": "other", "reasons": ["ingredient_alternatives"] } },
+      "expected": { "outcome": "C5", "partial": "a", "c1plus": false, "detailMismatch": false, "falseCertainty": null, "severe": [], "bareNoAmount": false },
+      "calc": "ing-h2-0223 shape (R1). SCORE-01: bare = label quantity, unit AND alternatives all null; the label offers options → not bare. Options matched on a choice label → a (reading 1)."
+    },
+    {
+      "id": "P02", "covers": ["C5a", "SCORE-01 quantity arm", "bare no-amount negative"],
+      "label": { "input": "1 m sausage", "categories": ["integer_decimal"], "expect": { "status": "needs_review", "name": "sausage", "quantity": "1" } },
+      "engine": { "output": { "status": "needs_review", "name": "sausage", "quantity": "1", "reasons": ["unit_unknown"] } },
+      "expected": { "outcome": "C5", "partial": "a", "c1plus": false, "detailMismatch": false, "falseCertainty": null, "severe": [], "bareNoAmount": false },
+      "calc": "CONTRACT §12.14 shape (R1): amount with an unknown unit → needs_review, quantity 1, unit null → not bare (SCORE-01 needs quantity null too). Name and quantity match, nothing contradicts → C5a."
+    },
+    {
+      "id": "P03", "covers": ["CE nondeterministic", "unscored fields"],
+      "label": { "input": "2 cups flour, sifted", "categories": ["integer_decimal", "prep_note"], "expect": { "status": "ready", "name": "flour", "quantity": "2", "unit": "cup", "note": "sifted" } },
+      "engine": { "parses": [{ "output": { "status": "ready", "name": "flour", "quantity": "2", "unit": "cup", "note": "sifted" } }, { "output": { "status": "ready", "name": "flour", "quantity": "2", "unit": "cup", "note": "sifted", "evidence": { "spans": { "name": [7, 12] } } } }] },
+      "expected": { "outcome": "CE", "partial": null, "c1plus": false, "detailMismatch": false, "falseCertainty": null, "severe": [], "strict": { "outcome": "CE", "c1plus": false }, "ce": { "engineError": false, "invalid": false, "nondeterministic": true } },
+      "calc": "R1. Plan v3 §4 'two parses of the line differ': the whole output, not only scored fields. Both outputs valid; only evidence.spans differs → nondeterministic → CE."
+    },
+    {
+      "id": "P04", "covers": ["CE invalid output", "CE nondeterministic", "second parse", "CL2(a)"],
+      "label": { "input": "2 cups flour, sifted", "categories": ["integer_decimal", "prep_note"], "expect": { "status": "ready", "name": "flour", "quantity": "2", "unit": "cup", "note": "sifted" } },
+      "engine": { "parses": [{ "output": { "status": "ready", "name": "flour", "quantity": "2", "unit": "cup", "note": "sifted" } }, { "output": { "status": "ready", "name": "flour", "quantity": "2", "unit": "cup", "note": "sifted", "confidence": 0.9 } }] },
+      "expected": { "outcome": "CE", "partial": null, "c1plus": false, "detailMismatch": false, "falseCertainty": null, "severe": [], "strict": { "outcome": "CE", "c1plus": false }, "ce": { "engineError": false, "invalid": true, "nondeterministic": true } },
+      "calc": "R1. CL2(a): both parses are validated; the second output has a key outside the contract → invalid, as well as nondeterministic → CE, although the first parse alone is C1+."
+    },
+    {
+      "id": "P05", "covers": ["C1", "C1+", "exact rational equality"],
+      "label": { "input": "1/2 cup sugar", "categories": ["fraction"], "expect": { "status": "ready", "name": "sugar", "quantity": "1/2", "unit": "cup" } },
+      "engine": { "output": { "status": "ready", "name": "sugar", "quantity": { "kind": "exact", "numerator": "1", "denominator": "2", "display": "½" }, "unit": "cup" } },
+      "expected": { "outcome": "C1", "partial": null, "c1plus": true, "detailMismatch": false, "falseCertainty": null, "severe": [] },
+      "calc": "R1. §9 C: quantity is exact rational equality; display is a human rendering that is never parsed back. 1/2 = 1/2 → C1+ although the display is '½'."
+    },
+    {
+      "id": "P06", "covers": ["C1", "C1+", "unit canonical code"],
+      "label": { "input": "2 cups flour", "categories": ["integer_decimal"], "expect": { "status": "ready", "name": "flour", "quantity": "2", "unit": "cup" } },
+      "engine": { "output": { "status": "ready", "name": "flour", "quantity": "2", "unit": { "canonical": "cup", "dimension": "volume", "source": "cups" } } },
+      "expected": { "outcome": "C1", "partial": null, "c1plus": true, "detailMismatch": false, "falseCertainty": null, "severe": [] },
+      "calc": "R1. §9 C: unit = canonical code; unit.source ('cups', as written) is not compared → C1+."
+    },
+    {
+      "id": "P07", "covers": ["C5b", "range upper end"],
+      "label": { "input": "2-3 cloves garlic", "categories": ["range", "count_unit"], "expect": { "status": "needs_review", "name": "garlic", "quantity": "2..3", "unit": "clove" } },
+      "engine": { "output": { "status": "needs_review", "name": "garlic", "quantity": "2..4", "unit": "clove", "reasons": ["quantity_range"] } },
+      "expected": { "outcome": "C5", "partial": "b", "c1plus": false, "detailMismatch": false, "falseCertainty": null, "severe": [] },
+      "calc": "R1. §9 C 'ranges: both ends': 2..4 ≠ 2..3 (same lower end) → contradiction → C5b; not ready → no S2."
+    },
+    {
+      "id": "P08", "covers": ["C3b", "S7 negative (needs_review output)"],
+      "label": { "input": "1 cup 2% milk", "categories": ["percentage"], "expect": { "status": "ready", "name": "2% milk", "quantity": "1", "unit": "cup" } },
+      "engine": { "output": { "status": "needs_review", "name": "milk", "quantity": "1", "unit": "cup" } },
+      "expected": { "outcome": "C3", "partial": "b", "c1plus": false, "detailMismatch": false, "falseCertainty": null, "severe": [] },
+      "calc": "R1. §5 S7 needs an engine ready on a ready label → the needs_review output gets no S7; name 'milk' contradicts '2% milk' → C3b."
+    },
+    {
+      "id": "P09", "covers": ["C2 high", "S2", "S4", "S7 negative (needs_review label)", "overlap"],
+      "label": { "input": "1-2 cups 2% milk", "categories": ["range", "percentage"], "expect": { "status": "needs_review", "name": "2% milk", "quantity": "1..2", "unit": "cup" } },
+      "engine": { "output": { "status": "ready", "name": "milk", "quantity": "1", "unit": "cup" } },
+      "expected": { "outcome": "C2", "partial": null, "c1plus": false, "detailMismatch": false, "falseCertainty": "high", "severe": ["S2", "S4"] },
+      "calc": "R1. Range collapsed on a ready output → S2; label needs_review → S4; S7 needs a ready label → none although {milk} ⊊ {2%, milk}; C2 high."
+    },
+    {
+      "id": "P10", "covers": ["C3c", "package only"],
+      "label": { "input": "2 (15 oz) cans black beans", "categories": ["package_size", "count_unit"], "expect": { "status": "ready", "name": "black beans", "quantity": "2", "unit": "can", "packageSize": { "quantity": "15", "unit": "oz" } } },
+      "engine": { "output": { "status": "needs_review", "packageSize": "15 oz" } },
+      "expected": { "outcome": "C3", "partial": "c", "c1plus": false, "detailMismatch": false, "falseCertainty": null, "severe": [] },
+      "calc": "R1. Reading 1: b first — the package 15 oz matches, nothing contradicts; c = name, quantity and unit null and no options → c (a package alone does not lift it out of c)."
+    },
+    {
+      "id": "P11", "covers": ["CE invalid output", "unit dimension field"],
+      "label": { "input": "8 oz cheddar", "categories": ["oz_vs_floz"], "expect": { "status": "ready", "name": "cheddar", "quantity": "8", "unit": "oz" } },
+      "engine": { "output": { "status": "ready", "name": "cheddar", "quantity": "8", "unit": { "canonical": "oz", "dimension": "volume", "source": "oz" } } },
+      "expected": { "outcome": "CE", "partial": null, "c1plus": false, "detailMismatch": false, "falseCertainty": null, "severe": [], "strict": { "outcome": "CE", "c1plus": false }, "ce": { "engineError": false, "invalid": true, "nondeterministic": false } },
+      "calc": "R1. The output's unit dimension contradicts the registry (oz is mass) → the validator fails it → CE; never coerced to C1, and no S3 from the output's own dimension field."
+    },
+    {
+      "id": "P12", "covers": ["CE invalid output", "unsupported input"],
+      "label": { "input": "For the sauce:", "categories": ["heading_non_ingredient"], "expect": { "status": "unsupported" } },
+      "engine": { "output": { "status": "unsupported", "name": "sauce", "reasons": ["section_heading"] } },
+      "expected": { "outcome": "CE", "partial": null, "c1plus": false, "detailMismatch": false, "falseCertainty": null, "severe": [], "strict": { "outcome": "CE", "c1plus": false }, "ce": { "engineError": false, "invalid": true, "nondeterministic": false } },
+      "calc": "R1. CONTRACT §2.1: an unsupported line has name null; a name makes the output invalid → CE, not C7 (C7 is not decided by the status string alone)."
+    },
+    {
+      "id": "P13", "covers": ["C3b", "S1"],
+      "label": { "input": "salt to taste", "categories": ["unstated_amount", "seasoning_ordinary"], "expect": { "status": "ready", "name": "salt", "amountUnstated": "to_taste" } },
+      "engine": { "output": { "status": "needs_review", "name": "salt", "quantity": "1", "unit": "pinch" } },
+      "expected": { "outcome": "C3", "partial": "b", "c1plus": false, "detailMismatch": false, "falseCertainty": null, "severe": ["S1"] },
+      "calc": "R1. S1 at any status (label quantity null, engine 1) on a ready label read as needs_review; the quantity contradicts → C3b; label unit null → no S3."
+    },
+    {
+      "id": "P14", "covers": ["C1", "detail mismatch", "amountUnstated"],
+      "label": { "input": "salt to taste", "categories": ["unstated_amount", "seasoning_ordinary"], "expect": { "status": "ready", "name": "salt", "amountUnstated": "to_taste" } },
+      "engine": { "output": { "status": "ready", "name": "salt", "amountUnstated": "as_needed" } },
+      "expected": { "outcome": "C1", "partial": null, "c1plus": false, "detailMismatch": true, "falseCertainty": null, "severe": [] },
+      "calc": "R1. amountUnstated is not a core field (§3) → C1; to_taste ≠ as_needed → not C1+, low detail mismatch."
+    },
+    {
+      "id": "O72", "covers": ["S3", "S6", "C5b", "CL2(b)", "package representation", "overlap"],
+      "label": { "input": "15 oz cans black beans", "categories": ["package_size", "quantity_missing"], "expect": { "status": "needs_review", "name": "black beans", "unit": "can", "packageSize": { "quantity": "15", "unit": "oz" } } },
+      "engine": { "output": { "status": "needs_review", "name": "black beans", "unit": "oz", "reasons": ["quantity_missing"] } },
+      "expected": { "outcome": "C5", "partial": "b", "c1plus": false, "detailMismatch": false, "falseCertainty": null, "severe": ["S3", "S6"] },
+      "calc": "CONTRACT §12.3: a plural container with no count → needs_review, unit can, package 15 oz. The output drops the package and states oz (mass) with no quantity: CL2(b) → S6 whether or not a quantity is stated; can (count) vs oz (mass) → S3; unit contradicts → C5b; label unit can → not bare."
+    },
+    {
+      "id": "O73", "covers": ["CE engine error", "CE nondeterministic", "CL2(c)"],
+      "label": { "input": "2 cups flour, sifted", "categories": ["integer_decimal", "prep_note"], "expect": { "status": "ready", "name": "flour", "quantity": "2", "unit": "cup", "note": "sifted" } },
+      "engine": { "parses": [{ "throws": "boom 1" }, { "throws": "boom 2" }] },
+      "expected": { "outcome": "CE", "partial": null, "c1plus": false, "detailMismatch": false, "falseCertainty": null, "severe": [], "strict": { "outcome": "CE", "c1plus": false }, "ce": { "engineError": true, "invalid": false, "nondeterministic": true } },
+      "calc": "CL2(c): both parses throw, with different messages → an engine error and nondeterministic (both dimensions recorded); CE either way. Compare O51 (the same message twice: not nondeterministic)."
+    },
+    {
+      "id": "O74", "covers": ["CE invalid output", "CE nondeterministic", "second parse", "CL2(a)"],
+      "label": { "input": "1 cup 2% milk", "categories": ["percentage"], "expect": { "status": "ready", "name": "2% milk", "quantity": "1", "unit": "cup" } },
+      "engine": { "parses": [{ "output": { "status": "ready", "name": "2% milk", "quantity": "1", "unit": "cup" } }, { "output": { "status": "ready", "name": "2% milk", "quantity": "1", "unit": "cup", "evidence": { "spans": { "name": [6, 40] } } } }] },
+      "expected": { "outcome": "CE", "partial": null, "c1plus": false, "detailMismatch": false, "falseCertainty": null, "severe": [], "strict": { "outcome": "CE", "c1plus": false }, "ce": { "engineError": false, "invalid": true, "nondeterministic": true } },
+      "calc": "CL2(a): the second output's name span [6, 40) runs past the 13-character normalized text → the validator fails the second parse → invalid; the parses differ → nondeterministic; CE although the first parse alone is C1+."
     }
   ]
 }

@@ -12,9 +12,12 @@
  *   FREEZE-v3.json exists it matches holdout-v3.jsonl (neither v3 file needs to exist).
  * - holdout-v2.jsonl, holdout-v3.jsonl and their freeze records, like every file, must be listed in
  *   MANIFEST.json (splits `holdout2` and `holdout3` are valid manifest splits).
+ * - The optional holdout-v3 exposure audit (EXPOSURE-AUDIT-v3.json, manifest kind `exposure_audit`) is
+ *   valid and names only holdout-v3 cases.
  */
 import { lstatSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
+import { verifyExposureAudit } from "./exposure-audit";
 import { verifyFreeze, verifyFreezeV2, verifyFreezeV3 } from "./freeze";
 import { PROVENANCE_KINDS, SPLITS } from "./types";
 
@@ -22,7 +25,7 @@ export const MANIFEST_FILE = "MANIFEST.json";
 export const MAX_FIXTURE_BYTES = 1024 * 1024;
 export const FIXTURE_RIGHTS = "synthetic — written for this repository; no third-party content; redistributable with the repository";
 const ALLOWED_EXTENSIONS = new Set([".jsonl", ".json", ".md", ".html"]);
-const MANIFEST_KINDS = new Set(["ingredient_labels", "page_labels", "page_html", "freeze_record", "documentation", "label_change_log"]);
+const MANIFEST_KINDS = new Set(["ingredient_labels", "page_labels", "page_html", "freeze_record", "documentation", "label_change_log", "exposure_audit"]);
 
 export interface InvariantResult {
   ok: boolean;
@@ -159,5 +162,6 @@ export function checkInvariants(fixturesDir: string): InvariantResult {
   problems.push(...verifyFreeze(fixturesDir));
   problems.push(...verifyFreezeV2(fixturesDir));
   problems.push(...verifyFreezeV3(fixturesDir));
+  problems.push(...verifyExposureAudit(fixturesDir));
   return { ok: problems.length === 0, problems };
 }
