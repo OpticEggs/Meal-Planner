@@ -57,7 +57,7 @@ export const INTERPRETATION: readonly string[] = [
   "A2 field accuracy counts a field as accurate when it matches the label, whatever the engine status (a CE line counts as not accurate). A1/A2 'met with confidence' uses the unrounded Wilson lower bound (z = 1.959964).",
   "A6 in the scorer: CE = 0 — no engine error, every output valid, every line read identically twice. The rest of A6 (legacy engines, frozen-baseline snapshot and parity tests unchanged and passing; reports byte-deterministic) and A7 are recorded outside the scorer.",
   "Sensitivity 3(b) (SCORE-01): the needs_review labels with no amount are those whose label quantity and unit are null and whose alternatives are empty, whatever their category tags.",
-  "Review-only pre-fills (informational, not plan classes): an invented option is an engine alternatives list that is not an accepted match and offers an option the label (or an accepted list) does not; a dropped option is such a list that leaves out an option of a choice-of-ingredients label. Both stay visible next to C3b/C5b.",
+  "Review-only pre-fills (informational, not plan classes): an invented option is an engine alternatives list that is not an accepted match and offers an option the label (or an accepted list) does not; a dropped option is such a list whose options are all the label's (or an accepted list's) but which leaves out an option of a choice-of-ingredients label. The two never overlap; both stay visible next to C3b/C5b.",
 ];
 
 // --- Reading an engine (dimensions 1–3) ----------------------------------------------------------------
@@ -282,7 +282,7 @@ export function classifyObservation(c: IngredientCase, o: Observation): LineOutc
       : { name: { strict: f.name.strict, accepted: f.name.accepted }, quantity: f.quantity.strict, unit: f.unit.strict },
     reviewPrefill: {
       inventedOption: offeredWrongList && engineAlts.some((x) => !labelOptions.has(x)),
-      droppedOption: offeredWrongList && labelAlts.length >= 2 && labelAlts.some((x) => !engineAlts.includes(x)),
+      droppedOption: offeredWrongList && labelAlts.length >= 2 && engineAlts.every((x) => labelOptions.has(x)) && labelAlts.some((x) => !engineAlts.includes(x)),
     },
     bareNoAmount: isBareNoAmountLabel(c),
   };
