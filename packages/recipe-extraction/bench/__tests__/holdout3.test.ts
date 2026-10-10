@@ -1,9 +1,10 @@
 /**
  * Holdout-v3 support (EVALUATION-PLAN-v3), opt-in: split `holdout3`, file
- * `fixtures/ingredients/holdout-v3.jsonl`, frozen by `fixtures/FREEZE-v3.json`. Neither file is part of
- * this commit; both states are tested on temporary copies of the fixtures — "absent" (everything behaves
- * as before) and "present" with a five-line synthetic plumbing file that is NOT holdout-v3 content.
- * Only label-built control engines are used.
+ * `fixtures/ingredients/holdout-v3.jsonl`, frozen by `fixtures/FREEZE-v3.json`, with the optional
+ * `fixtures/EXPOSURE-AUDIT-v3.json`. Both states are tested on temporary copies of the fixtures from which
+ * those three files (and their manifest entries) are removed — "absent" (everything behaves as before) and
+ * "present" with a five-line synthetic plumbing file that is NOT holdout-v3 content. The real holdout-v3
+ * files are never read here. Only label-built control engines are used.
  */
 import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
@@ -30,13 +31,14 @@ const MANIFEST = "MANIFEST.json";
 const readJson = (dir: string, rel: string) => JSON.parse(readFileSync(path.join(dir, rel), "utf8"));
 const writeJson = (dir: string, rel: string, v: unknown) => writeFileSync(path.join(dir, rel), JSON.stringify(v, null, 2) + "\n");
 
-/** A temporary fixtures copy with no holdout-v3 file and no FREEZE-v3.json (and no manifest entries for them). */
+/** A temporary fixtures copy with no holdout-v3 file, no FREEZE-v3.json and no EXPOSURE-AUDIT-v3.json (and no manifest entries for them). */
 function absentCopy(): string {
   const c = copyFixtures();
   cleanup = c.cleanup;
-  for (const f of [HOLDOUT3_INGREDIENTS, FREEZE_V3_FILE]) rmSync(path.join(c.dir, f), { force: true });
+  const h3Files = [HOLDOUT3_INGREDIENTS, FREEZE_V3_FILE, EXPOSURE_AUDIT_FILE];
+  for (const f of h3Files) rmSync(path.join(c.dir, f), { force: true });
   const m = readJson(c.dir, MANIFEST);
-  m.files = m.files.filter((f: { path: string }) => f.path !== HOLDOUT3_INGREDIENTS && f.path !== FREEZE_V3_FILE);
+  m.files = m.files.filter((f: { path: string }) => !h3Files.includes(f.path));
   writeJson(c.dir, MANIFEST, m);
   return c.dir;
 }
