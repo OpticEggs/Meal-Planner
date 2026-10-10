@@ -1,0 +1,6 @@
+commit 44251ec46987cc3c8ebf10f4b5574427d4d612b7
+status-porcelain-lines 0
+main 8ae5497d5a4dc6cbb49ad1d2ba8cbc52bc481d11
+v22.22.0
+2026-10-10T15:22:14Z
+index-hash before=fd8254454a791e2d after=fd8254454a791e2d status-porcelain-lines-after=0

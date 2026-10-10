@@ -36,7 +36,16 @@ The CLI reads local files only and refuses URLs.
 | `bench/` | Label loader/validator, comparison, Wilson intervals, scorer, outcome classes and acceptance (`outcomes.ts`, EVALUATION-PLAN-v2), report, invariants, mutation controls |
 | `tests/` | Package tests (`@/` resolves to Table's `src` only for parity tests) |
 
-## Status (2026-10-10)
+## Status (2026-10-10, Phase 2C)
+
+Phase 2C adds the declared unit-word table `src/unit-aliases.ts` (CONTRACT §13.1), with a generated manifest, and a third candidate, `semantic-v3` (`src/ingredient/semantic-v3/`, registered, not the default).
+- **Exposed sets.** It passes every exposed regression: the 2C corpus has 4 082 firm cases, read as 3 883 exact plus 199 safe abstentions.
+- **Fresh reviews.** R1's final development review found three systemic families of wrong ready readings.
+- **Result.** The predeclared gate was not met, so the phase **stopped before evaluation**. `semantic-v3` was never frozen or scored against G2. `DEFAULT_ENGINE_ID` stays `legacy-table-import-2`.
+
+See `docs/table/recipe-extraction/PHASE-2C-DISPOSITIONS.md`.
+
+## Status (2026-10-10, Phase 2B)
 
 Phase 2B repaired the scorer (outcomes v3) and built a second candidate, `semantic-v2` (`src/ingredient/semantic-v2/`). It
 fixes every reported failure: 1 114 exposed regression cases pass, with 1 076 exact readings and 38 safe abstentions. A

@@ -1,0 +1,15 @@
+pg_ctl: another server might be running; trying to start server anyway
+postgres running on 127.0.0.1:54329 (postgres (PostgreSQL) 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1))
+schema up to date
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/Meal-Planner
+
+
+ Test Files  58 passed (58)
+      Tests  1178 passed (1178)
+   Start at  15:26:51
+   Duration  273.78s (tests 94%, import 5%, transform 1%)
+

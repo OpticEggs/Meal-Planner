@@ -1,0 +1,121 @@
+{
+  "raw": "1 small tub crème fraîche",
+  "normalized": "1 small tub crème fraîche",
+  "status": "needs_review",
+  "name": "crème fraîche",
+  "quantity": null,
+  "unit": null,
+  "packageSize": null,
+  "equivalents": [],
+  "form": null,
+  "note": "1 small tub",
+  "alternatives": [],
+  "optional": false,
+  "approximate": false,
+  "amountUnstated": null,
+  "reasons": [
+    "unit_unknown"
+  ],
+  "evidence": {
+    "spans": {
+      "name": [
+        12,
+        25
+      ]
+    }
+  }
+}
+{
+  "raw": "1 tbsp tamarind paste, dissolved in 3 tbsp hot water",
+  "normalized": "1 tbsp tamarind paste, dissolved in 3 tbsp hot water",
+  "status": "needs_review",
+  "name": "tamarind paste",
+  "quantity": {
+    "kind": "exact",
+    "numerator": "1",
+    "denominator": "1",
+    "display": "1"
+  },
+  "unit": {
+    "canonical": "tbsp",
+    "dimension": "volume",
+    "source": "tbsp"
+  },
+  "packageSize": null,
+  "equivalents": [],
+  "form": null,
+  "note": "dissolved in 3 tbsp hot water",
+  "alternatives": [],
+  "optional": false,
+  "approximate": false,
+  "amountUnstated": null,
+  "reasons": [
+    "quantity_unassigned"
+  ],
+  "evidence": {
+    "spans": {
+      "quantity": [
+        0,
+        1
+      ],
+      "unit": [
+        2,
+        6
+      ],
+      "name": [
+        7,
+        21
+      ]
+    }
+  }
+}
+{
+  "raw": "1-1/2 cups milk",
+  "normalized": "1-1/2 cups milk",
+  "status": "needs_review",
+  "name": "1-1/2 cups milk",
+  "quantity": null,
+  "unit": null,
+  "packageSize": null,
+  "equivalents": [],
+  "form": null,
+  "note": null,
+  "alternatives": [],
+  "optional": false,
+  "approximate": false,
+  "amountUnstated": null,
+  "reasons": [
+    "quantity_range"
+  ],
+  "evidence": {
+    "spans": {}
+  }
+}
+[
+  {
+    "id": "legacy-table-import-2",
+    "default": true,
+    "description": "Table import 2's ingredient-line parser (frozen copy at cb7b56e) translated into contract v1. Faithful, including its defects; the only deviation is the input_truncated reason when a line is cut at 500 characters."
+  },
+  {
+    "id": "legacy-table-import-2+suggestion",
+    "default": false,
+    "description": "Benchmark only: legacy-table-import-2 with the legacy one-click suggestion filled in (rounded thirds stay 0.3333). Status stays needs_review with legacy_suggestion_applied."
+  },
+  {
+    "id": "semantic-v1",
+    "default": false,
+    "description": "Phase 2 semantic ingredient reader (contract v1)"
+  },
+  {
+    "id": "semantic-v2",
+    "default": false,
+    "description": "Phase 2B semantic ingredient reader, repaired families A–D (contract v1)"
+  },
+  {
+    "id": "semantic-v3",
+    "default": false,
+    "description": "Phase 2C semantic ingredient reader: declared unit words, structural measure slot (contract v1)"
+  }
+]
+recipe-lab reads local files only

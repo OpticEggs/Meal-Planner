@@ -138,3 +138,18 @@ Every row is a required regression or a required structural repair. "Firm" means
   - non-food safe abstentions, kept apart from correct rejections.
 - **Mutations.** Parser and scorer mutations are reported apart from harness self-test controls.
 - **Thresholds.** A1–A7 are unchanged.
+
+## 6. Outcome (2026-10-10)
+
+Steps 1–5 ran as planned:
+- the ledger, CONTRACT §13, the alias table and the 2C corpus came first; R2's review was adjudicated in `cc285b2`;
+- `semantic-v3` build 1 is `b0dea38`;
+- R1 round 1 found 0 clean-control HIGH and 2 systemic families (8 HIGH);
+- repair 1 is `3372dfb`;
+- R1 round 2 found 0/335 clean-control HIGH, but **3 systemic families** (16 HIGH).
+
+**Gate (§4.6 c) is not met. The phase stops before evaluation:**
+- no candidate freeze, no holdout-v4 and no acceptance run;
+- the optional round-2 repair is not made, because it could not change a gate already decided by the review, and no third review is authorised.
+
+Dispositions: `PHASE-2C-DISPOSITIONS.md`. Verified at `44251ec`.

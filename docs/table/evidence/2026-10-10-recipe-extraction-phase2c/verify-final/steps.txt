@@ -1,0 +1,12 @@
+pkg-typecheck exit=0 seconds=7
+pkg-test-verbose exit=0 seconds=80
+frozen-unchanged exit=0 seconds=0
+bench-every exit=0 seconds=4
+holdout3-equivalence exit=0 seconds=2
+cli exit=0 seconds=4
+boundary exit=0 seconds=1
+app-does-not-import-package exit=0 seconds=0
+mutations exit=0 seconds=169
+root-typecheck exit=0 seconds=8
+root-vitest exit=0 seconds=276
+next-build exit=0 seconds=28

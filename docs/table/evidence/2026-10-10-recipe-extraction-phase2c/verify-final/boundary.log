@@ -1,0 +1,21 @@
+== default engine
+DEFAULT_ENGINE_ID = legacy-table-import-2
+lines changing DEFAULT_ENGINE_ID since the Phase 2 lab head 8131fe0 (main has never contained the package): 0
+PASS default engine is legacy-table-import-2 and unchanged
+== app code equals main 8ae5497d5a4dc6cbb49ad1d2ba8cbc52bc481d11
+
+PASS app code, migrations, scripts, deploy templates, public assets, tests and root config identical to main
+== changed paths vs main 8ae5497d5a4dc6cbb49ad1d2ba8cbc52bc481d11
+      1 CLAUDE.md
+      1 docs/table/ACCEPTANCE.md
+      1 docs/table/BACKLOG.md
+      1 docs/table/DECISIONS.md
+      1 docs/table/IMPLEMENTATION-STATUS.md
+    357 docs/table/evidence
+     14 docs/table/recipe-extraction
+    248 packages/recipe-extraction
+paths outside packages/recipe-extraction/, docs/table/ and CLAUDE.md: none
+-- CLAUDE.md lines that differ from main:
+-`src/app/globals.css` theme tokens (light default, dark via `prefers-color-scheme`; every colour a token, contrast checked by `tests/unit/theme-contrast.test.ts`) · `src/ui` client screens (`a11y.ts
++`src/app/globals.css` theme tokens (light default, dark via `prefers-color-scheme`; every colour a token, contrast checked by `tests/unit/theme-contrast.test.ts`) · `src/ui` client screens (`a11y.ts
+PASS every changed path is under packages/recipe-extraction/ or docs/table/, plus CLAUDE.md's package sentence

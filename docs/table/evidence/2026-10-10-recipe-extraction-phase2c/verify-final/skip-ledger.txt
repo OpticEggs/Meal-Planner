@@ -1,0 +1,11 @@
+↓ tests/parity/benchmark-corpus.test.ts > benchmark corpus parity (frozen legacy vs live Table) > parseIngredientLine is deep-equal on every benchmark line
+↓ tests/unit/cli.test.ts > recipe-lab > bench says so when the benchmark module is not in this build
+↓ tests/parity/ingredient-line.test.ts > ingredient-line parity (frozen copy vs live Table module) > the corpus has the promised sizes
+↓ tests/parity/ingredient-line.test.ts > ingredient-line parity (frozen copy vs live Table module) > parseIngredientLine is deep-equal over the Table test literals
+↓ tests/parity/ingredient-line.test.ts > ingredient-line parity (frozen copy vs live Table module) > parseIngredientLine is deep-equal over the Table property sweep
+↓ tests/parity/ingredient-line.test.ts > ingredient-line parity (frozen copy vs live Table module) > parseIngredientLine is deep-equal over the hostile lines
+↓ tests/parity/ingredient-line.test.ts > ingredient-line parity (frozen copy vs live Table module) > parseIngredientLine is deep-equal over the seeded random lines
+↓ tests/parity/ingredient-line.test.ts > ingredient-line parity (frozen copy vs live Table module) > parseIngredientLine is deep-equal for non-string inputs
+↓ tests/parity/ingredient-line.test.ts > ingredient-line parity (frozen copy vs live Table module) > splitNote is deep-equal over the corpus
+↓ tests/parity/ingredient-line.test.ts > ingredient-line parity (frozen copy vs live Table module) > exports the same constants and unit table
+↓ tests/parity/ingredient-line.test.ts > ingredient-line parity (frozen copy vs live Table module) > the parity corpus exercises every legacy outcome
