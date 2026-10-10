@@ -42,11 +42,9 @@ export function shareOptions(options: readonly string[]): string[] {
   const n = options.length;
   const last = ws[n - 1];
   const firsts = ws.slice(0, -1);
-  // (b1)
-  let m = 0;
-  while (m < last.length - 1 && versionWord(last[m])) m++;
-  if (m >= 1 && firsts.every((o) => o.length >= 1 && o.every(versionWord))) {
-    const head = last.slice(m).join(" ");
+  // (b1) — the last option's own modifier is its first word (the rest, "bell pepper", "green beans", is the head)
+  if (last.length >= 2 && versionWord(last[0]) && firsts.every((o) => o.length >= 1 && o.every(versionWord))) {
+    const head = last.slice(1).join(" ");
     return options.map((o, k) => (k === n - 1 ? o : `${o} ${head}`));
   }
   // (b2)
@@ -71,9 +69,12 @@ export function shareOptions(options: readonly string[]): string[] {
   return [...options];
 }
 
-/** A word that names a version of a food (adjectival, or a remark word such as fresh/frozen/dried). */
-function versionWord(w: string): boolean {
-  return adjectival(w) || (REMARK_WORDS.has(lower(w)) && !["more", "less", "so", "taste", "needed", "desired", "optional", "kind", "brand", "type", "variety", "style"].includes(lower(w)));
+/** Gerunds that name a version of a food ("whipping cream", "baking potatoes", "cooking apples"). */
+const VERSION_GERUNDS = new Set(["whipping", "baking", "cooking", "eating", "frying", "roasting", "boiling", "stewing", "pickling", "dipping", "drinking", "sparkling"]);
+
+/** A word that names a version of a food (adjectival, a version gerund, or a remark word such as fresh/frozen/dried). */
+export function versionWord(w: string): boolean {
+  return adjectival(w) || VERSION_GERUNDS.has(lower(w)) || (REMARK_WORDS.has(lower(w)) && !["more", "less", "so", "taste", "needed", "desired", "optional", "kind", "brand", "type", "variety", "style"].includes(lower(w)));
 }
 
 /** A bare food option: one word, or a run of capitalised words ("Monterey Jack"), with no version word of its own. */
@@ -98,10 +99,13 @@ export function headOf(option: string): string {
 export function varietiesOf(options: readonly string[], base: string): boolean {
   const head = lower(wordsOf(base).pop() ?? "");
   const sources = SHARED_HEAD_MODIFIERS[head];
-  return options.length >= 2 && options.every((o) => {
+  const variety = (o: string) => {
     const ws = wordsOf(o);
     return ws.length > 0 && (ws.every(versionWord) || (sources !== undefined && sources.has(lower(o))));
-  });
+  };
+  // every option a variety — or one bare version word among them, which cannot be a food by itself ("bread, white or
+  // wheat" → white bread, wheat bread)
+  return options.length >= 2 && (options.every(variety) || options.some((o) => wordsOf(o).length === 1 && versionWord(o)));
 }
 
 /** (§12.7 f) The named food is a category whose kinds are listed ("nuts, pecans or walnuts"). */

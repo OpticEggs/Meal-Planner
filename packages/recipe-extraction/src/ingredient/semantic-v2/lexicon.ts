@@ -119,7 +119,7 @@ export const CONTAINER_UNITS: ReadonlySet<UnitCode> = new Set<UnitCode>([
  * bags…) and "bars" (a block) are not portions and are not read this way.
  */
 export const TRAILING_COUNT_UNITS: ReadonlySet<UnitCode> = new Set<UnitCode>([
-  "clove", "stalk", "sprig", "slice", "fillet", "link", "ear", "bulb", "pod", "rib", "wedge", "stick", "strip", "head", "sheet", "leaf", "cube", "piece", "loaf", "ball",
+  "clove", "stalk", "sprig", "slice", "fillet", "link", "ear", "bulb", "pod", "rib", "wedge", "stick", "strip", "head", "sheet", "leaf", "cube", "piece", "bunch",
 ]);
 
 /**
@@ -130,9 +130,9 @@ export const TRAILING_COUNT_UNITS: ReadonlySet<UnitCode> = new Set<UnitCode>([
 export const PRODUCT_IDENTITY_NOUNS: Readonly<Partial<Record<UnitCode, ReadonlySet<string>>>> = {
   stick: setOf("fish mozzarella cheese string pretzel bread crab"),
   leaf: setOf("bay curry banana grape vine lime makrut kaffir fig pandan shiso perilla tea"),
-  cube: setOf("ice"),
+  cube: setOf("ice stock bouillon"),
   rib: setOf("short spare back pork beef lamb veal country-style"),
-  ball: setOf("matzo matzah matzoh melon rice cheese popcorn energy protein"),
+  sheet: setOf("lasagna"),
   strip: setOf("york city"),
   clove: setOf("whole ground"),
 };
@@ -177,7 +177,7 @@ export const APPROX_SYMBOLS = new Set(["~", "≈"]);
 /** Size words (CONTRACT §7.6/§7.7: → note). Abbreviations lg/sm/med included. */
 export const SIZE_WORDS = setOf(
   "small medium large big jumbo extra-large x-large xl extra-small medium-size medium-sized large-size large-sized small-size small-sized " +
-    "medium-large small-medium lg lrg sm med",
+    "medium-large small-medium lg lrg sm med colossal giant little",
 );
 
 /**
@@ -284,7 +284,7 @@ const SHARED_HEADS: Readonly<Record<string, string>> = {
   rolls: "dinner sandwich hoagie sub kaiser brioche",
   milk: "almond oat soy rice coconut cashew hemp dairy",
   oil: "olive vegetable canola coconut sesame peanut avocado sunflower grapeseed corn safflower walnut",
-  vinegar: "rice wine cider apple_cider white_wine red_wine rice_wine balsamic sherry malt champagne",
+  vinegar: "rice wine cider apple_cider white_wine red_wine rice_wine balsamic sherry malt champagne white distilled",
   flour: "all-purpose bread cake pastry almond coconut rice oat chickpea tapioca spelt rye buckwheat corn self-rising",
   extract: "vanilla almond peppermint lemon orange maple coconut",
   seeds: "sesame poppy pumpkin sunflower chia flax caraway fennel",
@@ -293,7 +293,8 @@ const SHARED_HEADS: Readonly<Record<string, string>> = {
   paste: "tomato curry chili garlic ginger",
   sauce: "soy fish tomato barbecue bbq pizza pasta",
   rice: "jasmine basmati arborio sushi",
-  beans: "kidney pinto navy cannellini lima garbanzo great_northern refried",
+  beans: "kidney pinto navy cannellini lima garbanzo great_northern refried black white red green",
+  bread: "white wheat whole_wheat rye sourdough multigrain french italian pita",
   yogurt: "greek vanilla coconut soy",
   syrup: "maple corn simple agave golden",
   greens: "collard mustard turnip beet salad",
@@ -347,7 +348,11 @@ export const INVARIANT_PLURALS = setOf(
  * pearl tapioca", "jumbo lump crab"): a size word right before one of them stays in the name (CONTRACT §12.10 keeps
  * material qualifiers); any other size word after a weight or volume is a note ("1 lb large shrimp").
  */
-export const SIZE_GRADED_NOUNS = setOf("curd curds flake flakes pearl pearls lump lumps grain grains crystal crystals");
+export const SIZE_GRADED_NOUNS = setOf(
+  "curd curds flake flakes pearl pearls lump lumps grain grains crystal crystals shell shells couscous gem " +
+    // a heat or grade, not a size (§12.10 "medium salsa")
+    "salsa curry chili chile enchilada",
+);
 
 /**
  * Foods measured by the length cut from them ("1 inch ginger", "2 inch turmeric"): with no hyphen and no counted unit
@@ -498,11 +503,11 @@ export const PAGE_WORDS = setOf(
   "print jump skip to the a an this our my your recipe recipes see below above card watch video videos nutrition facts fact information info " +
     "instructions instruction directions method notes note advertisement advertisements ad ads sponsored share pin save rate comment comments review " +
     "reviews tips tip faq faqs here click tap scroll continue reading read more back top full post page shopping list add get follow us and for of " +
-    "on in it with how make",
+    "on in it with how make amount per serving servings information",
 );
 export const PAGE_KEYWORDS = setOf(
   "print jump skip card watch video videos nutrition facts instructions directions method notes advertisement advertisements sponsored share pin save " +
-    "rate comments reviews tips faq faqs click tap scroll continue",
+    "rate comments reviews tips faq faqs click tap scroll continue amount",
 );
 /** Credit lines ("Recipe adapted from …", "Adapted from …", "Recipe by …", "Photo by …"), as opening word sequences. */
 export const CREDIT_OPENERS: readonly (readonly string[])[] = [
@@ -522,6 +527,7 @@ export const EQUIPMENT_HEADS = setOf(
 export const EQUIPMENT_MODIFIERS = setOf(
   "baking cookie sheet roasting muffin loaf cake springform bundt tart pie piping pastry parchment wax waxed aluminum aluminium plastic cling " +
     "zip-top ziplock ziploc resealable freezer cutting mixing stand food hand wire cooling casserole square round rimmed nonstick non-stick cast-iron " +
+    "cupcake silicone wooden bamboo metal " +
     "oven-safe heatproof heat-proof glass metal kitchen paper",
 );
 /** Words of a label that introduces what to have ready ("You will need:", "You'll need:", "What you'll need:"). */
@@ -594,5 +600,5 @@ export const DISH_WORDS = setOf(
   "cake cakes pie pies pizza pizzas tart tarts salad salads bread cookie cookies cupcake cupcakes cheesecake brownie brownies muffin muffins pancake " +
     "pancakes waffle waffles crepe crepes quiche galette cobbler crisp crumble bar bars loaf roll rolls bun buns biscuit biscuits scone scones dumpling " +
     "dumplings taco tacos burger burgers sandwich sandwiches soup stew pasta noodle noodles bowl bowls wrap wraps enchilada enchiladas casserole lasagna " +
-    "dessert main side trifle pudding sundae shortcake focaccia flatbread pretzel pretzels donut donuts doughnut doughnuts sponge chocolate vanilla",
+    "dessert main side trifle pudding sundae shortcake focaccia flatbread pretzel pretzels donut donuts doughnut doughnuts",
 );

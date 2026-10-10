@@ -54,12 +54,17 @@ describe("a slash between foods offers a choice", () => {
 });
 
 describe("size words", () => {
-  // semantic-v2 (CONTRACT §12.10): size words are a note after a weight or volume too ("8 oz large shells" → shells, note
-  // large; semantic-v1 kept "large shells"); a size word grading a material inside the product name stays ("small curd").
-  it("describe counted items and, after a weight or volume, the food (→ note); a size that grades a material stays", () => {
+  it("describe counted items (→ note), but stay in the name after a weight or volume, where they often name a product", () => {
     expect(read("2 large eggs")).toMatchObject({ name: "eggs", note: "large" });
     expect(read("1 cup small curd cottage cheese")).toMatchObject({ status: "ready", name: "small curd cottage cheese", note: null });
-    expect(read("8 oz large shells")).toMatchObject({ status: "ready", name: "shells", note: "large" });
+    expect(read("8 oz large shells")).toMatchObject({ status: "ready", name: "large shells" });
+  });
+
+  // semantic-v2 (CONTRACT §12.10): a size word that sizes the weighed item is a note after a weight too ("1 lb large
+  // shrimp" → shrimp, note large); product terms keep it ("small curd", "large shells", "medium salsa")
+  it("after a weight, a size word that sizes the item is a note", () => {
+    expect(read("1 lb large shrimp")).toMatchObject({ status: "ready", name: "shrimp", note: "large" });
+    expect(read("1 cup medium salsa")).toMatchObject({ status: "ready", name: "medium salsa", note: null });
   });
 });
 

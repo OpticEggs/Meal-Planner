@@ -205,12 +205,12 @@ export function sameAmount(a: ExactQuantity, ua: UnitV1, b: ExactQuantity, ub: U
 /**
  * The second restatement test of §12.6: the restated number is a whole number equal to the exact conversion of the
  * first-stated amount rounded to a whole number of the restated unit ("1/4 tsp (1 ml)", "3/4 tsp (4 ml)", "1 lb (454 g)").
- * Halves round up. `firstBase` is the first amount in the dimension's base unit. Only a restatement in a unit no larger
+ * Halves round up. `firstBase` is the first amount in the dimension's base unit. Only a restatement in a smaller unit
  * than the first one is a rounding convention (a whole number of a larger unit hides more than it states: "2 lb (1 kg)"
  * is outside both tests, §12.6 policy).
  */
 export function roundedConversion(firstBase: Rational, ua: UnitV1, restated: ExactQuantity, ub: UnitV1): boolean {
-  if (restated.denominator !== "1" || cmp(base(ub), base(ua)) > 0) return false;
+  if (restated.denominator !== "1" || ua.canonical === ub.canonical || cmp(base(ub), base(ua)) >= 0) return false;
   const converted = div(firstBase, base(ub)); // exact, in the restated unit
   const twice = BigInt(2) * converted.n + converted.d; // round half up: floor((2n + d) / 2d)
   const rounded = twice / (BigInt(2) * converted.d);
@@ -253,6 +253,12 @@ export function placeSecondary(text: string, slots: AmountSlots, sec: Secondary)
   const packageable = main === null || main.canonical === "each" || PACKAGE_UNITS.has(main.canonical);
   if (isMassOrVolume(sa.unit) && counted && !packageable && !sa.total && (sec.position === "between" || sa.each)) {
     const one = slots.quantity?.kind === "exact" && slots.quantity.numerator === slots.quantity.denominator;
+    // (a part of one item with a weight per item, "1/2 (8 oz) fillet", is not clear)
+    if (slots.quantity?.kind === "exact" && slots.quantity.denominator !== "1") {
+      fx.notes.push({ s: sa.s, text: text.slice(sa.s, sa.e) });
+      fx.unassigned++;
+      return;
+    }
     if (one && !slots.equivalents.some((x) => x.unit.canonical === sa.unit.canonical)) {
       slots.equivalents.push({ quantity: q, unit: sa.unit });
       if (!fx.reasons.includes("equivalent_quantity_stated")) fx.reasons.push("equivalent_quantity_stated");
@@ -346,6 +352,8 @@ interface Part {
 interface Between {
   sec: Secondary;
   marked: boolean;
+  /** Written after a multiplier "x" ("2 x 400 g"): the count is of packages, so it is never a per-piece weight. */
+  viaX?: boolean;
 }
 
 /** The note-able text of a bracket group with no number in it, when only remark words are inside ("(heaping)", "(US)"). */
@@ -447,7 +455,12 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
         k++;
         continue;
       }
+      // (only after a whole count of two or more: "1/2 half-cup milk" is not clear)
       fx.notes.push({ s: t.s, text: t.text });
+      if (!(n1.value.d === BigInt(1) && n1.value.n >= BigInt(2))) {
+        fx.unassigned++;
+        irregular = true;
+      }
       k++;
       continue;
     }
@@ -545,7 +558,7 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
       if (dims > k && between.length === 0) return sizeOnly(text, toks, fx, n1.s, dims, approximate);
       const sa = readStatedAmount(text, toks, k + 1);
       if (sa && isMassOrVolume(sa.unit)) {
-        between.push({ sec: { sa, position: "between" }, marked: true });
+        between.push({ sec: { sa, position: "between" }, marked: true, viaX: true });
         k = sa.next;
         continue;
       }
@@ -616,7 +629,7 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   }
   // CONTAINER-CUP RULE (CONTRACT §12.5): "3 (5.3 oz) cups vanilla Greek yogurt" — a package size between the count and
   // "cup(s)" makes the cup a container (a measuring cup never carries a package size)
-  if (unitRead && containerCup(unitRead, between)) unitRead = { ...unitRead, unit: unitV1("container", unitRead.unit.source) };
+  if (unitRead && n1.ok && n1.value.d === BigInt(1) && max === null && containerCup(unitRead, between)) unitRead = { ...unitRead, unit: unitV1("container", unitRead.unit.source) };
   if (unitRead) k = unitRead.next;
   // "1 pint (UK) milk": the system written right after the unit
   const afterUnit = toks[k];
@@ -794,13 +807,13 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   // Sizes written between the count and the unit: a container's contents only beside a counted unit
   // (CONTRACT §7.4: "2 (15 oz) cans"). With no unit yet the engine decides once the whole line is read
   // ("2 (6-ounce) salmon fillets"); beside a weight or volume ("1 1 cup milk") it is a second amount.
-  let packageProvisional: { marked: boolean; approx?: boolean } | null = null;
+  let packageProvisional: { marked: boolean; approx?: boolean; viaX?: boolean } | null = null;
   for (const { sec, marked } of between) {
     if (sec.sa.unit.dimension === "imprecise" || (unitRead && unitRead.unit.dimension === "count" && unitRead.unit.canonical !== "each")) {
       placeSecondary(text, slots, sec);
     } else if (!unitRead && isMassOrVolume(sec.sa.unit)) {
       placeSecondary(text, slots, sec);
-      if (slots.packageSize !== null) packageProvisional = { marked, approx: sec.sa.approx };
+      if (slots.packageSize !== null) packageProvisional = { marked, approx: sec.sa.approx, viaX: between.some((b) => b.viaX === true) };
     } else {
       fx.notes.push({ s: sec.sa.s, text: text.slice(sec.sa.s, sec.sa.e) });
       fx.unassigned++;
@@ -825,7 +838,7 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
         const list = groupAmounts(text, t);
         if (!list) break;
         // "3 cups (5.3 oz each) Greek yogurt": a per-item size after "cups" makes the cups containers (§12.5)
-        if (unitRead.unit.canonical === "cup" && list.length === 1 && list[0].each && isMassOrVolume(list[0].unit) && slots.packageSize === null && parts.length <= 1) {
+        if (unitRead.unit.canonical === "cup" && /^cups?$/i.test(unitRead.unit.source) && v1 !== null && v1.d === BigInt(1) && list.length === 1 && list[0].each && containerSize({ ...list[0], each: false }) && slots.packageSize === null && parts.length <= 1) {
           unit = unitV1("container", unitRead.unit.source);
           slots.unit = unit;
         }
@@ -965,7 +978,10 @@ export function multiplierAt(toks: readonly Tok[], k: number): boolean {
 function pluralFoodAfter(toks: readonly Tok[], i: number): boolean {
   let last: Tok | undefined;
   for (let c = i; c < toks.length && !isGroup(toks[c]) && !isSym(toks[c], ",", ";"); c++) last = toks[c];
-  return isWord(last) && last.lower.length > 2 && /[^s]s$/.test(last.lower);
+  const plural = (t: Tok | undefined) => isWord(t) && t.lower.length > 2 && /[^s]s$/.test(t.lower);
+  // ("2 x 4-inch pieces ginger": a plural counted unit right after the size counts the items too)
+  const next = toks[i];
+  return plural(last) || (plural(next) && unitOfWord((next as { text: string }).text) !== null && UNIT_REGISTRY[unitOfWord((next as { text: string }).text)!].dimension === "count");
 }
 
 /**
@@ -988,7 +1004,13 @@ function inchMeasuresFood(toks: readonly Tok[], unitAt: number, next: number): b
  * it in brackets, hyphenated or after "x" ("3 (5.3 oz) cups yogurt") — the cup is a container.
  */
 export function containerCup(unitRead: UnitRead, between: readonly { sec: Secondary; marked: boolean }[]): boolean {
-  return unitRead.unit.canonical === "cup" && between.length === 1 && between[0].marked && isMassOrVolume(between[0].sec.sa.unit) && !between[0].sec.sa.each && !between[0].sec.sa.total;
+  const sa = between.length === 1 ? between[0].sec.sa : null;
+  return unitRead.unit.canonical === "cup" && /^cups?$/i.test(unitRead.unit.source) && sa !== null && between[0].marked && containerSize(sa);
+}
+
+/** A container's contents: a weight, or a metric or fluid volume, stated exactly ("5.3 oz", "150 g", "6 fl oz") — never cups or spoons. */
+function containerSize(sa: StatedAmount): boolean {
+  return (sa.unit.dimension === "mass" || ["ml", "l", "dl", "fl_oz"].includes(sa.unit.canonical)) && !sa.each && !sa.total && !sa.approx;
 }
 
 /**

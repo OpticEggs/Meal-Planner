@@ -71,7 +71,7 @@ const isSizeWordAt = (toks: readonly Tok[], i: number): number => {
 function sizeGradesMaterial(toks: readonly Tok[], i: number): boolean {
   const n = isSizeWordAt(toks, i);
   const next = toks[i + n];
-  return n > 0 && isWord(next) && SIZE_GRADED_NOUNS.has(next.lower) && toks[i + n + 1] !== undefined;
+  return n > 0 && isWord(next) && SIZE_GRADED_NOUNS.has(next.lower);
 }
 
 /** A dimension written in the name ("9-inch", "1 inch") — a size, so a note. */
@@ -158,6 +158,7 @@ export function numberInProductName(toks: readonly Tok[], i: number): number {
     if (isWord(next) && adjacent(t, next) && unitOfWord(next.text) === null) return 2; // "10X", "7Up"
     if (/^00+$/.test(t.text) && isWord(next) && unitOfWord(next.text) === null) return 1; // "00 flour" (a grade, not a count)
     if (isWord(next, "percent")) return 2;
+    if (isSym(next, "%") && isWord(toks[i + 2])) return 2; // "2 % milk" (a spaced percentage)
   }
   // a count of two or more, then a singular component noun ("7 grain cereal", "five spice powder")
   const value = t.kind === "num" ? Number(t.text) : Object.prototype.hasOwnProperty.call(CARDINALS, t.lower) ? CARDINALS[t.lower] : 0;
@@ -390,7 +391,8 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
   }
 
   // 4. options ("milk or cream", "black beans or 1 1/2 cups cooked beans")
-  const parts = splitOr(toks).filter((o) => o.some((t) => t.kind === "word"));
+  // (a percentage alone is an option too: "whole milk or 2%")
+  const parts = splitOr(toks).filter((o) => o.some((t) => t.kind === "word") || (o.length === 2 && isNumberish(o[0]) && isSym(o[1], "%")));
   let options: string[] | null = null;
   if (parts.length >= 2) {
     let ownAmount = false;
@@ -542,8 +544,8 @@ export function postFoodCountUnit(text: string, toks: readonly Tok[]): UnitRead 
 /**
  * REMAINING-TOKEN NAME GUARD (semantic-v2, CONTRACT §2 "never contains the amount, unit or package size", §12.1, §12.2,
  * §12.14): true when the tokens of a name still hold a weight or volume unit word ("x cup milk", "half-cup milk"), a
- * fraction-unit compound, a stand-alone multiplier "x"/"×", or a lone lower-case letter opening the name that is no
- * known unit ("1 m sausage"). Food names that begin with a unit spelling ("pound cake", "gram flour", "cup noodles":
+ * fraction-unit compound, a stand-alone multiplier "x"/"×", an "or" (an unread choice), or a lone lower-case letter
+ * opening the name that is no known unit ("1 m sausage"). Food names that begin with a unit spelling ("pound cake", "gram flour", "cup noodles":
  * UNIT_WORDS_IN_FOOD_NAMES) and one-letter unit abbreviations inside a name ("vitamin C powder") are not left-overs.
  * Numbers are not checked here: a number left in a name is cut off by `stopAtNumber` unless it names the product.
  */
@@ -553,6 +555,7 @@ export function nameLeftoverGuard(text: string, toks: readonly Tok[]): boolean {
     const t = toks[i];
     if (isSym(t, "×") || (isWord(t, "x") && !adjacent(toks[i - 1], t))) return true;
     if (!isWord(t)) continue;
+    if (t.lower === "or" && i > 0) return true; // an unread choice ("whole milk or 2%")
     if (fractionUnitWord(t) !== null) return true;
     const u = readUnit(text, toks, i);
     if (u !== null && (u.unit.dimension === "mass" || u.unit.dimension === "volume")) {

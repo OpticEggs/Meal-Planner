@@ -410,7 +410,9 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
     slots.packageSpan = null;
     // (an unmarked size before a counted unit is per piece too: "6 150 g salmon fillets")
     const countedUnit = unit !== null && unit.dimension === "count" && unit.canonical !== "each";
-    if ((amt.packageProvisional.marked || countedUnit) && amt.packageProvisional.approx !== true) {
+    // (only whole items carry a per-piece weight: "⅓ (120 g) maple syrup" and "2 x 400 g walnuts" stay for a person)
+    const wholeCount = slots.quantity?.kind === "exact" && slots.quantity.denominator === "1";
+    if ((amt.packageProvisional.marked || countedUnit) && amt.packageProvisional.approx !== true && amt.packageProvisional.viaX !== true && wholeCount) {
       // (semantic-v2, §12.3) a PER-PIECE WEIGHT of what is counted ("4 (6-oz) salmon fillets", "2 (6 oz) chicken
       // breasts"): a note, never a package size; for one item it restates the amount ("a 3-pound whole chicken")
       const one = slots.quantity?.kind === "exact" && slots.quantity.numerator === slots.quantity.denominator;
@@ -422,7 +424,7 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
       // "3 4 cups flour": nobody can say what the second number measures; "2 (about 1 lb) potatoes": each, or in all?
       if (pe > ps) fx.notes.push({ s: ps, text: text.slice(ps, pe) });
       fx.unassigned++;
-      if (!amt.packageProvisional.marked) slots.quantity = null;
+      if (!amt.packageProvisional.marked && !countedUnit) slots.quantity = null;
     }
   }
 
@@ -616,6 +618,13 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
   // Alternatives (CONTRACT §7.8): every option, in order; the name is then null. Options are completed only
   // where the grammar says so (alternatives.ts); a word is never invented and an option never dropped.
   let name = nr.name;
+  // (semantic-v2, §12.4) "6 cloves", "2 whole cloves": "cloves" with no food word is the spice, counted as it is
+  if (name === null && nr.options === null && unit?.canonical === "clove" && unitSpan !== null && amt.unitSpan !== null && region.every((t) => isGroup(t) || isSym(t))) {
+    name = text.slice(unitSpan[0], unitSpan[1]);
+    nr.nameSpan = [unitSpan[0], unitSpan[1]];
+    unit = { canonical: "each", dimension: "count", source: "" };
+    unitSpan = null;
+  }
   const additional = fx.options.filter((o) => o.mode === "additional");
   const variantOpts = fx.options.filter((o) => o.mode === "variants" && o.text.length > 0);
   const variants = variantOpts.map((o) => o.text);
@@ -638,9 +647,11 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
     // vegetable", "flour, all-purpose or bread") → each with the food; kinds of a category ("nuts, pecans or walnuts",
     // "cheese, cheddar or Swiss") → the kinds; otherwise a list in which every item is an option ("raisins, cranberries
     // or cherries", "chicken, beef or vegetable stock") — never one option privileged or dropped
+    const asList = shareOptions([base[0], ...variants]);
     if (varietiesOf(variants, base[0])) base = variants.map((v) => withKind(v, base[0]));
+    else if (asList.some((x, k) => x !== [base[0], ...variants][k])) base = asList; // "chicken, beef or vegetable stock"
     else if (categoryNoun(base[0])) base = shareOptions(variants);
-    else base = shareOptions([base[0], ...variants]);
+    else base = asList;
     choice = base.length >= 2;
   } else if (variants.length >= 2 && base.length === 0) {
     base = variants;
@@ -656,9 +667,11 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
     // words completed by `shareOptions` ("maple syrup, honey, or agave"; "chicken, beef, or vegetable broth")
     const kinds = [...listOptions.map((o) => o.text), ...additional.map((o) => o.text)];
     extra = [];
+    const asList = shareOptions([named, ...kinds]);
     if (varietiesOf(kinds, named)) base = kinds.map((v) => withKind(v, named));
+    else if (asList.some((x, k) => x !== [named, ...kinds][k])) base = asList; // "beef, chicken, or vegetable stock"
     else if (categoryNoun(named)) base = shareOptions(kinds);
-    else base = shareOptions([named, ...kinds]);
+    else base = asList;
     choice = base.length >= 2;
   }
   // an option with its own amount ("(or 1 tsp dried)", "(or 2 cups)") is a second amount nobody can place

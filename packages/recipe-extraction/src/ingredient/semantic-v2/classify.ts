@@ -275,7 +275,8 @@ const PLAIN_EQUIPMENT = new Set([
 export function equipmentPhrase(toks: readonly Tok[]): boolean {
   const head: Tok[] = [];
   for (const t of toks) {
-    if (isGroup(t) || isSym(t, ",", ";")) break;
+    if (isSym(t, ",", ";")) break;
+    if (isGroup(t)) continue; // "1 (9-inch) springform pan": a size in brackets
     head.push(t);
   }
   const ws = head.filter((t) => t.kind === "word") as { lower: string }[];
@@ -298,7 +299,7 @@ export function componentHeading(toks: readonly Tok[]): boolean {
   if (!toks.every((t) => isWord(t) || isSym(t, "&", "-", "–", "*", "_", "#", ".", "/"))) return false;
   const ws = words(toks).map((w) => w.lower);
   if (ws.length === 0 || ws.length > 5) return false;
-  if (ws.join(" ") === "to serve" || ws.join(" ") === "for serving") return true;
+  if (["to serve", "for serving", "to garnish", "for garnish", "for garnishing", "to finish", "for decoration", "to decorate"].includes(ws.join(" "))) return true;
   if (findUnstated(toks) !== null) return false;
   let k = 0;
   while (k < ws.length && (DISH_WORDS.has(ws[k]) || ws[k] === "the" || ws[k] === "for")) k++;
