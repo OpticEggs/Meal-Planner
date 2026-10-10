@@ -5,6 +5,7 @@
  */
 import { PACKAGE_NAME, PACKAGE_VERSION, SCHEMA_VERSION } from "../src/contract";
 import { canonicalJsonPretty } from "./canonical";
+import type { ReportPins } from "./pins";
 import { outcomesMarkdownV2 } from "./archive/report-outcomes-v2";
 import type { OutcomesSection as OutcomesSectionV2 } from "./archive/outcomes-v2";
 import {
@@ -50,6 +51,8 @@ export interface BenchReport {
    * outcomes v2 (bench/archive/, EVALUATION-PLAN-v2) for reproductions. Every other section is the same.
    */
   outcomes?: OutcomesSection | OutcomesSectionV2;
+  /** outcomes v3 runs only (absent in archived v2 reproductions): plan, scorer and source identities (bench/pins.ts). */
+  pins?: ReportPins;
 }
 
 export interface PageRun {
@@ -67,6 +70,8 @@ export interface BuildReportInput {
   pageRuns: PageRun[];
   /** Omitted → no `outcomes` key in the report. */
   outcomes?: OutcomesSection | OutcomesSectionV2;
+  /** Omitted → no `pins` key (archived v2 mode). */
+  pins?: ReportPins;
 }
 
 export function buildReport(input: BuildReportInput): BenchReport {
@@ -81,6 +86,7 @@ export function buildReport(input: BuildReportInput): BenchReport {
     ingredientEngines: input.ingredientScores,
     pages: input.pageRuns,
     outcomes: input.outcomes,
+    pins: input.pins,
   };
 }
 
@@ -441,6 +447,14 @@ export function renderMarkdown(report: BenchReport, timing?: TimingEntry[], opti
   out.push(`# Recipe extraction benchmark`, "");
   out.push(`${report.package.name}@${report.package.version} · contract ${report.contract} · split ${report.selection.split}${report.selection.case ? ` · case ${report.selection.case}` : ""}`, "");
   out.push(`Holdout freeze: ${report.freeze.verified ? "verified" : `**NOT VERIFIED** (${report.freeze.problems.length} problem(s))`}`, "");
+  if (report.pins) {
+    const p = report.pins;
+    const h = (x: string | null) => (x === null ? "(absent)" : `\`${x}\``);
+    out.push(
+      `Pins: plan \`${p.planFile}\` SHA-256 ${h(p.planSha256)} · scorer \`bench/outcomes.ts\` SHA-256 ${h(p.scorerSha256)} · package \`src/\` digest ${h(p.packageSourceDigest)} · engine sources ${Object.keys(p.engineSourceDigests).sort().map((k) => `${k} ${h(p.engineSourceDigests[k])}`).join(", ")}.`,
+      "",
+    );
+  }
   out.push("| Corpus file | Entries | SHA-256 |", "|---|---|---|");
   for (const f of report.corpus.files) out.push(`| ${cell(f.path)} | ${f.entries} | \`${f.sha256.slice(0, 16)}…\` |`);
   out.push("");

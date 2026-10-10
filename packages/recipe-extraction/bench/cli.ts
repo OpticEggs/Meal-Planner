@@ -13,6 +13,7 @@ import { canonicalJsonPretty } from "./canonical";
 import { compareIngredient } from "./compare";
 import { pageExtractor, selectIngredientEngines, type PageExtractor } from "./engines";
 import { loadExposureAudit } from "./exposure-audit";
+import { computePins } from "./pins";
 import { computeFreeze, computeFreezeV2, computeFreezeV3, freezeV2Status, freezeV3Status, sha256Hex } from "./freeze";
 import { checkInvariants } from "./invariants";
 import { INGREDIENT_FILES, PAGE_LABELS_FILE, loadIngredientCases, loadPageLabels } from "./labels";
@@ -47,6 +48,8 @@ import { EVERY_SPLITS, PAGE_SPLITS, SPLITS, V1_SPLITS, type IngredientCase, type
 
 export const PACKAGE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const FIXTURES_DIR = path.join(PACKAGE_ROOT, "fixtures");
+/** The repository root (the package lives at packages/recipe-extraction). */
+export const REPO_ROOT = path.resolve(PACKAGE_ROOT, "../..");
 
 export const USAGE = `Recipe extraction benchmark (local fixtures only; no network).
 
@@ -422,6 +425,8 @@ export async function run(opts: CliOptions, deps: RunDeps): Promise<RunResult> {
       scorer === "outcomes-v2"
         ? outcomesSectionV2(outcomes as EngineOutcomesV2[], splits.includes("holdout2") ? freezeV2Status(deps.fixturesDir) : null)
         : outcomesSection(outcomes as EngineOutcomes[], acceptanceFreezes(deps.fixturesDir, splits), scorerIdentityOf(PACKAGE_ROOT)),
+    // The archived v2 mode carries no pins, so it reproduces the historical report byte-for-byte.
+    pins: scorer === "outcomes-v2" ? undefined : computePins(PACKAGE_ROOT, REPO_ROOT),
   });
   const json = reportJson(report);
   const markdown = renderMarkdown(report, timing);
