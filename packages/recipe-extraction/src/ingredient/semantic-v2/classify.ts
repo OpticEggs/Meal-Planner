@@ -420,6 +420,13 @@ export function equipmentShape(toks: readonly Tok[]): "equipment" | "unsure" | n
     // a measured amount ("1 cup …", "2 tbsp …", "a pinch …") is food, unless a sure equipment item follows it ("1 cup
     // measuring cup": a 1-cup measuring cup)
     const u = unitOfWord(content[0].lower);
+    // ("4 pint jars", "2 quart bags": a size that is a purpose of the vessel after it — the vessel is the item)
+    const sized = content.length === 2 ? EQUIPMENT_VESSEL_HEADS[content[1].lower] : undefined;
+    if (u !== null && sized !== undefined && sized.purposes.has(content[0].lower) && content[1].at === content[content.length - 1].at) {
+      let n = content[1].at + 1;
+      while (n < seg.length && isGroup(seg[n])) n++;
+      if (n >= seg.length) return "equipment";
+    }
     if (u !== null && content.length >= 2) {
       const dim = UNIT_REGISTRY[u].dimension;
       if (dim === "mass" || dim === "volume" || dim === "imprecise") return equipmentShape(seg.slice(content[0].at + 1)) === "equipment" ? "equipment" : null;
@@ -503,7 +510,14 @@ export function equipmentNamesFood(toks: readonly Tok[]): boolean {
   const ws = (end < 0 ? toks : toks.slice(0, end)).filter((t) => isWord(t)).map((t) => (t as { text: string; lower: string }));
   let k = 0;
   while (k < ws.length - 1 && (unitOfWord(ws[k].text) !== null || EQUIPMENT_COUNT_NOUNS.has(ws[k].lower) || ws[k].lower === "of" || APPROX_WORDS.has(ws[k].lower) || ws[k].lower === "a" || ws[k].lower === "an" || Object.prototype.hasOwnProperty.call(CARDINALS, ws[k].lower))) k++;
-  return k < ws.length && recognisedFoodNoun(ws.slice(k).map((w) => w.text).join(" "));
+  if (k >= ws.length) return false;
+  // (round 3) a vessel head after one of its purpose or material words is equipment, whatever else it names ("1 lobster
+  // cracker", "1 egg cup", "1 bag hickory wood chips")
+  const last = ws[ws.length - 1].lower;
+  const prev = ws.length - 2 >= k ? ws[ws.length - 2].lower : null;
+  const vessel = EQUIPMENT_VESSEL_HEADS[last];
+  if (vessel !== undefined && prev !== null && (vessel.purposes.has(prev) || EQUIPMENT_MATERIAL_WORDS.has(prev))) return false;
+  return recognisedFoodNoun(ws.slice(k).map((w) => w.text).join(" "));
 }
 
 /**

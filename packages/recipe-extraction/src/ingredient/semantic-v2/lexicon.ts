@@ -132,7 +132,7 @@ export const PRODUCT_IDENTITY_NOUNS: Readonly<Partial<Record<UnitCode, ReadonlyS
   stick: setOf("fish mozzarella cheese string pretzel bread crab"),
   leaf: setOf("bay curry banana grape vine lime makrut kaffir fig pandan shiso perilla tea"),
   cube: setOf("ice stock bouillon"),
-  rib: setOf("short spare back pork beef lamb veal country-style"),
+  rib: setOf("short spare back pork beef lamb veal country-style plate chuck flanken dino dinosaur louis prime standing english kalbi galbi"),
   sheet: setOf("lasagna"),
   strip: setOf("york city"),
   clove: setOf("whole ground"),
@@ -213,7 +213,20 @@ export const UNKNOWN_MEASURES = setOf(
     // containers outside the registry ("1 pouch tuna", "1 canister oats", "1 clamshell spring mix")
     "pouch pouches canister canisters clamshell clamshells tablet tablets portion portions " +
     // a singular "bar" before a food ("1 bar cream cheese"; "bars" is a registry block)
-    "bar growler growlers",
+    "bar growler growlers " +
+    // semantic-v2 round 3 (R1 item 1): vessels, and food words that are also measures, right after a count ("1 pot chili",
+    // "1 kettle boiling water", "1 casserole dish baked ziti", "1 square baking chocolate", "1 bouquet flat-leaf parsley",
+    // "1 spritz lime juice", "2 sips dark rum", "1 gulp lemonade", "1 hand bananas"); a compound food after them stays food
+    // ("pot roast", "bouquet garni", "hand pies")
+    "pot pots pan pans kettle kettles dish dishes casserole casseroles square squares bouquet bouquets spritz spritzes sip sips gulp gulps " +
+    "hand hands serving servings helping helpings slosh sloshes " +
+    // collective and cut nouns before a food ("1 flat strawberries", "1 string chilies", "1 side salmon", "1 joint lamb",
+    // "1 case beer", "1 rope garlic"); compound foods after them stay food ("string beans", "side salad")
+    "flat flats string strings side sides joint joints braid braids case cases trug trugs hank hanks rope ropes ristra ristras " +
+    // vessels and tools that hold an amount ("1 shaker salt", "1 platter cold cuts")
+    "shaker shakers grinder grinders mill mills plate plates platter platters tray trays dish dishes ramekin ramekins " +
+    // layers and coats ("1 layer cream", "1 thin coating flour")
+    "layer layers coating coatings",
 );
 
 /** Words after a number that make it a temperature or a time, never an amount ("350°F", "10 minutes"). */
@@ -462,7 +475,9 @@ export const INVARIANT_PLURALS = setOf(
     "kiwifruit grapefruit jackfruit breadfruit starfruit dragonfruit passionfruit pepperoncini peperoncini allspice okra shiitake enoki maitake " +
     "shimeji pierogi gyoza crawfish crayfish whitefish shellfish lionfish pheasant partridge cardamom " +
     // fixed dish names counted as they are ("2 corn on the cob", "2 pan dulce")
-    "cob dulce",
+    "cob dulce bagnat " +
+    // "fruit" is its own plural in two-word fruit names ("3 passion fruit", "2 dragon fruit", "2 star fruit")
+    "fruit",
 );
 
 /**
@@ -704,14 +719,20 @@ export const KITCHEN_ACTION_VERBS = setOf(
 const VESSEL_HEADS: Readonly<Record<string, [policy: "food" | "unsure", purposes: string]>> = {
   bag: ["food", "piping pastry icing decorating zip-top ziptop ziplock zip-lock ziploc resealable freezer storage sandwich snack gallon-size quart-size sandwich-size snack-size gallon quart treat oven roasting brining vacuum sous-vide trash garbage cheesecloth jelly nut-milk"],
   boat: ["food", "gravy sauce"],
-  cup: ["food", "muffin cupcake baking custard souffle soufflé measuring dixie espresso shot"],
+  cup: ["food", "muffin cupcake baking custard souffle soufflé measuring dixie espresso shot egg tea coffee"],
   sheet: ["food", "baking cookie rimmed"],
   stick: ["food", "popsicle lollipop lolly pop craft cocktail treat"],
   wrap: ["food", "plastic cling saran beeswax"],
   wrapper: ["food", "cupcake muffin baking"],
   paper: ["food", "wax waxed parchment baking kitchen tissue butcher greaseproof cupcake muffin"],
-  ring: ["food", "tart cake pastry mousse egg cookie biscuit flan"],
-  rack: ["food", "wire cooling roasting baking oven drying steaming"],
+  ring: ["food", "tart cake pastry mousse egg cookie biscuit flan crumpet muffin pancake"],
+  rack: ["food", "wire cooling roasting baking oven drying steaming bacon rib dish wine spice plate pot pan egg"],
+  // (semantic-v2 round 3) more heads that are food in some compounds and equipment in others ("1 tea ball", "1 fish slice",
+  // "1 lobster cracker", "1 bag hickory wood chips")
+  ball: ["food", "tea infuser mesh"],
+  slice: ["food", "fish"],
+  cracker: ["food", "lobster crab seafood shellfish shell nut walnut pecan claw"],
+  chip: ["food", "wood smoking smoker hickory mesquite applewood alder oak"],
   tin: ["food", "muffin loaf cake baking tart pie roasting bundt springform cupcake patty"],
   bottle: ["food", "spray squeeze"],
   box: ["food", "cake pizza bento lunch storage cardboard"],

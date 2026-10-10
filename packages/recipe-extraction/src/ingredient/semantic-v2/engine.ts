@@ -30,8 +30,16 @@
  * amount, unit or package and the text after the number as the name pre-fill — never `unsupported`. A sure equipment
  * shape yields to a name whose head is itself a food (`recognisedFoodNoun`, `equipmentNamesFood` in classify.ts): it is
  * read when the name ends in a compound food ("short plate") or follows a food container ("1 bottle mixer"), and goes
- * to a person otherwise. Equipment heads are not foods by themselves ("2 pepper grinders" stays equipment); a vessel
- * head of the `food` policy after a brand is read as food ("1 KitchenAid mixer" — a known limit).
+ * to a person otherwise. Equipment heads are not foods by themselves ("2 pepper grinders" stays equipment).
+ *
+ * Round 3 (R1 round-3 review): the word right after a count is a measure when it is a measure gerund (`measureGerund`,
+ * foods.ts: "1 helping mashed potatoes"), a vessel or a food-or-measure word (UNKNOWN_MEASURES: "1 pot chili", "1 square
+ * baking chocolate", "2 sips dark rum") unless a compound food follows ("pot roast", "bouquet garni"), or a singular noun
+ * before a plural food after a count of one (`oneBeforePluralFood`, amount.ts: "1 braid onions"); a trailing multiplier
+ * gets the same check ("tots of rum x 2"). On a Title Case line capitals carry no brand signal (`titleCaseLine`); a
+ * capitalised plural opening the name is not a variety; a food head that is also an equipment or brand word after a
+ * capitalised word with a count of one goes to a person (`homographHeadAfterCapital`, foods.ts: "1 Big Green Egg"); a
+ * mixer is food only with a drink word or a food container ("1 bottle mixer").
  *
  * A final check (`guardedParse`) runs the contract validator: a reader that throws, or an output that
  * would not validate (a defect), is replaced by a minimal `needs_review` reading with `unclassified`, so
@@ -41,14 +49,14 @@
 import { REASONS, UNIT_REGISTRY, type AmountUnstated, type IngredientEngine, type ParsedIngredientV1, type ReasonCode, type SpanField, type UnitV1 } from "../../contract";
 import { cmp, fromExactQuantity, rational, toExactQuantity } from "../../rational";
 import { validateParsedIngredientV1 } from "../../validate";
-import { amountStartsAt, foreignSystemRemark, groupAmount, isPriceGroup, PACKAGE_UNITS, readAmountPhrase, readStatedAmount, placeSecondary, sameAmount, sumInSmallest, type AmountSlots } from "./amount";
+import { amountStartsAt, foreignSystemRemark, groupAmount, isPriceGroup, PACKAGE_UNITS, readAmountPhrase, readStatedAmount, placeSecondary, sameAmount, sumInSmallest, unknownMeasureAt, type AmountSlots } from "./amount";
 import { equipmentShape, nonIngredientReason, numericLead } from "./classify";
 import { adjacent, isGroup, isNumberish, isSym, isWord, lex, type Tok } from "./lexer";
 import { APPROX_WORDS, BULLETS, CONTAINER_UNITS, FRUIT_PART_WORDS, NUTRIENT_FOOD_WORDS, SERVING_LABEL_WORDS, UNIT_WORDS_IN_FOOD_NAMES, FUNCTION_WORDS, INVARIANT_PLURALS, MEASURE_ADJECTIVES, PREP_ADVERBS, REMARK_WORDS, SIZE_WORDS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
 import { numberInProductName, readNameRegion, type NameReading } from "./name";
 import { normalizeLine } from "./normalize";
 import { classifyPiece, remarkMeasuresAnother, remarkRestatement, remarkSecondAmount, splitOr, splitTopLevel, textOf, trimEdges, unstatedAt } from "./remarks";
-import { compoundFoodEnding, recognisedFoodHead } from "./foods";
+import { compoundFoodEnding, homographHeadAfterCapital, recognisedFoodHead } from "./foods";
 import { andJoinsTwoFoods, categoryNoun, foodHead, isRemarkOption, shareOptions, uniqueOptions, varietiesOf, withKind } from "./alternatives";
 import { emptyEffects, mergeEffects, type AmountReading } from "./types";
 import { readUnit, type UnitRead } from "./unit";
@@ -155,6 +163,13 @@ function bareUnitAtStart(u: UnitRead, text: string): boolean {
   if (written.length <= 1 || UNIT_WORDS_IN_FOOD_NAMES.has(written)) return false;
   return u.unit.dimension === "mass" || u.unit.dimension === "volume";
 }
+
+/** Every word of the item (short function words aside) begins with a capital, and there are at least two ("2 Sips Dark Rum"). */
+function titleCaseLine(head: readonly Tok[]): boolean {
+  const ws = head.filter((t) => isWord(t) && /\p{L}{2,}/u.test(t.text) && !TITLE_CASE_SMALL_WORDS.has(t.lower)) as { text: string }[];
+  return ws.length >= 2 && ws.every((w) => /^\p{Lu}/u.test(w.text));
+}
+const TITLE_CASE_SMALL_WORDS = new Set(["of", "and", "or", "the", "a", "an", "in", "with", "for", "to", "on", "at", "by"]);
 
 /**
  * MULTIPLIER AFTER THE FOOD (CONTRACT §12.2): the head ends in "x N" / "×N" / "(xN)" after at least one food word; the
@@ -301,6 +316,7 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
   // The amount phrase.
   let amount: AmountReading | null = null;
   let region: Tok[] = head;
+  let multiplierMeasure = false;
   let nameFromLabel = false;
   let usedTail = -1;
   let partNote: Tok[] | null = null;
@@ -350,6 +366,14 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
       if (m !== null) {
         amount = m.amount;
         region = head.slice(0, m.at);
+        // (round 3, R1 item 4) the same measure check as after a count: "tots of rum x 2" multiplies an unread measure
+        // (a unit word there too: "cups of tea x 3" — the multiplier counts cups, not the food)
+        const mm = isWord(region[0]) && unitOfWord((region[0] as { text: string }).text) !== null && region.length > 1 ? 1 : unknownMeasureAt(region, 0);
+        if (mm > 0) {
+          fx.notes.push({ s: region[0].s, text: text.slice(region[0].s, region[mm - 1].e) });
+          multiplierMeasure = true;
+          region = region.slice(isWord(region[mm], "of") ? mm + 1 : mm);
+        }
       }
     }
     if (!amount) {
@@ -777,13 +801,23 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
   // amount, unit or package is kept, so equipment ("1 comal") or a measure word ("1 tot dark rum") never carries an
   // invented amount. Lines measured in a mass or volume unit are not affected.
   const counted = amt.amountWritten && (unit === null || unit.dimension === "count" || unit.dimension === "imprecise");
-  const recognised = name !== null ? recognisedFoodHead(name) : alternatives.length >= 2 ? alternatives.some(recognisedFoodHead) : true;
-  if (unsureEquipment && !(name !== null && recognisedFoodHead(name))) push(fx.reasons, "unclassified");
-  // (a food container written as the unit says the item is its contents: "1 bottle margarita mixer")
+  // (round 3, R1 item 1) on a Title Case line capitals carry no brand or variety signal: the words are judged in lower
+  // case ("2 Sips Dark Rum", "1 Big Green Egg"; "4 Roma Tomatoes" stays a variety)
+  const titleCase = titleCaseLine(head);
+  const recognises = (n: string) => recognisedFoodHead(titleCase ? n.toLowerCase() : n);
+  // (a food container written as the unit says the item is its contents: "1 bottle margarita mixer", "1 bottle mixer")
   const containerOfFood = unit !== null && ["bottle", "can", "jar", "carton", "tin"].includes(unit.canonical);
+  const containedMixer = containerOfFood && name !== null && /(?:^|\s)mixers?$/i.test(name) && (/^\S+$/.test(name) || recognises(name.replace(/\s+mixers?$/i, "")));
+  let recognised = name !== null ? recognises(name) || containedMixer : alternatives.length >= 2 ? alternatives.some(recognises) : true;
+  // (round 3, R1 item 2) a food head that is also an equipment or brand word, after a capitalised word, with a count of one,
+  // names a product to check ("1 Big Green Egg", "1 Kamado Joe", "1 Glad wrap")
+  const one = quantity !== null && quantity.kind === "exact" && quantity.numerator === quantity.denominator;
+  if (counted && one && (unit === null || unit.canonical === "each") && name !== null && homographHeadAfterCapital(name)) recognised = false;
+  if (unsureEquipment && !(name !== null && recognises(name))) push(fx.reasons, "unclassified");
   const equipmentConflict = equipmentFood && !containerOfFood && !(name !== null && compoundFoodEnding(name.split(/\s+/)));
   let abstain = false;
-  if ((counted && !recognised) || equipmentConflict) {
+  if (multiplierMeasure) push(fx.reasons, "unit_unknown");
+  if ((counted && !recognised) || equipmentConflict || multiplierMeasure) {
     abstain = true;
     // (owner rule, round 2) the name pre-fill is the text after the number, as written: nothing is trimmed to known
     // words, and a unit or measure word that is no longer read stays visible in it ("4 slices chashu pork" → "slices

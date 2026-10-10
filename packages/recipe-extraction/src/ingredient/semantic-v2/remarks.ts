@@ -344,7 +344,9 @@ export function remarkMeasuresAnother(toks: readonly Tok[], name: string | null,
   const nameWs = (name ?? "").toLowerCase().split(/[^\p{L}'-]+/u).filter((w) => w.length > 0);
   if (ws.some((w) => STATE_CHANGE_WORDS.has(w) && !nameWs.includes(w))) return true;
   if (nameWs.some((w) => EXTRACTED_PART_WORDS.has(w))) return true;
-  return otherFoodIn(ws, nameWs);
+  // (round 3) a capitalised word in the remark is a variety or brand of the food itself ("(8 Medjool)" after dates)
+  const proper = new Set(toks.filter((t) => isWord(t) && /^\p{Lu}\p{Ll}/u.test((t as { text: string }).text)).map((t) => (t as { lower: string }).lower));
+  return otherFoodIn(ws, nameWs, proper);
 }
 
 /** States a food is brought to before it is measured (§12.A A3: "soaked", "rehydrated"), beside the REMARK_STATE_WORDS. */
@@ -362,10 +364,12 @@ function opensWithAmount(text: string, toks: readonly Tok[]): boolean {
 }
 
 /** A word of the remark that names something other than the food: not describing, not a unit or number word, not in the name. */
-function otherFoodIn(ws: readonly string[], nameWs: readonly string[]): boolean {
+function otherFoodIn(ws: readonly string[], nameWs: readonly string[], proper: ReadonlySet<string> = new Set()): boolean {
   const names = new Set(nameWs.flatMap((w) => [w, singularOf(w)]));
   return ws.some((w) => {
-    if (names.has(w) || names.has(singularOf(w))) return false;
+    if (names.has(w) || names.has(singularOf(w)) || proper.has(w)) return false;
+    // ("3 cups cubed watermelon (1/4 melon)": the remark names the food by the last part of its name)
+    if (w.length >= 4 && nameWs.some((n) => n.length > w.length && (n.endsWith(w) || n.endsWith(singularOf(w))))) return false;
     if (FUNCTION_WORDS.has(w) || APPROX_WORDS.has(w) || SIZE_WORDS.has(w) || REMARK_WORDS.has(w) || ADJECTIVE_WORDS.has(w) || TRAILING_PREP_WORDS.has(w) || PREP_ADVERBS.has(w)) return false;
     // (parts taken whole — kernels, leaves, florets — are the same food, §12.A A3: "3 ears corn (about 2 cups kernels)")
     if (PART_HEADS.has(w) && !EXTRACTED_PART_WORDS.has(w)) return false;
