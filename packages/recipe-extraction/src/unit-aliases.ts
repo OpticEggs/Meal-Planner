@@ -29,7 +29,7 @@ export const UNIT_ALIASES: Readonly<Record<UnitCode, readonly string[]>> = Objec
   l: words("l ls lt lts ltr ltrs liter liters litre litres"),
   tsp: words("tsp tsps tspn tspns teaspoon teaspoons teaspoonful teaspoonfuls"),
   tbsp: words("tbsp tbsps tbs tbl tbls tblsp tblsps tblspn tb tablespoon tablespoons tablespoonful tablespoonfuls"),
-  fl_oz: words("floz fl-oz"),
+  fl_oz: words("floz fl-oz fl.oz"),
   cup: words("cup cups c cupful cupfuls"),
   pint: words("pint pints pt pts"),
   quart: words("quart quarts qt qts"),

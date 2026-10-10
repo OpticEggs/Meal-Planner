@@ -17,7 +17,7 @@ own frozen word lists; this table is what the contract declares._
 | `l` | volume | 1000 | `l`, `ls`, `lt`, `lts`, `ltr`, `ltrs`, `liter`, `liters`, `litre`, `litres` |
 | `tsp` | volume | 4.92892159375 | `tsp`, `tsps`, `tspn`, `tspns`, `teaspoon`, `teaspoons`, `teaspoonful`, `teaspoonfuls` |
 | `tbsp` | volume | 14.78676478125 | `tbsp`, `tbsps`, `tbs`, `tbl`, `tbls`, `tblsp`, `tblsps`, `tblspn`, `tb`, `tablespoon`, `tablespoons`, `tablespoonful`, `tablespoonfuls` |
-| `fl_oz` | volume | 29.5735295625 | `floz`, `fl-oz` |
+| `fl_oz` | volume | 29.5735295625 | `floz`, `fl-oz`, `fl.oz` |
 | `cup` | volume | 236.5882365 | `cup`, `cups`, `c`, `cupful`, `cupfuls` |
 | `pint` | volume | 473.176473 | `pint`, `pints`, `pt`, `pts` |
 | `quart` | volume | 946.352946 | `quart`, `quarts`, `qt`, `qts` |
@@ -70,6 +70,8 @@ own frozen word lists; this table is what the contract declares._
 **Case-sensitive spellings:** `T` → `tbsp`, `Tb` → `tbsp`, `TB` → `tbsp`, `Tbs` → `tbsp`, `TBS` → `tbsp`, `t` → `tsp`.
 
 **Fluid ounce (two words):** `fl` or `fluid` followed by an `oz` word → `fl_oz`.
+
+**Readings that are not word aliases** (CONTRACT §12.4, §12.5): `cup(s)` with a stated package size is a `container` (§12.5: `3 (5.3 oz) cups yogurt`), never a word alias; a declared word inside a product name keeps the name (`filet mignon`, `pound cake`); `pk` means a package here — the registry has no peck.
 
 **Not aliases** (a different noun; an amount before it is CONTRACT §12.14 → `needs_review`):
 

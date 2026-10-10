@@ -31,6 +31,7 @@ export function renderManifest(): string {
   }
   out.push("", "**Case-sensitive spellings:** " + Object.entries(CASED_UNIT_ALIASES).map(([w, c]) => `\`${w}\` → \`${c}\``).join(", ") + ".");
   out.push("", `**Fluid ounce (two words):** ${FLUID_OUNCE_WORDS.map((w) => `\`${w}\``).join(" or ")} followed by an \`oz\` word → \`fl_oz\`.`);
+  out.push("", "**Readings that are not word aliases** (CONTRACT §12.4, §12.5): `cup(s)` with a stated package size is a `container` (§12.5: `3 (5.3 oz) cups yogurt`), never a word alias; a declared word inside a product name keeps the name (`filet mignon`, `pound cake`); `pk` means a package here — the registry has no peck.");
   out.push("", "**Not aliases** (a different noun; an amount before it is CONTRACT §12.14 → `needs_review`):", "");
   out.push("| Word | Why |", "|---|---|");
   for (const [w, why] of Object.entries(NOT_ALIASES)) out.push(`| \`${w}\` | ${why} |`);

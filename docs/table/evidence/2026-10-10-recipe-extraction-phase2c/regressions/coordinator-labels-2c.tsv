@@ -33,8 +33,8 @@
 1 can pork and beans	ready	pork and beans	1	can	-	-	-	FL-B-control	B
 1 head lettuce, romaine or green leaf	needs_review	-	1	head	-	romaine lettuce;green leaf lettuce	-	FL-B3	B
 1 bunch kale, curly or lacinato	needs_review	-	1	bunch	-	curly kale;lacinato kale	-	FL-B3	B
-2 cups cheese, cheddar or monterey jack	needs_review	-	2	cup	-	cheddar cheese;monterey jack cheese	-	FL-B3	B
-1 lb cremini or shiitake mushrooms	needs_review	-	1	lb	-	cremini mushrooms;shiitake mushrooms	-	FL-B4	B
+2 cups cheese, cheddar or monterey jack	needs_review	-	2	cup	-	cheddar cheese;monterey jack cheese||cheddar;monterey jack	-	FL-B3	B
+1 lb cremini or shiitake mushrooms	needs_review	-	1	lb	-	cremini;shiitake mushrooms||cremini mushrooms;shiitake mushrooms	-	FL-B4	B
 2 cups white or brown rice	needs_review	-	2	cup	-	white rice;brown rice	-	FL-B4	B
 1 saucepan water	needs_review	*	-	-	-	-	N	FL-C3	C
 1 stockpot water	needs_review	*	-	-	-	-	N	FL-C3	C
@@ -47,7 +47,7 @@
 1 skillet cornbread batter	needs_review	*	-	-	-	-	N	FL-C3	C
 300 g fish slices	ready	fish slices	300	g	-	-	-	FL-C6	C
 1 lb fish slices	ready	fish slices	1	lb	-	-	-	FL-C6	C
-6 fish slices, patted dry	ready	fish slices	6	each	-	-	-	FL-C6	C
+6 fish slices, patted dry	ready	fish	6	slice	-	-	-	FL-C6	C
 2 lb pork rib racks	ready	pork rib racks	2	lb	-	-	-	FL-C6	C
 1 lamb rib rack	ready	lamb rib rack	1	each	-	-	-	FL-C6	C
 1 bag walnut crackers	ready	walnut crackers	1	bag	-	-	-	FL-C6	C

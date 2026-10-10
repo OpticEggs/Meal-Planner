@@ -452,7 +452,8 @@ them. They settle what §7/§12 left to the registry or to an unranked pair of r
      - the case conventions `T` (tablespoon) and `t` (teaspoon).
    - **What is never an alias.** A different noun for a similar thing: `tub`, `pot`, `bar`, `rasher`, `punnet`. An
      amount before such a noun is an unknown unit (§12.14) → `needs_review`, unit null.
-   - **How the label reads.** The quantity is the number as written; the noun goes in `note` (holdout-v3 0075, 0193).
+   - **How the label reads (Phase 2C on).** `needs_review`; quantity, unit and packageSize null; the stated number and noun kept in `note` as written (`1 small tub`, `3 rashers`).
+     - This differs from the pre-fill fields of the frozen holdout-v3 labels 0075 and 0193 (quantity 1 and 3, the noun only an accepted note). Those labels and their scores are unchanged; the new reading applies to future labels only. For a `needs_review` label the status, not the pre-fill, decides C5.
    - **Changing the table.** Adding an alias is a prospective contract change, logged here and in
      `fixtures/LABEL-CHANGES.md`, and never applied to an earlier evaluation.
 2. *(new)* **The measure slot is accounted for structurally (§12.14 extended).**
@@ -462,9 +463,8 @@ them. They settle what §7/§12 left to the registry or to an unranked pair of r
      - a modifier of the food (variety, colour, origin, form, preparation participle, brand);
      - a part of the food's own name.
    - **A noun that is none of these makes the line `needs_review`**, with no unit and no count read into the name (§12.14). This covers a noun that names a portion, shape, cut-off or dispenser of another food, as in `3 stems lemongrass`, `2 fronds dill`, `1 cob corn`, `20 threads saffron`, `2 cones piloncillo`, `1 disc Mexican chocolate`, `1 heel sourdough`, `2 sprays cooking oil`, `1 blade mace`, `1 split prosecco`. It also covers a vessel or tool, as in `1 saucepan water` and `1 wok oil`.
-     - **Label:** `needs_review`, name = the food, quantity = the number, unit null, the noun in `note`.
-     - **Engine.** Under owner requirement 2, an engine reading leaves the quantity empty and keeps the phrase in `note`. It never pre-fills a count of an unresolved measure.
-     - **Scoring.** Both readings are `needs_review`. The label's quantity records what was written; it is not a prompt to fill a count.
+     - **Label:** `needs_review`, name = the food; quantity, unit and packageSize null; the number and the noun in `note` as written (`3 stems`). This is the same as item 1, and an engine reading must match it: it never pre-fills a count of an unresolved measure (owner requirement 2).
+     - **Precedence over §12.3.** §12.3's "a size before any other noun is the line's amount" applies only when that noun is part of the food's name (`6 oz salmon fillet`). When the noun is an undeclared container or measure word followed by the food (`8 oz tub whipped topping`), this item applies → `needs_review`, no amount.
    - **Where the rule does not apply.** It applies only when a food follows the noun. A noun that is itself the food's head keeps its reading (`4 waffle cones` → 4 `each` `waffle cones`; `4 pots de crème` → 4 `each` `pots de crème`, a dish name, never a container).
    - **A recognised food does not validate an unaccounted word before it.** An unrecognised food is not thereby non-food: it is `needs_review` with its text kept, never `unsupported` (owner requirements, PHASE-2B-PLAN §6.3).
 3. *(restated, §12.11 and §12.A A3)* **Remark amounts of a different food.**
@@ -477,8 +477,8 @@ them. They settle what §7/§12 left to the registry or to an unranked pair of r
      - a same-ingredient compound (`plus 2 tablespoons for dusting`, §12.11–12);
      - a time or temperature;
      - a remark with no amount (`soaked in warm water`).
-4. *(restated, §12.A A4)* **Coordinated foods.** Two or more foods after one amount, joined by `and`, `&` or commas, are a list → `needs_review`. This holds whether or not either food's name has several words (`1 cup fresh peas and fava beans`, `1/2 cup sun-dried tomatoes and kalamata olives`).
-   - **Label:** quantity and unit = the shared amount; name null; `alternatives` empty, because a list is not a choice (§12.7 g). Each food's text may be kept in `note`. No share of the amount is assigned to a food.
+4. *(restated, §12.A A4)* **Coordinated foods.** Two or more foods after one amount, joined by `and` or `&`, are a list → `needs_review`. Comma lists are §12.7(e)/(f), and a comma remark is a note (§7.7); this item does not change them. This holds whether or not either food's name has several words (`1 cup fresh peas and fava beans`, `1/2 cup sun-dried tomatoes and kalamata olives`).
+   - **Label:** quantity and unit = the shared amount; name null; `alternatives` empty, because a list is not a choice (§12.7 g). The foods' text as written goes in `note` (strict), with null accepted. No share of the amount is assigned to a food.
    - **These stay one food:**
      - the fixed compounds of §7.6 and §12.A A4;
      - modifiers joined by `and` before one head (`red and yellow bell peppers`, `salt and vinegar potato chips`).
@@ -495,8 +495,8 @@ them. They settle what §7/§12 left to the registry or to an unranked pair of r
    - A4 product-or-list pairs (`peas and carrots`);
    - A5 `2 pound cakes`.
 
-   A case the label checker finds debatable is pre-registered as `debatable: true` and left out of the firm acceptance set. The all-case figure is reported beside it. Holdout-v3's published results, which counted every case, are unchanged.
-7. *(new; settles §12.8 for future labels)* **Role labels and headings.**
+   A case the label checker finds debatable is pre-registered as `debatable: true` **before any candidate is scored on the set** and left out of the firm acceptance set. The all-case figure is reported beside it. The zero-tolerance counts (A3 and A4: high false certainty, S1, S3, S4, S5, S6) are also reported over all cases, debatable ones included. Holdout-v3's published results, which counted every case, are unchanged.
+7. *(new; settles §12.8 for future labels)* **Role labels and headings.** A *role label* is one of §7.10's unstated-amount phrases written as a label: `For garnish`, `Garnish`, `To garnish`, `For serving`, `To serve`, `For dusting/greasing/frying/drizzling`.
    - A role label followed by a food after the colon is an ingredient. The heading reading of `For (the)` applies only when nothing follows the colon: `For garnish: pomegranate arils` → `ready`, `for_garnish`.
    - A role label may carry `(optional)`: `Garnish (optional): microgreens` → `ready`, `for_garnish`, optional (as frozen holdout-v3 0248).
    - A line of only generic component words, optionally followed by `(optional)`, is a heading: `Topping (optional)` → `unsupported`.
