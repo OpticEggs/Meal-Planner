@@ -155,4 +155,9 @@ It needs a separately authorized Phase 3.
    Holdout-v3 metadata (`family`, `contract12`, `reliesOnNewReading`, `debatable`) and the optional
    `EXPOSURE-AUDIT-v3.json` are frozen **data** read by the scorer, so pre-registering debatable cases or recording
    the exposure audit never changes the frozen scorer. The report pins the plan hash, the scorer hash and source digests.
+4. **2026-10-10, before candidate freeze and before any holdout-v3 line** — CONTRACT §12.15 and §12.A (amendments
+   A1–A4 after the independent candidate review R1), refined after the label checker's second review (`be187c9`):
+   count words before the food, the rounding allowance (ml/g, half up), prepared vs extracted remark amounts, `and`
+   lists. Prospective only; no frozen label, threshold or acceptance rule changed. Candidate-review counterexamples
+   (R1, round 1) were added to the exposed regression corpus as required development coverage.
 
