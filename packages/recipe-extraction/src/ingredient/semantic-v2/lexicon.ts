@@ -205,7 +205,7 @@ export const UNKNOWN_MEASURES = setOf(
     "gill gills dram drams drachm drachms minim minims noggin noggins pony ponies firkin firkins stone stones catty catties tael taels " +
     // informal lumps and portions ("1 hunk Parmesan", "1 thumb ginger", "1 slab tofu", "a blob of butter")
     "hunk hunks chunk chunks slab slabs thumb thumbs blob blobs wodge wodges swig swigs slug slugs smidge tad wineglass wineglasses thimble " +
-    "thimbles net nets wheel wheels log logs brick bricks measure measures finger fingers seer seers",
+    "thimbles net nets wheel wheels log logs brick bricks measure measures finger fingers seer seers rack racks leg legs",
 );
 
 /** Words after a number that make it a temperature or a time, never an amount ("350°F", "10 minutes"). */

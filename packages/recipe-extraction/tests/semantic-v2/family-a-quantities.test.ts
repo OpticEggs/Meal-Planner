@@ -171,6 +171,7 @@ describe("decoration, unknown and foreign units (§12.13, §12.14)", () => {
     "1 thumb fresh ginger", "1 coffee cup plain flour", "1 wine glass red wine", "2 soup spoons sugar", "1 bowl cooked rice", "2 fistfuls spinach", "1 pottle cream",
     "1 hunk Parmesan", "1 chunk fresh ginger", "1 slab tofu", "1 tub-full yogurt", "1 can-ful water", "1 stone potatoes", "1 crate oranges", "1 bucket ice",
     "1 hunk of Parmesan", "1 large pot of salted water", "2 mugfuls milk", "1 yogurt pot sugar", "1 roll refrigerated pie dough", "1 jigger rum",
+    "1 tea-cup milk", "1 measure gin", "2 fingers whiskey", "1 rack baby back ribs", "1 wheel brie",
   ])("unknown measure: %s → needs review, no amount, the measure in the note", (line) => {
     const r = read(line);
     expect(r).toMatchObject({ status: "needs_review", quantity: null, unit: null });
