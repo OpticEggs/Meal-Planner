@@ -1,0 +1,10 @@
+$ npx vitest run tests/integration/b10-partial-handoff.test.ts -t "B10-04"
+exit 0 signal 
+--- stdout
+JSON report written to /tmp/table-verify-dbc105d-20261010T013231Z/mutation/baseline-70.json
+
+--- stderr
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+

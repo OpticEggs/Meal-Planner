@@ -1,0 +1,3 @@
+fixture|legacy|26
+imported|exact|1
+sample|exact|26

@@ -1,0 +1,193 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/table
+
+ ❯ tests/integration/exact-quantities.test.ts (10 tests | 10 failed) 7437ms
+   ❯ exact quantities for new recipe versions (10)
+     × EQ-01: an imported row keeps its exact whole-recipe amount and serving basis next to the stored decimal 1287ms
+     × EQ-02: 2 cucumbers for 3 servings, all 3 planned, need exactly 2 — next to the legacy salmon bowls' cucumbers 774ms
+     × EQ-03: a genuine amount above the package boundary needs another package — no tolerance 822ms
+     × EQ-04: a legacy row is used exactly as stored and labelled approximate — never silently repaired 546ms
+     × EQ-05: a title-only edit of a legacy recipe keeps its rows legacy; a changed amount is the member's exact amount; the accepted dinner keeps its version 652ms
+     × EQ-06: a client cannot declare a row exact — exact fields in a save are ignored and the typed decimal is what is stored 525ms
+     × EQ-07: unit conversion stays exact — a new ⅓-cup recipe and the legacy tablespoon recipes combine in ml to the exact sum; packages from it 554ms
+     × EQ-08: what is at home is subtracted exactly, across units 697ms
+     × EQ-09: an exact boundary line and a legacy line approve and go in one partial transfer with the counts shown 991ms
+     × EQ-10: the database refuses an exact row without its basis, with a basis that does not match its decimal, or a legacy row claiming one 586ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/exact-quantities.test.ts > exact quantities for new recipe versions > EQ-01: an imported row keeps its exact whole-recipe amount and serving basis next to the stored decimal
+error: column "quantity_basis" does not exist
+ ❯ node_modules/pg/lib/client.js:694:17
+ ❯ q tests/integration/helpers.ts:17:13
+     15|   const c = await db();
+     16|   try {
+     17|     return (await c.query(sql, params)).rows as T[];
+       |             ^
+     18|   } finally {
+     19|     await c.end();
+ ❯ tests/integration/exact-quantities.test.ts:90:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  tests/integration/exact-quantities.test.ts > exact quantities for new recipe versions > EQ-02: 2 cucumbers for 3 servings, all 3 planned, need exactly 2 — next to the legacy salmon bowls' cucumbers
+AssertionError: expected { unit: 'each', …(4) } to match object { rational: '2', exact: true }
+(5 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "exact": true,
+-   "rational": "2",
++   "cookNight": "2026-10-16",
++   "eventId": "91b3aa21-4924-49e0-9242-6ad7319bf8f4",
++   "quantity": "2",
++   "recipeTitle": "Cucumber salad",
++   "unit": "each",
+  }
+
+ ❯ tests/integration/exact-quantities.test.ts:105:19
+    103|     const l = await line(fx.weekId, "cucumber");
+    104|     const salad = l.meal.sources.find((s: any) => s.recipeTitle === "C…
+    105|     expect(salad).toMatchObject({ rational: "2", exact: true });
+       |                   ^
+    106|     expect(l.meal.sources.filter((s: any) => s.recipeTitle !== "Cucumb…
+    107|     expect(l.meal.rational).toBe(rest.plus(2).toString());
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  tests/integration/exact-quantities.test.ts > exact quantities for new recipe versions > EQ-03: a genuine amount above the package boundary needs another package — no tolerance
+AssertionError: expected undefined to be '1500000000001/500000000000' // Object.is equality
+
+- Expected:
+"1500000000001/500000000000"
+
++ Received:
+undefined
+
+ ❯ tests/integration/exact-quantities.test.ts:122:29
+    120|     const l = await line(fx.weekId, "cucumber");
+    121|     const exact = rest.plus(2).plus(Q.of("0.000000000002"));
+    122|     expect(l.meal.rational).toBe(exact.toString());
+       |                             ^
+    123|     expect(l.packagesForMeal).toBe(Number(exact.ceil())); // one more …
+    124|     expect(l.packagesForMeal).toBe(Number(rest.plus(2).ceil()) + (rest…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  tests/integration/exact-quantities.test.ts > exact quantities for new recipe versions > EQ-04: a legacy row is used exactly as stored and labelled approximate — never silently repaired
+error: column "quantity_basis" does not exist
+ ❯ node_modules/pg/lib/client.js:694:17
+ ❯ q tests/integration/helpers.ts:17:13
+     15|   const c = await db();
+     16|   try {
+     17|     return (await c.query(sql, params)).rows as T[];
+       |             ^
+     18|   } finally {
+     19|     await c.end();
+ ❯ tests/integration/exact-quantities.test.ts:131:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  tests/integration/exact-quantities.test.ts > exact quantities for new recipe versions > EQ-05: a title-only edit of a legacy recipe keeps its rows legacy; a changed amount is the member's exact amount; the accepted dinner keeps its version
+error: column "quantity_basis" does not exist
+ ❯ node_modules/pg/lib/client.js:694:17
+ ❯ q tests/integration/helpers.ts:17:13
+     15|   const c = await db();
+     16|   try {
+     17|     return (await c.query(sql, params)).rows as T[];
+       |             ^
+     18|   } finally {
+     19|     await c.end();
+ ❯ tests/integration/exact-quantities.test.ts:152:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  tests/integration/exact-quantities.test.ts > exact quantities for new recipe versions > EQ-06: a client cannot declare a row exact — exact fields in a save are ignored and the typed decimal is what is stored
+error: column "quantity_basis" does not exist
+ ❯ node_modules/pg/lib/client.js:694:17
+ ❯ q tests/integration/helpers.ts:17:13
+     15|   const c = await db();
+     16|   try {
+     17|     return (await c.query(sql, params)).rows as T[];
+       |             ^
+     18|   } finally {
+     19|     await c.end();
+ ❯ tests/integration/exact-quantities.test.ts:182:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  tests/integration/exact-quantities.test.ts > exact quantities for new recipe versions > EQ-07: unit conversion stays exact — a new ⅓-cup recipe and the legacy tablespoon recipes combine in ml to the exact sum; packages from it
+AssertionError: expected 157725491n to be 1n // Object.is equality
+
+- Expected
++ Received
+
+- 1n
++ 157725491n
+
+ ❯ tests/integration/exact-quantities.test.ts:190:24
+    188|     const restMl = await restOf(fx.weekId, "soy_sauce", ["2026-10-16"]…
+    189|     const restTbsp = restMl.div(TBSP);
+    190|     expect(restTbsp.d).toBe(BigInt(1)); // the fixture's soy sauce is …
+       |                        ^
+    191|     // Fill exactly to the next 10 fl oz (= 20 tbsp) boundary with a c…
+    192|     const k = restTbsp.div(20).ceil() + BigInt(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  tests/integration/exact-quantities.test.ts > exact quantities for new recipe versions > EQ-08: what is at home is subtracted exactly, across units
+TypeError: Cannot read properties of undefined (reading 'toFixed')
+ ❯ Function.of src/domain/exact.ts:54:61
+     52|       return Q.of(new D(v).toFixed());
+     53|     }
+     54|     const s = typeof v === "string" ? v.trim() : (v as Dec).toFixed();
+       |                                                             ^
+     55|     const f = /^(-?\d+)\/(\d+)$/.exec(s);
+     56|     if (f) return new Q(BigInt(f[1]), BigInt(f[2]));
+ ❯ tests/integration/exact-quantities.test.ts:210:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  tests/integration/exact-quantities.test.ts > exact quantities for new recipe versions > EQ-09: an exact boundary line and a legacy line approve and go in one partial transfer with the counts shown
+TypeError: Cannot read properties of undefined (reading 'toFixed')
+ ❯ Function.of src/domain/exact.ts:54:61
+     52|       return Q.of(new D(v).toFixed());
+     53|     }
+     54|     const s = typeof v === "string" ? v.trim() : (v as Dec).toFixed();
+       |                                                             ^
+     55|     const f = /^(-?\d+)\/(\d+)$/.exec(s);
+     56|     if (f) return new Q(BigInt(f[1]), BigInt(f[2]));
+ ❯ tests/integration/exact-quantities.test.ts:235:38
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+ FAIL  tests/integration/exact-quantities.test.ts > exact quantities for new recipe versions > EQ-10: the database refuses an exact row without its basis, with a basis that does not match its decimal, or a legacy row claiming one
+AssertionError: expected 'column "quantity_basis" of relation "…' to match /check constraint/
+
+- Expected:
+/check constraint/
+
++ Received:
+"column \"quantity_basis\" of relation \"recipe_ingredients\" does not exist"
+
+ ❯ tests/integration/exact-quantities.test.ts:246:59
+    244|         (e: Error) => e.message,
+    245|       );
+    246|     expect(await ins("0.666666666666", "exact", null, 3)).toMatch(/che…
+       |                                                           ^
+    247|     expect(await ins("0.6667", "exact", "2", 3)).toMatch(/check constr…
+    248|     expect(await ins("0.6667", "legacy", "2", 3)).toMatch(/check const…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  10 failed (10)
+   Start at  01:03:39
+   Duration  9.57s (tests 80%, transform 11%, import 9%)
+

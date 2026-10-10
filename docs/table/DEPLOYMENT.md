@@ -19,7 +19,29 @@ services, private services, and background workers"), **no shell, no one-off job
 15 minutes without traffic and takes about a minute to wake. So the database is updated by the **Start Command**
 itself, before the server starts. The health check answers 503 while a migration this code knows about is pending.
 
-### Upgrade from your phone — `43cd1ce` (verified commit); you run it, Claude does not deploy
+### Upgrade from your phone — `dbc105d` (verified commit); you run it, Claude does not deploy
+
+**Pilot-upgrade checklist for `dbc105d` (exact quantities, migration 015).** The steps below are unchanged; this is
+what is new in this upgrade and what to look at.
+
+- [ ] Step 1 recovery point taken **before** deploying (the migration cannot be un-applied).
+- [ ] Step 5 log shows `applied: …` ending in `015_exact_quantities.sql` (just that file if the pilot runs `43cd1ce`;
+      earlier files too if it is older), then `✓ Ready`.
+- [ ] Step 6 health is `{"ok":true,"problems":[]}`; sign in; an existing recipe shows the same amounts as before.
+- [ ] Groceries for the current week show the same packages as before the upgrade (**[tested]** in the rehearsal:
+      identical amounts, packages, to-send counts and approvals for data written by `43cd1ce`).
+- [ ] Nothing else to switch on; no data is changed by the upgrade and nothing is backfilled.
+- What 015 does: adds three columns to recipe ingredients (`quantity_basis` defaulting to `legacy`, `exact_amount`,
+  `exact_servings`) and checks between them. Existing rows are not rewritten. **[tested]** on a populated database
+  written by `43cd1ce`: every pre-existing column of every table unchanged
+  (`docs/table/evidence/2026-10-10-verify-dbc105d/rehearsal/`).
+- Going back: **[tested]** `43cd1ce`'s commands and grocery projection run and its whole test suite passes on the
+  upgraded schema, also after new exact recipes exist (it then counts their stored decimals, not the exact
+  fractions). **[not tested here]** `43cd1ce` started as a web server against the upgraded schema (the 2026-10-09
+  rehearsal did test an older release serving on a newer schema). An export
+  made **after** exact recipes exist restores only into `dbc105d` or later; exports from before restore anywhere.
+- **Do not** run `npm run audit:legacy-quantities` against Neon. It refuses a remote host unless told otherwise;
+  whether to run it at all (preferably on a local restore of a household export) is your decision (B41).
 
 Everything marked **[tested]** was rehearsed locally on 2026-10-09 in production mode (production build,
 `TABLE_ENV=production`, PostgreSQL 16) on a household database at migration 011 created and populated by the
@@ -58,7 +80,7 @@ or paste the database password in these steps.
      under `/bin/sh`, a stop signal to the shell left the server running. **[unverified]** which shell Render uses.
    - **[unverified]** whether saving starts a deploy by itself; if one starts, check its commit in **Events** and
      continue with step 4 either way. Leave every environment variable as it is.
-4. **Deploy the exact commit.** **Manual Deploy** → **Deploy a specific commit** → `43cd1ce` → **Deploy**.
+4. **Deploy the exact commit.** **Manual Deploy** → **Deploy a specific commit** → `dbc105d` → **Deploy**.
    (Render's docs say this turns automatic deploys off for the service — what you want for a verified commit.)
 5. **Read the deploy log** (**Events** → the deploy → **Logs**). Expect, in order: `> tsx scripts/migrate.ts`,
    then `applied: …` ending in `014_member_recipe_photo.sql` (earlier files too if the pilot is older), or
@@ -85,7 +107,7 @@ or paste the database password in these steps.
   a deploy failed.
 
 **Alternative (needs a computer):** keep any Start Command and run `npm run db:migrate` from your copy of the
-repository at `43cd1ce` with `DATABASE_URL` typed into that terminal only, then deploy the same commit. With
+repository at `dbc105d` with `DATABASE_URL` typed into that terminal only, then deploy the same commit. With
 this commit a start-time migration running at the same moment is safe (the lock above).
 
 ### One real recipe URL (only after you separately approve R1)

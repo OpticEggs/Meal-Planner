@@ -1,0 +1,88 @@
+{
+  "when": "2026-10-10T01:26:37.021Z",
+  "head": "5e19991ec420d72a2592ad4f28820bb2a842fa6b",
+  "restored": true,
+  "pass": false,
+  "results": [
+    {
+      "name": "HE_enough_compared_unrounded",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: a demand with more than 3 decimals is covered by the 3-decimal amount the member confirmed"
+    },
+    {
+      "name": "RIO01_per_serving_rounded_half_up",
+      "control": false,
+      "classification": "ERROR",
+      "expectedClassification": "KILLED",
+      "ok": false,
+      "detail": "non-assertion failure: error: new row for relation \"recipe_ingredients\" violates check constraint \"recipe_ingredients_exact_matches_quantity\""
+    },
+    {
+      "name": "EQ_purchase_uses_stored_decimal",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "3/10 failed by assertion: EQ-02: 2 cucumbers for 3 servings, all 3 planned, need exactly 2 — next to the legacy salmon bowls' cucumbers | EQ-03: a genuine amount above the package boundary needs another package — no tolerance"
+    },
+    {
+      "name": "EQ_package_tolerance",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: EQ-03: a genuine amount above the package boundary needs another package — no tolerance"
+    },
+    {
+      "name": "EQ_conversion_through_decimal",
+      "control": false,
+      "classification": "SURVIVED",
+      "expectedClassification": "KILLED",
+      "ok": false,
+      "detail": "1 executed, all passed"
+    },
+    {
+      "name": "EQ_import_drops_exact",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: EQ-01: an imported row keeps its exact whole-recipe amount and serving basis next to the stored decimal"
+    },
+    {
+      "name": "EQ_title_edit_relabels_legacy",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/2 failed by assertion: EQ-05: a title-only edit of a legacy recipe keeps its rows legacy; a changed amount is the member's exact amount; the accepted dinner keeps its version | EQ-05b: an unchanged number keeps its basis when the row's unit or name changes — an imported 2/3 stays 2/3, a legacy 0.6667 stays legacy"
+    },
+    {
+      "name": "EQ_client_claims_exact",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: EQ-06: a client cannot declare a row exact — exact fields in a save are ignored and the typed decimal is what is stored"
+    },
+    {
+      "name": "LA_audit_not_read_only",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: LA-02: it never writes — every statement is a read inside a READ ONLY transaction that is rolled back, and nothing changed"
+    },
+    {
+      "name": "LA_pattern_counted_as_evidence",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: LA-01: classifies legacy rows and separates recoverable evidence from patterns and missing information"
+    }
+  ]
+}
