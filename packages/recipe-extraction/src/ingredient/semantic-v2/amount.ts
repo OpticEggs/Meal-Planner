@@ -17,12 +17,13 @@ import { UNIT_REGISTRY, type EquivalentV1, type ExactQuantity, type QuantityV1, 
 import { add, cmp, div, fromDecimalString, fromExactQuantity, mul, rational, toExactQuantity, type Rational } from "../../rational";
 import { adjacent, isGroup, isSym, isWord, type GroupTok, type Tok } from "./lexer";
 import {
-  APPROX_SYMBOLS, APPROX_WORDS, BOUND_PHRASES, CARDINALS, CONTAINER_UNITS, FORM_WORDS, FRACTION_WORDS, FUNCTION_WORDS, LENGTH_WORDS, MEASURE_ADJECTIVES,
+  APPROX_SYMBOLS, APPROX_WORDS, BOUND_PHRASES, CARDINALS, CONTAINER_UNITS, FORM_WORDS, FRACTION_WORDS, FUNCTION_WORDS, LENGTH_MEASURED_FOODS, LENGTH_WORDS, MEASURE_ADJECTIVES,
   RANGE_DASHES, REMARK_WORDS, SIZE_WORDS, TIME_WORDS, UNKNOWN_MEASURES,
 } from "./lexicon";
 import { andFraction, readNumber, type NumberRead } from "./quantity";
 import { emptyEffects, type AmountReading, type Effects } from "./types";
 import { readUnit, type UnitRead } from "./unit";
+import { unitV1 } from "../../units";
 
 const isMassOrVolume = (u: UnitV1) => u.dimension === "mass" || u.dimension === "volume";
 const hyphen = (t: Tok | undefined) => isSym(t, "-", "‐", "‑");
@@ -170,33 +171,34 @@ function inBase(q: ExactQuantity, u: UnitV1): Rational | null {
   return b === null || r === null ? null : mul(r, fromDecimalString(b)!);
 }
 
-/** The measurement system of a weight or volume unit: metric, or US customary (avoirdupois and US liquid). */
-const METRIC = new Set(["mg", "g", "kg", "ml", "dl", "l"]);
-const systemOf = (u: UnitV1): "metric" | "us" => (METRIC.has(u.canonical) ? "metric" : "us");
+/**
+ * RESTATEMENT TOLERANCE (semantic-v2, CONTRACT §12.6): a same-dimension amount in brackets or after "/" restates the
+ * first-stated amount when it is within 7 % of it — |restated − first| ≤ 7/100 · first, in exact arithmetic on the
+ * definitional sizes of UNIT_REGISTRY, whatever the measurement systems: "1/3 cup (5 tbsp)" (6.25 %), "1 cup (250 ml)"
+ * (5.7 %), "2 cups (500 ml / 17 fl oz)", "14 oz (400 g)", "1 lb (15 oz)" (6.25 %). Beyond it is a second amount: "1 lb
+ * (14 oz)" (12.5 %), "1 lb (12 oz)". Mass and volume are never compared (no densities): they stay equivalents.
+ */
+export const RESTATEMENT_TOLERANCE: Rational = { n: BigInt(7), d: BigInt(100) };
 
 /**
- * The largest relative difference accepted between an amount and its restatement in the OTHER measurement
- * system (metric ↔ US customary): 1/8 (12.5 %). Recipes round across systems ("1 cup (240 ml)" is 1.4 % off,
- * "1 lb (450 g)" 0.8 %, "1 lb (500 g)" 9.3 %, "4 cups (1 liter)" 5.4 %). Within one system the sizes are
- * definitional (16 oz to the pound, 16 tbsp to the cup, 1000 g to the kilogram), so a restatement there must
- * be exact (CONTRACT §5): "1 lb (15 oz)", "1 cup (14 tbsp)", "1 quart (3 1/2 cups)" are contradictions.
- * Exact arithmetic on the definitional sizes of UNIT_REGISTRY; mass and volume are never compared.
+ * Whether `b` restates `a` (`a` is the first-stated amount): true / false when the two amounts have the same dimension
+ * and can be compared; null when they cannot (count, imprecise, mass vs volume).
  */
-export const RESTATEMENT_TOLERANCE: Rational = { n: BigInt(1), d: BigInt(8) };
-
-/** true / false when two amounts of the same dimension can be compared; null when they cannot (count, imprecise, mass vs volume). */
 export function sameAmount(a: ExactQuantity, ua: UnitV1, b: ExactQuantity, ub: UnitV1): boolean | null {
   if (ua.dimension !== ub.dimension) return null;
-  if (ua.canonical === ub.canonical) return a.numerator === b.numerator && a.denominator === b.denominator;
+  if (ua.canonical === ub.canonical && a.numerator === b.numerator && a.denominator === b.denominator) return true;
   const x = inBase(a, ua);
   const y = inBase(b, ub);
   if (x === null || y === null) return null;
-  if (systemOf(ua) === systemOf(ub)) return cmp(x, y) === 0;
-  const big = cmp(x, y) >= 0 ? x : y;
-  const small = big === x ? y : x;
-  // (big - small) / big ≤ tolerance  ⇔  big - small ≤ tolerance · big
+  return withinRestatementTolerance(x, y);
+}
+
+/** |restated − first| ≤ RESTATEMENT_TOLERANCE · first (both positive, in the same base unit). */
+export function withinRestatementTolerance(first: Rational, restated: Rational): boolean {
+  const big = cmp(first, restated) >= 0 ? first : restated;
+  const small = big === first ? restated : first;
   const diff = { n: big.n * small.d - small.n * big.d, d: big.d * small.d };
-  return cmp(diff, mul(RESTATEMENT_TOLERANCE, big)) <= 0;
+  return cmp(diff, mul(RESTATEMENT_TOLERANCE, first)) <= 0;
 }
 
 /**
@@ -237,7 +239,11 @@ export function placeSecondary(text: string, slots: AmountSlots, sec: Secondary)
       fx.unassigned++;
       return;
     }
-    if (agrees === true) return;
+    if (agrees === true) {
+      // (semantic-v2, CONTRACT §12.3) the restated package size is kept in the note, not as an equivalent
+      fx.notes.push({ s: sa.s, text: text.slice(sa.s, sa.e) });
+      return;
+    }
     // in another dimension ("1 (12 oz) package frozen peas (about 2 cups)"): with one package the contents
     // are the amount; with several, per package or in all? (a person decides)
     const one = slots.quantity?.kind === "exact" && slots.quantity.numerator === slots.quantity.denominator;
@@ -372,6 +378,8 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
 
   const slots: AmountSlots = { quantity: null, unit: null, packageSize: null, packageSpan: null, equivalents: [], effects: fx };
   const between: Between[] = [];
+  /** Restatements of a package size written in its bracket ("(15 oz / 425 g)"): checked once the package is placed. */
+  const restatedPackage: StatedAmount[] = [];
   /** Something unexpected sat between the amount and its unit ("1 (15) oz can"): the amount is not clear. */
   let irregular = false;
   /** A non-US measurement system was named for the unit ("1 (UK) pint", "1 imperial gallon"). */
@@ -380,6 +388,18 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   // Package sizes, size descriptors and remarks written before the unit.
   for (let guard = 0; guard < 6; guard++) {
     const t = toks[k];
+    // "1 large (28 oz) can", "1 lg. (28 oz) can": a size word before a bracketed package size describes the container
+    if (isWord(t) && SIZE_WORDS.has(t.lower) && n1.ok && max === null && between.length === 0) {
+      let c = k + 1;
+      if (isSym(toks[c], ".") && adjacent(toks[c - 1], toks[c])) c++;
+      const g = toks[c];
+      const inner = isGroup(g) ? groupAmounts(text, g) : null;
+      if (inner && isMassOrVolume(inner[0].unit)) {
+        fx.notes.push({ s: t.s, text: t.text });
+        k = c;
+        continue;
+      }
+    }
     if (isGroup(t)) {
       if (isPriceGroup(t)) {
         if (!fx.reasons.includes("price_annotation_removed")) fx.reasons.push("price_annotation_removed");
@@ -400,6 +420,15 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
       const sa = groupAmount(text, t);
       if (sa && (isMassOrVolume(sa.unit) || sa.unit.dimension === "imprecise")) {
         between.push({ sec: { sa, position: "between" }, marked: true });
+        k++;
+        continue;
+      }
+      // "1 (15 oz / 425 g) can": a package size restated in the same bracket — the first-stated size is the package,
+      // a restatement that agrees is a note (CONTRACT §12.3), one that does not is a second amount
+      const several = groupAmounts(text, t);
+      if (several && several.length >= 2 && several.every((x) => isMassOrVolume(x.unit) && !x.each && !x.total)) {
+        between.push({ sec: { sa: several[0], position: "between" }, marked: true });
+        restatedPackage.push(...several.slice(1));
         k++;
         continue;
       }
@@ -490,7 +519,11 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   let a = k;
   const sizeLike = (t: Tok | undefined) =>
     isWord(t) && (MEASURE_ADJECTIVES.has(t.lower) || SIZE_WORDS.has(t.lower) || t.lower === "extra" || /-sized?$/.test(t.lower) || SYSTEM_WORDS.has(t.lower));
-  while (sizeLike(toks[a])) a++;
+  while (sizeLike(toks[a])) {
+    a++;
+    // "1 lg. can": an abbreviated size word keeps its period
+    if (isSym(toks[a], ".") && adjacent(toks[a - 1], toks[a]) && SIZE_WORDS.has((toks[a - 1] as { lower: string }).lower) && readUnit(text, toks, a + 1)) a++;
+  }
   // ("1 UK pint": a measurement-system word before the unit is read with it)
   if (a > k && !readUnit(text, toks, a) && toks.slice(k, a).some((t) => isWord(t) && SYSTEM_WORDS.has(t.lower))) a = k;
   if (toks.slice(k, a).some((t) => isWord(t) && OTHER_SYSTEM_WORDS.has(t.lower))) otherSystem = true;
@@ -505,6 +538,9 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   if (unitRead && a > k && !isWord(toks[k], "of")) {
     fx.notes.push({ s: toks[k].s, text: text.slice(toks[k].s, toks[a - 1].e) });
   }
+  // CONTAINER-CUP RULE (CONTRACT §12.5): "3 (5.3 oz) cups vanilla Greek yogurt" — a package size between the count and
+  // "cup(s)" makes the cup a container (a measuring cup never carries a package size)
+  if (unitRead && containerCup(unitRead, between)) unitRead = { ...unitRead, unit: unitV1("container", unitRead.unit.source) };
   if (unitRead) k = unitRead.next;
   // "1 pint (UK) milk": the system written right after the unit
   const afterUnit = toks[k];
@@ -513,22 +549,28 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   if (unitRead && otherSystem && US_VOLUME.has(unitRead.unit.canonical) && !fx.reasons.includes("unclassified")) fx.reasons.push("unclassified");
 
   // An inch is a size ("9-inch pie crust", "12 inch pizza crust", "1-inch piece ginger"), never an amount bought.
-  if (unitRead && unitRead.unit.canonical === "inch" && between.length === 0) return sizeOnly(text, toks, fx, n1.s, k, approximate);
+  // (semantic-v2) "1 inch ginger": an unhyphenated inch before a food measured by its length is the amount
+  if (unitRead && unitRead.unit.canonical === "inch" && between.length === 0 && !inchMeasuresFood(toks, n1.next, k)) return sizeOnly(text, toks, fx, n1.s, k, approximate);
 
-  // "400 g tin", "16-ounce package": a size followed by its container. The size is the container's
-  // contents; how many containers is not stated, so no quantity is given.
-  if (unitRead && n1.ok && max === null && between.length === 0 && n1.value.n > BigInt(0)) {
-    const c = readUnit(text, toks, k);
-    if (c && c.unit.dimension === "count" && CONTAINER_UNITS.has(c.unit.canonical) && isMassOrVolume(unitRead.unit)) {
+  // PACKAGE SIZE WITH NO COUNT (CONTRACT §12.3): "28 oz can tomatoes", "400 g can chickpeas", "8-ounce package cream
+  // cheese" — a size directly before a SINGULAR container is one container of that size (quantity 1); before a plural
+  // container ("15 oz cans beans") the count is missing. A restatement of the size before the container ("400 g (14 oz)
+  // can", "400g/14oz can") keeps the first-stated size and goes to the note; one that disagrees is a second amount.
+  if (unitRead && n1.ok && max === null && between.length === 0 && n1.value.n > BigInt(0) && isMassOrVolume(unitRead.unit)) {
+    const pk = packageBeforeContainer(text, toks, k);
+    if (pk !== null) {
       const size: StatedAmount = {
-        value: n1.value, decimal: n1.decimal, unit: unitRead.unit, unitSpan: [unitRead.s, unitRead.e], s: n1.s, e: unitRead.e, next: c.next, each: false, total: false, approx: false,
+        value: n1.value, decimal: n1.decimal, unit: unitRead.unit, unitSpan: [unitRead.s, unitRead.e], s: n1.s, e: unitRead.e, next: pk.container.next, each: false, total: false, approx: false,
       };
-      fx.reasons.push("quantity_missing");
-      const slots0: AmountSlots = { quantity: null, unit: c.unit, packageSize: null, packageSpan: null, equivalents: [], effects: fx };
+      const one = !pk.plural;
+      const quantity1 = one ? toExactQuantity(rational(BigInt(1))) : null;
+      if (!one) fx.reasons.push("quantity_missing");
+      const slots0: AmountSlots = { quantity: quantity1, unit: pk.container.unit, packageSize: null, packageSpan: null, equivalents: [], effects: fx };
       placeSecondary(text, slots0, { sa: size, position: "between" });
+      for (const r of pk.restated) placeSecondary(text, slots0, { sa: r, position: "between" });
       return {
-        quantity: null, quantitySpan: null, amountWritten: true, unit: c.unit, unitSpan: [c.s, c.e], packageSize: slots0.packageSize, packageSpan: slots0.packageSpan,
-        packageProvisional: null, equivalents: [], approximate, fromWord: false, effects: fx, next: c.next,
+        quantity: quantity1, quantitySpan: null, amountWritten: true, unit: pk.container.unit, unitSpan: [pk.container.s, pk.container.e], packageSize: slots0.packageSize,
+        packageSpan: slots0.packageSpan, packageProvisional: null, equivalents: [], approximate, fromWord: false, effects: fx, next: pk.container.next,
       };
     }
   }
@@ -660,7 +702,9 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   }
   if (unit === null && quantity !== null) unit = { canonical: "each", dimension: "count", source: "" };
   slots.quantity = quantity;
-  slots.unit = unitRead ? unitRead.unit : null;
+  // (semantic-v2) a restatement is compared with the amount in the unit it is stated in — after a compound, the
+  // smallest unit ("1 Tbsp + 1 tsp (20 ml)" → 4 tsp vs 20 ml)
+  slots.unit = unitRead ? (parts.length > 1 && unit !== null ? unit : unitRead.unit) : null;
 
   // Sizes written between the count and the unit: a container's contents only beside a counted unit
   // (CONTRACT §7.4: "2 (15 oz) cans"). With no unit yet the engine decides once the whole line is read
@@ -678,6 +722,10 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
       if (!marked) slots.quantity = quantity = null;
     }
   }
+
+  // restatements of the package size written in its bracket ("(15 oz / 425 g)")
+  if (slots.packageSize !== null) for (const r of restatedPackage) placeSecondary(text, slots, { sa: r, position: "between" });
+  else if (restatedPackage.length > 0) fx.unassigned++;
 
   // Restatements and container contents after the unit.
   if (unitRead) {
@@ -751,6 +799,60 @@ function dimensionsEnd(text: string, toks: readonly Tok[], k: number): number {
   // "13x9 pan": numbers written together with an "x" and no unit are dimensions too
   if (glued && isWord(u) && readUnit(text, toks, c) === null) return c;
   return k;
+}
+
+/**
+ * "1 inch ginger, grated", "2 inch fresh turmeric": the inch (not hyphenated to the number, at `unitAt`) is followed,
+ * before any comma or bracket, by a food that is measured by the length cut from it (LENGTH_MEASURED_FOODS); with
+ * another counted unit after it ("1 inch piece ginger") or any other food ("12 inch pizza crust") it is a size.
+ */
+function inchMeasuresFood(toks: readonly Tok[], unitAt: number, next: number): boolean {
+  if (hyphen(toks[unitAt]) || isSym(toks[unitAt - 1], "-")) return false;
+  const rest: Tok[] = [];
+  for (let c = next; c < toks.length && !isGroup(toks[c]) && !isSym(toks[c], ",", ";"); c++) rest.push(toks[c]);
+  const ws = rest.filter((t) => t.kind === "word") as { lower: string }[];
+  if (ws.length === 0 || rest.length !== ws.length) return false;
+  const head = ws[ws.length - 1].lower === "root" && ws.length >= 2 ? ws[ws.length - 2].lower : ws[ws.length - 1].lower;
+  return LENGTH_MEASURED_FOODS.has(head) && ws.slice(0, -1).every((w) => REMARK_WORDS.has(w.lower) || LENGTH_MEASURED_FOODS.has(w.lower) || w.lower === "of" || w.lower === "root");
+}
+
+/**
+ * CONTAINER-CUP RULE (CONTRACT §12.5): the unit read is "cup(s)" and a package size was written between the count and
+ * it in brackets, hyphenated or after "x" ("3 (5.3 oz) cups yogurt") — the cup is a container.
+ */
+export function containerCup(unitRead: UnitRead, between: readonly { sec: Secondary; marked: boolean }[]): boolean {
+  return unitRead.unit.canonical === "cup" && between.length === 1 && between[0].marked && isMassOrVolume(between[0].sec.sa.unit) && !between[0].sec.sa.each && !between[0].sec.sa.total;
+}
+
+/**
+ * After a weight or volume at `k`: optional restatements of it ("(14 oz)", "/ 14 oz") and then a container unit
+ * ("can", "packages"). Null when no container follows. `plural`: the container was written in the plural.
+ */
+function packageBeforeContainer(text: string, toks: readonly Tok[], k: number): { container: UnitRead; plural: boolean; restated: StatedAmount[] } | null {
+  let c = k;
+  const restated: StatedAmount[] = [];
+  for (let guard = 0; guard < 3; guard++) {
+    const t = toks[c];
+    if (isGroup(t)) {
+      const list = groupAmounts(text, t);
+      if (!list || !list.every((x) => isMassOrVolume(x.unit) && !x.each && !x.total)) return null;
+      restated.push(...list);
+      c++;
+      continue;
+    }
+    if (isSym(t, "/")) {
+      const sa = readStatedAmount(text, toks, c + 1);
+      if (!sa || !isMassOrVolume(sa.unit) || sa.each || sa.total) return null;
+      restated.push(sa);
+      c = sa.next;
+      continue;
+    }
+    break;
+  }
+  const container = readUnit(text, toks, c);
+  if (container === null || container.unit.dimension !== "count" || !CONTAINER_UNITS.has(container.unit.canonical)) return null;
+  const written = text.slice(container.s, container.e).toLowerCase().replace(/\.$/, "");
+  return { container, plural: /s$/.test(written), restated };
 }
 
 /** A size with no amount ("9-inch", "2 cm"): noted; a counted unit right after it is read ("1-inch piece"); no quantity. */

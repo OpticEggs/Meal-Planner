@@ -22,7 +22,7 @@ import { validateParsedIngredientV1 } from "../../validate";
 import { amountStartsAt, groupAmount, isPriceGroup, readAmountPhrase, readStatedAmount, placeSecondary, sumInSmallest, type AmountSlots } from "./amount";
 import { nonIngredientReason, numericLead } from "./classify";
 import { adjacent, isGroup, isNumberish, isSym, isWord, lex, type Tok } from "./lexer";
-import { BULLETS, CONTAINER_UNITS, SERVING_LABEL_WORDS, UNIT_WORDS_IN_FOOD_NAMES, FUNCTION_WORDS, INVARIANT_PLURALS, MEASURE_ADJECTIVES, PREP_ADVERBS, REMARK_WORDS, SIZE_WORDS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
+import { BULLETS, CONTAINER_UNITS, FRUIT_PART_WORDS, SERVING_LABEL_WORDS, UNIT_WORDS_IN_FOOD_NAMES, FUNCTION_WORDS, INVARIANT_PLURALS, MEASURE_ADJECTIVES, PREP_ADVERBS, REMARK_WORDS, SIZE_WORDS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
 import { readNameRegion, type NameReading } from "./name";
 import { normalizeLine } from "./normalize";
 import { classifyPiece, splitOr, splitTopLevel, textOf, trimEdges, unstatedAt } from "./remarks";
@@ -131,6 +131,12 @@ function bareUnitAtStart(u: UnitRead, text: string): boolean {
   const written = text.slice(u.s, u.e).toLowerCase().replace(/\.$/, "");
   if (written.length <= 1 || UNIT_WORDS_IN_FOOD_NAMES.has(written)) return false;
   return u.unit.dimension === "mass" || u.unit.dimension === "volume";
+}
+
+/** A singular imprecise measure word with no number ("Pinch", "dash", "handful"): one of it is meant. */
+function impliedOne(u: UnitRead, text: string): boolean {
+  const written = text.slice(u.s, u.e).toLowerCase().replace(/\.$/, "");
+  return u.unit.dimension === "imprecise" && u.unit.canonical !== "inch" && !/(?:s|es)$/.test(written);
 }
 
 // --- The engine -------------------------------------------------------------------------------------
@@ -292,7 +298,11 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
           amount = a;
           partNote = head.slice(0, of);
           region = head.slice(a.next);
-          unclassified = true; // "juice of 1 lemon": the food is read, but what to buy is a person's call
+          // "Juice of 2 limes", "Zest of ½ orange": the fruit is counted and the part used is the note (labelling
+          // guide); any other "X of 2 Y" ("leaves of 2 sprigs") stays for a person to check
+          const partWords = partNote.filter((t) => t.kind === "word") as { lower: string }[];
+          const fruitPart = partWords.length === partNote.length && partWords.every((w) => FRUIT_PART_WORDS.has(w.lower)) && partWords.some((w) => ["juice", "zest", "rind", "peel"].includes(w.lower));
+          if (!fruitPart) unclassified = true;
         }
       }
     }
@@ -305,6 +315,9 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
       const taken = u !== null && (isWord(head[u.next], "of") || (u.unit.dimension === "imprecise" && u.unit.canonical !== "drop" && u.unit.canonical !== "inch") || bareUnitAtStart(u, text));
       if (u && taken && u.next < head.length) {
         amount = { ...noAmount(), unit: u.unit, unitSpan: [u.s, u.e], next: 0 };
+        // (semantic-v2) "Pinch of salt", "Small pinch of salt", "Dash hot sauce": a singular imprecise measure that
+        // opens the line is one of it, as "a pinch of salt" is (the article is left out); "Pinches of salt" states none
+        if (impliedOne(u, text)) amount.quantity = toExactQuantity(rational(BigInt(1)));
         if (k > 0) fx.notes.push({ s: head[0].s, text: textOf(text, head.slice(0, k)) });
         region = head.slice(u.next);
       }
@@ -333,8 +346,9 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
   const hasQuantity = amt.quantity !== null;
   const nr: NameReading = readNameRegion(region, {
     text, slots: amount ? slots : null, unitWritten: amt.unitSpan !== null, hasQuantity, dropLeadingOf: amount !== null && !nameFromLabel,
-    // size words describe counted items; after a weight, volume or container they name the product
-    sizeWordsAreNotes: amt.unitSpan === null || (amt.unit?.dimension === "count" && !CONTAINER_UNITS.has(amt.unit.canonical)),
+    // size words describe counted items and, after a weight or volume, the food (semantic-v2, CONTRACT §12.10: "1 lb
+    // large shrimp" → shrimp, note large); after a container they may name the product ("1 bag mini marshmallows")
+    sizeWordsAreNotes: amt.unitSpan === null || (amt.unit !== null && !CONTAINER_UNITS.has(amt.unit.canonical) && amt.unit.dimension !== "imprecise"),
     amountRead: amountAtStart && !nameFromLabel, verbatim: opts.leadIsName,
   }, fx);
   let unit: UnitV1 | null = amt.unit;

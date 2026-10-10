@@ -65,12 +65,15 @@ describe("a count, then a package size and a container (N2)", () => {
   });
 });
 
-describe("restatements within one measurement system are exact (N3)", () => {
+// semantic-v2: CONTRACT §12.6 replaces semantic-v1's rule (exact within one system, 12.5 % across systems) with one 7 %
+// tolerance for every same-dimension restatement. Moved to "kept": 1 lb (15 oz), 1 lb (17 oz), 2 lb (30 oz), 1 cup (15
+// tbsp), 1 gallon (15 cups), 2 cups (15 fl oz) — each 6.25 % off. Moved to "a contradiction": 1 lb (500 g) — 10.2 % off.
+describe("restatements must be within 7 % (N3, CONTRACT §12.6)", () => {
   it.each([
-    "1 lb (14 oz) beef", "1 lb (15 oz) beef", "1 lb (17 oz) beef", "1 lb (18 oz) beef", "2 lb (30 oz) beef", "1 cup (14 tbsp) butter", "1 cup (15 tbsp) butter",
-    "1 quart (3 1/2 cups) stock", "1 gallon (15 cups) water", "1 pint (14 fl oz) cream", "1 cup (7 fl oz) milk", "1 cup (9 fl oz) milk", "2 cups (15 fl oz) milk",
+    "1 lb (14 oz) beef", "1 lb (18 oz) beef", "1 cup (14 tbsp) butter",
+    "1 quart (3 1/2 cups) stock", "1 pint (14 fl oz) cream", "1 cup (7 fl oz) milk", "1 cup (9 fl oz) milk",
     "1 lb (8 oz) cheese", "1 tbsp (2 tsp) sugar", "1/2 cup (4 tbsp) butter", "1 pint (3 cups) cream", "1 kg (900 g) potatoes", "1 l (750 ml) stock",
-    "1 gallon (3 quarts) water",
+    "1 gallon (3 quarts) water", "1 lb (500 g) beef",
   ])("%s → a contradiction", (line) => {
     const r = read(line);
     expect(r).toMatchObject({ status: "needs_review", equivalents: [] });
@@ -79,9 +82,11 @@ describe("restatements within one measurement system are exact (N3)", () => {
 
   it.each([
     ["1 lb (16 oz) beef", "16 oz"], ["1/2 cup (8 tbsp) butter", "8 tbsp"], ["1 pint (2 cups) cream", "2 cup"], ["1 gallon (4 quarts) water", "4 quart"],
-    ["1 kg (1000 g) flour", "1000 g"], ["1 cup (240 ml) milk", "240 ml"], ["1 lb (454 g) beef", "454 g"], ["1 lb (500 g) beef", "500 g"],
+    ["1 kg (1000 g) flour", "1000 g"], ["1 cup (240 ml) milk", "240 ml"], ["1 lb (454 g) beef", "454 g"],
     ["2 tbsp (30 ml) oil", "30 ml"], ["1 oz (28 g) cheese", "28 g"], ["1 stick (1/2 cup) butter", "1/2 cup"],
-  ])("%s → kept (exact within a system; rounded across systems)", (line, eq) => {
+    ["1 lb (15 oz) beef", "15 oz"], ["1 lb (17 oz) beef", "17 oz"], ["2 lb (30 oz) beef", "30 oz"], ["1 cup (15 tbsp) butter", "15 tbsp"],
+    ["1 gallon (15 cups) water", "15 cup"], ["2 cups (15 fl oz) milk", "15 fl_oz"],
+  ])("%s → kept (within 7 %%)", (line, eq) => {
     const r = read(line);
     expect(r.status).toBe("ready");
     expect(r.equivalents.map(amountText)).toEqual([eq]);
@@ -148,15 +153,26 @@ describe("real ingredients are never refused as recipe facts (N6)", () => {
     expect(r.name).toBe(name);
   });
 
-  it.each(["Per person: 200 g pasta", "4 portions of salmon", "4 portions salmon (150 g each)", "2 servings cooked rice", "1 serving instant oatmeal", "2 portions noodles", "You will need: 2 baking sheets", "Sugars: 1 cup"])(
+  // (semantic-v2: "You will need: 2 baking sheets" is an equipment list → unsupported, CONTRACT §12.8; see below)
+  it.each(["Per person: 200 g pasta", "4 portions of salmon", "4 portions salmon (150 g each)", "2 servings cooked rice", "1 serving instant oatmeal", "2 portions noodles", "You will need: 2 eggs", "Sugars: 1 cup"])(
     "a line that may be food but is unclear goes to a person, never refused: %s",
     (line) => {
       expect(read(line).status).not.toBe("unsupported");
     },
   );
 
-  it.each(["BREAD", "STOCK", "SYRUP", "PIE CRUST", "SAUCE", "DRESSING", "CRUST"])("an all-capital line that may be food is food: %s", (line) => {
+  it.each(["BREAD", "STOCK", "OLIVE OIL", "SALT"])("an all-capital line that may be food is food: %s", (line) => {
     expect(read(line)).toMatchObject({ status: "needs_review", name: line });
+  });
+
+  // semantic-v2 (CONTRACT §12.8: "section headings in any case (SAUCE, Topping, Cake Layers)"): a line in capitals that
+  // names a dish component is a section heading; the semantic-v1 expectation (needs_review) is superseded.
+  it.each(["SYRUP", "PIE CRUST", "SAUCE", "DRESSING", "CRUST"])("an all-capital dish component is a section heading: %s", (line) => {
+    expect(read(line)).toMatchObject({ status: "unsupported", reasons: ["section_heading"] });
+  });
+
+  it("an equipment list is not an ingredient (CONTRACT §12.8): You will need: 2 baking sheets", () => {
+    expect(read("You will need: 2 baking sheets")).toMatchObject({ status: "unsupported", reasons: ["not_an_ingredient"] });
   });
 
   it.each(["Calories: 250", "Serving size: 1 cup", "250 kcal", "Protein 20g", "Calories 200 per serving", "Energy: 450 kJ", "Carbs 30 g", "Nutrition: 250 calories", "MARINADE", "FROSTING", "Special equipment: 9-inch pan"])(
@@ -169,12 +185,17 @@ describe("real ingredients are never refused as recipe facts (N6)", () => {
 
 describe("inch marks, dimensions and feet are sizes (N8)", () => {
   it.each([
-    ['12" pizza crust', "pizza crust", '12"'], ['9" pie crust', "pie crust", '9"'], ['10" tortillas', "tortillas", '10"'], ["8″ springform pan", "springform pan", "8″"],
-    ["9x13 inch pan", "pan", "9x13 inch"], ["13x9 pan", "pan", "13x9"], ["9 by 13 inch pan", "pan", "9 by 13 inch"], ['9 x 13" baking dish', "baking dish", '9 x 13"'],
+    ['12" pizza crust', "pizza crust", '12"'], ['9" pie crust', "pie crust", '9"'], ['10" tortillas', "tortillas", '10"'],
+    ["9x13 inch pan", "pan", "9x13 inch"], ["13x9 pan", "pan", "13x9"], ["9 by 13 inch pan", "pan", "9 by 13 inch"],
     ["2 feet sausage casing", "sausage casing", "2 feet"], ["3 feet twine", "twine", "3 feet"], ["1 yard cheesecloth", "cheesecloth", "1 yard"],
   ])("%s → note, no amount", (line, name, note) => {
     const r = read(line);
     expect(r).toMatchObject({ status: "needs_review", quantity: null, unit: null, name, note });
+  });
+
+  // semantic-v2 (CONTRACT §12.8 equipment): a sized equipment name is not an ingredient (was: needs_review with the size noted)
+  it.each(["8″ springform pan", '9 x 13" baking dish'])("%s → unsupported (equipment)", (line) => {
+    expect(read(line)).toMatchObject({ status: "unsupported", reasons: ["not_an_ingredient"] });
   });
 
   it('a size after a count: 2 12" pizza crusts', () => {

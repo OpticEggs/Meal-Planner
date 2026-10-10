@@ -114,6 +114,11 @@ describe("safety properties", () => {
       const r = parse(line);
       if (mentionsNumber(r.normalized)) continue;
       checked++;
+      // (semantic-v2) the one exception: a singular imprecise measure opening the line is one of it ("Pinch of salt" →
+      // 1 pinch, holdout-v2 label ing-h2-0061)
+      const impliedOne = r.quantity?.kind === "exact" && r.quantity.numerator === "1" && r.quantity.denominator === "1" && r.unit?.dimension === "imprecise" && r.packageSize === null && r.equivalents.length === 0
+        && new RegExp(`^(?:(?:small|large|big|generous|good|heaping|scant)\\s+)*${r.unit.source.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i").test(r.normalized.replace(/^[^\p{L}]+/u, ""));
+      if (impliedOne) continue;
       if (r.quantity !== null || r.packageSize !== null || r.equivalents.length > 0) bad.push(show(line));
       if (bad.length >= 10) break;
     }

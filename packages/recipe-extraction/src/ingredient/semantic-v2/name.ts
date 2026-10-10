@@ -12,7 +12,10 @@
  *  - a counted portion written after the food ("3 garlic cloves") is the unit.
  */
 import { adjacent, isGroup, isNumberish, isSym, isWord, type Tok } from "./lexer";
-import { APPROX_WORDS, BULLETS, CARDINALS, CONTAINER_UNITS, META_NOUNS, UNIT_WORDS_IN_FOOD_NAMES, FORM_WORDS, LEADING_JUNK, PREP_ADVERBS, SIZE_WORDS, TRAILING_COUNT_UNITS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
+import {
+  APPROX_WORDS, BULLETS, CARDINALS, CONTAINER_UNITS, FUNCTION_WORDS, META_NOUNS, PRODUCT_IDENTITY_NOUNS, REMARK_WORDS, SIZE_GRADED_NOUNS, UNIT_WORDS_IN_FOOD_NAMES, FORM_WORDS, LEADING_JUNK, PREP_ADVERBS,
+  SIZE_WORDS, TRAILING_COUNT_UNITS, TRAILING_PREP_WORDS, unitOfWord,
+} from "./lexicon";
 import { amountStartsAt, groupAmounts, isPriceGroup, placeSecondary, readAmountPhrase, readStatedAmount, type AmountSlots } from "./amount";
 import { classifyGroup, classifyPiece, dropBarePrices, remarkOnly, splitOr, textOf, trimEdges, unstatedAt } from "./remarks";
 import { readNumber } from "./quantity";
@@ -61,6 +64,13 @@ const isSizeWordAt = (toks: readonly Tok[], i: number): number => {
   if (t.lower === "extra" && isWord(toks[i + 1]) && SIZE_WORDS.has((toks[i + 1] as { lower: string }).lower)) return 2;
   return 0;
 };
+
+/** A size word at `i` that grades the next noun, a material of the product ("small curd", "large flake", "jumbo lump"). */
+function sizeGradesMaterial(toks: readonly Tok[], i: number): boolean {
+  const n = isSizeWordAt(toks, i);
+  const next = toks[i + n];
+  return n > 0 && isWord(next) && SIZE_GRADED_NOUNS.has(next.lower) && toks[i + n + 1] !== undefined;
+}
 
 /** A dimension written in the name ("9-inch", "1 inch") — a size, so a note. */
 function dimensionAt(text: string, toks: readonly Tok[], i: number): number {
@@ -163,7 +173,11 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
   //    a no-fixed-amount phrase before the food ("1 tsp to taste salt").
   let a = 0;
   let amountUnclear = false;
-  if (ctx.dropLeadingOf && isWord(toks[a], "of")) a++;
+  if (ctx.dropLeadingOf && isWord(toks[a], "of")) {
+    a++;
+    // "1/2 of a lemon", "half of an onion": a share of one item — the article is not a stray amount
+    if (ctx.hasQuantity && !ctx.unitWritten && isWord(toks[a], "a", "an") && a + 1 < toks.length) a++;
+  }
   if (ctx.hasQuantity && ctx.unitWritten && isWord(toks[a], "each")) {
     // "1 tsp each salt and pepper": one amount for several foods — a person must split it
     flag();
@@ -259,7 +273,8 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
       a++;
       continue;
     }
-    const size = ctx.sizeWordsAreNotes ? isSizeWordAt(toks, a) : 0;
+    // (a size word that grades a material inside the product name stays: "small curd cottage cheese", §12.10)
+    const size = ctx.sizeWordsAreNotes && !sizeGradesMaterial(toks, a) ? isSizeWordAt(toks, a) : 0;
     if (size > 0) {
       fx.notes.push({ s: t.s, text: text.slice(t.s, toks[a + size - 1].e) });
       a += size;
@@ -387,15 +402,11 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
     if (!ctx.verbatim) toks = stopAtNumber(text, toks, fx);
   }
 
-  // 7. a counted portion after the food ("3 garlic cloves")
+  // 7. a counted portion after the food ("3 garlic cloves", "2 celery ribs", "4 lemon wedges")
   let trailingUnit: UnitRead | null = null;
-  if (options === null && !ctx.unitWritten && ctx.hasQuantity && toks.length >= 2) {
-    const last = toks[toks.length - 1];
-    const code = isWord(last) ? unitOfWord(last.text) : null;
-    if (code !== null && TRAILING_COUNT_UNITS.has(code) && isWord(toks[toks.length - 2])) {
-      trailingUnit = readUnit(text, toks, toks.length - 1);
-      if (trailingUnit) toks = toks.slice(0, -1);
-    }
+  if (options === null && !ctx.unitWritten && ctx.hasQuantity) {
+    trailingUnit = postFoodCountUnit(text, toks);
+    if (trailingUnit) toks = toks.slice(0, -1);
   }
 
   // a conjunction or preposition left at the end ("cream of", "salt and") is not part of the food, and the
@@ -452,6 +463,27 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
   const name = options === null ? nameText(text, toks) : "";
   const span: [number, number] | null = options === null && toks.length > 0 && name.length > 0 ? [toks[0].s, toks[toks.length - 1].e] : null;
   return { name: name.length > 0 ? name : null, nameSpan: span, options, trailingUnit, plusRemark, amountUnclear };
+}
+
+/**
+ * COUNT-NOUN RULE (semantic-v2, CONTRACT §12.4): with a bare count, a portion noun written after the food is the unit
+ * ("2 celery ribs" → 2 rib, "celery"; "4 lemon wedges" → 4 wedge, "lemon"). Not when the noun is part of the product's
+ * identity (PRODUCT_IDENTITY_NOUNS: "fish sticks", "bay leaves", "ice cubes", "whole cloves"), when nothing but
+ * describing words would be left before it ("4 whole cloves", "2 large heads"), or when it is not the last word. The
+ * caller applies it only when no unit was written and a count was read ("1 cup basil leaves", "lime wedges, to serve"
+ * keep the noun).
+ */
+export function postFoodCountUnit(text: string, toks: readonly Tok[]): UnitRead | null {
+  if (toks.length < 2) return null;
+  const last = toks[toks.length - 1];
+  const prev = toks[toks.length - 2];
+  const code = isWord(last) ? unitOfWord(last.text) : null;
+  if (code === null || !TRAILING_COUNT_UNITS.has(code) || !isWord(prev)) return null;
+  if (PRODUCT_IDENTITY_NOUNS[code]?.has(prev.lower)) return null;
+  // the words before it must name a food, not only describe one ("4 whole cloves", "2 fresh sprigs")
+  const before = toks.slice(0, -1).filter((t) => t.kind === "word") as { lower: string }[];
+  if (!before.some((w) => !REMARK_WORDS.has(w.lower) && !SIZE_WORDS.has(w.lower) && !TRAILING_PREP_WORDS.has(w.lower) && !FUNCTION_WORDS.has(w.lower))) return null;
+  return readUnit(text, toks, toks.length - 1);
 }
 
 /** The option's first word is a weight or volume unit ("floz precooked", "kg"): no food is named by it. */

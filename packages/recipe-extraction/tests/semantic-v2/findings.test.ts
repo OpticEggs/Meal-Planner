@@ -140,7 +140,8 @@ describe("sizes in inches (B6)", () => {
 });
 
 describe("restatements must agree (B7)", () => {
-  it.each(["1 lb (12 oz) ground beef", "1 tbsp (1 tsp) salt", "1 cup (8 tbsp) butter", "1 quart (2 cups) stock", "1 liter (2 cups) water", "1 tsp (1 tbsp) baking soda", "2 cups (1 cup) milk", "1 kg (1 lb) flour"])(
+  // (semantic-v2, CONTRACT §12.6: "1 lb (500 g) beef" is 10.2 % off — beyond 7 %, a second amount; semantic-v1 kept it)
+  it.each(["1 lb (12 oz) ground beef", "1 tbsp (1 tsp) salt", "1 cup (8 tbsp) butter", "1 quart (2 cups) stock", "1 liter (2 cups) water", "1 tsp (1 tbsp) baking soda", "2 cups (1 cup) milk", "1 kg (1 lb) flour", "1 lb (500 g) beef"])(
     "%s → a contradiction is not a restatement",
     (line) => {
       const r = read(line);
@@ -155,7 +156,7 @@ describe("restatements must agree (B7)", () => {
 
   it.each([
     ["1 cup (240 ml) milk", "240 ml"], ["1 lb (450 g) carrots", "450 g"], ["1 cup (8 oz) sour cream", "8 oz"], ["1 kg (2.2 lb) flour", "2 1/5 lb"],
-    ["500 ml (2 cups) water", "2 cup"], ["1 lb (500 g) beef", "500 g"],
+    ["500 ml (2 cups) water", "2 cup"],
   ])("%s → a rounded restatement across systems is kept (within RESTATEMENT_TOLERANCE)", (line, eq) => {
     const r = read(line);
     expect(r.status).toBe("ready");

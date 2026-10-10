@@ -40,13 +40,20 @@ describe("package sizes: quantity = count, unit = container, packageSize = the s
     expect(read("2 8-inch flour tortillas")).toMatchObject({ status: "ready", name: "flour tortillas", note: "8-inch" });
   });
 
-  it("a size with no count of containers: the size is read, no count is invented", () => {
+  // semantic-v2 (CONTRACT §12.3): a size before a SINGULAR container is one container (semantic-v1: no count, review);
+  // before a plural container the count is still missing
+  it("a size with no count of containers: one container when it is singular, no count when plural", () => {
     for (const line of ["400g tin chopped tomatoes", "16-ounce package spaghetti", "12 oz. bag frozen peas"]) {
+      const r = read(line);
+      expect(r.status, line).toBe("ready");
+      expect(r.quantity).toMatchObject({ numerator: "1", denominator: "1" });
+      expect(r.unit?.dimension).toBe("count");
+      expect(r.packageSize).not.toBeNull();
+    }
+    for (const line of ["400g tins chopped tomatoes", "16-ounce packages spaghetti"]) {
       const r = read(line);
       expect(r.status, line).toBe("needs_review");
       expect(r.quantity).toBeNull();
-      expect(r.unit?.dimension).toBe("count");
-      expect(r.packageSize).not.toBeNull();
       expect(r.reasons).toContain("quantity_missing");
     }
   });

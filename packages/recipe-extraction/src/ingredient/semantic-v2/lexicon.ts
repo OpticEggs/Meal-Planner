@@ -113,13 +113,29 @@ export const CONTAINER_UNITS: ReadonlySet<UnitCode> = new Set<UnitCode>([
 ]);
 
 /**
- * Count nouns that are read as the unit when written AFTER the food ("3 garlic cloves", "4 bacon
- * slices", "2 celery stalks"): portions of a food that is bought as itself. Nouns that often ARE the
- * product after another noun (ribs, strips, wedges, heads, sticks, leaves, pods, cubes, sheets,
- * pieces) and packaging are NOT read this way: "4 cinnamon sticks" and "1 rack baby back ribs" keep
- * their names, because the first word alone could be a different product.
+ * semantic-v2 COUNT-NOUN RULE (CONTRACT §12.4, labelling guide "3 garlic cloves"): count nouns that are read as the
+ * unit when written AFTER the food with a bare count — portions of a food that is bought as itself ("3 garlic cloves",
+ * "2 celery ribs", "4 lemon wedges", "2 cinnamon sticks", "8 cardamom pods", "2 lettuce heads"). Packaging (cans,
+ * bags…) and "bars" (a block) are not portions and are not read this way.
  */
-export const TRAILING_COUNT_UNITS: ReadonlySet<UnitCode> = new Set<UnitCode>(["clove", "stalk", "sprig", "slice", "fillet", "link", "ear", "bulb"]);
+export const TRAILING_COUNT_UNITS: ReadonlySet<UnitCode> = new Set<UnitCode>([
+  "clove", "stalk", "sprig", "slice", "fillet", "link", "ear", "bulb", "pod", "rib", "wedge", "stick", "strip", "head", "sheet", "leaf", "cube", "piece", "loaf", "ball",
+]);
+
+/**
+ * PRODUCT-IDENTITY NOUNS (CONTRACT §12.4 exceptions): after these words the count noun is part of the product sold
+ * under that name ("fish sticks", "bay leaves", "ice cubes", "short ribs", "whole cloves" — the spice), so it stays in
+ * the name and the count is `each`. A closed list per noun (the word right before it), not a list of inputs.
+ */
+export const PRODUCT_IDENTITY_NOUNS: Readonly<Partial<Record<UnitCode, ReadonlySet<string>>>> = {
+  stick: setOf("fish mozzarella cheese string pretzel bread crab"),
+  leaf: setOf("bay curry banana grape vine lime makrut kaffir fig pandan shiso perilla tea"),
+  cube: setOf("ice"),
+  rib: setOf("short spare back pork beef lamb veal country-style"),
+  ball: setOf("matzo matzah matzoh melon rice cheese popcorn energy protein"),
+  strip: setOf("york city"),
+  clove: setOf("whole ground"),
+};
 
 // --- Numbers -------------------------------------------------------------------------------------
 
@@ -254,7 +270,27 @@ export const STANDALONE_INGREDIENTS = setOf(
  * Nouns whose plural is the same word (zero plural: "12 shrimp", "4 salmon"). A count before them is a count,
  * not a number inside a name. A linguistic list (fish, shellfish and game names with zero plurals), general.
  */
-export const INVARIANT_PLURALS = setOf("shrimp fish salmon trout cod tuna squid sheep deer halibut tilapia moose bison prawn scampi haddock pollock venison");
+export const INVARIANT_PLURALS = setOf(
+  "shrimp fish salmon trout cod tuna squid sheep deer halibut tilapia moose bison prawn scampi haddock pollock venison " +
+    // semantic-v2: Italian plurals used as English plurals, and star anise (counted as it is)
+    "zucchini broccolini panini biscotti cannoli anise",
+);
+
+/**
+ * Nouns whose SIZE a size word grades inside a product name ("small curd cottage cheese", "large flake oats", "small
+ * pearl tapioca", "jumbo lump crab"): a size word right before one of them stays in the name (CONTRACT §12.10 keeps
+ * material qualifiers); any other size word after a weight or volume is a note ("1 lb large shrimp").
+ */
+export const SIZE_GRADED_NOUNS = setOf("curd curds flake flakes pearl pearls lump lumps grain grains crystal crystals");
+
+/**
+ * Foods measured by the length cut from them ("1 inch ginger", "2 inch turmeric"): with no hyphen and no counted unit
+ * after it, an inch before one of them is the amount (an imprecise unit), not the size of one item ("12 inch pizza crust").
+ */
+export const LENGTH_MEASURED_FOODS = setOf("ginger turmeric galangal horseradish lemongrass cinnamon licorice liquorice kombu");
+
+/** Parts of a fruit named before "of" ("Juice of 2 limes", "Zest of ½ orange"): the fruit is counted, the part is the note. */
+export const FRUIT_PART_WORDS = setOf("juice zest rind peel grated finely freshly squeezed");
 
 /** Words that cannot start a food name; at the start of a name they are left-overs of a misread amount or a purpose ("or b", "for topping"). */
 export const LEADING_JUNK = setOf("or and nor with to plus but for");
@@ -348,10 +384,90 @@ export const YIELD_WORDS = setOf("serves serve makes yields yield servings");
  */
 export const NUTRIENT_WORDS = setOf(
   "calories calorie kcal kj kilojoules energy nutrition nutritional protein proteins carbs carbohydrates carbohydrate fiber fibre cholesterol " +
-    "sodium potassium calcium iron fat fats saturated unsaturated monounsaturated polyunsaturated trans sugars added total dietary net per serving",
+    "sodium potassium calcium iron fat fats saturated unsaturated monounsaturated polyunsaturated trans sugars added total dietary net per serving " +
+    // semantic-v2 (CONTRACT §12.8): the rest of a nutrition panel's vocabulary — vitamins, minerals, caffeine, daily value
+    "vitamin vitamins mineral minerals magnesium zinc phosphorus selenium copper manganese iodine chromium molybdenum chloride fluoride " +
+    "folate folic acid niacin riboflavin thiamin thiamine biotin pantothenic choline caffeine omega-3 omega-6 daily value dv amount",
 );
-/** Units of a nutrition value ("250 kcal", "10 g", "200 mg", "15%"). */
-export const FACT_UNITS = setOf("g mg mcg µg kcal cal calories calorie kj iu % dv");
+/**
+ * Units of a nutrition value ("250 kcal", "10 g", "200 mg", "15%"), abbreviated or spelled out ("20 grams", "300
+ * milligrams", "2 micrograms"). Written after a nutrient label only; never read as food units here.
+ */
+export const FACT_UNITS = setOf(
+  "g gs gram grams mg mgs milligram milligrams mcg µg ug microgram micrograms kcal kcals cal cals calories calorie kilocalorie kilocalories " +
+    "kj kilojoule kilojoules iu % dv",
+);
+/** Words of a diet-points label ("WW Points: 4", "SmartPoints: 7", "Weight Watchers points: 5"); the value is a bare number. */
+export const DIET_POINT_WORDS = setOf("points point smartpoints pointsplus ww weight watchers freestyle personal myww smart plus value values blue green purple");
+export const DIET_POINT_HEADS = setOf("points point smartpoints pointsplus");
+/**
+ * Rating and vote vocabulary ("4.8 stars (120 reviews)", "5 from 3 votes", "Rated 4.5 out of 5"). A line made only of
+ * these words and numbers is a rating, never food; "2 star anise" names a food, so the singular "star" alone is not
+ * enough (a RATING_HEADS word must appear).
+ */
+export const RATING_WORDS = setOf("stars star votes vote ratings rating reviews review rated from out of based on average by users user people readers");
+export const RATING_HEADS = setOf("stars votes ratings reviews rated rating");
+/**
+ * Labels of a recipe-time line ("Prep 10 mins", "Cook 20 mins", "Total 30 mins", "Active time: 30 min"): with only
+ * these words, imperative verbs and time amounts, a line states a time, never food.
+ */
+export const TIME_LABEL_WORDS = setOf(
+  "prep preparation cook cooking total active inactive hands-on passive ready rest resting chill chilling bake baking rise rising proof proofing " +
+    "marinate marinating freeze freezing soak soaking setting cool cooling time times in for about approximately approx and plus or to up at least overnight wait",
+);
+/** Recipe-card metadata labels before a colon ("Course: dinner", "Cuisine: Italian", "Keyword: …"): the value is never food. */
+export const META_LABEL_WORDS = setOf("course courses cuisine cuisines keyword keywords author authors diet diets category categories difficulty level skill tags tag occasion occasions season cost");
+/**
+ * Page furniture around a recipe card ("Print recipe", "Jump to recipe", "Watch the video below", "Nutrition Facts",
+ * "Advertisement"): a line with no number made only of PAGE_WORDS, at least one of them a PAGE_KEYWORDS word.
+ */
+export const PAGE_WORDS = setOf(
+  "print jump skip to the a an this our my your recipe recipes see below above card watch video videos nutrition facts fact information info " +
+    "instructions instruction directions method notes note advertisement advertisements ad ads sponsored share pin save rate comment comments review " +
+    "reviews tips tip faq faqs here click tap scroll continue reading read more back top full post page shopping list add get follow us and for of " +
+    "on in it with how make",
+);
+export const PAGE_KEYWORDS = setOf(
+  "print jump skip card watch video videos nutrition facts instructions directions method notes advertisement advertisements sponsored share pin save " +
+    "rate comments reviews tips faq faqs click tap scroll continue",
+);
+/** Credit lines ("Recipe adapted from …", "Adapted from …", "Recipe by …", "Photo by …"), as opening word sequences. */
+export const CREDIT_OPENERS: readonly (readonly string[])[] = [
+  ["recipe", "adapted"], ["adapted", "from"], ["adapted", "by"], ["recipe", "by"], ["recipe", "from"], ["recipe", "courtesy"], ["courtesy", "of"],
+  ["photo", "by"], ["photos", "by"], ["photography", "by"], ["inspired", "by"], ["recipe", "source"], ["recipe", "credit"],
+];
+/**
+ * Equipment: head nouns that are equipment, and the modifiers that make an equipment name with an ambiguous head
+ * ("baking sheet", "piping bag", "loaf pan", "parchment paper"). Used after a "you will need" label and for a bare
+ * equipment line; a container unit followed by a food ("1 bag frozen peas", "2 sheets puff pastry") is food.
+ */
+export const EQUIPMENT_HEADS = setOf(
+  "pan pans dish dishes bowl bowls skillet skillets pot pots mixer mixers processor blender thermometer rack racks mold molds mould moulds cutter cutters " +
+    "whisk spatula spatulas ramekin ramekins skewer skewers tray trays board boards knife knives peeler grater zester sieve strainer colander ladle tongs " +
+    "liner liners towel towels twine mandoline steamer wok griddle sheet sheets bag bags tin tins paper foil wrap",
+);
+export const EQUIPMENT_MODIFIERS = setOf(
+  "baking cookie sheet roasting muffin loaf cake springform bundt tart pie piping pastry parchment wax waxed aluminum aluminium plastic cling " +
+    "zip-top ziplock ziploc resealable freezer cutting mixing stand food hand wire cooling casserole square round rimmed nonstick non-stick cast-iron " +
+    "oven-safe heatproof heat-proof glass metal kitchen paper",
+);
+/** Words of a label that introduces what to have ready ("You will need:", "You'll need:", "What you'll need:"). */
+export const NEED_WORDS = setOf("need needed needs require required");
+/**
+ * Serving-fact labels ("Serving size: 1 cup (240 ml)", "Servings: 4 people", "Yield: 2 loaves", "Makes: 1 loaf"): with
+ * a number after the colon the line states a recipe fact, whatever follows. ("Per person: 200 g pasta" is not one.)
+ */
+export const SERVING_FACT_WORDS = setOf("serving servings size portion portions yield yields makes serves number of");
+export const SERVING_FACT_HEADS = setOf("size servings serves yield yields makes portions");
+/**
+ * Dish components that head a section ("SAUCE", "DOUGH", "CAKE LAYERS"). They can also be food ("hot sauce"), so they
+ * mark a heading only in a line written in capitals (PART_HEAD_WORDS mark one in any case).
+ */
+export const COMPONENT_NOUNS = setOf(
+  "sauce sauces dressing dressings dough doughs crust crusts base bases batter cake cakes salad salads soup filling fillings topping toppings frosting " +
+    "glaze marinade rub brine garnish garnishes layers layer assembly pastry crumble streusel meringue custard curd syrup vinaigrette " +
+    "seasoning mix icing ganache coating breading",
+);
 
 /**
  * Serving and size labels ("Serving size: 1 cup", "Per serving: 2 tbsp", "Portion: 200 g", "Total: 2 cups"):
@@ -372,8 +488,10 @@ export const META_NOUNS = setOf("servings serving portions portion people person
  */
 export const RECIPE_PART_WORDS = setOf(
   "topping toppings filling fillings garnish garnishes marinade glaze frosting icing assembly streusel decoration decorations main sides " +
-    "extras serve serving finish finishing decorate for the and to ingredients ingredient dry wet",
+    "extras serve serving finish finishing decorate for the and to ingredients ingredient dry wet layers components",
 );
+/** Recipe parts never bought as food that end a section heading in any case ("Topping", "Cake Layers", "Filling"). */
+export const PART_HEAD_WORDS = setOf("topping toppings filling fillings garnish garnishes frosting icing assembly streusel decoration decorations layers components");
 
 /** Words that, after an opening verb, show the line is an instruction ("Season with…", "Roll into…", "Mix all…"). */
 export const INSTRUCTION_CUES = setOf("the a an all into onto with until in to for over on at together then from off each well");

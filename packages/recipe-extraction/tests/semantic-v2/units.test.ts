@@ -97,10 +97,13 @@ describe("counted things", () => {
     expect(read(line)).toMatchObject({ status: "ready", name, unit: { canonical: unit, source } });
   });
 
-  it("product-form nouns after the food stay in the name (the food alone could be another product)", () => {
-    expect(read("4 cinnamon sticks")).toMatchObject({ name: "cinnamon sticks", unit: { canonical: "each", source: "" } });
+  // semantic-v2 (CONTRACT §12.4): "4 cinnamon sticks" → 4 stick "cinnamon", "2 cardamom pods" → 2 pod "cardamom"
+  // (semantic-v1 kept the noun, each); identity nouns stay ("bay leaves", "fish sticks")
+  it("portion nouns after the food are units; product-identity nouns stay in the name", () => {
+    expect(read("4 cinnamon sticks")).toMatchObject({ name: "cinnamon", unit: { canonical: "stick", source: "sticks" } });
     expect(read("2 bay leaves")).toMatchObject({ name: "bay leaves", unit: { canonical: "each" } });
-    expect(read("2 cardamom pods")).toMatchObject({ name: "cardamom pods", unit: { canonical: "each" } });
+    expect(read("2 cardamom pods")).toMatchObject({ name: "cardamom", unit: { canonical: "pod" } });
+    expect(read("2 fish sticks")).toMatchObject({ name: "fish sticks", unit: { canonical: "each" } });
   });
 
   it("a bare count is each with an empty source", () => {
@@ -118,9 +121,12 @@ describe("counted things", () => {
     }
   });
 
-  it("an inch is a size, never an amount bought: noted, and no count is invented", () => {
+  // semantic-v2: "1 inch ginger" is 1 inch of ginger (exposed corpus label, probes.tsv:358) — a food measured by its
+  // length (LENGTH_MEASURED_FOODS); semantic-v1 noted the size. Every other inch stays a size.
+  it("an inch is a size, never an amount bought — except before a food measured by its length", () => {
+    expect(read("1 inch ginger")).toMatchObject({ status: "ready", quantity: { numerator: "1" }, unit: { canonical: "inch" }, name: "ginger" });
     for (const [line, name, note] of [
-      ["1 inch ginger", "ginger", "1 inch"], ["9-inch pie crust", "pie crust", "9-inch"], ["10-inch tortillas", "tortillas", "10-inch"],
+      ["1-inch ginger", "ginger", "1-inch"], ["9-inch pie crust", "pie crust", "9-inch"], ["10-inch tortillas", "tortillas", "10-inch"],
       ["12 inch pizza crust", "pizza crust", "12 inch"], ["8 inch flour tortillas", "flour tortillas", "8 inch"], ["6 in. skewers", "skewers", "6 in"],
     ] as const) {
       const r = read(line);
@@ -131,8 +137,9 @@ describe("counted things", () => {
     expect(read("2 (10-inch) flour tortillas")).toMatchObject({ status: "ready", quantity: { numerator: "2" }, name: "flour tortillas", note: "10-inch" });
   });
 
-  it("a unit with no number is read but no amount is invented", () => {
-    expect(read("Pinch of salt")).toMatchObject({ status: "needs_review", quantity: null, unit: { canonical: "pinch" }, name: "salt" });
+  // semantic-v2: "Pinch of salt" → 1 pinch (holdout-v2 label ing-h2-0061); a precise unit gets no amount
+  it("a unit with no number is read; only a singular imprecise measure is one", () => {
+    expect(read("Pinch of salt")).toMatchObject({ status: "ready", quantity: { numerator: "1" }, unit: { canonical: "pinch" }, name: "salt" });
     expect(read("Bunch of cilantro")).toMatchObject({ status: "needs_review", quantity: null, unit: { canonical: "bunch" }, name: "cilantro" });
   });
 

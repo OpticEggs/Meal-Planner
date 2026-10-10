@@ -103,16 +103,21 @@ describe("options", () => {
     expect(read('1 cup "00" flour')).toMatchObject({ status: "ready", name: '"00" flour' });
   });
 
-  it("trailing portion nouns that often name the product are not units", () => {
+  // semantic-v2 (CONTRACT §12.4): a portion noun after the food is the unit ("12 lemon wedges" → 12 wedge "lemon";
+  // semantic-v1 kept "lemon wedges", each); product-identity nouns stay ("baby back ribs")
+  it("trailing portion nouns are units unless they name the product", () => {
     expect(read("1 rack baby back ribs")).toMatchObject({ unit: { canonical: "each" }, name: "rack baby back ribs" });
-    expect(read("12 lemon wedges")).toMatchObject({ unit: { canonical: "each" }, name: "lemon wedges" });
+    expect(read("12 lemon wedges")).toMatchObject({ unit: { canonical: "wedge" }, name: "lemon" });
   });
 });
 
 describe("units with no number, and choices inside brackets", () => {
-  it("a unit with no number is read (after size words; imprecise units also without 'of'); nothing is invented", () => {
-    expect(read("Small pinch of salt")).toMatchObject({ status: "needs_review", quantity: null, unit: { canonical: "pinch" }, name: "salt", note: "Small" });
-    expect(read("Dash hot sauce")).toMatchObject({ status: "needs_review", quantity: null, unit: { canonical: "dash" }, name: "hot sauce" });
+  // semantic-v2: a singular imprecise measure opening the line is one of it, as with the article ("Pinch of salt" → 1
+  // pinch, holdout-v2 label ing-h2-0061); semantic-v1 gave no amount. Precise units still get none ("Bunch of cilantro").
+  it("a unit with no number is read (after size words; imprecise units also without 'of'); a singular imprecise measure is one", () => {
+    expect(read("Small pinch of salt")).toMatchObject({ status: "ready", quantity: { numerator: "1" }, unit: { canonical: "pinch" }, name: "salt", note: "Small" });
+    expect(read("Dash hot sauce")).toMatchObject({ status: "ready", quantity: { numerator: "1" }, unit: { canonical: "dash" }, name: "hot sauce" });
+    expect(read("Pinches of salt")).toMatchObject({ status: "needs_review", quantity: null, unit: { canonical: "pinch" } });
     expect(read("Strip steak")).toMatchObject({ status: "needs_review", unit: null, name: "Strip steak" });
   });
 

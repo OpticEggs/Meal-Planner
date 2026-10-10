@@ -164,8 +164,11 @@ describe("amount after the name (CONTRACT §7, quantity_after_name)", () => {
     expect(r.note).toBe(note);
   });
 
-  it("'juice of 1 lemon': the food is read, a person confirms what to buy", () => {
-    expect(read("Juice of 1 lemon")).toMatchObject({ status: "needs_review", name: "lemon", quantity: { numerator: "1" }, note: "Juice" });
+  // semantic-v2: the labelling convention (fixtures/README "Juice of 2 limes / Zest of ½ orange → the fruit counted, the part
+  // used in the note"; holdout-v2 ing-h2-0212/0213) — ready; semantic-v1 sent it to review
+  it("'juice of 1 lemon': the fruit is counted, the part used is the note", () => {
+    expect(read("Juice of 1 lemon")).toMatchObject({ status: "ready", name: "lemon", quantity: { numerator: "1" }, note: "Juice" });
+    expect(read("Leaves of 2 sprigs thyme").status).toBe("needs_review");
   });
 });
 
