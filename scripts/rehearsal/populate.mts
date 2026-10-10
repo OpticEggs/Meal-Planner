@@ -82,5 +82,9 @@ ok(await purchasing.startPartialHandoff(jon, op(), {
 const brocNow = (await q("SELECT r.line FROM requirement_lines r JOIN grocery_cycles g ON g.id=r.cycle_id WHERE g.week_id=$1 AND r.ingredient_key='broccoli'", [fx.weekId]))[0].line;
 const alexA = { memberId: fx.members.alex, householdId: fx.householdId, displayName: "Alex" };
 ok(await groceries.recordAvailabilityCommand(alexA, op(), { weekId: fx.weekId, ingredientKey: "broccoli", state: "enough", reviewed: { quantity: brocNow.meal.quantity, unit: brocNow.meal.unit, fingerprint: brocNow.fingerprint } }), "have enough");
+// Two approvals left open across the upgrade: soy sauce (behind it, the imported salad — exact rows when the earlier
+// release wrote them) and black beans (all legacy). Whether each stays valid is what the rehearsal compares.
+const open = (await q("SELECT r.line FROM requirement_lines r JOIN grocery_cycles g ON g.id=r.cycle_id WHERE g.week_id=$1 AND r.ingredient_key = ANY($2)", [fx.weekId, ["soy_sauce", "black_beans"]])).map((r: any) => r.line);
+ok(await groceries.approvePurchaseLinesCommand(jon, op(), { weekId: fx.weekId, lines: open.map((l: any) => ({ key: l.key, fingerprint: l.fingerprint, packages: l.toSend })) }), "open approvals");
 console.log(JSON.stringify({ householdId: fx.householdId, weekId: fx.weekId }));
 process.exit(0);

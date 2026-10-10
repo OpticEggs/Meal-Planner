@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Upgrade rehearsal for migration 015 (EQ, 2026-10-10) on DISPOSABLE LOCAL databases only — never a household
+# Upgrade rehearsal for migrations 015/016 (EQ/EQR, 2026-10-10) on DISPOSABLE LOCAL databases only — never a household
 # database, never Neon. Usage: scripts/rehearse-upgrade.sh [previous-release-commit] [--old-suite]
 #
 #  1. A database is migrated and POPULATED by the previous release's own code (imported and manual recipes, a
@@ -86,7 +86,7 @@ if in_new npx tsx scripts/rehearsal/compare.mts "$OUT/1-projection-prev.json" "$
 else fail "3 projection after the upgrade differs (3-compare.json)"; fi
 in_prev env DATABASE_URL="$DB" TABLE_FIXED_NOW=2026-10-12T19:00:00Z TABLE_RETAILER=simulated TABLE_ENV=test npx tsx "$NEW/scripts/rehearsal/snapshot.mts" > "$OUT/3-projection-prev-on-new-schema.json"
 if in_new npx tsx scripts/rehearsal/compare.mts "$OUT/1-projection-prev.json" "$OUT/3-projection-prev-on-new-schema.json" > "$OUT/3-compare-prev.json"; then
-  pass "3 $PREV_SHA still projects the same amounts, packages and to-send on the upgraded schema (approvals this release found stale stay stale: $(node -e 'console.log(JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")).changedIdentity.join("; ")||"none")' "$OUT/3-compare-prev.json"))"
+  pass "3 $PREV_SHA still projects the same amounts, packages and to-send on the upgraded schema (an approval this release marked stale stays stale: $(node -e 'console.log(JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")).changedIdentity.join("; ")||"none")' "$OUT/3-compare-prev.json"))"
 else fail "3 $PREV_SHA projects differently on the upgraded schema (3-compare-prev.json)"; fi
 
 # 4. Rollback: this release saves an exact recipe; the previous release still reads and projects everything.
@@ -123,7 +123,7 @@ if [ "$OLD_SUITE" = 1 ]; then
   fresh_db table_test
   in_new env DATABASE_URL="$BASE/table_test" npx tsx scripts/migrate.ts > /dev/null
   if in_prev env TEST_DATABASE_URL="$BASE/table_test" npx vitest run > "$OUT/6-prev-suite.log" 2>&1; then
-    pass "6 $PREV_SHA's vitest suite passes on a database with migration 015: $(grep -E '^ +Tests ' "$OUT/6-prev-suite.log" | tr -s ' ')"
+    pass "6 $PREV_SHA's vitest suite passes on the upgraded database (all migrations of this release): $(grep -E '^ +Tests ' "$OUT/6-prev-suite.log" | tr -s ' ')"
   else fail "6 $PREV_SHA's vitest suite on the new schema: $(grep -E '^ +Tests ' "$OUT/6-prev-suite.log" | tr -s ' ')"; fi
 fi
 
