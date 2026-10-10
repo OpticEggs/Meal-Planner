@@ -24,7 +24,22 @@ import { validateParsedIngredientV1 } from "../src/validate";
 import { canonicalJson } from "./canonical";
 import { alternativeSet, compareIngredient, erroredComparison, normalizeText, type CaseComparison } from "./compare";
 import { rate, wilsonInterval, Z95, type Rate } from "./stats";
-import { CATEGORIES, EXPECT_FIELDS, PROVENANCE_KINDS, SPLITS, unitDimension, type Category, type IngredientCase, type ProvenanceKind, type Split } from "./types";
+import {
+  CATEGORIES,
+  CONTRACT12_ITEMS,
+  EXPECT_FIELDS,
+  FAMILIES,
+  PROVENANCE_KINDS,
+  SPLITS,
+  unitDimension,
+  type Category,
+  type Contract12Item,
+  type ExposureAudit,
+  type Family,
+  type IngredientCase,
+  type ProvenanceKind,
+  type Split,
+} from "./types";
 
 export const SCORER_ID = "outcomes" as const;
 export const SCORER_VERSION = "v3" as const;
@@ -57,6 +72,8 @@ export const INTERPRETATION: readonly string[] = [
   "A2 field accuracy counts a field as accurate when it matches the label, whatever the engine status (a CE line counts as not accurate). A1/A2 'met with confidence' uses the unrounded Wilson lower bound (z = 1.959964).",
   "A6 in the scorer: CE = 0 — no engine error, every output valid, every line read identically twice. The rest of A6 (legacy engines, frozen-baseline snapshot and parity tests unchanged and passing; reports byte-deterministic) and A7 are recorded outside the scorer.",
   "Sensitivity 3(b) (SCORE-01): the needs_review labels with no amount are those whose label quantity and unit are null and whose alternatives are empty, whatever their category tags.",
+  "Sensitivity (a) on holdout-v3 leaves out the cases marked debatable: true in holdout-v3.jsonl; on holdout-v2 the pre-registered list (ing-h2-0087). Sensitivity (c), holdout-v3 only: A1–A5 without the cases marked reliesOnNewReading: true (the result under CONTRACT-v1 §7 alone). Sensitivity (d), holdout-v3 only and only when fixtures/EXPOSURE-AUDIT-v3.json exists: A1–A5 without its matchedCaseIds. All three come from frozen data files, never from scorer constants, and are informational.",
+  "holdout-v3 breakdowns: per repair family (the case's family), per CONTRACT-v1 §12 item exercised (a case counts in every item it lists; 'none' = no item) and per construction (the case's construction string; compact: lines, classes, S codes).",
   "Review-only pre-fills (informational, not plan classes): an invented option is an engine alternatives list that is not an accepted match and offers an option the label (or an accepted list) does not; a dropped option is such a list whose options are all the label's (or an accepted list's) but which leaves out an option of a choice-of-ingredients label. The two never overlap; both stay visible next to C3b/C5b.",
 ];
 
@@ -168,6 +185,22 @@ export interface LineOutcome {
   reviewPrefill: { inventedOption: boolean; droppedOption: boolean };
   /** SCORE-01 label property (sensitivity 3(b)). */
   bareNoAmount: boolean;
+  /** The case's construction template, when recorded. */
+  construction: string | null;
+  /** holdout-v3 case metadata (frozen with the labels), else null. */
+  metadata: CaseMetadata | null;
+}
+
+export interface CaseMetadata {
+  family: Family;
+  contract12: Contract12Item[];
+  reliesOnNewReading: boolean;
+  debatable: boolean;
+}
+
+function metadataOf(c: IngredientCase): CaseMetadata | null {
+  if (c.family === undefined || c.contract12 === undefined || c.reliesOnNewReading === undefined || c.debatable === undefined) return null;
+  return { family: c.family, contract12: [...c.contract12], reliesOnNewReading: c.reliesOnNewReading, debatable: c.debatable };
 }
 
 const READ_STATUSES: readonly string[] = ["ready", "needs_review", "unsupported"];
@@ -285,6 +318,8 @@ export function classifyObservation(c: IngredientCase, o: Observation): LineOutc
       droppedOption: offeredWrongList && labelAlts.length >= 2 && engineAlts.every((x) => labelOptions.has(x)) && labelAlts.some((x) => !engineAlts.includes(x)),
     },
     bareNoAmount: isBareNoAmountLabel(c),
+    construction: c.construction ?? null,
+    metadata: metadataOf(c),
   };
 }
 
@@ -578,13 +613,20 @@ export const SET_STATUS: Record<Split, string> = {
 // --- Pre-registered sensitivity figures (informational, not the acceptance basis) -------------------
 
 /**
- * Cases pre-registered as debatable before any candidate was evaluated on the set. The acceptance
- * decision stays on ALL cases; A1–A5 without these are reported as information only.
+ * holdout-v2 cases pre-registered as debatable before any candidate was evaluated on it (EVALUATION-PLAN-v2
+ * change log 3(a)). holdout-v3's debatable cases are data: `debatable: true` in holdout-v3.jsonl. The
+ * acceptance decision stays on ALL cases; A1–A5 without these are reported as information only.
  */
-export const DEBATABLE_CASES: Readonly<Record<AcceptanceSplit, readonly string[]>> = { holdout2: ["ing-h2-0087"], holdout3: [] };
+export const DEBATABLE_CASES: Readonly<{ holdout2: readonly string[] }> = { holdout2: ["ing-h2-0087"] };
 export const SENSITIVITY_NOTE = "informational, not the acceptance basis" as const;
 export const BARE_NO_AMOUNT_DEFINITION =
   "needs_review labels with no amount: label quantity and unit null and alternatives empty (EVALUATION-PLAN-v2 change log 3(b); SCORE-01)" as const;
+export const SENSITIVITY_DEFINITIONS = {
+  debatableHoldout2: "(a) without the cases pre-registered as debatable at holdout-v2 adjudication (EVALUATION-PLAN-v2 change log 3(a))",
+  debatableHoldout3: "(a) without the cases marked debatable: true in holdout-v3.jsonl (EVALUATION-PLAN-v3 §7 (a))",
+  newReadings: "(c) without the cases marked reliesOnNewReading: true in holdout-v3.jsonl — the result under CONTRACT-v1 §7 alone (EVALUATION-PLAN-v3 §7 (c))",
+  exposureAudit: "(d) without the cases listed in fixtures/EXPOSURE-AUDIT-v3.json (EVALUATION-PLAN-v3 §7 (d), §9.4)",
+} as const;
 
 export interface NeedsReviewSensitivity {
   definition: typeof BARE_NO_AMOUNT_DEFINITION;
@@ -603,22 +645,68 @@ export interface NeedsReviewSensitivity {
   S4: Rate;
 }
 
-export interface Sensitivity {
-  note: typeof SENSITIVITY_NOTE;
-  /** Acceptance sets with pre-registered debatable cases only: A1–A5 recomputed without them. */
-  excludingDebatable: { excludedIds: string[]; lines: number; acceptance: AcceptanceReport } | null;
-  needsReviewExcludingBareNoAmount: NeedsReviewSensitivity;
+/** A1–A5 (and the rest of the acceptance table) recomputed without some cases of an acceptance set. */
+export interface ExclusionSensitivity {
+  definition: string;
+  excludedIds: string[];
+  /** Lines kept. */
+  lines: number;
+  acceptance: AcceptanceReport;
 }
 
-export function sensitivity(set: Split, lines: readonly LineOutcome[]): Sensitivity {
+export interface ExposureAuditSensitivity extends ExclusionSensitivity {
+  method: string;
+  auditedAt: string;
+  /** Ids the audit lists (the set may hold fewer when a run is restricted, e.g. --case). */
+  matchedCaseIds: number;
+}
+
+export interface Sensitivity {
+  note: typeof SENSITIVITY_NOTE;
+  /** (a) holdout-v2: the pre-registered list; holdout-v3: `debatable: true` cases (always reported, possibly none). Else null. */
+  excludingDebatable: ExclusionSensitivity | null;
+  /** (b) needs_review figures without the bare no-amount labels (SCORE-01). */
+  needsReviewExcludingBareNoAmount: NeedsReviewSensitivity;
+  /** (c) holdout-v3 only: without the `reliesOnNewReading: true` cases. Else null. */
+  excludingNewReadings: ExclusionSensitivity | null;
+  /** (d) holdout-v3 only, when the exposure audit file exists: without its matched cases. Else null. */
+  excludingExposureAudit: ExposureAuditSensitivity | null;
+}
+
+/** Options of a run that come from data files outside the labels (pure: the caller loads them). */
+export interface OutcomeOptions {
+  /** The holdout-v3 exposure audit (fixtures/EXPOSURE-AUDIT-v3.json), when it exists. */
+  exposureAudit?: ExposureAudit | null;
+}
+
+function excluding(set: AcceptanceSplit, lines: readonly LineOutcome[], definition: string, drop: (x: LineOutcome) => boolean): ExclusionSensitivity {
+  const rest = lines.filter((x) => !drop(x));
+  return { definition, excludedIds: lines.filter(drop).map((x) => x.id), lines: rest.length, acceptance: acceptance(aggregate(rest), set) };
+}
+
+export function sensitivity(set: Split, lines: readonly LineOutcome[], options: OutcomeOptions = {}): Sensitivity {
   const bare = lines.filter((x) => x.labelStatus === "needs_review" && x.bareNoAmount);
   const kept = lines.filter((x) => x.labelStatus === "needs_review" && !x.bareNoAmount);
   const k = aggregate(kept);
   let excludingDebatable: Sensitivity["excludingDebatable"] = null;
-  if (isAcceptanceSplit(set) && DEBATABLE_CASES[set].length > 0) {
-    const debatable = DEBATABLE_CASES[set];
-    const rest = lines.filter((x) => !debatable.includes(x.id));
-    excludingDebatable = { excludedIds: lines.filter((x) => debatable.includes(x.id)).map((x) => x.id), lines: rest.length, acceptance: acceptance(aggregate(rest), set) };
+  let excludingNewReadings: Sensitivity["excludingNewReadings"] = null;
+  let excludingExposureAudit: Sensitivity["excludingExposureAudit"] = null;
+  if (set === "holdout2" && DEBATABLE_CASES.holdout2.length > 0) {
+    excludingDebatable = excluding(set, lines, SENSITIVITY_DEFINITIONS.debatableHoldout2, (x) => DEBATABLE_CASES.holdout2.includes(x.id));
+  }
+  if (set === "holdout3") {
+    excludingDebatable = excluding(set, lines, SENSITIVITY_DEFINITIONS.debatableHoldout3, (x) => x.metadata?.debatable === true);
+    excludingNewReadings = excluding(set, lines, SENSITIVITY_DEFINITIONS.newReadings, (x) => x.metadata?.reliesOnNewReading === true);
+    const audit = options.exposureAudit;
+    if (audit) {
+      const matched = new Set(audit.matchedCaseIds);
+      excludingExposureAudit = {
+        ...excluding(set, lines, SENSITIVITY_DEFINITIONS.exposureAudit, (x) => matched.has(x.id)),
+        method: audit.method,
+        auditedAt: audit.auditedAt,
+        matchedCaseIds: matched.size,
+      };
+    }
   }
   return {
     note: SENSITIVITY_NOTE,
@@ -636,7 +724,47 @@ export function sensitivity(set: Split, lines: readonly LineOutcome[]): Sensitiv
       C6: k.outcomes.C6,
       S4: k.severe.S4,
     },
+    excludingNewReadings,
+    excludingExposureAudit,
   };
+}
+
+// --- holdout-v3 breakdowns ---------------------------------------------------------------------------
+
+/** One construction template of a set, compactly: its lines, their classes (C1, C3b, CE …) and S codes. */
+export interface ConstructionGroup {
+  lines: number;
+  caseIds: string[];
+  /** One entry per line, in case order: the class with its sub-class (e.g. "C3b"). */
+  classes: string[];
+  /** The S codes of its lines (union, S1…S8 order). */
+  severe: SevereCode[];
+}
+
+export interface ConstructionBreakdown {
+  /** Distinct construction templates (plan §8 reports this count). */
+  distinct: number;
+  /** Most lines sharing one template (plan §8: at most 2). */
+  maxUses: number;
+  groups: Record<string, ConstructionGroup>;
+}
+
+export const NO_CONSTRUCTION = "(none)";
+export const NO_CONTRACT12_ITEM = "none";
+export type Contract12Group = Contract12Item | typeof NO_CONTRACT12_ITEM;
+
+export function byConstruction(lines: readonly LineOutcome[]): ConstructionBreakdown {
+  const groups: Record<string, ConstructionGroup> = {};
+  for (const x of lines) {
+    const key = x.construction ?? NO_CONSTRUCTION;
+    const g = (groups[key] ??= { lines: 0, caseIds: [], classes: [], severe: [] });
+    g.lines++;
+    g.caseIds.push(x.id);
+    g.classes.push(`${x.outcome}${x.partial ?? ""}`);
+    g.severe = SEVERE_CODES.filter((s) => g.severe.includes(s) || x.severe.includes(s));
+  }
+  const counts = Object.values(groups).map((g) => g.lines);
+  return { distinct: counts.length, maxUses: counts.length === 0 ? 0 : Math.max(...counts), groups };
 }
 
 export interface OutcomeSetReport {
@@ -653,6 +781,12 @@ export interface OutcomeSetReport {
   acceptance: AcceptanceReport | null;
   /** Pre-registered sensitivity figures — informational, not the acceptance basis. */
   sensitivity: Sensitivity;
+  /** holdout-v3 only (else null): per repair family. */
+  byFamily: Partial<Record<Family, OutcomeAggregate>> | null;
+  /** holdout-v3 only (else null): per CONTRACT-v1 §12 item exercised ("none" = no item). */
+  byContract12: Partial<Record<Contract12Group, OutcomeAggregate>> | null;
+  /** holdout-v3 only (else null): per construction template, compact. */
+  byConstruction: ConstructionBreakdown | null;
 }
 
 export interface EngineOutcomes {
@@ -687,7 +821,7 @@ export interface OutcomesSection {
   engines: EngineOutcomes[];
 }
 
-export function setReport(set: Split, lines: readonly LineOutcome[]): OutcomeSetReport {
+export function setReport(set: Split, lines: readonly LineOutcome[], options: OutcomeOptions = {}): OutcomeSetReport {
   const byCategory: Partial<Record<Category, OutcomeAggregate>> = {};
   for (const cat of CATEGORIES) {
     const sub = lines.filter((x) => x.categories.includes(cat));
@@ -701,6 +835,20 @@ export function setReport(set: Split, lines: readonly LineOutcome[]): OutcomeSet
       if (sub.length > 0) bySourceKind[k] = aggregate(sub);
     }
   }
+  let byFamily: OutcomeSetReport["byFamily"] = null;
+  let byContract12: OutcomeSetReport["byContract12"] = null;
+  if (set === "holdout3") {
+    byFamily = {};
+    for (const f of FAMILIES) {
+      const sub = lines.filter((x) => x.metadata?.family === f);
+      if (sub.length > 0) byFamily[f] = aggregate(sub);
+    }
+    byContract12 = {};
+    for (const item of [...CONTRACT12_ITEMS, NO_CONTRACT12_ITEM] as const) {
+      const sub = lines.filter((x) => (item === NO_CONTRACT12_ITEM ? x.metadata !== null && x.metadata.contract12.length === 0 : x.metadata?.contract12.includes(item)));
+      if (sub.length > 0) byContract12[item] = aggregate(sub);
+    }
+  }
   const agg = aggregate(lines);
   return {
     set,
@@ -711,17 +859,20 @@ export function setReport(set: Split, lines: readonly LineOutcome[]): OutcomeSet
     byCategory,
     bySourceKind,
     acceptance: isAcceptanceSplit(set) ? acceptance(agg, set) : null,
-    sensitivity: sensitivity(set, lines),
+    sensitivity: sensitivity(set, lines, options),
+    byFamily,
+    byContract12,
+    byConstruction: set === "holdout3" ? byConstruction(lines) : null,
   };
 }
 
 /** Outcomes of one engine on every set present in `cases` (per set; sets are never pooled). */
-export function engineOutcomes(cases: readonly IngredientCase[], engine: IngredientEngine, observations?: ReadonlyMap<string, Observation>): EngineOutcomes {
+export function engineOutcomes(cases: readonly IngredientCase[], engine: IngredientEngine, observations?: ReadonlyMap<string, Observation>, options: OutcomeOptions = {}): EngineOutcomes {
   const lines = classifyLines(cases, engine, observations);
   const sets: Partial<Record<Split, OutcomeSetReport>> = {};
   for (const s of SPLITS) {
     const sub = lines.filter((x) => x.split === s);
-    if (sub.length > 0) sets[s] = setReport(s, sub);
+    if (sub.length > 0) sets[s] = setReport(s, sub, options);
   }
   return { engine: { id: String(engine.id), description: String(engine.description ?? "") }, sets };
 }

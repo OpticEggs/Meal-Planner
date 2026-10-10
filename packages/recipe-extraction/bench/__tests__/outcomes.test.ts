@@ -396,3 +396,63 @@ describe("engine plumbing", () => {
     expect(e.sets.holdout2!.acceptance).not.toBeNull();
   });
 });
+
+describe("holdout-v3 sensitivity figures from frozen case data: (a) debatable, (c) new readings, (d) exposure audit", () => {
+  const h3 = (n: number, c: IngredientCase, meta: Partial<IngredientCase>): IngredientCase => ({
+    ...c,
+    id: `ing-h3-000${n}`,
+    split: "holdout3",
+    construction: `construction ${n}`,
+    family: "plain",
+    contract12: [],
+    reliesOnNewReading: false,
+    debatable: false,
+    ...meta,
+  });
+  const r1 = h3(1, flour, { debatable: true });
+  const r2 = h3(2, milk, { family: "C", contract12: ["12.10"], reliesOnNewReading: true });
+  const r3 = h3(3, beans, { family: "C", contract12: ["12.3"] });
+  const n4 = h3(4, range, { family: "A" });
+  const lines = [one(r1, read(r1)), one(r2, read(r2, { name: "milk" })), one(r3, read(r3)), one(n4, read(n4))];
+  const st = (a: { criteria: { id: string; status: string; evidence: Record<string, { num: number; den: number }> }[] }, id: string) => a.criteria.find((c) => c.id === id)!;
+
+  it("hand-calculated on four lines (R = r1, r2, r3; r2 is C2 high with S7)", () => {
+    const s = setReport("holdout3", lines, { exposureAudit: { matchedCaseIds: ["ing-h3-0003", "ing-h3-0099"], method: "exact", auditedAt: "2026-10-11" } });
+    // All lines: C1 2/3 → A1 not met; C2High 1 → A3 not met.
+    expect([st(s.acceptance!, "A1").status, st(s.acceptance!, "A3").status]).toEqual(["not met", "not met"]);
+    // (a) without r1 (debatable): R = {r2, r3} → C1 1/2, A1 not met; r2 still C2 high → A3 not met.
+    expect(s.sensitivity.excludingDebatable, "(a) present").not.toBeNull();
+    const a = s.sensitivity.excludingDebatable!;
+    expect([a.excludedIds, a.lines, st(a.acceptance, "A1").evidence.C1, st(a.acceptance, "A3").status], "(a)").toEqual([["ing-h3-0001"], 3, expect.objectContaining({ num: 1, den: 2 }), "not met"]);
+    // (c) without r2 (reliesOnNewReading): R = {r1, r3} → C1 2/2 (point 100 % ≥ 98 %; Wilson lower 34.2 % < 98 %) → "met"; no C2 → A3 met; no S1/S3–S6 → A4 met.
+    expect(s.sensitivity.excludingNewReadings, "(c) present").not.toBeNull();
+    const c = s.sensitivity.excludingNewReadings!;
+    expect([c.excludedIds, c.lines], "(c)").toEqual([["ing-h3-0002"], 3]);
+    expect(["A1", "A3", "A4"].map((id) => st(c.acceptance, id).status)).toEqual(["met", "met", "met"]);
+    expect(st(c.acceptance, "A1").evidence.C1).toMatchObject({ num: 2, den: 2 });
+    // (d) without the audit's ids present in the set (r3; ing-h3-0099 is not a line here): R = {r1, r2} → C1 1/2.
+    expect(s.sensitivity.excludingExposureAudit, "(d) present").not.toBeNull();
+    const d = s.sensitivity.excludingExposureAudit!;
+    expect([d.excludedIds, d.lines, d.matchedCaseIds, d.method, d.auditedAt], "(d)").toEqual([["ing-h3-0003"], 3, 2, "exact", "2026-10-11"]);
+    expect(st(d.acceptance, "A1").evidence.C1).toMatchObject({ num: 1, den: 2 });
+    // The acceptance table itself is unchanged by any sensitivity figure.
+    expect(st(s.acceptance!, "A1").evidence.C1).toMatchObject({ num: 2, den: 3 });
+  });
+
+  it("(d) needs an audit; (c) and (d) exist only on holdout-v3; holdout-v2's (a) keeps its constant list", () => {
+    expect(setReport("holdout3", lines).sensitivity.excludingExposureAudit).toBeNull();
+    const h2 = setReport("holdout2", [one(flour, read(flour))], { exposureAudit: { matchedCaseIds: [flour.id], method: "m", auditedAt: "2026-10-11" } }).sensitivity;
+    expect([h2.excludingNewReadings, h2.excludingExposureAudit]).toEqual([null, null]);
+    expect(h2.excludingDebatable!.definition).toMatch(/holdout-v2 adjudication/);
+    expect(setReport("dev", lines).sensitivity.excludingDebatable).toBeNull();
+  });
+
+  it("per-family, per-§12-item and per-construction breakdowns count each line where its data puts it", () => {
+    const s = setReport("holdout3", lines);
+    expect(Object.fromEntries(Object.entries(s.byFamily!).map(([k, v]) => [k, v!.lines]))).toEqual({ A: 1, C: 2, plain: 1 });
+    expect(Object.fromEntries(Object.entries(s.byContract12!).map(([k, v]) => [k, v!.lines]))).toEqual({ "12.3": 1, "12.10": 1, none: 2 });
+    expect(s.byContract12!["12.10"]!.severe.S7.num).toBe(1);
+    expect(s.byConstruction).toMatchObject({ distinct: 4, maxUses: 1 });
+    expect(s.byConstruction!.groups["construction 2"]).toEqual({ lines: 1, caseIds: ["ing-h3-0002"], classes: ["C2"], severe: ["S7"] });
+  });
+});

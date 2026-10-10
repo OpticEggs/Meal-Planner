@@ -245,7 +245,7 @@ export const FREEZE_V3_FILE = "FREEZE-v3.json";
 export const HOLDOUT3_INGREDIENTS = "ingredients/holdout-v3.jsonl";
 
 export const FREEZE_V3_RULE =
-  "Holdout-v3 labels (ingredients/holdout-v3.jsonl, split holdout3) were written blind from CONTRACT-v1 §7 by the evaluation worker " +
+  "Holdout-v3 labels (ingredients/holdout-v3.jsonl, split holdout3) were written blind from CONTRACT-v1 §7 and §12 by the evaluation worker " +
   "(no parser was run on these inputs), checked by an independent label checker who saw no engine output, and adjudicated with the " +
   "rationale logged in LABEL-CHANGES.md before this freeze (EVALUATION-PLAN-v3). They are never tuned against engine output and " +
   "never shown to the implementation worker. Any change needs an entry in LABEL-CHANGES.md (case id, old and new label, an independent " +

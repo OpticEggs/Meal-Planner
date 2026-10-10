@@ -182,6 +182,56 @@
         }
       ],
       "expect": "KILLED"
+    },
+    {
+      "id": "SENS-c-uses-debatable-flag",
+      "description": "Sensitivity (c) reads the wrong frozen flag: it leaves out the debatable cases instead of the cases that rely on a §12 new reading.",
+      "file": "bench/outcomes.ts",
+      "find": "(x) => x.metadata?.reliesOnNewReading === true)",
+      "replace": "(x) => x.metadata?.debatable === true)",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts",
+        "bench/__tests__/outcome-controls.test.ts",
+        "bench/__tests__/outcomes.test.ts",
+        "bench/__tests__/holdout3.test.ts"
+      ],
+      "killedBy": [
+        {
+          "test": "holdout-v3 sensitivity figures from frozen case data: (a) debatable, (c) new readings, (d) exposure audit > hand-calculated on four lines (R = r1, r2, r3; r2 is C2 high with S7)",
+          "reason": "^AssertionError: \\(c\\): expected \\[ \\[ 'ing-h3-0001' \\], 3 \\] to deeply equal"
+        },
+        {
+          "test": "holdout-v3 case metadata and the data-driven sensitivity figures > hand-calculated: (a) drops the debatable case, (c) the new-reading case, (d) is absent without an audit file",
+          "reason": "^AssertionError: expected \\[ \\[ 'ing-h3-0003' \\], 5 \\] to deeply equal \\[ \\[ 'ing-h3-0006' \\], 5 \\]"
+        }
+      ],
+      "expect": "KILLED"
+    },
+    {
+      "id": "SENS-d-ignores-audit-ids",
+      "description": "Sensitivity (d) ignores the exposure audit's matched ids (excludes nothing).",
+      "file": "bench/outcomes.ts",
+      "find": "SENSITIVITY_DEFINITIONS.exposureAudit, (x) => matched.has(x.id))",
+      "replace": "SENSITIVITY_DEFINITIONS.exposureAudit, (x) => false)",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts",
+        "bench/__tests__/outcome-controls.test.ts",
+        "bench/__tests__/outcomes.test.ts",
+        "bench/__tests__/holdout3.test.ts"
+      ],
+      "killedBy": [
+        {
+          "test": "holdout-v3 sensitivity figures from frozen case data: (a) debatable, (c) new readings, (d) exposure audit > hand-calculated on four lines (R = r1, r2, r3; r2 is C2 high with S7)",
+          "reason": "^AssertionError: \\(d\\): expected \\[ \\[\\], 4, 2, 'exact'"
+        },
+        {
+          "test": "holdout-v3 case metadata and the data-driven sensitivity figures > hand-calculated: (d) drops exactly the audit's matched ids; the figure names the audit",
+          "reason": "^AssertionError: expected \\[ \\[\\], 6, 2,"
+        }
+      ],
+      "expect": "KILLED"
     }
   ]
 }
