@@ -285,7 +285,7 @@ describe("acceptance statuses (§6)", () => {
     expect(status(withC1(0, 0), "A1")).toBe("not met");
   });
 
-  it("A2 needs every field; A3/A4 need zero counts; A5 is the point estimate ≤ 10 %; A6/A7 are outside the scorer", () => {
+  it("A2 needs every field; A3/A4 need zero counts; A5 is the point estimate ≤ 10 %; A6 needs CE = 0 in the scorer; A7 is outside the scorer", () => {
     const a = withC1(200, 200);
     expect(status(a, "A2")).toBe("met with confidence");
     a.fieldAccuracyOnReady.unit = rate(195, 200);

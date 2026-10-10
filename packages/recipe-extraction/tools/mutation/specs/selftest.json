@@ -1,0 +1,176 @@
+{
+  "format": "recipe-extraction-mutations/v1",
+  "owner": "scorer worker (Phase 2B, Worker B) — runner self-test",
+  "description": "Controls for the runner itself: a no-op SURVIVES; a syntax break, a missing anchor, an ambiguous anchor, a filter that runs no test, and an unknown killer name are ERROR (setup failure is never a kill); a real fault whose listed killer does not fail, or fails for another reason, is KILLED-UNEXPECTED; the same fault with its real killer is KILLED.",
+  "mutations": [
+    {
+      "id": "self-noop",
+      "description": "No-op control: a comment changes, behaviour does not.",
+      "file": "bench/outcomes.ts",
+      "find": "/** Most validator problems listed per CE line in the report (all are counted). */",
+      "replace": "/** Most validator problems listed per CE line in the report (all are counted; no-op mutation control). */",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts"
+      ],
+      "killedBy": [],
+      "expect": "SURVIVED"
+    },
+    {
+      "id": "self-syntax-error",
+      "description": "Syntax-breaking control: an extra parenthesis makes bench/outcomes.ts fail to compile, so every test file importing it fails to load.",
+      "file": "bench/outcomes.ts",
+      "find": "export function classifyLine(c: IngredientCase",
+      "replace": "export function classifyLine((c: IngredientCase",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts"
+      ],
+      "killedBy": [
+        {
+          "test": "outcomes v3 hand-calculated oracles > O01 C1, C1+"
+        }
+      ],
+      "expect": "ERROR"
+    },
+    {
+      "id": "self-missing-anchor",
+      "description": "Missing-anchor control: the text to replace does not occur.",
+      "file": "bench/outcomes.ts",
+      "find": "this text does not occur anywhere in bench/outcomes.ts",
+      "replace": "x",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts"
+      ],
+      "killedBy": [
+        {
+          "test": "outcomes v3 hand-calculated oracles > O01 C1, C1+"
+        }
+      ],
+      "expect": "ERROR"
+    },
+    {
+      "id": "self-ambiguous-anchor",
+      "description": "Ambiguous-anchor control: the text occurs many times and no occurrence is named.",
+      "file": "bench/outcomes.ts",
+      "find": "export const ",
+      "replace": "export let ",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts"
+      ],
+      "killedBy": [
+        {
+          "test": "outcomes v3 hand-calculated oracles > O01 C1, C1+"
+        }
+      ],
+      "expect": "ERROR"
+    },
+    {
+      "id": "self-missing-file",
+      "description": "Missing-file control: the file to mutate does not exist.",
+      "file": "bench/no-such-file.ts",
+      "find": "x",
+      "replace": "y",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts"
+      ],
+      "killedBy": [
+        {
+          "test": "outcomes v3 hand-calculated oracles > O01 C1, C1+"
+        }
+      ],
+      "expect": "ERROR"
+    },
+    {
+      "id": "self-no-tests-ran",
+      "description": "No-test control: the name filter selects no test, so nothing ran (the baseline is unusable too).",
+      "file": "bench/outcomes.ts",
+      "find": "  // Semantic accuracy (dimension 4) only for a valid, deterministic, non-error output (SCORE-02).\n  if (!ce) {",
+      "replace": "  // Semantic accuracy (dimension 4) only for a valid, deterministic, non-error output (SCORE-02).\n  if (validity.engineError === null) {",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts"
+      ],
+      "testNamePattern": "no test has this name",
+      "killedBy": [
+        {
+          "test": "outcomes v3 hand-calculated oracles > O52 CE invalid output, SF-6"
+        }
+      ],
+      "expect": "ERROR"
+    },
+    {
+      "id": "self-unknown-killer",
+      "description": "Unknown-killer control: a real fault, but the named killing test does not exist in the run.",
+      "file": "bench/outcomes.ts",
+      "find": "  // Semantic accuracy (dimension 4) only for a valid, deterministic, non-error output (SCORE-02).\n  if (!ce) {",
+      "replace": "  // Semantic accuracy (dimension 4) only for a valid, deterministic, non-error output (SCORE-02).\n  if (validity.engineError === null) {",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts"
+      ],
+      "killedBy": [
+        {
+          "test": "no such describe > no such test"
+        }
+      ],
+      "expect": "ERROR"
+    },
+    {
+      "id": "self-killed-unexpected",
+      "description": "A real fault (S codes on CE) whose only listed killer is a test that keeps passing: other tests fail.",
+      "file": "bench/outcomes.ts",
+      "find": "  // Semantic accuracy (dimension 4) only for a valid, deterministic, non-error output (SCORE-02).\n  if (!ce) {",
+      "replace": "  // Semantic accuracy (dimension 4) only for a valid, deterministic, non-error output (SCORE-02).\n  if (validity.engineError === null) {",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts"
+      ],
+      "killedBy": [
+        {
+          "test": "outcomes v3 hand-calculated oracles > O01 C1, C1+"
+        }
+      ],
+      "expect": "KILLED-UNEXPECTED"
+    },
+    {
+      "id": "self-wrong-reason",
+      "description": "The same fault with its real killer but a wrong expected reason: the killer fails, not for that reason.",
+      "file": "bench/outcomes.ts",
+      "find": "  // Semantic accuracy (dimension 4) only for a valid, deterministic, non-error output (SCORE-02).\n  if (!ce) {",
+      "replace": "  // Semantic accuracy (dimension 4) only for a valid, deterministic, non-error output (SCORE-02).\n  if (validity.engineError === null) {",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts"
+      ],
+      "killedBy": [
+        {
+          "test": "outcomes v3 hand-calculated oracles > O52 CE invalid output, SF-6",
+          "reason": "^AssertionError: outcome:"
+        }
+      ],
+      "expect": "KILLED-UNEXPECTED"
+    },
+    {
+      "id": "self-killed",
+      "description": "The same fault with its real killer and reason: KILLED.",
+      "file": "bench/outcomes.ts",
+      "find": "  // Semantic accuracy (dimension 4) only for a valid, deterministic, non-error output (SCORE-02).\n  if (!ce) {",
+      "replace": "  // Semantic accuracy (dimension 4) only for a valid, deterministic, non-error output (SCORE-02).\n  if (validity.engineError === null) {",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts"
+      ],
+      "killedBy": [
+        {
+          "test": "outcomes v3 hand-calculated oracles > O52 CE invalid output, SF-6",
+          "reason": "^AssertionError: severe:"
+        }
+      ],
+      "expect": "KILLED"
+    }
+  ]
+}
