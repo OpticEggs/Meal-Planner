@@ -1,0 +1,618 @@
+# input	status	name(|accepted...)	qty	unit	pkg	alts(;)(||accepted set)	flags (D=debatable, S=status-only)	group
+2 tbsp agar flakes, boiled with 1 cup coconut water	needs_review	agar flakes	2	tbsp	-	-	-	A-remark7
+1 tsp matcha powder, whisked in 2 tbsp warm water	needs_review	matcha powder	1	tsp	-	-	-	A-remark7
+1/2 cup currants, macerated in 3 tbsp brandy	needs_review	currants	1/2	cup	-	-	-	A-remark7
+1 tbsp potato starch stirred into 1/4 cup cold stock	needs_review	potato starch	1	tbsp	-	-	-	A-remark7
+3 sheets gelatin, softened in 1/2 cup cold water	needs_review	gelatin	3	sheet	-	-	-	A-remark7
+1 cup semolina, toasted in 2 tbsp ghee	needs_review	semolina	1	cup	-	-	-	A-remark7
+2 tsp wasabi powder, made into a paste with 2 tsp water	needs_review	wasabi powder	2	tsp	-	-	-	A-remark7
+1/4 cup dried cherries, rehydrated in 1/3 cup kirsch	needs_review	dried cherries	1/4	cup	-	-	-	A-remark7
+1 cup basmati rice, parboiled in 4 cups salted water	needs_review	basmati rice	1	cup	-	-	-	A-remark7
+1 tbsp miso, emulsified with 2 tbsp butter	needs_review	miso	1	tbsp	-	-	-	A-remark7
+4 oz dark chocolate, melted into 1/2 cup hot cream	needs_review	dark chocolate	4	oz	-	-	-	A-remark7
+1/2 cup bread crumbs moistened with 1/4 cup milk	needs_review	bread crumbs	1/2	cup	-	-	-	A-remark7
+2 tsp cornstarch (slaked with 1 tbsp sherry)	needs_review	cornstarch	2	tsp	-	-	-	A-remark7
+1 cup flour plus 1/4 cup cornstarch	needs_review	flour	1	cup	-	-	-	A-remark7
+3 cups chicken stock plus 1/2 cup dry sherry	needs_review	chicken stock	3	cup	-	-	-	A-remark7
+1 tbsp sugar + 1 tsp salt	needs_review	sugar	1	tbsp	-	-	-	A-remark7
+1 cup rice flour, combined with 2 tbsp tapioca starch	needs_review	rice flour	1	cup	-	-	-	A-remark7
+1/3 cup tamarind pulp, steeped in 1 cup boiling water	needs_review	tamarind pulp	1/3	cup	-	-	-	A-remark7
+2 tbsp gochugaru, bloomed in 3 tbsp hot oil	needs_review	gochugaru	2	tbsp	-	-	-	A-remark7
+1 cup sushi rice, seasoned with 3 tbsp rice vinegar	needs_review	sushi rice	1	cup	-	-	-	A-remark7
+1/2 cup pearl tapioca, soaked in 2 cups milk	needs_review	pearl tapioca	1/2	cup	-	-	-	A-remark7
+6 dates, blitzed with 1/4 cup hot water	needs_review	dates	6	each	-	-	-	A-remark7
+1 envelope dry yeast, proofed in 1/4 cup warm milk	needs_review	dry yeast	1	envelope	-	-	-	A-remark7
+1 lb pork shoulder, brined in 2 quarts salted water	needs_review	pork shoulder	1	lb	-	-	-	A-remark7
+2 tbsp ghee, plus 1 tbsp to finish	ready	ghee	3	tbsp	-	-	-	A-control7
+1 1/2 cups bread flour, plus 2 tbsp for kneading	ready	bread flour	26	tbsp	-	-	-	A-control7
+1 lb chicken wings, split at the joint	ready	chicken wings	1	lb	-	-	-	A-control7
+1 (8-oz) package cream cheese, very soft	ready	cream cheese	1	package	8 oz	-	-	A-control7
+1 cup grated carrot (about 2 carrots)	ready	grated carrot|carrot	1	cup	-	-	-	A-control7
+2 cups stock, simmered for 20 minutes	ready	stock	2	cup	-	-	-	A-control7
+1/2 cup almonds, toasted at 325°F	ready	almonds	1/2	cup	-	-	-	A-control7
+1 tbsp coconut oil, plus extra for greasing	ready	coconut oil	1	tbsp	-	-	-	A-control7
+1 lb pork tenderloin, cut into 1/2-inch medallions	ready	pork tenderloin	1	lb	-	-	-	A-control7
+2 cups mashed sweet potato (about 2 medium sweet potatoes)	ready	mashed sweet potato|sweet potato	2	cup	-	-	-	A-control7
+1 cup lentils, soaked in warm water for 1 hour	ready	lentils	1	cup	-	-	-	A-control7
+4 oz feta, crumbled into small pieces	ready	feta	4	oz	-	-	-	A-control7
+2 cups apple cider, reduced by half	ready	apple cider	2	cup	-	-	-	A-control7
+2 tbsp soy sauce and sesame oil	needs_review	-	2	tbsp	-	-	-	B-and7
+1 cup sour cream and green onions	needs_review	-	1	cup	-	-	-	B-and7
+1/4 cup olive oil and lemon juice	needs_review	-	1/4	cup	-	-	-	B-and7
+2 tbsp brown sugar and smoked paprika	needs_review	-	2	tbsp	-	-	-	B-and7
+2 cups cream cheese and powdered sugar	needs_review	-	2	cup	-	-	-	B-and7
+1 tbsp tomato paste and red wine vinegar	needs_review	-	1	tbsp	-	-	-	B-and7
+1 cup green beans and baby carrots	needs_review	-	1	cup	-	-	-	B-and7
+3 tbsp hoisin sauce and rice wine	needs_review	-	3	tbsp	-	-	-	B-and7
+1/2 cup heavy cream and whole milk	needs_review	-	1/2	cup	-	-	-	B-and7
+2 tbsp Worcestershire and hot sauce	needs_review	-	2	tbsp	-	-	-	B-and7
+1 cup coconut milk & lime juice	needs_review	-	1	cup	-	-	-	B-and7
+1/2 cup grated parmesan and fresh breadcrumbs	needs_review	-	1/2	cup	-	-	-	B-and7
+2 cups baby spinach and arugula	needs_review	-	2	cup	-	-	-	B-and7
+1 tbsp garlic powder and onion powder	needs_review	-	1	tbsp	-	-	-	B-and7
+1 cup maple syrup and apple cider vinegar	needs_review	-	1	cup	-	-	-	B-and7
+1 lb shrimp and bay scallops	needs_review	-	1	lb	-	-	-	B-and7
+2 tbsp fish sauce & palm sugar	needs_review	-	2	tbsp	-	-	-	B-and7
+1 cup sour cream and onion dip	ready	sour cream and onion dip	1	cup	-	-	-	B-compound7
+1 jar sweet chili and garlic sauce	ready	sweet chili and garlic sauce	1	jar	-	-	-	B-compound7
+1 bottle soy and ginger dressing	ready	soy and ginger dressing	1	bottle	-	-	-	B-compound7
+1 bag salt and pepper kettle chips	ready	salt and pepper kettle chips	1	bag	-	-	-	B-compound7
+1 pint cookies and cream ice cream	ready	cookies and cream ice cream	1	pint	-	-	-	B-compound7
+1 can chicken and rice soup	ready	chicken and rice soup	1	can	-	-	-	B-compound7
+1 bag fruit and nut mix	ready	fruit and nut mix	1	bag	-	-	-	B-compound7
+1 box fish and chips batter mix	ready	fish and chips batter mix	1	box	-	-	-	B-compound7
+1 can beef and barley soup	ready	beef and barley soup	1	can	-	-	-	B-compound7
+2 cups ham and cheese filling	ready	ham and cheese filling	2	cup	-	-	D	B-compound7
+1 bag sweet and sour chicken	ready	sweet and sour chicken	1	bag	-	-	-	B-compound7
+2 Bartlett or Comice pears	needs_review	-	2	each	-	Bartlett pears;Comice pears	-	B-choice7
+1 lb flounder or sole fillets	needs_review	-	1	lb	-	flounder fillets;sole fillets	-	B-choice7
+1 tbsp sherry or balsamic vinegar	needs_review	-	1	tbsp	-	sherry vinegar;balsamic vinegar	-	B-choice7
+1 cup squash, acorn or butternut	needs_review	-	1	cup	-	acorn squash;butternut squash	-	B-choice7
+1 cup fruit, apples or pears	needs_review	-	1	cup	-	apples;pears	-	B-choice7
+1/2 cup golden or dark raisins	needs_review	-	1/2	cup	-	golden raisins;dark raisins	-	B-choice7
+2 tbsp red or white miso	needs_review	-	2	tbsp	-	red miso;white miso	-	B-choice7
+1 cloud meringue	needs_review	meringue	-	-	-	-	-	C-measure7
+1 pillow burrata	needs_review	burrata	-	-	-	-	-	C-measure7
+1 crumble blue cheese	needs_review	blue cheese	-	-	-	-	-	C-measure7
+1 tidbit smoked trout	needs_review	smoked trout	-	-	-	-	-	C-measure7
+1 taste brandy	needs_review	brandy	-	-	-	-	-	C-measure7
+1 sample caviar	needs_review	caviar	-	-	-	-	-	C-measure7
+1 petal edible rose	needs_review	edible rose	-	-	-	-	-	C-measure7
+1 nugget gingerbread	needs_review	gingerbread	-	-	-	-	-	C-measure7
+1 glaze honey	needs_review	honey	-	-	-	-	-	C-measure7
+1 dot butter	needs_review	butter	-	-	-	-	-	C-measure7
+1 nibble cheddar	needs_review	cheddar	-	-	-	-	-	C-measure7
+1 ration rice	needs_review	rice	-	-	-	-	-	C-measure7
+1 pile fresh herbs	needs_review	fresh herbs	-	-	-	-	-	C-measure7
+1 stack thin pancakes	needs_review	thin pancakes	-	-	-	-	-	C-measure7
+1 tower crisp lettuce	needs_review	crisp lettuce	-	-	-	-	-	C-measure7
+1 garland fresh bay leaves	needs_review	fresh bay leaves	-	-	-	-	-	C-measure7
+1 wreath dried chilies	needs_review	dried chilies	-	-	-	-	-	C-measure7
+1 cluster ripe grapes	needs_review	ripe grapes	-	-	-	-	-	C-measure7
+1 tile dark chocolate	needs_review	dark chocolate	-	-	-	-	-	C-measure7
+1 plank smoked salmon	needs_review	smoked salmon	-	-	-	-	-	C-measure7
+1 pellet frozen pesto	needs_review	frozen pesto	-	-	-	-	-	C-measure7
+1 stream warm honey	needs_review	warm honey	-	-	-	-	-	C-measure7
+1 jet soda water	needs_review	soda water	-	-	-	-	-	C-measure7
+1 breath smoked paprika	needs_review	smoked paprika	-	-	-	-	-	C-measure7
+1 touch fresh nutmeg	needs_review	fresh nutmeg	-	-	-	-	-	C-measure7
+1 whisper ground cardamom	needs_review	ground cardamom	-	-	-	-	-	C-measure7
+1 trace vanilla extract	needs_review	vanilla extract	-	-	-	-	-	C-measure7
+1 snippet chives	needs_review	chives	-	-	-	-	-	C-measure7
+1 crisp prosciutto	needs_review	prosciutto	-	-	-	-	D	C-measure7
+1 coin fresh ginger	needs_review	fresh ginger	-	-	-	-	-	C-measure7
+1 bud garlic	needs_review	garlic	-	-	-	-	-	C-measure7
+1 tassel dill	needs_review	dill	-	-	-	-	-	C-measure7
+1 gourd sake	needs_review	sake	-	-	-	-	-	C-measure7
+1 tumblerful orange juice	needs_review	orange juice	-	-	-	-	-	C-measure7
+3 tidbits smoked trout	needs_review	smoked trout	-	-	-	-	-	C-measure7
+2 pillows burrata	needs_review	burrata	-	-	-	-	-	C-measure7
+2 coins fresh ginger	needs_review	fresh ginger	-	-	-	-	-	C-measure7
+1 Cloud Meringue	needs_review	Meringue	-	-	-	-	-	C-measure7
+1 Pillow Burrata	needs_review	Burrata	-	-	-	-	-	C-measure7
+1 Tidbit Smoked Trout	needs_review	Smoked Trout	-	-	-	-	-	C-measure7
+1 Nugget Gingerbread	needs_review	Gingerbread	-	-	-	-	-	C-measure7
+1 scrap parmesan rind	needs_review	parmesan rind	-	-	-	-	-	C-measure7
+1 bunchlet thyme	needs_review	thyme	-	-	-	-	-	C-measure7
+1 pinchful saffron	needs_review	saffron	-	-	-	-	D	C-measure7
+1 chiffonade basil	needs_review	basil	-	-	-	-	D	C-measure7
+1 julienne carrot	needs_review	carrot	-	-	-	-	D	C-measure7
+1 brunoise shallot	needs_review	shallot	-	-	-	-	D	C-measure7
+1 apple stuffed pork loin	ready	apple stuffed pork loin	1	each	-	-	-	C-overfire7
+1 bacon wrapped beef filet	ready	bacon wrapped beef filet	1	each	-	-	D	C-overfire7
+1 cheese stuffed jalapeño	ready	cheese stuffed jalapeño	1	each	-	-	-	C-overfire7
+1 butter poached lobster tail	ready	butter poached lobster tail	1	each	-	-	-	C-overfire7
+1 herb crusted rack of lamb	ready	herb crusted rack of lamb	1	each	-	-	-	C-overfire7
+1 sugar cured ham	ready	sugar cured ham	1	each	-	-	-	C-overfire7
+1 salt crusted sea bass	ready	salt crusted sea bass	1	each	-	-	-	C-overfire7
+1 ginger glazed salmon fillet	ready	ginger glazed salmon	1	fillet	-	-	-	C-overfire7
+1 tea smoked duck breast	ready	tea smoked duck breast	1	each	-	-	-	C-overfire7
+1 garlic studded leg of lamb	ready	garlic studded leg of lamb	1	each	-	-	-	C-overfire7
+1 cedar planked salmon fillet	ready	cedar planked salmon fillet	1	each	-	-	-	C-overfire7
+1 farm raised rainbow trout	ready	farm raised rainbow trout	1	each	-	-	-	C-overfire7
+1 pasture raised chicken	ready	pasture raised chicken	1	each	-	-	-	C-overfire7
+1 corn fed chicken	ready	corn fed chicken	1	each	-	-	-	C-overfire7
+1 milk fed veal chop	ready	milk fed veal chop	1	each	-	-	-	C-overfire7
+1 beer battered cod fillet	ready	beer battered cod	1	fillet	-	-	-	C-overfire7
+1 bourbon glazed spiral ham	ready	bourbon glazed spiral ham	1	each	-	-	-	C-overfire7
+1 maple cured pork belly	ready	maple cured pork belly	1	each	-	-	-	C-overfire7
+1 hickory smoked turkey breast	ready	hickory smoked turkey breast	1	each	-	-	-	C-overfire7
+1 wine braised lamb shank	ready	wine braised lamb shank	1	each	-	-	-	C-overfire7
+1 coffee rubbed tri-tip	ready	coffee rubbed tri-tip	1	each	-	-	-	C-overfire7
+1 Thai green papaya	ready	Thai green papaya	1	each	-	-	-	C-overfire7
+1 cherokee purple tomato	ready	cherokee purple tomato	1	each	-	-	-	C-overfire7
+1 brandywine tomato	ready	brandywine tomato	1	each	-	-	-	C-overfire7
+1 honeynut squash	ready	honeynut squash	1	each	-	-	-	C-overfire7
+1 sugarloaf pumpkin	ready	sugarloaf pumpkin	1	each	-	-	-	C-overfire7
+1 cara cara orange	ready	cara cara orange	1	each	-	-	-	C-overfire7
+1 hubbard squash	ready	hubbard squash	1	each	-	-	-	C-overfire7
+1 cotton candy grape bunch	ready	cotton candy grape bunch	1	each	-	-	D	C-overfire7
+1 Hellmann's mayonnaise jar	ready	Hellmann's mayonnaise jar	1	each	-	-	D	C-overfire7
+1 Kerrygold butter block	ready	Kerrygold butter block	1	each	-	-	D	C-overfire7
+1 Babybel mini cheese	ready	Babybel mini cheese	1	each	-	-	-	C-overfire7
+1 slab pie crust	ready	slab pie crust	1	each	-	-	D	C-overfire7
+1 bite-size brownie	ready	bite-size brownie	1	each	-	-	-	C-overfire7
+1 nugget potato	ready	nugget potato	1	each	-	-	D	C-overfire7
+1 ox heart tomato	ready	ox heart tomato	1	each	-	-	-	C-overfire7
+1 cow heel	ready	cow heel	1	each	-	-	D	C-overfire7
+1 lion's mane mushroom	ready	lion's mane mushroom	1	each	-	-	-	C-overfire7
+1 hen of the woods cluster	ready	hen of the woods cluster	1	each	-	-	D	C-overfire7
+1 snake gourd	ready	snake gourd	1	each	-	-	-	C-overfire7
+1 ash gourd	ready	ash gourd	1	each	-	-	-	C-overfire7
+1 ivy gourd	ready	ivy gourd	1	each	-	-	-	C-overfire7
+1 spider steak	ready	spider steak	1	each	-	-	-	C-overfire7
+1 soup bone	ready	soup bone	1	each	-	-	-	C-overfire7
+1 ham hock, smoked	ready	ham hock	1	each	-	-	-	C-overfire7
+1 pork knuckle, scored	ready	pork knuckle	1	each	-	-	-	C-overfire7
+1 Staub grill pan	unsupported	-	-	-	-	-	-	C-equip7
+1 Lodge pie iron	unsupported	-	-	-	-	-	-	C-equip7
+1 Emile Henry bread cloche	unsupported	-	-	-	-	-	-	C-equip7
+1 OXO pastry mat	unsupported	-	-	-	-	-	-	C-equip7
+1 Wilton cake leveler	unsupported	-	-	-	-	-	-	C-equip7
+1 Mauviel tarte tatin pan	unsupported	-	-	-	-	-	-	C-equip7
+1 Zwilling poultry shears	unsupported	-	-	-	-	-	-	C-equip7
+1 Victorinox bread knife	unsupported	-	-	-	-	-	-	C-equip7
+1 Weber chimney starter	unsupported	-	-	-	-	-	-	C-equip7
+1 Kamado grill grate	unsupported	-	-	-	-	-	-	C-equip7
+1 Microplane spice grater	unsupported	-	-	-	-	-	-	C-equip7
+1 Joseph Joseph nest	unsupported	-	-	-	-	-	-	C-equip7
+1 Yeti rambler	unsupported	-	-	-	-	-	-	C-equip7
+1 Stanley thermos	unsupported	-	-	-	-	-	-	C-equip7
+1 Bormioli Rocco jar	unsupported	-	-	-	-	-	-	C-equip7
+1 Ball mason jar	unsupported	-	-	-	-	-	-	C-equip7
+1 Bonne Maman jar, empty	unsupported	-	-	-	-	-	-	C-equip7
+1 chicken waterer	unsupported	-	-	-	-	-	-	C-equip7
+1 duck egg cup	unsupported	-	-	-	-	-	-	C-equip7
+1 lobster bib	unsupported	-	-	-	-	-	-	C-equip7
+1 oyster glove	unsupported	-	-	-	-	-	-	C-equip7
+1 pig cookie cutter	unsupported	-	-	-	-	-	-	C-equip7
+1 bear paw shredder	unsupported	-	-	-	-	-	-	C-equip7
+1 cow butter dish	unsupported	-	-	-	-	-	-	C-equip7
+1 owl kitchen timer	unsupported	-	-	-	-	-	-	C-equip7
+1 hen egg basket	unsupported	-	-	-	-	-	-	C-equip7
+1 goat cheese knife	unsupported	-	-	-	-	-	-	C-equip7
+1 pizza peel, wooden	unsupported	-	-	-	-	-	-	C-equip7
+1 corn cob holder	unsupported	-	-	-	-	-	-	C-equip7
+1 berry colander	unsupported	-	-	-	-	-	-	C-equip7
+1 avocado saver	unsupported	-	-	-	-	-	-	C-equip7
+1 onion goggles	unsupported	-	-	-	-	-	-	C-equip7
+1 bagel guillotine	unsupported	-	-	-	-	-	-	C-equip7
+1 tortilla warmer, cloth	unsupported	-	-	-	-	-	-	C-equip7
+1 rice washer	unsupported	-	-	-	-	-	-	C-equip7
+1 sushi bazooka	unsupported	-	-	-	-	-	-	C-equip7
+1 bento box	unsupported	-	-	-	-	-	-	C-equip7
+1 sugar tongs	unsupported	-	-	-	-	-	-	C-equip7
+1 lemon squeezer, enamel	unsupported	-	-	-	-	-	-	C-equip7
+1 olive wood trivet	unsupported	-	-	-	-	-	-	C-equip7
+1 cherry wood cutting board	unsupported	-	-	-	-	-	-	C-equip7
+1 marble pastry board	unsupported	-	-	-	-	-	-	C-equip7
+1 copper jam pan	unsupported	-	-	-	-	-	-	C-equip7
+1 slate serving tray	unsupported	-	-	-	-	-	-	C-equip7
+1 bamboo skewer pack	unsupported	-	-	-	-	-	-	C-equip7
+1 bottle stopper	unsupported	-	-	-	-	-	-	C-equip7
+1 wine aerator	unsupported	-	-	-	-	-	-	C-equip7
+1 cocktail jigger	unsupported	-	-	-	-	-	-	C-equip7
+1 popsicle mold set	unsupported	-	-	-	-	-	-	C-equip7
+1 roll kitchen string	unsupported	-	-	-	-	-	-	C-equip7
+1 box freezer labels	unsupported	-	-	-	-	-	-	C-equip7
+1 sheet parchment	unsupported	-	-	-	-	-	-	C-equip7
+1 bag cotton twine	unsupported	-	-	-	-	-	-	C-equip7
+1 bottle dish soap, lemon scented	unsupported	-	-	-	-	-	-	C-equip7
+1 box steel wool	unsupported	-	-	-	-	-	-	C-equip7
+1 pack oven liners	unsupported	-	-	-	-	-	-	C-equip7
+2 lb pork rib tips	ready	pork rib tips	2	lb	-	-	-	C-purpose7
+1 lb chicken tenders, breaded	ready	chicken tenders	1	lb	-	-	-	C-purpose7
+1 bag tortilla bowls	ready	tortilla bowls	1	bag	-	-	-	C-purpose7
+1 bag pizza rolls	ready	pizza rolls	1	bag	-	-	-	C-purpose7
+2 lb fish fillets, skinless	ready	fish fillets	2	lb	-	-	-	C-purpose7
+1 lb crab legs, split	ready	crab legs	1	lb	-	-	-	C-purpose7
+2 rice bowls with teriyaki chicken	ready	rice bowls with teriyaki chicken	2	each	-	-	D	C-dish7
+2 pot pies, frozen	ready	pot pies	2	each	-	-	-	C-dish7
+6 muffin-cup frittatas	ready	muffin-cup frittatas	6	each	-	-	-	C-dish7
+4 crock-baked potatoes	ready	crock-baked potatoes	4	each	-	-	-	C-dish7
+6 cup-o-noodles	ready	cup-o-noodles	6	each	-	-	D	C-dish7
+3 bowl-of-pho kits	ready	bowl-of-pho kits	3	each	-	-	D	C-dish7
+2 tray-bake lasagnas	ready	tray-bake lasagnas	2	each	-	-	-	C-dish7
+8 tostone	ready	tostone	8	each	-	-	-	C-plural7
+2 tongs	unsupported	-	-	-	-	-	-	C-plural7
+4 mixing bowl	unsupported	-	-	-	-	-	-	C-plural7
+300 ml beaker milk	needs_review	milk	-	-	-	-	-	D-alias7
+1 kg tote apples	needs_review	apples	-	-	-	-	-	D-alias7
+2 lb basket peaches	needs_review	peaches	-	-	-	-	-	D-alias7
+16 oz tumbler iced tea	needs_review	iced tea	-	-	-	-	-	D-alias7
+1 L flagon cider	needs_review	cider	-	-	-	-	-	D-alias7
+250 ml vial vanilla extract	needs_review	vanilla extract	-	-	-	-	-	D-alias7
+20 oz growler kombucha	needs_review	kombucha	-	-	-	-	-	D-alias7
+1 lb hamper mixed nuts	needs_review	mixed nuts	-	-	-	-	-	D-alias7
+2 kg crate oranges	needs_review	oranges	-	-	-	-	-	D-alias7
+1 trug runner beans	needs_review	runner beans	-	-	-	-	-	D-alias7
+1 bale hay	needs_review	hay	-	-	-	-	D	D-alias7
+1 crock sauerkraut	needs_review	sauerkraut	-	-	-	-	-	D-alias7
+1 sachet bouquet garni	needs_review	bouquet garni	-	-	-	-	-	D-alias7
+1 tin-can corned beef	needs_review	corned beef	-	-	-	-	D	D-alias7
+500 g carton crème fraîche	ready	crème fraîche	1	carton	500 g	-	-	D-alias7
+3 tsps baking powder	ready	baking powder	3	tsp	-	-	-	D-declared7
+2 Tbsps brown sugar	ready	brown sugar	2	tbsp	-	-	-	D-declared7
+1 tablespoonful olive oil	ready	olive oil	1	tbsp	-	-	-	D-declared7
+1 tbls cider vinegar	ready	cider vinegar	1	tbsp	-	-	-	D-declared7
+500 grs pork mince	ready	pork mince	500	g	-	-	-	D-declared7
+1 kilo chicken thighs	ready	chicken thighs	1	kg	-	-	-	D-declared7
+750 millilitres red wine	ready	red wine	750	ml	-	-	-	D-declared7
+2 btl tonic water	ready	tonic water	2	bottle	-	-	-	D-declared7
+1 pkt instant noodles	ready	instant noodles	1	packet	-	-	-	D-declared7
+3 pcs naan	ready	naan	3	piece	-	-	-	D-declared7
+1 ctns orange juice	ready	orange juice	1	carton	-	-	D	D-declared7
+1 qt buttermilk	ready	buttermilk	1	quart	-	-	-	D-declared7
+2 pts strawberries	ready	strawberries	2	pint	-	-	-	D-declared7
+1 gals apple cider	ready	apple cider	1	gallon	-	-	D	D-declared7
+3 dls cream	ready	cream	3	dl	-	-	-	D-declared7
+1 tblsp soy sauce	ready	soy sauce	1	tbsp	-	-	-	D-declared7
+1 1/2 lb boneless pork loin roast, tied	ready	boneless pork loin roast	3/2	lb	-	-	-	K-everyday7
+2 cups shredded green leaf lettuce, for the tacos	ready	shredded green leaf lettuce|green leaf lettuce	2	cup	-	-	-	K-everyday7
+3 tbsp mild salsa, plus extra for dipping	ready	mild salsa	3	tbsp	-	-	-	K-everyday7
+1 cup crushed tortilla chips, for topping	ready	crushed tortilla chips|tortilla chips	1	cup	-	-	-	K-everyday7
+4 cups cooked white rice, cooled overnight	ready	white rice|cooked white rice	4	cup	-	-	-	K-everyday7
+2 eggs, scrambled and set aside	ready	eggs	2	each	-	-	-	K-everyday7
+1 cup frozen peas and diced carrots blend, thawed	ready	frozen peas and diced carrots blend	1	cup	-	-	D	K-everyday7
+3 scallions, whites and greens separated	ready	scallions	3	each	-	-	-	K-everyday7
+2 tbsp oyster sauce, for the stir-fry	ready	oyster sauce	2	tbsp	-	-	-	K-everyday7
+1 lb bone-in chicken breasts, patted dry	ready	bone-in chicken breasts	1	lb	-	-	-	K-everyday7
+1/2 cup unsalted chicken stock, warm	ready	unsalted chicken stock	1/2	cup	-	-	-	K-everyday7
+2 cups herb-seasoned stuffing cubes	ready	herb-seasoned stuffing cubes	2	cup	-	-	-	K-everyday7
+1 can whole-berry cranberry sauce	ready	whole-berry cranberry sauce	1	can	-	-	-	K-everyday7
+3 cups mashed Yukon Gold potatoes, warm	ready	mashed Yukon Gold potatoes|Yukon Gold potatoes	3	cup	-	-	-	K-everyday7
+4 tbsp salted butter, at room temperature	ready	salted butter	4	tbsp	-	-	-	K-everyday7
+1 cup turkey gravy, homemade or jarred	ready	turkey gravy	1	cup	-	-	-	K-everyday7
+2 cups green bean casserole topping	ready	green bean casserole topping	2	cup	-	-	D	K-everyday7
+1 cup French-fried onions	ready	French-fried onions	1	cup	-	-	-	K-everyday7
+1 lb fresh green beans, ends snapped	ready	fresh green beans|green beans	1	lb	-	-	-	K-everyday7
+1 can condensed cream of chicken soup	ready	condensed cream of chicken soup	1	can	-	-	-	K-everyday7
+1 cup shredded rotisserie turkey	ready	shredded rotisserie turkey|rotisserie turkey	1	cup	-	-	-	K-everyday7
+2 cups cubed sourdough bread, toasted	ready	cubed sourdough bread|sourdough bread	2	cup	-	-	-	K-everyday7
+1 cup diced yellow onion, about 1 small	ready	diced yellow onion|yellow onion	1	cup	-	-	-	K-everyday7
+3/4 cup diced celery, with leaves	ready	diced celery|celery	3/4	cup	-	-	-	K-everyday7
+2 tsp dried sage, rubbed	ready	dried sage	2	tsp	-	-	-	K-everyday7
+1 tsp dried thyme leaves	ready	dried thyme leaves|dried thyme	1	tsp	-	-	-	K-everyday7
+1 large egg, whisked with a fork	ready	egg	1	each	-	-	-	K-everyday7
+1 1/2 cups low-sodium turkey broth	ready	low-sodium turkey broth	3/2	cup	-	-	-	K-everyday7
+6 slices white sandwich bread	ready	white sandwich bread	6	slice	-	-	-	K-everyday7
+3 tbsp creamy Dijon mustard	ready	creamy Dijon mustard	3	tbsp	-	-	-	K-everyday7
+1 lb sliced deli turkey breast	ready	sliced deli turkey breast|deli turkey breast	1	lb	-	-	-	K-everyday7
+6 slices pepper jack cheese	ready	pepper jack cheese	6	slice	-	-	-	K-everyday7
+1 tomato, cut into 6 slices	ready	tomato	1	each	-	-	-	K-everyday7
+1/4 cup balsamic vinaigrette	ready	balsamic vinaigrette	1/4	cup	-	-	-	K-everyday7
+1/2 cup hollandaise sauce, kept warm	ready	hollandaise sauce	1/2	cup	-	-	-	K-everyday7
+1 tbsp white vinegar, for poaching	ready	white vinegar	1	tbsp	-	-	-	K-everyday7
+3/4 cup whole milk, for the batter	ready	whole milk	3/4	cup	-	-	-	K-everyday7
+1 tbsp vegetable oil, for the griddle	ready	vegetable oil	1	tbsp	-	-	-	K-everyday7
+1/2 cup fresh blueberries, rinsed and dried	ready	fresh blueberries|blueberries	1/2	cup	-	-	-	K-everyday7
+1/4 cup warm maple syrup, to serve	ready	warm maple syrup|maple syrup	1/4	cup	-	-	-	K-everyday7
+2 tbsp powdered sugar, for dusting	ready	powdered sugar	2	tbsp	-	-	-	K-everyday7
+4 slices brioche, a day old	ready	brioche	4	slice	-	-	-	K-everyday7
+3 eggs, whisked with a splash of milk	ready	eggs	3	each	-	-	D	K-everyday7
+1 tsp ground cinnamon, for the custard	ready	ground cinnamon	1	tsp	-	-	-	K-everyday7
+2 tbsp unsalted butter, for the skillet	ready	unsalted butter	2	tbsp	-	-	-	K-everyday7
+1 cup sliced strawberries, sweetened	ready	sliced strawberries|strawberries	1	cup	-	-	-	K-everyday7
+1 cup whipped cream, lightly sweetened	ready	whipped cream	1	cup	-	-	-	K-everyday7
+2 cups bran flakes	ready	bran flakes	2	cup	-	-	-	K-everyday7
+1 tbsp ground flaxseed	ready	ground flaxseed	1	tbsp	-	-	-	K-everyday7
+1 cup red seedless grapes, halved	ready	red seedless grapes	1	cup	-	-	-	K-everyday7
+1/2 cup low-fat vanilla yogurt	ready	low-fat vanilla yogurt	1/2	cup	-	-	-	K-everyday7
+1 lb ground sirloin, 90% lean	ready	ground sirloin	1	lb	-	-	-	K-everyday7
+1 packet chili seasoning mix	ready	chili seasoning mix	1	packet	-	-	-	K-everyday7
+1 (15-oz) can kidney beans, drained	ready	kidney beans	1	can	15 oz	-	-	K-everyday7
+1 (15-oz) can tomato sauce	ready	tomato sauce	1	can	15 oz	-	-	K-everyday7
+1 cup beef stock, unsalted	ready	beef stock	1	cup	-	-	-	K-everyday7
+1 cup shredded Colby Jack	ready	shredded Colby Jack|Colby Jack	1	cup	-	-	-	K-everyday7
+1/2 cup sliced green onions, for topping	ready	sliced green onions|green onions	1/2	cup	-	-	-	K-everyday7
+1 bag corn chips, for scooping	ready	corn chips	1	bag	-	-	-	K-everyday7
+1 lb chicken tenderloins, cut into bite-size pieces	ready	chicken tenderloins	1	lb	-	-	-	K-everyday7
+1 cup teriyaki sauce, bottled	ready	teriyaki sauce	1	cup	-	-	-	K-everyday7
+2 cups broccoli florets, blanched	ready	broccoli florets|broccoli	2	cup	-	-	-	K-everyday7
+1 red bell pepper, cut into 1-inch squares	ready	red bell pepper	1	each	-	-	-	K-everyday7
+1 can pineapple chunks in juice, drained	ready	pineapple chunks in juice|pineapple chunks	1	can	-	-	-	K-everyday7
+2 tbsp cornstarch, for dredging	ready	cornstarch	2	tbsp	-	-	-	K-everyday7
+1/4 cup ketchup, for the sauce	ready	ketchup	1/4	cup	-	-	-	K-everyday7
+1/3 cup granulated sugar, for the sauce	ready	granulated sugar	1/3	cup	-	-	-	K-everyday7
+1 lb lo mein noodles, cooked	ready	lo mein noodles	1	lb	-	-	-	K-everyday7
+1 lb medium shrimp, tails removed	ready	shrimp	1	lb	-	-	-	K-everyday7
+2 cups cooked day-old rice	ready	day-old rice|rice	2	cup	-	-	-	K-everyday7
+1/2 cup frozen peas, straight from the freezer	ready	frozen peas	1/2	cup	-	-	-	K-everyday7
+1 lb spaghetti, broken into thirds	ready	spaghetti	1	lb	-	-	-	K-everyday7
+2 cups chopped cooked chicken	ready	chopped chicken|chicken|chopped cooked chicken	2	cup	-	-	-	K-everyday7
+1/4 cup chopped Italian parsley	ready	chopped Italian parsley|Italian parsley	1/4	cup	-	-	-	K-everyday7
+1 lb meatballs, frozen	ready	meatballs	1	lb	-	-	-	K-everyday7
+2 cups part-skim ricotta	ready	part-skim ricotta	2	cup	-	-	-	K-everyday7
+2 cups shredded low-moisture mozzarella	ready	shredded low-moisture mozzarella|low-moisture mozzarella	2	cup	-	-	-	K-everyday7
+1 bag Caesar salad kit	ready	Caesar salad kit	1	bag	-	-	-	K-everyday7
+1 cup garlic croutons	ready	garlic croutons	1	cup	-	-	-	K-everyday7
+4 chicken cutlets, thinly pounded	ready	chicken cutlets	4	each	-	-	-	K-everyday7
+1 cup seasoned Italian breadcrumbs	ready	seasoned Italian breadcrumbs	1	cup	-	-	-	K-everyday7
+2 eggs, beaten for dredging	ready	eggs	2	each	-	-	-	K-everyday7
+1/2 cup canola oil, for frying	ready	canola oil	1/2	cup	-	-	-	K-everyday7
+1 cup marinara, warmed	ready	marinara	1	cup	-	-	-	K-everyday7
+4 slices fresh mozzarella	ready	fresh mozzarella	4	slice	-	-	-	K-everyday7
+1 lb wide egg noodles	ready	wide egg noodles	1	lb	-	-	-	K-everyday7
+2 lb beef stew meat, cut into chunks	ready	beef stew meat	2	lb	-	-	-	K-everyday7
+3 carrots, cut into thick coins	ready	carrots	3	each	-	-	-	K-everyday7
+1 lb red potatoes, quartered	ready	red potatoes	1	lb	-	-	-	K-everyday7
+2 tbsp tomato paste, for the stew	ready	tomato paste	2	tbsp	-	-	-	K-everyday7
+1 cup dry red wine, such as merlot	ready	dry red wine	1	cup	-	-	-	K-everyday7
+1 tbsp chopped fresh rosemary	ready	chopped fresh rosemary|fresh rosemary	1	tbsp	-	-	-	K-everyday7
+1/4 cup flour, for dredging the beef	ready	flour	1/4	cup	-	-	-	K-everyday7
+1 lb kielbasa, cut on the bias	ready	kielbasa	1	lb	-	-	-	K-everyday7
+1 bag sauerkraut, rinsed	ready	sauerkraut	1	bag	-	-	-	K-everyday7
+1 cup lager beer	ready	lager beer	1	cup	-	-	-	K-everyday7
+1 lb small red-skinned potatoes	ready	red-skinned potatoes	1	lb	-	-	-	K-everyday7
+2 cups whole cranberries, fresh or frozen	ready	whole cranberries	2	cup	-	-	-	K-everyday7
+3/4 cup orange juice, fresh	ready	orange juice	3/4	cup	-	-	-	K-everyday7
+1 cup sugar, for the cranberry sauce	ready	sugar	1	cup	-	-	-	K-everyday7
+1 tbsp orange zest, grated	ready	orange zest	1	tbsp	-	-	-	K-everyday7
+1 pie shell, unbaked	ready	pie shell	1	each	-	-	-	K-everyday7
+3 large eggs, for the filling	ready	eggs	3	each	-	-	-	K-everyday7
+3/4 cup packed dark brown sugar	ready	packed dark brown sugar|dark brown sugar	3/4	cup	-	-	-	K-everyday7
+1 tsp ground ginger, for the filling	ready	ground ginger	1	tsp	-	-	-	K-everyday7
+1 cup whipped topping, thawed	ready	whipped topping	1	cup	-	-	-	K-everyday7
+1 box yellow cake mix	ready	yellow cake mix	1	box	-	-	-	K-everyday7
+1/2 cup vegetable oil, for the cake	ready	vegetable oil	1/2	cup	-	-	-	K-everyday7
+1 can chocolate frosting	ready	chocolate frosting	1	can	-	-	-	K-everyday7
+1/4 cup rainbow sprinkles	ready	rainbow sprinkles	1/4	cup	-	-	-	K-everyday7
+1 cup creamy peanut butter, room temperature	ready	creamy peanut butter	1	cup	-	-	-	K-everyday7
+1 cup packed brown sugar, for the cookies	ready	packed brown sugar|brown sugar	1	cup	-	-	-	K-everyday7
+2 large eggs, for the dough	ready	eggs	2	each	-	-	-	K-everyday7
+1 1/2 cups milk chocolate chips	ready	milk chocolate chips	3/2	cup	-	-	-	K-everyday7
+2 cups quick oats, uncooked	ready	quick oats	2	cup	-	-	-	K-everyday7
+1 cup unsalted butter, cold and cubed	ready	unsalted butter	1	cup	-	-	-	K-everyday7
+2 1/2 cups all-purpose flour, for the crust	ready	all-purpose flour	5/2	cup	-	-	-	K-everyday7
+1/2 cup ice water, as needed	ready	ice water|water	1/2	cup	-	-	-	K-everyday7
+6 cups sliced peaches, peeled	ready	sliced peaches|peaches	6	cup	-	-	-	K-everyday7
+1/4 cup cornstarch, for the filling	ready	cornstarch	1/4	cup	-	-	-	K-everyday7
+2 tbsp lemon juice, for the peaches	ready	lemon juice	2	tbsp	-	-	-	K-everyday7
+1 egg, for brushing the crust	ready	egg	1	each	-	-	-	K-everyday7
+2 tbsp turbinado sugar, for sprinkling	ready	turbinado sugar	2	tbsp	-	-	-	K-everyday7
+1 pint vanilla bean ice cream	ready	vanilla bean ice cream	1	pint	-	-	-	K-everyday7
+1 jar maraschino cherries, drained	ready	maraschino cherries	1	jar	-	-	-	K-everyday7
+1/2 cup chopped salted peanuts	ready	chopped salted peanuts|salted peanuts	1/2	cup	-	-	-	K-everyday7
+3 bananas, split lengthwise	ready	bananas	3	each	-	-	-	K-everyday7
+1 cup hot fudge sauce, warm	ready	hot fudge sauce	1	cup	-	-	-	K-everyday7
+2 cups crushed graham cracker crumbs	ready	crushed graham cracker crumbs|graham cracker crumbs	2	cup	-	-	-	K-everyday7
+1/3 cup melted unsalted butter, for the crust	ready	melted unsalted butter|unsalted butter	1/3	cup	-	-	-	K-everyday7
+16 oz cream cheese, softened, for the filling	ready	cream cheese	16	oz	-	-	-	K-everyday7
+1 cup sour cream, room temperature	ready	sour cream	1	cup	-	-	-	K-everyday7
+1 tsp vanilla extract, for the filling	ready	vanilla extract	1	tsp	-	-	-	K-everyday7
+1/2 cup honey barbecue sauce	ready	honey barbecue sauce	1/2	cup	-	-	-	K-everyday7
+1 tsp liquid smoke	ready	liquid smoke	1	tsp	-	-	-	K-everyday7
+4 ears sweet corn, husks removed	ready	sweet corn	4	ear	-	-	-	K-everyday7
+2 tbsp chopped fresh dill, for the potato salad	ready	chopped fresh dill|fresh dill	2	tbsp	-	-	-	K-everyday7
+3 hard-boiled eggs, chopped	ready	hard-boiled eggs	3	each	-	-	-	K-everyday7
+1 tbsp yellow mustard, for the dressing	ready	yellow mustard	1	tbsp	-	-	-	K-everyday7
+2 cups shredded carrots, bagged	ready	shredded carrots|carrots	2	cup	-	-	-	K-everyday7
+1/2 cup raisins, for the slaw	ready	raisins	1/2	cup	-	-	-	K-everyday7
+1 bag tri-color coleslaw mix	ready	tri-color coleslaw mix	1	bag	-	-	-	K-everyday7
+1/2 cup creamy coleslaw dressing	ready	creamy coleslaw dressing	1/2	cup	-	-	-	K-everyday7
+1 lb watermelon, cubed and chilled	ready	watermelon	1	lb	-	-	-	K-everyday7
+1/4 cup fresh mint, torn	ready	fresh mint	1/4	cup	-	-	-	K-everyday7
+2 tbsp lime juice, fresh	ready	lime juice	2	tbsp	-	-	-	K-everyday7
+1 bag frozen mixed berries	ready	frozen mixed berries	1	bag	-	-	-	K-everyday7
+2 cups lemonade, chilled	ready	lemonade	2	cup	-	-	-	K-everyday7
+1 can frozen limeade concentrate	ready	frozen limeade concentrate	1	can	-	-	-	K-everyday7
+1 bottle club soda, cold	ready	club soda	1	bottle	-	-	-	K-everyday7
+1 lime, sliced into wheels	ready	lime	1	each	-	-	-	K-everyday7
+1 cup fresh basil leaves, loosely packed	ready	fresh basil leaves|basil leaves|fresh basil|basil	1	cup	-	-	-	K-everyday7
+1/3 cup pine nuts, lightly toasted	ready	pine nuts	1/3	cup	-	-	-	K-everyday7
+2 garlic cloves, roughly chopped	ready	garlic	2	clove	-	-	-	K-everyday7
+1/2 cup good olive oil	ready	olive oil|good olive oil	1/2	cup	-	-	-	K-everyday7
+1 lb trofie or gemelli pasta	needs_review	-	1	lb	-	-	D	K-everyday7
+1 lb fresh mozzarella balls, drained	ready	fresh mozzarella balls	1	lb	-	-	-	K-everyday7
+2 large heirloom tomatoes, sliced	ready	heirloom tomatoes	2	each	-	-	-	K-everyday7
+1 tbsp flaky sea salt, to finish	ready	flaky sea salt	1	tbsp	-	-	-	K-everyday7
+2 cups cooked quinoa, cooled	ready	quinoa|cooked quinoa	2	cup	-	-	-	K-everyday7
+1 can chickpeas, rinsed, for the salad	ready	chickpeas	1	can	-	-	-	K-everyday7
+1/2 cup diced cucumber, seeded	ready	diced cucumber|cucumber	1/2	cup	-	-	-	K-everyday7
+1/4 cup diced red onion, soaked in cold water	ready	diced red onion|red onion	1/4	cup	-	-	D	K-everyday7
+4 pita breads, warmed	ready	pita breads	4	each	-	-	-	K-everyday7
+1/2 cup hummus, store-bought	ready	hummus	1/2	cup	-	-	-	K-everyday7
+1 lb chicken thigh meat, cubed	ready	chicken thigh meat	1	lb	-	-	-	K-everyday7
+2 tbsp shawarma spice mix	ready	shawarma spice mix	2	tbsp	-	-	-	K-everyday7
+1/4 cup plain yogurt, for the marinade	ready	plain yogurt	1/4	cup	-	-	-	K-everyday7
+2 cups jasmine rice, uncooked	ready	jasmine rice	2	cup	-	-	-	K-everyday7
+1 can light coconut milk	ready	light coconut milk	1	can	-	-	-	K-everyday7
+2 tbsp yellow curry powder	ready	yellow curry powder	2	tbsp	-	-	-	K-everyday7
+1 lb cauliflower florets, roasted	ready	cauliflower florets|cauliflower	1	lb	-	-	-	K-everyday7
+1 cup frozen spinach, chopped	ready	frozen spinach	1	cup	-	-	-	K-everyday7
+1/2 cup plain whole yogurt, to serve	ready	plain whole yogurt	1/2	cup	-	-	-	K-everyday7
+4 naan breads, brushed with butter	ready	naan breads	4	each	-	-	-	K-everyday7
+1 lb salmon, skin removed and cubed	ready	salmon	1	lb	-	-	-	K-everyday7
+2 tbsp sweet chili sauce, for glazing	ready	sweet chili sauce	2	tbsp	-	-	-	K-everyday7
+2 cups shelled edamame, steamed	ready	shelled edamame|edamame	2	cup	-	-	-	K-everyday7
+1 cup shredded purple cabbage	ready	shredded purple cabbage|purple cabbage	1	cup	-	-	-	K-everyday7
+1/2 cup spicy mayo	ready	spicy mayo	1/2	cup	-	-	-	K-everyday7
+2 cups sushi rice, cooked and seasoned	ready	sushi rice	2	cup	-	-	-	K-everyday7
+1 cucumber, cut into matchsticks	ready	cucumber	1	each	-	-	-	K-everyday7
+4 nori sheets, halved	ready	nori	4	sheet	-	-	-	K-everyday7
+2 tbsp tamari, for dipping	ready	tamari	2	tbsp	-	-	-	K-everyday7
+1 lb lean ground pork, for the dumplings	ready	lean ground pork	1	lb	-	-	-	K-everyday7
+1 cup finely chopped napa cabbage	ready	finely chopped napa cabbage|napa cabbage	1	cup	-	-	-	K-everyday7
+1 package round dumpling wrappers	ready	round dumpling wrappers	1	package	-	-	-	K-everyday7
+3 tbsp black vinegar, for dipping	ready	black vinegar	3	tbsp	-	-	-	K-everyday7
+1 package firm tofu, cubed	ready	firm tofu	1	package	-	-	-	K-everyday7
+1/4 cup sliced scallions, to garnish	ready	sliced scallions|scallions	1/4	cup	-	-	-	K-everyday7
+1 lb frozen cod fillets, thawed	ready	frozen cod fillets	1	lb	-	-	-	K-everyday7
+1 cup tempura batter mix	ready	tempura batter mix	1	cup	-	-	-	K-everyday7
+3/4 cup ice-cold sparkling water	ready	ice-cold sparkling water|sparkling water	3/4	cup	-	-	-	K-everyday7
+1 quart peanut oil, for frying	ready	peanut oil	1	quart	-	-	-	K-everyday7
+1 cup tentsuyu dipping sauce	ready	tentsuyu dipping sauce	1	cup	-	-	-	K-everyday7
+2 tbsp apple jelly, melted	ready	apple jelly	2	tbsp	-	-	-	K-everyday7
+2 Granny Smith apples, cut into wedges	ready	Granny Smith apples	2	each	-	-	-	K-everyday7
+1 red onion, cut into wedges	ready	red onion	1	each	-	-	-	K-everyday7
+3 slices bacon, cut into lardons	ready	bacon	3	slice	-	-	-	K-everyday7
+1 butternut squash, about 2 lb	ready	butternut squash	1	each	-	-	-	K-everyday7
+1 tbsp maple syrup, for roasting	ready	maple syrup	1	tbsp	-	-	-	K-everyday7
+1/2 tsp ground nutmeg, freshly grated	ready	ground nutmeg|nutmeg	1/2	tsp	-	-	-	K-everyday7
+4 cups vegetable broth, low sodium	ready	vegetable broth	4	cup	-	-	-	K-everyday7
+1/2 cup heavy cream, to finish	ready	heavy cream	1/2	cup	-	-	-	K-everyday7
+1/4 cup roasted pumpkin seeds	ready	roasted pumpkin seeds	1/4	cup	-	-	-	K-everyday7
+1 baguette, sliced and toasted	ready	baguette	1	each	-	-	-	K-everyday7
+1 cup shredded Gruyère, for the soup	ready	shredded Gruyère|Gruyère	1	cup	-	-	-	K-everyday7
+3 large onions, thinly sliced	ready	onions	3	each	-	-	-	K-everyday7
+6 cups beef stock, for the soup	ready	beef stock	6	cup	-	-	-	K-everyday7
+2 sprigs thyme, tied together	ready	thyme	2	sprig	-	-	-	K-everyday7
+1 bay leaf, dried	ready	bay leaf	1	each	-	-	-	K-everyday7
+2 cups cooked egg noodles, buttered	ready	egg noodles|cooked egg noodles	2	cup	-	-	-	K-everyday7
+1 lb lean beef sirloin tips	ready	lean beef sirloin tips|beef sirloin tips	1	lb	-	-	-	K-everyday7
+8 oz sliced mushrooms, browned	ready	sliced mushrooms|mushrooms	8	oz	-	-	-	K-everyday7
+1/2 cup sour cream, for the stroganoff	ready	sour cream	1/2	cup	-	-	-	K-everyday7
+1 tbsp Worcestershire, for the sauce	ready	Worcestershire	1	tbsp	-	-	-	K-everyday7
+2 cups instant mashed potato flakes	ready	instant mashed potato flakes	2	cup	-	-	-	K-everyday7
+1 bag frozen tater tots	ready	frozen tater tots	1	bag	-	-	-	K-everyday7
+1 lb ground beef, browned and drained	ready	ground beef	1	lb	-	-	-	K-everyday7
+1 cup frozen green beans, cut	ready	frozen green beans	1	cup	-	-	-	K-everyday7
+1 cup shredded mild cheddar	ready	shredded mild cheddar|mild cheddar	1	cup	-	-	-	K-everyday7
+2 cups cooked einkorn berries	ready	einkorn berries|cooked einkorn berries	2	cup	-	-	-	K-lesscommon7
+1 cup kamut, soaked overnight	ready	kamut	1	cup	-	-	-	K-lesscommon7
+1/2 cup millet, toasted in a dry pan	ready	millet	1/2	cup	-	-	-	K-lesscommon7
+1/2 cup Job's tears	ready	Job's tears	1/2	cup	-	-	-	K-lesscommon7
+1 lb fresh rice noodles, separated	ready	fresh rice noodles	1	lb	-	-	-	K-lesscommon7
+8 oz dried mung bean vermicelli	ready	dried mung bean vermicelli	8	oz	-	-	-	K-lesscommon7
+1 package fresh udon, loosened	ready	fresh udon	1	package	-	-	-	K-lesscommon7
+2 cups cooked spätzle	ready	spätzle|cooked spätzle	2	cup	-	-	-	K-lesscommon7
+1 cup Israeli couscous, toasted	ready	Israeli couscous	1	cup	-	-	-	K-lesscommon7
+2 tbsp shiro dashi	ready	shiro dashi	2	tbsp	-	-	-	K-lesscommon7
+1 tbsp usukuchi soy sauce	ready	usukuchi soy sauce	1	tbsp	-	-	-	K-lesscommon7
+1/4 cup sake lees	ready	sake lees	1/4	cup	-	-	-	K-lesscommon7
+2 tbsp black sesame seeds, toasted	ready	black sesame seeds	2	tbsp	-	-	-	K-lesscommon7
+1 cup daikon, grated and squeezed	ready	daikon	1	cup	-	-	-	K-lesscommon7
+4 shiso leaves, chiffonade	ready	shiso leaves	4	each	-	-	D	K-lesscommon7
+1 tbsp yuzu juice, bottled	ready	yuzu juice	1	tbsp	-	-	-	K-lesscommon7
+1 cup gochujang marinade	ready	gochujang marinade	1	cup	-	-	-	K-lesscommon7
+1/2 cup fermented black bean paste	ready	fermented black bean paste	1/2	cup	-	-	-	K-lesscommon7
+1 lb pork belly, sliced for samgyeopsal	ready	pork belly	1	lb	-	-	-	K-lesscommon7
+2 cups napa cabbage kimchi, chopped	ready	napa cabbage kimchi	2	cup	-	-	-	K-lesscommon7
+1 tbsp doubanjiang, chopped fine	ready	doubanjiang	1	tbsp	-	-	-	K-lesscommon7
+1 tbsp Pixian chili bean paste	ready	Pixian chili bean paste	1	tbsp	-	-	-	K-lesscommon7
+1/4 cup Chinese sesame oil	ready	Chinese sesame oil	1/4	cup	-	-	-	K-lesscommon7
+1 tbsp rock sugar, crushed	ready	rock sugar	1	tbsp	-	-	-	K-lesscommon7
+2 pieces dried tangerine peel	ready	dried tangerine peel	2	piece	-	-	-	K-lesscommon7
+1 lb Chinese broccoli, trimmed	ready	Chinese broccoli	1	lb	-	-	-	K-lesscommon7
+1/2 cup Chinese pickled mustard greens	ready	Chinese pickled mustard greens	1/2	cup	-	-	-	K-lesscommon7
+2 tbsp XO sauce, homemade	ready	XO sauce	2	tbsp	-	-	-	K-lesscommon7
+1 cup Vietnamese coriander leaves	ready	Vietnamese coriander leaves	1	cup	-	-	-	K-lesscommon7
+1 tbsp mắm tôm	ready	mắm tôm	1	tbsp	-	-	-	K-lesscommon7
+2 tbsp kecap manis, for drizzling	ready	kecap manis	2	tbsp	-	-	-	K-lesscommon7
+1 cup coconut cream, chilled	ready	coconut cream	1	cup	-	-	-	K-lesscommon7
+1 tbsp sambal oelek	ready	sambal oelek	1	tbsp	-	-	-	K-lesscommon7
+1/4 cup fried shallots, store-bought	ready	fried shallots	1/4	cup	-	-	-	K-lesscommon7
+1 tsp belacan, toasted	ready	belacan	1	tsp	-	-	-	K-lesscommon7
+1 cup bean thread noodles	ready	bean thread noodles	1	cup	-	-	-	K-lesscommon7
+1/2 tsp ground mace, for the pickle	ready	ground mace	1/2	tsp	-	-	-	K-lesscommon7
+1 tbsp panch phoron	ready	panch phoron	1	tbsp	-	-	-	K-lesscommon7
+1/4 cup mint chutney, fresh	ready	mint chutney	1/4	cup	-	-	-	K-lesscommon7
+1 cup sev, for topping	ready	sev	1	cup	-	-	-	K-lesscommon7
+1 cup idli rice, soaked	ready	idli rice	1	cup	-	-	-	K-lesscommon7
+1 lb goat meat, bone-in pieces	ready	goat meat	1	lb	-	-	-	K-lesscommon7
+1 tsp garam masala, homemade	ready	garam masala	1	tsp	-	-	-	K-lesscommon7
+2 tbsp ghee, for tempering	ready	ghee	2	tbsp	-	-	-	K-lesscommon7
+1/4 tsp edible camphor	ready	edible camphor	1/4	tsp	-	-	D	K-lesscommon7
+2 cups injera batter	ready	injera batter	2	cup	-	-	-	K-lesscommon7
+1 tbsp mitmita	ready	mitmita	1	tbsp	-	-	-	K-lesscommon7
+1 lb cassava leaves, pounded	ready	cassava leaves	1	lb	-	-	-	K-lesscommon7
+1 cup egusi seeds, ground	ready	egusi seeds	1	cup	-	-	-	K-lesscommon7
+2 tbsp red palm oil	ready	red palm oil	2	tbsp	-	-	-	K-lesscommon7
+1 cup gari	ready	gari	1	cup	-	-	-	K-lesscommon7
+1 lb plantains, ripe and black	ready	plantains	1	lb	-	-	-	K-lesscommon7
+1 cup fonio, rinsed well	ready	fonio	1	cup	-	-	-	K-lesscommon7
+2 tbsp preserved lemon rind, chopped	ready	preserved lemon rind	2	tbsp	-	-	-	K-lesscommon7
+1 tsp smen	ready	smen	1	tsp	-	-	-	K-lesscommon7
+1 cup warka pastry sheets	ready	warka pastry sheets	1	cup	-	-	D	K-lesscommon7
+2 tbsp kashk	ready	kashk	2	tbsp	-	-	-	K-lesscommon7
+1 tsp dried limes, ground	ready	dried limes	1	tsp	-	-	-	K-lesscommon7
+1 cup sour cherries, pitted	ready	sour cherries	1	cup	-	-	-	K-lesscommon7
+1/4 cup verjuice, white	ready	verjuice	1/4	cup	-	-	-	K-lesscommon7
+1 tbsp sumac berries, ground	ready	sumac berries	1	tbsp	-	-	-	K-lesscommon7
+1 cup fine bulgur, for kibbeh	ready	fine bulgur	1	cup	-	-	-	K-lesscommon7
+1/2 cup tahini halva, crumbled	ready	tahini halva	1/2	cup	-	-	-	K-lesscommon7
+1 lb kasseri cheese, grated	ready	kasseri cheese	1	lb	-	-	-	K-lesscommon7
+1 cup trahana	ready	trahana	1	cup	-	-	-	K-lesscommon7
+2 tbsp mastiha liqueur	ready	mastiha liqueur	2	tbsp	-	-	-	K-lesscommon7
+1 lb dandelion greens, blanched	ready	dandelion greens	1	lb	-	-	-	K-lesscommon7
+1 cup horta, boiled	ready	horta	1	cup	-	-	-	K-lesscommon7
+4 oz guanciale, rind removed	ready	guanciale	4	oz	-	-	-	K-lesscommon7
+1 cup ricotta salata, grated	ready	ricotta salata	1	cup	-	-	-	K-lesscommon7
+2 oz culatello, sliced paper thin	ready	culatello	2	oz	-	-	-	K-lesscommon7
+1 lb puntarelle, soaked in ice water	ready	puntarelle	1	lb	-	-	-	K-lesscommon7
+1 cup cime di rapa, chopped	ready	cime di rapa	1	cup	-	-	-	K-lesscommon7
+1/4 cup saba	ready	saba	1/4	cup	-	-	-	K-lesscommon7
+1 tbsp colatura di alici	ready	colatura di alici	1	tbsp	-	-	-	K-lesscommon7
+1 cup fresh borlotti beans, shelled	ready	fresh borlotti beans|borlotti beans	1	cup	-	-	-	K-lesscommon7
+8 oz taleggio, rind trimmed	ready	taleggio	8	oz	-	-	-	K-lesscommon7
+2 oz jamón ibérico	ready	jamón ibérico	2	oz	-	-	-	K-lesscommon7
+1 cup Marcona almonds, salted	ready	Marcona almonds	1	cup	-	-	-	K-lesscommon7
+1 tsp pimentón de la Vera	ready	pimentón de la Vera	1	tsp	-	-	-	K-lesscommon7
+8 oz Manchego, aged	ready	Manchego	8	oz	-	-	-	K-lesscommon7
+1 lb fresh piquillo peppers	ready	fresh piquillo peppers|piquillo peppers	1	lb	-	-	-	K-lesscommon7
+1/4 cup sherry vinegar, aged	ready	sherry vinegar	1/4	cup	-	-	-	K-lesscommon7
+1 cup cooked white Tarbais beans	ready	white Tarbais beans|Tarbais beans	1	cup	-	-	-	K-lesscommon7
+1 lb Toulouse sausage	ready	Toulouse sausage	1	lb	-	-	-	K-lesscommon7
+2 tbsp herbes de Provence, crushed	ready	herbes de Provence	2	tbsp	-	-	-	K-lesscommon7
+1/2 cup Comté, shredded	ready	Comté	1/2	cup	-	-	-	K-lesscommon7
+1 lb celeriac, shredded for rémoulade	ready	celeriac	1	lb	-	-	-	K-lesscommon7
+1 cup spätzle flour	ready	spätzle flour	1	cup	-	-	-	K-lesscommon7
+2 tbsp Lyle's golden syrup	ready	Lyle's golden syrup	2	tbsp	-	-	-	K-lesscommon7
+1/2 cup mincemeat, jarred	ready	mincemeat	1/2	cup	-	-	-	K-lesscommon7
+1 lb black pudding, sliced	ready	black pudding	1	lb	-	-	-	K-lesscommon7
+1 cup Marmite gravy	ready	Marmite gravy	1	cup	-	-	D	K-lesscommon7
+1 lb skyr, plain	ready	skyr	1	lb	-	-	-	K-lesscommon7
+1/2 cup lingonberry jam, for serving	ready	lingonberry jam	1/2	cup	-	-	-	K-lesscommon7
+1 lb cured gravlax, sliced	ready	cured gravlax|gravlax	1	lb	-	-	-	K-lesscommon7
+1 cup sour cream, Polish style	ready	sour cream	1	cup	-	-	D	K-lesscommon7
+1 lb farmer's cheese, drained	ready	farmer's cheese	1	lb	-	-	-	K-lesscommon7
+1 cup buckwheat groats, toasted	ready	buckwheat groats	1	cup	-	-	-	K-lesscommon7
+2 tbsp horseradish, freshly grated	ready	horseradish	2	tbsp	-	-	-	K-lesscommon7
+1 cup ajvar, mild	ready	ajvar	1	cup	-	-	-	K-lesscommon7
+1/2 cup kajmak	ready	kajmak	1/2	cup	-	-	-	K-lesscommon7
+1 lb ćevapi	ready	ćevapi	1	lb	-	-	-	K-lesscommon7
+2 cups rhubarb compote	ready	rhubarb compote	2	cup	-	-	-	K-lesscommon7
+1 lb chayote, sliced thin	ready	chayote	1	lb	-	-	-	K-lesscommon7
+1 cup cooked sorghum grains	ready	sorghum grains|cooked sorghum grains	1	cup	-	-	-	K-lesscommon7
+2 tbsp mesquite flour	ready	mesquite flour	2	tbsp	-	-	-	K-lesscommon7
+1 cup blue cornmeal	ready	blue cornmeal	1	cup	-	-	-	K-lesscommon7
+1/2 cup piñon nuts, toasted	ready	piñon nuts	1/2	cup	-	-	-	K-lesscommon7
+1 lb tepary beans, soaked	ready	tepary beans	1	lb	-	-	-	K-lesscommon7
+1 cup prickly pear juice	ready	prickly pear juice	1	cup	-	-	-	K-lesscommon7
+2 tbsp chiltepin chiles, crushed	ready	chiltepin chiles	2	tbsp	-	-	-	K-lesscommon7
+1 lb carne seca	ready	carne seca	1	lb	-	-	-	K-lesscommon7
+1 cup tamarind candy, chopped	ready	tamarind candy	1	cup	-	-	D	K-lesscommon7
+1 lb fresh hearts of palm	ready	fresh hearts of palm|hearts of palm	1	lb	-	-	-	K-lesscommon7
+1 cup açaí pulp, frozen	ready	açaí pulp	1	cup	-	-	-	K-lesscommon7
+1 lb carne de sol	ready	carne de sol	1	lb	-	-	-	K-lesscommon7
+2 tbsp dendê oil	ready	dendê oil	2	tbsp	-	-	-	K-lesscommon7
+1 cup guava paste, cubed	ready	guava paste	1	cup	-	-	-	K-lesscommon7
+1 lb queso blanco	ready	queso blanco	1	lb	-	-	-	K-lesscommon7
+1 lb bacalao, desalted	ready	bacalao	1	lb	-	-	-	K-lesscommon7
+1 cup ackee, canned	ready	ackee	1	cup	-	-	-	K-lesscommon7
+2 tbsp jerk seasoning, wet	ready	jerk seasoning	2	tbsp	-	-	-	K-lesscommon7
+1 cup coco bread crumbs	ready	coco bread crumbs	1	cup	-	-	D	K-lesscommon7
+1 lb callaloo, steamed	ready	callaloo	1	lb	-	-	-	K-lesscommon7
+1 cup sorrel drink concentrate	ready	sorrel drink concentrate	1	cup	-	-	-	K-lesscommon7
+1 pack coffee pods, reusable	unsupported	-	-	-	-	-	D	C-equip7
+1 lb ground beef and pork sausage	needs_review	-	1	lb	-	-	D	B-and7

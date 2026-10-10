@@ -1,0 +1,137 @@
+{
+ "format": "recipe-extraction-mutations/v1",
+ "owner": "coordinator (Phase 2C)",
+ "description": "Parser mutations for the candidate semantic-v3: each disables one Phase 2C safeguard and must be KILLED by an assertion in the required 2C regression harness, for the stated reason.",
+ "mutations": [
+  {
+   "id": "P3-engine-alias-tub",
+   "description": "§13.1 bypassed: the engine reads 'tub(s)' as a container although the declared table does not (the Phase 2B 0075 fault)",
+   "file": "src/ingredient/semantic-v3/lexicon.ts",
+   "find": "  return unitOfAlias(text);",
+   "replace": "  if (/^tubs?$/i.test(text)) return \"container\";\n  return unitOfAlias(text);",
+   "tests": [
+    "tests/regressions/semantic-v3-regressions.test.ts"
+   ],
+   "killedBy": [
+    {
+     "test": "exposed regressions 2C — semantic-v3 (required) > rx2c-0062 [C] coordinator-2c:FL-D1 \"1 tub sour cream\"",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exposed regressions 2C — semantic-v3 (required) > rx2c-0061 [C] coordinator-2c:FL-D1 \"2 tubs Greek yogurt\"",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exposed regressions 2C — semantic-v3 (required) > rx2c-0060 [C] coordinator-2c:FL-D1 \"1 small tub crème fraîche\"",
+     "reason": "^AssertionError"
+    }
+   ],
+   "expect": "KILLED"
+  },
+  {
+   "id": "P3-measure-slot-off",
+   "description": "§13.2 measure-slot accounting disabled: an undeclared measure, portion or vessel noun after a count is no longer an unresolved measure",
+   "file": "src/ingredient/semantic-v3/measure-slot.ts",
+   "find": "export function unresolvedMeasureAt(toks: readonly Tok[], a: number, count: Rational): number {",
+   "replace": "export function unresolvedMeasureAt(toks: readonly Tok[], a: number, count: Rational): number {\n  if (Number.isFinite(0)) return a;",
+   "tests": [
+    "tests/regressions/semantic-v3-regressions.test.ts"
+   ],
+   "killedBy": [
+    {
+     "test": "exposed regressions 2C — semantic-v3 (required) > rx2c-0038 [C] coordinator-2c:FL-C3 \"1 saucepan water\"",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exposed regressions 2C — semantic-v3 (required) > rx2c-3721 [C] phase2c-review-r1-round1:probes-r6-new.tsv:89 \"1 knot fresh ginger\"",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exposed regressions 2C — semantic-v3 (required) > rx2c-3752 [C] phase2c-review-r1-round1:probes-r6-new.tsv:126 \"1 bite cheesecake\"",
+     "reason": "^AssertionError"
+    }
+   ],
+   "expect": "KILLED"
+  },
+  {
+   "id": "P3-sized-container-off",
+   "description": "§13.2 precedence over §12.3 disabled: a weight or volume before an undeclared serving vessel is read as the line's amount",
+   "file": "src/ingredient/semantic-v3/measure-slot.ts",
+   "find": "export function sizedContainerWord(toks: readonly Tok[], at: number): boolean {",
+   "replace": "export function sizedContainerWord(toks: readonly Tok[], at: number): boolean {\n  if (Number.isFinite(0)) return false;",
+   "tests": [
+    "tests/regressions/semantic-v3-regressions.test.ts"
+   ],
+   "killedBy": [
+    {
+     "test": "exposed regressions 2C — semantic-v3 (required) > rx2c-3826 [D] phase2c-review-r1-round1:probes-r6-new.tsv:203 \"750 ml carafe white wine\"",
+     "reason": "^AssertionError"
+    }
+   ],
+   "expect": "KILLED"
+  },
+  {
+   "id": "P3-remark-another-off",
+   "description": "§13.3 disabled: a remark that brings in a separately measured other food (dissolved in, mixed with, soaked in) no longer makes the line needs_review",
+   "file": "src/ingredient/semantic-v3/remarks.ts",
+   "find": "export function remarkCombinesAnother(toks: readonly Tok[], name: string | null, text: string): boolean {",
+   "replace": "export function remarkCombinesAnother(toks: readonly Tok[], name: string | null, text: string): boolean {\n  if (Number.isFinite(0)) return false;",
+   "tests": [
+    "tests/regressions/semantic-v3-regressions.test.ts"
+   ],
+   "killedBy": [
+    {
+     "test": "exposed regressions 2C — semantic-v3 (required) > rx2c-0001 [A] coordinator-2c:FL-A2 \"1 tbsp tamarind paste, dissolved in 3 tbsp hot water\"",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exposed regressions 2C — semantic-v3 (required) > rx2c-0003 [A] coordinator-2c:FL-A2 \"2 tsp instant yeast, dissolved in 1/4 cup warm water\"",
+     "reason": "^AssertionError"
+    }
+   ],
+   "expect": "KILLED"
+  },
+  {
+   "id": "P3-source-remark-off",
+   "description": "§12.A A3 disabled: a remark that measures the source of an extracted part ('(from 1 orange)') no longer makes the line needs_review",
+   "file": "src/ingredient/semantic-v3/remarks.ts",
+   "find": "export function remarkMeasuresAnother(toks: readonly Tok[], name: string | null, text: string): boolean {",
+   "replace": "export function remarkMeasuresAnother(toks: readonly Tok[], name: string | null, text: string): boolean {\n  if (Number.isFinite(0)) return false;",
+   "tests": [
+    "tests/regressions/semantic-v3-regressions.test.ts"
+   ],
+   "killedBy": [
+    {
+     "test": "exposed regressions 2C — semantic-v3 (required) > rx2c-1793 [A] candidate-review-r1-round4:probes-r4-new.tsv:561 \"3 tbsp orange juice (from 1 orange)\"",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exposed regressions 2C — semantic-v3 (required) > rx2c-1794 [A] candidate-review-r1-round4:probes-r4-new.tsv:562 \"1 tsp lime zest (1 lime)\"",
+     "reason": "^AssertionError"
+    }
+   ],
+   "expect": "KILLED"
+  },
+  {
+   "id": "P3-and-list-off",
+   "description": "§13.4 disabled: two foods joined by 'and' are read as one food",
+   "file": "src/ingredient/semantic-v3/alternatives.ts",
+   "find": "export function andJoinsTwoFoods(name: string): boolean {",
+   "replace": "export function andJoinsTwoFoods(name: string): boolean {\n  if (Number.isFinite(0)) return false;",
+   "tests": [
+    "tests/regressions/semantic-v3-regressions.test.ts"
+   ],
+   "killedBy": [
+    {
+     "test": "exposed regressions 2C — semantic-v3 (required) > rx2c-0019 [B] coordinator-2c:FL-B1 \"1 cup fresh peas and fava beans\"",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exposed regressions 2C — semantic-v3 (required) > rx2c-3688 [B] phase2c-review-r1-round1:probes-r6-new.tsv:56 \"2 tbsp lime juice and fish sauce\"",
+     "reason": "^AssertionError"
+    }
+   ],
+   "expect": "KILLED"
+  }
+ ]
+}

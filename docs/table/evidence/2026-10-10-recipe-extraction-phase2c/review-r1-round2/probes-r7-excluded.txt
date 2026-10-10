@@ -1,0 +1,204 @@
+EXPOSED	B-and7	1 cup chicken broth and white wine
+EXPOSED	B-compound7	1 jar peanut butter and honey spread
+EXPOSED	B-compound7	1 jar black bean and corn salsa
+EXPOSED	B-choice7	2 cups greens, collard or mustard
+EXPOSED	B-choice7	6 corn or wheat tortillas
+EXPOSED	B-choice7	1 lb shiitake or oyster mushrooms
+EXPOSED	C-measure7	1 bucketful ice
+EXPOSED	C-overfire7	1 Japanese sweet potato
+EXPOSED	C-equip7	1 Kilner jar
+EXPOSED	C-equip7	1 Weck jar
+EXPOSED	C-equip7	1 fish spatula
+EXPOSED	C-equip7	1 shrimp deveiner
+EXPOSED	C-equip7	1 apple slicer
+EXPOSED	C-equip7	1 cherry stoner
+EXPOSED	C-equip7	1 ice cube tray
+EXPOSED	C-equip7	1 Lemon Squeezer
+EXPOSED	C-equip7	1 Pizza Peel
+EXPOSED	C-equip7	1 Fish Spatula
+EXPOSED	C-purpose7	1 box ice cream cones
+EXPOSED	C-purpose7	1 package egg roll wrappers
+EXPOSED	D-declared7	2 lbs ground chuck
+EXPOSED	K-everyday7	2 slices Canadian bacon
+EXPOSED	K-everyday7	1 cup pancake mix
+EXPOSED	K-everyday7	1 scoop vanilla protein powder
+EXPOSED	K-everyday7	1 jar Alfredo sauce
+EXPOSED	K-everyday7	1 jar vodka sauce
+EXPOSED	K-everyday7	2 celery stalks, chopped
+EXPOSED	K-everyday7	1 can evaporated milk
+EXPOSED	K-everyday7	1 tsp chili oil
+EXPOSED	K-everyday7	1 lb Brussels sprouts, trimmed and halved
+EXPOSED	K-everyday7	1/4 cup dry sherry
+EXPOSED	K-everyday7	1 can cream of celery soup
+NEAR	A-control7	1 cup cold water, plus more as needed
+NEAR	B-and7	1 cup peanut butter and honey
+NEAR	B-compound7	1 jar lemon and herb seasoning
+NEAR	B-choice7	1 cup soy or oat milk
+NEAR	B-choice7	1 cup frozen or fresh cranberries
+NEAR	C-measure7	1 puff whipped cream
+NEAR	C-measure7	1 knot ginger
+NEAR	C-measure7	1 mouthful sparkling wine
+NEAR	C-measure7	1 tuber ginger
+NEAR	C-measure7	2 puffs whipped cream
+NEAR	C-overfire7	1 walla walla onion
+NEAR	C-overfire7	1 cubanelle pepper
+NEAR	C-overfire7	1 lemon cucumber
+NEAR	C-overfire7	1 Oreo pie crust
+NEAR	C-overfire7	1 Pillsbury pie crust
+NEAR	C-overfire7	1 Boursin cheese
+NEAR	C-overfire7	1 sheet pan frittata
+NEAR	C-overfire7	1 wedge potato
+NEAR	C-overfire7	1 fingerling potato
+NEAR	C-overfire7	1 button mushroom
+NEAR	C-overfire7	1 bird's eye chile
+NEAR	C-overfire7	1 lobster mushroom
+NEAR	C-overfire7	1 bitter gourd
+NEAR	C-overfire7	1 bottle gourd
+NEAR	C-overfire7	1 flat iron steak
+NEAR	C-overfire7	1 bavette steak
+NEAR	C-overfire7	1 Denver steak
+NEAR	C-overfire7	1 cowboy ribeye
+NEAR	C-overfire7	1 tomahawk chop
+NEAR	C-overfire7	1 pie pumpkin
+NEAR	C-overfire7	1 cake doughnut
+NEAR	C-overfire7	1 sandwich loaf
+NEAR	C-overfire7	1 cocktail sausage
+NEAR	C-overfire7	1 dinner roll
+NEAR	C-overfire7	1 marrow bone
+NEAR	C-overfire7	1 veal shank
+NEAR	C-overfire7	1 turkey drumstick
+NEAR	C-equip7	1 Nordic Ware pancake pan
+NEAR	C-equip7	1 crab pot
+NEAR	C-equip7	1 lettuce knife
+NEAR	C-equip7	1 egg rack
+NEAR	C-equip7	1 noodle strainer
+NEAR	C-equip7	1 dumpling press
+NEAR	C-equip7	1 tea tray
+NEAR	C-equip7	1 bar towel
+NEAR	C-equip7	1 Egg Rack
+NEAR	C-purpose7	1 bag waffle fries
+NEAR	C-purpose7	1 jar cocktail sauce
+NEAR	C-purpose7	6 taco boats
+NEAR	C-purpose7	1 box muffin mix
+NEAR	C-dish7	4 burrito bowls
+NEAR	C-dish7	4 jar parfaits
+NEAR	C-dish7	2 skillet frittatas
+NEAR	C-dish7	2 sheet-pan quesadillas
+NEAR	C-dish7	4 kettle bagels
+NEAR	C-dish7	4 basket fries
+NEAR	C-dish7	2 pan haggis
+NEAR	C-plural7	2 papaya
+NEAR	C-plural7	3 mango, peeled
+NEAR	C-plural7	4 plum
+NEAR	C-plural7	2 eggplant, cubed
+NEAR	C-plural7	5 radish
+NEAR	C-plural7	6 sausage link
+NEAR	C-plural7	3 cucumber
+NEAR	C-plural7	2 parsnip
+NEAR	C-plural7	4 empanada
+NEAR	C-plural7	6 arepa
+NEAR	C-plural7	4 kolache
+NEAR	C-plural7	2 grater
+NEAR	C-plural7	3 trivet
+NEAR	C-plural7	4 coaster
+NEAR	C-plural7	2 Grater
+NEAR	C-plural7	3 apron
+NEAR	C-plural7	2 cutting board
+NEAR	D-alias7	1 caddy green tea
+NEAR	D-alias7	1 bucket fried shrimp
+NEAR	D-declared7	4 ozs cheddar
+NEAR	D-declared7	1 litre passata
+NEAR	K-everyday7	1 tbsp poultry seasoning
+NEAR	K-everyday7	1/4 cup whole milk, hot
+NEAR	K-everyday7	2 cups mixed salad greens
+NEAR	K-everyday7	1 English muffin, split
+NEAR	K-everyday7	2 eggs, poached
+NEAR	K-everyday7	1 cup plain kefir
+NEAR	K-everyday7	1/2 cup frozen mango chunks
+NEAR	K-everyday7	1 cup spinach leaves, packed
+NEAR	K-everyday7	1/2 avocado, pitted
+NEAR	K-everyday7	1 cup ice cubes
+NEAR	K-everyday7	2 cups cubed cantaloupe
+NEAR	K-everyday7	1 tbsp honey, or more to taste
+NEAR	K-everyday7	3 tbsp rice wine vinegar
+NEAR	K-everyday7	1 cup shredded napa cabbage
+NEAR	K-everyday7	2 tbsp dark soy sauce
+NEAR	K-everyday7	1 tsp ground white pepper
+NEAR	K-everyday7	1 cup grated Romano cheese
+NEAR	K-everyday7	1 lb ziti
+NEAR	K-everyday7	1/2 cup Caesar dressing
+NEAR	K-everyday7	1/4 cup shaved Parmesan
+NEAR	K-everyday7	3 cups low-sodium beef broth
+NEAR	K-everyday7	2 apples, cored and sliced
+NEAR	K-everyday7	1 tbsp caraway seeds
+NEAR	K-everyday7	1 (15-oz) can pumpkin puree
+NEAR	K-everyday7	1/2 tsp ground cloves
+NEAR	K-everyday7	1/2 cup raisins, optional
+NEAR	K-everyday7	1 cup chocolate syrup
+NEAR	K-everyday7	1 can cherry pie filling
+NEAR	K-everyday7	2 lb chicken drumsticks, skin on
+NEAR	K-everyday7	1 tbsp brown mustard
+NEAR	K-everyday7	1 lb fingerling potatoes, halved
+NEAR	K-everyday7	1/4 cup sweet pickle relish
+NEAR	K-everyday7	1 cup feta crumbles
+NEAR	K-everyday7	1/3 cup lemon vinaigrette
+NEAR	K-everyday7	1 lb lean ground lamb
+NEAR	K-everyday7	1 cup tzatziki sauce
+NEAR	K-everyday7	1 cup sliced romaine
+NEAR	K-everyday7	1 can diced tomatoes with green chilies
+NEAR	K-everyday7	1 tbsp lime zest
+NEAR	K-everyday7	1 avocado, thinly sliced
+NEAR	K-everyday7	1/4 cup pickled ginger
+NEAR	K-everyday7	2 cups mushroom broth
+NEAR	K-everyday7	1 lb pork tenderloin, trimmed
+NEAR	K-everyday7	1 tbsp grainy mustard
+NEAR	K-everyday7	1/4 cup apple juice
+NEAR	K-everyday7	1 tbsp balsamic reduction
+NEAR	K-lesscommon7	1 cup black barley
+NEAR	K-lesscommon7	12 oz cavatappi
+NEAR	K-lesscommon7	1 lb paccheri
+NEAR	K-lesscommon7	8 oz casarecce
+NEAR	K-lesscommon7	1 lb malloreddus
+NEAR	K-lesscommon7	1/2 cup ditalini
+NEAR	K-lesscommon7	1 lb fresh tagliolini
+NEAR	K-lesscommon7	1 lb mafaldine
+NEAR	K-lesscommon7	2 tbsp mentsuyu
+NEAR	K-lesscommon7	1 lb fresh wheat noodles
+NEAR	K-lesscommon7	1/2 cup tamarind water
+NEAR	K-lesscommon7	1/2 cup besan, sifted
+NEAR	K-lesscommon7	1 cup sooji
+NEAR	K-lesscommon7	2 tbsp tamarind chutney
+NEAR	K-lesscommon7	1 tsp chaat masala
+NEAR	K-lesscommon7	1/2 cup poha, rinsed
+NEAR	K-lesscommon7	1 tsp black salt
+NEAR	K-lesscommon7	2 tbsp mustard oil
+NEAR	K-lesscommon7	1/2 cup khoya, crumbled
+NEAR	K-lesscommon7	1 cup fresh chhena
+NEAR	K-lesscommon7	1/2 cup shiro powder
+NEAR	K-lesscommon7	1 tsp ground crayfish
+NEAR	K-lesscommon7	1 tbsp suya spice
+NEAR	K-lesscommon7	1/2 cup dried barberries
+NEAR	K-lesscommon7	2 tbsp grape molasses
+NEAR	K-lesscommon7	1 cup kaymak
+NEAR	K-lesscommon7	8 oz manouri cheese
+NEAR	K-lesscommon7	1 lb cotechino
+NEAR	K-lesscommon7	1/2 cup stracciatella
+NEAR	K-lesscommon7	1 cup bomba rice
+NEAR	K-lesscommon7	4 duck legs, confit
+NEAR	K-lesscommon7	1 cup crème de cassis
+NEAR	K-lesscommon7	1 cup quark, drained
+NEAR	K-lesscommon7	1 lb weisswurst
+NEAR	K-lesscommon7	1 cup clotted cream
+NEAR	K-lesscommon7	4 oz Stilton, crumbled
+NEAR	K-lesscommon7	2 tbsp HP sauce
+NEAR	K-lesscommon7	1 cup treacle
+NEAR	K-lesscommon7	1 lb smoked kielbasa
+NEAR	K-lesscommon7	1 cup sorrel leaves, shredded
+NEAR	K-lesscommon7	1 cup pozole broth
+NEAR	K-lesscommon7	1 cup requesón
+NEAR	K-lesscommon7	1/2 cup cajeta
+NEAR	K-lesscommon7	2 tbsp chamoy
+NEAR	K-lesscommon7	1/2 cup farofa
+NEAR	K-lesscommon7	2 cups cooked gandules
+NEAR	K-lesscommon7	1 tbsp sazón seasoning
+NEAR	K-lesscommon7	1 cup recaíto
