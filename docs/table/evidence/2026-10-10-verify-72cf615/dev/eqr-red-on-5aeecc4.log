@@ -1,0 +1,206 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/table
+
+ ❯ tests/integration/eqr-corrections.test.ts (12 tests | 9 failed) 10327ms
+   ❯ EQR-01: the basis follows the ingredient occurrence (5)
+     × EQR-01a: a changed amount is exact as typed — it does not take another row's legacy label because the numbers match 1995ms
+     × EQR-01b: a new ingredient typed as 0.666666666666 is that decimal, not another row's 2-for-3 644ms
+     × EQR-01c: two occurrences with the same decimal keep their own bases through a title-only save and a reorder — and the package count with them 627ms
+     × EQR-01e: lineage that is missing, foreign, duplicated, unknown or from another household is refused and nothing is saved 695ms
+   ❯ EQR-02: 'Have enough' certifies the exact requirement reviewed (7)
+     × EQR-02a: confirmed for exactly 3, then the requirement becomes 3.0004 — still shown as 3 — and the confirmation does not stretch to it 855ms
+     × EQR-02b: a confirmation racing the increase never certifies the larger requirement (observation first) 882ms
+     × EQR-02b: a confirmation racing the increase never certifies the larger requirement (change first) 978ms
+     × EQR-02d: a change below the 6th decimal changes the review identity — the earlier approval goes stale and nothing is sent 877ms
+     × EQR-02e: a basis-only change (a legacy ½ cucumber per plate replaced by an exact ½) is a new review identity 613ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/eqr-corrections.test.ts > EQR-01: the basis follows the ingredient occurrence > EQR-01a: a changed amount is exact as typed — it does not take another row's legacy label because the numbers match
+AssertionError: expected [ { key: 'cucumber', …(4) }, …(1) ] to deeply equal [ { key: 'cucumber', …(4) }, …(1) ]
+
+- Expected
++ Received
+
+@@ -1,12 +1,12 @@
+  [
+    {
+-     "amount": "1/2",
+-     "basis": "exact",
++     "amount": null,
++     "basis": "legacy",
+      "key": "cucumber",
+      "q": "0.5",
+-     "servings": 1,
++     "servings": null,
+    },
+    {
+      "amount": null,
+      "basis": "legacy",
+      "key": "onion",
+
+ ❯ tests/integration/eqr-corrections.test.ts:46:55
+     44|     const s = await save(jon, old.recipeId, 1, "Old salad", [{ key: "c…
+     45|     expect(s.status, JSON.stringify(s)).toBe("accepted");
+     46|     expect(basisOf(await rowsOf(s.result.versionId))).toEqual([
+       |                                                       ^
+     47|       { key: "cucumber", q: "0.5", basis: "exact", amount: "1/2", serv…
+     48|       { key: "onion", q: "0.5", basis: "legacy", amount: null, serving…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  tests/integration/eqr-corrections.test.ts > EQR-01: the basis follows the ingredient occurrence > EQR-01b: a new ingredient typed as 0.666666666666 is that decimal, not another row's 2-for-3
+AssertionError: expected [ { key: 'onion', …(4) }, …(1) ] to deeply equal [ { key: 'onion', …(4) }, …(1) ]
+
+- Expected
++ Received
+
+@@ -5,12 +5,12 @@
+      "key": "onion",
+      "q": "0.666666666666",
+      "servings": 3,
+    },
+    {
+-     "amount": "333333333333/500000000000",
++     "amount": "2",
+      "basis": "exact",
+      "key": "cucumber",
+      "q": "0.666666666666",
+-     "servings": 1,
++     "servings": 3,
+    },
+  ]
+
+ ❯ tests/integration/eqr-corrections.test.ts:58:55
+     56|     const s = await save(jon, r.recipeId, 1, "Onion salad", [{ key: "o…
+     57|     expect(s.status, JSON.stringify(s)).toBe("accepted");
+     58|     expect(basisOf(await rowsOf(s.result.versionId))).toEqual([
+       |                                                       ^
+     59|       { key: "onion", q: "0.666666666666", basis: "exact", amount: "2"…
+     60|       { key: "cucumber", q: "0.666666666666", basis: "exact", amount: …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  tests/integration/eqr-corrections.test.ts > EQR-01: the basis follows the ingredient occurrence > EQR-01c: two occurrences with the same decimal keep their own bases through a title-only save and a reorder — and the package count with them
+AssertionError: expected [ { key: 'cucumber', …(4) }, …(1) ] to deeply equal [ { key: 'cucumber', …(4) }, …(1) ]
+
+- Expected
++ Received
+
+@@ -5,12 +5,12 @@
+      "key": "cucumber",
+      "q": "0.666666666666",
+      "servings": 3,
+    },
+    {
+-     "amount": "333333333333/500000000000",
++     "amount": "2",
+      "basis": "exact",
+      "key": "cucumber",
+      "q": "0.666666666666",
+-     "servings": 1,
++     "servings": 3,
+    },
+  ]
+
+ ❯ tests/integration/eqr-corrections.test.ts:77:26
+     75|       { key: "cucumber", q: "0.666666666666", basis: "exact", amount: …
+     76|     ];
+     77|     expect(basisOf(two)).toEqual(expected);
+       |                          ^
+     78|     // Title-only save: each row names the row it came from.
+     79|     const v3 = await save(jon, r.recipeId, 2, "Cucumber two ways (ours…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  tests/integration/eqr-corrections.test.ts > EQR-01: the basis follows the ingredient occurrence > EQR-01e: lineage that is missing, foreign, duplicated, unknown or from another household is refused and nothing is saved
+AssertionError: from another recipe: {"status":"accepted","result":{"recipeId":"d5662f0d-6a6c-4251-b9eb-2940fecba184","versionId":"6de4c804-e301-4479-a6ee-7947253bdc98","versionNo":2},"operationId":"op-4614a514-c6ef-4afa-b7ed-71831431027b","command":"SaveRecipeVersion","replayed":false,"seq":1,"acceptedChoiceRevision":null}: expected false to be 'invalid_lineage' // Object.is equality
+
+- Expected:
+"invalid_lineage"
+
++ Received:
+false
+
+ ❯ tests/integration/eqr-corrections.test.ts:135:82
+    133|     for (const [what, rows, code] of attempts) {
+    134|       const r = await save(jon, a.recipeId, 1, "Recipe A", rows);
+    135|       expect(r.status === "rejected" && r.code, `${what}: ${JSON.strin…
+       |                                                                                  ^
+    136|     }
+    137|     // An edit that does not say where its rows came from (an outdated…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  tests/integration/eqr-corrections.test.ts > EQR-02: 'Have enough' certifies the exact requirement reviewed > EQR-02a: confirmed for exactly 3, then the requirement becomes 3.0004 — still shown as 3 — and the confirmation does not stretch to it
+AssertionError: expected '' to match /increased since Alex said "Have enoug…/
+
+- Expected:
+/increased since Alex said "Have enough"/
+
++ Received:
+""
+
+ ❯ tests/integration/eqr-corrections.test.ts:171:36
+    169|     expect(l.meal.quantity).toBe("3"); // the display is unchanged …
+    170|     expect(l.meal.rational).toBe("7501/2500"); // … the requirement is…
+    171|     expect(l.unresolved.join(" ")).toMatch(/increased since Alex said …
+       |                                    ^
+    172|     expect(l.homeSupply).toBe("3");
+    173|     expect(l.netMeal.rational).toBe("1/2500"); // 0.0004 still needed
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  tests/integration/eqr-corrections.test.ts > EQR-02: 'Have enough' certifies the exact requirement reviewed > EQR-02b: a confirmation racing the increase never certifies the larger requirement (observation first)
+ FAIL  tests/integration/eqr-corrections.test.ts > EQR-02: 'Have enough' certifies the exact requirement reviewed > EQR-02b: a confirmation racing the increase never certifies the larger requirement (change first)
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/integration/eqr-corrections.test.ts:188:33
+    186|       const l = await line(fx.weekId, "cucumber");
+    187|       expect(l.meal.rational).toBe("7501/2500");
+    188|       expect(l.packagesForMeal).toBe(1);
+       |                                 ^
+    189|       expect(l.unresolved.join(" ")).toMatch(/increased since Alex sai…
+    190|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  tests/integration/eqr-corrections.test.ts > EQR-02: 'Have enough' certifies the exact requirement reviewed > EQR-02d: a change below the 6th decimal changes the review identity — the earlier approval goes stale and nothing is sent
+AssertionError: expected 'e2e8b52bf7ed657438a93f975bb51d0589101…' not to be 'e2e8b52bf7ed657438a93f975bb51d0589101…' // Object.is equality
+ ❯ tests/integration/eqr-corrections.test.ts:222:35
+    220|     expect(after.toSend).toBe(before.toSend);
+    221|     expect(after.meal.rational).not.toBe(before.meal.rational);
+    222|     expect(after.fingerprint).not.toBe(before.fingerprint);
+       |                                   ^
+    223|     expect(after.approval?.valid ?? false).toBe(false);
+    224|     const calls = async () => (await q<any>("SELECT count(*)::int AS n…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  tests/integration/eqr-corrections.test.ts > EQR-02: 'Have enough' certifies the exact requirement reviewed > EQR-02e: a basis-only change (a legacy ½ cucumber per plate replaced by an exact ½) is a new review identity
+AssertionError: expected '3e3738dbda7e16644717c2c00d8038c26c7ff…' not to be '3e3738dbda7e16644717c2c00d8038c26c7ff…' // Object.is equality
+ ❯ tests/integration/eqr-corrections.test.ts:242:35
+    240|     const after = await line(fx.weekId, "cucumber");
+    241|     expect(after.meal.rational).toBe(before.meal.rational); // same am…
+    242|     expect(after.fingerprint).not.toBe(before.fingerprint); // … diffe…
+       |                                   ^
+    243|     expect(after.approval?.valid ?? false).toBe(false);
+    244|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed | 3 passed (12)
+   Start at  02:36:17
+   Duration  12.04s (tests 87%, transform 8%, import 5%)
+

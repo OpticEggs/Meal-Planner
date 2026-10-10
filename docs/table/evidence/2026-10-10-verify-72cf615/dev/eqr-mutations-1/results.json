@@ -1,0 +1,104 @@
+{
+  "when": "2026-10-10T02:59:49.321Z",
+  "head": "5aeecc4a3d1c437c21bbb9ee6c1fce0466ba928f",
+  "restored": true,
+  "pass": false,
+  "results": [
+    {
+      "name": "F06_enough_uses_current_demand",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/3 failed by assertion: R-F06a: a concurrent increase cannot enlarge Alex's assertion (change first)"
+    },
+    {
+      "name": "HE_enough_compared_unrounded",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: a demand with more than 3 decimals is covered by the 3-decimal amount the member confirmed"
+    },
+    {
+      "name": "EQ_title_edit_relabels_legacy",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/2 failed by assertion: EQ-05: a title-only edit of a legacy recipe keeps its rows legacy; a changed amount is the member's exact amount; the accepted dinner keeps its version | EQ-05b: an unchanged number keeps its basis (by its own lineage) when the row's unit or name changes — an imported 2/3 stays 2/3, a legacy 0.6667 stays legacy"
+    },
+    {
+      "name": "EQR_basis_by_equal_number",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "3/5 failed by assertion: EQR-01a: a changed amount is exact as typed — it does not take another row's legacy label because the numbers match"
+    },
+    {
+      "name": "EQR_lineage_not_verified",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: EQR-01e: lineage that is missing, foreign, duplicated, unknown or from another household is refused and nothing is saved"
+    },
+    {
+      "name": "EQR_lineage_reused",
+      "control": false,
+      "classification": "SURVIVED",
+      "expectedClassification": "KILLED",
+      "ok": false,
+      "detail": "1 executed, all passed"
+    },
+    {
+      "name": "EQR_missing_lineage_guessed",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: EQR-01e: lineage that is missing, foreign, duplicated, unknown or from another household is refused and nothing is saved"
+    },
+    {
+      "name": "EQR_enough_compared_to_display",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "4/7 failed by assertion: EQR-02a: confirmed for exactly 3, then the requirement becomes 3.0004 — still shown as 3 — and the confirmation does not stretch to it"
+    },
+    {
+      "name": "EQR_stale_enough_takes_current",
+      "control": false,
+      "classification": "SURVIVED",
+      "expectedClassification": "KILLED",
+      "ok": false,
+      "detail": "2 executed, all passed"
+    },
+    {
+      "name": "EQR_identity_without_exact",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/7 failed by assertion: EQR-02d: a change below the 6th decimal changes the review identity — the earlier approval goes stale and nothing is sent | EQR-02e: a basis-only change (a legacy ½ cucumber per plate replaced by an exact ½) is a new review identity"
+    },
+    {
+      "name": "LA_first_fitting_line",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: LA-04: ambiguous sources are reported as conflicting, never as a recoverable amount (EQR)"
+    },
+    {
+      "name": "LA_inherit_more_rows_than_source",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: LA-04: ambiguous sources are reported as conflicting, never as a recoverable amount (EQR)"
+    }
+  ]
+}

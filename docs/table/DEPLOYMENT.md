@@ -19,33 +19,39 @@ services, private services, and background workers"), **no shell, no one-off job
 15 minutes without traffic and takes about a minute to wake. So the database is updated by the **Start Command**
 itself, before the server starts. The health check answers 503 while a migration this code knows about is pending.
 
-### Upgrade from your phone — `dbc105d` (verified commit); you run it, Claude does not deploy
+### Upgrade from your phone — `72cf615` (verified commit); you run it, Claude does not deploy
 
-**Pilot-upgrade checklist for `dbc105d` (exact quantities, migration 015).** The steps below are unchanged; this is
-what is new in this upgrade and what to look at.
+**Pilot-upgrade checklist for `72cf615` (exact quantities: migrations 015 and 016).** What is new in this upgrade and
+what to look at; the numbered steps below say how.
 
-- [ ] Step 1 recovery point taken **before** deploying (the migration cannot be un-applied).
-- [ ] Step 5 log shows `applied: …` ending in `015_exact_quantities.sql` (just that file if the pilot runs `43cd1ce`;
-      earlier files too if it is older), then `✓ Ready`.
+- [ ] Step 1 recovery point taken **before** deploying (a migration cannot be un-applied).
+- [ ] Step 5 log shows `applied: …` ending in `016_exact_lineage_and_review.sql` — `015_exact_quantities.sql, 016_…`
+      if the pilot runs `43cd1ce`; just `016_…` if it already runs `dbc105d`; earlier files too if it is older — then
+      `✓ Ready`.
 - [ ] Step 6 health is `{"ok":true,"problems":[]}`; sign in; an existing recipe shows the same amounts as before.
-- [ ] Groceries for the current week show the same packages as before the upgrade (**[tested]** in the rehearsal:
-      identical amounts, packages, to-send counts and approvals for data written by `43cd1ce`).
+- [ ] Groceries for the current week show the same amounts, packages and to-send counts as before (**[tested]** in
+      rehearsals from `43cd1ce` and from `dbc105d`). From `dbc105d` only: lines with recipes saved by it ask for their
+      purchase approval again once (their review identity now includes the exact amount); approve them again.
+- [ ] Reload any recipe editor that was open before the upgrade; an edit from an old screen is refused, not guessed.
 - [ ] Nothing else to switch on; no data is changed by the upgrade and nothing is backfilled.
-- What 015 does: adds three columns to recipe ingredients (`quantity_basis` defaulting to `legacy`, `exact_amount`,
-  `exact_servings`) and checks between them. Existing rows are not rewritten. **[tested]** on a populated database
-  written by `43cd1ce`: every pre-existing column of every table unchanged
-  (`docs/table/evidence/2026-10-10-verify-dbc105d/rehearsal/`).
-- Going back: **[tested]** `43cd1ce`'s commands and grocery projection run and its whole test suite passes on the
-  upgraded schema, also after new exact recipes exist (it then counts their stored decimals, not the exact
-  fractions). **[not tested here]** `43cd1ce` started as a web server against the upgraded schema (the 2026-10-09
-  rehearsal did test an older release serving on a newer schema). An export
-  made **after** exact recipes exist restores only into `dbc105d` or later; exports from before restore anywhere.
+- What 015 and 016 do: add columns only — the exact amount and serving basis of new recipe rows (015), the row each
+  edited row came from and the exact amount a "Have enough" certified (016) — with checks between them. Existing
+  rows are not rewritten. **[tested]** on populated databases written by `43cd1ce` and by `dbc105d`: every
+  pre-existing column of every table unchanged (`docs/table/evidence/2026-10-10-verify-72cf615/rehearsal-*/`).
+- Going back changes behaviour, not data. **[tested]** earlier code (`43cd1ce`, `dbc105d`) still runs its commands and
+  grocery projection on the upgraded schema. But it counts stored decimals instead of exact amounts, ignores what
+  "Have enough" certified exactly, records no row lineage, and an edit made with it saves a new version whose rows
+  are all legacy. An approval this release marked stale stays stale after going back (**[tested]**). A 200 from
+  `/api/health` or a passing old test suite does **not** mean equal purchasing results.
+  **[not tested here]** earlier code started as a web server against this schema. An export made after this upgrade restores only into `72cf615` or later; exports from before restore anywhere.
 - **Do not** run `npm run audit:legacy-quantities` against Neon. It refuses a remote host unless told otherwise;
   whether to run it at all (preferably on a local restore of a household export) is your decision (B41).
 
-Everything marked **[tested]** was rehearsed locally on 2026-10-09 in production mode (production build,
+Everything marked **[tested]** in the checklist above was rehearsed locally on 2026-10-10 with
+`scripts/rehearse-upgrade.sh` (disposable databases written by `43cd1ce` and by `dbc105d`, upgraded to `72cf615`).
+In the steps below it means rehearsed locally on 2026-10-09 in production mode (production build,
 `TABLE_ENV=production`, PostgreSQL 16) on a household database at migration 011 created and populated by the
-011-era code (`9623de4`), upgraded to this commit. Nothing was tried on Render or Neon; **[unverified]** marks what
+011-era code (`9623de4`), upgraded to the commit of that day. Nothing was tried on Render or Neon; **[unverified]** marks what
 Render or Neon are expected to do. Evidence: `docs/table/evidence/2026-10-09-deploy-rehearsal/`. You never type
 or paste the database password in these steps.
 
@@ -80,34 +86,33 @@ or paste the database password in these steps.
      under `/bin/sh`, a stop signal to the shell left the server running. **[unverified]** which shell Render uses.
    - **[unverified]** whether saving starts a deploy by itself; if one starts, check its commit in **Events** and
      continue with step 4 either way. Leave every environment variable as it is.
-4. **Deploy the exact commit.** **Manual Deploy** → **Deploy a specific commit** → `dbc105d` → **Deploy**.
+4. **Deploy the exact commit.** **Manual Deploy** → **Deploy a specific commit** → `72cf615` → **Deploy**.
    (Render's docs say this turns automatic deploys off for the service — what you want for a verified commit.)
 5. **Read the deploy log** (**Events** → the deploy → **Logs**). Expect, in order: `> tsx scripts/migrate.ts`,
-   then `applied: …` ending in `014_member_recipe_photo.sql` (earlier files too if the pilot is older), or
+   then `applied: …` ending in `016_exact_lineage_and_review.sql` (see the checklist above for which files), or
    `schema up to date`, then `✓ Ready`. **Stop, don't retry,** on `Error: migration 0NN_….sql failed: …` or
    `… changed after it was applied`: copy that line (it holds no password) and ask for help. **[unverified]**
    Render keeps the previous release serving when a deploy fails.
 6. **Health and sign-in.** `https://meal-planner-eq58.onrender.com/api/health` → `{"ok":true,"problems":[]}` (the
    first request after a sleep can take about a minute). Then sign in as usual at `/login`; Our Recipes still
    lists your recipes and saved links. **[tested]** accounts and sessions from before the upgrade keep working.
-7. **These stay off (do not add them):** `TABLE_RECIPE_IMPORT_FETCH`, `TABLE_RECIPE_CONTENT`,
-   `TABLE_RECIPE_CONTENT_GRANTS`, `TABLE_RECIPE_PHOTO_HOSTS`, `KROGER_ACTIVATE` (with `TABLE_RETAILER` left at
-   simulated), `INSTACART_ACTIVATE`, and every test-only switch (`TABLE_*_FIXTURES`, `TABLE_*_FAKE_*`,
-   `TABLE_FIXED_NOW`, `TABLE_DISPATCH_TIMEOUT_MS`).
+7. **Leave every environment variable exactly as it is** — add nothing, remove nothing, change nothing, including any
+   setting you chose earlier (for example page reading, if you turned it on). Never add a test-only switch
+   (`TABLE_*_FIXTURES`, `TABLE_*_FAKE_*`, `TABLE_FIXED_NOW`, `TABLE_DISPATCH_TIMEOUT_MS`).
 
 **What can and cannot be undone.**
 - **Code can go back** to an earlier commit from Render's deploy list, but only to one whose migrations are all in
   the database. **[tested]** the 011-era code served, read and wrote on the upgraded schema and its start said
   `schema up to date`. **Its `/api/health` still answers 200**, because it checks only the migrations it knows, so a
   200 does not prove code and database match.
-- **A migration cannot be un-applied.** 012, 013 and 014 only add a table, optional columns, a wider check and
-  columns with defaults, which is why older code keeps working.
+- **A migration cannot be un-applied.** 012–016 only add tables, optional columns, wider checks and columns with
+  defaults, which is why older code keeps running — with older behaviour (see "Going back" above).
 - **Restoring from the Neon branch** returns the data to step 1: **everything written after it is lost** (recipes,
   links, plans, sign-ins). **[unverified]** Neon's exact restore screens. Do it only if data is damaged, not because
   a deploy failed.
 
 **Alternative (needs a computer):** keep any Start Command and run `npm run db:migrate` from your copy of the
-repository at `dbc105d` with `DATABASE_URL` typed into that terminal only, then deploy the same commit. With
+repository at `72cf615` with `DATABASE_URL` typed into that terminal only, then deploy the same commit. With
 this commit a start-time migration running at the same moment is safe (the lock above).
 
 ### One real recipe URL (only after you separately approve R1)

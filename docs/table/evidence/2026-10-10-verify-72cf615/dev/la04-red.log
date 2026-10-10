@@ -1,0 +1,49 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/table
+
+ ❯ tests/integration/legacy-audit.test.ts (4 tests | 1 failed | 3 skipped) 1096ms
+   ❯ legacy quantity audit (read-only) (4)
+     × LA-04: ambiguous sources are reported as conflicting, never as a recoverable amount (EQR) 1094ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/legacy-audit.test.ts > legacy quantity audit (read-only) > LA-04: ambiguous sources are reported as conflicting, never as a recoverable amount (EQR)
+AssertionError: expected [ [ 'import_draft', true ], …(1) ] to deeply equal [ [ 'conflicting', false ], …(1) ]
+
+- Expected
++ Received
+
+  [
+    [
+-     "conflicting",
+-     false,
++     "import_draft",
++     true,
+    ],
+    [
+-     "conflicting",
+-     false,
++     "import_draft",
++     true,
+    ],
+  ]
+
+ ❯ tests/integration/legacy-audit.test.ts:153:74
+    151|     await c.end();
+    152|     const of = (versionId: string) => report.rows.filter((r) => r.vers…
+    153|     expect(of(a.versionId).map((r) => [r.evidence.kind, r.recoverable]…
+       |                                                                          ^
+    154|     expect(of(b1.versionId).map((r) => [r.evidence.kind, r.recoverable…
+    155|     expect(of(b2.versionId).map((r) => [r.evidence.kind, r.recoverable…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 skipped (4)
+   Start at  02:46:24
+   Duration  2.14s (tests 55%, import 25%, transform 19%)
+

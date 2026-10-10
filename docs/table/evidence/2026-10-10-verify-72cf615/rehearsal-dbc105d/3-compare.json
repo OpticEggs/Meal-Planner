@@ -1,0 +1,8 @@
+{
+ "ok": true,
+ "problems": [],
+ "changedIdentity": [
+  "cucumber (approval null → null, status in_cart_transfer → in_cart_transfer)",
+  "soy_sauce (approval true → false, status approved → needs_review)"
+ ]
+}

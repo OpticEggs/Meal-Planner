@@ -1,0 +1,13 @@
+Upgrade rehearsal: previous release dbc105d → this release 72cf615 (2026-10-10T04:30:32Z)
+PASS  1 populated by dbc105d: 13 grocery lines; export taken by dbc105d
+applied: 016_exact_lineage_and_review.sql
+PASS  2 every pre-existing column of every table is unchanged by the migration
+PASS  2 every existing recipe row keeps its basis (before: {"exact":8,"legacy":26}; after: {"exact":8,"legacy":26})
+PASS  3 this release projects the upgraded week as dbc105d did: amounts, packages, to send and status on every line; review identity changed only where exact rows are behind a line: cucumber (approval null → null, status in_cart_transfer → in_cart_transfer); soy_sauce (approval true → false, status approved → needs_review)
+PASS  3 dbc105d still projects the same amounts, packages and to-send on the upgraded schema (an approval this release marked stale stays stale: soy_sauce (approval true → null, status approved → needs_review))
+PASS  4 after this release saved an exact recipe ({"exact":9,"legacy":26}), dbc105d still recomputes every week
+PASS  5 this release's export (legacy and exact rows) restores and re-exports identically
+PASS  5 dbc105d's pre-upgrade export restores into the new schema with every row's basis as it was ({"exact":8,"legacy":26})
+PASS  5 known limit confirmed: an export containing exact rows needs this release (or later) to restore; dbc105d's schema refuses it and nothing was half-restored
+PASS  6 dbc105d's vitest suite passes on the upgraded database (all migrations of this release):  Tests 1164 passed (1164)
+Result: PASS — /tmp/claude-0/-home-user/ae3f20b4-8e59-5d3c-9e16-8b697724019c/scratchpad/eqr/final-dbc105d

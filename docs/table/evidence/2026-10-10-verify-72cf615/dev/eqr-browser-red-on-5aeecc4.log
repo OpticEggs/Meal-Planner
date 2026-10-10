@@ -1,0 +1,102 @@
+
+Running 2 tests using 1 worker
+
+  ✘  1 [chromium] › tests/e2e/eqr-two-members.spec.ts:21:1 › EQR-E1: across a rebase onto the other member's version, an untouched row keeps its own legacy basis; the changed one is exact (4.7s)
+  ✘  2 [chromium] › tests/e2e/eqr-two-members.spec.ts:67:1 › EQR-E2: Alex's 'Have enough' for exactly 3 does not cover Jon's later 3.0004 that still shows as 3 (18.3s)
+
+
+  1) [chromium] › tests/e2e/eqr-two-members.spec.ts:21:1 › EQR-E1: across a rebase onto the other member's version, an untouched row keeps its own legacy basis; the changed one is exact 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  - 2[39m
+    [31m+ Received  + 2[39m
+
+    [33m@@ -1,9 +1,9 @@[39m
+    [2m  Array [[22m
+    [2m    Object {[22m
+    [32m-     "amount": "1/2",[39m
+    [32m-     "basis": "exact",[39m
+    [31m+     "amount": null,[39m
+    [31m+     "basis": "legacy",[39m
+    [2m      "key": "cucumber",[22m
+    [2m      "q": "0.5",[22m
+    [2m      "title": "Old salad (Alex)",[22m
+    [2m    },[22m
+    [2m    Object {[22m
+
+      57 |     [recipeId],
+      58 |   );
+    > 59 |   expect(v3).toEqual([
+         |              ^
+      60 |     { key: "cucumber", q: "0.5", basis: "exact", amount: "1/2", title: "Old salad (Alex)" },
+      61 |     { key: "onion", q: "0.5", basis: "legacy", amount: null, title: "Old salad (Alex)" },
+      62 |   ]);
+        at /home/user/old-wt-5aeecc4/tests/e2e/eqr-two-members.spec.ts:59:14
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/eqr-two-members-EQR-E1-acr-12219-is-the-changed-one-is-exact-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/eqr-two-members-EQR-E1-acr-12219-is-the-changed-one-is-exact-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/eqr-two-members-EQR-E1-acr-12219-is-the-changed-one-is-exact-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/eqr-two-members-EQR-E1-acr-12219-is-the-changed-one-is-exact-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/eqr-two-members-EQR-E1-acr-12219-is-the-changed-one-is-exact-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › tests/e2e/eqr-two-members.spec.ts:67:1 › EQR-E2: Alex's 'Have enough' for exactly 3 does not cover Jon's later 3.0004 that still shows as 3 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoContainText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByTestId('line-cucumber')
+    Expected pattern: [32m/increased since Alex said "Have enough"/[39m
+    Received string:  [31m"CucumberNothing to buyDinners: 3 — Chicken shawarma bowls (10-18), Cucumber bowls (10-16), Cucumber garnish (10-15)Cucumber · 0 pkg needed · $0.79 each (fixture, fixture)Alex: Have enoughHave enoughHave someNeedchange product…"[39m
+    Timeout: 15000ms
+
+    Call log:
+    [2m  - Expect "toContainText" with timeout 15000ms[22m
+    [2m  - waiting for getByTestId('line-cucumber')[22m
+    [2m    2 × locator resolved to <li data-to-send="0" data-testid="line-cucumber" data-status="nothing_needed" class="line st-nothing_needed">…</li>[22m
+    [2m      - unexpected value "CucumberNothing to buyDinners: 3 — Chicken shawarma bowls (10-18), Cucumber bowls (10-16)Cucumber · 0 pkg needed · $0.79 each (fixture, fixture)Alex: Have enoughHave enoughHave someNeedchange product…"[22m
+    [2m    17 × locator resolved to <li data-to-send="0" data-testid="line-cucumber" data-status="nothing_needed" class="line st-nothing_needed">…</li>[22m
+    [2m       - unexpected value "CucumberNothing to buyDinners: 3 — Chicken shawarma bowls (10-18), Cucumber bowls (10-16), Cucumber garnish (10-15)Cucumber · 0 pkg needed · $0.79 each (fixture, fixture)Alex: Have enoughHave enoughHave someNeedchange product…"[22m
+
+
+      100 |   await onNight(fx.assignments.thu, garnish.body.result.versionId);
+      101 |   await alex.page.evaluate(() => window.dispatchEvent(new Event("focus")));
+    > 102 |   await expect(cuc).toContainText(/increased since Alex said "Have enough"/, { timeout: 15_000 });
+          |                     ^
+      103 |   await expect(cuc).toHaveAttribute("data-to-send", "1", { timeout: 15_000 });
+      104 |   const now = (await q<any>("SELECT r.line FROM requirement_lines r JOIN grocery_cycles g ON g.id=r.cycle_id WHERE g.week_id=$1 AND r.ingredient_key='cucumber'", [fx.weekId]))[0].line;
+      105 |   expect([now.meal.quantity, now.meal.rational, now.packagesForMeal]).toEqual(["3", "7501/2500", 1]);
+        at /home/user/old-wt-5aeecc4/tests/e2e/eqr-two-members.spec.ts:102:21
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/eqr-two-members-EQR-E2-Ale-a3e94--0004-that-still-shows-as-3-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/eqr-two-members-EQR-E2-Ale-a3e94--0004-that-still-shows-as-3-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/eqr-two-members-EQR-E2-Ale-a3e94--0004-that-still-shows-as-3-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/eqr-two-members-EQR-E2-Ale-a3e94--0004-that-still-shows-as-3-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/eqr-two-members-EQR-E2-Ale-a3e94--0004-that-still-shows-as-3-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [chromium] › tests/e2e/eqr-two-members.spec.ts:21:1 › EQR-E1: across a rebase onto the other member's version, an untouched row keeps its own legacy basis; the changed one is exact 
+    [chromium] › tests/e2e/eqr-two-members.spec.ts:67:1 › EQR-E2: Alex's 'Have enough' for exactly 3 does not cover Jon's later 3.0004 that still shows as 3 

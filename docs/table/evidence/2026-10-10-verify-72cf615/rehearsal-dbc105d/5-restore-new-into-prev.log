@@ -1,0 +1,29 @@
+/home/user/table/node_modules/pg/lib/client.js:694
+          Error.captureStackTrace(err)
+                ^
+
+error: column "source_row_id" of relation "recipe_ingredients" does not exist
+    at /home/user/table/node_modules/pg/lib/client.js:694:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async restoreHousehold (/tmp/tmp.5cRQRMDELt/prev/src/server/export.ts:140:9)
+    at async <anonymous> (/home/user/table/scripts/rehearsal/data.mts:39:9) {
+  length: 145,
+  severity: 'ERROR',
+  code: '42703',
+  detail: undefined,
+  hint: undefined,
+  position: '179',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_target.c',
+  line: '1066',
+  routine: 'checkInsertTargets'
+}
+
+Node.js v22.22.0

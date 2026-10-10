@@ -730,3 +730,66 @@ ERROR, not KILLED). No assertion was weakened.
 5. No visual change: the recipe screens still show the stored decimal as a kitchen fraction; the exact fraction is
    in the data and on grocery lines (`meal.rational`, `meal.exact`), not newly displayed.
 6. Manual entry in the recipe editor still takes decimals (B30): a member who types `0.3333` states exactly 0.3333.
+
+## Exact-quantity correction EQR-01/EQR-02 (review of `dbc105d`) — added 2026-10-10
+
+Review package `Table-Exact-Quantities-Correction-dbc105d` (REVIEW.md, probes as source-level characterization).
+Starting `5aeecc4` (code `dbc105d`); correction `7332b06`, rehearsal data `72cf615` (approvals left open across the upgrade); verified at `72cf615` — `docs/table/evidence/2026-10-10-verify-72cf615/summary.md`: vitest 1177/1177, Playwright 153/153 (Chromium), mutation self-test PASS, 121 mutations killed / 0 survived / 0 error.
+Upgrade rehearsals on the committed `72cf615`, each with the previous release's own test suite: from `43cd1ce` PASS, from
+`dbc105d` PASS (`evidence/2026-10-10-verify-72cf615/rehearsal-*/`). The rehearsal data holds a recipe listing cucumber
+twice (an imported 2-for-3 and a typed 0.666666666666), a title-only edit of it, a "some" and a "Have enough"
+observation, a partial transfer, and two approvals left open (soy sauce, black beans). Migration 015 is unchanged; the correction is migration 016.
+
+Red evidence on the reviewed code (`evidence/2026-10-10-verify-72cf615/dev/`): the integration suite on `5aeecc4`
+failed 9 of 12 on the defects (EQR-01d, 02c, 02f are guards that already held); the two browser tests on a
+`5aeecc4` build failed on the defects (the changed cucumber took the onion's legacy label; "Nothing to buy" for
+3.0004 after "Have enough" for 3); LA-04 failed on the audit's first-match recovery. A first run of the integration
+suite with PostgreSQL stopped is kept as `INVALID-eqr-red-db-down.log` — a setup failure, not a result.
+
+| Finding | Disposition | Tests | Status |
+|---|---|---|---|
+| EQR-01A changed amount took another row's legacy label | Basis follows verified lineage (D136): the changed cucumber is exact `1/2`, the untouched onion stays legacy | integration EQR-01a; e2e EQR-E1 | FIXED |
+| EQR-01B new row took another row's 2-for-3 | A new row is exact as typed: `333333333333/500000000000` | integration EQR-01b | FIXED |
+| EQR-01C repeated occurrences collapsed through a title-only save | Each occurrence keeps its own basis through a title-only save and a reorder; 3 plates + 0.000000000001 × 2 plates → exactly 4 + 1 = 5 packages (collapsed: 6) | integration EQR-01c | FIXED |
+| EQR-01 renames/unit changes, invalid lineage | Rename/re-measure with lineage keeps the row's basis; missing, foreign, duplicated, unknown, other-household or malformed lineage refused, nothing saved | integration EQR-01d/e; mutations | FIXED |
+| EQR-01 audit first-match / look-alike inheritance | Ambiguous sources reported as conflicting; verified lineage followed | integration LA-04; mutations LA_first_fitting_line, LA_inherit_more_rows_than_source | FIXED |
+| EQR-02A old "Have enough" stretched to a larger exact requirement | Exact certification (D137): confirmed 3, now 3.0004 shown as 3 → unresolved, 0.0004 still needed, 1 package | integration EQR-02a; e2e EQR-E2 | FIXED |
+| EQR-02 race, both orders | Observation first: bound to the reviewed exact requirement; change first: bound to exactly the shown decimal, never upgraded; 1 package either way | integration EQR-02b (the reviewed change is prepared first so the race is one command against one command) | FIXED |
+| EQR-02 unchanged repeating requirement | ⅔-type requirement confirmed stays confirmed after an unrelated recompute | integration EQR-02c; unit seasonings "Have enough" (legacy rule) | HELD |
+| EQR-02B review identity omitted the exact requirement | Exact requirement and basis in the identity (D138): sub-6th-decimal change → approval stale, the send refused, zero retailer calls; basis-only change → new identity; ½ cup vs 8 tbsp → same identity, approval valid | integration EQR-02d/e/f; mutation EQR_identity_without_exact | FIXED |
+| Deployment wording | Checklist and step 5 now name migrations 015 and 016; rollback warning rewritten; existing settings left as they are | `docs/table/DEPLOYMENT.md` §0 | DONE |
+| Audit check on disposable data | First-match recovery and the look-alike (`known`) map both produced a recoverable amount where the source was ambiguous; now conflicting | integration LA-04 (disposable `table_test` data only) | FIXED |
+| Rehearsal with duplicate rows, a title-only edit, observations and approvals | Upgrade, export/restore and previous-release checks re-run from `43cd1ce` and `dbc105d` | `scripts/rehearse-upgrade.sh <prev> --old-suite` | PASS |
+| Extraction Lab | Read-only interface notice; identifier allocation unchanged; lab branch not written | `docs/table/LAB-QUANTITY-INTERFACE-EQR-2026-10-10.md` | DONE |
+
+**New tests (inventory):** `tests/integration/eqr-corrections.test.ts` — 12 (EQR-01a–e, EQR-02a, 02b × 2 orders,
+02c–f; expected values are literal fractions worked out by hand — `Q` only sums a fixture precondition, itself
+checked against a literal); `tests/integration/legacy-audit.test.ts`
+— LA-04; `tests/e2e/eqr-two-members.spec.ts` — 2 (EQR-E1, EQR-E2: two signed-in members, production server);
+`tests/mutation/run.mjs` — 9 new mutations (EQR_basis_by_equal_number, EQR_lineage_not_verified,
+EQR_lineage_reused, EQR_missing_lineage_guessed, EQR_enough_compared_to_display, EQR_stale_enough_takes_current,
+EQR_identity_without_exact, LA_first_fitting_line, LA_inherit_more_rows_than_source) and 3 re-anchored; rehearsal
+data and checks (`scripts/rehearsal/{populate,snapshot,compare}.mts`, `scripts/rehearse-upgrade.sh`).
+
+**Tests that changed (transparent):** edits through `SaveRecipeVersion` now state lineage, so the existing edit
+tests pass `sourceRowId` (null where the rows are restated, the stored row where inheritance is the point —
+EQ-05/05b); RB17-02's scripted duplicate row is a new occurrence (null). Mutations `F06_enough_uses_current_demand`,
+`HE_enough_compared_unrounded` and `EQ_title_edit_relabels_legacy` were re-anchored to the rewritten lines with the
+same injected defect. A first version of `EQR_lineage_reused` was an equivalent mutant (the count check still caught
+it) and `EQR_stale_enough_takes_current` first SURVIVED because the race raced a two-command plan change; both
+were corrected (mutation and test) and are KILLED. No assertion was weakened.
+
+**Limitations:**
+1. Observations recorded before migration 016 keep the 3-decimal rule; a requirement that grows below the shown
+   precision after such an observation is still covered by it until a member reviews it again.
+2. A screen open from before this release cannot save a recipe edit (`lineage_required`): reload and edit again.
+3. If `dbc105d` was ever deployed and members edited recipes there, those versions keep the bases `dbc105d` gave
+   them (number matching); nothing is rewritten. The audit does not report exact-basis rows; finding such versions
+   would be a separate, authorized check (B43).
+4. Rolling the code back after this upgrade keeps the data but not the behaviour: earlier code counts stored
+   decimals, ignores the certified exact amounts and records no lineage (an edit made there saves legacy-only rows
+   of a new version). A passing old test suite or a 200 from `/api/health` is not equality of exact behaviour.
+5. Upgrading from `dbc105d`: lines with exact rows get a new review identity once; approvals on them become stale
+   and must be given again. Rehearsed: amounts, packages and to-send unchanged on every line; the open soy-sauce
+   approval (exact rows) became stale and stays stale under `dbc105d` after going back; the open black-beans approval
+   (all legacy) stayed valid. From `43cd1ce` no identity changed.
