@@ -24,10 +24,10 @@
  */
 import { cmp, rational, type Rational } from "../../rational";
 import { NOT_ALIASES } from "../../unit-aliases";
-import { bakedWord, compoundFoodExactly, drinkWord, foodWord, meatOrFishWord, plainWord, twoWordFood, vesselLikeWord } from "./foods";
+import { adjectiveWord, bakedWord, describingWord, portionWord, compoundFoodExactly, drinkWord, foodModifierWord, foodWord, ingredientWord, knownParticiple, meatOrFishWord, plainWord, recognisedFoodHead, twoWordFood, vesselLikeWord } from "./foods";
 import { isWord, type Tok } from "./lexer";
 import {
-  APPLIANCE_WORDS, BOTTLE_SIZE_WORDS, CUT_PART_WORDS, EQUIPMENT_TOOL_HEADS, EQUIPMENT_VESSEL_HEADS, FUNCTION_WORDS, INVARIANT_PLURALS, PART_NOUNS, ROMANCE_JOINERS, SHAPE_FOOD_NOUNS, VESSEL_COMPOUNDS,
+  ADJECTIVE_WORDS, APPLIANCE_WORDS, BOTTLE_SIZE_WORDS, COUNTED_COMPONENT_NOUNS, PACKAGING_NOUNS, SERVING_VESSELS, MEASURE_ADJECTIVES, REMARK_WORDS, SIZE_WORDS, unitOfWord, CUT_PART_WORDS, EQUIPMENT_TOOL_HEADS, EQUIPMENT_VESSEL_HEADS, FUNCTION_WORDS, INVARIANT_PLURALS, PART_NOUNS, ROMANCE_JOINERS, SHAPE_FOOD_NOUNS, VESSEL_COMPOUNDS,
 } from "./lexicon";
 
 const hasOwn = (o: object, k: string) => Object.prototype.hasOwnProperty.call(o, k);
@@ -75,6 +75,8 @@ export function countAgreesPastMeasure(toks: readonly Tok[], at: number, count: 
   const w = toks[at];
   if (!isWord(w) || cmp(count, rational(BigInt(1))) <= 0 || regularPlural(w.lower)) return false;
   const end = runEnd(toks, at);
+  // ("2 fondue pots of cheese": a vessel head before "of" is the measure, whatever the count agrees with)
+  if (isWord(toks[end + 1], "of")) return false;
   return end > at && regularPlural((toks[end] as { lower: string }).lower);
 }
 
@@ -101,8 +103,7 @@ export function unresolvedMeasureAt(toks: readonly Tok[], a: number, count: Rati
   const head = plainWord((toks[end] as { lower: string }).lower);
   const above1 = cmp(count, rational(BigInt(1))) > 0;
   // 2. number agreement: the count counts the plural word, not the singular food after it
-  if (above1 && regularPlural(lw) && foodWord(head) && !readsPlural(head) && !foodWord(lw)) return a + 1;
-  if (above1 && regularPlural(lw) && foodWord(head) && !readsPlural(head) && (PART_NOUNS.has(lw) || holdingUtensil(lw) || BOTTLE_SIZE_WORDS.has(lw))) return a + 1;
+  if (above1 && regularPlural(lw) && foodWord(head) && !readsPlural(head) && !ingredientWord(lw)) return a + 1;
   // (a count above one that agrees with a plural food head: the word describes the items — "6 pan rolls", "4 griddle cakes")
   const agrees = above1 && readsPlural(head);
   // 3. a part, piece, shape, strand or spray of a food (a shape food only after a count of one: "Seven grain cereal" names
@@ -114,5 +115,49 @@ export function unresolvedMeasureAt(toks: readonly Tok[], a: number, count: Rati
   if (holdingUtensil(lw) && !agrees && !(end === a + 1 && bakedWord(head))) return a + 1;
   // 5. a bottle size before a drink
   if (BOTTLE_SIZE_WORDS.has(lw) && drinkWord(head)) return a + 1;
+  // (a component noun after a count above one names a product by its components: "Seven grain hot cereal", §12.9)
+  if (above1 && COUNTED_COMPONENT_NOUNS.has(lw)) return a;
+  if (agrees || describingWord(lw) || APPLIANCE_WORDS.has(lw) || ADJECTIVE_WORDS.has(lw) || SIZE_WORDS.has(lw) || MEASURE_ADJECTIVES.has(lw) || REMARK_WORDS.has(lw) || adjectiveWord(lw) || lw.includes("-")) return a;
+  const nextLower = plainWord(next.lower);
+  // 6. NOT ONE NOUN PHRASE (structural): a noun, then a describing word, then the food — "1 knot fresh ginger", "1 fan sliced
+  // avocado", "1 wafer white chocolate", "1 kiss whipped cream": a describing word stands before the head of the phrase it
+  // describes, so the noun before it heads no phrase with the food and names what is counted. An ingredient before a
+  // participle is the participle's agent, one compound modifier ("honey glazed ham", "chicken fried steak")
+  const describes = (x: string) => ADJECTIVE_WORDS.has(x) || adjectiveWord(x) || SIZE_WORDS.has(x);
+  if (end > a + 1 && describes(nextLower) && !(ingredientWord(lw) && knownParticiple(nextLower))) return a + 1;
+  // 7. A PORTION NOUN BEFORE A WHOLE FOOD: a portion or part noun ("bite", "piece", "chunk", "wedge") directly before a food
+  // that is not one of its components or a cut of meat counts portions of that food — "1 bite cheesecake" (a portion noun
+  // follows its food: "cheesecake bites"; a cut word may precede meat: "1 back bacon")
+  if (end === a + 1 && portionWord(lw) && !ingredientWord(lw) && !meatOrFishWord(head) && foodWord(head) && !COMPONENT_HEADS.has(head) && !COMPONENT_HEADS.has(head.replace(/s$/, "")) && unitOfWord(head) === null && !PART_NOUNS.has(head)) return a + 1;
+  // 8. AN UNKNOWN NOUN BEFORE A RECOGNISED FOOD (§13.2): a lower-case word no lexicon accounts for, directly after the count,
+  // followed by a food that is recognised on its own — "1 tureen chicken soup", "1 tuft dill": the word names what is counted
+  if (/^\p{Ll}/u.test(w.text) && !foodModifierWord(lw) && unitOfWord(lw) === null && recognisedFoodHead(textRun(toks, a + 1, end)) && !recognisedFoodHead(textRun(toks, a, end))) return a + 1;
   return a;
+}
+
+/**
+ * (semantic-v3, CONTRACT §13.2 precedence over §12.3) After a weight or volume, the word at `at` names a container or measure
+ * the size belongs to — not the food — when it is a declared non-alias (tub, pot, bar…), a packaging noun, a measure or
+ * serving vessel noun that is no cookware ("750 ml carafe white wine", "330 ml glass beer"), or a lower-case word no lexicon
+ * knows before a recognised food. Cookware before its product stays food ("2 cups pan drippings").
+ */
+export function sizedContainerWord(toks: readonly Tok[], at: number): boolean {
+  const w = toks[at];
+  if (!isWord(w)) return false;
+  const lw = plainWord(w.lower);
+  if (hasOwn(NOT_ALIASES, lw) || PACKAGING_NOUNS.has(lw)) return true;
+  return SERVING_VESSELS.has(lw) && runEnd(toks, at) > at;
+}
+
+/**
+ * COMPONENT HEADS (semantic-v3): parts a dish is assembled from, named after the dish ("pie crust", "pizza dough", "taco
+ * shell", "burger bun", "cake mix", "dumpling wrapper"): after a dish noun they make one food name.
+ */
+const COMPONENT_HEADS = new Set(["crust", "dough", "shell", "bun", "patty", "base", "mix", "seasoning", "sauce", "wrapper", "sheet", "skin", "casing", "crumb", "crumbs", "batter", "frosting", "icing", "glaze", "filling", "topping", "pocket", "wrap", "liner", "starter", "kit", "spice", "rub", "cup", "bowl", "boat", "stick", "pop", "roll", "ring", "bite", "ball"]);
+
+/** The words of toks[from..to] joined by single spaces. */
+function textRun(toks: readonly Tok[], from: number, to: number): string {
+  const out: string[] = [];
+  for (let k = from; k <= to; k++) out.push((toks[k] as { text: string }).text);
+  return out.join(" ");
 }

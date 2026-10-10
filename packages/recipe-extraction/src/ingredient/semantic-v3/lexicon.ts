@@ -789,7 +789,7 @@ export const PART_NOUNS = setOf(
   // plant parts
   "stem stems stalklet stalklets frond fronds cob cobs husk husks shuck shucks blade blades needle needles spear spears floret florets tip tips " +
     "crown crowns heart hearts core cores kernel kernels hull hulls rind rinds peel peels skin skins tendril tendrils shoot shoots runner runners " +
-    "pad pads " +
+    "pad pads quill quills feather feathers " +
     // cut-off pieces and ends
     "heel heels end ends butt butts nub crust crusts shard shards sliver slivers shaving shavings shred shreds flake flakes crumb crumbs " +
     "segment segments morsel morsels bit bits lobe lobes " +
@@ -853,3 +853,14 @@ export const PACKAGING_NOUNS = setOf(
  * unresolved measure ("1 dutch oven stew", "1 crockpot chili"), like any holding vessel.
  */
 export const VESSEL_COMPOUNDS = setOf("dutch-oven slow-cooker pressure-cooker rice-cooker instant-pot crock-pot crockpot crockpots sheet-pan roasting-pan stock-pot stockpot frying-pan saute-pan sauté-pan cast-iron baking-dish casserole-dish pie-dish pie-plate loaf-pan cake-pan tart-pan");
+
+/**
+ * SERVING AND DRINKING VESSELS (semantic-v3, CONTRACT §13.2): vessels an amount is served or poured into. After a weight or
+ * volume and before the food ("750 ml carafe white wine", "330 ml glass beer") the size is the vessel's, not an amount of
+ * the food. Cookware (pan, pot, kettle) is left out: before its own product it is food ("2 cups pan drippings").
+ */
+export const SERVING_VESSELS = setOf(
+  "carafe carafes decanter decanters pitcher pitchers jug jugs tumbler tumblers glass glasses goblet goblets flute flutes stein steins tankard tankards " +
+    "mug mugs cup-full teacup teacups beaker beakers flask flasks thermos thermoses snifter snifters bowl bowls saucer saucers ramekin ramekins " +
+    "carton-full bucket buckets pail pails",
+);

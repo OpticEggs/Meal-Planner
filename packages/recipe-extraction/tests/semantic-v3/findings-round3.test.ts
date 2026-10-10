@@ -338,3 +338,40 @@ describe("nits", () => {
     expect(read(line)).toMatchObject({ status: "needs_review", name: null });
   });
 });
+
+// semantic-v3 round 1 (R1 review of b0dea38): the measure slot by grammar, not by list. These words are not in any
+// measure-word list; the readings follow from the shape of the phrase (CONTRACT §13.2).
+describe("round 1: a noun used as a measure is found by the phrase's shape (§13.2)", () => {
+  it.each([
+    // a noun, then a describing word, then the food: the noun heads no phrase with the food
+    ["1 nugget fresh ginger", "fresh ginger", "1 nugget"], ["1 pillow whipped cream", "whipped cream", "1 pillow"], ["1 swirl dark chocolate", "dark chocolate", "1 swirl"],
+    // a portion noun directly before a whole food
+    ["1 bite cheesecake", "cheesecake", "1 bite"],
+    // a word no lexicon knows, directly before a recognised food
+    ["1 tureen chicken soup", "chicken soup", "1 tureen"], ["1 scatter sesame seeds", "sesame seeds", "1 scatter"],
+  ])("%s → needs_review, name %j, note %j, no amount", (line, name, note) => {
+    expect(read(line)).toMatchObject({ status: "needs_review", name, note, quantity: null, unit: null, packageSize: null });
+  });
+
+  it.each([
+    ["1 chicken breast", "chicken breast"], ["1 cherry tomato", "cherry tomato"], ["1 honey glazed ham", "honey glazed ham"], ["1 chicken fried steak", "chicken fried steak"],
+    ["1 pie crust", "pie crust"], ["1 taco shell", "taco shell"], ["1 thin crust pizza", "thin crust pizza"], ["1 deep dish pizza", "deep dish pizza"], ["1 club sandwich", "club sandwich"],
+    ["1 dragon fruit", "dragon fruit"], ["1 bundt cake", "bundt cake"], ["1 young coconut", "young coconut"], ["1 back bacon", "back bacon"],
+  ])("compound food controls: %s → ready", (line, name) => {
+    expect(core(read(line))).toEqual({ status: "ready", name, quantity: "1", unit: "each" });
+  });
+
+  it("a size before a serving vessel is the vessel's (§13.2 over §12.3); cookware before its product is food", () => {
+    expect(read("330 ml glass beer")).toMatchObject({ status: "needs_review", name: "beer", note: "330 ml glass", quantity: null, unit: null });
+    expect(core(read("2 cups pan drippings"))).toEqual({ status: "ready", name: "pan drippings", quantity: "2", unit: "cup" });
+  });
+});
+
+describe("round 1: an and-list whose first conjunct is a complete food (§12.A A4, §13.4)", () => {
+  it.each(["2 tbsp soy sauce and rice vinegar", "2 tbsp olive oil and balsamic vinegar", "1 cup chicken broth and white wine", "1 tbsp honey and apple cider vinegar"])("%s → a list", (line) => {
+    expect(read(line)).toMatchObject({ status: "needs_review", name: null, alternatives: [] });
+  });
+  it.each(["2 tbsp sweet and sour sauce", "1 bag salt and vinegar potato chips", "1 jar black bean and corn salsa", "2 tbsp lemon and lime juice", "1 jar garlic and herb cream cheese"])("%s → one food", (line) => {
+    expect(read(line).status).toBe("ready");
+  });
+});

@@ -11,7 +11,7 @@
  * Words are lower case, without diacritics, mostly singular: `foodWord` also accepts the regular plurals ("cherries",
  * "tomatoes", "loaves", "radishes") and hyphenated words whose parts are recognised ("sun-dried", "jalapeno-cheddar").
  */
-import { APPLIANCE_WORDS, EQUIPMENT_MATERIAL_WORDS, EQUIPMENT_TOOL_HEADS, EQUIPMENT_VESSEL_HEADS, KITCHEN_ACTION_VERBS, PART_NOUNS, ROMANCE_JOINERS, UNKNOWN_MEASURES, unitOfWord } from "./lexicon";
+import { APPLIANCE_WORDS, CUT_PART_WORDS, EQUIPMENT_MATERIAL_WORDS, EQUIPMENT_TOOL_HEADS, EQUIPMENT_VESSEL_HEADS, KITCHEN_ACTION_VERBS, PART_NOUNS, ROMANCE_JOINERS, UNKNOWN_MEASURES, unitOfWord } from "./lexicon";
 import {
   BAKED_MORE, CONDIMENTS_MORE, DAIRY_MORE, DISHES_MORE, DRINKS_MORE, FRUITS_MORE, HERBS_MORE, MEATS_MORE, MORE_MODIFIERS, MUSHROOMS_MORE,
   NUTS_GRAINS_MORE, PANTRY_MORE, SEAFOOD_MORE, SPICES_MORE, SWEETS_MORE, VEGETABLES_MORE,
@@ -524,6 +524,8 @@ const COMPOUND_FOODS = [
   "jell-o shot", "jello shot", "jelly shot", "pudding shot", "wood ear", "plate rib", "funnel cake", "kettle chip",
   // assortments sold or served on a tray or platter ("1 veggie tray", "1 deli platter")
   // (semantic-v3, FL-C8) cuts, fish, cups and cases named with a word that is otherwise a measure or a vessel
+  // dishes served as a bowl ("1 grain bowl"; "1 burrito bowl" stays for a person, see above)
+  "buddha bowl", "poke bowl", "acai bowl", "smoothie bowl", "power bowl", "harvest bowl",
   "sand dab", "crumb cake", "crumb bar", "coffee cake", "pound cake", "sponge cake", "layer cake", "grain bowl", "brisket point", "brisket flat", "hot pot", "brick pastry", "chocolate cup", "meringue cup", "waffle cup", "wafer cup", "tuile cup",
   "pastry case", "tart case", "tartlet case", "vol-au-vent case", "filo case", "phyllo case", "pie case",
   "veggie tray", "vegetable tray", "fruit tray", "cheese tray", "meat tray", "deli tray", "relish tray", "shrimp tray", "deli platter",
@@ -551,7 +553,9 @@ const V3_CUTS =
 const V3_BAKED =
   "fatayer sfiha sfeeha sambousek sambusa samsa siopao siomai hopia ensaymada pandesal pan-de-sal bolani gozleme pide kubaneh malawach " +
   "spanakopita tiropita kolach kolache kolaches pirozhki piroshki pirog chebureki belyashi khinkali manti mandu jiaozi baozi bao gyoza " +
-  "tartlet tartlets vol-au-vent vol-au-vents brick-pastry warka yufka kataifi feuilles-de-brick";
+  "tartlet tartlets vol-au-vent vol-au-vents brick-pastry warka yufka kataifi feuilles-de-brick " +
+  // frostings and icings by kind
+  "buttercream buttercreams ermine-frosting royal-icing glace-icing seven-minute-frosting swiss-meringue-buttercream cream-cheese-frosting";
 /** Products sold as blends and bases. */
 const V3_PANTRY = "blend blends soup-base hot-pot-base hot-pot";
 /** Taste and season adjectives that describe a food ("bitter melons", "winter melon", "summer squash"). */
@@ -568,9 +572,10 @@ const V3_SOURCES = "supermarket grocery grocery-store store deli bakery market f
 /** Rearing and feeding of an animal ("suckling pig", "milk-fed veal", "corn-fed chicken"). */
 const V3_REARING = "suckling milk-fed corn-fed acorn-fed grain-finished grass-finished heritage-breed heritage";
 /** Shape and cut styles of breads, potatoes and steaks ("cloverleaf rolls", "accordion potatoes", "cowboy steaks"). */
-const V3_SHAPES = "cloverleaf accordion hasselback fan crescent rosette braided twisted knotted spiral-cut cowboy tomahawk butterfly";
+const V3_SHAPES = "cloverleaf accordion hasselback fan crescent rosette braided twisted knotted spiral-cut cowboy tomahawk butterfly jacket";
+const SHAPE_STYLE_WORDS: ReadonlySet<string> = setOf(V3_SHAPES);
 /** Cooking techniques used as modifiers ("sous-vide egg bites", "en papillote"). */
-const V3_TECHNIQUES = "sous-vide sous vide flambe flambeed confit tandoori teppanyaki rotisserie-style";
+const V3_TECHNIQUES = "sous-vide sous vide flambe flambeed confit tandoori teppanyaki rotisserie-style overnight same-day next-day night-before";
 /** Place names used in food names ("California rolls", "Philly cheesesteak", "Kansas City ribs", "Maryland crab cakes"). */
 const V3_PLACES =
   "california philly philadelphia texas kansas maryland carolina georgia florida louisiana maine idaho vermont wisconsin buffalo boston chicago " +
@@ -604,7 +609,7 @@ const FOOD_CLASSES = [
 ];
 const FOOD_WORDS: ReadonlySet<string> = setOf(...FOOD_CLASSES);
 const NAME_PART_WORDS: ReadonlySet<string> = setOf(FOOD_NAME_PARTS);
-const MODIFIER_WORDS: ReadonlySet<string> = setOf(MODIFIERS, VARIETIES, MORE_MODIFIERS, V3_TASTE_SEASON, V3_ADVERBS, V3_SOURCES, V3_REARING, V3_SHAPES, V3_TECHNIQUES, V3_PLACES, V3_VARIETIES, V3_BRANDS);
+const MODIFIER_WORDS: ReadonlySet<string> = setOf(MODIFIERS, VARIETIES, MORE_MODIFIERS, V3_TASTE_SEASON, V3_ADVERBS, V3_SOURCES, V3_REARING, V3_TECHNIQUES, V3_PLACES, V3_VARIETIES, V3_BRANDS);
 
 /**
  * A hyphenated food of two or three parts is also a compound food name when written with spaces ("hearts-of-palm",
@@ -878,6 +883,9 @@ function foodNameReading(name: string, portions: boolean, ctx: FoodNameContext):
   // for its meat, milk or body parts ("pig ears", "cow's milk", "ox cheek"), never a product named after it ("1 cow creamer")
   if (head === raw.length - 1 && ANIMAL_NOUNS.has(lower[head]) && lower.slice(0, head).some((w) => foodWord(w) && !MODIFIER_WORDS.has(w))) return false;
   if (lower.slice(0, head).some((w) => ANIMAL_NOUNS.has(w.replace(/'s$/, ""))) && !inSet(ANIMAL_PRODUCT_HEADS, lower[raw.length - 1])) return false;
+  // (round 1) after a meat animal a part head is one of its body parts, portions or cuts ("duck legs", "chicken fingers");
+  // any other part ("1 goose quill") names a thing made from the animal, not food
+  if (head === raw.length - 1 && head > 0 && PART_NOUNS.has(lower[head]) && MEAT_ANIMAL_NAMES.has(lower[head - 1]) && !inSet(ANIMAL_PRODUCT_HEADS, lower[head]) && !inSet(PORTION_HEADS, lower[head]) && !CUT_PART_WORDS.has(lower[head])) return false;
   // the head is a food itself, not a portion of one ("griddle cakes" may take a tool word before it; "egg cup" may not)
   const foodHead = head < raw.length - 1 || foodWord(raw[head]);
   let brandOnly = false;
@@ -899,7 +907,10 @@ function foodNameReading(name: string, portions: boolean, ctx: FoodNameContext):
     const appliance = foodHead && APPLIANCE_WORDS.has(lower[k]);
     // (cookware stays out: "1 sheet pan roasted potatoes" names a pan, not a style)
     const describedVessel = foodHead && ctx.slotResolved && UNKNOWN_MEASURES.has(lower[k]) && !VESSEL_LIKE.has(lower[k]) && !EQUIPMENT_TOOL_HEADS.has(lower[k]);
-    const known = foodModifierWord(w) || tool || vesselBeforePlural || innerCompound || hyphenCompound || appliance || describedVessel;
+    // (semantic-v3, round 1) a shape-style NOUN ("cloverleaf", "accordion", "fan", "rosette") describes a food only where it
+    // is not in the measure slot — after a unit, after another word, or with a count that agrees with a plural head
+    const shapeStyle = foodHead && SHAPE_STYLE_WORDS.has(lower[k]) && (k > 0 || ctx.slotResolved || ctx.countAgrees);
+    const known = foodModifierWord(w) || tool || vesselBeforePlural || innerCompound || hyphenCompound || appliance || describedVessel || shapeStyle;
     // (a capitalised word is a proper name or brand, unless it is a unit or measure word ("2 BUNCH black beans") or a
     // plural opening the name, which counts rather than names ("2 Sips dark rum"))
     // (semantic-v3, R1 §5 path 2) only after a declared unit: with a bare count an unknown capitalised word is unrecognised
@@ -922,6 +933,8 @@ function foodNameReading(name: string, portions: boolean, ctx: FoodNameContext):
 const ROMANCE_FOOD_HEADS = setOf("pan pain pane pao pão pommes pomme arroz riz riso huevos huevo oeufs oeuf uova pollo poulet frango carne viande sopa soupe zuppa gateau gâteau torta tarte tarta pasta");
 /** (semantic-v3) Live-animal nouns that are not meat names (the meat is "pork", "beef", "mutton"): see `foodNameReading`. */
 const ANIMAL_NOUNS = setOf("pig pigs hog hogs piglet piglets cow cows ox oxen bull bulls steer steers sheep ewe ewes sow sows");
+/** (round 1) Meats named by their animal. */
+const MEAT_ANIMAL_NAMES = setOf("beef pork lamb veal mutton goat venison bison boar elk rabbit chicken turkey duck goose quail pheasant hen");
 /** What an animal noun may stand before: its milk and milk products, meat, fat and body parts. */
 const ANIMAL_PRODUCT_HEADS = setOf(
   "milk cheese butter cream yogurt yoghurt kefir curd ghee fat lard meat ear ears foot feet trotter trotters cheek cheeks tongue tongues tail tails " +
@@ -990,6 +1003,40 @@ export function massClassWord(word: string): boolean {
 /** (semantic-v3) A meat, poultry, game or fish noun (the heads a cut word such as "blade", "heel" or "crown" may stand before). */
 export function meatOrFishWord(word: string): boolean {
   return inSet(MEAT_CLASS_WORDS, plainWord(word));
+}
+const PRODUCT_HEAD_WORDS: ReadonlySet<string> = setOf(CONDIMENTS, CONDIMENTS_MORE, DRINKS, DRINKS_MORE);
+/**
+ * (semantic-v3, CONTRACT §12.A A4, §13.4) A processed product named after what it is made from — a sauce, condiment, oil,
+ * vinegar, syrup, juice or drink ("lime juice", "maple syrup", "fish sauce"): a name ending in one is a complete food, never
+ * a modifier shared before another head.
+ */
+export function productHeadWord(word: string): boolean {
+  return inSet(PRODUCT_HEAD_WORDS, plainWord(word));
+}
+const INGREDIENT_CLASS_WORDS: ReadonlySet<string> = setOf(
+  FRUITS, VEGETABLES, MUSHROOMS, HERBS, SPICES, CONDIMENTS, MEATS, SEAFOOD, DAIRY, DRINKS, NUTS_GRAINS, PANTRY, FRUITS_MORE, VEGETABLES_MORE, MUSHROOMS_MORE,
+  HERBS_MORE, SPICES_MORE, CONDIMENTS_MORE, MEATS_MORE, SEAFOOD_MORE, DAIRY_MORE, DRINKS_MORE, NUTS_GRAINS_MORE, PANTRY_MORE, V3_PRODUCE, V3_CUTS, V3_PANTRY,
+);
+/**
+ * (semantic-v3, CONTRACT §13.2) An INGREDIENT noun — produce, meat and fish, dairy, herbs and spices, condiments, drinks,
+ * grains and pantry staples: what a food is made of or flavoured with, so it may stand before another food's head
+ * ("chicken breast", "cherry tomato", "cheese pizza", "honey glazed ham"). A food noun of no ingredient class names a dish,
+ * a sweet or a portion ("bite", "kiss", "wafer", "cake"): before another food it measures it (§13.2).
+ */
+export function ingredientWord(word: string): boolean {
+  return inSet(INGREDIENT_CLASS_WORDS, plainWord(word));
+}
+/**
+ * (semantic-v3) A word that can only describe — an adjective by class (colour, size, taste, texture, form) or by form, or a
+ * participle of a known verb ("fresh", "white", "sliced", "whipped", "smoked", "Italian").
+ */
+export function adjectiveWord(word: string): boolean {
+  const w = plainWord(word);
+  return knownParticiple(w) || COLOUR_WORDS.has(w) || PRE_NOUN_MODIFIERS.has(w) || /^\p{L}{3,}(?:ian|ican|ese|ish|ic|ful|less|ous|ive|able|ible)$/u.test(w);
+}
+/** (semantic-v3) A portion or part noun (PORTION_HEADS: "bite", "piece", "chunk", "wedge", "finger"…). */
+export function portionWord(word: string): boolean {
+  return inSet(PORTION_HEADS, plainWord(word));
 }
 /** (semantic-v3) A drink noun ("prosecco", "cava", "lager", "rosé"). */
 export function drinkWord(word: string): boolean {
