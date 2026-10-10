@@ -113,6 +113,21 @@ for them was looked up. It is never shown to the implementation worker.
   `npx tsx bench/cli.ts --print-freeze-v2 <YYYY-MM-DD>`, save it as `FREEZE-v2.json`, add that file to
   `MANIFEST.json` (kind `freeze_record`), and commit it on its own. From then on every run verifies it.
 
+## Holdout-v3 (`ingredients/holdout-v3.jsonl`, Phase 2B)
+
+_Not yet written; this section is the format contract the evaluator writes to (EVALUATION-PLAN-v3 §8–§9)._
+
+- Split `holdout3`, ids `ing-h3-NNNN`, frozen by `FREEZE-v3.json`; scored only with `--split holdout3`. Labels follow
+  CONTRACT-v1 §7 **and §12**. Synthetic lines only (`source.kind` `synthetic_pattern`), each with `construction`.
+- Four extra fields, required on holdout3 cases and rejected elsewhere:
+  - `family`: `"A"` quantity syntax, `"B"` alternatives and notes, `"C"` count units, packages and qualifiers,
+    `"D"` non-ingredient lines, `"plain"` ordinary lines;
+  - `contract12`: the CONTRACT §12 items the line exercises (`["12.4"]`, possibly `[]`);
+  - `reliesOnNewReading`: `true` when the label would differ under §7 alone (sensitivity (c));
+  - `debatable`: `true` for cases pre-registered as debatable at adjudication (sensitivity (a)).
+- `EXPOSURE-AUDIT-v3.json` (optional, written after the freeze and before scoring): the holdout-v3 ids whose inputs
+  match an exposed string (sensitivity (d)); listed in `MANIFEST.json` with kind `exposure_audit`.
+
 ## Changing labels
 
 1. Never change a label because an engine disagrees. Argue from the contract text and a careful cook's

@@ -149,3 +149,10 @@ It needs a separately authorized Phase 3.
    is CE either way). Informational review-only flags: an **invented option** is an engine option that matches no
    label option (nor an accepted one); a **dropped option** is a label option missing from an engine list that
    invents none. No threshold or acceptance rule changed.
+3. **2026-10-10, before candidate freeze and before any holdout-v3 line** — scope of the informational
+   invented/dropped-option flags: judged only when the engine's options match neither the label's list nor an accepted
+   list (so an accepted reading is never flagged "dropped"); the scorer worker's and R1's independent checker agree.
+   Holdout-v3 metadata (`family`, `contract12`, `reliesOnNewReading`, `debatable`) and the optional
+   `EXPOSURE-AUDIT-v3.json` are frozen **data** read by the scorer, so pre-registering debatable cases or recording
+   the exposure audit never changes the frozen scorer. The report pins the plan hash, the scorer hash and source digests.
+
