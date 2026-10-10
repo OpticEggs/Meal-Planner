@@ -89,7 +89,11 @@
    ],
    "killedBy": [
     {
-     "test": "restatement tolerance (RESTATEMENT_TOLERANCE, sameAmount, roundedConversion) > roundedConversion needs a whole restated number in a smaller, different unit",
+     "test": "restatement tolerance (RESTATEMENT_TOLERANCE, sameAmount, roundedConversion) > roundedConversion needs a whole restated number in ml or g (or lb for kg), smaller than the first unit",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "restatement tolerance (RESTATEMENT_TOLERANCE, sameAmount, roundedConversion) > same-dimension restatements",
      "reason": "^AssertionError"
     }
    ],
@@ -167,7 +171,7 @@
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0301 [C] final-head-probe:probes.tsv:159 \"4 kaffir lime leaves\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0457 [C] final-head-probe:probes.tsv:159 \"4 kaffir lime leaves\"",
      "reason": "^AssertionError"
     }
    ],
@@ -211,7 +215,7 @@
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0258 [C] final-head-probe:probes.tsv:113 \"4 (6-oz) salmon fillets\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0414 [C] final-head-probe:probes.tsv:113 \"4 (6-oz) salmon fillets\"",
      "reason": "^AssertionError"
     }
    ],
@@ -341,7 +345,177 @@
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0437 [D] final-head-probe:probes.tsv:295 \"Topping\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0593 [D] final-head-probe:probes.tsv:295 \"Topping\"",
+     "reason": "^AssertionError"
+    }
+   ],
+   "expect": "KILLED"
+  },
+  {
+   "id": "P-and-list-off",
+   "description": "§12.A A4 'A and B' after one amount read as one food again",
+   "file": "src/ingredient/semantic-v2/alternatives.ts",
+   "find": "export function andJoinsTwoFoods(name: string): boolean {",
+   "replace": "export function andJoinsTwoFoods(name: string): boolean {\n  if (Number.isFinite(0)) return false;",
+   "tests": [
+    "tests/semantic-v2/safeguards.test.ts",
+    "tests/regressions/semantic-v2-regressions.test.ts"
+   ],
+   "killedBy": [
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0167 [B] candidate-review-r1:R1-HIGH \"2 cups strawberries and blueberries\"",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0166 [B] candidate-review-r1:R1-HIGH \"1/4 cup chopped parsley and mint\"",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0164 [B] candidate-review-r1:R1-HIGH \"2 cups chopped celery and carrots\"",
+     "reason": "^AssertionError"
+    }
+   ],
+   "expect": "KILLED"
+  },
+  {
+   "id": "P-count-word-name-off",
+   "description": "§12.A A1 count word that begins a product name taken as the unit again ('2 strip steaks' → 2 strip)",
+   "file": "src/ingredient/semantic-v2/amount.ts",
+   "find": "export function countWordBeginsName(text: string, toks: readonly Tok[], unitRead: UnitRead, value: Rational): boolean {",
+   "replace": "export function countWordBeginsName(text: string, toks: readonly Tok[], unitRead: UnitRead, value: Rational): boolean {\n  if (Number.isFinite(0)) return false;",
+   "tests": [
+    "tests/semantic-v2/safeguards.test.ts",
+    "tests/regressions/semantic-v2-regressions.test.ts"
+   ],
+   "killedBy": [
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0168 [C] candidate-review-r1:R1-HIGH \"2 strip steaks\"",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0169 [C] candidate-review-r1:R1-HIGH \"4 cube steaks\"",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0170 [C] candidate-review-r1:R1-HIGH \"2 sheet cakes\"",
+     "reason": "^AssertionError"
+    }
+   ],
+   "expect": "KILLED"
+  },
+  {
+   "id": "P-can-designation-off",
+   "description": "§12.9 can-size designation not recognised ('1 #10 can' read with the designation as an amount)",
+   "file": "src/ingredient/semantic-v2/amount.ts",
+   "find": "export function canSizeDesignationAt(toks: readonly Tok[], k: number): number {",
+   "replace": "export function canSizeDesignationAt(toks: readonly Tok[], k: number): number {\n  if (Number.isFinite(0)) return k;",
+   "tests": [
+    "tests/semantic-v2/safeguards.test.ts",
+    "tests/regressions/semantic-v2-regressions.test.ts"
+   ],
+   "killedBy": [
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0298 [A] candidate-review-r1:R1-MEDIUM \"1 #10 can diced tomatoes\"",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0299 [A] candidate-review-r1:R1-MEDIUM \"2 No. 303 cans cut green beans\"",
+     "reason": "^AssertionError"
+    }
+   ],
+   "expect": "KILLED"
+  },
+  {
+   "id": "P-unknown-measure-off",
+   "description": "§12.14 unknown measure words not recognised ('1 gill single cream' ready with the measure in the name)",
+   "file": "src/ingredient/semantic-v2/amount.ts",
+   "find": "export function unknownMeasureAt(toks: readonly Tok[], a: number): number {",
+   "replace": "export function unknownMeasureAt(toks: readonly Tok[], a: number): number {\n  if (Number.isFinite(0)) return a;",
+   "tests": [
+    "tests/semantic-v2/safeguards.test.ts",
+    "tests/regressions/semantic-v2-regressions.test.ts"
+   ],
+   "killedBy": [
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0156 [A] candidate-review-r1:R1-HIGH \"1 gill single cream\"",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0158 [A] candidate-review-r1:R1-HIGH \"1 tumbler orange juice\"",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0159 [A] candidate-review-r1:R1-HIGH \"2 ladles chicken stock\"",
+     "reason": "^AssertionError"
+    }
+   ],
+   "expect": "KILLED"
+  },
+  {
+   "id": "P-remark-source-off",
+   "description": "§12.A A3 remark measuring the source of an extracted part ignored ('(about 1 lemon)' left ready)",
+   "file": "src/ingredient/semantic-v2/remarks.ts",
+   "find": "export function remarkMeasuresAnother(toks: readonly Tok[], name: string | null, text: string): boolean {",
+   "replace": "export function remarkMeasuresAnother(toks: readonly Tok[], name: string | null, text: string): boolean {\n  if (Number.isFinite(0)) return false;",
+   "tests": [
+    "tests/semantic-v2/safeguards.test.ts",
+    "tests/regressions/semantic-v2-regressions.test.ts"
+   ],
+   "killedBy": [
+    {
+     "test": "product numbers, fraction units, remark amounts, foreign units > remarkMeasuresAnother: an amount remark measuring something other than the named food as prepared",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0153 [A] candidate-review-r1:R1-HIGH \"3 tablespoons lemon juice (about 1 lemon)\"",
+     "reason": "^AssertionError"
+    }
+   ],
+   "expect": "KILLED"
+  },
+  {
+   "id": "P-equipment-off",
+   "description": "§12.8 equipment shape disabled (counted kitchen tools read as food)",
+   "file": "src/ingredient/semantic-v2/classify.ts",
+   "find": "export function equipmentShape(toks: readonly Tok[]): \"equipment\" | \"unsure\" | null {",
+   "replace": "export function equipmentShape(toks: readonly Tok[]): \"equipment\" | \"unsure\" | null {\n  if (Number.isFinite(0)) return null;",
+   "tests": [
+    "tests/semantic-v2/safeguards.test.ts",
+    "tests/regressions/semantic-v2-regressions.test.ts"
+   ],
+   "killedBy": [
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0175 [D] candidate-review-r1:R1-HIGH \"1 rolling pin\"",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0182 [D] candidate-review-r1:R1-HIGH \"1 roll kitchen twine\"",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0181 [D] candidate-review-r1:R1-HIGH \"6 popsicle sticks\"",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0183 [D] candidate-review-r1:R1-HIGH \"1 box toothpicks\"",
+     "reason": "^AssertionError"
+    }
+   ],
+   "expect": "KILLED"
+  },
+  {
+   "id": "P-nutrition-panel-off",
+   "description": "§12.8 one-line nutrition panel read as an ingredient (invented amount)",
+   "file": "src/ingredient/semantic-v2/classify.ts",
+   "find": "export function nutritionPanel(toks: readonly Tok[]): boolean {",
+   "replace": "export function nutritionPanel(toks: readonly Tok[]): boolean {\n  if (Number.isFinite(0)) return false;",
+   "tests": [
+    "tests/semantic-v2/safeguards.test.ts",
+    "tests/regressions/semantic-v2-regressions.test.ts"
+   ],
+   "killedBy": [
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0172 [D] candidate-review-r1:R1-HIGH \"Calories: 412kcal | Carbohydrates: 52g | Protein: 18g\"",
      "reason": "^AssertionError"
     }
    ],

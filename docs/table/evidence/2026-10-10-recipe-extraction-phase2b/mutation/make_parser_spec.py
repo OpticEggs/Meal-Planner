@@ -39,7 +39,7 @@ add("P-tolerance-widened", "§12.6 tolerance widened from 7 % to 13 % (accepts t
     [safe(G, "is exactly 7/100, inclusive, against the first-stated amount"), reg("1 lb (14 oz) ground beef")])
 add("P-rounding-allowance-off", "§12.6 whole-unit rounding allowance removed ('1/2 tsp (2 ml)' becomes a second amount)",
     "amount.ts", early_return("export function roundedConversion(firstBase: Rational, ua: UnitV1, restated: ExactQuantity, ub: UnitV1): boolean {", "false"),
-    [safe(G, "roundedConversion needs a whole restated number in a smaller, different unit")])
+    [safe(G, "roundedConversion needs a whole restated number in ml or g (or lb for kg), smaller than the first unit"), reg("1/2 tsp (2 ml) vanilla extract") if "1/2 tsp (2 ml) vanilla extract" in by_input else safe(G, "same-dimension restatements")])
 G = "shareOptions (option-preservation rule)"
 add("P-invent-options", "§12.7 option preservation broken: the last option's head is shared with every option (semantic-v1's 'kale chard')",
     "alternatives.ts", {"find": "  if (options.length < 2) return [...options];",
@@ -75,6 +75,27 @@ add("P-fraction-unit-off", "§12.1 fraction-unit compounds not read ('a half-cup
 add("P-heading-off", "§12.8 component-heading rule disabled ('SAUCE', 'Cake Layers' read as foods)",
     "classify.ts", early_return("export function componentHeading(toks: readonly Tok[]): boolean {", "false"),
     [reg("SAUCE"), reg("Cake Layers"), reg("Topping")])
+add("P-and-list-off", "§12.A A4 'A and B' after one amount read as one food again",
+    "alternatives.ts", early_return("export function andJoinsTwoFoods(name: string): boolean {", "false"),
+    [reg("2 cups strawberries and blueberries"), reg("1/4 cup chopped parsley and mint"), reg("2 cups chopped celery and carrots")])
+add("P-count-word-name-off", "§12.A A1 count word that begins a product name taken as the unit again ('2 strip steaks' → 2 strip)",
+    "amount.ts", early_return("export function countWordBeginsName(text: string, toks: readonly Tok[], unitRead: UnitRead, value: Rational): boolean {", "false"),
+    [reg("2 strip steaks"), reg("4 cube steaks"), reg("2 sheet cakes")])
+add("P-can-designation-off", "§12.9 can-size designation not recognised ('1 #10 can' read with the designation as an amount)",
+    "amount.ts", early_return("export function canSizeDesignationAt(toks: readonly Tok[], k: number): number {", "k"),
+    [reg("1 #10 can diced tomatoes"), reg("2 No. 303 cans cut green beans")])
+add("P-unknown-measure-off", "§12.14 unknown measure words not recognised ('1 gill single cream' ready with the measure in the name)",
+    "amount.ts", early_return("export function unknownMeasureAt(toks: readonly Tok[], a: number): number {", "a"),
+    [reg("1 gill single cream"), reg("1 tumbler orange juice"), reg("2 ladles chicken stock")])
+add("P-remark-source-off", "§12.A A3 remark measuring the source of an extracted part ignored ('(about 1 lemon)' left ready)",
+    "remarks.ts", early_return("export function remarkMeasuresAnother(toks: readonly Tok[], name: string | null, text: string): boolean {", "false"),
+    [safe(GP, "remarkMeasuresAnother: an amount remark measuring something other than the named food as prepared"), reg("3 tablespoons lemon juice (about 1 lemon)")])
+add("P-equipment-off", "§12.8 equipment shape disabled (counted kitchen tools read as food)",
+    "classify.ts", early_return('export function equipmentShape(toks: readonly Tok[]): "equipment" | "unsure" | null {', "null"),
+    [reg("1 rolling pin"), reg("1 roll kitchen twine"), reg("6 popsicle sticks"), reg("1 box toothpicks")])
+add("P-nutrition-panel-off", "§12.8 one-line nutrition panel read as an ingredient (invented amount)",
+    "classify.ts", early_return("export function nutritionPanel(toks: readonly Tok[]): boolean {", "false"),
+    [reg("Calories: 412kcal | Carbohydrates: 52g | Protein: 18g")])
 spec = {"format": "recipe-extraction-mutations/v1", "owner": "coordinator (Phase 2B)",
         "description": "Parser mutations for the candidate semantic-v2: each disables or weakens one named safeguard and must be KILLED by an assertion in its direct test or in the required regression harness, for the stated reason.",
         "mutations": M}
