@@ -43,8 +43,6 @@ describe("amounts that cannot be placed", () => {
     ["2 large or 3 small potatoes", "potatoes"],
     ["1 small (or 1/2 large) onion", "onion"],
     ["1 (15 oz) can or 2 cups cooked chickpeas", "chickpeas"],
-    ["3 eggs plus 1 yolk", "eggs"],
-    ["1 egg + 1 egg yolk", "egg"],
     ["2 cups flour and 1 tsp salt", "flour"],
   ])("%s → needs review, name %s", (line, name) => {
     const r = read(line);
@@ -55,9 +53,18 @@ describe("amounts that cannot be placed", () => {
 });
 
 describe("one line, several foods", () => {
-  it("a distributive 'each' needs review; the foods are kept", () => {
-    expect(read("1 tsp each salt and pepper")).toMatchObject({ status: "needs_review", name: "salt and pepper" });
+  // semantic-v2 (CONTRACT §12.7 g, §12.12; corpus probes 339/379/576): several foods sharing the amount — no single
+  // name, the foods are kept in the note (semantic-v1 kept "salt and pepper" / "eggs" as the name)
+  it("a distributive 'each' needs review; the foods are kept in the note, no name", () => {
+    expect(read("1 tsp each salt and pepper")).toMatchObject({ status: "needs_review", name: null, note: "salt and pepper" });
     expect(read("1/2 tsp each salt and pepper").reasons).toContain("unclassified");
+  });
+
+  it.each(["3 eggs plus 1 yolk", "1 egg + 1 egg yolk"])("another food added with its own amount: %s → needs review, no name", (line) => {
+    const r = read(line);
+    expect(r).toMatchObject({ status: "needs_review", name: null, alternatives: [] });
+    expect(r.quantity).not.toBeNull();
+    expect(r.note).toMatch(/egg/);
   });
 
   it("a comma list of foods needs review; a list of preparations does not", () => {

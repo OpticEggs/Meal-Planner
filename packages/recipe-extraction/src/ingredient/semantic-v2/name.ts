@@ -13,8 +13,8 @@
  */
 import { adjacent, isGroup, isNumberish, isSym, isWord, type Tok } from "./lexer";
 import {
-  APPROX_WORDS, BULLETS, CARDINALS, CONTAINER_UNITS, FUNCTION_WORDS, META_NOUNS, PRODUCT_IDENTITY_NOUNS, REMARK_WORDS, SIZE_GRADED_NOUNS, UNIT_WORDS_IN_FOOD_NAMES, FORM_WORDS, LEADING_JUNK, PREP_ADVERBS,
-  SIZE_WORDS, TRAILING_COUNT_UNITS, TRAILING_PREP_WORDS, unitOfWord,
+  APPROX_WORDS, BULLETS, CARDINALS, CONTAINER_UNITS, COUNTED_COMPONENT_NOUNS, FUNCTION_WORDS, META_NOUNS, PRODUCT_IDENTITY_NOUNS, REMARK_WORDS, SIZE_GRADED_NOUNS, UNIT_WORDS_IN_FOOD_NAMES, FORM_WORDS, LEADING_JUNK, PREP_ADVERBS,
+  INVARIANT_PLURALS, SIZE_WORDS, TRAILING_COUNT_UNITS, TRAILING_PREP_WORDS, unitOfWord,
 } from "./lexicon";
 import { amountStartsAt, groupAmounts, isPriceGroup, placeSecondary, readAmountPhrase, readStatedAmount, type AmountSlots } from "./amount";
 import { classifyGroup, classifyPiece, dropBarePrices, remarkOnly, splitOr, textOf, trimEdges, unstatedAt } from "./remarks";
@@ -55,6 +55,8 @@ export interface NameReading {
   plusRemark: Tok[] | null;
   /** A second number sat right after the amount ("1 half cup milk"): the amount is not clear. */
   amountUnclear: boolean;
+  /** (semantic-v2) one amount for several foods ("1/2 tsp each salt and pepper"): no single name applies (§12.7 g). */
+  distributive: boolean;
 }
 
 const isSizeWordAt = (toks: readonly Tok[], i: number): number => {
@@ -116,6 +118,14 @@ function stopAtNumber(text: string, toks: readonly Tok[], fx: Effects): Tok[] {
       kept.push(t);
       continue;
     }
+    // (semantic-v2, §12.9) a number that names the product: "5-spice", "7-Up", "10X", "00 flour", "2 percent milk",
+    // "7 grain cereal", "Chinese 5 spice"
+    const named = numberInProductName(toks, i);
+    if (named > 0) {
+      for (let k = i; k < i + named; k++) kept.push(toks[k]);
+      i += named - 1;
+      continue;
+    }
     const dim = dimensionAt(text, toks, i);
     if (dim > i) {
       fx.notes.push({ s: t.s, text: text.slice(t.s, toks[dim - 1].e) });
@@ -129,6 +139,41 @@ function stopAtNumber(text: string, toks: readonly Tok[], fx: Effects): Tok[] {
     break;
   }
   return kept;
+}
+
+/**
+ * NUMBERS THAT NAME THE FOOD inside a name (semantic-v2, CONTRACT §12.9): how many tokens from `i` are a product
+ * number kept in the name, or 0. A number joined to a word by a hyphen ("5-spice", "7-Up", "7-grain") or glued to letters
+ * ("10X"); a grade written with a leading zero ("00 flour"); "N percent"; and a count of two or more followed by a
+ * singular component noun whose phrase ends in a singular or mass head ("7 grain cereal", "Chinese 5 spice", "three
+ * cheese blend") — a plural head makes the number a count ("3 eggs", "2 cheese pizzas").
+ */
+export function numberInProductName(toks: readonly Tok[], i: number): number {
+  const t = toks[i];
+  if (t?.kind !== "num" && !isWord(t)) return 0;
+  const next = toks[i + 1];
+  if (t.kind === "num") {
+    if (t.form !== "int" || t.script) return 0;
+    if (isSym(next, "-", "‐", "‑") && adjacent(t, next) && isWord(toks[i + 2]) && adjacent(next, toks[i + 2]) && unitOfWord((toks[i + 2] as { text: string }).text) === null) return 3;
+    if (isWord(next) && adjacent(t, next) && unitOfWord(next.text) === null) return 2; // "10X", "7Up"
+    if (/^00+$/.test(t.text) && isWord(next) && unitOfWord(next.text) === null) return 1; // "00 flour" (a grade, not a count)
+    if (isWord(next, "percent")) return 2;
+  }
+  // a count of two or more, then a singular component noun ("7 grain cereal", "five spice powder")
+  const value = t.kind === "num" ? Number(t.text) : Object.prototype.hasOwnProperty.call(CARDINALS, t.lower) ? CARDINALS[t.lower] : 0;
+  if (value < 2 || !isWord(next) || !COUNTED_COMPONENT_NOUNS.has(next.lower)) return 0;
+  const rest: string[] = [];
+  for (let k = i + 1; k < toks.length && isWord(toks[k]); k++) rest.push((toks[k] as { lower: string }).lower);
+  const head = rest[rest.length - 1];
+  if (head === undefined || pluralWord(head) || TRAILING_COUNT_UNITS.has(unitOfWord(head) ?? "each")) return 0;
+  // the component must lead to a head ("5 spice powder"), or be the head after another name word ("Chinese 5 spice")
+  if (rest.length === 1 && !(i > 0 && isWord(toks[i - 1]))) return 0;
+  return 1;
+}
+
+/** A word read as a plural ("eggs", "tomatoes"; "shrimp" and other zero plurals too). */
+export function pluralWord(w: string): boolean {
+  return (w.length > 2 && w.endsWith("s") && !w.endsWith("ss")) || INVARIANT_PLURALS.has(w);
 }
 
 /** True when the name region starts with a stray amount ("half cup milk" after "1"): a number that was not placed. */
@@ -178,9 +223,11 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
     // "1/2 of a lemon", "half of an onion": a share of one item — the article is not a stray amount
     if (ctx.hasQuantity && !ctx.unitWritten && isWord(toks[a], "a", "an") && a + 1 < toks.length) a++;
   }
+  let distributive = false;
   if (ctx.hasQuantity && ctx.unitWritten && isWord(toks[a], "each")) {
     // "1 tsp each salt and pepper": one amount for several foods — a person must split it
     flag();
+    distributive = true;
     a++;
     if (isSym(toks[a], ":")) a++;
   }
@@ -264,8 +311,8 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
       a++;
       continue;
     }
-    if (isWord(t, "a", "an") && a + 1 < toks.length) {
-      flag(); // "1 cup a flour": an article after the amount
+    if (isWord(t, "a", "an") && a + 1 < toks.length && !(toks[a + 1]?.kind === "num" && adjacent(t, toks[a + 1]))) {
+      flag(); // "1 cup a flour": an article after the amount ("A1 sauce" is a name)
       a++;
       continue;
     }
@@ -324,6 +371,7 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
   // "1 tsp salt and pepper each": a distributive "each" at the end
   if (ctx.hasQuantity && toks.length > 1 && isWord(toks[toks.length - 1], "each")) {
     flag();
+    distributive = true;
     toks = toks.slice(0, -1);
   }
   // trailing preparation ("2 eggs beaten", "1 onion finely chopped")
@@ -462,7 +510,7 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
   }
   const name = options === null ? nameText(text, toks) : "";
   const span: [number, number] | null = options === null && toks.length > 0 && name.length > 0 ? [toks[0].s, toks[toks.length - 1].e] : null;
-  return { name: name.length > 0 ? name : null, nameSpan: span, options, trailingUnit, plusRemark, amountUnclear };
+  return { name: name.length > 0 ? name : null, nameSpan: span, options, trailingUnit, plusRemark, amountUnclear, distributive };
 }
 
 /**

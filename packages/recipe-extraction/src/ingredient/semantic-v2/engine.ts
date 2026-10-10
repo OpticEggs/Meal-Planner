@@ -19,11 +19,11 @@
 import { REASONS, type AmountUnstated, type IngredientEngine, type ParsedIngredientV1, type ReasonCode, type SpanField, type UnitV1 } from "../../contract";
 import { cmp, fromExactQuantity, rational, toExactQuantity } from "../../rational";
 import { validateParsedIngredientV1 } from "../../validate";
-import { amountStartsAt, groupAmount, isPriceGroup, readAmountPhrase, readStatedAmount, placeSecondary, sumInSmallest, type AmountSlots } from "./amount";
+import { amountStartsAt, groupAmount, isPriceGroup, PACKAGE_UNITS, readAmountPhrase, readStatedAmount, placeSecondary, sumInSmallest, type AmountSlots } from "./amount";
 import { nonIngredientReason, numericLead } from "./classify";
 import { adjacent, isGroup, isNumberish, isSym, isWord, lex, type Tok } from "./lexer";
 import { BULLETS, CONTAINER_UNITS, FRUIT_PART_WORDS, SERVING_LABEL_WORDS, UNIT_WORDS_IN_FOOD_NAMES, FUNCTION_WORDS, INVARIANT_PLURALS, MEASURE_ADJECTIVES, PREP_ADVERBS, REMARK_WORDS, SIZE_WORDS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
-import { readNameRegion, type NameReading } from "./name";
+import { numberInProductName, readNameRegion, type NameReading } from "./name";
 import { normalizeLine } from "./normalize";
 import { classifyPiece, splitOr, splitTopLevel, textOf, trimEdges, unstatedAt } from "./remarks";
 import { adjectival, distributeOptions, foodHead, isRemarkOption, plural, uniqueOptions, versionsOf, withKind } from "./alternatives";
@@ -133,6 +133,12 @@ function bareUnitAtStart(u: UnitRead, text: string): boolean {
   return u.unit.dimension === "mass" || u.unit.dimension === "volume";
 }
 
+/** A comma item "celery and onion": two plain foods joined by "and"/"&". */
+function andJoinsFoods(seg: readonly Tok[]): boolean {
+  const k = seg.findIndex((t) => isWord(t, "and") || isSym(t, "&"));
+  return k > 0 && k < seg.length - 1 && plainFoodItem(seg.slice(0, k)) && plainFoodItem(stripPhrase(seg.slice(k + 1)));
+}
+
 /** A singular imprecise measure word with no number ("Pinch", "dash", "handful"): one of it is meant. */
 function impliedOne(u: UnitRead, text: string): boolean {
   const written = text.slice(u.s, u.e).toLowerCase().replace(/\.$/, "");
@@ -151,6 +157,8 @@ interface ReadOptions {
    * the line is read name-first and a person must confirm (`unclassified`).
    */
   leadIsName: boolean;
+  /** (semantic-v2) the leading number names the product (§12.9): no person needs to confirm that by itself. */
+  productNumber?: boolean;
 }
 
 function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Reading {
@@ -239,7 +247,7 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
   let nameFromLabel = false;
   let usedTail = -1;
   let partNote: Tok[] | null = null;
-  let unclassified = opts.leadIsName;
+  let unclassified = opts.leadIsName && opts.productNumber !== true;
   amount = opts.leadIsName ? null : readAmountPhrase(text, head, 0);
   const amountAtStart = amount !== null;
   if (amount) {
@@ -363,15 +371,45 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
   // a unit ("2 (6-ounce) salmon fillets"); otherwise ("3 4 cups flour", "2 (8 oz) steaks") nobody can say
   // what it measures: noted, `quantity_unassigned`, and a bare "3 4 cups" leaves no amount at all.
   const bareCount = amountAtStart && amt.unitSpan === null;
-  if (amt.packageProvisional && slots.packageSize !== null && !(unit && unit.dimension === "count" && unit.canonical !== "each")) {
+  if (amt.packageProvisional && slots.packageSize !== null && !(unit !== null && PACKAGE_UNITS.has(unit.canonical))) {
     const [ps, pe] = slots.packageSpan ?? [0, 0];
-    if (pe > ps) fx.notes.push({ s: ps, text: text.slice(ps, pe) });
-    slots.packageSize = null;
-    slots.packageSpan = null;
+    const size = slots.packageSize;
     const at = fx.reasons.indexOf("package_size_stated");
     if (at >= 0) fx.reasons.splice(at, 1);
-    fx.unassigned++;
-    if (!amt.packageProvisional.marked) slots.quantity = null;
+    slots.packageSize = null;
+    slots.packageSpan = null;
+    // (an unmarked size before a counted unit is per piece too: "6 150 g salmon fillets")
+    const countedUnit = unit !== null && unit.dimension === "count" && unit.canonical !== "each";
+    if ((amt.packageProvisional.marked || countedUnit) && amt.packageProvisional.approx !== true) {
+      // (semantic-v2, §12.3) a PER-PIECE WEIGHT of what is counted ("4 (6-oz) salmon fillets", "2 (6 oz) chicken
+      // breasts"): a note, never a package size; for one item it restates the amount ("a 3-pound whole chicken")
+      const one = slots.quantity?.kind === "exact" && slots.quantity.numerator === slots.quantity.denominator;
+      if (one) {
+        slots.equivalents.push({ quantity: size.quantity, unit: size.unit });
+        push(fx.reasons, "equivalent_quantity_stated");
+      } else if (pe > ps) fx.notes.push({ s: ps, text: text.slice(ps, pe) });
+    } else {
+      // "3 4 cups flour": nobody can say what the second number measures; "2 (about 1 lb) potatoes": each, or in all?
+      if (pe > ps) fx.notes.push({ s: ps, text: text.slice(ps, pe) });
+      fx.unassigned++;
+      if (!amt.packageProvisional.marked) slots.quantity = null;
+    }
+  }
+
+  // (semantic-v2, §12.3) a size placed before the counted unit was known ("4 salmon fillets (6 oz each)", "2 chicken
+  // breasts (6 oz each)"): only packaging takes a package size; of anything else it is a per-piece weight
+  if (slots.packageSize !== null && !amt.packageProvisional && !(unit !== null && PACKAGE_UNITS.has(unit.canonical))) {
+    const size = slots.packageSize;
+    const [ps, pe] = slots.packageSpan ?? [0, 0];
+    const at = fx.reasons.indexOf("package_size_stated");
+    if (at >= 0) fx.reasons.splice(at, 1);
+    slots.packageSize = null;
+    slots.packageSpan = null;
+    const one = slots.quantity?.kind === "exact" && slots.quantity.numerator === slots.quantity.denominator;
+    if (one && !slots.equivalents.some((x) => x.unit.canonical === size.unit.canonical)) {
+      slots.equivalents.push({ quantity: size.quantity, unit: size.unit });
+      push(fx.reasons, "equivalent_quantity_stated");
+    } else if (pe > ps) fx.notes.push({ s: ps, text: text.slice(ps, pe) });
   }
 
   // A count before a food that does not read as several ("Five spice powder", "Two egg", "2 tomato"): the
@@ -382,6 +420,14 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
   // (read again only when a plain word follows the number: "10 of rice", "12 (1 stick) can …" are other shapes)
   const r0 = region[0];
   const plainNext = r0 !== undefined && r0.kind === "word" && r0.lower !== "of" && readUnit(text, region, 0) === null && !SIZE_WORDS.has(r0.lower);
+  // (semantic-v2, CONTRACT §12.9) a count of two or more followed by a singular component noun and a singular or mass
+  // head names the product ("Five spice powder", "Three cheese blend", "5 spice powder"): the number is part of the name
+  // and the line has no amount unless another one is written ("Three cheese blend, 1 cup"); a plural head is a count
+  // ("Twelve cherry tomatoes")
+  if (!opts.leadIsName && bareCount && amt.quantitySpan !== null && slots.packageSize === null && amt.equivalents.length === 0) {
+    const at = head.findIndex((t) => t.s === amt.quantitySpan![0]);
+    if (at >= 0 && at + 1 < head.length && numberInProductName(head, at) === 1 && !isNumberish(head[at + 1])) return read(input, { leadIsName: true, productNumber: true });
+  }
   if (!opts.leadIsName && bareCount && slots.packageSize === null && slots.quantity?.kind === "exact" && nr.options === null && nr.name !== null) {
     const value = fromExactQuantity(slots.quantity)!;
     if (cmp(value, rational(BigInt(1), BigInt(1))) > 0 && !namesSeveral(nr.name, nr.trailingUnit, text)) {
@@ -409,10 +455,15 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
 
   // "plus …" without a comma, and remarks after commas.
   let quantity = slots.quantity;
+  // "plus" with an amount of ANOTHER food ("2 eggs + 1 yolk", "3 eggs plus 1 egg yolk"): two foods, no single name
+  let severalFoods = false;
   const addPlus = (remark: Tok[]) => {
     const body = isWord(remark[0], "plus") || isSym(remark[0], "+") ? remark.slice(1) : remark;
     const sa = readStatedAmount(text, body, 0);
-    if (sa && sa.next === body.length && quantity?.kind === "exact" && unit && unit.dimension === sa.unit.dimension && (unit.dimension === "mass" || unit.dimension === "volume")) {
+    // (semantic-v2, §12.11) the same food after "plus", with only a purpose after it ("plus 2 tablespoons for
+    // dusting", "plus 1/2 tsp for the eggs"), is summed; the purpose is the note
+    const purpose = sa !== null && sa.next < body.length && isWord(body[sa.next], "for", "to") && !body.slice(sa.next).some((t) => isNumberish(t) || isGroup(t));
+    if (sa && (sa.next === body.length || purpose) && quantity?.kind === "exact" && unit && unit.dimension === sa.unit.dimension && (unit.dimension === "mass" || unit.dimension === "volume")) {
       const q = fromExactQuantity(quantity)!;
       const sum = sumInSmallest([{ value: q, unit }, { value: sa.value, unit: sa.unit }]);
       const exact = sum ? toExactQuantity(sum.value) : null;
@@ -423,12 +474,22 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
           unitSpan = sa.unitSpan;
         }
         push(fx.reasons, "compound_quantity_summed");
+        if (purpose) {
+          const pfx = emptyEffects();
+          classifyPiece(text, body.slice(sa.next), pfx);
+          mergeEffects(fx, pfx);
+        }
         return;
       }
     }
     const pfx = emptyEffects();
     classifyPiece(text, remark, pfx);
     if (hasNumberTok(body)) pfx.unassigned++;
+    if (amountStartsAt(text, body, 0)) {
+      const other = readAmountPhrase(text, body, 0);
+      const rest = other === null ? [] : body.slice(isWord(body[other.next], "of") ? other.next + 1 : other.next);
+      if (rest.length > 0 && namesAFood(rest) && !isWord(rest[0], "for", "to", "more", "extra")) severalFoods = true;
+    }
     mergeEffects(fx, pfx);
   };
   if (nr.plusRemark) addPlus(nr.plusRemark);
@@ -469,8 +530,11 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
       m++;
     }
     const andLast = m < tails.length && (isWord(tails[m][0], "and") || isSym(tails[m][0], "&")) && plainFoodItem(stripPhrase(tails[m].slice(1)));
-    if (nr.name !== null && listOptions.length === 0 && (foods >= 2 || (foods >= 1 && andLast))) {
+    // (semantic-v2) "1 cup carrots, celery and onion": a last item "celery and onion" names two foods
+    const andPair = foods === 1 && m === usedTail + 2 && andJoinsFoods(tails[m - 1]);
+    if (nr.name !== null && listOptions.length === 0 && (foods >= 2 || (foods >= 1 && andLast) || andPair)) {
       push(fx.reasons, "unclassified");
+      severalFoods = true; // §12.7 (g): different foods sharing one amount — no name is privileged
     }
   }
   tails.forEach((seg, idx) => {
@@ -582,7 +646,13 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
   if (additional.some((o) => o.hasAmount)) fx.unassigned++;
   let alternatives = uniqueOptions([...base, ...extra]);
   if (alternatives.length >= 2 && (choice || extra.length > 0)) name = null;
-  else {
+  else if ((severalFoods || nr.distributive) && name !== null) {
+    // (semantic-v2, §12.7 g, §12.12) several foods share the line's amount: no single name; the foods stay in the note
+    alternatives = [];
+    fx.notes.push({ s: nr.nameSpan?.[0] ?? 0, text: name });
+    name = null;
+    push(fx.reasons, "unclassified");
+  } else {
     alternatives = [];
     if (!listTakesAdditional) for (const o of additional) if (o.text) fx.notes.push({ s: o.s, text: `or ${o.text}` });
   }

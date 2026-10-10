@@ -209,7 +209,11 @@ describe("safety properties", () => {
         if (r.unit && r.unit.source !== "" && name.includes(" ") && first === r.unit.source.toLowerCase().replace(/\.$/, "") && r.unit.dimension !== "count") bad.push(`${show(line)}: name starts with the unit "${name}"`);
         if (LEADING.test(name)) bad.push(`${show(line)}: name starts with a conjunction "${name}"`);
         if (/^(?:a|an)\s/i.test(name)) bad.push(`${show(line)}: name starts with an article "${name}"`);
-        if (CARDINAL.test(name) && !/^\d+(?:\.\d+)?%/.test(name) && !/^\d+\/\d+ /.test(name) && !(r.status === "needs_review" && r.reasons.includes("unclassified")) && !/^\w*\d\w*[a-z]/i.test(name)) bad.push(`${show(line)}: name starts with a number "${name}"`);
+        // (semantic-v2, CONTRACT §12.9: numbers that name the food — "5-spice", "00 flour", "2 percent milk", "7 grain
+        // cereal", "Five spice powder" — written here independently of the engine's lexicon)
+        const productNumber = /^\d+-\p{L}/u.test(name) || /^0\d+ /.test(name) || /^\d+ percent\b/i.test(name)
+          || /^(?:\d+|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)[ -](?:spice|grain|cheese|bean|berry|seed|nut|herb|fruit|vegetable|pepper|mushroom|layer|flavou?r)\b/i.test(name);
+        if (CARDINAL.test(name) && !productNumber && !/^\d+(?:\.\d+)?%/.test(name) && !/^\d+\/\d+ /.test(name) && !(r.status === "needs_review" && r.reasons.includes("unclassified")) && !/^\w*\d\w*[a-z]/i.test(name)) bad.push(`${show(line)}: name starts with a number "${name}"`);
         // at every status, also when no amount was read: never "<number> <unit> …" ("hundred grams flour",
         // "quarter cup sugar"), never a weight or volume word first ("cups flour")
         const ws = name.split(" ").map((w) => w.toLowerCase().replace(/\.$/, ""));

@@ -19,8 +19,6 @@ describe("package sizes: quantity = count, unit = container, packageSize = the s
     ["1 (12 fl oz) bottle beer", "1", "bottle", "12 fl_oz", "beer"],
     ["2 x 400g tins chopped tomatoes", "2", "tin", "400 g", "chopped tomatoes"],
     ["A 15-ounce can chickpeas", "1", "can", "15 oz", "chickpeas"],
-    ["2 (6-ounce) salmon fillets", "2", "fillet", "6 oz", "salmon"],
-    ["4 salmon fillets (6 oz each)", "4", "fillet", "6 oz", "salmon"],
   ])("%s", (line, q, unit, pkg, name) => {
     const r = read(line);
     expect(core(r)).toEqual({ status: "ready", name, quantity: q, unit });
@@ -123,8 +121,24 @@ describe("restatements: the first amount, the other in equivalents", () => {
     expect(r.reasons).toContain("equivalent_quantity_stated");
   });
 
+  // semantic-v2 (CONTRACT §12.3): the weight of each fillet is a per-piece weight — a note, never a package size
+  // (semantic-v1 read both lines with packageSize 6 oz)
+  it.each([["2 (6-ounce) salmon fillets", "2", "6-ounce"], ["4 salmon fillets (6 oz each)", "4", "6 oz each"]])("%s → per-piece weight in the note", (line, q, note) => {
+    const r = read(line);
+    expect(core(r)).toEqual({ status: "ready", name: "salmon", quantity: q, unit: "fillet" });
+    expect(r.packageSize).toBeNull();
+    expect(r.note).toBe(note);
+  });
+
+  // semantic-v2: "1 tsp salt, plus 1/2 tsp for the eggs" is the same food after "plus" — summed, the purpose in the note
+  // (CONTRACT §12.11); "1 cup 00 flour" names a flour grade (§12.9). semantic-v1 sent both to review.
+  it("a same-food amount after plus is summed; a grade number is part of the name", () => {
+    expect(read("1 tsp salt, plus 1/2 tsp for the eggs")).toMatchObject({ status: "ready", quantity: { numerator: "3", denominator: "2" }, unit: { canonical: "tsp" }, note: "for the eggs" });
+    expect(read("1 cup 00 flour")).toMatchObject({ status: "ready", name: "00 flour" });
+  });
+
   it("a second amount that is neither a sum nor a restatement needs review", () => {
-    for (const line of ["1 cup (2 cups) flour", "1 cup 30 ml milk", "1 cup flour, 2 tbsp sugar", "1 tsp salt, plus 1/2 tsp for the eggs", "1 cup 00 flour"]) {
+    for (const line of ["1 cup (2 cups) flour", "1 cup 30 ml milk", "1 cup flour, 2 tbsp sugar"]) {
       const r = read(line);
       expect(r.status, line).toBe("needs_review");
       expect(r.reasons, line).toContain("quantity_unassigned");

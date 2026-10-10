@@ -306,6 +306,31 @@ function withDozen(toks: readonly Tok[], r: NumberRead): NumberRead {
   return { ...r, value: mul(r.value, TWELVE), word: true, decimal: false, e: toks[d].e, next: d + 1 };
 }
 
+/**
+ * FRACTION-UNIT COMPOUND (semantic-v2, CONTRACT §12.1): one hyphenated word made of a fraction phrase and a unit word —
+ * "half-cup", "quarter-pound", "half-gallon", "quarter-teaspoon", "three-quarter-cup", "two-thirds-cup", "one-half-cup".
+ * Returns the fraction's exact value, where the unit part starts inside the word, and whether the unit is written in
+ * the plural ("half-cups"); null for any other word ("half-and-half", "five-spice", "half-dozen").
+ */
+export function fractionUnitWord(t: Tok | undefined): { value: Rational; unitOffset: number; unitWord: string; plural: boolean } | null {
+  if (!isWord(t)) return null;
+  const pieces = t.text.split(/[-‐‑]/);
+  if (pieces.length < 2 || pieces.some((p) => p.length === 0)) return null;
+  const unitWord = pieces[pieces.length - 1];
+  const code = unitOfWord(unitWord);
+  if (code === null || code === "each" || UNIT_REGISTRY[code].dimension === "count") return null;
+  const ws: Part[] = pieces.slice(0, -1).map((p) => ({ w: p.toLowerCase(), ti: 0 }));
+  let value: Rational;
+  if (ws.length === 1 && (ws[0].w === "half" || ws[0].w === "third" || ws[0].w === "quarter")) value = rational(BIG(1), BIG(FRACTION_WORDS[ws[0].w]));
+  else {
+    const f = fractionPhraseAt(ws, 0);
+    if (f === null || f[1] !== ws.length || f[0].n >= f[0].d) return null;
+    value = f[0];
+  }
+  const lowerUnit = unitWord.toLowerCase();
+  return { value, unitOffset: t.text.length - unitWord.length, unitWord, plural: lowerUnit.length > 2 && /s$/.test(lowerUnit) && lowerUnit !== "lbs" ? true : lowerUnit === "lbs" };
+}
+
 // --- The reader -------------------------------------------------------------------------------------
 
 /** Reads one number (numerals or number words) at token `i`, or returns null when none starts there. */

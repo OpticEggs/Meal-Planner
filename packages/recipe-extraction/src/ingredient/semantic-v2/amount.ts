@@ -18,9 +18,9 @@ import { add, cmp, div, fromDecimalString, fromExactQuantity, mul, rational, toE
 import { adjacent, isGroup, isSym, isWord, type GroupTok, type Tok } from "./lexer";
 import {
   APPROX_SYMBOLS, APPROX_WORDS, BOUND_PHRASES, CARDINALS, CONTAINER_UNITS, FORM_WORDS, FRACTION_WORDS, FUNCTION_WORDS, LENGTH_MEASURED_FOODS, LENGTH_WORDS, MEASURE_ADJECTIVES,
-  RANGE_DASHES, REMARK_WORDS, SIZE_WORDS, TIME_WORDS, UNKNOWN_MEASURES,
+  RANGE_DASHES, REMARK_WORDS, SIZE_WORDS, TIME_WORDS, UNKNOWN_MEASURES, unitOfWord,
 } from "./lexicon";
-import { andFraction, readNumber, type NumberRead } from "./quantity";
+import { andFraction, fractionUnitWord, readNumber, type NumberRead } from "./quantity";
 import { emptyEffects, type AmountReading, type Effects } from "./types";
 import { readUnit, type UnitRead } from "./unit";
 import { unitV1 } from "../../units";
@@ -224,6 +224,17 @@ export function placeSecondary(text: string, slots: AmountSlots, sec: Secondary)
   }
   const main = slots.unit;
   const counted = main === null || main.dimension === "count";
+  // (semantic-v2, §12.3) only packaging units — and a bare count, decided once the line is read — take a package
+  // size; the weight of one fillet, slice or piece is a per-piece weight: a note, or with one item a restatement
+  const packageable = main === null || main.canonical === "each" || PACKAGE_UNITS.has(main.canonical);
+  if (isMassOrVolume(sa.unit) && counted && !packageable && !sa.total && (sec.position === "between" || sa.each)) {
+    const one = slots.quantity?.kind === "exact" && slots.quantity.numerator === slots.quantity.denominator;
+    if (one && !slots.equivalents.some((x) => x.unit.canonical === sa.unit.canonical)) {
+      slots.equivalents.push({ quantity: q, unit: sa.unit });
+      if (!fx.reasons.includes("equivalent_quantity_stated")) fx.reasons.push("equivalent_quantity_stated");
+    } else fx.notes.push({ s: sa.s, text: text.slice(sa.s, sa.e) });
+    return;
+  }
   const asPackage = isMassOrVolume(sa.unit) && counted && !sa.total && (sec.position === "between" || sa.each || (main !== null && CONTAINER_UNITS.has(main.canonical)));
   if (asPackage) {
     if (slots.packageSize === null) {
@@ -303,6 +314,8 @@ interface Part {
   value: Rational;
   decimal: boolean;
   unit: UnitRead;
+  /** Subtracted ("1 cup minus 2 tbsp"). */
+  minus?: boolean;
 }
 
 /** A between-position size and how it was written: in brackets, hyphenated ("15-oz") or after "x" (marked), or bare ("3 4 cups"). */
@@ -354,8 +367,17 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
     const fraction = n !== null && n.ok && cmp(n.value, rational(BigInt(1))) < 0;
     if (sa !== null && !hyphenated && !container && fraction) j++;
   }
+  // "between 2 and 3 cups": a range (CONTRACT §7.2)
+  let betweenRange = false;
+  if (isWord(toks[j], "between") && readNumber(toks, j + 1)) {
+    betweenRange = true;
+    j++;
+  }
   const article = isWord(toks[j], "a", "an");
-  const n1 = readNumber(toks, j);
+  // FRACTION-UNIT COMPOUND (§12.1): "a half-cup milk", "1 half-cup butter", "2 half-cups milk", "a quarter-pound beef"
+  const compound = fractionUnitAt(text, toks, j);
+  if (numberNamesProductAt(toks, j)) return null; // "7-Up", "5-spice powder", "93/7 ground turkey", "10X sugar": part of the name
+  const n1 = compound !== null ? compound.n1 : readNumber(toks, j);
   if (!n1) return null;
   if (isTemperatureOrTime(toks, n1.next)) return null; // "350°F", "10 minutes" are not amounts
 
@@ -366,7 +388,9 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   if (n1.ok && isSym(toks[k], ".") && adjacent(toks[k - 1], toks[k]) && !adjacent(toks[k], toks[k + 1])) k++;
   let max: NumberRead | null = null;
   if (!n1.ok) fx.reasons.push(n1.reason);
-  if (isRangeSep(toks[k])) {
+  if (compound !== null) {
+    // the compound is the amount and its unit; nothing sits between them
+  } else if (isRangeSep(toks[k]) || (betweenRange && isWord(toks[k], "and"))) {
     const n2 = rangeEnd(toks, k + 1);
     if (n2) {
       max = n2;
@@ -386,8 +410,23 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   let otherSystem = false;
 
   // Package sizes, size descriptors and remarks written before the unit.
-  for (let guard = 0; guard < 6; guard++) {
+  for (let guard = 0; guard < 6 && compound === null; guard++) {
     const t = toks[k];
+    // "2 quarter-pound beef patties": a fraction-unit after a count of two or more sizes what is counted (§12.1)
+    const fw = fractionUnitWord(t);
+    if (fw !== null && isWord(t) && !fw.plural && n1.ok && max === null && between.length === 0) {
+      const after = readUnit(text, toks, k + 1);
+      if (after !== null && CONTAINER_UNITS.has(after.unit.canonical)) {
+        // "1 half-gallon carton milk": the size of the container
+        const sa: StatedAmount = { value: fw.value, decimal: false, unit: unitV1(unitOfWord(fw.unitWord)!, fw.unitWord), unitSpan: [t.s + fw.unitOffset, t.e], s: t.s, e: t.e, next: k + 1, each: false, total: false, approx: false };
+        between.push({ sec: { sa, position: "between" }, marked: true });
+        k++;
+        continue;
+      }
+      fx.notes.push({ s: t.s, text: t.text });
+      k++;
+      continue;
+    }
     // "1 large (28 oz) can", "1 lg. (28 oz) can": a size word before a bracketed package size describes the container
     if (isWord(t) && SIZE_WORDS.has(t.lower) && n1.ok && max === null && between.length === 0) {
       let c = k + 1;
@@ -471,14 +510,26 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
       if (dims > k) return sizeOnly(text, toks, fx, n1.s, dims, approximate);
     }
     if ((isWord(t, "x") || isSym(t, "×")) && n1.ok && max === null) {
-      // "9x13 inch pan", "9 x 13\" dish", "13x9 pan": dimensions are a size, never an amount
+      // "9x13 inch pan", "9 x 13\" dish", "13x9 pan": dimensions are a size, never an amount — but before a plural food
+      // ("2 x 13-inch pizza bases") the first number counts the items and the length is a note (§12.2 ii)
       const dims = dimensionsEnd(text, toks, k);
+      if (dims > k && between.length === 0 && pluralFoodAfter(toks, dims) && !isWord(toks[dims - 1], "x")) {
+        fx.notes.push({ s: toks[k + 1].s, text: text.slice(toks[k + 1].s, toks[dims - 1].e) });
+        k = dims;
+        break;
+      }
       if (dims > k && between.length === 0) return sizeOnly(text, toks, fx, n1.s, dims, approximate);
       const sa = readStatedAmount(text, toks, k + 1);
       if (sa && isMassOrVolume(sa.unit)) {
         between.push({ sec: { sa, position: "between" }, marked: true });
         k = sa.next;
         continue;
+      }
+      // MULTIPLIER RULE (§12.2): "1x cup milk", "2x cans chickpeas", "1 x can chickpeas", "3x eggs" — a count before
+      // "x" and a unit, container or food is the count; the "x" is consumed and never stays in the name
+      if (between.length === 0 && multiplierAt(toks, k)) {
+        k++;
+        break;
       }
       break;
     }
@@ -527,7 +578,8 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   // ("1 UK pint": a measurement-system word before the unit is read with it)
   if (a > k && !readUnit(text, toks, a) && toks.slice(k, a).some((t) => isWord(t) && SYSTEM_WORDS.has(t.lower))) a = k;
   if (toks.slice(k, a).some((t) => isWord(t) && OTHER_SYSTEM_WORDS.has(t.lower))) otherSystem = true;
-  let unitRead = readUnit(text, toks, a);
+  let unitRead = compound !== null ? compound.unit : readUnit(text, toks, a);
+  if (compound !== null) a = k;
   if (!unitRead && a === k && isWord(toks[k], "of") && isWord(toks[k + 1], "a", "an") && n1.ok) {
     const u = readUnit(text, toks, k + 2);
     if (u) {
@@ -636,8 +688,14 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
       for (let guard = 0; guard < 4; guard++) {
         let c = k;
         let connector = false;
+        let minus = false;
         if (isWord(toks[c], "plus", "and") || isSym(toks[c], "+", "&")) {
           connector = true;
+          c++;
+        } else if (isWord(toks[c], "minus", "less") && parts.length === 1) {
+          // "1 cup minus 2 tbsp", "1 cup less 2 tbsp" → 14 tbsp (§12.12)
+          connector = true;
+          minus = true;
           c++;
         }
         const t = toks[c];
@@ -646,9 +704,12 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
         if (!n2 || !n2.ok) break;
         const u2 = readUnit(text, toks, n2.next);
         const last = parts[parts.length - 1].unit.unit;
-        if (!u2 || u2.unit.dimension !== unitRead.unit.dimension || u2.unit.canonical === last.canonical) break;
+        if (!u2 || u2.unit.dimension !== unitRead.unit.dimension) break;
+        // the same unit again is summed only after an explicit "plus"/"+" ("2 tsp + ½ tsp", "1 cup plus 1/3 cup")
+        if (u2.unit.canonical === last.canonical && !connector) break;
         if (!connector && cmp(base(u2.unit), base(last)) >= 0) break;
-        parts.push({ value: n2.value, decimal: n2.decimal, unit: u2 });
+        if (minus && cmp(base(u2.unit), base(last)) >= 0) break;
+        parts.push({ value: n2.value, decimal: n2.decimal, unit: u2, minus });
         qEnd = u2.e;
         k = u2.next;
       }
@@ -672,9 +733,9 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
       }
     }
   } else if (parts.length > 1) {
-    const sum = sumInSmallest(parts.map((p) => ({ value: p.value, unit: p.unit.unit })));
+    const sum = sumInSmallest(parts.map((p) => ({ value: p.value, unit: p.unit.unit })), parts.map((p) => p.minus === true));
     const smallest = parts.find((p) => sum !== null && p.unit.unit.canonical === sum.unit.canonical)!;
-    const q = sum ? toExactQuantity(sum.value, parts.every((p) => p.decimal) ? "decimal" : "fraction") : null;
+    const q = sum && sum.value.n > BigInt(0) ? toExactQuantity(sum.value, parts.every((p) => p.decimal) ? "decimal" : "fraction") : null;
     if (q === null) {
       // Not representable within the bounds: keep the first amount, report the rest.
       quantity = v1 !== null ? exactOf(v1, n1.ok && n1.decimal) : null;
@@ -709,13 +770,13 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   // Sizes written between the count and the unit: a container's contents only beside a counted unit
   // (CONTRACT §7.4: "2 (15 oz) cans"). With no unit yet the engine decides once the whole line is read
   // ("2 (6-ounce) salmon fillets"); beside a weight or volume ("1 1 cup milk") it is a second amount.
-  let packageProvisional: { marked: boolean } | null = null;
+  let packageProvisional: { marked: boolean; approx?: boolean } | null = null;
   for (const { sec, marked } of between) {
     if (sec.sa.unit.dimension === "imprecise" || (unitRead && unitRead.unit.dimension === "count" && unitRead.unit.canonical !== "each")) {
       placeSecondary(text, slots, sec);
     } else if (!unitRead && isMassOrVolume(sec.sa.unit)) {
       placeSecondary(text, slots, sec);
-      if (slots.packageSize !== null) packageProvisional = { marked };
+      if (slots.packageSize !== null) packageProvisional = { marked, approx: sec.sa.approx };
     } else {
       fx.notes.push({ s: sec.sa.s, text: text.slice(sec.sa.s, sec.sa.e) });
       fx.unassigned++;
@@ -739,6 +800,11 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
         }
         const list = groupAmounts(text, t);
         if (!list) break;
+        // "3 cups (5.3 oz each) Greek yogurt": a per-item size after "cups" makes the cups containers (§12.5)
+        if (unitRead.unit.canonical === "cup" && list.length === 1 && list[0].each && isMassOrVolume(list[0].unit) && slots.packageSize === null && parts.length <= 1) {
+          unit = unitV1("container", unitRead.unit.source);
+          slots.unit = unit;
+        }
         for (const sa of list) placeSecondary(text, slots, { sa, position: "after" });
         k++;
         continue;
@@ -801,6 +867,83 @@ function dimensionsEnd(text: string, toks: readonly Tok[], k: number): number {
   return k;
 }
 
+/** Units that take a package size: the registry's packaging units plus the sold-by-weight block, loaf and ball (§12.3). */
+export const PACKAGE_UNITS: ReadonlySet<string> = new Set([...CONTAINER_UNITS, "block", "loaf", "ball"]);
+
+/**
+ * FRACTION-UNIT COMPOUND at `j` (§12.1): [a | an | one | 1 | N] "half-cup" (one hyphenated word, see
+ * `fractionUnitWord`), or "1 half cup" written apart. The article or "1" never multiplies; a count of two or more
+ * multiplies only a plural compound ("2 half-cups milk" → 1 cup). Before a container, or after a count of two or more
+ * with a singular compound, the compound is a size (read by the between loop instead). Returns the amount as a number
+ * read and the unit read, or null.
+ */
+function fractionUnitAt(text: string, toks: readonly Tok[], j: number): { n1: NumberRead & { ok: true }; unit: UnitRead } | null {
+  const t0 = toks[j];
+  if (t0 === undefined) return null;
+  const leadCount = t0.kind === "num" && t0.form === "int" && !t0.script && /^[1-9]\d?$/.test(t0.text) ? BigInt(t0.text) : null;
+  const lead = isWord(t0, "a", "an", "one") || leadCount !== null;
+  // "1 half cup milk", "one quarter cup": a fraction word written apart, then a weight or volume unit
+  // "2 half cups milk" (a count before a plural unit multiplies, §12.1)
+  if (leadCount !== null && isWord(toks[j + 1], "half", "quarter", "third")) {
+    const u = readUnit(text, toks, j + 2);
+    const pluralUnit = u !== null && /s\.?$/i.test(text.slice(u.s, u.e));
+    if (u !== null && isMassOrVolume(u.unit) && (leadCount === BigInt(1) || pluralUnit)) {
+      const value = mul(rational(BigInt(1), BigInt(FRACTION_WORDS[(toks[j + 1] as { lower: string }).lower])), rational(leadCount));
+      return { n1: { ok: true, value, decimal: false, word: true, s: t0.s, e: toks[j + 1].e, next: j + 2 }, unit: u };
+    }
+  }
+  const c = lead ? j + 1 : j;
+  const t = toks[c];
+  const fw = fractionUnitWord(t);
+  if (fw === null || t === undefined) return null;
+  if (leadCount !== null && leadCount > BigInt(1) && !fw.plural) return null;
+  const after = readUnit(text, toks, c + 1);
+  if (after !== null && PACKAGE_UNITS.has(after.unit.canonical)) return null;
+  const value = leadCount !== null && leadCount > BigInt(1) ? mul(fw.value, rational(leadCount)) : fw.value;
+  const unitS = t.s + fw.unitOffset;
+  const unit: UnitRead = { unit: unitV1(unitOfWord(fw.unitWord)!, fw.unitWord), s: unitS, e: t.e, next: c + 1 };
+  return { n1: { ok: true, value, decimal: false, word: leadCount === null, s: lead ? t0.s : t.s, e: unitS - 1, next: c }, unit };
+}
+
+/**
+ * NUMBERS THAT NAME THE FOOD at `j` (§12.9): a number joined by a hyphen to a word that is not a unit ("7-Up",
+ * "5-spice powder", "7-grain bread"), a lean ratio ("93/7 ground turkey", "80/20 beef": two whole numbers summing to
+ * 100, the first the larger), or a sugar grade ("10X sugar", which is never a multiplier, §12.2 i). Such a number
+ * starts no amount phrase.
+ */
+export function numberNamesProductAt(toks: readonly Tok[], j: number): boolean {
+  const t = toks[j];
+  if (t?.kind !== "num" || t.form !== "int" || t.script) return false;
+  const n1 = toks[j + 1];
+  const n2 = toks[j + 2];
+  if (hyphen(n1) && adjacent(t, n1) && isWord(n2) && adjacent(n1, n2)) {
+    const w = n2.lower;
+    return unitOfWord(n2.text) === null && !LENGTH_WORDS.has(w) && !Object.prototype.hasOwnProperty.call(CARDINALS, w) && w !== "dozen" && !TIME_WORDS.has(w) && !/^(?:inch|in|ounce|pound)/.test(w);
+  }
+  if (isSym(n1, "/") && adjacent(t, n1) && n2?.kind === "num" && n2.form === "int" && adjacent(n1, n2) && isWord(toks[j + 3])) {
+    const a = Number(t.text);
+    const b = Number(n2.text);
+    return a + b === 100 && a > b && unitOfWord((toks[j + 3] as { text: string }).text) === null;
+  }
+  if (isWord(n1, "x") && adjacent(t, n1) && (isWord(n2, "sugar", "powdered", "confectioners", "confectioner's", "icing"))) return true;
+  return false;
+}
+
+/** MULTIPLIER RULE (§12.2): "x"/"×" at `k` after a count, followed by a unit, a container or a food word (not a number). */
+export function multiplierAt(toks: readonly Tok[], k: number): boolean {
+  const x = toks[k];
+  const next = toks[k + 1];
+  if (!(isWord(x, "x") || isSym(x, "×")) || !isWord(next) || isWord(next, "x")) return false;
+  return !(isWord(next, "sugar", "powdered", "confectioners", "icing") && adjacent(toks[k - 1], x));
+}
+
+/** The words from `i` to the first comma or bracket end in a plural noun ("pizza bases", "tortillas"). */
+function pluralFoodAfter(toks: readonly Tok[], i: number): boolean {
+  let last: Tok | undefined;
+  for (let c = i; c < toks.length && !isGroup(toks[c]) && !isSym(toks[c], ",", ";"); c++) last = toks[c];
+  return isWord(last) && last.lower.length > 2 && /[^s]s$/.test(last.lower);
+}
+
 /**
  * "1 inch ginger, grated", "2 inch fresh turmeric": the inch (not hyphenated to the number, at `unitAt`) is followed,
  * before any comma or bracket, by a food that is measured by the length cut from it (LENGTH_MEASURED_FOODS); with
@@ -849,10 +992,26 @@ function packageBeforeContainer(text: string, toks: readonly Tok[], k: number): 
     }
     break;
   }
-  const container = readUnit(text, toks, c);
-  if (container === null || container.unit.dimension !== "count" || !CONTAINER_UNITS.has(container.unit.canonical)) return null;
+  let container = readUnit(text, toks, c);
+  if (container === null) return null;
   const written = text.slice(container.s, container.e).toLowerCase().replace(/\.$/, "");
+  // "6 oz cup yogurt": a size right before a singular "cup" makes it a container (§12.5)
+  // (the size is a weight or a metric/fluid volume, never another kitchen measure: "1 cup cup noodles" is food)
+  const sizeUnit = toks[k - 1] !== undefined ? readUnitBefore(text, toks, k) : null;
+  if (container.unit.canonical === "cup" && c === k && written === "cup" && sizeUnit !== null && (sizeUnit.dimension === "mass" || ["ml", "l", "dl", "fl_oz"].includes(sizeUnit.canonical))) {
+    container = { ...container, unit: unitV1("container", text.slice(container.s, container.e)) };
+  }
+  if (container.unit.dimension !== "count" || !PACKAGE_UNITS.has(container.unit.canonical)) return null;
   return { container, plural: /s$/.test(written), restated };
+}
+
+/** The unit word that ends right before token `k` ("oz" in "6 oz cup"), or null. */
+function readUnitBefore(text: string, toks: readonly Tok[], k: number): UnitV1 | null {
+  for (let c = Math.max(0, k - 3); c < k; c++) {
+    const u = readUnit(text, toks, c);
+    if (u !== null && u.next === k) return u.unit;
+  }
+  return null;
 }
 
 /** A size with no amount ("9-inch", "2 cm"): noted; a counted unit right after it is read ("1-inch piece"); no quantity. */
@@ -878,15 +1037,24 @@ function isPlainNoun(w: string): boolean {
   return !SIZE_WORDS.has(w) && !MEASURE_ADJECTIVES.has(w) && !REMARK_WORDS.has(w) && !FUNCTION_WORDS.has(w) && !Object.prototype.hasOwnProperty.call(FORM_WORDS, w) && w !== "each";
 }
 
-/** Exact sum of amounts in related units (same dimension, mass or volume), in the smallest stated unit. */
-export function sumInSmallest(parts: { value: Rational; unit: UnitV1 }[]): { value: Rational; unit: UnitV1 } | null {
+/**
+ * Exact sum of amounts in related units (same dimension, mass or volume), in the smallest stated unit. A part marked
+ * in `minus` is subtracted ("1 cup minus 2 tbsp"); a sum that is not positive gives a zero value (refused by the caller).
+ */
+export function sumInSmallest(parts: { value: Rational; unit: UnitV1 }[], minus: readonly boolean[] = []): { value: Rational; unit: UnitV1 } | null {
   if (parts.length === 0) return null;
   const dim = parts[0].unit.dimension;
   if (parts.some((p) => p.unit.dimension !== dim || UNIT_REGISTRY[p.unit.canonical].base === null)) return null;
   let smallest = parts[0].unit;
   for (const p of parts) if (cmp(base(p.unit), base(smallest)) < 0) smallest = p.unit;
-  let total: Rational = { n: BigInt(0), d: BigInt(1) };
-  for (const p of parts) total = add(total, mul(p.value, div(base(p.unit), base(smallest))));
-  return { value: total, unit: smallest };
+  let plus: Rational = { n: BigInt(0), d: BigInt(1) };
+  let less: Rational = { n: BigInt(0), d: BigInt(1) };
+  parts.forEach((p, k) => {
+    const v = mul(p.value, div(base(p.unit), base(smallest)));
+    if (minus[k]) less = add(less, v);
+    else plus = add(plus, v);
+  });
+  if (cmp(plus, less) <= 0) return { value: { n: BigInt(0), d: BigInt(1) }, unit: smallest };
+  const diff = rational(plus.n * less.d - less.n * plus.d, plus.d * less.d);
+  return { value: diff, unit: smallest };
 }
-

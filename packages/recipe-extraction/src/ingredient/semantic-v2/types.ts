@@ -55,7 +55,7 @@ export interface AmountReading {
    * fillets"): it stands only if the line turns out to count a unit (CONTRACT §7.4). `marked`: written in
    * brackets, hyphenated or after "x" (the count is clear); a bare "3 4 cups" is not.
    */
-  packageProvisional: { marked: boolean } | null;
+  packageProvisional: { marked: boolean; approx?: boolean } | null;
   equivalents: EquivalentV1[];
   approximate: boolean;
   fromWord: boolean;

@@ -25,10 +25,11 @@ describe("a bare count, then an amount with a unit (B2)", () => {
   });
 
   it("a size in brackets after a bare count is a package size only when a counted unit follows", () => {
-    expect(read("3 [6 oz] salmon fillets")).toMatchObject({ status: "ready", unit: { canonical: "fillet" }, packageSize: { unit: { canonical: "oz" } } });
+    // semantic-v2 (CONTRACT §12.3): a per-piece weight is a note, never a package size, and the line is ready
+    // (semantic-v1: "3 [6 oz] salmon fillets" had packageSize 6 oz; "2 (8 oz) chicken breasts" needed review)
+    expect(read("3 [6 oz] salmon fillets")).toMatchObject({ status: "ready", unit: { canonical: "fillet" }, packageSize: null, note: "6 oz" });
     const r = read("2 (8 oz) chicken breasts");
-    expect(r).toMatchObject({ status: "needs_review", quantity: { numerator: "2" }, packageSize: null, name: "chicken breasts", note: "8 oz" });
-    expect(r.reasons).toContain("quantity_unassigned");
+    expect(r).toMatchObject({ status: "ready", quantity: { numerator: "2" }, packageSize: null, name: "chicken breasts", note: "8 oz" });
   });
 
   it.each([["a 1/2 cup sugar", "1/2", "sugar"], ["an 1/4 cup honey", "1/4", "honey"]])("an article before a written amount is not a count: %s", (line, q, name) => {
@@ -57,7 +58,12 @@ describe("words between the amount and its unit (B3)", () => {
     expect(core(read(line))).toEqual({ status: "ready", name, quantity: q, unit });
   });
 
-  it.each(["1 (1/2) cup milk", "2 (1/4) tsp salt", "1 half cup milk", "2 half cups milk", "1 a cup milk", "2 a tbsp oil"])("a second number before the unit: %s → no amount, needs review", (line) => {
+  // semantic-v2 (CONTRACT §12.1): "1 half cup milk" → 1/2 cup and "2 half cups milk" → 1 cup are amounts (semantic-v1: no amount)
+  it.each([["1 half cup milk", "1/2"], ["2 half cups milk", "1"]])("a fraction word before the unit is the amount: %s", (line, q) => {
+    expect(core(read(line))).toEqual({ status: "ready", name: "milk", quantity: q, unit: "cup" });
+  });
+
+  it.each(["1 (1/2) cup milk", "2 (1/4) tsp salt", "1 a cup milk", "2 a tbsp oil"])("a second number before the unit: %s → no amount, needs review", (line) => {
     const r = read(line);
     expect(r).toMatchObject({ status: "needs_review", quantity: null });
     expect(r.name).not.toMatch(/\b(?:cups?|tbsp|tsp|half|a)\b/i);
@@ -87,21 +93,32 @@ describe("'and a half' and 'half-dozen' (B4)", () => {
 });
 
 describe("a number that is part of the food's name (B5)", () => {
+  // semantic-v2 (CONTRACT §12.9): a number counting the product's components names it — the line is read as written
+  // and is ready when it states an amount or "to taste" (semantic-v1 asked a person to confirm, `unclassified`)
   it.each([
     ["Five spice powder, to taste", "Five spice powder", null, "to_taste"], ["Three bean salad, to taste", "Three bean salad", null, "to_taste"],
-    ["Three cheese blend, 1 cup", "Three cheese blend", "1 cup", null], ["Seven Up, 1 can", "Seven Up", "1 can", null],
+    ["Three cheese blend, 1 cup", "Three cheese blend", "1 cup", null],
     ["5 spice powder, 1 tsp", "5 spice powder", "1 tsp", null], ["Twelve grain bread, 2 slices", "Twelve grain bread", "2 slice", null],
     ["Six grain cereal, 1 cup", "Six grain cereal", "1 cup", null],
-  ])("%s → the number stays in the name; the amount after the comma is the amount; a person checks", (line, name, amount, unstated) => {
+  ])("%s → the number stays in the name; the amount after the comma is the amount", (line, name, amount, unstated) => {
     const r = read(line);
-    expect(r).toMatchObject({ status: "needs_review", name, amountUnstated: unstated, equivalents: [] });
+    expect(r).toMatchObject({ status: "ready", name, amountUnstated: unstated, equivalents: [] });
     expect(r.quantity === null ? null : amountText({ quantity: r.quantity as { numerator: string; denominator: string }, unit: r.unit! })).toBe(amount);
+  });
+
+  it("a number before a word that is not a counted component is still checked by a person: Seven Up, 1 can", () => {
+    const r = read("Seven Up, 1 can");
+    expect(r).toMatchObject({ status: "needs_review", name: "Seven Up" });
     expect(r.reasons).toContain("unclassified");
   });
 
+  // semantic-v2 (CONTRACT §12.9, K4): with no other amount the product name is kept whole and the amount is missing
+  it.each(["Five spice powder", "Seven spice blend", "Four cheese blend"])("%s → the full name, no amount", (line) => {
+    expect(read(line)).toMatchObject({ status: "needs_review", name: line, quantity: null, unit: null });
+  });
+
   it.each([
-    ["Five spice powder", "spice powder"], ["Seven spice blend", "spice blend"], ["Four cheese blend", "cheese blend"], ["two tomato", "tomato"],
-    ["Two egg", "egg"], ["Three onion", "onion"],
+    ["two tomato", "tomato"], ["Two egg", "egg"], ["Three onion", "onion"],
   ])("a count before a food that is not counted: %s → the count stays the amount, a person checks (never in the name)", (line, name) => {
     const r = read(line);
     expect(r).toMatchObject({ status: "needs_review", name });
@@ -195,11 +212,13 @@ describe("number formats nobody can read for sure (B9, SF7)", () => {
 });
 
 describe("one amount for several foods (B10)", () => {
-  it.each(["1 tsp salt and pepper each", "1 tbsp each salt and pepper", "1 tbsp each oil and vinegar", "2 tsp sugar and salt each", "1/2 tsp garlic and onion powder each"])("%s → needs review, 'each' not in the name", (line) => {
+  // (semantic-v2, CONTRACT §12.7 g: no name for several foods sharing one amount; semantic-v1 kept them as the name)
+  it.each(["1 tsp salt and pepper each", "1 tbsp each salt and pepper", "1 tbsp each oil and vinegar", "2 tsp sugar and salt each", "1/2 tsp garlic and onion powder each"])("%s → needs review, no name, 'each' not in the note", (line) => {
     const r = read(line);
     expect(r.status).toBe("needs_review");
     expect(r.reasons).toContain("unclassified");
-    expect(r.name).not.toMatch(/\beach\b/);
+    expect(r.name).toBeNull();
+    expect(r.note).not.toMatch(/\beach\b/);
   });
 });
 
@@ -342,8 +361,11 @@ describe("small things (nits)", () => {
     expect(read("($0.50) 2 eggs")).toMatchObject({ status: "ready", name: "eggs", quantity: { numerator: "2" } });
   });
 
-  it("a weight between a count and the food is per item, approximate or not: a person checks", () => {
-    for (const line of ["2 (about 1 lb) potatoes", "2 (about 8 oz) steaks", "2 (8 oz) steaks"]) {
+  // semantic-v2 (CONTRACT §12.3): an exact per-piece weight is a note and the line is ready ("2 (8 oz) steaks"); an
+  // approximate one may be the total, so a person still checks (semantic-v1 sent all three to review)
+  it("a weight between a count and the food: exact → a per-piece note; approximate → a person checks", () => {
+    expect(read("2 (8 oz) steaks")).toMatchObject({ status: "ready", packageSize: null, equivalents: [], note: "8 oz" });
+    for (const line of ["2 (about 1 lb) potatoes", "2 (about 8 oz) steaks"]) {
       const r = read(line);
       expect(r, line).toMatchObject({ status: "needs_review", packageSize: null, equivalents: [] });
       expect(r.reasons, line).toContain("quantity_unassigned");

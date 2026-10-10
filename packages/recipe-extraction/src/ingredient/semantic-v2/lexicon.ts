@@ -289,6 +289,13 @@ export const SIZE_GRADED_NOUNS = setOf("curd curds flake flakes pearl pearls lum
  */
 export const LENGTH_MEASURED_FOODS = setOf("ginger turmeric galangal horseradish lemongrass cinnamon licorice liquorice kombu");
 
+/**
+ * Components a product name counts (CONTRACT §12.9: "five spice powder", "seven grain bread", "three cheese blend",
+ * "three-bean salad", "Chinese 5 spice"): after a count of two or more, one of these singular nouns makes the number
+ * part of the name. Any other singular noun after a count is not read this way ("2 chicken breast" is a count).
+ */
+export const COUNTED_COMPONENT_NOUNS = setOf("spice grain cheese bean berry seed nut herb fruit vegetable veggie pepper mushroom citrus meat layer flavor flavour color colour");
+
 /** Parts of a fruit named before "of" ("Juice of 2 limes", "Zest of ½ orange"): the fruit is counted, the part is the note. */
 export const FRUIT_PART_WORDS = setOf("juice zest rind peel grated finely freshly squeezed");
 

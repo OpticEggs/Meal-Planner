@@ -40,7 +40,7 @@ describe("a count, then a package size and a container (N2)", () => {
     ["2 200 g packs halloumi", "2", "package", "200 g", "halloumi"], ["1 500 g bag pasta", "1", "bag", "500 g", "pasta"],
     ["3 250 ml cartons stock", "3", "carton", "250 ml", "stock"], ["1 750 ml bottle wine", "1", "bottle", "750 ml", "wine"],
     ["4 125 g pots yogurt", "4", "container", "125 g", "yogurt"], ["2 100 g bars chocolate", "2", "block", "100 g", "chocolate"],
-    ["6 150 g salmon fillets", "6", "fillet", "150 g", "salmon"], ["3 400 g tins tomatoes", "3", "tin", "400 g", "tomatoes"],
+    ["3 400 g tins tomatoes", "3", "tin", "400 g", "tomatoes"],
     ["1 330 ml can soda", "1", "can", "330 ml", "soda"], ["2 125 g balls mozzarella", "2", "ball", "125 g", "mozzarella"],
     ["1 900 g tub yogurt", "1", "container", "900 g", "yogurt"], ["2 12 fl oz bottles beer", "2", "bottle", "12 fl_oz", "beer"],
   ])("%s", (line, q, unit, pkg, name) => {
@@ -278,15 +278,23 @@ describe("dotted thousands, full-width separators, joiners between digits (SF-f,
   });
 });
 
-describe("a per-item weight of a whole item is not the amount (SF-g)", () => {
-  it.each([["a 3 lb chicken", "chicken", "3 lb"], ["a 4 lb pork shoulder", "pork shoulder", "4 lb"], ["a 5 lb turkey", "turkey", "5 lb"], ["a 2-pound chicken", "chicken", "2-pound"]])(
-    "%s → one item, the weight noted, a person checks",
-    (line, name, note) => {
+// semantic-v2 (CONTRACT §12.3, per-piece weights): the weight of one whole item restates the amount (`a 3-pound whole
+// chicken` → 1 each, equivalent 3 lb, ready); semantic-v1 noted it and sent the line to review. Of several items it is
+// a note ("6 150 g salmon fillets" → 6 fillet, note 150 g — semantic-v1 made it a package size).
+describe("a per-item weight of a whole item is not the amount (SF-g, §12.3)", () => {
+  it.each([["a 3 lb chicken", "chicken", "3 lb"], ["a 4 lb pork shoulder", "pork shoulder", "4 lb"], ["a 5 lb turkey", "turkey", "5 lb"], ["a 2-pound chicken", "chicken", "2 lb"]])(
+    "%s → one item, the weight restates the amount",
+    (line, name, eq) => {
       const r = read(line);
-      expect(r).toMatchObject({ status: "needs_review", name, note, unit: { canonical: "each" } });
+      expect(r).toMatchObject({ status: "ready", name, unit: { canonical: "each" }, packageSize: null });
       expect(qText(r.quantity)).toBe("1");
+      expect(r.equivalents.map(amountText)).toEqual([eq]);
     },
   );
+
+  it("several items: the per-piece weight is a note, never a package size", () => {
+    expect(read("6 150 g salmon fillets")).toMatchObject({ status: "ready", quantity: { numerator: "6" }, unit: { canonical: "fillet" }, packageSize: null, name: "salmon", note: "150 g" });
+  });
 
   it("an article before a fraction is not a count; before a container it is", () => {
     expect(core(read("a 1/4 cup butter"))).toEqual({ status: "ready", name: "butter", quantity: "1/4", unit: "cup" });
