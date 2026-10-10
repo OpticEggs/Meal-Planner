@@ -90,3 +90,16 @@ reproducible; the repairs go into a copy under a new id.
    accepts a safe abstention: `needs_review` with no quantity, unit, package or options. G2 classes that as C8, which
    is not an acceptance error and carries no S code. A ready reading, or any reading that carries an amount, still
    fails.
+3. **Owner requirements for the recognised-food change (2026-10-10, binding).**
+   - An unknown food identity is `needs_review`, never `unsupported` and never left out only because the food is absent
+     from a vocabulary. The original source line is preserved (`raw`, `normalized`, the text as the name pre-fill).
+   - Recognising the food does not validate the reading: a known food after an unresolved measure word is not `ready`
+     and inherits no invented count.
+   - Legitimate foods that overlap equipment or measure vocabulary are retested (R1's regressions and more). The extra
+     review burden on valid ingredients is reported separately.
+   - The harness's safe C8 abstention is reported separately from correct interpretations and rejections. No
+     accuracy or safety threshold changes, and no valid food is relabelled to fit the vocabulary.
+   - After the repair: the complete required corpus and the mutation checks run on the actual final candidate; then
+     R1's fresh review; then the engine, vocabulary, contract and scorer are frozen before the evaluator writes
+     holdout-v3.
+
