@@ -156,7 +156,8 @@ function flat(toks: readonly Tok[]): Tok[] {
 const NUTRIENT_QUALIFIERS = new Set(["total", "added", "net", "per", "serving", "daily", "value", "amount", "dietary", "saturated", "unsaturated", "trans", "sat", "mono", "poly", "free"]);
 
 export function nutrientLabelEnd(toks: readonly Tok[]): number {
-  let k = 0;
+  // ("of which sugars 5g", "- of which saturates 2g": a UK panel's sub-line)
+  let k = isWord(toks[0], "of") && isWord(toks[1], "which") ? 2 : 0;
   let sawNutrient = false;
   while (k < toks.length) {
     const t = toks[k];
@@ -195,6 +196,8 @@ export function nutrientLabelEnd(toks: readonly Tok[]): number {
     }
     break;
   }
+  // "Calories (kcal): 250", "Fat (g) 10": the unit of the value written in brackets after the label
+  while (sawNutrient && isGroup(toks[k]) && (toks[k] as { children: Tok[] }).children.every((c) => (isWord(c) && FACT_UNITS.has(c.lower)) || isSym(c, "%"))) k++;
   if (!sawNutrient) return 0;
   // the label must end where the value begins: a word that is not nutrient vocabulary means food ("protein powder")
   const after = toks[k];

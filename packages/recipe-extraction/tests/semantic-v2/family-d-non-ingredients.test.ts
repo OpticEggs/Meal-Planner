@@ -208,3 +208,19 @@ describe("instructions that open with a verb that also names food, and page prom
     },
   );
 });
+
+describe("nutrition labels with the unit in brackets, UK sub-lines, nutrient names that are also foods", () => {
+  it.each(["Calories (kcal): 250", "Fat (g): 10", "Protein (g) 20", "Energy (kJ): 1000", "Sodium (mg): 300", "Saturates 2g", "of which sugars 5g", "- of which saturates 2g"])(
+    "%s → unsupported",
+    (line) => {
+      expect(read(line).status).toBe("unsupported");
+    },
+  );
+
+  it.each([["Glucose 5g", "needs_review"], ["Starch 10 g", "needs_review"], ["Water 200g", "ready"], ["Potato starch 10 g", "ready"], ["Liquid glucose 50g", "ready"]])(
+    "a nutrient name that is also a food, weighed alone, goes to a person; a fuller name is food: %s → %s",
+    (line, status) => {
+      expect(read(line).status).toBe(status);
+    },
+  );
+});

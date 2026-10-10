@@ -548,8 +548,14 @@ export const NUTRIENT_WORDS = setOf(
     "vitamin vitamins mineral minerals magnesium zinc phosphorus selenium copper manganese iodine chromium molybdenum chloride fluoride " +
     "folate folic acid niacin riboflavin thiamin thiamine biotin pantothenic choline caffeine omega-3 omega-6 daily value dv amount " +
     // abbreviations and spelling variants of a nutrition panel ("Sat. fat", "Carb", "Prot", "Chol", "Sugar alcohols", "Fibre")
-    "sat satfat sat-fat carb prot chol cholest sod fibres fibers alcohols polyols mono poly monounsat polyunsat unsat kcals cal cals",
+    "sat satfat sat-fat carb prot chol cholest sod fibres fibers alcohols polyols mono poly monounsat polyunsat unsat kcals cal cals " +
+    "saturates monounsaturates polyunsaturates which",
 );
+/**
+ * Words that name a nutrient AND a food bought by weight in UK recipes ("Sugar 10g", "Glucose 50g", "Starch 10 g"): a
+ * line made of one of them and only a mass in g/mg is uncertain (CONTRACT §12.8) — a person checks.
+ */
+export const NUTRIENT_FOOD_WORDS = setOf("sugar sugars salt glucose fructose lactose sucrose maltose dextrose starch alcohol");
 /**
  * Units of a nutrition value ("250 kcal", "10 g", "200 mg", "15%"), abbreviated or spelled out ("20 grams", "300
  * milligrams", "2 micrograms"). Written after a nutrient label only; never read as food units here.

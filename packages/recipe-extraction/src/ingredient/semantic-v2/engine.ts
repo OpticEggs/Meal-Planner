@@ -12,13 +12,18 @@
  * that counts a product's components ("Five spice powder", "Three cheese blend, 1 cup") is read again
  * with the number in the name (§12.9).
  *
- * semantic-v2 (Phase 2B) is semantic-v1 with families A–D repaired under CONTRACT §12. The safeguards
+ * semantic-v2 (Phase 2B) is semantic-v1 with families A–D repaired under CONTRACT §12 and §12.A. The safeguards
  * live in named functions: `nameLeftoverGuard` (name.ts, the general final guard), `multiplierAt` and
  * `fractionUnitAt` (amount.ts), `RESTATEMENT_TOLERANCE` / `sameAmount` / `roundedConversion` (amount.ts),
- * `shareOptions` (alternatives.ts, the option-preservation rule), `postFoodCountUnit` (name.ts, the
- * count-noun rule), `containerCup` and `PACKAGE_UNITS` (amount.ts), `numberInProductName` /
- * `numberNamesProductAt` (product numbers), `remarkSecondAmount` (remarks.ts) and `nonIngredientReason`
- * with its named shapes (classify.ts).
+ * `shareOptions` / `trailingHeadSplit` / `andJoinsTwoFoods` (alternatives.ts, the option-preservation rule and
+ * "and" lists), `postFoodCountUnit` (name.ts, the count-noun rule) and `countWordBeginsName` (amount.ts, §12.A A1),
+ * `containerCup`, `PACKAGE_UNITS` and `canSizeDesignationAt` (amount.ts), `unknownMeasureAt` (amount.ts, §12.14),
+ * `numberInProductName` / `numberNamesProductAt` (product numbers), `remarkSecondAmount` and
+ * `remarkMeasuresAnother` (remarks.ts, §12.11 and §12.A A3) and `nonIngredientReason` with its named shapes
+ * (classify.ts: `equipmentShape` / `agentNounTool`, `nutritionPanel`, `nutrientLabelEnd`, …). Where a family's closed
+ * vocabulary misses but the line has the family's shape, the reading goes to a person (`unclassified`), never to a
+ * confident `ready`: a holder after an unknown word ("2 chicken skewers"), a label with only milligrams, a nutrient
+ * name that is also a UK ingredient weighed in grams.
  *
  * A final check (`guardedParse`) runs the contract validator: a reader that throws, or an output that
  * would not validate (a defect), is replaced by a minimal `needs_review` reading with `unclassified`, so
@@ -31,7 +36,7 @@ import { validateParsedIngredientV1 } from "../../validate";
 import { amountStartsAt, foreignSystemRemark, groupAmount, isPriceGroup, PACKAGE_UNITS, readAmountPhrase, readStatedAmount, placeSecondary, sameAmount, sumInSmallest, type AmountSlots } from "./amount";
 import { equipmentShape, nonIngredientReason, numericLead } from "./classify";
 import { adjacent, isGroup, isNumberish, isSym, isWord, lex, type Tok } from "./lexer";
-import { APPROX_WORDS, BULLETS, CONTAINER_UNITS, FRUIT_PART_WORDS, SERVING_LABEL_WORDS, UNIT_WORDS_IN_FOOD_NAMES, FUNCTION_WORDS, INVARIANT_PLURALS, MEASURE_ADJECTIVES, PREP_ADVERBS, REMARK_WORDS, SIZE_WORDS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
+import { APPROX_WORDS, BULLETS, CONTAINER_UNITS, FRUIT_PART_WORDS, NUTRIENT_FOOD_WORDS, SERVING_LABEL_WORDS, UNIT_WORDS_IN_FOOD_NAMES, FUNCTION_WORDS, INVARIANT_PLURALS, MEASURE_ADJECTIVES, PREP_ADVERBS, REMARK_WORDS, SIZE_WORDS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
 import { numberInProductName, readNameRegion, type NameReading } from "./name";
 import { normalizeLine } from "./normalize";
 import { classifyPiece, remarkMeasuresAnother, remarkRestatement, remarkSecondAmount, splitOr, splitTopLevel, textOf, trimEdges, unstatedAt } from "./remarks";
@@ -449,7 +454,7 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
   if (foreignSystemRemark(head, unit)) push(fx.reasons, "unclassified");
   // (semantic-v2, §12.8) "Sugar 10g", "Salt: 1.2 g": sugar or salt, then only a mass in g/mg — a nutrition-panel
   // line or a UK recipe weight; a person checks
-  if ((nameFromLabel || !amountAtStart) && nr.name !== null && /^(?:sugars?|salt)$/i.test(nr.name.trim()) && unit !== null && (unit.canonical === "g" || unit.canonical === "mg")) push(fx.reasons, "unclassified");
+  if ((nameFromLabel || !amountAtStart) && nr.name !== null && NUTRIENT_FOOD_WORDS.has(nr.name.trim().toLowerCase()) && unit !== null && (unit.canonical === "g" || unit.canonical === "mg")) push(fx.reasons, "unclassified");
   // (semantic-v2, §12.8 unknown default) "Lycopene 2 mg", "Erythritol: 5 mg": a label, then only milligrams — the shape of a
   // nutrition fact whose label is not in the nutrient vocabulary; a person checks
   if ((nameFromLabel || !amountAtStart) && nr.name !== null && unit !== null && unit.canonical === "mg") push(fx.reasons, "unclassified");
