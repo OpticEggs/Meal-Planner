@@ -1,11 +1,25 @@
 import { D, Dec, baseUnit, convert, normalizeUnit } from "../units";
+import { Q, convertQ } from "../exact";
+import type { RecipeIngredient } from "../types";
 import type { Allocation, NutritionFacts, RecipeVersion } from "../types";
 import { normalizeForm } from "../nutrition/form";
 
 export interface IngredientDemand {
   ingredientKey: string;
   unit: string; // base unit (g / ml / each) or a custom unit
+  /** decimal.js view of `exact` (40 digits), for code that only displays it. */
   quantity: Dec;
+  /** The demand as an exact fraction — what purchasing computes with (EQ). */
+  exact: Q;
+  /** False when any contributing row is a legacy approximation (its stored decimal was used). */
+  fromExactRows: boolean;
+}
+
+/** One portion of a row: exact_amount ÷ exact_servings for a row saved with an exact basis, otherwise the
+ *  stored decimal itself (a legacy approximation, used as stored — never "repaired" here). */
+export function perPortionExact(ing: Pick<RecipeIngredient, "quantity" | "exactAmount" | "exactServings">): { value: Q; exact: boolean } {
+  if (ing.exactAmount && ing.exactServings) return { value: Q.of(ing.exactAmount).div(ing.exactServings), exact: true };
+  return { value: Q.of(String(ing.quantity)), exact: false };
 }
 
 /**
@@ -23,22 +37,26 @@ export function eventDemand(recipe: RecipeVersion, allocations: Allocation[]): {
       componentTotals.set(k, (componentTotals.get(k) ?? new D(0)).plus(p));
     }
   }
-  const acc = new Map<string, Map<string, Dec>>(); // ingredient -> baseUnit -> qty
+  // Exact all the way: portions (decimal text) × the row's exact per-portion amount, converted to the base
+  // unit with exact factors, summed as fractions.
+  const acc = new Map<string, Map<string, { q: Q; exact: boolean }>>(); // ingredient -> baseUnit -> qty
   for (const ing of recipe.ingredients) {
     const portions = componentTotals.get(ing.componentKey) ?? new D(0);
     if (portions.lte(0)) continue;
     const bu = baseUnit(ing.unit);
-    const q = convert(new D(ing.quantity).mul(portions), ing.unit, bu);
-    const qty = q ?? new D(ing.quantity).mul(portions);
-    const byUnit = acc.get(ing.ingredientKey) ?? new Map<string, Dec>();
-    byUnit.set(bu, (byUnit.get(bu) ?? new D(0)).plus(qty));
+    const per = perPortionExact(ing);
+    const whole = per.value.mul(Q.of(portions.toFixed()));
+    const qty = convertQ(whole, ing.unit, bu) ?? whole;
+    const byUnit = acc.get(ing.ingredientKey) ?? new Map<string, { q: Q; exact: boolean }>();
+    const was = byUnit.get(bu);
+    byUnit.set(bu, { q: (was?.q ?? Q.zero).plus(qty), exact: (was?.exact ?? true) && per.exact });
     acc.set(ing.ingredientKey, byUnit);
   }
   const lines: IngredientDemand[] = [];
   const unconvertible: { ingredientKey: string; units: string[] }[] = [];
   for (const [key, byUnit] of acc) {
     if (byUnit.size > 1) unconvertible.push({ ingredientKey: key, units: [...byUnit.keys()] });
-    for (const [unit, quantity] of byUnit) lines.push({ ingredientKey: key, unit, quantity });
+    for (const [unit, v] of byUnit) lines.push({ ingredientKey: key, unit, quantity: v.q.toDec(), exact: v.q, fromExactRows: v.exact });
   }
   return { lines, unconvertible };
 }

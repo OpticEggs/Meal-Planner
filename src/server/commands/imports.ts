@@ -233,6 +233,8 @@ export function confirmImportDraftCommand(actor: Actor, operationId: string, p: 
         ingredients: used.map((l) => ({
           componentKey: "main", ingredientName: l.decision.name, quantity: perPortion(l.decision.quantity, d.servings).value,
           unit: l.decision.unit, form: l.decision.form, note: `From: ${l.raw}`.slice(0, 200),
+          // EQ: the exact whole-recipe amount and its servings travel with the row (migration 015).
+          exactAmount: l.decision.quantity, exactServings: d.servings,
         })),
       },
       { provenance: "imported", sourceUrl: source.url, importDraftId: d.id, imageId: d.image_id ?? null, sourceAuthor: d.source_author ?? null, sourceSiteName: d.site_name ?? null },

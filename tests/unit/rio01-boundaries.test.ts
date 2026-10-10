@@ -10,9 +10,10 @@
  *   than 10⁻¹² of the ingredient's unit per planned plate (e.g. < 5.5×10⁻⁹ g for 12 plates measured in lb).
  *   Over this matrix (single recipes; pairs of recipes sharing an ingredient; count, volume and mass units
  *   with conversions; both sides of every boundary) that never happens.
- * - Stored values are NOT exact for non-terminating amounts; exact source provenance would need an additive
- *   schema change (see docs/table/DECISIONS.md D121). Recipes saved before 8e6bd6e (4 places, half-up)
- *   can over- AND under-count; the control below shows the matrix detects that class.
+ * - Stored decimals are NOT exact for non-terminating amounts (D131). Since migration 015 (EQ, D133) a newly saved
+ *   row also keeps its exact amount and serving basis and purchasing uses that fraction; this matrix still pins
+ *   the stored decimal itself, which legacy rows and the previous release rely on. Recipes saved before
+ *   8e6bd6e (4 places, half-up) can over- AND under-count; the control below shows the matrix detects that class.
  */
 import { describe, expect, it } from "vitest";
 import { parseAmount, perServing } from "@/domain/quantity";

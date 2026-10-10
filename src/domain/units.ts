@@ -34,6 +34,11 @@ export function normalizeUnit(u: string): string {
   return alias[s] ?? s;
 }
 
+/** A known unit's dimension and factor to its base unit (exact decimal text); null for other units. */
+export function unitFactor(unit: string): { dim: Dimension; factor: string } | null {
+  return UNITS[normalizeUnit(unit)] ?? null;
+}
+
 export function dimensionOf(unit: string): Dimension | null {
   return UNITS[normalizeUnit(unit)]?.dim ?? null;
 }

@@ -16,6 +16,11 @@ export interface RecipeIngredient {
   unit: string;
   form: string;
   note?: string | null;
+  /** EQ (migration 015): the exact amount this row came from — a reduced fraction "n" or "n/d" for
+   *  `exactServings` portions. Present only on rows saved with an exact basis; absent (legacy) rows are
+   *  the decimal `quantity` alone, a legacy approximation. */
+  exactAmount?: string | null;
+  exactServings?: number | null;
 }
 
 export interface RecipeVersion {

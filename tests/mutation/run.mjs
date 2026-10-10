@@ -48,6 +48,9 @@ const B2122 = "tests/integration/b21-b22.test.ts";
 const MSS = "tests/integration/ms-sources.test.ts";
 const IO = "tests/integration/import-overhaul.test.ts";
 const RIO = "tests/integration/rio-corrections.test.ts";
+const EQ = "tests/integration/exact-quantities.test.ts";
+const QTY = "tests/unit/quantity.test.ts";
+const LA = "tests/integration/legacy-audit.test.ts";
 const PARSE = "tests/unit/recipe-import-ingredient-line.test.ts";
 const SEASON = "tests/unit/seasonings.test.ts";
 const CP = "tests/unit/u2c-content-policy.test.ts";
@@ -305,9 +308,13 @@ MUTATIONS.push(
     // Re-anchored 2026-10-09 (RIO-02): the line now also admits NEUTRAL words; the injected defect is unchanged.
     edits: [["  if (!words.every((w) => QUALIFIERS.has(w) || NEUTRAL.has(w))) return false;", "  if (!words.some((w) => QUALIFIERS.has(w) || NEUTRAL.has(w))) return false;"]] },
   { name: "HE_enough_compared_unrounded", file: "src/domain/groceries/projection.ts", suite: SEASON, pattern: "Have enough", expect: [/3-decimal amount/],
-    edits: [["reviewed.gte(mealQty.toDecimalPlaces(SHOWN_PLACES))", "reviewed.gte(mealQty)"]] },
+    // Re-anchored 2026-10-10 (EQ): demand is an exact fraction now; the injected defect (compare unrounded) is unchanged.
+    edits: [["reviewed.gte(mealQty.toDecimal(SHOWN_PLACES))", "reviewed.gte(mealQty)"]] },
   // Import-overhaul corrections (2026-10-09; RIO-01..02 reconstructed — the owner's package did not arrive).
-  { name: "RIO01_per_serving_rounded_half_up", file: "src/domain/quantity.ts", suite: RIO, pattern: "RIO-01", expect: [/RIO-01/],
+  // Re-targeted 2026-10-10 (EQ): migration 015 now REFUSES a stored per-serving decimal above the exact value, so
+  // through the real commands this defect ends in a database error (a non-assertion failure, rightly ERROR). The
+  // same injected defect is checked where it is asserted directly: the per-serving unit test.
+  { name: "RIO01_per_serving_rounded_half_up", file: "src/domain/quantity.ts", suite: QTY, pattern: "perServing", expect: [/perServing|0\.666666666666/],
     edits: [["toDecimalPlaces(12, D.ROUND_DOWN)", "toDecimalPlaces(12)"]] },
   { name: "RIO02_bare_pepper_always_seasoning", file: "src/domain/groceries/seasonings.ts", suite: RIO, pattern: "RIO-02", expect: [/RIO-02/],
     edits: [["  if (barePepper && unit && BOUGHT_BY_PIECE_OR_WEIGHT.has(unit)) return false;", "  void barePepper;"]] },
@@ -317,6 +324,25 @@ MUTATIONS.push(
     edits: [["  if (identityDescriptors(name, descriptors).length) return false;", "  void identityDescriptors;"]] },
   { name: "IO_private_mode_copies_photos", file: "src/server/integrations/recipe-import/content-policy.ts", suite: CP, pattern: "CP-02", expect: [/CP-02/],
     edits: [["    return { instructions: true, photos: false, kind: \"owner_mode\"", "    return { instructions: true, photos: true, kind: \"owner_mode\""]] },
+);
+// Exact quantities for new recipe versions (EQ, 2026-10-10) and the read-only legacy audit.
+MUTATIONS.push(
+  { name: "EQ_purchase_uses_stored_decimal", file: "src/domain/recipes/plate.ts", suite: EQ, pattern: "EQ-0", expect: [/EQ-0[23]/],
+    edits: [["  if (ing.exactAmount && ing.exactServings) return", "  if (false && ing.exactAmount && ing.exactServings) return"]] },
+  { name: "EQ_package_tolerance", file: "src/domain/exact.ts", suite: EQ, pattern: "EQ-03", expect: [/EQ-03/],
+    edits: [["  return Number(demand.div(packageQty).ceil());", "  return Number(demand.div(packageQty).minus(\"0.000000001\").ceil());"]] },
+  { name: "EQ_conversion_through_decimal", file: "src/domain/exact.ts", suite: EQ, pattern: "EQ-07", expect: [/EQ-07b/],
+    edits: [["  return qty.mul(Q.of(uf.factor)).div(Q.of(ut.factor));", "  return Q.of(qty.toDec().mul(uf.factor).div(ut.factor).toDecimalPlaces(12).toFixed());"]] },
+  { name: "EQ_import_drops_exact", file: "src/server/commands/imports.ts", suite: EQ, pattern: "EQ-01", expect: [/EQ-01/],
+    edits: [["          exactAmount: l.decision.quantity, exactServings: d.servings,", ""]] },
+  { name: "EQ_title_edit_relabels_legacy", file: "src/server/commands/library.ts", suite: EQ, pattern: "EQ-05", expect: [/EQ-05/],
+    edits: [["  if (same.some((x) => x.quantity_basis !== \"exact\")) return { basis: \"legacy\" };\n  if (same.length)", "  if (same.length && false)"]] },
+  { name: "EQ_client_claims_exact", file: "src/server/commands/library.ts", suite: EQ, pattern: "EQ-06", expect: [/EQ-06/],
+    edits: [["p.ingredients.map(({ exactAmount: _a, exactServings: _s, ...i }) => i)", "p.ingredients"]] },
+  { name: "LA_audit_not_read_only", file: "src/server/audit/legacy-quantities.ts", suite: LA, pattern: "LA-02", expect: [/LA-02/],
+    edits: [["BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY", "BEGIN"]] },
+  { name: "LA_pattern_counted_as_evidence", file: "src/server/audit/legacy-quantities.ts", suite: LA, pattern: "LA-01", expect: [/LA-01/],
+    edits: [["      const recoverable = evidence.kind === \"import_draft\" || evidence.kind === \"earlier_version\";", "      const recoverable = evidence.kind !== \"missing\";"]] },
 );
 // A harmless change that MUST be classified SURVIVED (proves the classifier can say so).
 const CONTROLS_LIST = [

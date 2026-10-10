@@ -3,6 +3,8 @@ import type { Db } from "../db/pool";
 import { Reject, runCommand, type Actor, type HandlerOutcome } from "./framework";
 import { normalizeUnit } from "@/domain/units";
 import { slug } from "@/domain/recipes/rebase";
+import { Q } from "@/domain/exact";
+import { parseAmount, perServing } from "@/domain/quantity";
 
 // Preferences, interests, notes and recipe versions. None of these touch accepted
 // assignments, portions or requirements: they emit change events (so the other member
@@ -83,7 +85,12 @@ export interface RecipeDraft {
   reheatInstructions?: string;
   sourceLabel?: string | null;
   components: { key: string; name: string }[];
-  ingredients: { componentKey: string; ingredientKey?: string | null; ingredientName: string; quantity: string; unit: string; form?: string; note?: string | null }[];
+  ingredients: {
+    componentKey: string; ingredientKey?: string | null; ingredientName: string; quantity: string; unit: string; form?: string; note?: string | null;
+    /** SERVER-INTERNAL (a confirmed import): the exact whole-recipe amount and its servings this row came
+     *  from. Never accepted from a client — SaveRecipeVersion strips them (EQ, D134). */
+    exactAmount?: string | null; exactServings?: number | null;
+  }[];
   /** The version the member edited. REQUIRED when saving an existing recipe (RB17-03): a missing,
    *  malformed or stale expectation is refused with no write. Not used when creating a recipe. */
   expectedVersionNo?: number;
@@ -93,7 +100,52 @@ export interface RecipeDraft {
 /** Manual structured recipe entry/edit. Every save creates a NEW immutable version; accepted
  *  meals stay pinned to the version they were chosen with. Text is stored as data, never markup. */
 export function saveRecipeVersionCommand(actor: Actor, operationId: string, p: RecipeDraft) {
-  return runCommand(actor, "SaveRecipeVersion", operationId, p, (c) => writeRecipeVersion(c, actor, p));
+  return runCommand(actor, "SaveRecipeVersion", operationId, p, (c) =>
+    writeRecipeVersion(c, actor, {
+      ...p,
+      // A client cannot declare a row exact (D134): the basis is decided here, from what was typed and from
+      // the version being edited.
+      ingredients: Array.isArray(p?.ingredients) ? p.ingredients.map(({ exactAmount: _a, exactServings: _s, ...i }) => i) : p?.ingredients,
+    }),
+  );
+}
+
+type Basis = { basis: "exact"; amount: string; servings: number } | { basis: "legacy" };
+/** "n" or "n/d", reduced: what migration 015 stores. */
+const fractionText = (q: Q) => q.toString();
+const FITS = /^[1-9]\d{0,17}(\/[1-9]\d{0,17})?$/;
+
+/**
+ * The quantity basis of one row being saved (EQ, D134):
+ *  - a confirmed import gives its exact whole-recipe amount and servings → exact (checked against the decimal);
+ *  - a row whose number the member left as it was in the version being edited keeps that row's basis (also
+ *    when its name or unit changed) — a title-only edit of an old recipe never relabels an inherited legacy
+ *    approximation as exact, and an imported 2/3 stays 2/3;
+ *  - anything else is the decimal the member typed for ONE portion, which is exact as typed (servings 1).
+ */
+function basisOf(
+  ing: { componentKey: string; ingredientKey: string; unit: string; quantity: string; ingredientName: string; exactAmount?: string | null; exactServings?: number | null },
+  previous: { component_key: string; ingredient_key: string; unit: string; q: string; quantity_basis: string; exact_amount: string | null; exact_servings: number | null }[],
+): Basis {
+  if (ing.exactAmount != null || ing.exactServings != null) {
+    const r = parseAmount(String(ing.exactAmount ?? ""));
+    const servings = Number(ing.exactServings);
+    if (!r || !Number.isInteger(servings) || servings < 1 || servings > 1000) throw new Reject("invalid", `The exact amount for ${ing.ingredientName} is not valid`);
+    if (perServing(String(ing.exactAmount), servings)?.value !== String(ing.quantity)) throw new Reject("invalid", `The amount for ${ing.ingredientName} does not match its exact amount`);
+    return { basis: "exact", amount: fractionText(Q.frac(r.n, r.d)), servings };
+  }
+  // A row whose number is unchanged keeps the basis of the row it came from — the same ingredient, unit and
+  // component first; failing that, any row of the edited version with that number (a renamed ingredient or a
+  // changed unit still carries the same, possibly rounded, number). A legacy match always wins.
+  const value = Q.of(ing.quantity);
+  const sameNumber = previous.filter((x) => Q.of(x.q).eq(value));
+  const sameRow = sameNumber.filter((x) => x.component_key === ing.componentKey && x.ingredient_key === ing.ingredientKey && x.unit === ing.unit);
+  const same = sameRow.length ? sameRow : sameNumber;
+  if (same.some((x) => x.quantity_basis !== "exact")) return { basis: "legacy" };
+  if (same.length) return { basis: "exact", amount: same[0].exact_amount!, servings: same[0].exact_servings! };
+  const typed = fractionText(Q.of(ing.quantity));
+  if (!FITS.test(typed)) throw new Reject("invalid", `Quantity for ${ing.ingredientName} has too many digits`);
+  return { basis: "exact", amount: typed, servings: 1 };
 }
 
 /** Writes one new immutable recipe version (the only path: manual saves and confirmed imports).
@@ -126,7 +178,10 @@ export async function writeRecipeVersion(
       const name = String(ing.ingredientName ?? "").trim().slice(0, 80);
       const key = ing.ingredientKey ? String(ing.ingredientKey) : slug(name);
       if (!key) throw new Reject("invalid", "Ingredient name required");
-      return { componentKey, ingredientKey: key, name, quantity: String(ing.quantity), unit, form: ing.form ?? "raw", note: ing.note ? String(ing.note).slice(0, 200) : null, sort: i };
+      return {
+        componentKey, ingredientKey: key, name, quantity: String(ing.quantity), unit, form: ing.form ?? "raw", note: ing.note ? String(ing.note).slice(0, 200) : null, sort: i,
+        ingredientName: String(ing.ingredientName ?? key), exactAmount: ing.exactAmount, exactServings: ing.exactServings,
+      };
     });
     let recipeId = p.recipeId ?? null;
     let versionNo = 1;
@@ -191,10 +246,21 @@ export async function writeRecipeVersion(
     for (const cmp of components) {
       await c.query("INSERT INTO recipe_components(recipe_version_id, key, name, sort) VALUES ($1,$2,$3,$4)", [vid, cmp.key, cmp.name, cmp.sort]);
     }
+    // The rows of the version this one was edited from (empty for a new recipe): their basis is inherited by
+    // rows left unchanged.
+    const previous = versionNo > 1
+      ? (await c.query(
+          `SELECT ri.component_key, ri.ingredient_key, ri.unit, ri.quantity::text AS q, ri.quantity_basis, ri.exact_amount, ri.exact_servings
+             FROM recipe_ingredients ri JOIN recipe_versions v ON v.id=ri.recipe_version_id WHERE v.recipe_id=$1 AND v.version_no=$2`,
+          [recipeId, versionNo - 1],
+        )).rows
+      : [];
     for (const ing of ings) {
+      const b = basisOf(ing, previous);
       await c.query(
-        "INSERT INTO recipe_ingredients(recipe_version_id, component_key, ingredient_key, quantity, unit, form, note, sort) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)",
-        [vid, ing.componentKey, ing.ingredientKey, ing.quantity, ing.unit, ing.form, ing.note, ing.sort],
+        `INSERT INTO recipe_ingredients(recipe_version_id, component_key, ingredient_key, quantity, unit, form, note, sort, quantity_basis, exact_amount, exact_servings)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
+        [vid, ing.componentKey, ing.ingredientKey, ing.quantity, ing.unit, ing.form, ing.note, ing.sort, b.basis, b.basis === "exact" ? b.amount : null, b.basis === "exact" ? b.servings : null],
       );
     }
     await c.query("UPDATE recipes SET current_version_id=$2 WHERE id=$1", [recipeId, vid]);

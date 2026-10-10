@@ -1,6 +1,7 @@
 import { isHouseholdSeasoning } from "./seasonings";
 import { hashOf } from "../hash";
-import { D, Dec, convert, normalizeUnit, packagesFor } from "../units";
+import { normalizeUnit } from "../units";
+import { Q, convertQ, packagesForQ } from "../exact";
 import { eventDemand } from "../recipes/plate";
 import { dayName } from "../dates";
 import type { Allocation, CookingEvent, Ingredient, RecipeVersion } from "../types";
@@ -138,13 +139,20 @@ export interface RequirementLine {
   key: string;
   ingredientKey: string | null;
   name: string;
-  meal: { quantity: string; unit: string; sources: { eventId: string; cookNight: string; recipeTitle: string; quantity: string; unit: string }[] } | null;
+  /** `quantity` is shown to 3 places; `rational` is the exact fraction purchasing used ("2", "8/3") and
+   *  `exact` says whether every contributing recipe row was saved with an exact basis (EQ) — false when a
+   *  legacy approximation is included (its stored decimal was used). Always set by computeProjection; optional
+   *  because requirement lines stored before migration 015 do not carry them. */
+  meal: {
+    quantity: string; unit: string; rational?: string; exact?: boolean;
+    sources: { eventId: string; cookNight: string; recipeTitle: string; quantity: string; unit: string; rational?: string; exact?: boolean }[];
+  } | null;
   mealUnitConflict: string[] | null;
   requests: { id: string; kind: "usual" | "extra"; packages: number | null; text: string; contributors: { memberId: string; name: string; taps: number }[]; productId?: string | null }[];
   availability: AvailabilityInput | null;
   homeSupply: string | null;
-  /** Meal amount still needed after what a member said is at home (same unit as `meal`). */
-  netMeal: { quantity: string; unit: string } | null;
+  /** Meal amount still needed after what a member said is at home (same unit as `meal`); exact as `rational`. */
+  netMeal: { quantity: string; unit: string; rational?: string } | null;
   product: ProductInput | null;
   price: PriceInput | null;
   packagesForMeal: number | null;
@@ -206,8 +214,8 @@ function costFrom(values: (number | null)[], currency: string): CostView {
 export function computeProjection(input: ProjectionInput): ProjectionResult {
   const destination: Destination = input.destination ?? "retailer_cart";
   // 1. Meal demand from accepted, scheduled cooking events.
-  type MealSource = { eventId: string; cookNight: string; recipeTitle: string; quantity: string; unit: string };
-  const meal = new Map<string, { byUnit: Map<string, Dec>; sources: MealSource[] }>();
+  type MealSource = { eventId: string; cookNight: string; recipeTitle: string; quantity: string; unit: string; rational: string; exact: boolean };
+  const meal = new Map<string, { byUnit: Map<string, Q>; exact: boolean; sources: MealSource[] }>();
   // Ordinary salt and black pepper: never bought (the household has them); recipes keep them.
   const seasonings = new Map<string, { key: string; name: string; recipes: string[] }>();
   for (const { event, recipe, allocations } of input.events) {
@@ -221,9 +229,10 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
         seasonings.set(l.ingredientKey, sz);
         continue;
       }
-      const m = meal.get(l.ingredientKey) ?? { byUnit: new Map<string, Dec>(), sources: [] as MealSource[] };
-      m.byUnit.set(l.unit, (m.byUnit.get(l.unit) ?? new D(0)).plus(l.quantity));
-      m.sources.push({ eventId: event.id, cookNight: event.cookNight, recipeTitle: recipe.title, quantity: l.quantity.toDecimalPlaces(3).toString(), unit: l.unit });
+      const m = meal.get(l.ingredientKey) ?? { byUnit: new Map<string, Q>(), exact: true, sources: [] as MealSource[] };
+      m.byUnit.set(l.unit, (m.byUnit.get(l.unit) ?? Q.zero).plus(l.exact));
+      m.exact = m.exact && l.fromExactRows;
+      m.sources.push({ eventId: event.id, cookNight: event.cookNight, recipeTitle: recipe.title, quantity: l.exact.toDecimal(3), unit: l.unit, rational: l.exact.toString(), exact: l.fromExactRows });
       meal.set(l.ingredientKey, m);
     }
   }
@@ -241,7 +250,7 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
     const reqs = input.requests.filter((r) => (r.ingredientKey ?? `text:${r.id}`) === key);
     const unresolved: string[] = [];
     const m = meal.get(key);
-    let mealQty: Dec | null = null;
+    let mealQty: Q | null = null;
     let mealUnit: string | null = null;
     let mealUnitConflict: string[] | null = null;
     if (m) {
@@ -283,40 +292,40 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
 
     // 2. Home supply (availability observation for this cycle).
     const avail = ingredientKey ? input.availability.find((a) => a.ingredientKey === ingredientKey) ?? null : null;
-    let homeSupply: Dec | null = null;
+    let homeSupply: Q | null = null;
     if (avail && mealQty && mealUnit) {
       if (avail.state === "enough") {
-        const reviewed = avail.reviewedDemand && avail.reviewedUnit ? convert(avail.reviewedDemand, avail.reviewedUnit, mealUnit) : null;
+        const reviewed = avail.reviewedDemand && avail.reviewedUnit ? convertQ(Q.of(avail.reviewedDemand), avail.reviewedUnit, mealUnit) : null;
         // "Have enough" binds to the amount the member was shown, which is the demand to 3 decimal places
         // (`meal.quantity` below). Comparing it with the unrounded demand would call 1.333 fl oz too little
         // for 1.3333… fl oz and put the line back on the list although nothing changed.
-        if (reviewed && reviewed.gte(mealQty.toDecimalPlaces(SHOWN_PLACES))) {
+        if (reviewed && reviewed.gte(mealQty.toDecimal(SHOWN_PLACES))) {
           homeSupply = mealQty;
         } else {
-          homeSupply = reviewed ?? new D(0);
+          homeSupply = reviewed ?? Q.zero;
           unresolved.push(
-            `Needed amount increased since ${avail.memberName} said "Have enough" (reviewed ${reviewed ? reviewed.toDecimalPlaces(2) : "?"} ${mealUnit}, now ${mealQty.toDecimalPlaces(2)} ${mealUnit})`,
+            `Needed amount increased since ${avail.memberName} said "Have enough" (reviewed ${reviewed ? reviewed.toDecimal(2) : "?"} ${mealUnit}, now ${mealQty.toDecimal(2)} ${mealUnit})`,
           );
         }
       } else if (avail.state === "some") {
         if (avail.quantity && avail.unit) {
-          const q = convert(avail.quantity, avail.unit, mealUnit);
-          if (q) homeSupply = D.min(q, mealQty);
+          const q = convertQ(Q.of(avail.quantity), avail.unit, mealUnit);
+          if (q) homeSupply = Q.min(q, mealQty);
           else unresolved.push(`"Have some" amount is in ${avail.unit}, which cannot be compared with ${mealUnit}`);
         } else {
           unresolved.push(`"Have some" without an amount — nothing subtracted; say how much, or mark it Need`);
         }
       }
     }
-    const netMeal = mealQty ? D.max(0, mealQty.minus(homeSupply ?? 0)) : null;
+    const netMeal = mealQty ? Q.max(mealQty.minus(homeSupply ?? Q.zero), 0) : null;
 
     // 3. Packages.
     let packagesForMeal: number | null = mealQty ? null : 0;
     let leftAfterMeal: RequirementLine["leftAfterMeal"] = null;
-    let pkgInMealUnit: Dec | null = null;
+    let pkgInMealUnit: Q | null = null;
     if (mealQty && mealUnit && product?.packageQty && product.packageUnit) {
-      pkgInMealUnit = convert(product.packageQty, product.packageUnit, mealUnit);
-      if (pkgInMealUnit) packagesForMeal = packagesFor(netMeal!, pkgInMealUnit);
+      pkgInMealUnit = convertQ(Q.of(product.packageQty), product.packageUnit, mealUnit);
+      if (pkgInMealUnit) packagesForMeal = packagesForQ(netMeal!, pkgInMealUnit);
       else unresolved.push(`Package size (${product.packageUnit}) cannot be converted to the recipe unit (${mealUnit})`);
     } else if (mealQty && product && !product.packageQty) {
       unresolved.push("Package size unknown");
@@ -330,7 +339,7 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
     if (packagesNeeded !== null && pkgInMealUnit && netMeal && packagesUsual > 0) {
       const base = Math.max(packagesForMeal ?? 0, packagesUsual);
       const left = pkgInMealUnit.mul(base).minus(netMeal);
-      leftAfterMeal = { quantity: left.toDecimalPlaces(2).toString(), unit: mealUnit! };
+      leftAfterMeal = { quantity: left.toDecimal(2), unit: mealUnit! };
     }
 
     // 4. History. A confirmed order is expected supply for the transfers it explicitly
@@ -340,15 +349,15 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
     const order = input.order;
     const reconciled = new Set(order && order.contentsKnown ? order.reconcilesBatchIds ?? [] : []);
     const unitP = product?.packageQty && product.packageUnit ? product.packageUnit : null;
-    const pkgP = product?.packageQty && product.packageUnit ? new D(product.packageQty) : null;
+    const pkgP = product?.packageQty && product.packageUnit ? Q.of(product.packageQty) : null;
     let basisUnknown = false;
-    const toP = (packages: number, qty: string | null | undefined, unit: string | null | undefined): Dec | null => {
+    const toP = (packages: number, qty: string | null | undefined, unit: string | null | undefined): Q | null => {
       if (!pkgP || !unitP) return null;
       if (!qty || !unit) {
         basisUnknown = true;
         return pkgP.mul(packages); // unknown basis: counted as today's package, and flagged
       }
-      const c = convert(new D(qty).mul(packages), unit, unitP);
+      const c = convertQ(Q.of(qty).mul(packages), unit, unitP);
       if (!c) basisUnknown = true;
       return c ?? pkgP.mul(packages);
     };
@@ -358,8 +367,8 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
     let ordered = 0;
     let received = 0;
     let missing = 0;
-    let coveredP: Dec = new D(0);
-    let receivedP: Dec = new D(0);
+    let coveredP: Q = Q.zero;
+    let receivedP: Q = Q.zero;
     for (const ol of orderLines) {
       ordered += ol.packages;
       const rs = receipts.filter((r) => r.orderLineId === ol.id);
@@ -370,8 +379,8 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
       received += rec;
       missing += mis;
       // Original product still expected = packages not reported missing or substituted.
-      coveredP = coveredP.plus(toP(ol.packages - mis - sub, ol.packageQty, ol.packageUnit) ?? 0);
-      receivedP = receivedP.plus(toP(rec, ol.packageQty, ol.packageUnit) ?? 0);
+      coveredP = coveredP.plus(toP(ol.packages - mis - sub, ol.packageQty, ol.packageUnit) ?? Q.zero);
+      receivedP = receivedP.plus(toP(rec, ol.packageQty, ol.packageUnit) ?? Q.zero);
       for (const r of subs) {
         const v = r.validation;
         if (!v) {
@@ -379,7 +388,7 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
         } else if (!v.suitable) {
           missing += r.packages; // an unsuitable substitute leaves the need actionable
         } else {
-          const q = v.quantity && v.unit && unitP ? convert(v.quantity, v.unit, unitP) : null;
+          const q = v.quantity && v.unit && unitP ? convertQ(Q.of(v.quantity), v.unit, unitP) : null;
           if (q) {
             coveredP = coveredP.plus(q);
             receivedP = receivedP.plus(q);
@@ -390,7 +399,7 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
     }
     let sent = 0;
     let uncertain = 0;
-    let sentP: Dec = new D(0);
+    let sentP: Q = Q.zero;
     let preOrderUnknown = false;
     for (const b of input.batches) {
       if (reconciled.has(b.id)) continue;
@@ -401,7 +410,7 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
       if (!counts) continue;
       if (b.status === "uncertain") uncertain += n;
       else sent += n;
-      for (const l of ls) sentP = sentP.plus(toP(l.packages, l.packageQty, l.packageUnit) ?? 0);
+      for (const l of ls) sentP = sentP.plus(toP(l.packages, l.packageQty, l.packageUnit) ?? Q.zero);
       if (order && !order.contentsKnown && b.authorizedAt && order.confirmedAt && b.authorizedAt <= order.confirmedAt) preOrderUnknown = true;
     }
     if (uncertain > 0) unresolved.push("A transfer outcome is uncertain — check the retailer cart; Table does not resend automatically");
@@ -428,19 +437,19 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
     if (packagesNeeded === null) toSend = null;
     else if (pkgP) {
       const short = pkgP.mul(packagesNeeded).minus(coveredP).minus(sentP);
-      toSend = packagesFor(D.max(0, short), pkgP);
+      toSend = packagesForQ(Q.max(short, 0), pkgP);
     } else toSend = Math.max(0, packagesNeeded - coveredByOrder - sent - uncertain);
 
     const fingerprint = hashOf({
       key,
-      meal: mealQty ? [mealQty.toDecimalPlaces(6).toString(), mealUnit] : null,
+      meal: mealQty ? [mealQty.toDecimal(6), mealUnit] : null,
       mealUnitConflict,
       requests: reqs.map((r) => (r.productId ? [r.id, r.kind, r.packages, r.productId] : [r.id, r.kind, r.packages])).sort(),
       availability: avail ? avail.id : null,
       product: product ? [product.id, product.packageQty, product.packageUnit] : null,
       packagesNeeded,
       coveredByOrder,
-      covered: coveredP.toDecimalPlaces(6).toString(),
+      covered: coveredP.toDecimal(6),
       unresolved: unresolved.filter((u) => !u.startsWith("A transfer outcome")),
       // Absent for the store cart, so every earlier fingerprint (and the approvals bound to it) is unchanged.
       ...(destination !== "retailer_cart" ? { destination } : {}),
@@ -463,28 +472,28 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
     else status = "needs_review";
 
     const usageCostMinor =
-      mealQty && pkgInMealUnit && price ? Number(mealQty.div(pkgInMealUnit).mul(price.amountMinor).toDecimalPlaces(0, D.ROUND_HALF_UP)) : mealQty ? null : 0;
+      mealQty && pkgInMealUnit && price ? Number(mealQty.div(pkgInMealUnit).mul(price.amountMinor).roundHalfUp()) : mealQty ? null : 0;
     const pickupCostMinor = packagesNeeded === null ? null : packagesNeeded === 0 ? 0 : price ? packagesNeeded * price.amountMinor : null;
     const outstandingCostMinor = toSend === null ? null : toSend === 0 ? 0 : price ? toSend * price.amountMinor : null;
     // Received goods beyond what the plan and requests need are applicable, unallocated supply.
     let receivedSurplus: RequirementLine["receivedSurplus"] = null;
     if (pkgP && unitP && receivedP.gt(0)) {
-      const mealP = netMeal && mealUnit ? convert(netMeal, mealUnit, unitP) : new D(0);
-      const wantP = D.max(mealP ?? new D(0), pkgP.mul(packagesUsual)).plus(pkgP.mul(packagesExtra));
+      const mealP = netMeal && mealUnit ? convertQ(netMeal, mealUnit, unitP) : Q.zero;
+      const wantP = Q.max(mealP ?? Q.zero, pkgP.mul(packagesUsual)).plus(pkgP.mul(packagesExtra));
       const surplus = receivedP.minus(wantP);
-      if (surplus.gt(0)) receivedSurplus = { quantity: surplus.toDecimalPlaces(2).toString(), unit: unitP };
+      if (surplus.gt(0)) receivedSurplus = { quantity: surplus.toDecimal(2), unit: unitP };
     }
 
     lines.push({
       key,
       ingredientKey,
       name: ing?.name ?? reqs[0]?.text ?? key,
-      meal: mealQty && mealUnit ? { quantity: mealQty.toDecimalPlaces(SHOWN_PLACES).toString(), unit: normalizeUnit(mealUnit), sources: m!.sources } : null,
+      meal: mealQty && mealUnit ? { quantity: mealQty.toDecimal(SHOWN_PLACES), unit: normalizeUnit(mealUnit), rational: mealQty.toString(), exact: m!.exact, sources: m!.sources } : null,
       mealUnitConflict,
       requests: reqs.map((r) => ({ id: r.id, kind: r.kind, packages: r.packages, text: r.text, contributors: r.contributors, productId: r.productId ?? null })),
       availability: avail,
-      homeSupply: homeSupply ? homeSupply.toDecimalPlaces(3).toString() : null,
-      netMeal: netMeal && mealUnit ? { quantity: netMeal.toDecimalPlaces(3).toString(), unit: normalizeUnit(mealUnit) } : null,
+      homeSupply: homeSupply ? homeSupply.toDecimal(3) : null,
+      netMeal: netMeal && mealUnit ? { quantity: netMeal.toDecimal(3), unit: normalizeUnit(mealUnit), rational: netMeal.toString() } : null,
       product,
       price,
       packagesForMeal,
