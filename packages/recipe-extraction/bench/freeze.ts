@@ -2,7 +2,8 @@
  * Holdout freeze: `fixtures/FREEZE.json` records SHA-256 hashes of every holdout label and page file
  * (CONTRACT-v1 §8). `computeFreeze` derives the record from the files; `verifyFreeze` lists every
  * difference between the record and the files. Holdout-v2 has its own record, `fixtures/FREEZE-v2.json`
- * (`computeFreezeV2` / `verifyFreezeV2`), verified on every run once it exists. Reads local files only.
+ * (`computeFreezeV2` / `verifyFreezeV2`), and holdout-v3 `fixtures/FREEZE-v3.json` (`computeFreezeV3` /
+ * `verifyFreezeV3`), each verified on every run once it exists. Reads local files only.
  */
 import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
@@ -154,16 +155,25 @@ function countBy(lines: string[], pick: (c: Record<string, unknown>) => unknown)
   return Object.fromEntries(Object.entries(out).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)));
 }
 
-/** The holdout-v2 freeze record derived from the file (throws when the file cannot be read). */
-export function computeFreezeV2(fixturesDir: string, frozenAt: string): FreezeV2Record {
-  const bytes = readFileSync(path.join(fixturesDir, HOLDOUT2_INGREDIENTS));
+/** A JSONL holdout frozen by its own record (holdout-v2: FREEZE-v2.json; holdout-v3: FREEZE-v3.json). */
+interface HoldoutFreezeSpec {
+  file: string;
+  record: string;
+  rule: string;
+  canonicalization: string;
+}
+
+const HOLDOUT2_SPEC: HoldoutFreezeSpec = { file: HOLDOUT2_INGREDIENTS, record: FREEZE_V2_FILE, rule: FREEZE_V2_RULE, canonicalization: FREEZE_V2_CANONICALIZATION };
+
+function computeHoldoutFreeze(spec: HoldoutFreezeSpec, fixturesDir: string, frozenAt: string): FreezeV2Record {
+  const bytes = readFileSync(path.join(fixturesDir, spec.file));
   const lines = bytes.toString("utf8").split("\n").filter((l) => l.trim() !== "");
   return {
     frozenAt,
-    rule: FREEZE_V2_RULE,
-    canonicalization: FREEZE_V2_CANONICALIZATION,
+    rule: spec.rule,
+    canonicalization: spec.canonicalization,
     ingredients: {
-      file: HOLDOUT2_INGREDIENTS,
+      file: spec.file,
       sha256: sha256Hex(bytes),
       cases: lines.length,
       byStatus: countBy(lines, (c) => (c.expect as Record<string, unknown> | undefined)?.status),
@@ -172,15 +182,53 @@ export function computeFreezeV2(fixturesDir: string, frozenAt: string): FreezeV2
   };
 }
 
-/** Whether FREEZE-v2.json exists (holdout-v2 is frozen) and what it records. */
-export function freezeV2Status(fixturesDir: string): { frozen: boolean; frozenAt: string | null; sha256: string | null } {
-  if (!existsSync(path.join(fixturesDir, FREEZE_V2_FILE))) return { frozen: false, frozenAt: null, sha256: null };
+function holdoutFreezeStatus(spec: HoldoutFreezeSpec, fixturesDir: string): { frozen: boolean; frozenAt: string | null; sha256: string | null } {
+  if (!existsSync(path.join(fixturesDir, spec.record))) return { frozen: false, frozenAt: null, sha256: null };
   try {
-    const r = JSON.parse(readFileSync(path.join(fixturesDir, FREEZE_V2_FILE), "utf8")) as FreezeV2Record;
+    const r = JSON.parse(readFileSync(path.join(fixturesDir, spec.record), "utf8")) as FreezeV2Record;
     return { frozen: true, frozenAt: typeof r.frozenAt === "string" ? r.frozenAt : null, sha256: typeof r.ingredients?.sha256 === "string" ? r.ingredients.sha256 : null };
   } catch {
     return { frozen: true, frozenAt: null, sha256: null };
   }
+}
+
+function verifyHoldoutFreeze(spec: HoldoutFreezeSpec, fixturesDir: string, ruleSource: string): string[] {
+  const REC = spec.record;
+  const FILE = spec.file;
+  if (!existsSync(path.join(fixturesDir, REC))) return [];
+  let recorded: FreezeV2Record;
+  try {
+    recorded = JSON.parse(readFileSync(path.join(fixturesDir, REC), "utf8")) as FreezeV2Record;
+  } catch (err) {
+    return [`${REC}: cannot be read (${(err as Error).message})`];
+  }
+  if (!existsSync(path.join(fixturesDir, FILE))) return [`${FILE}: recorded in ${REC} but missing`];
+  let actual: FreezeV2Record;
+  try {
+    actual = computeHoldoutFreeze(spec, fixturesDir, recorded.frozenAt);
+  } catch (err) {
+    return [`${FILE} cannot be read (${(err as Error).message})`];
+  }
+  const problems: string[] = [];
+  const r = recorded.ingredients;
+  if (!r || r.file !== FILE) problems.push(`${REC}: must record ${FILE}`);
+  if (!r || r.sha256 !== actual.ingredients.sha256) problems.push(`${FILE}: SHA-256 differs from ${REC}`);
+  if (!r || r.cases !== actual.ingredients.cases) problems.push(`${FILE}: ${actual.ingredients.cases} cases, ${REC} records ${r?.cases}`);
+  if (!r || canonicalJson(r.byStatus ?? null) !== canonicalJson(actual.ingredients.byStatus)) problems.push(`${FILE}: status counts differ from ${REC}`);
+  if (!r || canonicalJson(r.bySourceKind ?? null) !== canonicalJson(actual.ingredients.bySourceKind)) problems.push(`${FILE}: source-kind counts differ from ${REC}`);
+  if (recorded.rule !== spec.rule) problems.push(`${REC}: rule text differs from bench/freeze.ts ${ruleSource}`);
+  if (typeof recorded.frozenAt !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(recorded.frozenAt)) problems.push(`${REC}: frozenAt must be a date YYYY-MM-DD`);
+  return problems;
+}
+
+/** The holdout-v2 freeze record derived from the file (throws when the file cannot be read). */
+export function computeFreezeV2(fixturesDir: string, frozenAt: string): FreezeV2Record {
+  return computeHoldoutFreeze(HOLDOUT2_SPEC, fixturesDir, frozenAt);
+}
+
+/** Whether FREEZE-v2.json exists (holdout-v2 is frozen) and what it records. */
+export function freezeV2Status(fixturesDir: string): { frozen: boolean; frozenAt: string | null; sha256: string | null } {
+  return holdoutFreezeStatus(HOLDOUT2_SPEC, fixturesDir);
 }
 
 /**
@@ -188,28 +236,44 @@ export function freezeV2Status(fixturesDir: string): { frozen: boolean; frozenAt
  * holdout-v2 is not frozen yet (no FREEZE-v2.json). Once the record exists it is verified on every run.
  */
 export function verifyFreezeV2(fixturesDir: string): string[] {
-  if (!existsSync(path.join(fixturesDir, FREEZE_V2_FILE))) return [];
-  let recorded: FreezeV2Record;
-  try {
-    recorded = JSON.parse(readFileSync(path.join(fixturesDir, FREEZE_V2_FILE), "utf8")) as FreezeV2Record;
-  } catch (err) {
-    return [`${FREEZE_V2_FILE}: cannot be read (${(err as Error).message})`];
-  }
-  if (!existsSync(path.join(fixturesDir, HOLDOUT2_INGREDIENTS))) return [`${HOLDOUT2_INGREDIENTS}: recorded in ${FREEZE_V2_FILE} but missing`];
-  let actual: FreezeV2Record;
-  try {
-    actual = computeFreezeV2(fixturesDir, recorded.frozenAt);
-  } catch (err) {
-    return [`${HOLDOUT2_INGREDIENTS} cannot be read (${(err as Error).message})`];
-  }
-  const problems: string[] = [];
-  const r = recorded.ingredients;
-  if (!r || r.file !== HOLDOUT2_INGREDIENTS) problems.push(`${FREEZE_V2_FILE}: must record ${HOLDOUT2_INGREDIENTS}`);
-  if (!r || r.sha256 !== actual.ingredients.sha256) problems.push(`${HOLDOUT2_INGREDIENTS}: SHA-256 differs from ${FREEZE_V2_FILE}`);
-  if (!r || r.cases !== actual.ingredients.cases) problems.push(`${HOLDOUT2_INGREDIENTS}: ${actual.ingredients.cases} cases, ${FREEZE_V2_FILE} records ${r?.cases}`);
-  if (!r || canonicalJson(r.byStatus ?? null) !== canonicalJson(actual.ingredients.byStatus)) problems.push(`${HOLDOUT2_INGREDIENTS}: status counts differ from ${FREEZE_V2_FILE}`);
-  if (!r || canonicalJson(r.bySourceKind ?? null) !== canonicalJson(actual.ingredients.bySourceKind)) problems.push(`${HOLDOUT2_INGREDIENTS}: source-kind counts differ from ${FREEZE_V2_FILE}`);
-  if (recorded.rule !== FREEZE_V2_RULE) problems.push(`${FREEZE_V2_FILE}: rule text differs from bench/freeze.ts FREEZE_V2_RULE`);
-  if (typeof recorded.frozenAt !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(recorded.frozenAt)) problems.push(`${FREEZE_V2_FILE}: frozenAt must be a date YYYY-MM-DD`);
-  return problems;
+  return verifyHoldoutFreeze(HOLDOUT2_SPEC, fixturesDir, "FREEZE_V2_RULE");
+}
+
+// --- Holdout-v3 freeze (EVALUATION-PLAN-v3; same rules as holdout-v2) ------------------------------
+
+export const FREEZE_V3_FILE = "FREEZE-v3.json";
+export const HOLDOUT3_INGREDIENTS = "ingredients/holdout-v3.jsonl";
+
+export const FREEZE_V3_RULE =
+  "Holdout-v3 labels (ingredients/holdout-v3.jsonl, split holdout3) were written blind from CONTRACT-v1 §7 by the evaluation worker " +
+  "(no parser was run on these inputs), checked by an independent label checker who saw no engine output, and adjudicated with the " +
+  "rationale logged in LABEL-CHANGES.md before this freeze (EVALUATION-PLAN-v3). They are never tuned against engine output and " +
+  "never shown to the implementation worker. Any change needs an entry in LABEL-CHANGES.md (case id, old and new label, an independent " +
+  "rationale that does not cite engine output, and a reviewer) and a new FREEZE-v3.json with the previous hash recorded in that entry; " +
+  "a change made after a candidate has been scored on holdout-v3 makes its holdout-v3 results exposed, not fresh (EVALUATION-PLAN-v3).";
+
+export const FREEZE_V3_CANONICALIZATION = "SHA-256 of the exact bytes of ingredients/holdout-v3.jsonl; counts from its non-empty lines.";
+
+/** The FREEZE-v3.json record: the same shape as FREEZE-v2.json. */
+export type FreezeV3Record = FreezeV2Record;
+
+const HOLDOUT3_SPEC: HoldoutFreezeSpec = { file: HOLDOUT3_INGREDIENTS, record: FREEZE_V3_FILE, rule: FREEZE_V3_RULE, canonicalization: FREEZE_V3_CANONICALIZATION };
+
+/** The holdout-v3 freeze record derived from the file (throws when the file cannot be read, e.g. before holdout-v3 exists). */
+export function computeFreezeV3(fixturesDir: string, frozenAt: string): FreezeV3Record {
+  return computeHoldoutFreeze(HOLDOUT3_SPEC, fixturesDir, frozenAt);
+}
+
+/** Whether FREEZE-v3.json exists (holdout-v3 is frozen) and what it records. */
+export function freezeV3Status(fixturesDir: string): { frozen: boolean; frozenAt: string | null; sha256: string | null } {
+  return holdoutFreezeStatus(HOLDOUT3_SPEC, fixturesDir);
+}
+
+/**
+ * Every difference between FREEZE-v3.json and holdout-v3.jsonl; [] when the freeze holds or when
+ * holdout-v3 is not frozen (no FREEZE-v3.json — including before holdout-v3 exists). Once the record
+ * exists it is verified on every run.
+ */
+export function verifyFreezeV3(fixturesDir: string): string[] {
+  return verifyHoldoutFreeze(HOLDOUT3_SPEC, fixturesDir, "FREEZE_V3_RULE");
 }

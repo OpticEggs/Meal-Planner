@@ -1,15 +1,16 @@
 /**
- * Mutation controls for the EVALUATION-PLAN-v2 outcome scorer: engines built from the labels (never a
- * parser). The oracle must be all C1+/C5a/C7 with zero severe errors and pass A1–A5; each saboteur must
- * trip exactly the class or code it is designed to trip, on exactly the lines it touches. Run on every
- * split, with the acceptance checks on holdout-v2.
+ * Mutation controls for the outcomes v3 scorer: engines built from the labels (never a parser). The
+ * oracle must be all C1+/C5a/C7 with zero severe errors and pass A1–A5 and the scorer's A6 checks; each
+ * saboteur must trip exactly the class or code it is designed to trip, on exactly the lines it touches;
+ * each CE saboteur (invalid output, engine error, nondeterminism) must give CE with no S code on exactly
+ * its lines. Run on every split, with the acceptance checks on holdout-v2 (historical).
  */
 import { describe, expect, it } from "vitest";
 import { engineFromLabels, outcomeControlEngines } from "../controls";
 import { loadIngredientCases } from "../labels";
-import { DEBATABLE_CASES, engineOutcomes, type EngineOutcomes, type OutcomeSetReport, type SevereCode } from "../outcomes";
+import { DEBATABLE_CASES, engineOutcomes, isBareNoAmountLabel, type EngineOutcomes, type OutcomeSetReport, type SevereCode } from "../outcomes";
 import { normalizeText } from "../compare";
-import { SPLITS, parseLabelQuantity, type IngredientCase, type Split } from "../types";
+import { EVERY_SPLITS as SPLITS, parseLabelQuantity, type IngredientCase, type Split } from "../types";
 import { FIXTURES } from "./helpers";
 
 const cases = loadIngredientCases(FIXTURES, SPLITS);
@@ -45,13 +46,16 @@ describe("oracle", () => {
     }
   });
 
-  it("passes A1–A5 on holdout-v2, A1 and A2 with confidence (≥ 189 ready lines)", () => {
+  it("passes A1–A5 on holdout-v2, A1 and A2 with confidence (≥ 189 ready lines), and the scorer's A6 checks", () => {
     const h = o.sets.holdout2!;
     expect(h.aggregate.ready).toBeGreaterThanOrEqual(189);
     for (const id of ["A1", "A2"]) expect(statusOf(o, id)).toBe("met with confidence");
     for (const id of ["A3", "A4", "A5"]) expect(statusOf(o, id)).toBe("met");
-    for (const id of ["A6", "A7"]) expect(statusOf(o, id)).toBe("checked outside the scorer");
+    expect(statusOf(o, "A6")).toBe("scorer checks met; rest checked outside the scorer");
+    expect(statusOf(o, "A7")).toBe("checked outside the scorer");
     expect(h.acceptance!.a1ToA5Met).toBe(true);
+    expect(h.acceptance!.a6ScorerChecksMet).toBe(true);
+    for (const s of SPLITS) expect(o.sets[s]!.aggregate.validity.classified.num, s).toBe(o.sets[s]!.aggregate.lines);
     expect(o.sets.dev!.acceptance).toBeNull();
     expect(o.sets.holdout!.acceptance).toBeNull();
   });
@@ -64,6 +68,13 @@ describe("oracle", () => {
 });
 
 describe("saboteurs trip their class or code on exactly the lines they touch", () => {
+  it("every semantic saboteur returns valid, deterministic readings (CE = 0), so its codes are scored", () => {
+    for (const key of Object.keys(ctl).filter((k) => !["invalidReady", "throwOnNeedsReview", "nondeterministicNote"].includes(k))) {
+      const e = run(key as keyof typeof ctl);
+      expect(setIds(e, (s) => s.caseIds.CE), key).toEqual([]);
+    }
+  });
+
   it("drop amount → S2 and C2 high on every ready line with an amount; A1, A2, A3 not met", () => {
     const e = run("dropAmount");
     const want = ids((c) => ready(c) && c.expect.quantity !== null);
@@ -188,30 +199,67 @@ describe("saboteurs trip their class or code on exactly the lines they touch", (
     const e = engineOutcomes(
       cases,
       engineFromLabels("control:debatable-cup", "ing-h2-0087 read as volume cups", cases, (r, c) =>
-        DEBATABLE_CASES.includes(c.id) ? { ...r, unit: { canonical: "cup", dimension: "volume", source: "cups" } } : r),
+        DEBATABLE_CASES.holdout2.includes(c.id) ? { ...r, unit: { canonical: "cup", dimension: "volume", source: "cups" } } : r),
     );
     const h = e.sets.holdout2!;
-    expect(h.caseIds.S3).toEqual([...DEBATABLE_CASES]);
+    expect(h.caseIds.S3).toEqual([...DEBATABLE_CASES.holdout2]);
     expect(statusOf(e, "A3")).toBe("not met");
     expect(statusOf(e, "A4")).toBe("not met");
     const d = h.sensitivity.excludingDebatable!;
-    expect(d.excludedIds).toEqual([...DEBATABLE_CASES]);
+    expect(d.excludedIds).toEqual([...DEBATABLE_CASES.holdout2]);
     expect(d.acceptance.criteria.slice(0, 5).map((c) => c.status)).toEqual(["met with confidence", "met with confidence", "met", "met", "met"]);
   });
 
-  it("sensitivity: needs_review figures without bare foods leave out exactly the needs_review labels tagged only quantity_missing/seasoning", () => {
+  it("sensitivity (SCORE-01): needs_review figures leave out exactly the needs_review labels with quantity, unit and alternatives all null", () => {
     const e = run("readyOnNeedsReview");
-    const bare = (c: IngredientCase) => c.expect.status === "needs_review" && c.categories.every((t) => ["quantity_missing", "seasoning_ordinary", "seasoning_lookalike"].includes(t));
+    const bare = (c: IngredientCase) => c.expect.status === "needs_review" && c.expect.quantity === null && c.expect.unit === null && c.expect.alternatives.length === 0;
     for (const s of SPLITS) {
-      const n = e.sets[s]!.sensitivity.needsReviewExcludingBareFoods;
+      const n = e.sets[s]!.sensitivity.needsReviewExcludingBareNoAmount;
       expect(n.excludedIds, s).toEqual(ids(bare, s));
+      expect(n.excludedIds, s).toEqual(ids(isBareNoAmountLabel, s));
       expect(n.needsReview + n.excluded, s).toBe(e.sets[s]!.aggregate.needsReview);
       expect(n.S4.num, s).toBe(n.needsReview);
       expect(n.C5.num, s).toBe(0);
     }
-    expect(e.sets.holdout2!.sensitivity.needsReviewExcludingBareFoods.excluded).toBeGreaterThanOrEqual(15);
-    const o = run("oracle").sets.holdout2!.sensitivity.needsReviewExcludingBareFoods;
+    expect(e.sets.holdout2!.sensitivity.needsReviewExcludingBareNoAmount.excluded).toBe(29);
+    const o = run("oracle").sets.holdout2!.sensitivity.needsReviewExcludingBareNoAmount;
     expect(o.C5a.num).toBe(o.needsReview);
+  });
+
+  it("CE: an invalid output (ready, no amount, no amountUnstated) is CE with no S code on exactly those lines; A6 not met", () => {
+    const e = run("invalidReady");
+    const want = ids((c) => ready(c) && c.expect.quantity !== null);
+    expect(setIds(e, (s) => s.caseIds.CE)).toEqual(want);
+    expect(setIds(e, (s) => s.caseIds.CEInvalidOutput)).toEqual(want);
+    expect(setIds(e, (s) => [...s.caseIds.CEEngineError, ...s.caseIds.CENondeterministic])).toEqual([]);
+    for (const code of ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"] as const) expect(severeIds(e, code), code).toEqual([]);
+    expect(setIds(e, (s) => s.caseIds.C2High)).toEqual([]);
+    expect(statusOf(e, "A6")).toBe("not met");
+    expect(e.sets.holdout2!.acceptance!.a6ScorerChecksMet).toBe(false);
+    expect(e.sets.holdout2!.ceLines[0].problems).toContain("ingredient.amountUnstated: a ready line without a quantity must say why (amountUnstated)");
+    for (const s of SPLITS) expect(e.sets[s]!.aggregate.outcomes.CE.den, s).toBe(e.sets[s]!.aggregate.lines); // CE stays in N
+    for (const s of SPLITS) expect(e.sets[s]!.aggregate.outcomes.C1.den, s).toBe(e.sets[s]!.aggregate.ready); // and in R
+  });
+
+  it("CE: an engine error is CE (engine error dimension) on exactly the lines that throw; A6 not met", () => {
+    const e = run("throwOnNeedsReview");
+    const want = ids((c) => c.expect.status === "needs_review");
+    expect(setIds(e, (s) => s.caseIds.CE)).toEqual(want);
+    expect(setIds(e, (s) => s.caseIds.CEEngineError)).toEqual(want);
+    expect(setIds(e, (s) => [...s.caseIds.CEInvalidOutput, ...s.caseIds.CENondeterministic])).toEqual([]);
+    expect(e.sets.holdout2!.ceLines[0].engineError).toMatch(/^Error: refused ing-h2-/);
+    expect(statusOf(e, "A6")).toBe("not met");
+  });
+
+  it("CE: a nondeterministic engine (the second parse differs) is CE (nondeterministic dimension) on exactly those lines; A6 not met", () => {
+    const e = run("nondeterministicNote");
+    const want = ids(ready);
+    expect(setIds(e, (s) => s.caseIds.CE)).toEqual(want);
+    expect(setIds(e, (s) => s.caseIds.CENondeterministic)).toEqual(want);
+    expect(setIds(e, (s) => [...s.caseIds.CEInvalidOutput, ...s.caseIds.CEEngineError])).toEqual([]);
+    expect(setIds(e, (s) => s.caseIds.C1)).toEqual([]);
+    expect(statusOf(e, "A6")).toBe("not met");
+    expect(statusOf(e, "A1")).toBe("not met");
   });
 
   it("every saboteur is distinguishable from the oracle on holdout-v2", () => {

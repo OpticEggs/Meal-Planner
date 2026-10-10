@@ -1,12 +1,13 @@
 /**
- * EVALUATION-PLAN-v2 outcome scoring, unit level: every outcome class (C1–C8, C1+, the C3/C5 partial
- * sub-classes, CE), every severe code S1–S8, false-certainty severity, aggregates and the acceptance
- * statuses — each from a hand-built label and engine reading.
+ * Outcomes v3 scoring (EVALUATION-PLAN-v3), unit level: every outcome class (C1–C8, C1+, the C3/C5
+ * partial sub-classes, CE), every severe code S1–S8, false-certainty severity, aggregates and the
+ * acceptance statuses — each from a hand-built label and a contract-valid engine reading (an invalid
+ * reading is CE; see the CE tests). The hand-calculated oracles are in oracles-v3.json.
  */
 import { describe, expect, it } from "vitest";
 import type { IngredientEngine, ParsedIngredientV1 } from "../../src/contract";
 import { labelToReading } from "../controls";
-import { ACCEPTANCE_THRESHOLD, acceptance, aggregate, classifyLine, classifyLines, engineOutcomes, memoizeEngine, setReport, type LineOutcome } from "../outcomes";
+import { ACCEPTANCE_THRESHOLD, acceptance, aggregate, classifyLine, classifyLines, classifyObservation, engineOutcomes, observe, observeAll, replayEngine, serializeParse, setReport, type LineOutcome } from "../outcomes";
 import { rate } from "../stats";
 import type { IngredientCase, IngredientExpect } from "../types";
 
@@ -97,13 +98,13 @@ describe("outcome classes (§4)", () => {
   });
 
   it("C2 high: ready on a needs_review label (S4) or an unsupported label (S8)", () => {
-    expect(one(range, read(range, { status: "ready", reasons: [] }))).toMatchObject({ outcome: "C2", falseCertainty: "high", severe: ["S4"] });
+    expect(one(noAmount, read(noAmount, { status: "ready", amountUnstated: "as_needed", reasons: [] }))).toMatchObject({ outcome: "C2", falseCertainty: "high", severe: ["S4"] });
     expect(one(heading, read(heading, { status: "ready", name: "sauce", amountUnstated: "other", reasons: [] }))).toMatchObject({ outcome: "C2", falseCertainty: "high", severe: ["S8"] });
   });
 
-  it("C2 with only a fabricated amount and a matching (null) unit is reported high (documented reading)", () => {
-    const o = one(saltToTaste, read(saltToTaste, { quantity: q("1") }));
-    expect(o).toMatchObject({ outcome: "C2", falseCertainty: "high", severe: ["S1"] });
+  it("a fabricated amount on a ready reading is C2 high with S1; with a null unit the reading is invalid, so CE (documented reading)", () => {
+    expect(one(saltToTaste, read(saltToTaste, { quantity: q("1"), unit: u("pinch", "imprecise") }))).toMatchObject({ outcome: "C2", falseCertainty: "high", severe: ["S1"] });
+    expect(one(saltToTaste, read(saltToTaste, { quantity: q("1") }))).toMatchObject({ outcome: "CE", falseCertainty: null, severe: [] });
   });
 
   it("C3 sub-classes on a ready label: a useful partial, b wrong partial, c abstention, x food not named", () => {
@@ -138,22 +139,30 @@ describe("outcome classes (§4)", () => {
     expect(one(heading, read(heading, { status: "needs_review", reasons: ["unclassified"] })).outcome).toBe("C8");
   });
 
-  it("CE: an engine error or a status outside the contract (never C1, no S code)", () => {
-    expect(one(flour, null, "Error: boom")).toMatchObject({ outcome: "CE", engineStatus: "error", severe: [], fullyCorrect: false });
-    expect(one(saltToTaste, { ...read(saltToTaste), status: "maybe", quantity: q("1") })).toMatchObject({ outcome: "CE", engineStatus: "invalid", severe: ["S1"] });
-    expect(one(flour, undefined)).toMatchObject({ outcome: "CE", engineStatus: "invalid" });
+  it("CE: an engine error, an output that fails the contract validator, or two different parses (never C1, no S code)", () => {
+    expect(one(flour, null, "Error: boom")).toMatchObject({ outcome: "CE", engineStatus: "error", severe: [], fullyCorrect: false, validity: { engineError: "Error: boom", problems: [], nondeterministic: false } });
+    // SF-6: a status outside the contract no longer carries S codes (v2 gave S1 here).
+    expect(one(saltToTaste, { ...read(saltToTaste), status: "maybe", quantity: q("1") })).toMatchObject({ outcome: "CE", engineStatus: "invalid", severe: [] });
+    expect(one(flour, undefined)).toMatchObject({ outcome: "CE", engineStatus: "invalid", severe: [] });
+    // N-2: validity is the validator's verdict, not the status string: a ready reading with a range is CE.
+    const rangeReady = one(range, read(range, { status: "ready", reasons: [] }));
+    expect(rangeReady).toMatchObject({ outcome: "CE", engineStatus: "ready", severe: [], falseCertainty: null, partial: null });
+    expect(rangeReady.validity.problems).toEqual(["ingredient.quantity: a ready line cannot have a range"]);
+    expect(rangeReady.fields).toEqual({ name: { strict: false, accepted: false }, quantity: false, unit: false });
+    const twice = classifyObservation(flour, { first: { ok: true, output: read(flour) }, second: { ok: true, output: read(flour, { note: "x" }) } });
+    expect(twice).toMatchObject({ outcome: "CE", severe: [], validity: { engineError: null, problems: [], nondeterministic: true } });
   });
 });
 
 describe("severe semantic errors (§5)", () => {
   it("S1 fabricated amount, on any status", () => {
     expect(one(noAmount, read(noAmount, { quantity: q("1"), unit: u("each", "count", "") })).severe).toEqual(["S1"]);
-    expect(one(heading, read(heading, { quantity: q("2") })).severe).toEqual(["S1"]);
+    expect(one(heading, read(heading, { status: "needs_review", name: "sauce", quantity: q("2"), unit: u("each", "count", ""), reasons: ["unclassified"] }))).toMatchObject({ outcome: "C8", severe: ["S1"] });
   });
 
   it("S2 wrong amount on a ready reading, including a range collapsed to one end", () => {
     expect(one(flour, read(flour, { quantity: q("3") })).severe).toEqual(["S2"]);
-    expect(one(flour, read(flour, { quantity: null })).severe).toEqual(["S2"]);
+    expect(one(flour, read(flour, { quantity: null, amountUnstated: "other" })).severe).toEqual(["S2"]);
     expect(one(range, read(range, { status: "ready", quantity: q("2"), reasons: [] })).severe).toEqual(["S2", "S4"]);
     expect(one(flour, read(flour, { status: "needs_review", quantity: q("3"), reasons: ["unclassified"] })).severe).toEqual([]);
   });
@@ -265,7 +274,7 @@ describe("acceptance statuses (§6)", () => {
     a.outcomes.C3plusC4 = rate(0, den);
     return a;
   };
-  const status = (a: ReturnType<typeof aggregate>, id: string) => acceptance(a).criteria.find((c) => c.id === id)!.status;
+  const status = (a: ReturnType<typeof aggregate>, id: string) => acceptance(a, "holdout2").criteria.find((c) => c.id === id)!.status;
 
   it("A1: met with confidence needs the Wilson lower bound ≥ 98 % (189 perfect R lines), met on the point estimate, else not met", () => {
     expect(ACCEPTANCE_THRESHOLD.A1).toBe(0.98);
@@ -276,7 +285,7 @@ describe("acceptance statuses (§6)", () => {
     expect(status(withC1(0, 0), "A1")).toBe("not met");
   });
 
-  it("A2 needs every field; A3/A4 need zero counts; A5 is the point estimate ≤ 10 %; A6/A7 are outside the scorer", () => {
+  it("A2 needs every field; A3/A4 need zero counts; A5 is the point estimate ≤ 10 %; A6 needs CE = 0 in the scorer; A7 is outside the scorer", () => {
     const a = withC1(200, 200);
     expect(status(a, "A2")).toBe("met with confidence");
     a.fieldAccuracyOnReady.unit = rate(195, 200);
@@ -291,10 +300,13 @@ describe("acceptance statuses (§6)", () => {
     expect(status(a, "A5")).toBe("met");
     a.outcomes.C3plusC4 = rate(21, 200);
     expect(status(a, "A5")).toBe("not met");
-    expect(status(a, "A6")).toBe("checked outside the scorer");
+    expect(status(a, "A6")).toBe("scorer checks met; rest checked outside the scorer");
+    a.outcomes.CE = rate(1, 300);
+    expect(status(a, "A6")).toBe("not met");
+    expect(acceptance(a, "holdout2").a6ScorerChecksMet).toBe(false);
     expect(status(a, "A7")).toBe("checked outside the scorer");
-    expect(acceptance(a).a1ToA5Met).toBe(false);
-    expect(acceptance(withC1(200, 200)).a1ToA5Met).toBe(true);
+    expect(acceptance(a, "holdout2").a1ToA5Met).toBe(false);
+    expect(acceptance(withC1(200, 200), "holdout2").a1ToA5Met).toBe(true);
   });
 });
 
@@ -302,14 +314,16 @@ describe("pre-registered sensitivity figures (informational, not the acceptance 
   const yogurt = mk("3 (5.3 oz) cups vanilla Greek yogurt", { name: "vanilla Greek yogurt", quantity: "3", unit: "container", packageSize: { quantity: "5 3/10", unit: "oz" } }, { id: "ing-h2-0087" });
   const bareSalt = mk("sea salt", { status: "needs_review", name: "sea salt" }, { categories: ["quantity_missing", "seasoning_ordinary"] });
   const bareFood = mk("vanilla ice cream", { status: "needs_review", name: "vanilla ice cream" }, { categories: ["quantity_missing"] });
-  const notBare = mk("large eggs", { status: "needs_review", name: "eggs", note: "large" }, { categories: ["quantity_missing", "size_word"] });
+  // Tagged size_word as well: the v2 tag heuristic kept it, the plan's label definition leaves it out (SCORE-01).
+  const largeEggs = mk("large eggs", { status: "needs_review", name: "eggs", note: "large" }, { categories: ["quantity_missing", "size_word"] });
   const lines = [
     one(flour, read(flour)),
     one(yogurt, read(yogurt, { unit: u("cup", "volume", "cups") })), // the debatable reading: S3, C2 high
     one(bareSalt, read(bareSalt, { status: "ready", amountUnstated: "to_taste", reasons: [] })), // S4 on a bare food
     one(bareFood, read(bareFood, { name: null })), // C5c
-    one(notBare, read(notBare)), // C5a
-    one(range, read(range, { status: "unsupported", name: null, quantity: null, unit: null, reasons: ["not_an_ingredient"] })), // C6
+    one(largeEggs, read(largeEggs)), // C5a
+    one(range, read(range, { status: "unsupported", name: null, quantity: null, unit: null, reasons: ["not_an_ingredient"] })), // C6, kept (an amount)
+    one(altsNoAmount, read(altsNoAmount)), // C5a, kept (alternatives)
   ];
 
   it("lists the debatable cases in a constant and recomputes A1–A5 without them on holdout2 only", () => {
@@ -324,18 +338,20 @@ describe("pre-registered sensitivity figures (informational, not the acceptance 
     expect(setReport("dev", lines).sensitivity.excludingDebatable).toBeNull();
   });
 
-  it("reports needs_review figures without bare foods (only quantity_missing and/or seasoning tags), with counts", () => {
-    const n = setReport("holdout2", lines).sensitivity.needsReviewExcludingBareFoods;
-    expect(n.excludedIds).toEqual([bareSalt.id, bareFood.id]);
-    expect([n.excluded, n.needsReview]).toEqual([2, 2]);
+  it("reports needs_review figures without the labels with no amount (quantity, unit, alternatives all null — SCORE-01), with counts", () => {
+    const n = setReport("holdout2", lines).sensitivity.needsReviewExcludingBareNoAmount;
+    expect(n.definition).toMatch(/quantity and unit null and alternatives empty/);
+    expect(n.excludedIds).toEqual([bareSalt.id, bareFood.id, largeEggs.id]);
+    expect([n.excluded, n.needsReview]).toEqual([3, 2]);
     expect([n.C5.num, n.C5.den, n.C5a.num, n.C5c.num, n.C6.num, n.S4.num, n.S4.den]).toEqual([1, 2, 1, 0, 1, 0, 2]);
     const all = setReport("holdout2", lines).aggregate;
-    expect([all.outcomes.C5.num, all.outcomes.C5.den, all.outcomes.C5c.num, all.severe.S4.num]).toEqual([2, 4, 1, 1]);
+    expect([all.outcomes.C5.num, all.outcomes.C5.den, all.outcomes.C5c.num, all.severe.S4.num]).toEqual([3, 5, 1, 1]);
+    expect(lines.map((x) => x.bareNoAmount)).toEqual([false, false, true, true, true, false, false]);
   });
 });
 
 describe("engine plumbing", () => {
-  it("memoizeEngine parses each input once and replays results and errors", () => {
+  it("observe parses a line twice; observeAll once per distinct input; replayEngine replays the first parse or its error", () => {
     let calls = 0;
     const base: IngredientEngine = {
       id: "t",
@@ -346,12 +362,28 @@ describe("engine plumbing", () => {
         return read(flour);
       },
     };
-    const m = memoizeEngine(base);
-    expect(m.parse("x")).toBe(m.parse("x"));
-    expect(() => m.parse("boom")).toThrow("bad line");
-    expect(() => m.parse("boom")).toThrow("bad line");
+    const o = observe(base, "x");
     expect(calls).toBe(2);
+    expect(o.first).toEqual({ ok: true, output: read(flour) });
+    expect(observe(base, "boom")).toEqual({ first: { ok: false, error: "Error: bad line" }, second: { ok: false, error: "Error: bad line" } });
+    calls = 0;
+    const obs = observeAll([flour, { ...flour, id: "ing-h2-9999" }], base);
+    expect([obs.size, calls]).toEqual([1, 2]);
+    const m = replayEngine(base, new Map([...obs, ["boom", observe(base, "boom")]]));
+    calls = 0;
+    expect(m.parse(flour.input)).toBe(obs.get(flour.input)!.first.ok ? (obs.get(flour.input)!.first as { output: unknown }).output : null);
+    expect(() => m.parse("boom")).toThrow("Error: bad line");
+    expect(calls).toBe(0);
+    m.parse("unobserved");
+    expect(calls).toBe(1);
     expect([m.id, m.description]).toEqual(["t", "d"]);
+  });
+
+  it("serializeParse compares canonical JSON (key order does not matter) or the thrown message", () => {
+    expect(serializeParse({ ok: true, output: { a: 1, b: 2 } })).toBe(serializeParse({ ok: true, output: { b: 2, a: 1 } }));
+    expect(serializeParse({ ok: true, output: { a: 1 } })).not.toBe(serializeParse({ ok: true, output: { a: 2 } }));
+    expect(serializeParse({ ok: false, error: "E" })).not.toBe(serializeParse({ ok: false, error: "F" }));
+    expect(serializeParse({ ok: true, output: { a: Number.NaN } })).toMatch(/^unserializable /);
   });
 
   it("classifyLines catches engine errors per line; engineOutcomes reports each set separately", () => {
