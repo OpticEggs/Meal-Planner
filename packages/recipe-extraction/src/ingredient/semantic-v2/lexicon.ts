@@ -194,7 +194,9 @@ export const MEASURE_ADJECTIVES = setOf("heaping heaped scant level rounded gene
 export const UNKNOWN_MEASURES = setOf(
   "dsp dsps dessertspoon dessertspoons dollop dollops glug glugs drizzle drizzles squeeze squeezes rasher rashers punnet punnets " +
     "sachet sachets glass glasses mug mugs spoonful spoonfuls shot shots jigger jiggers cl cls centiliter centiliters centilitre centilitres " +
-    "peck pecks bushel bushels dab dabs pat pats lump lumps sliver slivers twist twists nub nubs smidgen smidgens",
+    "peck pecks bushel bushels dab dabs pat pats lump lumps sliver slivers twist twists nub nubs smidgen smidgens " +
+    // semantic-v2 (§12.14): packaging and batch words outside the registry ("1 sleeve saltine crackers", "1 recipe pie dough")
+    "sleeve sleeves recipe recipes batch batches",
 );
 
 /** Words after a number that make it a temperature or a time, never an amount ("350°F", "10 minutes"). */

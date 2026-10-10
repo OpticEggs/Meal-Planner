@@ -333,6 +333,8 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
     if (isWord(t) && Object.prototype.hasOwnProperty.call(FORM_WORDS, t.lower) && !isWord(toks[a + 1], "or")) {
       fx.form ??= FORM_WORDS[t.lower];
       a++;
+      // (semantic-v2) "1 cup cooked and shredded chicken": the "and" joins the form to a preparation word
+      if (isWord(toks[a], "and") && isWord(toks[a + 1]) && TRAILING_PREP_WORDS.has((toks[a + 1] as { lower: string }).lower)) a++;
       continue;
     }
     break;
