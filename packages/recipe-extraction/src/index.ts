@@ -3,7 +3,8 @@
  * database, no environment, no logging. See CONTRACT-v1.md.
  *
  * Engines: the frozen Table import 2 parsers (cb7b56e) translated into v1 (Phase 1; the default), and
- * the Phase 2 candidate `semantic-v1` and the Phase 2B candidate `semantic-v2` (by id; neither is the default).
+ * the Phase 2 candidate `semantic-v1`, the Phase 2B candidate `semantic-v2` and the Phase 2C candidate `semantic-v3`
+ * (by id; none is the default).
  */
 import { REASONS, type ParsedIngredientV1 } from "./contract";
 import { getEngine } from "./ingredient/engines";
@@ -23,6 +24,7 @@ export { DEFAULT_ENGINE_ID, ENGINES, getEngine } from "./ingredient/engines";
 export { LEGACY_ENGINE_ID, LEGACY_SUGGESTION_ENGINE_ID } from "./ingredient/legacy";
 export { SEMANTIC_ENGINE_ID } from "./ingredient/semantic/engine";
 export { SEMANTIC_V2_ENGINE_ID } from "./ingredient/semantic-v2/engine";
+export { SEMANTIC_V3_ENGINE_ID } from "./ingredient/semantic-v3/engine";
 export { extractRecipePage, PAGE_ENGINE_ID } from "./page/extract";
 
 /** Reads one ingredient line with the chosen engine (default: DEFAULT_ENGINE_ID). Throws only for an unknown engine id. */

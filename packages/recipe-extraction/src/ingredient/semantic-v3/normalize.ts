@@ -1,0 +1,44 @@
+/**
+ * semantic-v2 · step 1: the text the engine reads (CONTRACT-v1 §2 `normalized`).
+ *
+ * Control characters and invisible direction/format marks become spaces, every run of whitespace
+ * (including non-breaking and ideographic spaces) becomes one space, the ends are trimmed, and the
+ * result is capped at LIMITS.maxLineChars. `truncated` is true exactly when the cap cut something
+ * (§10.1). A cut never splits a surrogate pair.
+ *
+ * Joiners — soft hyphen (U+00AD), zero-width non-joiner/joiner (U+200C/D), word joiner (U+2060) and a
+ * byte-order mark inside the text (U+FEFF) — are removed when they sit between two letters, so
+ * "jalape\u200dño" reads as one word; anywhere else they become spaces like other invisible marks, so
+ * "1\u00ad2 cups" is never read as 12. A zero-width space (U+200B) always separates words.
+ */
+import { LIMITS } from "../../contract";
+
+/**
+ * C0 and C1 controls, DEL, zero-width space/joiners and direction marks (U+200B–U+200F), bidi
+ * embeddings/overrides (U+202A–U+202E), word joiner and invisible operators (U+2060–U+2064), bidi
+ * isolates (U+2066–U+2069), the Arabic letter mark (U+061C), the Mongolian vowel separator (U+180E)
+ * and the byte-order mark (U+FEFF).
+ */
+const CONTROLS = /[\u0000-\u001f\u007f-\u009f؜᠎​-‏‪-‮⁠-⁤⁦-⁩﻿]/g;
+/** Invisible joiners between two letters: removed (they sit inside a word). */
+const JOINERS = /(?<=[\p{L}\p{M}])[\u00ad\u200c\u200d\u2060\ufeff]+(?=[\p{L}\p{M}])/gu;
+/** A soft hyphen anywhere else is spaced like the other invisible marks. */
+const SOFT_HYPHEN = /\u00ad/g;
+
+export interface NormalizedLine {
+  raw: string;
+  normalized: string;
+  truncated: boolean;
+}
+
+export function normalizeLine(input: unknown): NormalizedLine {
+  const raw = typeof input === "string" ? input : "";
+  // (semantic-v2, CONTRACT §12.13) names are recorded in NFC: a combining accent is read as its composed letter
+  const full = raw.normalize("NFC").replace(JOINERS, "").replace(SOFT_HYPHEN, " ").replace(CONTROLS, " ").replace(/\s+/g, " ").trim();
+  if (full.length <= LIMITS.maxLineChars) return { raw, normalized: full, truncated: false };
+  let cut = LIMITS.maxLineChars;
+  const last = full.charCodeAt(cut - 1);
+  const next = full.charCodeAt(cut);
+  if (last >= 0xd800 && last <= 0xdbff && next >= 0xdc00 && next <= 0xdfff) cut -= 1; // keep the pair whole
+  return { raw, normalized: full.slice(0, cut).trimEnd(), truncated: true };
+}
