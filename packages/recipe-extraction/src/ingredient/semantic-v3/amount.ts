@@ -21,7 +21,7 @@ import {
   INVARIANT_PLURALS, PACKAGING_NOUNS, RANGE_DASHES, ROMANCE_JOINERS, VESSEL_COMPOUNDS, REMARK_WORDS, SIZE_WORDS, TIME_WORDS, UNKNOWN_MEASURES, unitOfWord,
 } from "./lexicon";
 import { andFraction, fractionUnitWord, readNumber, type NumberRead } from "./quantity";
-import { compoundFood, describingWord, foodWord, measureGerund, plainWord, recognisedFoodHead, twoWordFood } from "./foods";
+import { compoundFood, compoundFoodExactly, describingWord, foodWord, measureGerund, plainWord, recognisedFoodHead, twoWordFood } from "./foods";
 import { emptyEffects, type AmountReading, type Effects } from "./types";
 import { countAgreesPastMeasure, unresolvedMeasureAt } from "./measure-slot";
 import { NOT_ALIASES } from "../../unit-aliases";
@@ -714,7 +714,7 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
 
   // (semantic-v3, CONTRACT §13.2) "1 sheet pan vegetables", "2 cup measuring cups": a unit word that begins the name of a
   // cooking vessel ("sheet pan") is no unit of the food — the vessel is an unresolved measure
-  if (unitRead && n1.ok && max === null && isWord(toks[k]) && isWord(toks[k + 1]) && VESSEL_COMPOUNDS.has(`${plainWord(text.slice(unitRead.s, unitRead.e).replace(/\.$/, ""))}-${plainWord((toks[k] as { lower: string }).lower)}`)) {
+  if (unitRead && n1.ok && max === null && isWord(toks[k]) && isWord(toks[k + 1]) && !(isWord(toks[k + 1]) && compoundFoodExactly([text.slice(unitRead.s, unitRead.e), (toks[k] as { lower: string }).lower, (toks[k + 1] as { lower: string }).lower])) && VESSEL_COMPOUNDS.has(`${plainWord(text.slice(unitRead.s, unitRead.e).replace(/\.$/, ""))}-${plainWord((toks[k] as { lower: string }).lower)}`)) {
     fx.notes.push({ s: n1.s, text: text.slice(n1.s, toks[k].e) });
     fx.reasons.push("unit_unknown");
     return {

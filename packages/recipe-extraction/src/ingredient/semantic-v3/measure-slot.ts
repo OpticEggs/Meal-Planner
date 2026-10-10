@@ -24,7 +24,7 @@
  */
 import { cmp, rational, type Rational } from "../../rational";
 import { NOT_ALIASES } from "../../unit-aliases";
-import { bakedWord, drinkWord, foodWord, meatOrFishWord, plainWord, twoWordFood, vesselLikeWord } from "./foods";
+import { bakedWord, compoundFoodExactly, drinkWord, foodWord, meatOrFishWord, plainWord, twoWordFood, vesselLikeWord } from "./foods";
 import { isWord, type Tok } from "./lexer";
 import {
   APPLIANCE_WORDS, BOTTLE_SIZE_WORDS, CUT_PART_WORDS, EQUIPMENT_TOOL_HEADS, EQUIPMENT_VESSEL_HEADS, FUNCTION_WORDS, INVARIANT_PLURALS, PART_NOUNS, ROMANCE_JOINERS, SHAPE_FOOD_NOUNS, VESSEL_COMPOUNDS,
@@ -88,6 +88,8 @@ export function unresolvedMeasureAt(toks: readonly Tok[], a: number, count: Rati
   // a dish name headed by the word ("pots de crème", "pan de bono", "eggs en cocotte")
   if (ROMANCE_JOINERS.has(plainWord(next.lower)) && isWord(toks[a + 2])) return a;
   if (twoWordFood(lw, next.lower)) return a;
+  // ("1 sheet-pan dinner", "1 sheet pan dinner": a dish named with its vessel)
+  if (compoundFoodExactly([...lw.split("-"), next.lower]) || (isWord(toks[a + 2]) && compoundFoodExactly([lw, next.lower, (toks[a + 2] as { lower: string }).lower]))) return a;
   // 1. a noun the contract declares is not a unit
   if (hasOwn(NOT_ALIASES, lw)) return a + 1;
   // (a cooking vessel named in one or two words: "1 dutch oven stew", "1 crockpot chili", "1 sheet pan vegetables")

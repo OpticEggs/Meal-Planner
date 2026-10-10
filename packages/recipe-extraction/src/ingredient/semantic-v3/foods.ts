@@ -640,6 +640,13 @@ export function twoWordFood(w1: string, w2: string): boolean {
   return compoundFood(w1, w2) || forms(plainWord(w2)).some((f) => FOOD_WORDS.has(`${a}-${f}`) || FOOD_WORDS.has(`${a}-${plainWord(w2)}`));
 }
 
+/** (semantic-v3) The words, all of them, are a compound food name ("sheet pan dinner", "pot roast"). */
+export function compoundFoodExactly(ws: readonly string[]): boolean {
+  if (ws.length < 2) return false;
+  const lower = ws.map(plainWord);
+  return forms(lower[lower.length - 1]).some((f) => COMPOUND_FOOD_SET.has([...lower.slice(0, -1), f].join(" ")));
+}
+
 /** The words end in a compound food name of two or three words ("peanut butter cups", "wonton cups", "tea bags"). */
 export function compoundFoodEnding(ws: readonly string[]): boolean {
   if (ws.length < 2) return false;

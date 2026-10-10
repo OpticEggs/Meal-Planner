@@ -183,7 +183,7 @@
 {"line": "1 sponge cake", "status": "ready", "name": "sponge cake", "quantity": "1", "unit": "each"}
 {"line": "2 layer cakes", "status": "ready", "name": "layer cakes", "quantity": "2", "unit": "each"}
 {"line": "1 tube cake", "status": "ready", "name": "cake", "quantity": "1", "unit": "tube"}
-{"line": "1 sheet pan of roasted vegetables", "status": "needs_review", "name": "sheet pan of roasted vegetables", "quantity": null, "unit": null}
+{"line": "1 sheet pan of roasted vegetables", "status": "needs_review", "name": "roasted vegetables", "quantity": null, "unit": null}
 {"line": "2 rib roasts", "status": "ready", "name": "rib roasts", "quantity": "2", "unit": "each"}
 {"line": "4 ribeye roasts", "status": "ready", "name": "ribeye roasts", "quantity": "4", "unit": "each"}
 {"line": "1 sirloin tip roast", "status": "ready", "name": "sirloin tip roast", "quantity": "1", "unit": "each"}

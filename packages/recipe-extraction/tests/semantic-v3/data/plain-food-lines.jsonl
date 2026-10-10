@@ -1126,7 +1126,7 @@
 {"line": "2 bouillon cubes", "status": "ready", "name": "bouillon cubes", "quantity": "2", "unit": "each"}
 {"line": "1 envelope gelatin", "status": "ready", "name": "gelatin", "quantity": "1", "unit": "envelope"}
 {"line": "1 packet active dry yeast", "status": "ready", "name": "active dry yeast", "quantity": "1", "unit": "packet"}
-{"line": "1 cake compressed yeast", "status": "needs_review", "name": "cake compressed yeast", "quantity": null, "unit": null}
+{"line": "1 cake compressed yeast", "status": "needs_review", "name": "compressed yeast", "quantity": null, "unit": null}
 {"line": "1 packet stevia", "status": "ready", "name": "stevia", "quantity": "1", "unit": "packet"}
 {"line": "4 sugar cubes", "status": "ready", "name": "sugar", "quantity": "4", "unit": "cube"}
 {"line": "12 marshmallows", "status": "ready", "name": "marshmallows", "quantity": "12", "unit": "each"}
