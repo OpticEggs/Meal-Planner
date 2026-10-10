@@ -178,7 +178,7 @@
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0548 [C] final-head-probe:probes.tsv:159 \"4 kaffir lime leaves\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0611 [C] final-head-probe:probes.tsv:159 \"4 kaffir lime leaves\"",
      "reason": "^AssertionError"
     }
    ],
@@ -224,7 +224,7 @@
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0505 [C] final-head-probe:probes.tsv:113 \"4 (6-oz) salmon fillets\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0568 [C] final-head-probe:probes.tsv:113 \"4 (6-oz) salmon fillets\"",
      "reason": "^AssertionError"
     }
    ],
@@ -567,6 +567,52 @@
     },
     {
      "test": "a counted line whose food is not recognised: needs_review, no amount, the text after the number kept (Decision 1, owner rule 1) > never unsupported, never dropped: an unrecognised head is not a non-ingredient shape",
+     "reason": "^AssertionError"
+    }
+   ],
+   "expect": "KILLED"
+  },
+  {
+   "id": "P-measure-gerund-off",
+   "description": "gerund measures accepted as modifiers again ('1 helping mashed potatoes' read with a count)",
+   "file": "src/ingredient/semantic-v2/foods.ts",
+   "find": "export function measureGerund(word: string): boolean {",
+   "replace": "export function measureGerund(word: string): boolean {\n  if (Number.isFinite(0)) return false;",
+   "tests": [
+    "tests/regressions/semantic-v2-regressions.test.ts"
+   ],
+   "killedBy": [
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0411 [A] candidate-review-r1-round3:R1R3-NEW:HIGH lines, firm \"1 helping mashed potatoes\"",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0412 [A] candidate-review-r1-round3:R1R3-NEW:HIGH lines, firm \"1 dusting cocoa powder\"",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0417 [A] candidate-review-r1-round3:R1R3-NEW:HIGH lines, firm \"1 drizzling warm honey\"",
+     "reason": "^AssertionError"
+    }
+   ],
+   "expect": "KILLED"
+  },
+  {
+   "id": "P-homograph-off",
+   "description": "a food homograph after a capitalised brand read as food again ('1 Big Green Egg' ready)",
+   "file": "src/ingredient/semantic-v2/foods.ts",
+   "find": "export function homographHeadAfterCapital(name: string): boolean {",
+   "replace": "export function homographHeadAfterCapital(name: string): boolean {\n  if (Number.isFinite(0)) return false;",
+   "tests": [
+    "tests/regressions/semantic-v2-regressions.test.ts"
+   ],
+   "killedBy": [
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0399 [D] candidate-review-r1-round3:R1R3-NEW:HIGH lines, firm \"1 Big Green Egg\"",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0400 [D] candidate-review-r1-round3:R1R3-NEW:HIGH lines, firm \"1 Kamado Joe\"",
      "reason": "^AssertionError"
     }
    ],

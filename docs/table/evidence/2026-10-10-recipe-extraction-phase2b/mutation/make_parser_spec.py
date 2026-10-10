@@ -107,6 +107,12 @@ M.append({"id": "P-food-head-off", "description": "recognised-food requirement d
           "killedBy": [safe(RF, "a capitalised word is accepted as a proper name or brand before a food head, a lower-case unknown word is not"),
                        safe(RU, "never unsupported, never dropped: an unrecognised head is not a non-ingredient shape")],
           "expect": "KILLED"})
+M.append({"id": "P-measure-gerund-off", "description": "gerund measures accepted as modifiers again ('1 helping mashed potatoes' read with a count)",
+          "file": S + "foods.ts", **early_return("export function measureGerund(word: string): boolean {", "false"),
+          "tests": [HARNESS], "killedBy": [reg("1 helping mashed potatoes"), reg("1 dusting cocoa powder"), reg("1 drizzling warm honey")], "expect": "KILLED"})
+M.append({"id": "P-homograph-off", "description": "a food homograph after a capitalised brand read as food again ('1 Big Green Egg' ready)",
+          "file": S + "foods.ts", **early_return("export function homographHeadAfterCapital(name: string): boolean {", "false"),
+          "tests": [HARNESS], "killedBy": [reg("1 Big Green Egg"), reg("1 Kamado Joe")], "expect": "KILLED"})
 spec = {"format": "recipe-extraction-mutations/v1", "owner": "coordinator (Phase 2B)",
         "description": "Parser mutations for the candidate semantic-v2: each disables or weakens one named safeguard and must be KILLED by an assertion in its direct test or in the required regression harness, for the stated reason.",
         "mutations": M}
