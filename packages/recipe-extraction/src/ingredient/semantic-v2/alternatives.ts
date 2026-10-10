@@ -1,18 +1,14 @@
 /**
- * semantic-v2 · step 8: the options of a choice of ingredients (CONTRACT §7.8, §12.7). See `shareOptions`.
+ * semantic-v2 · step 8: the options of a choice of ingredients (CONTRACT §7.8, §12.7).
  *
- * Options are kept in source order and as written; a word is never invented, and an option is never
- * dropped. Two grammatical shapes complete elided words:
- *
- *  - options BEFORE one head noun ("chicken or vegetable broth", "Greek or plain yogurt", "red or green
- *    bell pepper", "1 tbsp fresh or 1 tsp dried thyme"): each earlier option is one modifier — a single
- *    word or a run of capitalised words ("Monterey Jack") — and shares the head of the last option, which
- *    is everything after the last option's own modifier. Not shared when the earlier option is a basic
- *    ingredient offered whole (STANDALONE_INGREDIENTS: "butter or olive oil", "honey or maple syrup") or
- *    already a word of that head ("flour or almond flour", "salt or kosher salt").
- *  - options AFTER the named food, in brackets or after a comma ("sugar (granulated or powdered)", "1 onion,
- *    red or white"): versions of that food when they describe it (adjectives, participles, "un-"/"non-"
- *    forms, percentages); the caller decides the other cases (see `versionsOf`).
+ * The OPTION-PRESERVATION RULE (`shareOptions`): options are kept one for one, in source order — never dropped,
+ * merged or invented. The only words added to an option are words written in the same line that the grammar shares:
+ * a trailing head (version words before it, or SHARED_HEAD_MODIFIERS sources of it), a leading product-form word
+ * (LEADING_SHARE_WORDS), or the first option's head for an option made only of version words. Options written after
+ * the named food ("X, A or B", "X (A or B)") are varieties of it (`varietiesOf`), kinds of a category (`categoryNoun`),
+ * or — otherwise — every item of a list. Unlike semantic-v1, no list of foods decides whether a head is shared
+ * (semantic-v1's STANDALONE_INGREDIENTS); the lexicons here list modifier words per head, as CONTRACT §12.7 b asks
+ * ("whether M1 alone is a product of H's kind").
  *
  * A remark-only option ("or 1 tsp dried") names the same food in another form ("dried thyme").
  */
@@ -129,29 +125,6 @@ export function adjectival(word: string): boolean {
     /\p{L}-\p{L}+ing$/u.test(w) ||
     /^\d+(?:\.\d+)?%$/.test(w)
   );
-}
-
-export const plural = (w: string) => w.length > 2 && /[^s]s$/i.test(w);
-const lastWord = (s: string) => wordsOf(s).pop() ?? "";
-
-/**
- * How options written AFTER a named food relate to it:
- *  - "versions": they describe it ("sugar (granulated or powdered)", "1 onion, red or white", "oats (rolled
- *    or quick-cooking)") — at least one option describes, and every option is at most two words;
- *  - "kinds": in brackets, single singular words beside a singular food ("pasta (penne or rigatoni)" →
- *    penne pasta, rigatoni pasta) — the brackets say which food is meant;
- *  - "members": the options are the food themselves (plural options "(walnuts or pecans)", a plural
- *    food "greens, spinach or kale", "potatoes, russet or Yukon gold", or any other bracketed choice) — the
- *    named food is not added as an option;
- *  - "unsure": after a comma, singular nouns beside a singular food ("cheese, cheddar or Swiss", "milk,
- *    cream or half-and-half"): the grammar does not say whether the food is one of the options.
- */
-export function versionsOf(options: readonly string[], base: string, inBrackets: boolean): "versions" | "kinds" | "members" | "unsure" {
-  if (options.every((o) => wordsOf(o).length <= 2) && options.some((o) => wordsOf(o).every(adjectival))) return "versions";
-  const singles = options.every((o) => wordsOf(o).length === 1 && !plural(o));
-  if (inBrackets && singles && !plural(lastWord(base))) return "kinds";
-  if (options.every((o) => plural(lastWord(o))) || plural(lastWord(base)) || inBrackets) return "members";
-  return "unsure";
 }
 
 /** A kind placed in a name, after its leading remark words: "cheddar" + "shredded cheese" → "shredded cheddar cheese". */

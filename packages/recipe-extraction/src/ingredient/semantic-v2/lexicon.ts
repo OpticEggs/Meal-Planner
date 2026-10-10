@@ -2,9 +2,10 @@
  * semantic-v2 · the engine's small, general vocabularies, documented so a reviewer can see exactly which
  * words change a reading. Most lists are closed classes of measuring or function words (units, number
  * words, size and measure words, preparation participles, remark markers, imperative verbs, nutrition
- * labels). Three lists DO name foods and say so where they are defined: STANDALONE_INGREDIENTS (pantry
- * staples offered whole as a substitute), INVARIANT_PLURALS (zero-plural nouns) and the food-like
- * words that RECIPE_PART_WORDS deliberately leaves out. No list was chosen from a label set.
+ * labels). Lists that DO name foods say so where they are defined: INVARIANT_PLURALS (zero-plural nouns),
+ * PRODUCT_IDENTITY_NOUNS (§12.4), SHARED_HEAD_MODIFIERS (modifier words per product head, §12.7 b),
+ * CATEGORY_NOUNS, COUNTED_COMPONENT_NOUNS, LENGTH_MEASURED_FOODS, SIZE_GRADED_NOUNS and DISH_WORDS. Each is a
+ * closed class chosen from what the words mean (CONTRACT §12), never a list of corpus inputs.
  */
 import type { AmountUnstated, UnitCode } from "../../contract";
 
@@ -253,18 +254,6 @@ export const ADJECTIVE_WORDS = setOf(
     "bone-in boneless skin-on skinless seedless",
 );
 
-/**
- * Basic ingredients that are routinely offered WHOLE as a substitute for a compound ingredient ("butter or
- * olive oil", "honey or maple syrup", "water or chicken stock", "milk or heavy cream"). A word from this
- * list before "or" is its own option, so the last option's head is not shared with it ("butter oil" and
- * "honey syrup" would be made up). This is a list of foods, kept short and general (pantry staples and
- * liquids), not chosen from any label set; any other single word before "or" shares the last option's
- * head ("maple or agave syrup", "Greek or plain yogurt", "chicken or vegetable broth").
- */
-export const STANDALONE_INGREDIENTS = setOf(
-  "water butter margarine ghee lard shortening oil honey sugar salt milk cream stock broth wine beer vinegar juice yogurt yoghurt " +
-    "mayonnaise mayo ketchup molasses jam jelly cheese flour cornstarch eggs egg tofu",
-);
 
 /**
  * SHARED-HEAD MODIFIERS (semantic-v2, CONTRACT §12.7 b, f): for a product head, the words that name what the product is
@@ -538,15 +527,6 @@ export const NEED_WORDS = setOf("need needed needs require required");
  */
 export const SERVING_FACT_WORDS = setOf("serving servings size portion portions yield yields makes serves number of");
 export const SERVING_FACT_HEADS = setOf("size servings serves yield yields makes portions");
-/**
- * Dish components that head a section ("SAUCE", "DOUGH", "CAKE LAYERS"). They can also be food ("hot sauce"), so they
- * mark a heading only in a line written in capitals (PART_HEAD_WORDS mark one in any case).
- */
-export const COMPONENT_NOUNS = setOf(
-  "sauce sauces dressing dressings dough doughs crust crusts base bases batter cake cakes salad salads soup filling fillings topping toppings frosting " +
-    "glaze marinade rub brine garnish garnishes layers layer assembly pastry crumble streusel meringue custard curd syrup vinaigrette " +
-    "seasoning mix icing ganache coating breading",
-);
 
 /**
  * Serving and size labels ("Serving size: 1 cup", "Per serving: 2 tbsp", "Portion: 200 g", "Total: 2 cups"):
@@ -569,8 +549,6 @@ export const RECIPE_PART_WORDS = setOf(
   "topping toppings filling fillings garnish garnishes marinade glaze frosting icing assembly streusel decoration decorations main sides " +
     "extras serve serving finish finishing decorate for the and to ingredients ingredient dry wet layers components",
 );
-/** Recipe parts never bought as food that end a section heading in any case ("Topping", "Cake Layers", "Filling"). */
-export const PART_HEAD_WORDS = setOf("topping toppings filling fillings garnish garnishes frosting icing assembly streusel decoration decorations layers components");
 
 /** Words that, after an opening verb, show the line is an instruction ("Season with…", "Roll into…", "Mix all…"). */
 export const INSTRUCTION_CUES = setOf("the a an all into onto with until in to for over on at together then from off each well");

@@ -8,8 +8,17 @@
  *
  * Every part that was read is kept when a person must still decide something (useful partial
  * reading); the raw line is never used as the name. After the amount: a size between a bare count and
- * the food stands only beside a counted unit; a count before a food that does not read as several
- * ("Five spice powder", "Three cheese blend, 1 cup") is read again with the number in the name.
+ * the food stands only beside a packaging unit, otherwise it is a per-piece weight (§12.3); a number
+ * that counts a product's components ("Five spice powder", "Three cheese blend, 1 cup") is read again
+ * with the number in the name (§12.9).
+ *
+ * semantic-v2 (Phase 2B) is semantic-v1 with families A–D repaired under CONTRACT §12. The safeguards
+ * live in named functions: `nameLeftoverGuard` (name.ts, the general final guard), `multiplierAt` and
+ * `fractionUnitAt` (amount.ts), `RESTATEMENT_TOLERANCE` / `sameAmount` / `roundedConversion` (amount.ts),
+ * `shareOptions` (alternatives.ts, the option-preservation rule), `postFoodCountUnit` (name.ts, the
+ * count-noun rule), `containerCup` and `PACKAGE_UNITS` (amount.ts), `numberInProductName` /
+ * `numberNamesProductAt` (product numbers), `remarkSecondAmount` (remarks.ts) and `nonIngredientReason`
+ * with its named shapes (classify.ts).
  *
  * A final check (`guardedParse`) runs the contract validator: a reader that throws, or an output that
  * would not validate (a defect), is replaced by a minimal `needs_review` reading with `unclassified`, so
