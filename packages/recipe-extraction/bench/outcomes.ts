@@ -63,18 +63,19 @@ export type FalseCertaintySeverity = "high" | "medium";
 
 /** Readings the plan leaves open, as implemented here. Reported verbatim in every outcomes section. */
 export const INTERPRETATION: readonly string[] = [
-  "CE (SCORE-02): a line is CE when the engine threw on either of its two parses, when the complete first output fails validateParsedIngredientV1 (src/validate.ts) — not merely when its status is outside the contract — or when the two parses differ (canonical JSON of the outputs, or the thrown messages). A CE line stays in every denominator (so it is never C1), gets no C1–C8 class, no C3/C5 sub-class, no false-certainty severity and no S code, counts as not accurate for A2 field accuracy, and fails A6. An invalid output is never repaired or coerced to make it scoreable. Validity, engine error and nondeterminism are reported as separate dimensions; the semantic classification below applies only to valid, deterministic, non-error outputs.",
+  "CE (SCORE-02): a line is CE when the engine threw on either of its two parses, when either complete output fails validateParsedIngredientV1 (src/validate.ts) — not merely when its status is outside the contract (plan v3 change log 2(a)) — or when the two parses differ: canonical JSON of the whole outputs, unscored fields (evidence, reasons, unit source) included, or the thrown messages, so two different errors are also nondeterministic (change log 2(c)). A CE line stays in every denominator (so it is never C1), gets no C1–C8 class, no C3/C5 sub-class, no false-certainty severity and no S code, counts as not accurate for A2 field accuracy, and fails A6. An invalid output is never repaired or coerced to make it scoreable. Validity, engine error and nondeterminism are reported as separate dimensions; the semantic classification below applies only to valid, deterministic, non-error outputs.",
   "C3/C5 sub-classes are decided in the order b, c, a, x over the engine's name, quantity, unit and package size (accepted values count; a non-empty alternatives list is also compared): b = a non-null field contradicts the label; c = name, quantity and unit are all null and no alternatives were read; a = no contradiction and the food was named (name non-null, or, on a choice-of-ingredients label, the options matched); x = no contradiction but the food was not named while an amount or unit was read — a case the plan does not define, reported separately and still counted in C3/C5.",
   "C2 severity: high when the line has any of S2–S8 or a wrong unit or package size; medium when only the name is wrong (not S7). The one remaining C2 case — a fabricated quantity (S1) on a ready label whose unit also matches (both null) — is not covered by the plan's rule and is reported as high (a valid ready output with a quantity always has a unit, so under SCORE-02 this case can only arise as CE).",
   "S5 compares the engine name (§9 normalization) with the label's alternatives and any accepted alternative lists; it applies to any engine status when the engine reports no alternatives.",
   "S7 uses the accepted name match and §9-normalized word sets: the engine's (non-null) name words form a proper subset of the label name's words.",
+  "S6 fires when the label has a packageSize, the engine has none and the engine unit is mass or volume, whether or not the engine states a quantity (plan v3 change log 2(b)).",
   "S3 is the CONTRACT-v1 §9 cross-dimension check: the engine unit's dimension differs from the label unit's, or the engine package size's from the label package size's, both present.",
   "A2 field accuracy counts a field as accurate when it matches the label, whatever the engine status (a CE line counts as not accurate). A1/A2 'met with confidence' uses the unrounded Wilson lower bound (z = 1.959964).",
   "A6 in the scorer: CE = 0 — no engine error, every output valid, every line read identically twice. The rest of A6 (legacy engines, frozen-baseline snapshot and parity tests unchanged and passing; reports byte-deterministic) and A7 are recorded outside the scorer.",
   "Sensitivity 3(b) (SCORE-01): the needs_review labels with no amount are those whose label quantity and unit are null and whose alternatives are empty, whatever their category tags.",
   "Sensitivity (a) on holdout-v3 leaves out the cases marked debatable: true in holdout-v3.jsonl; on holdout-v2 the pre-registered list (ing-h2-0087). Sensitivity (c), holdout-v3 only: A1–A5 without the cases marked reliesOnNewReading: true (the result under CONTRACT-v1 §7 alone). Sensitivity (d), holdout-v3 only and only when fixtures/EXPOSURE-AUDIT-v3.json exists: A1–A5 without its matchedCaseIds. All three come from frozen data files, never from scorer constants, and are informational.",
   "holdout-v3 breakdowns: per repair family (the case's family), per CONTRACT-v1 §12 item exercised (a case counts in every item it lists; 'none' = no item) and per construction (the case's construction string; compact: lines, classes, S codes).",
-  "Review-only pre-fills (informational, not plan classes): an invented option is an engine alternatives list that is not an accepted match and offers an option the label (or an accepted list) does not; a dropped option is such a list whose options are all the label's (or an accepted list's) but which leaves out an option of a choice-of-ingredients label. The two never overlap; both stay visible next to C3b/C5b.",
+  "Review-only pre-fills (informational, not plan classes; plan v3 change log 2): an invented option is an engine option that matches no label option (nor an accepted one); a dropped option is a label option missing from an engine list that invents none. Both are judged only on an engine alternatives list that matches neither the label's options nor an accepted list, so they never overlap; both stay visible next to C3b/C5b.",
 ];
 
 // --- Reading an engine (dimensions 1–3) ----------------------------------------------------------------
@@ -137,15 +138,24 @@ export function serializeParse(p: Parse): string {
 export interface LineValidity {
   /** The engine threw on the first or the second parse (the first such message); else null. */
   engineError: string | null;
-  /** `validateParsedIngredientV1` problems of the complete first output ([] when the first parse threw). */
+  /** `validateParsedIngredientV1` problems of the complete first output, then those of the second output prefixed
+   * "second parse: " when they differ ([] for a parse that threw). Any problem makes the line invalid. */
   problems: string[];
   /** The two parses differ (serialized as `serializeParse`). */
   nondeterministic: boolean;
 }
 
+/** The contract validator's verdict on one parse ([] when the parse threw). */
+const problemsOf = (p: Parse): string[] => (p.ok ? validateParsedIngredientV1(p.output) : []);
+const sameList = (a: readonly string[], b: readonly string[]) => a.length === b.length && a.every((x, i) => x === b[i]);
+
 export function lineValidity(o: Observation): LineValidity {
   const engineError = !o.first.ok ? o.first.error : !o.second.ok ? o.second.error : null;
-  const problems = o.first.ok ? validateParsedIngredientV1(o.first.output) : [];
+  // Both parses are validated (plan v3 change log 2(a)); the second's problems are listed only when they differ.
+  const first = problemsOf(o.first);
+  const second = problemsOf(o.second);
+  const problems = sameList(first, second) ? first : [...first, ...second.map((x) => `second parse: ${x}`)];
+  // Two different thrown messages differ too (change log 2(c)).
   return { engineError, problems, nondeterministic: serializeParse(o.first) !== serializeParse(o.second) };
 }
 
@@ -275,6 +285,7 @@ export function classifyObservation(c: IngredientCase, o: Observation): LineOutc
     if (r.crossDimension) severe.push("S3");
     if (L === "needs_review" && ready) severe.push("S4");
     if (c.expect.alternatives.length >= 2 && engineAlts.length === 0 && name !== null && labelOptions.has(name)) severe.push("S5");
+    // S6 whether or not the engine states a quantity (plan v3 change log 2(b)).
     if (c.expect.packageSize !== null && !present(g.packageSize)) {
       const d = engineUnitDimension(g.unit);
       if (d === "mass" || d === "volume") severe.push("S6");

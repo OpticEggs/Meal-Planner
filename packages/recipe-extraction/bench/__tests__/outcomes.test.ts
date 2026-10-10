@@ -456,3 +456,22 @@ describe("holdout-v3 sensitivity figures from frozen case data: (a) debatable, (
     expect(s.byConstruction!.groups["construction 2"]).toEqual({ lines: 1, caseIds: ["ing-h3-0002"], classes: ["C2"], severe: ["S7"] });
   });
 });
+
+describe("plan v3 change log 2: both parses validated, S6 without a quantity, different throws", () => {
+  it("(a) lists the second parse's problems only when they differ from the first's", () => {
+    const bad = { ...read(flour), confidence: 1 };
+    const same = classifyObservation(flour, { first: { ok: true, output: bad }, second: { ok: true, output: bad } });
+    expect(same.validity.problems).toEqual(['ingredient: unknown key "confidence"']);
+    const second = classifyObservation(flour, { first: { ok: true, output: read(flour) }, second: { ok: true, output: bad } });
+    expect(second.validity).toEqual({ engineError: null, problems: ['second parse: ingredient: unknown key "confidence"'], nondeterministic: true });
+    const first = classifyObservation(flour, { first: { ok: true, output: bad }, second: { ok: true, output: read(flour) } });
+    expect(first.validity.problems).toEqual(['ingredient: unknown key "confidence"']);
+  });
+
+  it("(b) S6 when the engine drops the package and states a mass unit with no quantity; (c) different thrown messages are nondeterministic", () => {
+    expect(one(beans, read(beans, { status: "needs_review", quantity: null, unit: u("oz", "mass"), packageSize: null, reasons: ["quantity_missing"] })).severe).toEqual(["S3", "S6"]);
+    const c = classifyObservation(flour, { first: { ok: false, error: "Error: a" }, second: { ok: false, error: "Error: b" } });
+    expect(c).toMatchObject({ outcome: "CE", severe: [], validity: { engineError: "Error: a", problems: [], nondeterministic: true } });
+    expect(classifyObservation(flour, { first: { ok: false, error: "Error: a" }, second: { ok: false, error: "Error: a" } }).validity.nondeterministic).toBe(false);
+  });
+});

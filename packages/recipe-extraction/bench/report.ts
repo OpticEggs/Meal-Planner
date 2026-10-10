@@ -252,8 +252,8 @@ function outcomeTable(s: OutcomeSetReport): string[] {
   ];
   for (const c of SEVERE_CODES) lines.push(orow(`**${SEVERE_NAMES[c]}** (of N)`, s.aggregate.severe[c], every(c)));
   lines.push(orow("Any severe error (of N)", s.aggregate.anySevere, ""));
-  lines.push(orow("Invented option — review-only pre-fill, informational (of N)", p.inventedOption, ids("inventedOption")));
-  lines.push(orow("Dropped option — review-only pre-fill, informational (of N)", p.droppedOption, ids("droppedOption")));
+  lines.push(orow("Invented option — an engine option matching no label (or accepted) option; review-only, informational (of N)", p.inventedOption, ids("inventedOption")));
+  lines.push(orow("Dropped option — a label option missing from an engine list that invents none; review-only, informational (of N)", p.droppedOption, ids("droppedOption")));
   return lines;
 }
 

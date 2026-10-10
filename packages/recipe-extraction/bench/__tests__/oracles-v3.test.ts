@@ -167,10 +167,11 @@ describe("outcomes v3 hand-calculated oracles", () => {
 });
 
 describe("the oracle file is well formed", () => {
-  it("has 40–80 oracles with unique ids, each with a one-line hand calculation", () => {
+  it("has 40–100 oracles (71 written first, 14 proposed by the independent checker R1, 3 for plan v3 change log 2) with unique ids, each with a one-line hand calculation", () => {
     expect(doc.schema).toBe("outcome-oracles/v1");
     expect(doc.oracles.length).toBeGreaterThanOrEqual(40);
-    expect(doc.oracles.length).toBeLessThanOrEqual(80);
+    expect(doc.oracles.length).toBeLessThanOrEqual(100);
+    expect(doc.oracles.filter((o) => o.id.startsWith("P")).map((o) => o.id)).toEqual(Array.from({ length: 14 }, (_, i) => `P${String(i + 1).padStart(2, "0")}`));
     expect(new Set(doc.oracles.map((o) => o.id)).size).toBe(doc.oracles.length);
     for (const o of doc.oracles) {
       expect(o.calc.trim().length, o.id).toBeGreaterThan(20);
@@ -209,6 +210,7 @@ describe("the oracle file is well formed", () => {
     for (const tag of [
       "oz vs fl_oz", "cup vs container", "unsupported input", "range collapse", "range loss", "alternative loss", "invented option", "dropped option",
       "package representation", "accept.name", "accept.note", "accept.alternatives", "overlap", "bare no-amount", "SCORE-01 tag/label difference", "SF-6", "N-2",
+      "SCORE-01 alternatives arm", "SCORE-01 quantity arm", "unscored fields", "second parse", "CL2(a)", "CL2(b)", "CL2(c)", "range upper end", "unit canonical code", "exact rational equality",
     ])
       expect(covers.has(tag), tag).toBe(true);
     expect(ex.some((x) => x.strict && x.strict.outcome !== x.outcome)).toBe(true);
