@@ -205,7 +205,15 @@ export const UNKNOWN_MEASURES = setOf(
     "gill gills dram drams drachm drachms minim minims noggin noggins pony ponies firkin firkins stone stones catty catties tael taels " +
     // informal lumps and portions ("1 hunk Parmesan", "1 thumb ginger", "1 slab tofu", "a blob of butter")
     "hunk hunks chunk chunks slab slabs thumb thumbs blob blobs wodge wodges swig swigs slug slugs smidge tad wineglass wineglasses thimble " +
-    "thimbles net nets wheel wheels log logs brick bricks measure measures finger fingers seer seers rack racks leg legs",
+    "thimbles net nets wheel wheels log logs brick bricks measure measures finger fingers seer seers rack racks leg legs " +
+    // semantic-v2 round 2 (§12.14): more portions and vessels ("1 shake paprika", "1 knuckle ginger", "2 clusters grapes")
+    "shake shakes knuckle knuckles cluster clusters squirt squirts swirl swirls tot tots nip nips snifter snifters flask flasks twig twigs " +
+    "bundle bundles smear smears eggcup eggcups dribble dribbles splosh drizzle drizzles sprig-full fistful scrap scraps morsel shaving " +
+    "jar-full canful trickle trickles nugget " +
+    // containers outside the registry ("1 pouch tuna", "1 canister oats", "1 clamshell spring mix")
+    "pouch pouches canister canisters clamshell clamshells tablet tablets portion portions " +
+    // a singular "bar" before a food ("1 bar cream cheese"; "bars" is a registry block)
+    "bar growler growlers",
 );
 
 /** Words after a number that make it a temperature or a time, never an amount ("350°F", "10 minutes"). */
@@ -280,8 +288,8 @@ export const ADJECTIVE_WORDS = setOf(
  */
 const MEAT_SOURCES = "chicken beef pork turkey lamb veal duck goose venison bison buffalo ham fish seafood shrimp crab lobster salmon tuna clam rabbit goat";
 const NUT_SEED_SOURCES = "almond cashew peanut pecan walnut hazelnut pistachio macadamia pine brazil sunflower pumpkin sesame flax flaxseed chia hemp poppy soy soybean";
-const FRUIT_SOURCES = "apple pear lemon lime orange grapefruit tangerine pineapple cranberry grape cherry pomegranate peach mango apricot plum blueberry raspberry strawberry blackberry coconut tomato passion";
-const VEGETABLE_SOURCES = "onion garlic celery carrot mushroom vegetable veggie beet ginger chili chile shallot leek";
+const FRUIT_SOURCES = "apple pear lemon lime orange grapefruit tangerine pineapple cranberry grape cherry pomegranate peach mango apricot plum blueberry raspberry strawberry blackberry coconut tomato passion date fig banana kiwi papaya guava lychee nectarine quince rhubarb watermelon melon";
+const VEGETABLE_SOURCES = "onion garlic celery carrot mushroom vegetable veggie beet ginger chili chile shallot leek spinach tomato pumpkin squash kale pepper potato corn pea";
 const GRAIN_SOURCES = "rice oat wheat corn rye spelt barley buckwheat millet chickpea tapioca potato quinoa sorghum teff arrowroot";
 
 /**
@@ -326,17 +334,48 @@ const SHARED_HEADS: Readonly<Record<string, string>> = {
   noodles: "$GRAIN egg glass udon soba",
   powder: "$VEG curry cocoa baking mustard",
   paste: "$VEG curry",
-  sauce: "soy fish tomato barbecue bbq pizza pasta",
+  sauce: "$FRUIT soy fish tomato barbecue bbq pizza pasta",
   rice: "jasmine basmati arborio sushi",
   beans: "kidney pinto navy cannellini lima garbanzo great_northern refried",
   bread: "wheat whole_wheat rye sourdough multigrain french italian pita",
-  yogurt: "$FRUIT greek coconut soy",
-  syrup: "$FRUIT maple corn simple agave golden",
+  yogurt: "$FRUIT greek coconut soy vanilla goat sheep",
   greens: "collard mustard turnip beet salad",
   tortillas: "corn flour",
   scallops: "sea bay",
   seasoning: "taco cajun creole poultry steak fajita",
   potatoes: "russet yukon_gold new fingerling baking",
+  // semantic-v2 round 2: more product heads by their source classes
+  syrup: "$FRUIT date fig maple corn simple agave golden brown_rice rice malt",
+  chips: "chocolate butterscotch peanut_butter white caramel cinnamon mint toffee carob potato tortilla corn pita bagel kale veggie banana apple coconut plantain sweet_potato",
+  squash: "acorn butternut delicata kabocha spaghetti summer winter yellow pattypan hubbard buttercup calabaza",
+  honey: "clover wildflower orange_blossom manuka buckwheat acacia raw local hot lavender tupelo sage alfalfa",
+  tea: "chamomile mint peppermint spearmint green black herbal jasmine earl_grey oolong white rooibos hibiscus ginger lemon chai matcha fruit",
+  ham: "black_forest honey smoked country virginia spiral deli maple baked cooked",
+  bacon: "$MEAT canadian applewood hickory maple thick-cut center-cut peppered",
+  wine: "$FRUIT $GRAIN rose dessert cooking table palm",
+  pudding: "vanilla chocolate butterscotch banana rice tapioca bread coconut pistachio lemon",
+  chutney: "$FRUIT $VEG",
+  pasta: "$VEG egg whole_wheat semolina rice gluten-free",
+  fettuccine: "$VEG egg whole_wheat semolina",
+  linguine: "$VEG egg whole_wheat",
+  spaghetti: "$VEG whole_wheat",
+  ravioli: "$VEG $MEAT cheese mushroom",
+  tortellini: "$VEG $MEAT cheese",
+  chorizo: "mexican spanish pork beef chicken soy",
+  water: "lavender rose orange_blossom coconut tonic soda sparkling mineral spring",
+  soda: "$FRUIT cream root lemon-lime club",
+  cream: "vanilla chocolate strawberry coffee mint pistachio coconut",
+  burgers: "$MEAT veggie bean black_bean",
+  patties: "$MEAT veggie bean",
+  meatballs: "$MEAT",
+  dumplings: "$MEAT $VEG",
+  soup: "$MEAT $VEG",
+  salsa: "$FRUIT $VEG",
+  pie: "$FRUIT $MEAT",
+  muffins: "$FRUIT bran corn",
+  cookies: "$NUT oatmeal chocolate sugar",
+  tortilla: "corn flour wheat whole_wheat",
+  wraps: "$VEG spinach tomato whole_wheat",
   steak: "$MEAT flank skirt hanger flat_iron strip sirloin round cube minute tri-tip porterhouse t-bone",
 };
 /**
@@ -346,7 +385,7 @@ const SHARED_HEADS: Readonly<Record<string, string>> = {
  */
 export const PART_HEADS = setOf(
   "halves pieces chunks bits florets fillets filets slices wedges rings spears tips strips cubes segments kernels leaves sprigs stalks ribs hearts " +
-    "crumbs flakes shavings nibs shoots sprouts puree purée",
+    "crumbs flakes shavings nibs shoots sprouts puree purée seeds",
 );
 const SOURCE_CLASSES: Readonly<Record<string, string>> = { $MEAT: MEAT_SOURCES, $NUT: NUT_SEED_SOURCES, $FRUIT: FRUIT_SOURCES, $VEG: VEGETABLE_SOURCES, $GRAIN: GRAIN_SOURCES };
 export const SHARED_HEAD_MODIFIERS: Readonly<Record<string, ReadonlySet<string>>> = Object.fromEntries(
@@ -379,6 +418,8 @@ export const AND_COMPOUNDS: readonly string[] = [
   "pork and beans", "franks and beans", "beans and franks", "peanut butter and jelly", "cookies and cream", "peaches and cream", "surf and turf",
   "fish and chips", "bangers and mash", "bread and butter", "salt and vinegar", "sour cream and onion", "spinach and artichoke", "chicken and dumplings",
   "biscuits and gravy", "corned beef and cabbage", "liver and onions", "pb and j", "pigs in a blanket", "sweet and salty", "salt and pepper seasoning",
+  // a mixed product sold under one name (debatable in §12.A A4; read as the product)
+  "peas and carrots",
 ];
 /** Product heads whose name may open with a flavour pair ("salt and vinegar potato chips", "garlic and herb seasoning"). */
 export const FLAVOUR_HEADS = setOf(
@@ -412,7 +453,16 @@ export const LEADING_SHARE_WORDS = setOf(
 export const INVARIANT_PLURALS = setOf(
   "shrimp fish salmon trout cod tuna squid sheep deer halibut tilapia moose bison prawn scampi haddock pollock venison " +
     // semantic-v2: Italian plurals used as English plurals, and star anise (counted as it is)
-    "zucchini broccolini panini biscotti cannoli anise",
+    "zucchini broccolini panini biscotti cannoli anise " +
+    // zero plurals of foods counted as they are ("4 baby bok choy", "6 bratwurst", "2 naan", "4 quail", "2 snapper")
+    "choy choi bratwurst naan roti paratha chapati kohlrabi quail grouse venison elk mackerel snapper grouper bass seabass perch pike carp " +
+    "branzino bream sole flounder mahi monkfish swordfish sturgeon sablefish whiting pollock catfish walleye herring sardine anchovy " +
+    "edamame sushi sashimi squash porcini mantou bao bocconcini ciliegine perline " +
+    // more zero and foreign plurals counted as they are ("4 pepperoncini", "2 kiwifruit", "4 whole allspice", "8 shiitake", "6 pierogi")
+    "kiwifruit grapefruit jackfruit breadfruit starfruit dragonfruit passionfruit pepperoncini peperoncini allspice okra shiitake enoki maitake " +
+    "shimeji pierogi gyoza crawfish crayfish whitefish shellfish lionfish pheasant partridge cardamom " +
+    // fixed dish names counted as they are ("2 corn on the cob", "2 pan dulce")
+    "cob dulce",
 );
 
 /**
@@ -531,7 +581,7 @@ export const WEAK_INSTRUCTION_VERBS = setOf("season whip line spread roll slice 
  */
 export const FOOD_NAME_VERBS = setOf("brown roast grill cool store top toast sear steam braise crack shake taste enjoy broil poach char flip rest stuff pipe");
 /** Words right after such a verb that make the line a sentence. */
-export const IMPERATIVE_CUES = setOf("the a an all with in into onto over under for until on at to from completely thoroughly well briefly gently lightly immediately again it them");
+export const IMPERATIVE_CUES = setOf("the a an all with in into onto over under for until on at to from completely thoroughly well briefly gently lightly immediately again it them each both half remaining slightly");
 /** Words that open a yield line ("Serves 4", "Makes 12 cookies"). */
 export const YIELD_WORDS = setOf("serves serve makes yields yield servings");
 
@@ -549,7 +599,7 @@ export const NUTRIENT_WORDS = setOf(
     "folate folic acid niacin riboflavin thiamin thiamine biotin pantothenic choline caffeine omega-3 omega-6 daily value dv amount " +
     // abbreviations and spelling variants of a nutrition panel ("Sat. fat", "Carb", "Prot", "Chol", "Sugar alcohols", "Fibre")
     "sat satfat sat-fat carb prot chol cholest sod fibres fibers alcohols polyols mono poly monounsat polyunsat unsat kcals cal cals " +
-    "saturates monounsaturates polyunsaturates which",
+    "saturates monounsaturates polyunsaturates which kilocalories kilocalorie fatty acid acids trans-fat",
 );
 /**
  * Words that name a nutrient AND a food bought by weight in UK recipes ("Sugar 10g", "Glucose 50g", "Starch 10 g"): a
@@ -596,11 +646,13 @@ export const PAGE_WORDS = setOf(
     "on in it with how make amount per serving servings information " +
     // semantic-v2 (R1 L2): recipe-card controls and prompts ("Cook Mode", "Save to Recipe Box", "Hide Images", "No reviews yet")
     "mode box content get hide show images image photos photo steps step mark complete did you yet no keep screen awake tried subscribe newsletter " +
-    "email cart cook or as made",
+    "email cart cook or as made friendly version printable pinterest facebook twitter instagram whatsapp yummly flipboard tiktok youtube " +
+    "less view views related posts post recipes newsletter sign up login log account bookmark bookmarked saved collections",
 );
 export const PAGE_KEYWORDS = setOf(
   "print jump skip card watch video videos nutrition facts instructions directions method notes advertisement advertisements sponsored share pin save " +
-    "rate comments reviews tips faq faqs click tap scroll continue amount mode hide show images subscribe newsletter tried did get",
+    "rate comments reviews tips faq faqs click tap scroll continue amount mode hide show images subscribe newsletter tried did get read screen awake " +
+    "pinterest facebook twitter instagram whatsapp yummly version related",
 );
 /** Credit lines ("Recipe adapted from …", "Adapted from …", "Recipe by …", "Photo by …"), as opening word sequences. */
 export const CREDIT_OPENERS: readonly (readonly string[])[] = [

@@ -1,0 +1,2217 @@
+# Ordinary ingredient lines of valid foods (semantic-v2 round 2, PHASE-2B-PLAN §6.1 burden check), written by the
+# implementation worker from general cookery knowledge, one per line; not copied from any page. Never `unsupported`.
+2 cups all-purpose flour
+1 tsp baking soda
+1/2 tsp salt
+1 cup unsalted butter, softened
+3/4 cup granulated sugar
+3/4 cup packed brown sugar
+2 large eggs
+1 tsp vanilla extract
+2 cups semisweet chocolate chips
+1 cup chopped walnuts
+1 lb ground beef
+1 medium onion, diced
+3 cloves garlic, minced
+1 (15 oz) can tomato sauce
+1 (14.5 oz) can diced tomatoes
+2 tbsp chili powder
+1 tsp ground cumin
+1 (15 oz) can kidney beans, drained and rinsed
+1 cup shredded cheddar cheese
+2 tbsp olive oil
+4 boneless skinless chicken breasts
+1 lemon, juiced
+2 tbsp fresh parsley, chopped
+1/4 cup grated Parmesan cheese
+8 oz spaghetti
+1 jar marinara sauce
+1 lb Italian sausage
+1 red bell pepper, sliced
+1 green bell pepper, sliced
+1 yellow onion, sliced
+1 cup heavy cream
+1 cup chicken broth
+2 cups milk
+1/4 cup honey
+2 tbsp soy sauce
+1 tbsp rice vinegar
+1 tsp sesame oil
+1 tbsp grated fresh ginger
+2 green onions, thinly sliced
+1 cup jasmine rice
+1 can coconut milk
+2 tbsp red curry paste
+1 lb shrimp, peeled and deveined
+1 avocado, diced
+1/2 cup sour cream
+1/4 cup fresh cilantro
+1 lime, cut into wedges
+8 corn tortillas
+1 cup salsa
+2 cups baby spinach
+1 cup cherry tomatoes, halved
+1/2 red onion, thinly sliced
+1/4 cup extra-virgin olive oil
+2 tbsp balsamic vinegar
+1 tsp Dijon mustard
+salt and pepper to taste
+6 slices bacon
+4 hamburger buns
+1 lb ground turkey
+1 egg
+1/2 cup breadcrumbs
+1/4 cup milk
+2 tbsp Worcestershire sauce
+1 cup frozen peas
+2 carrots, peeled and diced
+2 celery stalks, diced
+4 cups chicken stock
+1 bay leaf
+1 tsp dried thyme
+2 cups egg noodles
+1 whole chicken
+3 lbs russet potatoes
+1/2 cup butter
+1 cup buttermilk
+2 cups powdered sugar
+8 oz cream cheese, softened
+1 tsp lemon zest
+1 pie crust
+6 cups sliced apples
+1 tsp ground cinnamon
+1/4 tsp ground nutmeg
+2 tbsp cornstarch
+1 cup old-fashioned oats
+1/2 cup raisins
+1 banana, mashed
+1 cup blueberries
+2 cups strawberries, hulled and sliced
+1 cup Greek yogurt
+1 tbsp maple syrup
+1/4 cup chia seeds
+1 cup almond milk
+1 scoop protein powder
+2 cups kale, stems removed
+1 cucumber, sliced
+1 cup feta cheese, crumbled
+1/2 cup kalamata olives
+1 pint grape tomatoes
+1 lb salmon fillets
+2 tbsp butter, melted
+1 tsp garlic powder
+1 tsp onion powder
+1 tsp smoked paprika
+1/4 tsp cayenne pepper
+1 cup panko breadcrumbs
+2 lbs chicken wings
+1/2 cup hot sauce
+1 cup ranch dressing
+1 head lettuce
+2 tomatoes, sliced
+4 slices cheddar cheese
+1 lb pork tenderloin
+1/4 cup brown sugar
+2 tbsp apple cider vinegar
+1 cup ketchup
+1 (8 oz) package mushrooms, sliced
+1 shallot, minced
+1/2 cup dry white wine
+2 sprigs fresh rosemary
+4 sprigs fresh thyme
+1 bunch asparagus, trimmed
+1 lb green beans, trimmed
+2 zucchini, sliced
+1 eggplant, cubed
+1 can chickpeas
+1/4 cup tahini
+2 tbsp lemon juice
+1 clove garlic
+1 tsp kosher salt
+1/2 tsp black pepper
+1 cup quinoa
+2 cups water
+1 cup vegetable broth
+1 sweet potato, cubed
+1 cup black beans
+1 tsp chili flakes
+2 cups shredded mozzarella
+1 lb lasagna noodles
+15 oz ricotta cheese
+1 cup tomato puree
+1 tbsp Italian seasoning
+1 large egg yolk
+2 egg whites
+1/3 cup vegetable oil
+1 cup pecans, toasted
+1 tbsp butter, for greasing
+Cooking spray
+1 cup ice
+1/2 cup orange juice
+1 tbsp orange zest
+3 cups cubed bread
+1 cup half-and-half
+4 oz prosciutto
+1 ball fresh mozzarella
+1 cup arugula
+12 oz penne pasta
+1/2 cup pesto
+2 cups cooked chicken, shredded
+1 cup corn kernels
+1 jalapeño, seeded and minced
+1 cup crushed tortilla chips
+1/2 cup Monterey Jack cheese
+1 packet taco seasoning
+1 can refried beans
+1 cup enchilada sauce
+1 lb flank steak
+1/4 cup lime juice
+2 tbsp fish sauce
+1 tbsp sugar
+1 cup bean sprouts
+1 cup Thai basil leaves
+8 oz rice noodles
+2 tbsp peanut butter
+1/4 cup chopped peanuts
+1 tsp sriracha
+2 ripe avocados
+3 Roma tomatoes
+1 English cucumber
+2 Persian cucumbers
+1 head romaine lettuce
+1 head garlic
+1 bunch flat-leaf parsley
+1 bunch radishes
+2 bunches scallions
+4 green onions
+1 large red onion
+2 shallots
+1 leek
+2 carrots
+3 celery stalks
+1 fennel bulb
+1 small butternut squash
+2 sweet potatoes
+4 Yukon Gold potatoes
+6 red potatoes
+1 acorn squash
+1 spaghetti squash
+2 zucchini
+1 yellow squash
+1 eggplant
+2 Japanese eggplants
+1 head cauliflower
+1 head broccoli
+2 heads bok choy
+4 baby bok choy
+1 bunch kale
+1 bunch Swiss chard
+1 bunch collard greens
+1 bunch asparagus
+8 oz cremini mushrooms
+4 portobello mushroom caps
+10 shiitake mushrooms
+1 jalapeño pepper
+2 serrano chiles
+1 habanero
+2 poblano peppers
+3 dried ancho chiles
+2 chipotle peppers in adobo
+1 red bell pepper
+2 ears corn
+1 ear of corn
+1 artichoke
+4 artichoke hearts
+1 bunch beets
+2 parsnips
+1 turnip
+1 rutabaga
+1 daikon radish
+1 knob ginger
+1 thumb-size piece fresh ginger
+1 stalk lemongrass
+2 kaffir lime leaves
+4 sprigs thyme
+2 sprigs rosemary
+1 sprig sage
+10 basil leaves
+2 bay leaves
+6 mint leaves
+1 lemon
+2 limes
+1 orange
+3 navel oranges
+2 blood oranges
+1 grapefruit
+4 Meyer lemons
+2 apples
+3 Granny Smith apples
+2 Honeycrisp apples
+4 pears
+2 Bosc pears
+3 bananas
+1 ripe banana
+2 mangoes
+1 papaya
+1 pineapple
+1 cantaloupe
+1 small watermelon
+2 peaches
+4 plums
+6 apricots
+12 fresh figs
+8 Medjool dates
+2 kiwis
+1 pomegranate
+1 cup fresh raspberries
+1 pint blueberries
+1 quart strawberries
+2 cups seedless grapes
+4 lemon wedges
+6 lime wedges
+1 coconut
+2 plantains
+1 dozen eggs
+4 large eggs
+6 egg yolks
+3 egg whites
+2 hard-boiled eggs
+1 stick unsalted butter
+2 sticks butter
+1 (8 oz) block cream cheese
+1 (8 oz) container sour cream
+1 (6 oz) container Greek yogurt
+1 wedge Parmesan
+4 slices provolone
+6 slices Swiss cheese
+8 slices American cheese
+1 (16 oz) tub ricotta
+4 string cheese sticks
+1 wheel of brie
+1 pint heavy cream
+1 quart buttermilk
+1 gallon whole milk
+6 bone-in chicken thighs
+8 chicken drumsticks
+12 chicken wings
+1 (4 lb) whole chicken
+2 Cornish hens
+1 turkey breast
+1 (12 lb) turkey
+2 duck breasts
+4 pork chops
+2 pork tenderloins
+1 pork shoulder
+1 (3 lb) pork butt
+1 rack of ribs
+2 racks baby back ribs
+1 ham hock
+1 smoked ham
+8 slices bacon
+6 strips thick-cut bacon
+4 slices prosciutto
+12 slices pepperoni
+1 lb Italian sausage links
+6 bratwurst
+8 hot dogs
+4 hamburger patties
+2 ribeye steaks
+2 New York strip steaks
+4 filet mignon steaks
+1 flank steak
+1 beef brisket
+1 (3 lb) chuck roast
+2 lamb shanks
+8 lamb chops
+1 leg of lamb
+2 veal cutlets
+4 salmon fillets
+2 (6 oz) cod fillets
+4 tilapia fillets
+1 lb large shrimp
+12 jumbo shrimp
+1 lb sea scallops
+2 dozen littleneck clams
+2 lbs mussels
+12 oysters
+2 lobster tails
+4 crab legs
+1 (6 oz) can tuna
+2 cans sardines
+1 tin anchovies
+6 anchovy fillets
+1 (14 oz) can coconut milk
+1 (15 oz) can chickpeas
+2 (15 oz) cans black beans
+1 (28 oz) can crushed tomatoes
+1 (6 oz) can tomato paste
+1 (4 oz) can diced green chiles
+1 can cream of mushroom soup
+1 can evaporated milk
+1 (14 oz) can sweetened condensed milk
+1 (10 oz) can enchilada sauce
+1 jar salsa verde
+1 jar roasted red peppers
+1 jar capers
+1 jar kalamata olives
+1 jar marinara
+1 jar peanut butter
+1 bottle hot sauce
+1 bottle red wine
+1 bottle dry white wine
+2 bottles beer
+1 can coconut cream
+1 box spaghetti
+1 (16 oz) box penne
+1 package egg noodles
+1 package rice noodles
+1 (12 oz) package frozen peas
+1 package dry yeast
+1 envelope unflavored gelatin
+1 package ranch dressing mix
+1 box cake mix
+1 box instant vanilla pudding mix
+1 package puff pastry
+1 sheet frozen puff pastry
+1 refrigerated pie crust
+2 frozen pie crusts
+1 tube refrigerated biscuits
+1 can crescent rolls
+1 (16 oz) package lasagna noodles
+12 lasagna noodles
+1 package tofu
+1 (14 oz) block extra-firm tofu
+1 package tempeh
+10 flour tortillas
+4 pita breads
+2 naan
+1 baguette
+1 loaf sourdough bread
+1 loaf French bread
+8 slices whole wheat bread
+4 English muffins
+6 hamburger buns
+8 hot dog buns
+4 brioche buns
+12 dinner rolls
+4 croissants
+6 bagels
+2 ciabatta rolls
+1 focaccia
+1 (12-inch) pizza crust
+1 lb pizza dough
+24 vanilla wafers
+12 graham crackers
+1 sleeve Ritz crackers
+20 saltine crackers
+1 cup oyster crackers
+1 bag tortilla chips
+1 bag potato chips
+2 cups mini marshmallows
+1 bag chocolate chips
+12 Oreo cookies
+1 (4 oz) bar dark chocolate
+2 Hershey bars
+1 bag caramels
+10 maraschino cherries
+1 jar maraschino cherries
+1 bag frozen corn
+1 bag frozen spinach
+1 bag shredded cheddar
+1 bag baby carrots
+1 bag coleslaw mix
+1 container cherry tomatoes
+1 clamshell spring mix
+1 (5 oz) package baby spinach
+1 bunch cilantro
+1 bunch dill
+1 bunch mint
+1 bunch basil
+2 cinnamon sticks
+6 whole cloves
+4 cardamom pods
+2 star anise
+1 vanilla bean
+2 dried bay leaves
+1 cube chicken bouillon
+2 beef bouillon cubes
+1 packet sweetener
+4 tea bags
+2 green tea bags
+1 shot espresso
+2 cups brewed coffee
+1 can ginger ale
+1 bottle club soda
+1 lemon, zested
+2 limes, juiced
+1 orange, sliced
+1 onion, diced
+2 tomatoes, chopped
+1 avocado, sliced
+4 eggs, beaten
+2 bananas, mashed
+1 apple, cored and sliced
+1 cucumber, peeled and diced
+2 carrots, peeled and grated
+1 sweet onion, thinly sliced
+6 Brussels sprouts
+12 cherry tomatoes
+20 grape tomatoes
+8 radishes
+6 dates, pitted
+10 dried apricots
+12 prunes
+8 walnuts halves
+2 tablespoons pine nuts
+1 cup cashews
+1/2 cup sliced almonds
+1 cup pecan halves
+1/4 cup sunflower seeds
+2 tbsp chia seeds
+1 cup cooked brown rice
+2 cups basmati rice
+1 cup arborio rice
+1 cup red lentils
+1 cup dried black beans
+1 cup farro
+1 cup pearl barley
+1 cup rolled oats
+1 cup steel-cut oats
+1 cup couscous
+1 cup bulgur
+1 cup cornmeal
+1 cup polenta
+2 cups bread flour
+1 cup whole wheat flour
+1/2 cup almond flour
+1/4 cup cornstarch
+1 tsp baking powder
+1/2 tsp cream of tartar
+1 tbsp molasses
+1/4 cup maple syrup
+2 tbsp honey
+1 cup brown sugar
+1/2 cup powdered sugar
+1 tsp vanilla
+1/2 tsp almond extract
+1/2 tsp ground cinnamon
+1/4 tsp ground cloves
+1 tsp garam masala
+1 tbsp curry powder
+1 tsp ground turmeric
+2 tsp ground cumin
+1 tsp dried oregano
+1 tsp Italian seasoning
+1 tsp red pepper flakes
+1/2 tsp cayenne
+1 tbsp fish sauce
+2 tbsp oyster sauce
+1 tbsp hoisin sauce
+1 tbsp gochujang
+1 tbsp miso paste
+2 tbsp tahini
+1 tbsp Dijon mustard
+2 tbsp mayonnaise
+1/4 cup ketchup
+2 tbsp sriracha
+1 tbsp capers
+2 tbsp pickle relish
+4 dill pickles
+6 pickle spears
+1 jar pickled jalapeños
+1 cup sauerkraut
+1 cup kimchi
+2 tbsp ghee
+1/4 cup coconut oil
+2 tbsp sesame oil
+2 tbsp red wine vinegar
+1 tbsp balsamic vinegar
+1/4 cup apple cider vinegar
+1 tbsp lime juice
+1 cup orange juice
+1 cup chicken stock
+2 cups beef broth
+4 cups vegetable broth
+1 cup dry white wine
+1/2 cup red wine
+1/4 cup bourbon
+2 tbsp rum
+1 oz tequila
+1 oz triple sec
+2 oz gin
+4 oz tonic water
+1 cup heavy whipping cream
+1 cup plain Greek yogurt
+1 cup whole milk ricotta
+1/2 cup crumbled feta
+1 cup shredded mozzarella
+1/2 cup grated Parmesan
+4 oz goat cheese
+8 oz cream cheese
+1 cup cottage cheese
+1/4 cup mascarpone
+2 tbsp butter
+1 cup coconut milk
+3 tbsp cocoa powder
+4 oz bittersweet chocolate
+1 cup semisweet chocolate chips
+1/2 cup shredded coconut
+1/2 cup dried cranberries
+1 cup granola
+1 cup panko
+1 (14.5 oz) can fire-roasted tomatoes
+2 (14 oz) cans artichoke hearts
+1 (15 oz) can pumpkin puree
+1 (8 oz) can water chestnuts
+1 (8 oz) can bamboo shoots
+1 (11 oz) can mandarin oranges
+1 (20 oz) can pineapple chunks
+1 (21 oz) can cherry pie filling
+1 (12 oz) bottle chili sauce
+1 (10 oz) jar apricot jam
+1 (13 oz) jar Nutella
+2 frozen waffles
+4 frozen hash brown patties
+1 bag frozen meatballs
+12 frozen dumplings
+24 wonton wrappers
+1 package dumpling wrappers
+12 rice paper wrappers
+8 sheets nori
+4 sheets phyllo dough
+2 nori sheets
+1 bunch green onions
+4 scallions
+2 leeks
+6 garlic cloves
+1 large shallot
+3 jalapeños
+2 Fresno chiles
+4 Thai chiles
+1 Scotch bonnet pepper
+1 small head cabbage
+1/2 head red cabbage
+1 head napa cabbage
+1 bunch broccolini
+1 bunch watercress
+2 heads endive
+1 head radicchio
+2 bulbs fennel
+1 celery root
+1 jicama
+2 kohlrabi
+4 ribs celery
+1 bunch rainbow carrots
+1 bag russet potatoes
+2 large russet potatoes
+1 lb fingerling potatoes
+12 baby potatoes
+2 yams
+4 tomatillos
+1 bunch epazote
+1 package chorizo
+1 lb ground lamb
+1 lb ground chicken
+4 Italian sausages
+2 andouille sausages
+1 kielbasa
+1 package hot dogs
+12 meatballs
+6 chicken tenders
+1 lb chicken livers
+4 quail
+1 duck
+2 pheasants
+1 rabbit
+1 venison tenderloin
+2 bison burgers
+4 veggie burgers
+2 Beyond burgers
+6 fish sticks
+4 crab cakes
+2 salmon burgers
+1 lb calamari
+1 octopus
+2 squid
+12 mussels
+1 dozen clams
+4 king crab legs
+2 soft-shell crabs
+1 lb crawfish tails
+1 lb bay scallops
+4 sea bass fillets
+2 halibut steaks
+2 swordfish steaks
+4 trout fillets
+1 whole branzino
+2 mackerel
+6 sardines
+1 tin smoked oysters
+1 jar herring
+4 oz smoked salmon
+1 (2 oz) jar caviar
+2 tamales
+4 empanadas
+6 samosas
+8 spring rolls
+12 pot stickers
+2 burritos
+4 tacos
+1 frozen pizza
+2 slices pizza
+1 rotisserie chicken
+1 container hummus
+1 container guacamole
+1 container pesto
+1 tub sour cream
+1 carton eggs
+1 carton chicken broth
+1 carton almond milk
+1 pint vanilla ice cream
+1 quart vanilla ice cream
+1 container whipped topping
+1 can whipped cream
+1 jar hot fudge
+1 jar caramel sauce
+1 bottle chocolate syrup
+2 candy canes
+12 gummy bears
+1 bag M&Ms
+1 bag jelly beans
+1 bag pretzels
+1 bag popcorn
+2 rice cakes
+1 box Cheerios
+1 box cornflakes
+1 bag granola
+2 protein bars
+1 energy bar
+2 granola bars
+1 bag trail mix
+1 bag dried mango
+12 almonds
+8 cashews
+20 pistachios
+10 pecan halves
+1 bag walnuts
+1 bag peanuts
+1 jar almond butter
+1 jar sunflower seed butter
+1 jar tahini
+1 jar honey
+1 bottle maple syrup
+1 jar molasses
+1 bag brown sugar
+1 bag powdered sugar
+1 box baking soda
+1 can baking powder
+1 bottle vanilla extract
+1 jar instant coffee
+1 bag coffee beans
+1 box tea
+2 chai tea bags
+1 bottle sparkling water
+6 ice cubes
+2 cups ice
+1 lime wedge
+1 orange twist
+3 olives
+2 maraschino cherries
+1 cocktail onion
+1 celery stick
+1 cinnamon stick
+1 sugar cube
+1 egg white
+2 chayote squash
+1 bunch mustard greens
+3 turnip greens bunches
+1 bunch dandelion greens
+6 fava bean pods
+1 lb sugar snap peas
+2 handfuls snow peas
+1 bunch cilantro stems
+4 tomatillos, husked
+2 cactus paddles
+1 nopal
+3 guavas
+2 passion fruits
+1 dragon fruit
+4 kumquats
+1 pomelo
+2 Asian pears
+6 persimmons
+1 star fruit
+12 cherries, pitted
+3 nectarines
+2 quinces
+1 durian
+4 lychees
+1 jackfruit
+1 young coconut
+2 Key limes
+1 Buddha's hand
+5 shallots
+2 spring onions
+1 red chili
+2 green chilies
+6 dried red chilies
+4 garlic scapes
+1 bunch chives
+2 stalks green garlic
+1 bunch ramps
+1 head escarole
+1 head frisée
+2 heads Little Gem lettuce
+1 bunch arugula
+1 bunch mizuna
+1 bunch sorrel
+1 bunch tarragon
+1 bunch chervil
+1 bunch lovage
+4 sprigs oregano
+6 sprigs marjoram
+1 sprig savory
+10 Thai basil leaves
+6 curry leaves
+4 sage leaves
+1 piece kombu
+2 sheets wakame
+1 lotus root
+1 burdock root
+2 taro roots
+1 cassava root
+1 large yam
+6 baby turnips
+8 baby carrots
+12 pearl onions
+4 cipollini onions
+1 Vidalia onion
+2 Walla Walla onions
+1 bunch baby beets
+4 golden beets
+2 Chioggia beets
+6 radishes, trimmed
+1 watermelon radish
+1 bunch French breakfast radishes
+2 delicata squash
+1 kabocha squash
+1 sugar pumpkin
+2 ears sweet corn
+1 bag corn tortillas
+1 pkg tostada shells
+6 taco shells
+12 hard taco shells
+4 sopes
+8 tamales, frozen
+2 gorditas
+6 pupusas
+4 arepas
+10 empanada discs
+1 package dumpling skins
+20 gyoza wrappers
+16 egg roll wrappers
+12 spring roll wrappers
+6 bao buns
+4 mantou
+8 dinner rolls, warmed
+4 kaiser rolls
+6 potato rolls
+2 hoagie rolls
+4 sub rolls
+4 pretzel buns
+4 slider buns
+2 Texas toast slices
+6 slices rye bread
+4 slices pumpernickel
+2 slices sourdough
+1 loaf brioche
+1 loaf challah
+1 loaf banana bread
+1 loaf zucchini bread
+2 pita pockets
+4 whole wheat pitas
+2 lavash sheets
+4 flatbreads
+2 naan breads
+6 corn muffins
+4 blueberry muffins
+6 bran muffins
+2 croissants, day-old
+4 scones
+6 biscuits, split
+8 crumpets
+12 bagel chips
+2 cups pita chips
+4 rice crackers
+10 water crackers
+6 rye crisps
+12 vanilla wafers
+16 gingersnaps
+24 chocolate wafer cookies
+12 shortbread cookies
+8 ladyfingers
+20 amaretti cookies
+12 biscotti
+6 macarons
+4 cannoli shells
+6 puff pastry shells
+1 package phyllo cups
+12 mini pie shells
+1 graham cracker crust
+1 chocolate cookie crust
+1 (9-inch) unbaked pie shell
+2 (9-inch) deep-dish pie crusts
+1 sheet cake
+1 angel food cake
+1 pound cake
+1 sponge cake
+12 cupcakes
+24 mini cupcakes
+6 brownies
+4 blondies
+8 lemon bars
+12 cake pops
+6 donuts
+12 donut holes
+4 cinnamon rolls
+2 sticky buns
+6 churros
+4 waffles
+8 pancakes
+6 crepes
+4 French toast slices
+2 English muffins, split
+4 hash brown patties
+2 cups tater tots
+1 bag frozen fries
+1 bag frozen onion rings
+12 mozzarella sticks
+8 jalapeño poppers
+12 chicken nuggets
+8 fish fingers
+4 fish fillets
+6 shrimp skewers
+4 chicken kebabs
+2 lamb kebabs
+8 meatballs, frozen
+4 Italian sausages, casings removed
+6 breakfast sausage links
+8 breakfast sausage patties
+4 turkey burgers
+4 veggie patties
+2 black bean burgers
+6 slices ham
+8 slices turkey
+6 slices roast beef
+4 slices salami
+6 slices mortadella
+4 slices pancetta
+2 slices Canadian bacon
+1 ham steak
+2 pork cutlets
+4 boneless pork loin chops
+2 pork shoulder steaks
+1 pork belly
+2 lbs pork ribs
+1 rack spare ribs
+6 beef short ribs
+4 beef shanks
+2 oxtails
+1 beef tongue
+1 beef heart
+4 marrow bones
+2 lbs chicken feet
+6 chicken thighs, bone-in
+10 chicken wingettes
+8 drumettes
+2 turkey legs
+4 turkey wings
+2 turkey thighs
+1 turkey breast, boneless
+2 duck legs
+1 whole duck
+4 duck breasts
+1 goose
+6 quail eggs
+2 duck eggs
+12 large brown eggs
+6 pasture-raised eggs
+4 egg whites
+2 whole eggs plus 1 yolk
+1 lb chicken gizzards
+1 lb chicken hearts
+4 rabbit legs
+2 venison steaks
+1 elk roast
+1 bison ribeye
+2 lamb racks
+1 lamb shoulder
+4 lamb loin chops
+2 lamb necks
+1 goat leg
+2 salmon steaks
+1 side of salmon
+4 halibut fillets
+2 cod loins
+4 snapper fillets
+2 whole red snappers
+4 catfish fillets
+6 tilapia fillets
+2 mahi mahi fillets
+4 swordfish steaks
+2 tuna steaks
+4 ahi tuna steaks
+1 whole trout
+6 smelts
+12 anchovies
+8 sardines, fresh
+2 kippers
+1 smoked haddock fillet
+2 eel fillets
+1 lb bay shrimp
+16 tiger prawns
+12 langoustines
+2 Dungeness crabs
+4 blue crabs
+1 lb lump crabmeat
+6 crab claws
+2 whole lobsters
+4 lobster tails
+24 littleneck clams
+12 cherrystone clams
+2 lbs PEI mussels
+12 oysters, shucked
+6 scallops, dried
+1 lb squid tubes
+2 octopus tentacles
+1 lb cuttlefish
+4 sea urchins
+1 jar salmon roe
+1 tin caviar
+2 cans tuna in olive oil
+1 can salmon
+1 can crabmeat
+1 can clams
+1 can smoked oysters
+1 (15 oz) can pinto beans
+1 (15 oz) can great northern beans
+1 (15 oz) can butter beans
+1 (15 oz) can lentils
+1 (15 oz) can black-eyed peas
+1 (16 oz) can refried beans
+1 (15 oz) can sweet corn
+1 (15 oz) can creamed corn
+1 (15 oz) can sliced peaches
+1 (15 oz) can pear halves
+1 (15 oz) can fruit cocktail
+1 (15 oz) can coconut milk, light
+1 (13.5 oz) can coconut cream
+1 (14 oz) can hearts of palm
+1 (8 oz) can tomato sauce
+1 (10 oz) can Rotel
+1 (7 oz) can chipotles in adobo
+1 (4 oz) can sliced black olives
+1 (6 oz) can pitted ripe olives
+1 (12 oz) can evaporated milk
+1 (10.5 oz) can cream of chicken soup
+1 (10.75 oz) can condensed tomato soup
+1 (14 oz) can beef broth
+1 (32 oz) carton vegetable stock
+1 (8 oz) jar sun-dried tomatoes
+1 (16 oz) jar salsa
+1 (24 oz) jar pasta sauce
+1 (12 oz) jar roasted red peppers
+1 (10 oz) jar pimento-stuffed olives
+1 (16 oz) jar dill pickles
+1 (16 oz) jar sauerkraut
+1 (8 oz) jar horseradish
+1 (12 oz) jar orange marmalade
+1 (18 oz) jar peanut butter
+1 (16 oz) jar honey
+1 (32 oz) bottle ketchup
+1 (12 oz) bottle beer
+1 (750 ml) bottle dry red wine
+1 (1 liter) bottle club soda
+1 (16 oz) package bacon
+1 (8 oz) package shredded mozzarella
+1 (8 oz) package sliced mushrooms
+1 (10 oz) package frozen broccoli florets
+1 (12 oz) package frozen mixed vegetables
+1 (16 oz) package frozen peaches
+1 (14 oz) package andouille sausage
+1 (12 oz) package bow tie pasta
+1 (16 oz) package elbow macaroni
+1 (8 oz) package egg noodles
+1 (16 oz) package wide egg noodles
+1 (8 oz) package rice vermicelli
+1 (14 oz) package firm tofu
+1 (3 oz) package ramen noodles
+1 (1 oz) packet onion soup mix
+1 (1.25 oz) packet chili seasoning
+1 (0.6 oz) packet Italian dressing mix
+1 (3.4 oz) box instant pudding
+1 (15.25 oz) box yellow cake mix
+1 (18 oz) box brownie mix
+1 (16 oz) box powdered sugar
+1 (12 oz) box vanilla wafers
+1 (14 oz) bag sweetened coconut flakes
+1 (12 oz) bag white chocolate chips
+1 (10 oz) bag mini marshmallows
+1 (16 oz) bag frozen shrimp
+1 (32 oz) bag frozen hash browns
+1 (5 oz) container baby arugula
+1 (16 oz) container cottage cheese
+1 (15 oz) container ricotta cheese
+1 (8 oz) container mascarpone
+1 (32 oz) container plain yogurt
+1 (16 oz) tub whipped topping
+1 (8 oz) tub cream cheese spread
+1 block feta
+1 block sharp cheddar
+1 wedge blue cheese
+1 log goat cheese
+1 round brie
+1 (8 oz) round Camembert
+1 ball burrata
+6 bocconcini
+12 mozzarella pearls
+4 slices havarti
+6 slices pepper jack
+2 slices Muenster
+4 slices Gruyère
+1 rind Parmesan
+2 sticks salted butter
+1 pat butter
+1 container crème fraîche
+1 carton heavy cream
+1 carton egg whites
+1 quart half-and-half
+1 pint whipping cream
+1 bottle buttermilk ranch
+1 bottle Caesar dressing
+1 bottle balsamic glaze
+1 bottle fish sauce
+1 bottle Worcestershire sauce
+1 bottle sesame oil
+1 bottle olive oil
+1 bottle canola oil
+1 bottle rice wine vinegar
+1 jar Dijon mustard
+1 jar whole-grain mustard
+1 jar mayonnaise
+1 jar pesto
+1 jar miso
+1 jar chili crisp
+1 jar curry paste
+1 jar sambal oelek
+1 jar harissa
+1 jar capers, drained
+1 jar artichoke hearts, quartered
+1 jar cocktail onions
+1 jar pickled beets
+1 jar kimchi
+2 lemongrass stalks
+3 kaffir lime leaves
+1 galangal root
+1 knob turmeric
+4 dried shiitake mushrooms
+6 dried porcini
+1 packet dried mushrooms
+2 vanilla pods
+3 star anise pods
+1 cinnamon stick, broken
+6 allspice berries
+10 black peppercorns
+4 juniper berries
+2 dried chipotles
+1 packet saffron
+2 bouillon cubes
+1 envelope gelatin
+1 packet active dry yeast
+1 cake compressed yeast
+1 packet stevia
+4 sugar cubes
+12 marshmallows
+8 caramels, unwrapped
+6 Oreos, crushed
+4 Reese's cups
+2 Snickers bars
+12 Hershey's Kisses
+1 bag Skittles
+2 candy bars
+1 roll Life Savers
+6 peppermint candies
+4 gumdrops
+1 bag candy corn
+12 maraschino cherries, drained
+6 dried figs
+10 dried dates
+1 bag dried cherries
+1 bag banana chips
+1 bag pita chips
+1 bag tortilla strips
+1 package croutons
+1 bag pork rinds
+1 package rice cakes
+4 rice paper rounds
+2 sheets nori, toasted
+1 package seaweed snacks
+6 fortune cookies
+2 egg rolls
+4 spring rolls, frozen
+6 wontons
+12 pot stickers, frozen
+2 samosas
+4 falafel balls
+2 veggie burgers
+1 rotisserie chicken, shredded
+2 hot Italian sausages
+1 frozen cheese pizza
+2 store-bought pizza crusts
+1 tube polenta
+1 package gnocchi
+1 package fresh ravioli
+1 package cheese tortellini
+1 bag frozen pierogies
+2 bagels, toasted
+1 baguette, sliced
+1 boule
+4 ciabatta buns
+1 focaccia, cut into squares
+6 breadsticks
+1 can chickpeas, rinsed
+1 bottle sparkling wine
+2 cans coconut water
+4 limes, halved
+2 lemons, quartered
+1 grapefruit, segmented
+1 orange, zested and juiced
+3 apples, cored
+2 pears, sliced
+4 peaches, pitted
+2 mangoes, cubed
+1 pineapple, peeled
+1 cantaloupe, cubed
+1 honeydew melon
+1 small seedless watermelon
+2 bananas, sliced
+1 avocado, pitted
+2 plantains, ripe
+2 medium leeks, white parts only
+3 heads garlic, halved
+1 bunch spring onions
+4 Thai bird chilies
+2 long red chilies
+1 head celery
+6 white mushrooms
+8 button mushrooms
+2 king oyster mushrooms
+1 package enoki mushrooms
+1 handful bean sprouts
+2 heads butter lettuce
+1 bag mixed greens
+1 bunch rainbow chard
+1 bunch lacinato kale
+2 small cucumbers
+1 hothouse cucumber
+4 plum tomatoes
+2 beefsteak tomatoes
+1 pint heirloom cherry tomatoes
+3 vine-ripened tomatoes
+2 yellow bell peppers
+1 orange bell pepper
+6 mini sweet peppers
+2 banana peppers
+4 pepperoncini
+1 bunch asparagus, woody ends removed
+12 green beans
+1 handful haricots verts
+2 cups shelled edamame
+1 bag frozen lima beans
+2 ears white corn
+1 small rutabaga
+1 large celeriac
+4 Brussels sprouts, halved
+1 small head red cabbage
+2 heads Belgian endive
+1 bulb kohlrabi
+2 parsnips, peeled
+3 small turnips
+1 large sweet potato
+4 red-skinned potatoes
+10 new potatoes
+2 purple potatoes
+1 bag fingerlings
+1 Japanese sweet potato
+2 Asian eggplants
+1 globe eggplant
+1 large zucchini
+2 summer squash
+1 pumpkin
+1 spaghetti squash, halved
+1 bunch fresh thyme
+1 small bunch dill
+1 bunch Italian parsley
+1 bunch Thai basil
+1 bunch fresh oregano
+1 bunch mint leaves
+3 sprigs fresh thyme
+6 fresh sage leaves
+2 fresh bay leaves
+1 stalk celery
+3 green cardamom pods
+2 black cardamom pods
+4 whole allspice
+1 whole nutmeg
+1 dried chile de árbol
+3 guajillo chiles
+2 pasilla chiles
+1 dried ancho chile
+4 cloves black garlic
+1 (2-inch) piece ginger
+1 small piece turmeric root
+2 limes, cut into wedges
+1 lemon, thinly sliced
+3 oranges, segmented
+1 grapefruit, halved
+2 tangerines
+4 clementines
+1 Meyer lemon
+6 Key limes
+1 blood orange
+2 Fuji apples
+3 Gala apples
+2 Pink Lady apples
+1 Bartlett pear
+2 Anjou pears
+6 strawberries, hulled
+12 raspberries
+1 cup blackberries
+1 cup red currants
+2 cups cranberries
+1 pint gooseberries
+4 ripe figs
+6 Medjool dates, pitted
+2 ripe mangoes
+1 ripe papaya
+2 kiwifruit
+1 small pineapple
+1/2 watermelon
+1 honeydew
+1 cantaloupe, seeded
+3 ripe bananas
+2 plantains, green
+1 ripe avocado
+2 Hass avocados
+1 coconut, cracked
+12 green olives
+10 black olives
+8 Kalamata olives, pitted
+1 cup Castelvetrano olives
+1 jar Peppadew peppers
+2 tbsp capers, rinsed
+4 cornichons
+2 pickled jalapeños
+6 bread-and-butter pickles
+1 pickle spear
+1 jar sweet relish
+4 large eggs, room temperature
+2 extra-large eggs
+1 egg, lightly beaten
+3 egg yolks, beaten
+6 egg whites, at room temperature
+2 tbsp unsalted butter
+1 stick (1/2 cup) butter
+8 oz mascarpone
+1 cup crème fraîche
+2 slices cheddar cheese
+4 slices Monterey Jack
+1 slice Swiss
+6 thin slices Parmesan
+1 chunk Parmigiano-Reggiano
+1 piece pecorino
+4 oz Gorgonzola
+1 small wheel Camembert
+1 tub feta
+1 package halloumi
+1 package paneer
+1 ball mozzarella, torn
+1 container cottage cheese
+1 pint sour cream
+1 quart Greek yogurt
+1 bottle kefir
+1 carton oat milk
+1 carton soy milk
+2 boneless chicken breasts
+4 chicken thighs, skin-on
+2 chicken leg quarters
+1 spatchcocked chicken
+1 roasting chicken
+1 fryer chicken
+2 chicken carcasses
+2 turkey cutlets
+4 turkey sausages
+2 smoked turkey legs
+1 duck, quartered
+2 duck legs, confit
+4 pork loin chops
+2 pork tenderloins, trimmed
+1 boneless pork loin roast
+1 bone-in pork shoulder
+6 country-style pork ribs
+1 rack St. Louis ribs
+1 pork belly slab
+2 ham hocks
+1 spiral ham
+4 slices deli ham
+8 slices smoked bacon
+4 slices turkey bacon
+6 strips center-cut bacon
+2 links chorizo
+4 links andouille
+6 Italian sausage links
+8 breakfast links
+2 kielbasa rings
+4 beef franks
+2 bratwursts
+4 beef patties
+2 sirloin steaks
+2 strip steaks
+1 skirt steak
+1 hanger steak
+1 tri-tip roast
+1 top round roast
+1 eye of round roast
+1 rump roast
+1 brisket flat
+4 short ribs, bone-in
+2 lbs stew meat
+1 beef tenderloin
+4 beef medallions
+2 veal chops
+4 lamb shoulder chops
+1 rack of lamb
+1 boneless leg of lamb
+2 rabbit
+4 quail, semi-boneless
+1 pheasant
+2 Cornish game hens
+4 salmon fillets, skin-on
+1 lb salmon, skinned
+2 trout fillets
+1 lb cod
+4 haddock fillets
+2 pollock fillets
+4 flounder fillets
+2 sole fillets
+1 whole sea bass
+2 striped bass fillets
+2 grouper fillets
+1 lb halibut
+4 sardines, gutted
+6 fresh anchovies
+12 large prawns
+1 lb rock shrimp
+8 scallops
+2 lbs clams
+1 lb mussels, scrubbed
+6 oysters on the half shell
+1 lb crab legs
+1 lb crab meat
+1 (6 oz) can crab
+2 lobster tails, thawed
+1 cooked lobster
+1 lb calamari rings
+1 lb octopus
+1 package imitation crab
+4 fish cakes
+1 lb smoked salmon
+4 oz lox
+1 can sardines in oil
+2 cans albacore tuna
+1 pouch tuna
+1 can anchovy fillets
+1 package frozen tilapia
+1 bag frozen shrimp
+1 package tofu, drained
+1 block silken tofu
+1 package smoked tofu
+1 package seitan
+1 package veggie sausages
+4 plant-based burgers
+1 loaf whole grain bread
+1 loaf rye bread
+1 loaf multigrain bread
+1 baguette, halved
+2 French rolls
+4 hamburger buns, toasted
+6 hot dog rolls
+8 slider rolls
+4 sandwich rolls
+4 hoagie buns
+6 English muffins
+6 everything bagels
+4 plain bagels
+2 pita breads, halved
+4 flour tortillas, warmed
+12 corn tortillas, warmed
+6 street taco tortillas
+4 whole wheat tortillas
+2 burrito-size tortillas
+4 naan, warmed
+2 garlic naan
+1 package tostadas
+1 package wonton wrappers
+1 package egg roll wrappers
+1 package phyllo dough
+2 sheets puff pastry, thawed
+1 refrigerated pizza dough
+1 premade pizza crust
+2 refrigerated pie crusts
+1 graham cracker pie crust
+1 package crescent rolls
+1 can biscuits
+1 box graham crackers
+1 sleeve graham crackers
+12 Nilla wafers
+1 package ladyfingers
+1 box saltines
+1 bag oyster crackers
+1 box Ritz crackers
+1 box Triscuits
+1 bag pretzel sticks
+1 bag potato chips, crushed
+1 bag corn chips
+1 bag cheese puffs
+1 box rice cereal
+1 box Rice Krispies
+1 box Corn Chex
+1 canister oats
+1 box quick oats
+1 bag brown rice
+1 bag jasmine rice
+1 bag arborio rice
+1 bag wild rice
+1 package quinoa
+1 bag lentils
+1 bag split peas
+1 bag dried kidney beans
+1 bag dried chickpeas
+1 box couscous
+1 box orzo
+1 box penne rigate
+1 box rigatoni
+1 box shells
+1 box farfalle
+1 box linguine
+1 box fettuccine
+1 box angel hair pasta
+1 package soba noodles
+1 package udon noodles
+1 package ramen noodles
+1 package glass noodles
+1 bag egg noodles
+1 jar Alfredo sauce
+1 jar vodka sauce
+1 jar pizza sauce
+1 bottle barbecue sauce
+1 bottle teriyaki sauce
+1 bottle soy sauce
+1 bottle sriracha
+1 bottle ketchup
+1 jar mustard
+1 jar honey mustard
+1 jar mayo
+1 bottle ranch
+1 bottle Italian dressing
+1 jar salsa
+1 jar queso
+1 can enchilada sauce
+1 jar green chile salsa
+1 can chipotle peppers
+1 can black beans, drained
+1 can kidney beans
+1 can cannellini beans
+1 can corn, drained
+1 can peas
+1 can green beans
+1 can diced tomatoes
+1 can tomato sauce
+1 can tomato paste
+1 can pumpkin
+1 can mandarin oranges
+1 can pineapple tidbits
+1 can peaches
+1 can cherries
+1 can pie filling
+1 can sweetened condensed milk
+1 can cream of celery soup
+1 can chicken noodle soup
+1 carton chicken stock
+1 carton beef stock
+1 carton vegetable broth
+1 jar chicken base
+1 jar beef bouillon
+4 chicken bouillon cubes
+1 packet onion soup mix
+1 packet gravy mix
+1 packet ranch seasoning
+1 packet fajita seasoning
+1 packet yeast
+1 envelope Knox gelatin
+1 box Jell-O
+1 box instant chocolate pudding
+1 box brownie mix
+1 box pancake mix
+1 bag flour
+1 bag sugar
+1 bag confectioners' sugar
+1 container baking powder
+1 bottle lemon extract
+1 bag butterscotch chips
+1 bag peanut butter chips
+1 bag white chocolate chips
+1 bar baking chocolate
+2 squares unsweetened chocolate
+4 squares semisweet chocolate
+1 bag cocoa powder
+1 bag shredded coconut
+1 bag sliced almonds
+1 bag chopped walnuts
+1 bag pecans
+1 bag pine nuts
+1 bag sunflower seeds
+1 bag pumpkin seeds
+1 bag chia seeds
+1 bag flaxseed
+1 jar sesame seeds
+1 bag raisins
+1 bag dried cranberries
+1 bag dried apricots
+1 bag prunes
+1 bag dates
+1 jar maple syrup
+1 bottle agave
+1 jar corn syrup
+1 bottle honey
+1 jar jam
+1 jar strawberry preserves
+1 jar grape jelly
+1 jar apple butter
+1 jar lemon curd
+1 jar Nutella
+1 jar marshmallow creme
+1 container frosting
+1 tub whipped cream cheese
+1 container Cool Whip
+1 pint heavy whipping cream
+1 half gallon milk
+1 quart chocolate milk
+1 bottle orange juice
+1 carton apple juice
+1 bottle cranberry juice
+1 can pineapple juice
+1 bottle lemonade
+1 can tomato juice
+1 bottle ginger beer
+2 cans cola
+1 can root beer
+1 bottle tonic water
+1 bottle white wine
+1 bottle rosé
+1 bottle prosecco
+1 bottle champagne
+1 bottle bourbon
+1 bottle vodka
+1 bottle rum
+1 bottle tequila
+1 bottle gin
+1 bottle brandy
+1 bottle sherry
+1 bottle port
+1 bottle sake
+1 can coconut water
+1 bag coffee
+1 jar instant espresso
+1 box green tea
+1 box herbal tea
+2 bags black tea
+1 jar matcha powder
+1 bag ice
+1 bag frozen berries
+1 bag frozen mango chunks
+1 bag frozen peas and carrots
+1 bag frozen stir-fry vegetables
+1 bag frozen cauliflower rice
+1 box frozen spinach
+1 bag frozen corn kernels
+1 pint vanilla gelato
+1 pint raspberry sorbet
+1 box ice cream cones
+1 jar hot fudge sauce
+1 bottle caramel syrup
+1 container sprinkles
+1 bag mini chocolate chips
+1 package Oreos
+1 package Nutter Butters
+1 package fig bars
+1 box animal crackers
+1 bag gummy bears
+1 bag candy-coated chocolates
+1 bag peppermint candies
+1 package marshmallows
+1 bag caramel bits
+1 package almond paste
+1 tube marzipan
+1 package fondant
+1 tube icing
+2 cups basmati rice, rinsed
+1 large onion, finely sliced
+4 cloves garlic, crushed
+1 tbsp ginger-garlic paste
+2 green chillies, slit
+1 tsp cumin seeds
+2 dried red chillies
+4 green cardamom
+500 g chicken thighs, cut into pieces
+1 cup plain yogurt
+2 medium tomatoes, chopped
+1 tsp Kashmiri chilli powder
+1/2 tsp turmeric
+1 handful coriander leaves
+1 handful mint leaves
+2 potatoes, quartered
+1 cup paneer cubes
+200 g spinach
+2 tbsp kasuri methi
+1/4 cup cashews, soaked
+1/2 cup heavy cream
+4 rotis
+6 papadums
+1 jar mango chutney
+1 jar lime pickle
+2 lbs pork shoulder, cut into 2-inch chunks
+1 white onion, quartered
+4 garlic cloves
+1 orange, juiced
+1 tsp dried Mexican oregano
+12 corn tortillas
+1 bunch cilantro, chopped
+1 cup crumbled queso fresco
+4 radishes, thinly sliced
+1/2 cup pickled red onions
+1 jalapeño, seeded
+2 tomatillos, husked
+1 cup Mexican rice
+6 tostada shells
+1 cup shredded lettuce
+1/2 cup Mexican crema
+2 dried ancho chiles, stemmed
+3 dried guajillo chiles
+1 chipotle in adobo
+1 tablet Mexican chocolate
+1 red onion, sliced
+8 flour tortillas
+1 cup shredded Mexican cheese blend
+1 lb ground pork
+2 scallions, thinly sliced
+1 tbsp Shaoxing wine
+2 tbsp light soy sauce
+1 tbsp dark soy sauce
+1 tbsp oyster sauce
+1 tsp sugar
+1 tbsp cornstarch
+30 dumpling wrappers
+4 baby bok choy, halved
+1 lb boneless chicken thighs
+1 cup roasted peanuts
+1 tsp Sichuan peppercorns
+1 block firm tofu
+1/2 lb ground beef
+2 tbsp doubanjiang
+1 tbsp fermented black beans
+1 lb fresh egg noodles
+2 cups bean sprouts
+1 carrot, julienned
+3 eggs, beaten
+2 cups cooked jasmine rice
+1 cup frozen peas and carrots
+2 Chinese sausages, diced
+1 cup sushi rice
+4 sheets nori
+1 cucumber, cut into strips
+4 oz sashimi-grade tuna
+2 tbsp rice vinegar
+1 tbsp mirin
+2 tbsp white miso
+1 block silken tofu, cubed
+2 green onions
+1 sheet kombu
+1 cup bonito flakes
+2 portions ramen noodles
+2 soft-boiled eggs
+4 slices chashu pork
+1 sheet nori, cut into strips
+1 lb thinly sliced ribeye
+1 Asian pear, grated
+3 tbsp gochujang
+1 tbsp gochugaru
+2 cups napa cabbage kimchi
+1 lb pork belly, sliced
+1 cup short-grain rice
+1 zucchini, julienned
+4 shiitake mushrooms, sliced
+1 cup spinach, blanched
+1 egg yolk
+1 lb rice noodles
+1 lb shrimp, peeled
+2 tbsp tamarind paste
+2 tbsp palm sugar
+1/4 cup crushed peanuts
+2 shallots, sliced
+1 stalk lemongrass, bruised
+4 kaffir lime leaves
+1 Thai eggplant, quartered
+1 handful Thai basil
+2 bird's eye chilies
+1 lb flank steak, thinly sliced
+1 onion, charred
+1 knob ginger, charred
+1 package pho noodles
+1 bunch Vietnamese mint
+1 cup pickled carrots and daikon
+4 banh mi rolls
+1/2 cup Kewpie mayonnaise
+2 cups chickpeas, cooked
+1 garlic clove
+1 pinch paprika
+1 small onion, grated
+2 tbsp chopped parsley
+1 tsp sumac
+3 tomatoes, diced
+1 cucumber, diced
+1/2 cup pomegranate seeds
+2 tbsp pomegranate molasses
+1 cup labneh
+2 tbsp za'atar
+4 Medjool dates
+1/2 cup preserved lemon, chopped
+1 cup green olives
+1 whole chicken, cut into 8 pieces
+1 tsp ras el hanout
+1 lb spaghetti
+4 oz guanciale, diced
+3 large eggs
+1 cup grated Pecorino Romano
+1 tsp black pepper
+1 can San Marzano tomatoes
+2 tbsp extra-virgin olive oil
+1 lb Italian sausage, casings removed
+15 oz ricotta
+1 lb arborio rice
+6 cups chicken stock
+1 lb asparagus
+1 lb mussels
+1 lb clams
+1/2 lb calamari
+1 lb cod fillets
+2 lbs beef chuck, cubed
+4 carrots, cut into chunks
+1 lb pearl onions
+4 slices thick-cut bacon
+1 bouquet garni
+2 tbsp tomato paste
+1 duck breast
+1 lb Yukon Gold potatoes
+1 cup Gruyère, grated
+2 leeks, sliced
+4 cups beef broth
+6 slices French bread
+1 lb green beans
+1 lb fresh fettuccine
+1 whole turkey (12 lb)
+1 loaf day-old bread, cubed
+4 celery stalks
+1 lb breakfast sausage
+2 cups cornbread crumbs
+1 can cranberry sauce
+4 sweet potatoes
+1 bag mini marshmallows
+1 unbaked pie shell
+1 can pumpkin puree
+2 eggs
+1 tsp pumpkin pie spice
+1 tub whipped topping
+2 lbs collard greens
+1 smoked ham hock
+1 lb black-eyed peas
+1 lb andouille sausage
+1 green bell pepper
+3 celery ribs
+1 cup long-grain rice
+2 tsp Cajun seasoning
+1 lb catfish fillets
+6 buttermilk biscuits
+1 lb pimento cheese
+1 rack baby back ribs
+1/2 cup barbecue rub
+1 bottle BBQ sauce
+1 head green cabbage, shredded
+1 cup coleslaw dressing
+8 hamburger buns
+2 lbs ground chuck
+1 sweet onion
+2 dill pickles, sliced
+1 head iceberg lettuce
+1 tsp salt
+2 tsp vanilla extract
+3 ripe bananas, mashed
+1/3 cup melted butter
+1 tsp cinnamon
+4 Granny Smith apples
+1 double pie crust
+1 package cream cheese, softened
+1 cup graham cracker crumbs
+1 cup sour cream
+1 cup powdered sugar
+2 cups buttermilk
+2 tsp baking powder
+6 egg whites
+1 cup cake flour
+1 pint strawberries, sliced
+1 cup whipped cream
+6 shortcakes
+1 package instant vanilla pudding
+1 box vanilla wafers
+4 bananas, sliced
+1 tub Cool Whip
+1 cup sprinkles
+2 oz white rum
+1 oz fresh lime juice
+1/2 oz simple syrup
+2 oz bourbon
+2 dashes Angostura bitters
+1 orange peel
+1 maraschino cherry
+1 1/2 oz tequila
+1 oz Cointreau
+1 coarse salt rim
+1 cucumber slice
+1 oz Campari
+1 oz sweet vermouth
+2 oz vodka
+4 oz ginger beer
+4 slices bread
+1 cup maple syrup
+1 cup fresh berries
+4 slices Canadian bacon
+4 eggs, poached
+1 cup hollandaise
+1 cup pancake mix
+1 cup milk
+4 sausage links
+2 cups hash browns
+1 bell pepper, diced
+1/2 cup diced ham
+1 cup shredded cheddar
+4 flour tortillas
+1 avocado
+2 cups Greek yogurt
+1 banana
+1 tbsp chia seeds
+1 tbsp honey
+1 cup frozen mixed berries
+1 handful spinach
+1 pinch red pepper flakes
+2 poached eggs
+1 bagel, split
+2 oz smoked salmon
+1/4 red onion, thinly sliced
+1 tbsp chopped dill
+1 lb Brussels sprouts
+1 head cauliflower, cut into florets
+2 heads broccoli
+1 butternut squash, cubed
+1 acorn squash, halved
+4 beets, roasted
+2 cups arugula
+1/2 cup goat cheese crumbles
+1/3 cup candied pecans
+1 Honeycrisp apple
+2 cups kale, stemmed
+1/4 cup dried cranberries
+1/4 cup toasted pumpkin seeds
+1 cup feta cheese
+1/2 cup Kalamata olives
+1 red onion
+1 green pepper
+1 cucumber
+2 cups cooked quinoa
+1 can lentils
+4 cups vegetable stock
+1 can diced tomatoes with green chiles
+1 pkg taco seasoning
+1 lb lean ground turkey
+1 can pinto beans
+2 cups shredded rotisserie chicken
+1 can cream of chicken soup
+1 cup frozen mixed vegetables
+1 lb elbow macaroni
+3 cups sharp cheddar
+1/4 cup panko
+1 lb penne
+1 cup sun-dried tomatoes
+1 lb bow tie pasta
+1 cup cherry tomatoes
+1 lb tortellini
+1 lb gnocchi
+1 can artichoke hearts
+1 lb salmon fillet
+1 lemon, sliced
+4 sprigs dill
+1 lb tilapia
+1 lb jumbo shrimp
+1 lb king crab legs
+1 dozen oysters
+2 tbsp Old Bay
+1 lb smoked sausage
+4 ears corn, halved
+2 lbs red potatoes
+2 heads radicchio
+3 baby fennel bulbs
+6 baby carrots
+2 heirloom tomatoes, sliced
+1 small red cabbage
+4 large portobello caps
+2 heads romaine
+1 large jicama
+2 chayotes
+1 star anise pod
+3 allspice berries
+2 strips lemon zest
+1 vanilla bean, split
+1 knob fresh ginger
+1 large leek
+3 garlic scapes
+8 ramps
+2 red bell peppers
+3 poblano peppers
+4 Anaheim chiles
+2 habaneros
+6 shishito peppers
+1 small eggplant
+4 baby zucchini
+1 delicata squash
+2 Yukon Gold potatoes
+6 fingerling potatoes
+3 russet potatoes
+4 parsnips
+6 radishes
+2 golden beets
+1 bunch baby turnips
+4 apricots
+6 plums
+1 pint cherries
+2 cups blueberries
+1 lime
+2 lemons
+3 blood oranges
+1 pink grapefruit
+1 mango
+4 bananas
+2 avocados
+4 chicken breasts
+1 pork tenderloin
+2 lbs pork shoulder
+1 rack pork ribs
+4 bratwurst
+6 Italian sausages
+1 lb chorizo
+8 slices prosciutto
+6 slices salami
+2 flat iron steaks
+1 lb ground sirloin
+1 chuck roast
+4 short ribs
+4 lamb chops
+1 venison loin
+4 salmon steaks
+2 halibut fillets
+4 cod loins
+1 whole snapper
+4 sardines
+12 littleneck clams
+24 mussels
+16 jumbo shrimp
+2 lobsters
+1 lb squid
+1 can tuna
+1 jar olives
+1 jar sun-dried tomatoes
+1 jar artichoke hearts
+1 can black beans
+1 can white beans
+1 can tomato puree
+1 can crushed tomatoes
+1 can whole peeled tomatoes
+1 can tomato soup
+1 can chicken broth
+1 can beef consomme
+1 can corned beef
+1 can Spam
+1 can water chestnuts
+1 can bamboo shoots
+1 can baby corn
+1 can pumpkin pie filling
+1 can apple pie filling
+1 can fruit cocktail
+1 can peaches in syrup
+1 can pears
+1 can condensed milk
+1 can dulce de leche
+1 jar applesauce
+1 jar marmalade
+1 jar fig jam
+1 jar whole grain mustard
+1 jar horseradish
+1 jar pickled ginger
+1 jar sauerkraut
+1 jar giardiniera
+1 bottle oyster sauce
+1 bottle hoisin sauce
+1 bottle rice vinegar
+1 bottle balsamic vinegar
+1 bottle apple cider vinegar
+1 bottle vegetable oil
+1 bottle Tabasco
+1 bottle lime juice
+1 bottle sparkling cider
+1 bottle Cabernet
+1 bottle Pinot Grigio
+1 bottle Chardonnay
+1 bottle dry vermouth
+1 bottle Aperol
+1 bottle Kahlua
+1 bottle Baileys
+1 bottle Grand Marnier
+1 bottle amaretto
+1 bottle triple sec
+1 bottle mezcal
+1 bottle rye whiskey
+1 bottle scotch
+1 bottle dark rum
+1 bottle spiced rum
+6 bottles lager
+12 cans seltzer
+1 carton half-and-half
+1 carton buttermilk
+1 tub ricotta
+1 tub hummus
+1 tub butter
+1 tub margarine
+1 block Parmesan
+1 package shredded cheddar
+1 package sliced Swiss
+1 package cream cheese
+1 package goat cheese
+1 package fresh mozzarella
+1 package bacon
+1 package ground beef
+1 package chicken thighs
+1 package tortillas
+1 package pita bread
+1 package naan
+1 package hamburger buns
+1 package hot dog buns
+1 package English muffins
+1 package bagels
+1 package croissants
+1 package dinner rolls
+1 package phyllo
+1 package pie crusts
+1 package udon
+1 package soba
+1 package spaghetti
+1 package lasagna noodles
+1 package tortellini
+1 package ravioli
+1 package frozen peas
+1 package frozen spinach
+1 package frozen corn
+1 package frozen berries
+1 package frozen shrimp
+1 package frozen meatballs
+1 package frozen waffles
+1 package frozen pie shells
+1 package frozen puff pastry
+1 package frozen hash browns
+1 package frozen french fries
+1 package frozen pizza
+1 package yeast
+1 package gelatin
+1 package instant pudding
+1 package cream cheese frosting
+1 package chocolate chips
+1 package graham crackers
+1 package vanilla wafers
+1 package shortbread cookies
+1 package pita chips
+1 package tortilla chips
+1 package pretzels
+1 package popcorn
+1 package dried mango
+1 package dried figs
+1 package prunes
+1 package walnuts
+1 package almonds
+1 package cashews
+1 package pistachios
+1 package peanuts
+1 package hazelnuts
+1 package macadamia nuts
+1 package pecans
+1 package pine nuts
+1 package sesame seeds
+1 package flax seeds
+1 package hemp seeds
+1 package rolled oats
+1 package steel-cut oats
+1 package farro
+1 package barley
+1 package bulgur
+1 package polenta
+1 package grits
+1 package cornmeal
+1 package masa harina
+1 package rice flour
+1 package almond flour
+1 package coconut flour
+1 package cake flour
+1 package bread flour
+1 package whole wheat flour
+1 package brown sugar
+1 package powdered sugar
+1 package turbinado sugar
+1 package cornstarch
+1 package baking soda
+1 package cocoa
+1 package espresso powder
+1 package coffee beans
+1 package ground coffee
+1 package tea
+1 package matcha
+1 package chai concentrate
+1 package hot cocoa mix
+1 package lemonade mix
+1 package Kool-Aid
+1 package Jell-O
+1 package taco shells
+1 package tostada shells
+1 package refried beans
+1 package Spanish rice
+1 package mac and cheese
+1 package stuffing mix
+1 package gravy mix
+1 package onion soup mix
+1 package chili seasoning
+1 package Italian dressing mix

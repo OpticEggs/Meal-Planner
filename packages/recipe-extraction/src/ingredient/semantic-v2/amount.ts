@@ -21,6 +21,7 @@ import {
   INVARIANT_PLURALS, RANGE_DASHES, REMARK_WORDS, SIZE_WORDS, TIME_WORDS, UNKNOWN_MEASURES, unitOfWord,
 } from "./lexicon";
 import { andFraction, fractionUnitWord, readNumber, type NumberRead } from "./quantity";
+import { compoundFood, foodWord, recognisedFoodHead } from "./foods";
 import { emptyEffects, type AmountReading, type Effects } from "./types";
 import { readUnit, type UnitRead } from "./unit";
 import { unitV1 } from "../../units";
@@ -467,6 +468,12 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   for (let guard = 0; guard < 6 && compound === null; guard++) {
     const t = toks[k];
     // CAN-SIZE DESIGNATION (§12.9): "1 #10 can", "2 No. 303 cans", "1 (No. 2) can" — the designation is a note
+    // (after a size word too: "1 large (#2) can crushed pineapple")
+    if (isWord(t) && SIZE_WORDS.has(t.lower) && canSizeDesignationAt(toks, k + 1) > k + 1 && n1.ok && max === null) {
+      fx.notes.push({ s: t.s, text: t.text });
+      k++;
+      continue;
+    }
     const des = canSizeDesignationAt(toks, k);
     if (des > k && n1.ok && max === null) {
       const inner = isGroup(t) ? text.slice(t.innerS, t.innerE).trim() : text.slice(t.s, toks[des - 1].e);
@@ -706,7 +713,7 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   // a registry unit. The amount cannot be carried without its unit: it is kept in the note, not invented.
   if (!unitRead && n1.ok && max === null && between.length === 0) {
     // (after any measure adjectives: "2 heaping spoonfuls sugar")
-    const m = unknownMeasureAt(toks, a);
+    const m = countWordBeforePluralFoodName(toks, a, n1.value) ? a : unknownMeasureAt(toks, a);
     if (m > a) {
       let c = m;
       if (isSym(toks[c], ".") && adjacent(toks[c - 1], toks[c])) c++;
@@ -1124,12 +1131,17 @@ export function isTemperatureOrTime(toks: readonly Tok[], k: number): boolean {
  * right before a container unit names the container's size class; it is not an amount. Returns the index after it, or `k`.
  */
 export function canSizeDesignationAt(toks: readonly Tok[], k: number): number {
+  // (the number may carry a fraction: "#2½", "No. 2 1/2")
+  const afterNumber = (list: readonly Tok[], j: number): number => {
+    const n = readNumber(list, j);
+    return n !== null && n.ok ? n.next : j + 1;
+  };
   const designation = (list: readonly Tok[], i: number): number => {
-    if (isSym(list[i], "#") && list[i + 1]?.kind === "num" && adjacent(list[i], list[i + 1])) return i + 2;
+    if (isSym(list[i], "#") && list[i + 1]?.kind === "num" && adjacent(list[i], list[i + 1])) return afterNumber(list, i + 1);
     if (isWord(list[i], "no", "number", "nr")) {
       let j = i + 1;
       if (isSym(list[j], ".") && adjacent(list[i], list[j])) j++;
-      if (list[j]?.kind === "num") return j + 1;
+      if (list[j]?.kind === "num") return afterNumber(list, j);
     }
     return i;
   };
@@ -1144,7 +1156,8 @@ export function canSizeDesignationAt(toks: readonly Tok[], k: number): number {
 }
 
 /**
- * COUNT WORD BEGINNING THE NAME (semantic-v2, CONTRACT §12.A A1 as refined): a SINGULAR, non-container count unit right
+ * COUNT WORD BEGINNING THE NAME (semantic-v2, CONTRACT §12.A A1 as refined, A5): a SINGULAR, non-container count or
+ * imprecise unit right
  * after a count above one, followed by a PLURAL countable food, begins the food's name — "2 strip steaks", "4 rib eye
  * steaks", "4 cube steaks", "2 sheet cakes", "2 wedge salads" → `each`, the whole name kept. Before an uncounted food it
  * is a sloppy plural and stays the unit ("2 clove garlic", "1 1/2 stick butter"); containers are always the unit ("2 can
@@ -1158,17 +1171,23 @@ export function countWordBeginsName(text: string, toks: readonly Tok[], unitRead
 /** The count-word half of `countWordBeginsName`: a singular non-container count word followed by a plural countable food. */
 export function countWordBeforePluralFood(text: string, toks: readonly Tok[], unitRead: UnitRead): boolean {
   const u = unitRead.unit;
-  if (u.dimension !== "count" || u.canonical === "each" || PACKAGE_UNITS.has(u.canonical)) return false;
+  // (§12.A A5: imprecise units follow the same agreement — "6 drop biscuits", "4 sprinkle donuts"; mass and volume never)
+  if (!(u.dimension === "count" || (u.dimension === "imprecise" && u.canonical !== "inch")) || u.canonical === "each" || PACKAGE_UNITS.has(u.canonical)) return false;
   const written = text.slice(unitRead.s, unitRead.e).toLowerCase().replace(/\.$/, "");
   if (written.endsWith("s")) return false;
   // the food after it, up to a comma, a bracket or a joining word: its last word must be a plural noun
   let k = unitRead.next;
   let last: string | null = null;
+  const name: string[] = [written];
   while (isWord(toks[k]) && !FUNCTION_WORDS.has((toks[k] as { lower: string }).lower)) {
     last = (toks[k] as { lower: string }).lower;
+    name.push((toks[k] as { text: string }).text);
     k++;
   }
-  return last !== null && pluralNoun(last);
+  if (last === null || !pluralNoun(last)) return false;
+  // (an imprecise word begins the name only when the whole is a recognised food: "drop biscuits", "sprinkle donuts";
+  // "2 handful diced tomatoes" is a sloppy plural of the measure)
+  return u.dimension !== "imprecise" || recognisedFoodHead(name.join(" "));
 }
 
 /** A plural noun by its form ("steaks", "cakes", "salads"; not "asparagus", "hummus", "swiss"), or a zero plural. */
@@ -1191,13 +1210,43 @@ export function unknownMeasureAt(toks: readonly Tok[], a: number): number {
   const w = toks[a];
   if (!isWord(w)) return a;
   const next = toks[a + 1];
+  const food = (t: Tok | undefined) => isWord(t) && !FUNCTION_WORDS.has(t.lower);
+  // a measure needs a food after it: "2 rolls, split", "1 jigger" name the thing itself
+  if (!food(next) && !isWord(next, "of")) return a;
+  // a cut named with "of" is food ("1 leg of lamb", "2 racks of lamb", "1 saddle of venison")
+  if (CUT_WORDS.has(w.lower) && isWord(next, "of")) return a;
+  // a compound food name that opens with a measure word is food ("1 spoon bread", "1 cup noodles" aside: a registry unit)
+  if (isWord(next) && compoundFood(w.lower, next.lower)) return a;
   if (UNKNOWN_MEASURES.has(w.lower) || MEASURE_BY_FORM.test(w.lower) || HYPHENATED_VESSEL.test(w.lower)) return a + 1;
   if (!isPlainNoun(w.lower) || unitOfWord(w.text) !== null) return a;
-  const food = (t: Tok | undefined) => isWord(t) && !FUNCTION_WORDS.has(t.lower);
-  if (isWord(next) && VESSEL_MEASURES.has(next.lower) && (food(toks[a + 2]) || isWord(toks[a + 2], "of"))) return a + 2;
+  // ("1 chicken pot pie", "2 beef pot roasts": a vessel word inside a dish name is not a measure)
+  if (isWord(next) && VESSEL_MEASURES.has(next.lower) && (food(toks[a + 2]) || isWord(toks[a + 2], "of")) && !(isWord(toks[a + 2]) && compoundFood(next.lower, (toks[a + 2] as { lower: string }).lower))) return a + 2;
   if (isWord(next, "of") && toks[a + 2] !== undefined && !isWord(toks[a + 2], "the")) return a + 1;
-  if (isWord(next) && isPlainNoun(next.lower) && unitOfWord(next.text) === null && isWord(toks[a + 2], "of") && food(toks[a + 3])) return a + 2;
+  // ("1 coffee mug of milk"; but "1 crown roast of pork" names a food: a food noun before "of" is not a measure)
+  if (isWord(next) && isPlainNoun(next.lower) && unitOfWord(next.text) === null && !foodWord(next.text) && isWord(toks[a + 2], "of") && food(toks[a + 3])) return a + 2;
   return a;
+}
+
+/**
+ * A singular word after a count above one, before a plural food, begins the food's name, not a measure (§12.A A1): "6
+ * finger sandwiches", "3 stone crab claws", "2 slab pies" (checked before `unknownMeasureAt`).
+ */
+function countWordBeforePluralFoodName(toks: readonly Tok[], a: number, count: Rational): boolean {
+  const w = toks[a];
+  return isWord(w) && cmp(count, rational(BigInt(1))) > 0 && !/s$/.test(w.lower) && isWord(toks[a + 1]) && pluralFoodAhead(toks, a + 1);
+}
+
+/** Cuts named with "of" ("leg of lamb", "rack of ribs", "saddle of venison", "side of salmon"): food, not a measure. */
+const CUT_WORDS = new Set(["leg", "legs", "rack", "racks", "saddle", "saddles", "crown", "crowns", "haunch", "loin", "loins", "shoulder", "shoulders", "side", "sides", "breast", "breasts", "shank", "shanks", "eye", "eyes", "heart", "hearts"]);
+
+/** The words from `k` end (before a comma, bracket or joining word) in a plural noun ("sandwiches", "crab claws"). */
+function pluralFoodAhead(toks: readonly Tok[], k: number): boolean {
+  let last: string | null = null;
+  while (isWord(toks[k]) && !FUNCTION_WORDS.has((toks[k] as { lower: string }).lower)) {
+    last = (toks[k] as { lower: string }).lower;
+    k++;
+  }
+  return last !== null && pluralNoun(last);
 }
 /** "-ful" measures by their form: "fistful", "spoonfuls", "can-ful", "tub-full" (registry ones — cupful, handful — are read before). */
 const MEASURE_BY_FORM = /^\p{L}{2,}-?full?s?$/u;
