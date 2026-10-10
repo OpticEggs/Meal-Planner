@@ -171,7 +171,7 @@
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0457 [C] final-head-probe:probes.tsv:159 \"4 kaffir lime leaves\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0548 [C] final-head-probe:probes.tsv:159 \"4 kaffir lime leaves\"",
      "reason": "^AssertionError"
     }
    ],
@@ -215,7 +215,7 @@
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0414 [C] final-head-probe:probes.tsv:113 \"4 (6-oz) salmon fillets\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0505 [C] final-head-probe:probes.tsv:113 \"4 (6-oz) salmon fillets\"",
      "reason": "^AssertionError"
     }
    ],
@@ -345,7 +345,7 @@
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0593 [D] final-head-probe:probes.tsv:295 \"Topping\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0684 [D] final-head-probe:probes.tsv:295 \"Topping\"",
      "reason": "^AssertionError"
     }
    ],
@@ -363,15 +363,15 @@
    ],
    "killedBy": [
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0167 [B] candidate-review-r1:R1-HIGH \"2 cups strawberries and blueberries\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0168 [B] candidate-review-r1:R1-HIGH \"2 cups strawberries and blueberries\"",
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0166 [B] candidate-review-r1:R1-HIGH \"1/4 cup chopped parsley and mint\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0167 [B] candidate-review-r1:R1-HIGH \"1/4 cup chopped parsley and mint\"",
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0164 [B] candidate-review-r1:R1-HIGH \"2 cups chopped celery and carrots\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0165 [B] candidate-review-r1:R1-HIGH \"2 cups chopped celery and carrots\"",
      "reason": "^AssertionError"
     }
    ],
@@ -389,15 +389,15 @@
    ],
    "killedBy": [
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0168 [C] candidate-review-r1:R1-HIGH \"2 strip steaks\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0169 [C] candidate-review-r1:R1-HIGH \"2 strip steaks\"",
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0169 [C] candidate-review-r1:R1-HIGH \"4 cube steaks\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0170 [C] candidate-review-r1:R1-HIGH \"4 cube steaks\"",
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0170 [C] candidate-review-r1:R1-HIGH \"2 sheet cakes\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0171 [C] candidate-review-r1:R1-HIGH \"2 sheet cakes\"",
      "reason": "^AssertionError"
     }
    ],
@@ -415,11 +415,11 @@
    ],
    "killedBy": [
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0298 [A] candidate-review-r1:R1-MEDIUM \"1 #10 can diced tomatoes\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0299 [A] candidate-review-r1:R1-MEDIUM \"1 #10 can diced tomatoes\"",
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0299 [A] candidate-review-r1:R1-MEDIUM \"2 No. 303 cans cut green beans\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0300 [A] candidate-review-r1:R1-MEDIUM \"2 No. 303 cans cut green beans\"",
      "reason": "^AssertionError"
     }
    ],
@@ -437,15 +437,15 @@
    ],
    "killedBy": [
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0156 [A] candidate-review-r1:R1-HIGH \"1 gill single cream\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0157 [A] candidate-review-r1:R1-HIGH \"1 gill single cream\"",
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0158 [A] candidate-review-r1:R1-HIGH \"1 tumbler orange juice\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0159 [A] candidate-review-r1:R1-HIGH \"1 tumbler orange juice\"",
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0159 [A] candidate-review-r1:R1-HIGH \"2 ladles chicken stock\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0160 [A] candidate-review-r1:R1-HIGH \"2 ladles chicken stock\"",
      "reason": "^AssertionError"
     }
    ],
@@ -467,7 +467,7 @@
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0153 [A] candidate-review-r1:R1-HIGH \"3 tablespoons lemon juice (about 1 lemon)\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0154 [A] candidate-review-r1:R1-HIGH \"3 tablespoons lemon juice (about 1 lemon)\"",
      "reason": "^AssertionError"
     }
    ],
@@ -485,19 +485,19 @@
    ],
    "killedBy": [
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0175 [D] candidate-review-r1:R1-HIGH \"1 rolling pin\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0176 [D] candidate-review-r1:R1-HIGH \"1 rolling pin\"",
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0182 [D] candidate-review-r1:R1-HIGH \"1 roll kitchen twine\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0183 [D] candidate-review-r1:R1-HIGH \"1 roll kitchen twine\"",
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0181 [D] candidate-review-r1:R1-HIGH \"6 popsicle sticks\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0182 [D] candidate-review-r1:R1-HIGH \"6 popsicle sticks\"",
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0183 [D] candidate-review-r1:R1-HIGH \"1 box toothpicks\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0184 [D] candidate-review-r1:R1-HIGH \"1 box toothpicks\"",
      "reason": "^AssertionError"
     }
    ],
@@ -515,7 +515,29 @@
    ],
    "killedBy": [
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0172 [D] candidate-review-r1:R1-HIGH \"Calories: 412kcal | Carbohydrates: 52g | Protein: 18g\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0173 [D] candidate-review-r1:R1-HIGH \"Calories: 412kcal | Carbohydrates: 52g | Protein: 18g\"",
+     "reason": "^AssertionError"
+    }
+   ],
+   "expect": "KILLED"
+  },
+  {
+   "id": "P-food-head-off",
+   "description": "recognised-food requirement disabled: every counted line counts as a recognised food (unknown heads and unknown leading words read ready)",
+   "file": "src/ingredient/semantic-v2/foods.ts",
+   "find": "export function recognisedFoodHead(name: string): boolean {",
+   "replace": "export function recognisedFoodHead(name: string): boolean {\n  if (Number.isFinite(0)) return true;",
+   "tests": [
+    "tests/semantic-v2/recognised-food.test.ts",
+    "tests/regressions/semantic-v2-regressions.test.ts"
+   ],
+   "killedBy": [
+    {
+     "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > a capitalised word is accepted as a proper name or brand before a food head, a lower-case unknown word is not",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "a counted line whose food is not recognised: needs_review, no amount, the text after the number kept (Decision 1, owner rule 1) > never unsupported, never dropped: an unrecognised head is not a non-ingredient shape",
      "reason": "^AssertionError"
     }
    ],

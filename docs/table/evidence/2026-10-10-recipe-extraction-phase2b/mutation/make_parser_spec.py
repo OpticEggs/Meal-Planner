@@ -96,6 +96,14 @@ add("P-equipment-off", "§12.8 equipment shape disabled (counted kitchen tools r
 add("P-nutrition-panel-off", "§12.8 one-line nutrition panel read as an ingredient (invented amount)",
     "classify.ts", early_return("export function nutritionPanel(toks: readonly Tok[]): boolean {", "false"),
     [reg("Calories: 412kcal | Carbohydrates: 52g | Protein: 18g")])
+RF = "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised"
+RU = "a counted line whose food is not recognised: needs_review, no amount, the text after the number kept (Decision 1, owner rule 1)"
+M.append({"id": "P-food-head-off", "description": "recognised-food requirement disabled: every counted line counts as a recognised food (unknown heads and unknown leading words read ready)",
+          "file": S + "foods.ts", **early_return("export function recognisedFoodHead(name: string): boolean {", "true"),
+          "tests": ["tests/semantic-v2/recognised-food.test.ts", HARNESS],
+          "killedBy": [safe(RF, "a capitalised word is accepted as a proper name or brand before a food head, a lower-case unknown word is not"),
+                       safe(RU, "never unsupported, never dropped: an unrecognised head is not a non-ingredient shape")],
+          "expect": "KILLED"})
 spec = {"format": "recipe-extraction-mutations/v1", "owner": "coordinator (Phase 2B)",
         "description": "Parser mutations for the candidate semantic-v2: each disables or weakens one named safeguard and must be KILLED by an assertion in its direct test or in the required regression harness, for the stated reason.",
         "mutations": M}
