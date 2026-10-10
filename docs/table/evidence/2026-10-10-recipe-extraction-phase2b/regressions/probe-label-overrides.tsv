@@ -1,0 +1,18 @@
+# Coordinator corrections to the final-head reviewer's probe labels, from label checker R2's review (label-check/REVIEW-CONTRACT-12.md §3.3), applied by build_corpus.py by probes.tsv line number. The probe file itself is unchanged evidence.
+# line	input	status	name(|accepted...)	qty	unit	pkg	alts(;)(||accepted set)	flags	rationale
+43	a couple of bay leaves	needs_review	bay leaves	-	-	-	-	D	§12.4: bay leaves is product identity; accepted name "bay" dropped
+88	Fresh basil or parsley, for garnish	needs_review	-	-	-	-	fresh basil;fresh parsley||fresh basil;parsley||basil;parsley	-	§12.7(c) shared leading modifier: strict distributed (frozen convention dev-0055/hold-0034/h2-0225); scoring-neutral
+94	1 cup shredded cheddar or Monterey Jack	needs_review	-	1	cup	-	shredded cheddar;shredded Monterey Jack||shredded cheddar;Monterey Jack||cheddar;Monterey Jack	-	§12.7(c); scoring-neutral
+100	1 tbsp chopped parsley or cilantro	needs_review	-	1	tbsp	-	chopped parsley;chopped cilantro||chopped parsley;cilantro||parsley;cilantro	-	§12.7(c), same construction as frozen h2-0225; scoring-neutral
+113	4 (6-oz) salmon fillets	ready	salmon	4	fillet	-	-	-	§12.3 per-piece weight of a non-container goes to note, never packageSize
+149	2 bay leaves	ready	bay leaves	2	each	-	-	-	§12.4 identity exception; accepted name "bay" dropped
+159	4 kaffir lime leaves	ready	kaffir lime leaves	4	each	-	-	-	§12.4 names makrut/kaffir lime leaves as identity
+368	2 tsp kosher salt (such as Diamond Crystal; use half for table salt)	needs_review	kosher salt	2	tsp	-	-	-	§12.11 substitution amount in a remark (consistent with probe 469 "(or 1/2 tsp table salt)")
+377	1 lb fresh or frozen cranberries	needs_review	-	1	lb	-	fresh cranberries;frozen cranberries	-	§12.7(c) / README: "fresh or frozen" before the food is a choice (frozen h2-0216, dev-0050)
+384	2 (6 oz) boneless skinless chicken breasts	ready	boneless skinless chicken breasts	2	each	-	-	-	§12.3 per-piece weight → note, never packageSize
+392	1 cup flour, plus 2 tablespoons for dusting	ready	flour	18	tbsp	-	-	-	§12.11/§12.12: same food, same dimension after "plus" is summed (now firm)
+483	1 cup feta or goat cheese	needs_review	-	1	cup	-	feta;goat cheese||feta cheese;goat cheese	-	§12.7(b): distributed set also accepted
+508	Sugar 10g	needs_review	Sugar	10	g	-	-	-	§12.8: Sugar/Salt followed by a mass in g is uncertain → needs_review (dev-0182 treats "Sugar:" label-first as an ingredient)
+561	a 3-pound whole chicken	ready	whole chicken	1	each	-	-	-	§12.3 single item: weight restates the amount (equivalent 3 lb), never packageSize
+562	Juice of 1 lemon	ready	lemon|lemon juice|juice of lemon	1	each	-	-	-	frozen convention h2-0212 (strict "limes", note "juice"; "lime juice" accepted); scoring-neutral
+598	Salt: 1.2 g	needs_review	Salt	6/5	g	-	-	-	§12.8: Salt followed by a mass in g → needs_review

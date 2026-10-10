@@ -2,69 +2,69 @@
  "summary": {
   "engine": "legacy-table-import-2",
   "corpus": 863,
-  "firm": 792,
-  "firmPass": 176,
-  "firmAssertion": 616,
+  "firm": 804,
+  "firmPass": 177,
+  "firmAssertion": 627,
   "engineErrors": 0,
   "byFamily": {
    "A": {
-    "total": 231,
+    "total": 232,
     "pass": 52,
-    "assertion": 179,
+    "assertion": 180,
     "engine-error": 0
    },
    "C": {
-    "total": 226,
-    "pass": 77,
-    "assertion": 149,
+    "total": 231,
+    "pass": 79,
+    "assertion": 152,
     "engine-error": 0
    },
    "B": {
-    "total": 102,
+    "total": 105,
     "pass": 5,
-    "assertion": 97,
+    "assertion": 100,
     "engine-error": 0
    },
    "D": {
-    "total": 113,
+    "total": 115,
     "pass": 3,
-    "assertion": 110,
+    "assertion": 112,
     "engine-error": 0
    },
    "A (debatable)": {
-    "total": 15,
+    "total": 14,
     "pass": 1,
-    "assertion": 14,
-    "engine-error": 0
-   },
-   "B (debatable)": {
-    "total": 19,
-    "pass": 0,
-    "assertion": 19,
-    "engine-error": 0
-   },
-   "C (debatable)": {
-    "total": 19,
-    "pass": 6,
     "assertion": 13,
     "engine-error": 0
    },
+   "C (debatable)": {
+    "total": 14,
+    "pass": 5,
+    "assertion": 9,
+    "engine-error": 0
+   },
+   "B (debatable)": {
+    "total": 16,
+    "pass": 0,
+    "assertion": 16,
+    "engine-error": 0
+   },
    "-": {
-    "total": 120,
-    "pass": 39,
-    "assertion": 81,
+    "total": 121,
+    "pass": 38,
+    "assertion": 83,
     "engine-error": 0
    },
    "D (debatable)": {
-    "total": 8,
+    "total": 6,
     "pass": 0,
-    "assertion": 8,
+    "assertion": 6,
     "engine-error": 0
    },
    "- (debatable)": {
-    "total": 10,
+    "total": 9,
     "pass": 2,
-    "assertion": 8,
+    "assertion": 7,
     "engine-error": 0
    }
   }
@@ -1224,7 +1224,7 @@
    "id": "rx2b-0087",
    "input": "1/2 cup feta or goat cheese",
    "family": "B",
-   "firm": false,
+   "firm": true,
    "origin": "coordinator:R3-S1",
    "outcome": "assertion",
    "detail": [
@@ -1322,14 +1322,14 @@
    "id": "rx2b-0094",
    "input": "1 tbsp Dijon or whole grain mustard",
    "family": "B",
-   "firm": false,
+   "firm": true,
    "origin": "coordinator:R3-S1",
    "outcome": "assertion",
    "detail": [
     "name: want null, got \"1 tbsp Dijon or whole grain mustard\"",
     "quantity: want \"1\", got null",
     "unit: want \"tbsp\", got null",
-    "alternatives: want [\"Dijon mustard\",\"whole grain mustard\"], got []"
+    "alternatives: want [\"Dijon\",\"whole grain mustard\"], got []"
    ]
   },
   {
@@ -2476,7 +2476,7 @@
    "origin": "final-head-probe:probes.tsv:43",
    "outcome": "assertion",
    "detail": [
-    "name: want \"bay leaves\" (or bay), got \"a couple of bay leaves\""
+    "name: want \"bay leaves\", got \"a couple of bay leaves\""
    ]
   },
   {
@@ -3072,7 +3072,7 @@
    "outcome": "assertion",
    "detail": [
     "name: want null, got \"Fresh basil or parsley\"",
-    "alternatives: want [\"fresh basil\",\"parsley\"], got []"
+    "alternatives: want [\"fresh basil\",\"fresh parsley\"], got []"
    ]
   },
   {
@@ -3156,7 +3156,7 @@
     "name: want null, got \"1 cup shredded cheddar or Monterey Jack\"",
     "quantity: want \"1\", got null",
     "unit: want \"cup\", got null",
-    "alternatives: want [\"shredded cheddar\",\"Monterey Jack\"], got []"
+    "alternatives: want [\"shredded cheddar\",\"shredded Monterey Jack\"], got []"
    ]
   },
   {
@@ -3235,7 +3235,7 @@
     "name: want null, got \"1 tbsp chopped parsley or cilantro\"",
     "quantity: want \"1\", got null",
     "unit: want \"tbsp\", got null",
-    "alternatives: want [\"chopped parsley\",\"cilantro\"], got []"
+    "alternatives: want [\"chopped parsley\",\"chopped cilantro\"], got []"
    ]
   },
   {
@@ -3420,15 +3420,14 @@
    "id": "rx2b-0258",
    "input": "4 (6-oz) salmon fillets",
    "family": "C",
-   "firm": false,
+   "firm": true,
    "origin": "final-head-probe:probes.tsv:113",
    "outcome": "assertion",
    "detail": [
     "status: want ready, got needs_review",
     "name: want \"salmon\", got \"4 (6-oz) salmon fillets\"",
     "quantity: want \"4\", got null",
-    "unit: want \"fillet\", got null",
-    "packageSize: want \"6 oz\", got null"
+    "unit: want \"fillet\", got null"
    ]
   },
   {
@@ -3936,7 +3935,7 @@
    "id": "rx2b-0294",
    "input": "2 bay leaves",
    "family": "C",
-   "firm": false,
+   "firm": true,
    "origin": "final-head-probe:probes.tsv:149",
    "outcome": "pass",
    "detail": []
@@ -4014,13 +4013,10 @@
    "id": "rx2b-0301",
    "input": "4 kaffir lime leaves",
    "family": "C",
-   "firm": false,
+   "firm": true,
    "origin": "final-head-probe:probes.tsv:159",
-   "outcome": "assertion",
-   "detail": [
-    "name: want \"kaffir lime\", got \"kaffir lime leaves\"",
-    "unit: want \"leaf\", got \"each\""
-   ]
+   "outcome": "pass",
+   "detail": []
   },
   {
    "id": "rx2b-0302",
@@ -6448,8 +6444,10 @@
    "family": "-",
    "firm": true,
    "origin": "final-head-probe:probes.tsv:368",
-   "outcome": "pass",
-   "detail": []
+   "outcome": "assertion",
+   "detail": [
+    "status: want needs_review, got ready"
+   ]
   },
   {
    "id": "rx2b-0510",
@@ -6559,14 +6557,14 @@
    "id": "rx2b-0518",
    "input": "1 lb fresh or frozen cranberries",
    "family": "B",
-   "firm": false,
+   "firm": true,
    "origin": "final-head-probe:probes.tsv:377",
    "outcome": "assertion",
    "detail": [
-    "status: want ready, got needs_review",
-    "name: want \"cranberries\", got \"1 lb fresh or frozen cranberries\"",
+    "name: want null, got \"1 lb fresh or frozen cranberries\"",
     "quantity: want \"1\", got null",
-    "unit: want \"lb\", got null"
+    "unit: want \"lb\", got null",
+    "alternatives: want [\"fresh cranberries\",\"frozen cranberries\"], got []"
    ]
   },
   {
@@ -6648,15 +6646,14 @@
    "id": "rx2b-0525",
    "input": "2 (6 oz) boneless skinless chicken breasts",
    "family": "C",
-   "firm": false,
+   "firm": true,
    "origin": "final-head-probe:probes.tsv:384",
    "outcome": "assertion",
    "detail": [
     "status: want ready, got needs_review",
     "name: want \"boneless skinless chicken breasts\", got \"2 (6 oz) boneless skinless chicken breasts\"",
     "quantity: want \"2\", got null",
-    "unit: want \"each\", got null",
-    "packageSize: want \"6 oz\", got null"
+    "unit: want \"each\", got null"
    ]
   },
   {
@@ -6755,7 +6752,7 @@
    "id": "rx2b-0533",
    "input": "1 cup flour, plus 2 tablespoons for dusting",
    "family": "A",
-   "firm": false,
+   "firm": true,
    "origin": "final-head-probe:probes.tsv:392",
    "outcome": "assertion",
    "detail": [
@@ -8281,12 +8278,13 @@
    "id": "rx2b-0649",
    "input": "Sugar 10g",
    "family": "D",
-   "firm": false,
+   "firm": true,
    "origin": "final-head-probe:probes.tsv:508",
    "outcome": "assertion",
    "detail": [
-    "status: want unsupported, got needs_review",
-    "name: want null, got \"Sugar 10g\""
+    "name: want \"Sugar\", got \"Sugar 10g\"",
+    "quantity: want \"10\", got null",
+    "unit: want \"g\", got null"
    ]
   },
   {
@@ -8806,27 +8804,26 @@
    "id": "rx2b-0701",
    "input": "a 3-pound whole chicken",
    "family": "C",
-   "firm": false,
+   "firm": true,
    "origin": "final-head-probe:probes.tsv:561",
    "outcome": "assertion",
    "detail": [
     "status: want ready, got needs_review",
     "name: want \"whole chicken\", got \"a 3-pound whole chicken\"",
     "quantity: want \"1\", got null",
-    "unit: want \"each\", got null",
-    "packageSize: want \"3 lb\", got null"
+    "unit: want \"each\", got null"
    ]
   },
   {
    "id": "rx2b-0702",
    "input": "Juice of 1 lemon",
    "family": "-",
-   "firm": false,
+   "firm": true,
    "origin": "final-head-probe:probes.tsv:562",
    "outcome": "assertion",
    "detail": [
     "status: want ready, got needs_review",
-    "name: want \"lemon juice\" (or lemon), got \"Juice of 1 lemon\"",
+    "name: want \"lemon\" (or lemon juice | juice of lemon), got \"Juice of 1 lemon\"",
     "quantity: want \"1\", got null",
     "unit: want \"each\", got null"
    ]
@@ -9179,12 +9176,13 @@
    "id": "rx2b-0731",
    "input": "Salt: 1.2 g",
    "family": "D",
-   "firm": false,
+   "firm": true,
    "origin": "final-head-probe:probes.tsv:598",
    "outcome": "assertion",
    "detail": [
-    "status: want unsupported, got needs_review",
-    "name: want null, got \"Salt: 1.2 g\""
+    "name: want \"Salt\", got \"Salt: 1.2 g\"",
+    "quantity: want \"6/5\", got null",
+    "unit: want \"g\", got null"
    ]
   },
   {

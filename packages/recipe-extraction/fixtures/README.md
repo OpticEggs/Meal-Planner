@@ -39,7 +39,7 @@ Strict format checks: `bench/labels.ts` (run by `npm test`). Where §7 does not 
   still recorded as read.
 - **Count noun after the food** (`3 garlic cloves`): unit `clove`, name `garlic` — same as `3 cloves garlic`.
 - **Amount after the food** (`flour, 2 cups`, `Sugar: 1/2 cup`, `Parmesan cheese (1/2 cup), grated`):
-  the amount is the quantity (a note never holds an amount) and the line is `ready`.
+  the amount is the quantity (a note never holds the line's amount) and the line is `ready`.
 - **`fresh or frozen` before the food** (`2 cups fresh or frozen peas`): a choice of products →
   `alternatives`, `needs_review` (§7.8's note rule covers only remarks).
 - **Restatement in a count unit** (`1/2 cup (1 stick) butter`): an `equivalents` entry.

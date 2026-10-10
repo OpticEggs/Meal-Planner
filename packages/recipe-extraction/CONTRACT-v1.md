@@ -235,69 +235,146 @@ over unambiguous (`ready`-labelled) lines, with Wilson 95% intervals:
 
 ## 12. Phase 2B interpretations (2026-10-10; prospective — before holdout-v3 exists)
 
-Written by the coordinator before the Phase 2B candidate was frozen and before any holdout-v3 line existed; checked
-by an independent label checker; binding for holdout-v3 labels. **No historical label changes**: holdout-v1/v2 and
-dev keep their frozen labels (which already follow most of these readings). Items marked *(restated)* only spell
-out an existing rule (§7, `fixtures/README.md`); items marked *(new)* settle a case §7 leaves open.
+Written by the coordinator before the Phase 2B candidate was frozen and before any holdout-v3 line existed, then
+**revised after an independent label review** (label checker R2, blind to every engine; its review and this revision
+are in `docs/table/evidence/2026-10-10-recipe-extraction-phase2b/label-check/`). Binding for holdout-v3 labels.
+**No historical label changes**: dev, holdout-v1 and holdout-v2 keep their frozen labels, and every item below is
+consistent with them. *(restated)* = spells out an existing rule or frozen convention; *(new)* = settles a case §7
+leaves open. Unit and container lists refer to `UNIT_REGISTRY` (`src/contract.ts`).
 
-1. *(new)* **Fraction word hyphenated to a unit** — `a half-cup milk` → 1/2 `cup`; `a quarter-pound beef` →
-   1/4 `lb`; `1 half-cup butter` → 1/2 `cup`; `a half-cup of milk` → 1/2 `cup`. The article belongs to the
-   compound and does not multiply it. The unit never stays in `name`.
-2. *(new)* **Multiplier `x` / `×`** — a count before `x` and a unit, container or food (`1x cup milk`, `2x cans
-   chickpeas`, `1 x can chickpeas`, `2 x 400 g tins tomatoes`) or a count after the food (`eggs x 3`) is the line's
-   quantity: 1 `cup`; 2 `can`; 1 `can`; 2 `tin` with packageSize 400 `g`; 3 `each`. `x` between two lengths
-   (`9 x 13-inch pan`) is a size, not a multiplier. `x` never stays in `name`.
-3. *(new)* **Package size with no count** — a size directly before a *singular* container (`28 oz can tomatoes`,
-   `400 g can chickpeas`, `8-ounce package cream cheese`) means one container: quantity 1, unit = the container,
-   packageSize = the size, `ready`. A plural container with no count (`15 oz cans beans`) → `needs_review`
-   (`quantity_missing`). A restatement of the package size in another unit (`400 g (14 oz) can`, `400g/14oz can`,
-   `1 (15 oz / 425 g) can`) keeps the first-stated size as packageSize and puts the restated size in `note`;
-   it is not an `equivalent` (equivalents restate the line's amount).
-4. *(restated + new exceptions)* **Count noun after the food** — with a bare count, a count unit written after
-   the food is the unit (`2 celery ribs` → 2 `rib` celery; `4 lemon wedges` → 4 `wedge` lemon; `2 cinnamon
-   sticks` → 2 `stick` cinnamon), exactly as `3 garlic cloves` (labelling guide). *(new)* Exception — the noun is
-   part of the product's identity, the thing being sold under that name: `fish sticks`, `mozzarella sticks`,
-   `breadsticks`, `bay leaves`, `curry leaves`, `banana leaves`, `grape leaves`, `makrut`/`kaffir lime leaves`,
-   `ice cubes` → the noun stays in `name`, unit `each`. When another unit is stated (`1 cup basil leaves`) or
-   there is no amount (`lime wedges, to serve`), the noun stays in `name`.
-5. *(new)* **Container "cups"** — a parenthesized package size between a count and `cup(s)` makes the cup a
-   container: `3 (5.3 oz) cups vanilla Greek yogurt` → 3 `container`, packageSize 5.3 `oz`. A measuring cup never
-   carries a package size.
-6. *(new)* **Restatement tolerance (§7.5)** — a same-dimension amount in parentheses or after `/` restates the
-   first-stated amount when it is within **7 %** of it (`1/3 cup (5 tbsp)`, `1 cup (250 ml)`, `2 cups (500 ml / 17
-   fl oz)`, `14 oz (400 g)`); it goes to `equivalents`, `ready`. Beyond 7 % it is a second amount →
-   `needs_review` (`1 lb (12 oz)`, `1 lb (14 oz)`). Mass↔volume restatements stay equivalents (no density check).
-7. *(restated + new criterion)* **Choices (§7.8)** — every option is kept, in order; an option is never dropped,
-   merged or invented. (a) `A or B` where A names a food on its own → `[A, B]` as written (`kale or Swiss chard` →
-   `kale`, `Swiss chard`; `ham or smoked turkey`; `tea or apple juice`). (b) The last option's head noun is shared
-   only when the first option is a modifier of it that does not name the ingredient alone (`chicken or vegetable
-   broth`, `white or yellow miso`, `hamburger or hot dog buns`). (c) Comma lists `A, B, or C` / `A, B or C` →
-   all options (`maple syrup, honey, or agave`; `pecans, walnuts, or almonds`). (d) `X, A or B` where A and B
-   qualify X → expanded (`broth, chicken or vegetable` → `chicken broth`, `vegetable broth`). All four →
-   `needs_review`, `name` null.
-8. *(restated + extended list)* **Non-ingredient lines (§7.12)** → `unsupported`: nutrition facts (a nutrient,
-   vitamin, mineral, caffeine, `Calories`, `Net carbs`, `Serving size` label with an amount or a % daily value), diet
-   points (`WW Points: 4`, `SmartPoints: 7`), ratings and votes (`4.8 stars (120 reviews)`, `5 from 3 votes`), times
-   (`Prep 10 mins`, `Bake 25 minutes`), recipe metadata (`Course: dinner`, `Cuisine: Italian`), page furniture
-   (`Print recipe`, `Jump to recipe`, `Advertisement`, `Notes`, `Instructions`, `Method`), equipment lists (`You
-   will need: 2 baking sheets`), method steps (`Step 2`, `Step 3: Add the onions`) and section headings in any case
-   (`SAUCE`, `Topping`, `Cake Layers`). A food whose name contains such a word stays an ingredient (`1 scoop protein
+1. *(new)* **Fraction words before a unit** — a fraction word (`half`, `third`, `quarter`, `three-quarter(s)`,
+   `two-thirds`, `one-half`, `one-quarter`) before a unit, hyphenated or not, with or without a leading `a`/`one`/
+   `1`, is the amount; the article or `1` does not multiply it (`a half-cup milk` → 1/2 `cup`; `a quarter cup
+   sugar` → 1/4 `cup`; `1 half-cup butter` → 1/2 `cup`; `a half-cup of milk` → 1/2 `cup`). A count ≥ 2 before a
+   plural fraction-unit multiplies it (`2 half-cups milk` → 1 `cup`). When the fraction-unit sizes a counted item,
+   the count is the quantity and the size is a note (`2 quarter-pound beef patties` → 2 `each`, note
+   `quarter-pound`); before a container it is the packageSize (`a half-gallon carton milk` → 1 `carton`,
+   packageSize 1/2 `gallon`). `half-dozen` = 6 `each`; `half-and-half` is a food. The unit never stays in `name`.
+2. *(restated + new)* **Multiplier `x` / `×`** — restated: `2 x 400 g cans` (README package form), `eggs x 3`
+   (h2-0253). New: a count before `x` and a unit, container or food (`1x cup milk` → 1 `cup`; `2x cans chickpeas` →
+   2 `can`; `1 x can chickpeas` → 1 `can`); `xN` / `(xN)` after the food = `x N`. Precedence and exclusions:
+   (i) `NX`/`Nx` directly before `sugar`/`powdered sugar` is a sugar grade (item 9), never a multiplier;
+   (ii) `N x M-<length>` / `NxM` before a singular noun is a size (`9 x 13-inch pan`); before a plural food it is a
+   count with the length as a note (`2 x 13-inch pizza bases` → 2 `each`, note `13-inch`); (iii) a line of only
+   scaling controls (`1x 2x 3x`) is page furniture (item 8). `x` never stays in `name`.
+3. *(new)* **Package size with no count; restated package sizes** — containers are the registry's packaging count
+   units: `bag`, `bottle`, `box`, `can`, `carton`, `container`, `envelope`, `jar`, `package`, `packet`, `tin`, `tube`,
+   plus the sold-by-weight units `block`, `loaf`, `ball`. A size directly before a *singular* container
+   (`28 oz can tomatoes`, `400 g can chickpeas`, `8-ounce package cream cheese`) is one container: quantity 1, unit =
+   the container, packageSize = the size, `ready`. A plural container with no count (`15 oz cans beans`) →
+   `needs_review` (`quantity_missing`). A size before any other noun is the line's amount, not a package (`6 oz
+   salmon fillet` → 6 `oz`). `canned`, `tinned`, `jarred`, `bottled`, `boxed` are product-form words, not
+   containers (`28 oz canned tomatoes` → 28 `oz`). A restatement of the package size in another unit, before or
+   after the container (`400 g (14 oz) can`, `400g/14oz can`, `400 g can (14 oz)`, `1 (15 oz / 425 g) can`), keeps
+   the first-stated size as packageSize and puts the restated size in `note` as written without its brackets or
+   `/` (`14oz`, `14 oz`); it is a restatement only within item 6's tolerance, otherwise `needs_review`.
+   **Per-piece weights** of items that are not containers (`4 (6-oz) salmon fillets`, `2 (6 oz) chicken breasts`)
+   go to `note`, never packageSize; for a single item the weight restates the amount (`a 3-pound whole chicken` →
+   1 `each`, equivalent 3 `lb`).
+4. *(restated + new test)* **Count noun after the food** — the registry's count units that can follow a food are
+   `bulb`, `bunch`, `clove`, `cube`, `ear`, `fillet`, `head`, `leaf`, `link`, `piece`, `pod`, `rib`, `sheet`, `slice`,
+   `sprig`, `stalk`, `stick`, `strip`, `wedge`. With a bare count, such a noun after the food is the unit when the
+   words before it, bought by that unit, are the product meant: garlic by the clove (README, dev-0087), celery by
+   the rib (h2-0065), cardamom by the pod (h2-0054), anchovy by the fillet (h2-0079), sausage by the link (h2-0071),
+   lemon by the wedge, cinnamon by the stick, bacon by the strip, lettuce by the head. *(new)* It stays in `name`
+   (unit `each`) when the words before it alone name a different product or none: `fish`/`mozzarella`/`cheese`/
+   `bread` sticks, `breadsticks`, `bay`/`curry`/`banana`/`grape`/`makrut lime`/`kaffir lime`/`pandan` leaves,
+   `lasagna` sheets, `stock`/`bouillon` cubes. `ice cubes` and `sugar cubes` are debatable (both readings defensible);
+   they are not used as firm labels. `cloves` with no food word before it, or after `whole`/`ground`, is the spice
+   (`6 whole cloves` → 6 `each`, `whole cloves`). With another unit stated (`1 cup basil leaves`) or no amount
+   (`lime wedges, to serve`) the noun stays in `name`. Any other post-food noun (`thighs`, `breasts`, `chops`,
+   `steaks`, `noodles`) stays in `name` with `each` (dev-0046, h2-0265, h2-0273).
+5. *(restated)* **Container "cups"** (README holdout-v2 readings, h2-0087) — a package size with a count and
+   `cup(s)` makes the cup a container: `3 (5.3 oz) cups vanilla Greek yogurt`, `3 cups (5.3 oz each) Greek yogurt`,
+   `3 5.3-oz cups yogurt` → 3 `container`, packageSize 5.3 `oz`; with no count, `6 oz cup yogurt` → 1 `container`
+   (item 3). A measuring cup never carries a package size (`1 cup (8 oz) sour cream` is a restatement, dev-0112).
+6. *(new)* **Restatement test (§7.5)** — compare exactly in the `UNIT_REGISTRY` base values (cup 236.5882365 ml,
+   tbsp 14.78676478125 ml, tsp 4.92892159375 ml, fl oz 29.5735295625 ml, US pint/quart/gallon; oz 28.349523125 g, lb
+   453.59237 g). A same-dimension amount in brackets, after `/`, or in a remark restates the first-stated amount when
+   |restated − first| ≤ 7/100 × first (first-stated amount as the base, boundary inclusive), **or** when the restated
+   number equals the exact conversion rounded to a whole number of the restated unit (`1/4 tsp (1 ml)`, `1/2 tsp
+   (2 ml)`, `3/4 tsp (4 ml)`, `1 lb (454 g)`). Each restatement in a line is checked separately; one failure makes the
+   line `needs_review`. `about` does not widen the tolerance. A restated package size (item 3) is checked the same
+   way. Count restatements (`1/2 cup (1 stick)`) and mass↔volume restatements are not checked. **Policy:** the
+   rounded metric conventions outside both tests (`8 oz (250 g)`, `1 lb (500 g)`, `2 lb (1 kg)`, `4 oz (100 g)`)
+   are second amounts → `needs_review`; the review cost is accepted.
+7. *(restated + new criteria)* **Choices (§7.8)** — every option is kept, in order; an option is never dropped,
+   merged or invented. All choice lines → `needs_review`, `name` null.
+   (a) Options are as written except where (b)–(f) share words: `kale or Swiss chard` → `kale`, `Swiss chard`;
+   `ham or smoked turkey`; `tea or apple juice`; `pecans or walnuts`.
+   (b) **Shared trailing head** — `M1 or M2 H` → `[M1 H, M2 H]` when M1 alone is not a product of H's kind
+   (`lemon or lime juice`, dev-0054; `chicken or vegetable broth`; `beef or chicken stock`, hold-0033; `white or
+   yellow miso`, h2-0215; `hamburger or hot dog buns`; `red or white wine`). When M1 alone already names a product of
+   that kind (`feta or goat cheese`, `Dijon or whole grain mustard`, `sriracha or hot sauce`, `cumin or chili
+   powder`) the strict reading is as written and `[M1 H, M2 H]` is always accepted.
+   (c) **Shared leading modifier** — `P A or B`, where P is a product-form, variety or preparation word (ground,
+   dried, fresh, frozen, smoked, low-sodium, unsalted, chopped, shredded …) and B is a bare food of A's kind →
+   strict `[P A, P B]`, accepted `[P A, B]` (frozen: dev-0055 `ground beef or turkey`, hold-0034 `dried oregano or
+   thyme`, h2-0225 `chopped parsley or cilantro`). Not shared when B carries its own modifier (`ground beef or
+   smoked turkey`). `fresh or frozen` before the food is a choice (h2-0216, dev-0050).
+   (d) **Forward head** — `A-phrase or M` where M is only a modifier → `[A, M + A's head]` (`whole milk or 2%` →
+   `whole milk`, `2% milk`).
+   (e) **Lists** `A, B, or C`, `A, B or C`, `A or B or C`, `A/B`, `A and/or B` → all options, with (b)–(d) applied
+   across the list (`chicken, beef, or vegetable broth` → three broths; `maple syrup, honey, or agave`; `pecans,
+   walnuts, or almonds`).
+   (f) `X, A or B` → `[A X, B X]` only when A and B are varieties or types of X (`broth, chicken or vegetable`;
+   `flour, all-purpose or bread`; `sugar, white or brown`); when A and B are kinds of X (`nuts, pecans or walnuts`) →
+   `[A, B]`. Sourcing and form words (fresh, frozen, thawed, canned, jarred, boxed, homemade, store-bought) after a
+   comma or in brackets stay a note (§7.8; dev-0047, dev-0049, hold-0028, h2-0231, h2-0234).
+   (g) Options with their own amounts (`1 tsp dried thyme or 1 tbsp fresh thyme`, `1 egg or 2 egg whites`) →
+   quantity and unit of the first option. Different foods joined by `and` sharing one amount (`1 cup carrots, celery
+   and onion`, `1/2 tsp each salt and pepper`) → `needs_review` (no option privileged; `name` null, the foods in
+   `alternatives` only when the line offers a choice).
+8. *(restated + extended)* **Non-ingredient lines (§7.12)** → `unsupported`:
+   **nutrition** — a nutrient, vitamin, mineral or caffeine name followed by an amount in `g`, `mg`, `mcg`/`µg`,
+   `kcal`, `kJ`, `Cal`, `IU` or `%`, or `Calories`/`Net carbs`/`Serving size` with an amount; **`Sugar` or `Salt`
+   followed by a mass in `g`/`mg`** (UK recipes weigh them as ingredients) is uncertain → `needs_review`; followed by a
+   kitchen unit (cup, tbsp, tsp, pinch) they are ingredients (dev-0182 `Sugar: 1/2 cup`); diet points (`WW Points: 4`, `SmartPoints: 7`); ratings and votes
+   (`4.8 stars (120 reviews)`, `5 from 3 votes`); times (`Prep 10 mins`, `Bake 25 minutes`); recipe metadata
+   (`Course: dinner`, `Cuisine: Italian`, `Serves 4`, `Makes 12 muffins`); page furniture (`Print recipe`, `Jump to
+   recipe`, `Advertisement`, `Notes`, `Instructions`, `Method`, scaling controls); non-food items (pan, baking sheet,
+   skewers, parchment, foil, twine, liners, piping bag), with or without `You will need:`; method steps (`Step 2`,
+   `Step 3: Add the onions`). **Headings**: a line with no amount is a heading when it ends with `:`, starts with
+   `For (the)`, or consists only of generic component words (sauce, dressing, glaze, topping(s), filling, frosting,
+   icing, crust, dough, batter, marinade, garnish, base, layer(s), assembly, to serve), optionally after a dish word
+   (`Cake Layers`, `Pie Crust`, `Pizza Dough`), in any case (`SAUCE`). A specific food with no amount (`Pesto`,
+   `Hummus`, `Whipped cream`, `Croutons`) is an ingredient → `needs_review` (`quantity_missing`). A role label
+   followed by a food (`Garnish: chopped parsley`, `To serve: lime wedges`) is an ingredient with
+   `for_garnish`/`for_serving`. A food whose name contains a nutrition word stays an ingredient (`1 scoop protein
    powder`, `2 tbsp vitamin C powder`, `2 tbsp low-sodium soy sauce`, `1 tsp sodium bicarbonate`, `1 bottle vitamin
    water`). Uncertain lines go to `needs_review`, not `unsupported`.
-9. *(restated + new)* **Numbers that name the food** — a number that is part of a product's name stays in `name`:
-   `5-spice powder`, `Chinese 5 spice`, `7-Up`, `00 flour`, `10X sugar`, `A1 sauce`, `7 grain cereal`, lean
-   ratios `93/7`, `80/20`, percentages (§7.13). *(new)* A number word that begins a product name with nothing else
-   marking it as an amount (`Five spice powder`, `Three cheese blend`, `Four cheese pizza`) is not a count: no
-   quantity, `needs_review` (`quantity_missing`), the full name kept.
-10. *(restated)* **Size words** → `note`, also after a weight or volume (`1 lb large raw shrimp` → `shrimp`, note
-    `large`, form `raw`; `2 lbs medium potatoes`; `3 small zucchini` → 3 `each`, `ready`).
-11. *(restated)* **Second amounts in remarks (§7.5)** — an amount inside a remark that is not a restatement of the
-    line's amount (`(from 1/3 cup dry)`, `(1 cup dry makes 3 cooked)`, `(from 1 lime)`) → `needs_review`; the
-    remark stays in `note`.
-12. *(restated)* **Same-dimension compounds (§7.5)** — summed exactly into the smallest stated unit: `2 tsp + ½
-    tsp` → 5/2 `tsp`; `1 cup plus 1/3 cup` → 4/3 `cup`; `1 Tbsp + 1 tsp (20 ml)` → 4 `tsp`, equivalent 20 `ml`;
-    `1 lb. 2 oz. (510 g)` → 18 `oz`, equivalent 510 `g`. Different foods or dimensions (`2 eggs + 1 yolk`,
-    `1/2 tsp each salt and pepper`) → `needs_review`.
-13. *(new)* **Decoration and spacing** — leading checkbox or bullet glyphs (`▢`, `☐`, `•`) are decoration;
-    non-breaking, thin and tab spaces between amount and unit are spaces; a combining accent is read as its
-    composed letter (`jalapeños`).
+9. *(restated + new)* **Numbers that name the food** — restated: hyphenated or code-like product numbers stay in
+   `name` (`5-spice powder` h2-0040, `00 flour` h2-0041, `93/7 ground turkey` h2-0151, percentages §7.13 h2-0145);
+   also `7-Up`, `A1 sauce`, `10X sugar` (precedence over item 2). Bracketed ratios go to `note` (h2-0150
+   `ground pork (80/20)`). New: a number (word, or digits with no unit) followed by a *singular or mass* head noun
+   that, with the number, names the product by counting its components (`five spice powder`, `5 spice powder`,
+   `Chinese 5 spice`, `three cheese blend`, `seven grain bread`, `7 grain cereal`, `three-bean salad`, `four cheese
+   pizza`) is part of `name`; with no other amount → `needs_review` (`quantity_missing`), full name kept. A *plural*
+   head makes the number a count (`Twelve cherry tomatoes` h2-0045 → 12 `each`; `2 cheese pizzas` → 2 `each`).
+   Can-size designations (`#10 can`, `No. 2 can`) go to `note`.
+10. *(restated + exceptions)* **Size words** (small, medium, large, extra-large, jumbo, colossal, big, little,
+    giant; lg/med/sm) go to `note` when they size the counted or weighed item, also after a weight (`1 lb large raw
+    shrimp` → `shrimp`, note `large`, form `raw`; `2 lbs medium potatoes`; `3 small zucchini` → 3 `each`, `ready`).
+    They stay in `name` when part of a product term (`small curd`, `large-curd`, `medium-grain`, `long-grain`,
+    `large-flake`, `petite diced`, `mini`, `baby`, `jumbo shells`) or when they state a heat or grade (`medium salsa`).
+11. *(restated + boundary)* **Remark amounts (§7.5)** — a remark amount restates (→ `equivalents`, item 6) when it
+    measures the same food in the same state, optionally with about/approx./each, or is a breakdown summing to the
+    amount. It is a second amount (→ `needs_review`, remark in `note`) when it measures a source, another state or
+    another food (`from`, `makes`, `yields`, dry/uncooked vs cooked; `(1 lime)` / `(from 1 lime)` for lime juice) or
+    a substitution (`use half for table salt`, `(or 1/2 tsp table salt)`). A same-food, same-dimension amount after
+    `plus`/`+`, even after a comma, is summed per item 12, with only the purpose words in `note` (`1 cup flour, plus
+    2 tablespoons for dusting` → 18 `tbsp`, note `for dusting`).
+12. *(restated)* **Same-dimension compounds (§7.5)** — summed exactly into the smallest stated unit: `2 tsp + ½ tsp`
+    → 5/2 `tsp`; `1 cup plus 1/3 cup` → 4/3 `cup`; `1 Tbsp + 1 tsp (20 ml)` → 4 `tsp`, equivalent 20 `ml`; `1 lb.
+    2 oz. (510 g)` → 18 `oz`, equivalent 510 `g`; `1 cup minus 2 tbsp` / `1 cup less 2 tbsp` → 14 `tbsp`. Different
+    foods or dimensions (`2 eggs + 1 yolk`) → `needs_review`.
+13. *(restated + new)* **Decoration and spacing** — restated: leading `•`, `*`, `-` and NBSP (dev-0154, hold-0005,
+    dev-0020, dev-0153). New: leading `▢`, `☐`, `◦`, `▪`, `–`, `✓`, `✔` and enumerators (`N.`, `N)`, `a)`, `a.`)
+    followed by a space are decoration (`10. 1 tsp vanilla` → 1 `tsp`); a hyphen glued to a leading number
+    (`-1 cup sugar`) is a negative amount → `needs_review` (§7.1); thin, narrow and tab spaces between amount and unit
+    are spaces, but any space between a 1–3-digit group and a 3-digit group (`1 000 g`) is a thousands separator →
+    ambiguous, `needs_review` (like `1,000`); names are recorded in NFC (`jalapeños`).
+14. *(new)* **Unknown or foreign units** — an amount followed by a token that is neither a registry unit nor part of
+    the food (`1 m sausage`) → `needs_review`. A unit qualified as non-US (`UK`, `imperial`, `metric cup`,
+    `Australian tablespoon`) whose size differs from the registry's (`1 pint milk (UK)`, `1 UK pint milk`) →
+    `needs_review`.
