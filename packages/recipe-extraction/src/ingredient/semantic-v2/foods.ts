@@ -735,7 +735,9 @@ function foodNameReading(name: string, portions: boolean): boolean {
     // (a vessel word names how a plural food is made — "6 pan rolls", "4 mug brownies" — where the count agrees with the
     // food; after a count of one it is a measure, read before this: "1 pot chili")
     const vesselBeforePlural = foodHead && VESSEL_LIKE.has(lower[k]) && k === head - 1 && /[^s]s$/.test(lower[head]);
-    const known = foodModifierWord(w) || (foodHead && toolModifier(lower[k])) || vesselBeforePlural;
+    // (a compound food inside the name: "pot roast sandwiches", "tea bag holder" aside — the head decides)
+    const innerCompound = k + 1 < raw.length && compoundFood(lower[k], lower[k + 1]);
+    const known = foodModifierWord(w) || (foodHead && toolModifier(lower[k])) || vesselBeforePlural || innerCompound;
     // (a capitalised word is a proper name or brand, unless it is a unit or measure word ("2 BUNCH black beans") or a
     // plural opening the name, which counts rather than names ("2 Sips dark rum"))
     const brand = !known && /^\p{Lu}/u.test(w) && unitOfWord(w) === null && !UNKNOWN_MEASURES.has(lower[k]) && !(k === 0 && head > 0 && /\p{Ll}s$/u.test(w) && !/(?:'s|ss|us|is|as)$/.test(lower[k]));
