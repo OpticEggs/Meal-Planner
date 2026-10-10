@@ -102,4 +102,11 @@ reproducible; the repairs go into a copy under a new id.
    - After the repair: the complete required corpus and the mutation checks run on the actual final candidate; then
      R1's fresh review; then the engine, vocabulary, contract and scorer are frozen before the evaluator writes
      holdout-v3.
+4. **Stopping rule for the repair loop (after R1 round 3, before fix round 3).** R1 round 3 at `ea674ec` found two
+   remaining systematic HIGH families on fresh, deliberately adversarial probes. Equipment read as food: 16 of 137
+   probes. Unknown measure words read into the name with a count: 17 of 69. High-severity readings on the same probes
+   fell from 125 at `a8b76db` to 33. Fix round 3 targets R1's rule-shaped list and the review burden on valid foods
+   (3.7 % of R1's fresh valid lines). **R1's next review is the final pre-freeze review:** after it the engine,
+   vocabulary, contract and scorer are frozen whatever it finds, and any residual HIGH rates are recorded as known risk
+   before the single holdout-v3 evaluation. There will be no further repair round before the evaluation.
 
