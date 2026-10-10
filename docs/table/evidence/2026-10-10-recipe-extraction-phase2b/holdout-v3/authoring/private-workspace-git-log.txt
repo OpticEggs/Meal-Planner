@@ -1,0 +1,46 @@
+e44b184fdc73c459ffeebf7ef8d93f3eced78d3d 2026-10-10 07:18:52 +0000 holdout-v3: category tags aligned with the adjudicated labels; FREEZE-v3.json recomputed
+
+ fixtures/FREEZE-v3.json               |  2 +-
+ fixtures/ingredients/holdout-v3.jsonl |  6 +++---
+ work/LABEL-CHANGES-holdout-v3.md      |  9 +++++++--
+ work/apply_category_tags.py           | 28 ++++++++++++++++++++++++++++
+ work/holdout-v3.jsonl                 |  6 +++---
+ 5 files changed, 42 insertions(+), 9 deletions(-)
+dad087ce1c8524ad5a66f53b660b8f20e23c6005 2026-10-10 07:17:20 +0000 holdout-v3 pre-freeze adjudication applied; FREEZE-v3.json (frozenAt 2026-10-10)
+
+ fixtures/FREEZE-v3.json               |  18 +++++
+ fixtures/ingredients/holdout-v3.jsonl |  58 ++++++++--------
+ tools/freeze.ts                       |   9 +++
+ tools/sim-check.ts                    |  12 ++++
+ tools/validate.ts                     |  15 ++++-
+ work/ADJUDICATION-v3.md               | 104 +++++++++++++++++++++++++++++
+ work/LABEL-CHANGES-holdout-v3.md      |  87 ++++++++++++++++++++++++
+ work/MANIFEST-entries-holdout-v3.json |  22 +++++++
+ work/apply_adjudication.py            | 120 ++++++++++++++++++++++++++++++++++
+ work/holdout-v3.jsonl                 |  58 ++++++++--------
+ 10 files changed, 442 insertions(+), 61 deletions(-)
+57de3fb42fc0ffb76e6b7f52d2b85560a1fe16a2 2026-10-10 06:55:23 +0000 holdout-v3 draft: 369 synthetic cases (CONTRACT-v1 §7, §12, §12.A), provenance and checks
+
+ fixtures/ingredients/holdout-v3.jsonl | 369 +++++++++++++++++++++++++++++++
+ tools/validate.ts                     |  11 +
+ work/PROVENANCE.md                    | 127 +++++++++++
+ work/author.py                        | 140 ++++++++++++
+ work/cases.py                         | 394 ++++++++++++++++++++++++++++++++++
+ work/cases2.py                        | 221 +++++++++++++++++++
+ work/cases3.py                        | 215 +++++++++++++++++++
+ work/cases4.py                        | 171 +++++++++++++++
+ work/dedup.py                         |  49 +++++
+ work/holdout-v3.jsonl                 | 369 +++++++++++++++++++++++++++++++
+ work/prune.py                         |  26 +++
+ work/shape.py                         | 131 +++++++++++
+ work/stats.py                         |  10 +
+ 13 files changed, 2233 insertions(+)
+1f795a88e558710feb64c682afb2c379334074a4 2026-10-10 05:57:06 +0000 holdout-v3 private workspace: frozen references only
+
+ reference/CONTRACT-v1.md                  | 434 ++++++++++++++++++++++++++++++
+ reference/EVALUATION-PLAN-v3.md           | 172 ++++++++++++
+ reference/LABELLING-GUIDE.md              | 141 ++++++++++
+ reference/exposed-inputs-dedup.tsv        | Bin 0 -> 724393 bytes
+ reference/holdout-v2-format-example.jsonl |   3 +
+ reference/label-types.ts                  | 285 ++++++++++++++++++++
+ 6 files changed, 1035 insertions(+)
