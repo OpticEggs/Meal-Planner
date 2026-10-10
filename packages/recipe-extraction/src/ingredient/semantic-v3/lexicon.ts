@@ -793,7 +793,7 @@ export const PART_NOUNS = setOf(
     "heel heels end ends butt butts nub crust crusts shard shards sliver slivers shaving shavings shred shreds flake flakes crumb crumbs " +
     "segment segments morsel morsels bit bits lobe lobes " +
     // shapes and forms
-    "disc discs disk disks cone cones coin coins round rounds cylinder cylinders ring rings ribbon ribbons curl curls spiral spirals nest nests " +
+    "disc discs disk disks cone cones coin coins round rounds cylinder cylinders ribbon ribbons curl curls nest nests " +
     "square squares triangle triangles slab slabs block-shaped " +
     // strands
     "thread threads strand strands filament filaments fiber fibers fibre fibres " +

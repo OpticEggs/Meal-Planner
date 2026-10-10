@@ -133,7 +133,7 @@
 {"line": "1 brick cream cheese", "status": "needs_review", "name": "cream cheese", "quantity": null, "unit": null}
 {"line": "1 block cheddar", "status": "ready", "name": "cheddar", "quantity": "1", "unit": "block"}
 {"line": "1 bar cream cheese", "status": "needs_review", "name": "cream cheese", "quantity": null, "unit": null}
-{"line": "2 bars dark chocolate", "status": "ready", "name": "dark chocolate", "quantity": "2", "unit": "block"}
+{"line": "2 bars dark chocolate", "status": "needs_review", "name": "dark chocolate", "quantity": null, "unit": null}
 {"line": "4 granola bars", "status": "ready", "name": "granola bars", "quantity": "4", "unit": "each"}
 {"line": "12 candy canes", "status": "ready", "name": "candy canes", "quantity": "12", "unit": "each"}
 {"line": "6 lollipops", "status": "ready", "name": "lollipops", "quantity": "6", "unit": "each"}

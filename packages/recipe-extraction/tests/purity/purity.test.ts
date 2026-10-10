@@ -178,6 +178,6 @@ describe("runtime: the CLI makes no network or DNS call", () => {
     const page = JSON.parse(out[2]);
     expect(page.candidates.length).toBeGreaterThan(0);
     expect(JSON.parse(out[0]).reasons).toEqual(["legacy_contains_or", "legacy_fraction_not_exact_decimal"]);
-    expect(JSON.parse(out[3]).map((e: { id: string }) => e.id)).toEqual(["legacy-table-import-2", "legacy-table-import-2+suggestion", "semantic-v1", "semantic-v2"]);
+    expect(JSON.parse(out[3]).map((e: { id: string }) => e.id)).toEqual(["legacy-table-import-2", "legacy-table-import-2+suggestion", "semantic-v1", "semantic-v2", "semantic-v3"]);
   });
 });

@@ -33,6 +33,8 @@ const dataRows = (file: string): DataRow[] => readFileSync(path.join(DATA, file)
 const qText = (q: ParsedIngredientV1["quantity"]): string | null => (q === null ? null : q.kind === "exact" ? (q.denominator === "1" ? q.numerator : `${q.numerator}/${q.denominator}`) : "range");
 
 /** A safe abstention: a person checks, and no amount, unit, package, equivalent or choice is carried. */
+/** semantic-v3: a name whose measure slot is resolved (a declared unit before it, or a count agreeing with its head). */
+const RESOLVED = { slotResolved: true, countAgrees: true };
 function expectAbstention(r: ParsedIngredientV1) {
   expect(r).toMatchObject({ status: "needs_review", quantity: null, unit: null, packageSize: null, equivalents: [], alternatives: [] });
 }
@@ -49,7 +51,8 @@ describe("recognisedFoodHead (named safeguard): the head is a food and every wor
     "barista oat milk", "straw mushrooms", "fiddlehead ferns", "mug cakes", "pan rolls", "cocktail mixer", "onion rings", "cinnamon sticks", "80/20 ground beef", "oysters on the half shell", "chicken breast w/ skin", "hearts of palm",
     "tea bags", "wonton cups", "bread bowls", "chicken pot pie", "short plate", "Italian grinders", "jello mold", "Egg Beaters", "veggie tray", "chashu pork",
   ])("%s → recognised", (name) => {
-    expect(recognisedFoodHead(name)).toBe(true);
+    // semantic-v3: where the measure slot is resolved (a declared unit before, or a count that agrees with the head)
+    expect(recognisedFoodHead(name, RESOLVED)).toBe(true);
   });
 
   it.each([
@@ -72,12 +75,17 @@ describe("recognisedFoodHead (named safeguard): the head is a food and every wor
   });
 
   it("a capitalised word is accepted as a proper name or brand before a food head, a lower-case unknown word is not", () => {
-    expect(recognisedFoodHead("Zorble chicken thighs")).toBe(true);
-    expect(recognisedFoodHead("zorble chicken thighs")).toBe(false);
+    // semantic-v3 (R1 §5 path 2): only after a declared unit; with a bare count an unknown capitalised word is unrecognised
+    expect(recognisedFoodHead("Zorble chicken thighs", RESOLVED)).toBe(true);
+    expect(recognisedFoodHead("Zorble chicken thighs")).toBe(false);
+    expect(recognisedFoodHead("zorble chicken thighs", RESOLVED)).toBe(false);
+    // (R1 §5 path 4) a tool word stands before a food head only where the count agrees with it or a unit precedes it
+    expect(recognisedFoodHead("boiler onions", { slotResolved: false, countAgrees: true })).toBe(true);
+    expect(recognisedFoodHead("saucepan water")).toBe(false);
   });
 
   it("a portion head counts after a food (recognisedFoodHead), but only a food head overrides equipment (recognisedFoodNoun)", () => {
-    for (const n of ["pineapple tidbits", "pork belly slab", "chicken fingers", "egg noodle nest", "applesauce cups", "banana boats"]) expect(recognisedFoodHead(n), n).toBe(true);
+    for (const n of ["pineapple tidbits", "pork belly slab", "chicken fingers", "egg noodle nest", "applesauce cups", "banana boats"]) expect(recognisedFoodHead(n, RESOLVED), n).toBe(true);
     for (const n of ["popsicle sticks", "tart ring", "pizza peel", "muffin cups", "oak chunks"]) expect(recognisedFoodHead(n) && recognisedFoodNoun(n), n).toBe(false);
     for (const n of ["short plate", "Italian grinders", "jello mold", "chicken thighs"]) expect(recognisedFoodNoun(n), n).toBe(true);
   });
@@ -95,7 +103,7 @@ describe("a counted line whose food is not recognised: needs_review, no amount, 
     ["1 comal", "comal"], ["1 xyzzy", "xyzzy"], ["2 blorps", "blorps"], ["3 zorbleberry chicken thighs", "zorbleberry chicken thighs"],
     // the unit or measure word that is no longer read stays in the pre-fill: nothing is trimmed to known words
     ["4 slices zorble pork", "slices zorble pork"], ["1 bag zorble mix", "bag zorble mix"], ["2 large zorbles, seasoned", "large zorbles"],
-    ["1 (4 oz) bar zorble", "bar zorble"], ["2 pinch zorble", "pinch zorble"],
+    ["2 pinch zorble", "pinch zorble"],
   ])("%s → needs_review, name pre-fill %j", (line, name) => {
     const r = read(line);
     expectAbstention(r);
@@ -107,7 +115,8 @@ describe("a counted line whose food is not recognised: needs_review, no amount, 
 
   it("a remark after a comma and a package size no longer read stay in the note", () => {
     expect(read("2 large zorbles, seasoned").note).toBe("seasoned");
-    expect(read("1 (4 oz) bar zorble").note).toBe("4 oz");
+    // semantic-v3 (CONTRACT §13.1): "bar" is no unit — the count, size and noun stay in the note, the food is the name
+    expect(read("1 (4 oz) bar zorble")).toMatchObject({ status: "needs_review", name: "zorble", note: "1 (4 oz) bar", quantity: null, unit: null, packageSize: null });
     expect(read("2 (15 oz) cans zorbles").note).toContain("15 oz");
   });
 

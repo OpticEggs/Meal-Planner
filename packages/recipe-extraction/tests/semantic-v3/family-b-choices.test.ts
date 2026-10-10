@@ -135,7 +135,7 @@ describe("lists never invent strings; varieties after a comma or in brackets (R1
     ["2 cups red, yellow or orange peppers", ["red peppers", "yellow peppers", "orange peppers"]],
     ["1 cup flour (all-purpose or whole wheat)", ["all-purpose flour", "whole wheat flour"]], ["2 apples, Granny Smith or Honeycrisp", ["Granny Smith apples", "Honeycrisp apples"]],
     ["2 lb potatoes, Yukon Gold or russet", ["Yukon Gold potatoes", "russet potatoes"]], ["1 lb Yukon Gold potatoes or red", ["Yukon Gold potatoes", "red potatoes"]],
-    ["1 cup cheese, Cheddar or Swiss", ["Cheddar", "Swiss"]],
+    ["1 cup cheese, Cheddar or Swiss", ["Cheddar cheese", "Swiss cheese"]], // semantic-v3: kinds of a product bought by weight take its name
   ])("%s", (line, options) => {
     const alts = choice(line);
     expect(alts).toEqual(options);

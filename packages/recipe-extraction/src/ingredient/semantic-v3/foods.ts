@@ -719,7 +719,7 @@ const PARTICIPLE_VERBS = setOf(
     "devein dice distil distill dress drizzle dry dust enrich ferment fillet flake flavor flavour flash-freeze fold fortify frost fry garnish " +
     "glaze grate grill grind halve harvest heat hull husk ice infuse jar juice julienne knead layer leaven malt marble marinate mash melt " +
     "mince mix mold mould oak oil pack package parboil pasteurize pasteurise peel pepper pickle pit plank pluck poach pop powder precook " +
-    "preserve press process puff pull puree quarter raise refine render rinse ripen roast roll rub salt sauce saute scald scramble sear " +
+    "preserve press puff pull puree quarter raise refine render rinse ripen roast roll rub salt sauce saute scald scramble sear " +
     "season seed shell shred shuck sift skin slice smoke soak soften spice spiral sprout steam stew stone stuff sugar sweeten swirl " +
     "tenderize tenderise thicken toast top trim truss unwrap vacuum whip whisk wrap zest can bottle box bag tin chop farm pasture source " +
     "import cultivate store pick catch hand-pick hand-cut hand-roll stretch twist braid shape fill frost decorate sprinkle spike lace " +
@@ -825,7 +825,7 @@ export interface FoodNameContext {
   slotResolved: boolean;
   countAgrees: boolean;
 }
-const OPEN_CONTEXT: FoodNameContext = { slotResolved: true, countAgrees: true };
+const OPEN_CONTEXT: FoodNameContext = { slotResolved: false, countAgrees: false };
 
 /**
  * As `recognisedFoodHead`, but the head must itself be a food or a compound food name — a portion head after a food
@@ -864,7 +864,7 @@ function foodNameReading(name: string, portions: boolean, ctx: FoodNameContext):
   // (semantic-v3, CONTRACT §13.5) a part head ("pods", "threads", "chunks", "stems") is a food only as the part of a food
   // named right before it ("vanilla pods", "saffron threads", "pineapple chunks"); after a brand or a material it is not
   // ("1 bag Tide pods", "1 bag cherry wood chunks")
-  if (head === raw.length - 1 && head > 0 && partHead(lower[head]) && !(foodModifierWord(raw[head - 1]) && !EQUIPMENT_MATERIAL_WORDS.has(lower[head - 1]))) return false;
+  if (head === raw.length - 1 && head > 0 && partHead(lower[head]) && !(foodModifierWord(raw[head - 1]) && (!EQUIPMENT_MATERIAL_WORDS.has(lower[head - 1]) || (head >= 2 && compoundFood(lower[head - 2], lower[head - 1]))))) return false;
   if (head === raw.length - 1 && head === 0 && partHead(lower[head]) && !foodWord(lower[head])) return false;
   // (semantic-v3, CONTRACT §13.5) an animal named as the head ("pig", "cow") is a food only after its own describing words
   // ("suckling pig", "whole hog"), never after another food ("1 salt pig"); an animal word before a head names a food only
