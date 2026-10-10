@@ -1,8 +1,8 @@
 # Outcomes v2 → v3 delta on the historical engines (Phase 2B, scorer)
 
 **Compared:** the historical holdout-v2 report (`../../2026-10-09-recipe-extraction-phase2/evaluation-56eafe4/benchmark-report.json`,
-SHA-256 `afc55fd5…`, outcomes v2 / EVALUATION-PLAN-v2, run at `56eafe4`) against `report-v3.json` (SHA-256 `99c40e27…`,
-outcomes v3 / EVALUATION-PLAN-v3, `bench/outcomes.ts` SHA-256 `7821e853…`, code commit `2e05aa1`), both scoring `legacy-table-import-2`,
+SHA-256 `afc55fd5…`, outcomes v2 / EVALUATION-PLAN-v2, run at `56eafe4`) against `report-v3.json` (SHA-256 `6642e665…`,
+outcomes v3 / EVALUATION-PLAN-v3, `bench/outcomes.ts` SHA-256 `7821e853…`, code commit `4d1e1cc`), both scoring `legacy-table-import-2`,
 `legacy-table-import-2+suggestion` and `semantic-v1` on dev, holdout-v1 and holdout-v2 (`--split every --pages`).
 The historical files are untouched.
 
@@ -39,7 +39,7 @@ Figures only v3 reports: CE dimensions 0 everywhere (every line of every engine 
 
 ---
 
-Old report SHA-256 `afc55fd5b8f0ce9b8959882c44919cae29e943814e8960b586fba8da0e9b1e4a` (EVALUATION-PLAN-v2); new report SHA-256 `99c40e274c61cc2d25595ad0dd252aaaa8efecd646106db4931694a7376ed819` (EVALUATION-PLAN-v3).
+Old report SHA-256 `afc55fd5b8f0ce9b8959882c44919cae29e943814e8960b586fba8da0e9b1e4a` (EVALUATION-PLAN-v2); new report SHA-256 `6642e665270952f5e1d76052d38e93ddb3cad6fe051cfd3cb0d340daa5cbfe6b` (EVALUATION-PLAN-v3).
 
 | Section outside the outcome scorer | v2 vs v3 |
 |---|---|

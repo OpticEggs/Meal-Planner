@@ -1,7 +1,7 @@
-commit 2e05aa1
+commit 4d1e1cc
 run (v3): npx tsx bench/cli.ts --engines legacy-table-import-2,legacy-table-import-2+suggestion,semantic-v1 --split every --pages --out-json report-v3.json --out-md report-v3.md
-report-v3.json first run:  99c40e274c61cc2d25595ad0dd252aaaa8efecd646106db4931694a7376ed819
-report-v3.json second run: 99c40e274c61cc2d25595ad0dd252aaaa8efecd646106db4931694a7376ed819
+report-v3.json first run:  6642e665270952f5e1d76052d38e93ddb3cad6fe051cfd3cb0d340daa5cbfe6b
+report-v3.json second run: 6642e665270952f5e1d76052d38e93ddb3cad6fe051cfd3cb0d340daa5cbfe6b
 v3: DETERMINISTIC (byte-identical rerun)
 
 run (v2 reproduction): npx tsx bench/cli.ts --scorer outcomes-v2 --engines legacy-table-import-2,legacy-table-import-2+suggestion,semantic-v1 --split every --pages --out-json <file>

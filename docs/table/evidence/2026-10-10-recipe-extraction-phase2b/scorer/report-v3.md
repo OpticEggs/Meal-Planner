@@ -4,6 +4,8 @@
 
 Holdout freeze: verified
 
+Pins: plan `docs/table/recipe-extraction/EVALUATION-PLAN-v3.md` SHA-256 `306f51561e5075f0b477857e061937755e195d52d38775b79f9111ab3ffeb662` · scorer `bench/outcomes.ts` SHA-256 `7821e8532eb123e9694291c6d0deac6bdac40f96715d06a4d2aa2161fc3a3892` · package `src/` digest `1460901f1bc48ab8b4d718a70d71e1cbb136e919602f17cab84b654104d9ccbb` · engine sources legacy `081c8cfd9fbe2e2f4bf9d27b905960b6b90954731dd61f06c419289b2cb99583`, semantic `ab41d0c66467604e81cfbeb0b12a3d5f4b8c41cfc7f369ccd09dacb4993717f3`.
+
 | Corpus file | Entries | SHA-256 |
 |---|---|---|
 | fixtures/ingredients/dev.jsonl | 182 | `5f8db6d8edd6ad4c…` |
@@ -2248,7 +2250,7 @@ needs_review labels with no amount: label quantity and unit null and alternative
 
 | Run | Items | Total ms | ms per item |
 |---|---|---|---|
-| ingredients · legacy-table-import-2 | 669 | 114.7 | 0.171 |
-| ingredients · legacy-table-import-2+suggestion | 669 | 94.4 | 0.141 |
-| ingredients · semantic-v1 | 669 | 164.9 | 0.247 |
-| pages · default | 15 | 22.2 | 1.483 |
+| ingredients · legacy-table-import-2 | 669 | 121.0 | 0.181 |
+| ingredients · legacy-table-import-2+suggestion | 669 | 99.6 | 0.149 |
+| ingredients · semantic-v1 | 669 | 162.0 | 0.242 |
+| pages · default | 15 | 19.6 | 1.304 |

@@ -1140,7 +1140,7 @@
       "source": "bench/outcomes.ts",
       "version": "v3"
     },
-    "sha256": "99c40e274c61cc2d25595ad0dd252aaaa8efecd646106db4931694a7376ed819"
+    "sha256": "6642e665270952f5e1d76052d38e93ddb3cad6fe051cfd3cb0d340daa5cbfe6b"
   },
   "newFigures": [
     {"engine":"legacy-table-import-2","figure":"validity.engineError","set":"dev","value":"0/182"},

@@ -46641,6 +46641,13 @@
       }
     }
   ],
+  "pins": {
+    "engineSourceDigests": {"legacy":"081c8cfd9fbe2e2f4bf9d27b905960b6b90954731dd61f06c419289b2cb99583","semantic":"ab41d0c66467604e81cfbeb0b12a3d5f4b8c41cfc7f369ccd09dacb4993717f3"},
+    "packageSourceDigest": "1460901f1bc48ab8b4d718a70d71e1cbb136e919602f17cab84b654104d9ccbb",
+    "planFile": "docs/table/recipe-extraction/EVALUATION-PLAN-v3.md",
+    "planSha256": "306f51561e5075f0b477857e061937755e195d52d38775b79f9111ab3ffeb662",
+    "scorerSha256": "7821e8532eb123e9694291c6d0deac6bdac40f96715d06a4d2aa2161fc3a3892"
+  },
   "schema": "recipe-extraction-bench/v1",
   "selection": {"case":null,"pages":true,"split":"every"}
 }

@@ -1,7 +1,7 @@
 # Phase 2B — scorer: outcomes v3 (SCORE-01, SCORE-02), archived v2, holdout-v3 support, oracles, mutations
 
 Branch `lab2b-scorer` (base `8131fe0`; merged `2130dc3` and `4703ea3`); every file here was produced at code commit
-`2e05aa1`. Package only (`packages/recipe-extraction`); no `src/`, `fixtures/`, contract or historical evidence was
+`4d1e1cc`. Package only (`packages/recipe-extraction`); no `src/`, `fixtures/`, contract or historical evidence was
 changed. `oracle-check-r1/` is the independent checker R1's report (coordinator-owned, not written by the scorer worker).
 
 ## What changed
@@ -43,6 +43,11 @@ changed. `oracle-check-r1/` is the independent checker R1's report (coordinator-
   true` cases, new (d) the `matchedCaseIds` of the optional `fixtures/EXPOSURE-AUDIT-v3.json` (absent = no figure;
   validated on every run). Breakdowns per family, per §12 item and per construction. `FREEZE_V3_RULE` says §7 and §12.
   All tested on temporary fixture copies; no holdout-v3 file exists.
+- **Pins** (plan v3 §7). outcomes v3 reports carry `pins`: `planSha256` (of `docs/table/recipe-extraction/EVALUATION-PLAN-v3.md`
+  from the repository root; null when absent), `scorerSha256`, `packageSourceDigest` (SHA-256 over the sorted
+  `<package-relative path>\t<sha256>\n` lines of every file under `src/`) and `engineSourceDigests` (the same per engine
+  directory: `legacy` = `src/legacy`, plus every directory under `src/ingredient/` by name). The archived v2 mode carries
+  none, so the historical reproduction stays byte-identical. Tested in `pins.test.ts`.
 - **Mutation runner.** `tools/mutation/` (spec format in its `README.md`); results in `mutation-results.md`.
 - **Delta.** `DELTA.md` / `delta.json`: 1 128 figures compared, 1 029 unchanged, 99 changed, 0 unexpected.
 
@@ -51,9 +56,10 @@ changed. `oracle-check-r1/` is the independent checker R1's report (coordinator-
 | | git blob | SHA-256 |
 |---|---|---|
 | outcomes v2 (`bench/outcomes.ts` at `8131fe0` = `bench/archive/v2/bench/outcomes.ts`) | `69dffb0b08d3252d21f6475d6b768201a3629437` | `cdd48eb8623b54b517d8686f412d91ea78d52f07f637f161b64f688efa9607bc` |
-| outcomes v3 (`bench/outcomes.ts` at `2e05aa1`) | `8b5de5c8f9a3ab84f2d086b78f7cf0414af4b997` | `7821e8532eb123e9694291c6d0deac6bdac40f96715d06a4d2aa2161fc3a3892` |
+| outcomes v3 (`bench/outcomes.ts` at `2e05aa1`, unchanged at `4d1e1cc`) | `8b5de5c8f9a3ab84f2d086b78f7cf0414af4b997` | `7821e8532eb123e9694291c6d0deac6bdac40f96715d06a4d2aa2161fc3a3892` |
 | historical report (`evaluation-56eafe4/benchmark-report.json`, outcomes v2) | | `afc55fd5b8f0ce9b8959882c44919cae29e943814e8960b586fba8da0e9b1e4a` |
-| `report-v3.json` (outcomes v3, same engines and sets; byte-identical rerun) | | `99c40e274c61cc2d25595ad0dd252aaaa8efecd646106db4931694a7376ed819` |
+| `report-v3.json` (outcomes v3, same engines and sets; byte-identical rerun) | | `6642e665270952f5e1d76052d38e93ddb3cad6fe051cfd3cb0d340daa5cbfe6b` |
+| `EVALUATION-PLAN-v3.md` as merged (`4703ea3`), pinned in `report-v3.json` | | `306f51561e5075f0b477857e061937755e195d52d38775b79f9111ab3ffeb662` |
 
 ## Delta headline (`DELTA.md`)
 
@@ -89,8 +95,8 @@ scorer" (SCORE-02); the holdout-v2 set label.
 ## Tests
 
 Package typecheck passes (`typecheck.log`). Package suite before (`8131fe0`): 47 files (46 passed, 1 skipped),
-1 928 tests (1 917 passed, 11 skipped). After (`2e05aa1`, including the coordinator's regression-corpus test): 54 files
-(53 passed, 1 skipped), 2 080 tests (2 069 passed, 11 skipped, 0 failed); the 11 skips are the same pre-existing ones
+1 928 tests (1 917 passed, 11 skipped). After (`4d1e1cc`, including the coordinator's regression-corpus test): 55 files
+(54 passed, 1 skipped), 2 086 tests (2 075 passed, 11 skipped, 0 failed); the 11 skips are the same pre-existing ones
 (live Table parity 10, one CLI case) — no new skip.
 Per file: `test-counts.txt`.
 

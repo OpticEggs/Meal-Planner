@@ -1,10 +1,10 @@
-Package suite: cd packages/recipe-extraction && npx vitest run --config vitest.config.ts   (commit 2e05aa1)
+Package suite: cd packages/recipe-extraction && npx vitest run --config vitest.config.ts   (commit 4d1e1cc)
 Before (base 8131fe0): Test Files 46 passed | 1 skipped (47); Tests 1917 passed | 11 skipped (1928)
 At the first merge (2130dc3, with the coordinator's regression corpus): Tests 2040 passed | 11 skipped
-After: Test Files 53 passed | 1 skipped (54); Tests 2069 passed | 11 skipped | 0 failed (2080)
+After: Test Files 54 passed | 1 skipped (55); Tests 2075 passed | 11 skipped | 0 failed (2086)
 success: True
 
-Test files added by the scorer worker: bench/__tests__/{archive-v2,scorer-v3,holdout3,oracles-v3,mutation-runner,delta}.test.ts
+Test files added by the scorer worker: bench/__tests__/{archive-v2,scorer-v3,holdout3,oracles-v3,mutation-runner,delta,pins}.test.ts
 
 file | passed | skipped | failed
 bench/__tests__/archive-v2.test.ts | 3 | 0 | 0
@@ -20,6 +20,7 @@ bench/__tests__/mutation-runner.test.ts | 9 | 0 | 0
 bench/__tests__/oracles-v3.test.ts | 92 | 0 | 0
 bench/__tests__/outcome-controls.test.ts | 23 | 0 | 0
 bench/__tests__/outcomes.test.ts | 38 | 0 | 0
+bench/__tests__/pins.test.ts | 6 | 0 | 0
 bench/__tests__/report-cli.test.ts | 15 | 0 | 0
 bench/__tests__/scorer-v3.test.ts | 14 | 0 | 0
 bench/__tests__/stats.test.ts | 5 | 0 | 0
