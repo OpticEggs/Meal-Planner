@@ -85,17 +85,32 @@ for line in open(os.path.join(here, "coordinator-labels.tsv")):
 
 # 3. final-head review probes (reviewer's labels); origin severity from the reviewer's semantic-v1 run
 probe_out = {p["input"]: p for p in json.load(open(os.path.join(here, "final-head-probes-out-semantic-v1.json")))["probes"]}
+# coordinator corrections to probe labels (label checker R2 review), keyed by probes.tsv line number
+overrides = {}
+for line in open(os.path.join(here, "probe-label-overrides.tsv")):
+    if line.startswith("#") or not line.strip(): continue
+    oc = line.rstrip("\n").split("\t")
+    overrides[int(oc[0])] = oc
 for n, line in enumerate(open(os.path.join(ev2, "review/final-head-0c0c60f/probes.tsv")), start=1):
     if line.startswith("#") or not line.strip(): continue
     cols = line.rstrip("\n").split("\t")
+    corrected = None
+    if n in overrides:
+        oc = overrides.pop(n)
+        assert oc[1] == cols[0], (n, oc[1], cols[0])
+        cols = oc[1:9] + [cols[8]]
+        corrected = oc[9]
     inp, expect = parse_tsv_row(cols)
     po = probe_out.get(inp, {})
     # the reviewer's probe.ts decodes \uXXXX and \t escapes in the input column before parsing (probe.ts:48)
     inp = re.sub(r"\\u([0-9a-fA-F]{4})", lambda m: chr(int(m.group(1), 16)), inp).replace("\\t", "\t")
     sev = [x for x in [po.get("cls"), (po.get("cls","") + po["partial"]) if po.get("partial") else None, po.get("sev")] if x] + po.get("S", [])
-    add({"input": inp, "origin": {"kind": "final-head-probe", "ref": f"probes.tsv:{n}", "group": cols[8], "severityOnSemanticV1": sev},
+    origin = {"kind": "final-head-probe", "ref": f"probes.tsv:{n}", "group": cols[8], "severityOnSemanticV1": sev}
+    if corrected: origin["labelCorrected"] = corrected
+    add({"input": inp, "origin": origin,
          "family": GROUP_FAMILY.get(cols[8], "-"), "firm": "D" not in cols[7], "expect": expect})
 
+assert not overrides, f"unused overrides: {sorted(overrides)}"
 dest = os.path.join(root, "packages/recipe-extraction/tests/regressions/exposed-regressions-2b.jsonl")
 os.makedirs(os.path.dirname(dest), exist_ok=True)
 with open(dest, "w") as fh:

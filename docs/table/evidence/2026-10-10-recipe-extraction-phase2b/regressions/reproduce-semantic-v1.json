@@ -2,69 +2,69 @@
  "summary": {
   "engine": "semantic-v1",
   "corpus": 863,
-  "firm": 792,
-  "firmPass": 616,
-  "firmAssertion": 176,
+  "firm": 804,
+  "firmPass": 621,
+  "firmAssertion": 183,
   "engineErrors": 0,
   "byFamily": {
    "A": {
-    "total": 231,
+    "total": 232,
     "pass": 192,
-    "assertion": 39,
+    "assertion": 40,
     "engine-error": 0
    },
    "C": {
-    "total": 226,
-    "pass": 197,
-    "assertion": 29,
+    "total": 231,
+    "pass": 199,
+    "assertion": 32,
     "engine-error": 0
    },
    "B": {
-    "total": 102,
-    "pass": 55,
-    "assertion": 47,
+    "total": 105,
+    "pass": 59,
+    "assertion": 46,
     "engine-error": 0
    },
    "D": {
-    "total": 113,
+    "total": 115,
     "pass": 69,
-    "assertion": 44,
+    "assertion": 46,
     "engine-error": 0
    },
    "A (debatable)": {
-    "total": 15,
+    "total": 14,
     "pass": 7,
-    "assertion": 8,
-    "engine-error": 0
-   },
-   "B (debatable)": {
-    "total": 19,
-    "pass": 17,
-    "assertion": 2,
-    "engine-error": 0
-   },
-   "C (debatable)": {
-    "total": 19,
-    "pass": 5,
-    "assertion": 14,
-    "engine-error": 0
-   },
-   "-": {
-    "total": 120,
-    "pass": 103,
-    "assertion": 17,
-    "engine-error": 0
-   },
-   "D (debatable)": {
-    "total": 8,
-    "pass": 1,
     "assertion": 7,
     "engine-error": 0
    },
-   "- (debatable)": {
-    "total": 10,
-    "pass": 5,
+   "C (debatable)": {
+    "total": 14,
+    "pass": 3,
+    "assertion": 11,
+    "engine-error": 0
+   },
+   "B (debatable)": {
+    "total": 16,
+    "pass": 16,
+    "assertion": 0,
+    "engine-error": 0
+   },
+   "-": {
+    "total": 121,
+    "pass": 102,
+    "assertion": 19,
+    "engine-error": 0
+   },
+   "D (debatable)": {
+    "total": 6,
+    "pass": 1,
     "assertion": 5,
+    "engine-error": 0
+   },
+   "- (debatable)": {
+    "total": 9,
+    "pass": 5,
+    "assertion": 4,
     "engine-error": 0
    }
   }
@@ -1056,10 +1056,8 @@
    "family": "B",
    "firm": true,
    "origin": "coordinator:R3-S1",
-   "outcome": "assertion",
-   "detail": [
-    "alternatives: want [\"cumin\",\"chili powder\"], got [\"cumin powder\",\"chili powder\"]"
-   ]
+   "outcome": "pass",
+   "detail": []
   },
   {
    "id": "rx2b-0082",
@@ -1118,7 +1116,7 @@
    "id": "rx2b-0087",
    "input": "1/2 cup feta or goat cheese",
    "family": "B",
-   "firm": false,
+   "firm": true,
    "origin": "coordinator:R3-S1",
    "outcome": "pass",
    "detail": []
@@ -1191,11 +1189,11 @@
    "id": "rx2b-0094",
    "input": "1 tbsp Dijon or whole grain mustard",
    "family": "B",
-   "firm": false,
+   "firm": true,
    "origin": "coordinator:R3-S1",
    "outcome": "assertion",
    "detail": [
-    "alternatives: want [\"Dijon mustard\",\"whole grain mustard\"], got [\"Dijon grain mustard\",\"whole grain mustard\"]"
+    "alternatives: want [\"Dijon\",\"whole grain mustard\"], got [\"Dijon grain mustard\",\"whole grain mustard\"]"
    ]
   },
   {
@@ -2782,10 +2780,12 @@
    "id": "rx2b-0258",
    "input": "4 (6-oz) salmon fillets",
    "family": "C",
-   "firm": false,
+   "firm": true,
    "origin": "final-head-probe:probes.tsv:113",
-   "outcome": "pass",
-   "detail": []
+   "outcome": "assertion",
+   "detail": [
+    "packageSize: want null, got {\"quantity\":{\"kind\":\"exact\",\"numerator\":\"6\",\"denominator\":\"1\",\"display\":\"6\"},\"unit\":{\"canonical\":\"oz\",\"dimension\":\"mass\",\"source\":\"oz\"}}"
+   ]
   },
   {
    "id": "rx2b-0259",
@@ -3110,7 +3110,7 @@
    "id": "rx2b-0294",
    "input": "2 bay leaves",
    "family": "C",
-   "firm": false,
+   "firm": true,
    "origin": "final-head-probe:probes.tsv:149",
    "outcome": "pass",
    "detail": []
@@ -3173,13 +3173,10 @@
    "id": "rx2b-0301",
    "input": "4 kaffir lime leaves",
    "family": "C",
-   "firm": false,
+   "firm": true,
    "origin": "final-head-probe:probes.tsv:159",
-   "outcome": "assertion",
-   "detail": [
-    "name: want \"kaffir lime\", got \"kaffir lime leaves\"",
-    "unit: want \"leaf\", got \"each\""
-   ]
+   "outcome": "pass",
+   "detail": []
   },
   {
    "id": "rx2b-0302",
@@ -5090,8 +5087,10 @@
    "family": "-",
    "firm": true,
    "origin": "final-head-probe:probes.tsv:368",
-   "outcome": "pass",
-   "detail": []
+   "outcome": "assertion",
+   "detail": [
+    "status: want needs_review, got ready"
+   ]
   },
   {
    "id": "rx2b-0510",
@@ -5173,14 +5172,10 @@
    "id": "rx2b-0518",
    "input": "1 lb fresh or frozen cranberries",
    "family": "B",
-   "firm": false,
+   "firm": true,
    "origin": "final-head-probe:probes.tsv:377",
-   "outcome": "assertion",
-   "detail": [
-    "status: want ready, got needs_review",
-    "name: want \"cranberries\", got null",
-    "alternatives: want [], got [\"fresh cranberries\",\"frozen cranberries\"]"
-   ]
+   "outcome": "pass",
+   "detail": []
   },
   {
    "id": "rx2b-0519",
@@ -5244,12 +5239,11 @@
    "id": "rx2b-0525",
    "input": "2 (6 oz) boneless skinless chicken breasts",
    "family": "C",
-   "firm": false,
+   "firm": true,
    "origin": "final-head-probe:probes.tsv:384",
    "outcome": "assertion",
    "detail": [
-    "status: want ready, got needs_review",
-    "packageSize: want \"6 oz\", got null"
+    "status: want ready, got needs_review"
    ]
   },
   {
@@ -5319,7 +5313,7 @@
    "id": "rx2b-0533",
    "input": "1 cup flour, plus 2 tablespoons for dusting",
    "family": "A",
-   "firm": false,
+   "firm": true,
    "origin": "final-head-probe:probes.tsv:392",
    "outcome": "assertion",
    "detail": [
@@ -6176,10 +6170,8 @@
    "family": "B",
    "firm": true,
    "origin": "final-head-probe:probes.tsv:483",
-   "outcome": "assertion",
-   "detail": [
-    "alternatives: want [\"feta\",\"goat cheese\"], got [\"feta cheese\",\"goat cheese\"]"
-   ]
+   "outcome": "pass",
+   "detail": []
   },
   {
    "id": "rx2b-0625",
@@ -6445,14 +6437,11 @@
    "id": "rx2b-0649",
    "input": "Sugar 10g",
    "family": "D",
-   "firm": false,
+   "firm": true,
    "origin": "final-head-probe:probes.tsv:508",
    "outcome": "assertion",
    "detail": [
-    "status: want unsupported, got ready",
-    "name: want null, got \"Sugar\"",
-    "quantity: want null, got \"10\"",
-    "unit: want null, got \"g\""
+    "status: want needs_review, got ready"
    ]
   },
   {
@@ -6942,19 +6931,18 @@
    "id": "rx2b-0701",
    "input": "a 3-pound whole chicken",
    "family": "C",
-   "firm": false,
+   "firm": true,
    "origin": "final-head-probe:probes.tsv:561",
    "outcome": "assertion",
    "detail": [
-    "status: want ready, got needs_review",
-    "packageSize: want \"3 lb\", got null"
+    "status: want ready, got needs_review"
    ]
   },
   {
    "id": "rx2b-0702",
    "input": "Juice of 1 lemon",
    "family": "-",
-   "firm": false,
+   "firm": true,
    "origin": "final-head-probe:probes.tsv:562",
    "outcome": "assertion",
    "detail": [
@@ -7226,14 +7214,11 @@
    "id": "rx2b-0731",
    "input": "Salt: 1.2 g",
    "family": "D",
-   "firm": false,
+   "firm": true,
    "origin": "final-head-probe:probes.tsv:598",
    "outcome": "assertion",
    "detail": [
-    "status: want unsupported, got ready",
-    "name: want null, got \"Salt\"",
-    "quantity: want null, got \"1.2\"",
-    "unit: want null, got \"g\""
+    "status: want needs_review, got ready"
    ]
   },
   {
