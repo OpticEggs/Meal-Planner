@@ -163,7 +163,7 @@ describe("a choice of forms with no comma or bracket (§12.7 d, R1 H4)", () => {
 describe("two foods joined by 'and' after one amount (§12.A A4, R1 H5)", () => {
   it.each([
     "2 cups strawberries and blueberries", "2 cups chopped celery and carrots", "1 cup onion and bell pepper, diced", "2 tbsp butter and oil", "1 lb shrimp and scallops",
-    "4 cups broccoli and cauliflower florets", "1/4 cup sesame and flax seeds", "1/2 tsp garlic and onion powder", "2 cups lettuce & tomato",
+    "4 cups broccoli and cauliflower florets", "1/4 cup sesame and flax seeds", "2 cups lettuce & tomato",
   ])("%s → needs review, no name, the foods kept in the note", (line) => {
     const r = read(line);
     expect(r).toMatchObject({ status: "needs_review", name: null, alternatives: [] });
@@ -176,6 +176,8 @@ describe("two foods joined by 'and' after one amount (§12.A A4, R1 H5)", () => 
     ["1 bag salt and vinegar potato chips", "salt and vinegar potato chips"], ["3 red and yellow bell peppers", "red and yellow bell peppers"],
     ["2 cups peeled and diced potatoes", "peeled and diced potatoes"], ["1 can pork and beans", "pork and beans"], ["1 cup spinach and artichoke dip", "spinach and artichoke dip"],
     ["1 cup half and half", "half and half"],
+    // (round 2, as rx2b-0370 "2 tbsp lemon and lime juice") two food nouns before one head that is not a part noun: one food
+    ["1/2 tsp garlic and onion powder", "garlic and onion powder"],
   ])("negative control, one food: %s", (line, name) => {
     expect(read(line)).toMatchObject({ status: "ready", name });
   });

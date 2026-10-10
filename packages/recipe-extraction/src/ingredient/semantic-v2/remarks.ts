@@ -369,7 +369,7 @@ function otherFoodIn(ws: readonly string[], nameWs: readonly string[]): boolean 
     if (FUNCTION_WORDS.has(w) || APPROX_WORDS.has(w) || SIZE_WORDS.has(w) || REMARK_WORDS.has(w) || ADJECTIVE_WORDS.has(w) || TRAILING_PREP_WORDS.has(w) || PREP_ADVERBS.has(w)) return false;
     // (parts taken whole — kernels, leaves, florets — are the same food, §12.A A3: "3 ears corn (about 2 cups kernels)")
     if (PART_HEADS.has(w) && !EXTRACTED_PART_WORDS.has(w)) return false;
-    if (unitOfWord(w) !== null || Object.prototype.hasOwnProperty.call(CARDINALS, w) || TIME_WORDS.has(w) || ["half", "each", "total", "whole", "about", "approximately", "roughly", "around", "x", "made", "times"].includes(w)) return false;
+    if (unitOfWord(w) !== null || Object.prototype.hasOwnProperty.call(CARDINALS, w) || TIME_WORDS.has(w) || ["half", "each", "total", "whole", "about", "approximately", "roughly", "around", "x", "made", "times", "count", "ct", "per", "size", "sized"].includes(w)) return false;
     return true;
   });
 }
@@ -386,6 +386,8 @@ export function remarkRestatement(text: string, toks: readonly Tok[]): { amount:
   // ("(80/20)", "(90/10)": a lean ratio — two whole numbers that sum to 100 — is a note, never a count, §12.9)
   const [a, slash, b] = [toks[k], toks[k + 1], toks[k + 2]];
   if (a?.kind === "num" && isSym(slash, "/") && b?.kind === "num" && Number(a.text) + Number(b.text) === 100) return null;
+  // ("(16/20)", "(21/25 count)": a shrimp count per pound — two numbers of ten or more — is a size designation)
+  if (a?.kind === "num" && isSym(slash, "/") && b?.kind === "num" && Number(a.text) >= 10 && Number(b.text) >= 10) return null;
   const amount = readAmountPhrase(text, toks, k);
   if (amount === null || amount.quantity === null || amount.quantity.kind !== "exact" || amount.effects.reasons.some((r) => REASONS[r].class !== "info")) return null;
   const rest = toks.slice(amount.next);

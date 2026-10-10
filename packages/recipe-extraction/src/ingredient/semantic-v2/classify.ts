@@ -21,6 +21,10 @@ import {
 } from "./lexicon";
 import { findUnstated, unstatedAt } from "./remarks";
 import { canSizeDesignationAt, isTemperatureOrTime } from "./amount";
+import { foodWord, recognisedFoodNoun } from "./foods";
+
+/** Serving pieces that may name the food served on them ("veggie tray", "deli platter", "cheese board"). */
+const SERVING_TOOL_HEADS = new Set(["tray", "trays", "platter", "platters", "board", "boards"]);
 
 /** True when the line opens with a numeral, a vulgar fraction or a cardinal/fraction word (after "about", "~"). */
 export function numericLead(toks: readonly Tok[]): boolean {
@@ -67,6 +71,7 @@ function hasUrl(toks: readonly Tok[]): boolean {
 export function nonIngredientReason(toks: readonly Tok[]): ReasonCode | null {
   if (toks.length === 0) return "empty_line";
   if (nutritionPanel(toks)) return "not_an_ingredient"; // "Calories: 412kcal | Carbohydrates: 52g | Protein: 18g"
+  if (nutritionHeader(toks)) return "not_an_ingredient"; // "% Daily Value*", "Amount per serving", "Includes 10g Added Sugars"
   if (!toks.some((t) => t.kind === "word" || isNumberish(t) || (isGroup(t) && (wordCount(t.children) > 0 || hasNumber(t.children))))) return "not_an_ingredient";
   if (isNumberish(toks[0]) && temperatureOrTimeAt(toks, 0)) return "not_an_ingredient"; // "350°F oven", "10 minutes"
   if (isNumberish(toks[0]) && metaNounAt(toks, 0)) return "not_an_ingredient"; // "4 servings", "250 kcal"
@@ -167,9 +172,10 @@ export function nutrientLabelEnd(toks: readonly Tok[]): number {
       k += 3;
       continue;
     }
-    if (t.lower === "vitamin" || t.lower === "vitamins") {
+    if (t.lower === "vitamin" || t.lower === "vitamins" || t.lower === "vit") {
       sawNutrient = true;
       k++;
+      if (isSym(toks[k], ".") && adjacent(t, toks[k])) k++; // "Vit. C"
       const letter = toks[k];
       if (isWord(letter) && /^[a-km-z]$/i.test(letter.text) && /^\p{Lu}$/u.test(letter.text)) {
         k++;
@@ -190,14 +196,15 @@ export function nutrientLabelEnd(toks: readonly Tok[]): number {
       k++;
       continue;
     }
-    if (["of", "the", "a"].includes(t.lower) && k > 0) {
+    if (["of", "the", "a", "from"].includes(t.lower) && k > 0) {
       k++;
       continue;
     }
+    if (t.lower === "omega" && isSym(toks[k + 1], "-")) break;
     break;
   }
-  // "Calories (kcal): 250", "Fat (g) 10": the unit of the value written in brackets after the label
-  while (sawNutrient && isGroup(toks[k]) && (toks[k] as { children: Tok[] }).children.every((c) => (isWord(c) && FACT_UNITS.has(c.lower)) || isSym(c, "%"))) k++;
+  // "Calories (kcal): 250", "Fat (g) 10", "Carbs (net) 4 g": the unit or a qualifier in brackets after the label
+  while (sawNutrient && isGroup(toks[k]) && (toks[k] as { children: Tok[] }).children.every((c) => (isWord(c) && (FACT_UNITS.has(c.lower) || NUTRIENT_WORDS.has(c.lower))) || isSym(c, "%"))) k++;
   if (!sawNutrient) return 0;
   // the label must end where the value begins: a word that is not nutrient vocabulary means food ("protein powder")
   const after = toks[k];
@@ -231,6 +238,24 @@ export function nutritionPanel(toks: readonly Tok[]): boolean {
   }
   const filled = parts.filter((p) => p.length > 0);
   return filled.length >= 2 && filled.every((p) => nutritionFact(p));
+}
+
+/**
+ * NUTRITION PANEL HEADINGS AND LINES WITH THE VALUE FIRST: only nutrient vocabulary and "%"/"*", with a panel word
+ * ("% Daily Value*", "Amount Per Serving"); or "Includes"/"Including" a value of a nutrient ("Includes 10g Added Sugars").
+ */
+export function nutritionHeader(toks: readonly Tok[]): boolean {
+  const ws = words(toks);
+  if (ws.length === 0) return false;
+  const panel = ws.some((w) => ["daily", "value", "facts", "amount", "per", "serving"].includes(w.lower)) || toks.some((t) => isSym(t, "%"));
+  if (!hasNumber(toks) && panel && toks.every((t) => (isWord(t) && NUTRIENT_WORDS.has(t.lower)) || isSym(t, "%", "*", ":", "."))) return true;
+  if (isWord(toks[0], "includes", "including", "incl") && isNumberish(toks[1])) {
+    let k = 2;
+    if (isWord(toks[k]) && FACT_UNITS.has((toks[k] as { lower: string }).lower)) k++;
+    const rest = toks.slice(k);
+    return rest.length > 0 && rest.every((t) => isWord(t) && NUTRIENT_WORDS.has(t.lower));
+  }
+  return false;
 }
 
 /** One nutrition fact: "Calories: 412kcal", "Protein 18g", "Fat: 10 g" (a nutrient label, then only a value). */
@@ -414,6 +439,9 @@ export function equipmentShape(toks: readonly Tok[]): "equipment" | "unsure" | n
     if (isWord(nt) && EQUIPMENT_CONTINUATIONS.has(nt.lower)) ends = true;
     else if (isWord(nt, "and", "or", "plus") || isSym(nt, "&")) ends = equipmentShape(seg.slice(n + 1)) === "equipment";
     if (!ends) continue;
+    // ("1 veggie tray", "1 deli platter", "1 cheese board") a serving piece after a food word may be the food served on
+    // it: a person checks; "1 baking tray", "1 serving platter", "1 cutting board" stay equipment
+    if (tool && SERVING_TOOL_HEADS.has(w) && j > k && foodWord(content[j - 1].lower) && !EQUIPMENT_MATERIAL_WORDS.has(content[j - 1].lower)) return "unsure";
     if (tool) return "equipment";
     return vesselVerdict(content.slice(k, j).map((c) => c.lower), w);
   }
@@ -456,9 +484,26 @@ function vesselVerdict(before: readonly string[], head: string): "equipment" | "
   return entry.policy === "unsure" ? "unsure" : null;
 }
 
-/** True when the line is an equipment item (`equipmentShape` is sure of it). */
+/**
+ * True when the line is an equipment item (`equipmentShape` is sure of it) whose words do not name a recognised food
+ * (`equipmentNamesFood`). A food named with an equipment word ("1 lb short plate", "4 Italian grinders", "1 jello
+ * mold") is never `unsupported`: the engine reads it, or a person checks it (CONTRACT §12.8, PHASE-2B-PLAN §6.1).
+ */
 export function equipmentPhrase(toks: readonly Tok[]): boolean {
-  return equipmentShape(toks) === "equipment";
+  return equipmentShape(toks) === "equipment" && !equipmentNamesFood(toks);
+}
+
+/**
+ * The words of the item (before a comma; numbers, symbols, brackets, a leading unit or count noun and "of" left out)
+ * name a recognised food whose head is itself a food (`recognisedFoodNoun`): "pepper grinders", "short plate", "Italian
+ * grinders" — not "popsicle sticks" or "tart ring", where the equipment rule's own purpose words decide.
+ */
+export function equipmentNamesFood(toks: readonly Tok[]): boolean {
+  const end = toks.findIndex((t) => isSym(t, ",", ";"));
+  const ws = (end < 0 ? toks : toks.slice(0, end)).filter((t) => isWord(t)).map((t) => (t as { text: string; lower: string }));
+  let k = 0;
+  while (k < ws.length - 1 && (unitOfWord(ws[k].text) !== null || EQUIPMENT_COUNT_NOUNS.has(ws[k].lower) || ws[k].lower === "of" || APPROX_WORDS.has(ws[k].lower) || ws[k].lower === "a" || ws[k].lower === "an" || Object.prototype.hasOwnProperty.call(CARDINALS, ws[k].lower))) k++;
+  return k < ws.length && recognisedFoodNoun(ws.slice(k).map((w) => w.text).join(" "));
 }
 
 /**
@@ -516,7 +561,8 @@ function factValue(toks: readonly Tok[], nutrient: boolean): boolean {
   // (semantic-v2) a bracket after the value that only restates it ("(240 ml)", "(15% DV)") is part of the value
   const rest = toks.slice(k).filter((t) => !(isGroup(t) && t.children.length > 0 && t.children.every((c) => isNumberish(c) || isSym(c, "%", ".", "/", ",") || (isWord(c) && (FACT_UNITS.has(c.lower) || unitOfWord(c.text) !== null || APPROX_WORDS.has(c.lower))))));
   const ok = (t: Tok, k: number) =>
-    (nutrient && isNumberish(t) && isSym(rest[k + 1], "%")) || // ("3 g 15%": the daily value after the amount)
+    (nutrient && isNumberish(t) && (isSym(rest[k + 1], "%") || (isWord(rest[k + 1]) && FACT_UNITS.has((rest[k + 1] as { lower: string }).lower)))) || // ("3 g 15%", "1046 kJ / 250 kcal")
+    (nutrient && isSym(t, "/")) ||
     (isSym(t) && ["%", ".", ")", "("].includes(t.text)) ||
     (isWord(t) && (FACT_UNITS.has(t.lower) || SERVING_LABEL_WORDS.has(t.lower) || ["each", "of", "a", "an"].includes(t.lower) || (!nutrient && unitOfWord(t.text) !== null)));
   return rest.length <= 4 && rest.every(ok);

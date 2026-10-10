@@ -15,6 +15,7 @@
 import { ADJECTIVE_WORDS, AND_COMPOUNDS, CATEGORY_NOUNS, COMPOUND_MODIFIERS, FLAVOUR_HEADS, FORM_CHOICE_WORDS, FUNCTION_WORDS, LEADING_SHARE_WORDS, PART_HEADS, PREP_ADVERBS, REMARK_WORDS, SHARED_HEAD_MODIFIERS, SIZE_WORDS } from "./lexicon";
 
 const LEADING_JUNK_WORDS = FUNCTION_WORDS;
+import { foodWord } from "./foods";
 
 const wordsOf = (s: string) => s.split(" ").filter((w) => w.length > 0);
 const lower = (s: string) => s.toLowerCase();
@@ -74,10 +75,16 @@ function trailingHeadSplit(firsts: readonly string[][], last: readonly string[])
   // sources of the last word (a noun before its product, or any food before a part: "apple or white grape juice" shares
   // "juice", "walnut or pecan halves" shares "halves") share that word alone
   const lastWord = lower(last[last.length - 1]);
-  const lastSources = SHARED_HEAD_MODIFIERS[lastWord];
   const oneWordFood = (o: readonly string[]) => o.length === 1 && !versionWord(o[0]) && lower(o[0]) !== lastWord && !LEADING_JUNK_WORDS.has(lower(o[0]));
-  if (firsts.every((o) => (lastSources !== undefined && lastSources.has(lower(o.join(" "))) && !o.every(versionWord)) || (PART_HEADS.has(lastWord) && oneWordFood(o)))) {
-    return { head: last[last.length - 1] };
+  // the longest tail of the last option whose first word has every earlier option as a source ("goat or sheep milk
+  // yogurt" shares "milk yogurt", "chamomile or mint tea bags" shares "tea bags", "apple or white grape juice" shares "juice")
+  const sourceOf = (o: readonly string[], w: string) => {
+    const src = SHARED_HEAD_MODIFIERS[lower(w)];
+    return src !== undefined && src.has(lower(o.join(" "))) && !o.every(versionWord);
+  };
+  for (let k = 1; k < last.length; k++) {
+    const tail = last.slice(k);
+    if (firsts.every((o) => sourceOf(o, tail[0]) || (tail.length === 1 && PART_HEADS.has(lastWord) && oneWordFood(o)))) return { head: tail.join(" ") };
   }
   let m = 1;
   const pair = `${lower(last[0])} ${lower(last[1] ?? "")}`;
@@ -233,7 +240,8 @@ export function uniqueOptions(options: readonly string[]): string[] {
  * names the flavour of a product after it ("salt and vinegar potato chips", "spinach and artichoke dip": FLAVOUR_HEADS).
  */
 export function andJoinsTwoFoods(name: string): boolean {
-  const ws = wordsOf(name.replace(/\s*&\s*/g, " and "));
+  // ("M&Ms", "A&W": an ampersand between capitals is part of a brand word, not "and")
+  const ws = wordsOf(name.replace(/\s*&\s*/g, (m, at: number) => (m === "&" && /\p{Lu}/u.test(name[at - 1] ?? "") && /\p{Lu}/u.test(name[at + 1] ?? "") ? m : " and ")));
   const at = ws.findIndex((w) => lower(w) === "and");
   if (at <= 0 || at >= ws.length - 1) return false;
   const text = ` ${ws.map(lower).join(" ")} `;
@@ -245,5 +253,14 @@ export function andJoinsTwoFoods(name: string): boolean {
   // ("kosher salt and black pepper": the seasoning pair, however each is described)
   if (lower(left[left.length - 1]) === "salt" && /^pepper(?:corns)?$/.test(lower(right[right.length - 1]))) return false;
   if (right.length >= 2 && FLAVOUR_HEADS.has(lower(right[right.length - 1]))) return false; // a flavour of one product
+  // (§12.A A4) two food nouns joined by "and" before one head that is not a part noun name one food by what it is made of
+  // or flavoured with: "lemon and lime juice", "black bean and corn salsa", "bacon and cheese pierogies"; a part head
+  // ("broccoli and cauliflower florets", "sesame and flax seeds") lists two foods; "onion and bell pepper" is not parallel
+  if (right.length >= 2) {
+    const head = right[right.length - 1];
+    const b = right[right.length - 2];
+    const a = left[left.length - 1];
+    if (!PART_HEADS.has(lower(head)) && !PART_HEADS.has(lower(head).replace(/s$/, "")) && foodWord(head) && foodWord(a) && foodWord(b) && !describing(a) && !describing(b)) return false;
+  }
   return right.some((w) => !describing(w) && lower(w) !== "and");
 }

@@ -25,12 +25,20 @@
  * confident `ready`: a holder after an unknown word ("2 chicken skewers"), a label with only milligrams, a nutrient
  * name that is also a UK ingredient weighed in grams.
  *
+ * Recognised food (PHASE-2B-PLAN §6.1, round 2): `recognisedFoodHead` (foods.ts, with the word classes of foods.ts and
+ * foods-more.ts) decides whether a counted line's food is known; when it is not, the line goes to a person with no
+ * amount, unit or package and the text after the number as the name pre-fill — never `unsupported`. A sure equipment
+ * shape yields to a name whose head is itself a food (`recognisedFoodNoun`, `equipmentNamesFood` in classify.ts): it is
+ * read when the name ends in a compound food ("short plate") or follows a food container ("1 bottle mixer"), and goes
+ * to a person otherwise. Equipment heads are not foods by themselves ("2 pepper grinders" stays equipment); a vessel
+ * head of the `food` policy after a brand is read as food ("1 KitchenAid mixer" — a known limit).
+ *
  * A final check (`guardedParse`) runs the contract validator: a reader that throws, or an output that
  * would not validate (a defect), is replaced by a minimal `needs_review` reading with `unclassified`, so
  * callers always receive valid data — and `guardedParse` reports that the net was used, so tests can
  * prove it never is.
  */
-import { REASONS, type AmountUnstated, type IngredientEngine, type ParsedIngredientV1, type ReasonCode, type SpanField, type UnitV1 } from "../../contract";
+import { REASONS, UNIT_REGISTRY, type AmountUnstated, type IngredientEngine, type ParsedIngredientV1, type ReasonCode, type SpanField, type UnitV1 } from "../../contract";
 import { cmp, fromExactQuantity, rational, toExactQuantity } from "../../rational";
 import { validateParsedIngredientV1 } from "../../validate";
 import { amountStartsAt, foreignSystemRemark, groupAmount, isPriceGroup, PACKAGE_UNITS, readAmountPhrase, readStatedAmount, placeSecondary, sameAmount, sumInSmallest, type AmountSlots } from "./amount";
@@ -40,6 +48,7 @@ import { APPROX_WORDS, BULLETS, CONTAINER_UNITS, FRUIT_PART_WORDS, NUTRIENT_FOOD
 import { numberInProductName, readNameRegion, type NameReading } from "./name";
 import { normalizeLine } from "./normalize";
 import { classifyPiece, remarkMeasuresAnother, remarkRestatement, remarkSecondAmount, splitOr, splitTopLevel, textOf, trimEdges, unstatedAt } from "./remarks";
+import { compoundFoodEnding, recognisedFoodHead } from "./foods";
 import { andJoinsTwoFoods, categoryNoun, foodHead, isRemarkOption, shareOptions, uniqueOptions, varietiesOf, withKind } from "./alternatives";
 import { emptyEffects, mergeEffects, type AmountReading } from "./types";
 import { readUnit, type UnitRead } from "./unit";
@@ -256,9 +265,13 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
 
   const nonIngredient = nonIngredientReason(toks);
   if (nonIngredient) return { out: unsupported(raw, normalized, [...reasons.filter((r) => r === "input_truncated"), nonIngredient]) };
-  // (semantic-v2, §12.8) "2 chicken skewers", "1 burrito bowl": a holder that is never eaten, after a word that may name
-  // its contents — food on skewers, or the skewers? A person checks.
-  if (equipmentShape(toks) === "unsure") push(reasons, "unclassified");
+  // (semantic-v2, §12.8) "2 chicken skewers", "1 jam jar": a holder that is never eaten, after a word that may name its
+  // contents — food on skewers, or the skewers? A person checks, unless the name is a recognised food ("4 bread bowls").
+  const shape = equipmentShape(toks);
+  const unsureEquipment = shape === "unsure";
+  // ("2 pepper grinders", "1 lb short plate") a sure equipment shape whose words also name a recognised food reached
+  // here (`equipmentPhrase`): it is read only when its name ends in a compound food name ("short plate"), else a person checks
+  const equipmentFood = shape === "equipment";
 
   // Segments at top-level commas/semicolons: the head, then remarks.
   const segments = splitTopLevel(toks);
@@ -372,7 +385,9 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
       let k = 0;
       while (isWord(head[k]) && (SIZE_WORDS.has((head[k] as { lower: string }).lower) || MEASURE_ADJECTIVES.has((head[k] as { lower: string }).lower))) k++;
       const u = readUnit(text, head, k);
-      const taken = u !== null && (isWord(head[u.next], "of") || (u.unit.dimension === "imprecise" && u.unit.canonical !== "drop" && u.unit.canonical !== "inch") || bareUnitAtStart(u, text));
+      // ("Scant cup sugar", "Heaping tablespoon flour": after a measure adjective a unit word is the unit, §12.15)
+      const measured = k > 0 && u !== null && (u.unit.dimension === "mass" || u.unit.dimension === "volume") && head.slice(0, k).some((t) => isWord(t) && MEASURE_ADJECTIVES.has(t.lower) && !SIZE_WORDS.has(t.lower));
+      const taken = u !== null && (isWord(head[u.next], "of") || (u.unit.dimension === "imprecise" && u.unit.canonical !== "drop" && u.unit.canonical !== "inch") || bareUnitAtStart(u, text) || measured);
       if (u && taken && u.next < head.length) {
         amount = { ...noAmount(), unit: u.unit, unitSpan: [u.s, u.e], next: 0 };
         // (semantic-v2) "Pinch of salt", "Small pinch of salt", "Dash hot sauce": a singular imprecise measure that
@@ -757,6 +772,58 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
     if (!listTakesAdditional) for (const o of additional) if (o.text) fx.notes.push({ s: o.s, text: `or ${o.text}` });
   }
 
+  // (semantic-v2, PHASE-2B-PLAN §6.1) RECOGNISED FOOD on a counted line: with a bare count, a count unit or an imprecise
+  // unit, the line is read only when its food is recognised (`recognisedFoodHead`); otherwise a person checks and no
+  // amount, unit or package is kept, so equipment ("1 comal") or a measure word ("1 tot dark rum") never carries an
+  // invented amount. Lines measured in a mass or volume unit are not affected.
+  const counted = amt.amountWritten && (unit === null || unit.dimension === "count" || unit.dimension === "imprecise");
+  const recognised = name !== null ? recognisedFoodHead(name) : alternatives.length >= 2 ? alternatives.some(recognisedFoodHead) : true;
+  if (unsureEquipment && !(name !== null && recognisedFoodHead(name))) push(fx.reasons, "unclassified");
+  // (a food container written as the unit says the item is its contents: "1 bottle margarita mixer")
+  const containerOfFood = unit !== null && ["bottle", "can", "jar", "carton", "tin"].includes(unit.canonical);
+  const equipmentConflict = equipmentFood && !containerOfFood && !(name !== null && compoundFoodEnding(name.split(/\s+/)));
+  let abstain = false;
+  if ((counted && !recognised) || equipmentConflict) {
+    abstain = true;
+    // (owner rule, round 2) the name pre-fill is the text after the number, as written: nothing is trimmed to known
+    // words, and a unit or measure word that is no longer read stays visible in it ("4 slices chashu pork" → "slices
+    // chashu pork"). Only words are taken back into the name — never a number, a bracket or a symbol (CONTRACT §2:
+    // the name holds no amount) — and a package size that is no longer read is kept in the note ("4 oz").
+    if (slots.packageSize !== null && slots.packageSpan !== null) fx.notes.push({ s: slots.packageSpan[0], text: text.slice(slots.packageSpan[0], slots.packageSpan[1]) });
+    for (const x of slots.equivalents) if (x.quantity.kind === "exact") fx.notes.push({ s: amt.quantitySpan?.[1] ?? 0, text: `${x.quantity.display} ${x.unit.source || x.unit.canonical}` });
+    if (name !== null && nr.nameSpan !== null && amt.quantitySpan !== null && amt.quantitySpan[1] <= nr.nameSpan[0]) {
+      const qEnd = amt.quantitySpan[1];
+      const nameStart = nr.nameSpan[0];
+      const gap = toks.filter((t) => t.s >= qEnd && t.e <= nameStart);
+      // the words right before the name, after any number, bracket or symbol, and not glued to one ("3-quart")
+      let w0 = gap.length;
+      // (a weight or volume word is never taken into the name: "0.5 lbs …" stays out, §2)
+      const massOrVolume = (t: Tok) => {
+        const c = isWord(t) ? unitOfWord(t.text) : null;
+        return c !== null && (UNIT_REGISTRY[c].dimension === "mass" || UNIT_REGISTRY[c].dimension === "volume");
+      };
+      while (w0 > 0 && isWord(gap[w0 - 1]) && !massOrVolume(gap[w0 - 1]) && (w0 - 1 === 0 || !adjacent(gap[w0 - 2], gap[w0 - 1]) || isWord(gap[w0 - 2]))) w0--;
+      while (w0 < gap.length && ["a", "an", "and", "or", "nor", "with", "to", "plus", "but", "of"].includes((gap[w0] as { lower: string }).lower)) w0++;
+      if (w0 < gap.length && (w0 === 0 || !adjacent(gap[w0 - 1], gap[w0]))) {
+        const span: [number, number] = [gap[w0].s, nr.nameSpan[1]];
+        name = text.slice(span[0], span[1]).trim();
+        nr.nameSpan = span;
+        fx.notes = fx.notes.filter((n) => n.s < span[0] || n.s >= span[1]);
+      }
+    }
+    quantity = null;
+    unit = null;
+    unitSpan = null;
+    slots.packageSize = null;
+    slots.packageSpan = null;
+    slots.equivalents.length = 0;
+    for (const r of ["package_size_stated", "equivalent_quantity_stated", "compound_quantity_summed"] as ReasonCode[]) {
+      const at = fx.reasons.indexOf(r);
+      if (at >= 0) fx.reasons.splice(at, 1);
+    }
+    push(fx.reasons, "unclassified");
+  }
+
   // Unstated amount: a flag when no amount was written, otherwise the phrase is a note.
   let amountUnstated: AmountUnstated | null = null;
   const amountWritten = amt.amountWritten;
@@ -785,7 +852,7 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
   if (name === null && alternatives.length === 0) push(all, "name_missing");
   if (quantity === null && amountUnstated !== null) push(all, "amount_unstated");
   if (fx.optional) push(all, "optional_ingredient");
-  const approximate = amt.approximate || (fx.approximate && amt.amountWritten);
+  const approximate = !abstain && (amt.approximate || (fx.approximate && amt.amountWritten));
   if (approximate) push(all, "approximate_quantity");
   if (amt.fromWord && quantity !== null) push(all, "quantity_from_word");
   if (unit && unit.dimension === "count" && unit.canonical !== "each") push(all, "count_unit");

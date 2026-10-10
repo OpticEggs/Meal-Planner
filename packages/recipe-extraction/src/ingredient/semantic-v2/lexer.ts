@@ -63,6 +63,8 @@ const CLOSER: Record<string, string> = { "(": ")", "[": "]", "{": "}" };
 const CLOSERS = new Set([")", "]", "}"]);
 
 const WORD = /[\p{L}\p{M}]+(?:['’‘\-‐‑][\p{L}\p{M}]+)*/uy;
+/** A brand written with an ampersand between capitals ("M&Ms", "M&M's", "A&W"): one word, not "M and Ms". */
+const AMPERSAND_BRAND = /\p{Lu}{1,3}&\p{Lu}\p{L}{0,2}(?:['’]s)?(?![\p{L}\p{M}])/uy;
 const NUMBER = /(?:\d+|(?=\.\d))(?:[.,]\d+)*/y;
 /** Superscript, subscript and full-width digits, as in "¹⁄₂" and "１" (index = digit value). */
 const SUPERSCRIPTS = "⁰¹²³⁴⁵⁶⁷⁸⁹";
@@ -107,8 +109,12 @@ export function lex(text: string): Lexed {
       i++;
       continue;
     }
-    WORD.lastIndex = i;
-    let m = WORD.exec(text);
+    AMPERSAND_BRAND.lastIndex = i;
+    let m = AMPERSAND_BRAND.exec(text);
+    if (m === null) {
+      WORD.lastIndex = i;
+      m = WORD.exec(text);
+    }
     if (m) {
       top.list.push({ kind: "word", s: i, e: i + m[0].length, text: m[0], lower: m[0].toLowerCase() });
       i += m[0].length;

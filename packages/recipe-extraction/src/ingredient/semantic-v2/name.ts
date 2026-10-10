@@ -17,10 +17,11 @@ import {
   INVARIANT_PLURALS, SIZE_WORDS, TRAILING_COUNT_UNITS, TRAILING_PREP_WORDS, unitOfWord,
 } from "./lexicon";
 import { amountStartsAt, countWordBeforePluralFood, groupAmounts, isPriceGroup, placeSecondary, readAmountPhrase, readStatedAmount, type AmountSlots } from "./amount";
-import { classifyGroup, classifyPiece, dropBarePrices, remarkOnly, splitOr, textOf, trimEdges, unstatedAt } from "./remarks";
+import { classifyGroup, classifyPiece, dropBarePrices, remarkOnly, splitOr, splitTopLevel, textOf, trimEdges, unstatedAt } from "./remarks";
 import { fractionUnitWord, readNumber } from "./quantity";
 import type { Effects } from "./types";
 import { foodHead, isRemarkOption, shareOptions } from "./alternatives";
+import { compoundFoodEnding, recognisedFoodHead } from "./foods";
 import { readUnit, type UnitRead } from "./unit";
 
 export interface NameContext {
@@ -212,6 +213,18 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
       if (ctx.slots) for (const sa of list) placeSecondary(text, ctx.slots, { sa, position: "after" });
       else fx.unassigned++;
       continue;
+    }
+    // (semantic-v2, CONTRACT §12.A A6) "1 can tomatoes (14.5 oz, undrained)": on a container line, a mass or volume size
+    // opening the bracket is the container's contents, whatever else the bracket holds; the rest is a remark
+    const pieces = splitTopLevel(t.children);
+    const unit = ctx.slots?.unit;
+    if (ctx.slots && unit && CONTAINER_UNITS.has(unit.canonical) && ctx.slots.packageSize === null && pieces.length >= 2) {
+      const sa = readStatedAmount(text, pieces[0], 0);
+      if (sa !== null && sa.next === pieces[0].length && (sa.unit.dimension === "mass" || sa.unit.dimension === "volume")) {
+        placeSecondary(text, ctx.slots, { sa, position: "after" });
+        for (const piece of pieces.slice(1)) if (piece.length > 0) classifyPiece(text, piece, fx);
+        continue;
+      }
     }
     classifyGroup(text, t, fx);
   }
@@ -545,6 +558,8 @@ export function postFoodCountUnit(text: string, toks: readonly Tok[]): UnitRead 
   const code = isWord(last) ? unitOfWord(last.text) : null;
   if (code === null || !TRAILING_COUNT_UNITS.has(code) || !isWord(prev)) return null;
   if (PRODUCT_IDENTITY_NOUNS[code]?.has(prev.lower)) return null;
+  // after "of" the word is the food itself ("1 rack of ribs", "2 hearts of romaine" keep their name)
+  if (FUNCTION_WORDS.has(prev.lower)) return null;
   // the words before it must name a food, not only describe one ("4 whole cloves", "2 fresh sprigs")
   const before = toks.slice(0, -1).filter((t) => t.kind === "word") as { lower: string }[];
   if (!before.some((w) => !REMARK_WORDS.has(w.lower) && !SIZE_WORDS.has(w.lower) && !TRAILING_PREP_WORDS.has(w.lower) && !FUNCTION_WORDS.has(w.lower))) return null;
@@ -570,7 +585,11 @@ export function nameLeftoverGuard(text: string, toks: readonly Tok[]): boolean {
     const u = readUnit(text, toks, i);
     if (u !== null && (u.unit.dimension === "mass" || u.unit.dimension === "volume")) {
       const written = text.slice(u.s, u.e).toLowerCase().replace(/\.$/, "");
-      if (written.length > 1 && !UNIT_WORDS_IN_FOOD_NAMES.has(written)) return true;
+      // ("wonton cups", "peanut butter cups", "lettuce cups": a unit word ending a compound food name is the food)
+      // ("applesauce cups", "Jell-O cups": cups of a food named before them, a portion head of `recognisedFoodHead`)
+      const nameWords = toks.filter((w) => isWord(w)).map((w) => (w as { text: string }).text);
+      const compound = u.next === toks.length && (compoundFoodEnding(nameWords) || (/^cups?$/.test(written) && nameWords.length >= 2 && recognisedFoodHead(nameWords.join(" "))));
+      if (written.length > 1 && !UNIT_WORDS_IN_FOOD_NAMES.has(written) && !compound) return true;
     }
   }
   const first = ws[0];
