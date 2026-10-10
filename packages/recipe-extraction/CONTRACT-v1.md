@@ -425,3 +425,10 @@ is prospective (no frozen label changes) and is checked by the label checker bef
   vinegar dressing`, `pork and beans`), and modifiers joined by `and` before one head are one food (`salt and vinegar
   potato chips` h2-0104, `3 red and yellow bell peppers` → 3 `each` `red and yellow bell peppers`, consistent with
   h2-0268). Debatable, not used as firm labels: product-or-list pairs such as `peas and carrots`.
+- **A5 → A1, imprecise units (after candidate review R1 round 2).** The number-agreement rule of A1 covers imprecise
+  units too: a singular imprecise-unit word after a count above one, before a plural countable food, begins the name
+  (`6 drop biscuits`, `12 drop cookies`, `4 sprinkle donuts` → 6 / 12 / 4 `each`). Mass and volume words are excluded
+  (sloppy `2 pound ground beef` stays 2 `lb`); `2 pound cakes` is debatable, not a firm label.
+- **A6 → §12.3, package size after the food.** A mass or volume size in brackets after the food on a container line
+  is that container's packageSize, whatever else the bracket holds (`1 can tomatoes (14.5 oz, undrained)` → 1 `can`,
+  packageSize 14.5 `oz`, note `undrained`), as in §7.4 `2 cans (15 oz each)`.

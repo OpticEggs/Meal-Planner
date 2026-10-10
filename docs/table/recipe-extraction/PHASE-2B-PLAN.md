@@ -74,3 +74,19 @@ reproducible; the repairs go into a copy under a new id.
   disagreements; every adjudication must be argued from CONTRACT-v1 §7/§12 and is logged.
 - If any case-level holdout-v3 content reaches the candidate before scoring, the run is reported as exposed, not as
   clean acceptance.
+
+## 6. Design decisions during the repair (coordinator)
+
+1. **Recognised-food requirement for counted lines (after R1 round 2).** Equipment and unknown measure words are
+   open-vocabulary. Closed word lists fixed every reported line but only 47 % / 38 % of fresh ones. Decision: on a
+   line whose amount is a bare count or a count unit (not a mass or volume unit), `semantic-v2` reads `ready` only when
+   the name's head is a recognised food, and the words before it are recognised modifiers, varieties or food words.
+   These lexicons are built by word class (produce, meat and seafood cuts, breads and baked goods, dairy and eggs,
+   packaged and prepared foods, sweets, drinks, herbs and spices, condiments, nuts, grains, pasta), not from probe
+   words. Otherwise the line goes to `needs_review` **without** a quantity, unit or package, so an equipment line
+   cannot carry an invented amount (S1). This follows CONTRACT §12.8 ("uncertain lines go to `needs_review`"). It
+   trades some unnecessary review on rare foods (A1/A5) for no silent wrong readings (A3/A4).
+2. **Harness aligned with G2 for non-ingredient labels.** For an `unsupported` label, the required regression harness
+   accepts a safe abstention: `needs_review` with no quantity, unit, package or options. G2 classes that as C8, which
+   is not an acceptance error and carries no S code. A ready reading, or any reading that carries an amount, still
+   fails.
