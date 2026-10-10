@@ -18,7 +18,7 @@ import { add, cmp, div, fromDecimalString, fromExactQuantity, mul, rational, toE
 import { adjacent, isGroup, isSym, isWord, type GroupTok, type Tok } from "./lexer";
 import {
   APPROX_SYMBOLS, APPROX_WORDS, BOUND_PHRASES, CARDINALS, CONTAINER_UNITS, FORM_WORDS, FRACTION_WORDS, FUNCTION_WORDS, LENGTH_MEASURED_FOODS, LENGTH_WORDS, MEASURE_ADJECTIVES,
-  RANGE_DASHES, REMARK_WORDS, SIZE_WORDS, TIME_WORDS, UNKNOWN_MEASURES, unitOfWord,
+  INVARIANT_PLURALS, RANGE_DASHES, REMARK_WORDS, SIZE_WORDS, TIME_WORDS, UNKNOWN_MEASURES, unitOfWord,
 } from "./lexicon";
 import { andFraction, fractionUnitWord, readNumber, type NumberRead } from "./quantity";
 import { emptyEffects, type AmountReading, type Effects } from "./types";
@@ -203,19 +203,25 @@ export function sameAmount(a: ExactQuantity, ua: UnitV1, b: ExactQuantity, ub: U
 }
 
 /**
- * The second restatement test of §12.6: the restated number is a whole number equal to the exact conversion of the
- * first-stated amount rounded to a whole number of the restated unit ("1/4 tsp (1 ml)", "3/4 tsp (4 ml)", "1 lb (454 g)").
- * Halves round up. `firstBase` is the first amount in the dimension's base unit. Only a restatement in a smaller unit
- * than the first one is a rounding convention (a whole number of a larger unit hides more than it states: "2 lb (1 kg)"
- * is outside both tests, §12.6 policy).
+ * The second restatement test of §12.6 — the ROUNDING ALLOWANCE, as amended by CONTRACT §12.A A2 and refined after the
+ * label check: the restated number is a whole number equal to the exact conversion of the first-stated amount rounded
+ * HALF UP to a whole number of the restated unit, and the restated unit is a fine metric unit (`ml` or `g`) — or `lb`
+ * restating `kg` ("1/4 tsp (1 ml)", "3/4 tsp (4 ml)", "1 lb (454 g)", "1 kg (2 lb)"). A restated unit larger than the
+ * first never gets the allowance (§12.A A2: a whole number of a larger unit hides more than it states — "2 lb (1 kg)",
+ * "100 g (4 oz)"), nor does a coarse kitchen unit ("1/2 tbsp (2 tsp)", "1/6 cup (3 tbsp)": only the 7 % test applies).
+ * `firstBase` is the first amount in the dimension's base unit.
  */
 export function roundedConversion(firstBase: Rational, ua: UnitV1, restated: ExactQuantity, ub: UnitV1): boolean {
   if (restated.denominator !== "1" || ua.canonical === ub.canonical || cmp(base(ub), base(ua)) >= 0) return false;
+  if (!ROUNDING_UNITS.has(ub.canonical) && !(ub.canonical === "lb" && ua.canonical === "kg")) return false;
   const converted = div(firstBase, base(ub)); // exact, in the restated unit
   const twice = BigInt(2) * converted.n + converted.d; // round half up: floor((2n + d) / 2d)
   const rounded = twice / (BigInt(2) * converted.d);
   return rounded > BigInt(0) && rounded.toString() === restated.numerator;
 }
+
+/** The fine metric units a rounded conversion is written in (§12.6 rounding allowance); `lb` only restating `kg`. */
+export const ROUNDING_UNITS: ReadonlySet<string> = new Set(["ml", "g"]);
 
 /** |restated − first| ≤ RESTATEMENT_TOLERANCE · first (both positive, in the same base unit). */
 export function withinRestatementTolerance(first: Rational, restated: Rational): boolean {
@@ -405,6 +411,22 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
     betweenRange = true;
     j++;
   }
+  // "#10 can tomatoes", "No. 2 can corn": a can-size designation before a singular container with no count is one
+  // container (as "28 oz can tomatoes" is, §12.3); before a plural container the count is missing
+  const designated = canSizeDesignationAt(toks, j);
+  if (designated > j && bound === null && !betweenRange) {
+    const u = readUnit(text, toks, designated);
+    if (u !== null) {
+      const plural = /s$/i.test(text.slice(u.s, u.e));
+      const t0 = toks[j];
+      fx.notes.push({ s: t0.s, text: isGroup(t0) ? text.slice(t0.innerS, t0.innerE).trim() : text.slice(t0.s, toks[designated - 1].e) });
+      if (plural) fx.reasons.push("quantity_missing");
+      return {
+        quantity: plural ? null : toExactQuantity(rational(BigInt(1))), quantitySpan: null, amountWritten: true, unit: u.unit, unitSpan: [u.s, u.e], packageSize: null,
+        packageSpan: null, packageProvisional: null, equivalents: [], approximate, fromWord: false, effects: fx, next: u.next,
+      };
+    }
+  }
   const article = isWord(toks[j], "a", "an");
   // FRACTION-UNIT COMPOUND (§12.1): "a half-cup milk", "1 half-cup butter", "2 half-cups milk", "a quarter-pound beef"
   const compound = fractionUnitAt(text, toks, j);
@@ -444,6 +466,14 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   // Package sizes, size descriptors and remarks written before the unit.
   for (let guard = 0; guard < 6 && compound === null; guard++) {
     const t = toks[k];
+    // CAN-SIZE DESIGNATION (§12.9): "1 #10 can", "2 No. 303 cans", "1 (No. 2) can" — the designation is a note
+    const des = canSizeDesignationAt(toks, k);
+    if (des > k && n1.ok && max === null) {
+      const inner = isGroup(t) ? text.slice(t.innerS, t.innerE).trim() : text.slice(t.s, toks[des - 1].e);
+      fx.notes.push({ s: t.s, text: inner });
+      k = des;
+      continue;
+    }
     // "2 quarter-pound beef patties": a fraction-unit after a count of two or more sizes what is counted (§12.1)
     const fw = fractionUnitWord(t);
     if (fw !== null && isWord(t) && !fw.plural && n1.ok && max === null && between.length === 0) {
@@ -455,9 +485,11 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
         k++;
         continue;
       }
-      // (only after a whole count of two or more: "1/2 half-cup milk" is not clear)
+      // (only after a whole count of two or more: "1/2 half-cup milk" is not clear — a length always sizes the counted
+      // item: "a half-inch piece fresh ginger" → 1 piece, note half-inch)
       fx.notes.push({ s: t.s, text: t.text });
-      if (!(n1.value.d === BigInt(1) && n1.value.n >= BigInt(2))) {
+      const length = unitOfWord(fw.unitWord) === "inch";
+      if (!length && !(n1.value.d === BigInt(1) && n1.value.n >= BigInt(2))) {
         fx.unassigned++;
         irregular = true;
       }
@@ -624,12 +656,18 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
       a = k + 2;
     }
   }
+  // COUNT WORD BEGINNING THE NAME (§12.A A1): "2 strip steaks", "4 rib eye steaks", "2 sheet cakes" — the count word is food
+  if (unitRead && n1.ok && max === null && compound === null && countWordBeginsName(text, toks, unitRead, n1.value)) {
+    unitRead = null;
+    a = k;
+  }
   if (unitRead && a > k && !isWord(toks[k], "of")) {
     fx.notes.push({ s: toks[k].s, text: text.slice(toks[k].s, toks[a - 1].e) });
   }
   // CONTAINER-CUP RULE (CONTRACT §12.5): "3 (5.3 oz) cups vanilla Greek yogurt" — a package size between the count and
   // "cup(s)" makes the cup a container (a measuring cup never carries a package size)
   if (unitRead && n1.ok && n1.value.d === BigInt(1) && max === null && containerCup(unitRead, between)) unitRead = { ...unitRead, unit: unitV1("container", unitRead.unit.source) };
+
   if (unitRead) k = unitRead.next;
   // "1 pint (UK) milk": the system written right after the unit
   const afterUnit = toks[k];
@@ -668,11 +706,9 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   // a registry unit. The amount cannot be carried without its unit: it is kept in the note, not invented.
   if (!unitRead && n1.ok && max === null && between.length === 0) {
     // (after any measure adjectives: "2 heaping spoonfuls sugar")
-    const w = toks[a];
-    const known = isWord(w) && UNKNOWN_MEASURES.has(w.lower);
-    const beforeOf = a === k && isWord(w) && isWord(toks[k + 1], "of") && toks[k + 2] !== undefined && !isWord(toks[k + 2], "the") && isPlainNoun(w.lower);
-    if (known || beforeOf) {
-      let c = a + 1;
+    const m = unknownMeasureAt(toks, a);
+    if (m > a) {
+      let c = m;
       if (isSym(toks[c], ".") && adjacent(toks[c - 1], toks[c])) c++;
       // (a bracketed remark before it is already a note of its own: "2 (heaping) spoonfuls")
       const measure = k > n1.next ? `${text.slice(n1.s, n1.e)} ${text.slice(toks[k].s, toks[c - 1].e)}` : text.slice(n1.s, toks[c - 1].e);
@@ -745,7 +781,8 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
         // the same unit again is summed only after an explicit "plus"/"+" ("2 tsp + ½ tsp", "1 cup plus 1/3 cup")
         if (u2.unit.canonical === last.canonical && !connector) break;
         if (!connector && cmp(base(u2.unit), base(last)) >= 0) break;
-        if (minus && cmp(base(u2.unit), base(last)) >= 0) break;
+        // (a subtraction in the same unit is exact too: "2 cups minus 1/4 cup" → 7/4 cup)
+        if (minus && cmp(base(u2.unit), base(last)) > 0) break;
         parts.push({ value: n2.value, decimal: n2.decimal, unit: u2, minus });
         qEnd = u2.e;
         k = u2.next;
@@ -936,6 +973,8 @@ function fractionUnitAt(text: string, toks: readonly Tok[], j: number): { n1: Nu
   if (leadCount !== null && leadCount > BigInt(1) && !fw.plural) return null;
   const after = readUnit(text, toks, c + 1);
   if (after !== null && PACKAGE_UNITS.has(after.unit.canonical)) return null;
+  // ("a half-inch piece fresh ginger": a length before a counted unit sizes the piece; the article is the count, §12.1)
+  if (after !== null && after.unit.dimension === "count" && unitOfWord(fw.unitWord) === "inch") return null;
   const value = leadCount !== null && leadCount > BigInt(1) ? mul(fw.value, rational(leadCount)) : fw.value;
   const unitS = t.s + fw.unitOffset;
   const unit: UnitRead = { unit: unitV1(unitOfWord(fw.unitWord)!, fw.unitWord), s: unitS, e: t.e, next: c + 1 };
@@ -1079,6 +1118,93 @@ export function isTemperatureOrTime(toks: readonly Tok[], k: number): boolean {
   const t = toks[k];
   return isSym(t, "°", "℉", "℃") || (isWord(t) && TIME_WORDS.has(t.lower));
 }
+
+/**
+ * CAN-SIZE DESIGNATION (semantic-v2, CONTRACT §12.9): "#10", "No. 303", "No 2", "number 2" — or the same in brackets —
+ * right before a container unit names the container's size class; it is not an amount. Returns the index after it, or `k`.
+ */
+export function canSizeDesignationAt(toks: readonly Tok[], k: number): number {
+  const designation = (list: readonly Tok[], i: number): number => {
+    if (isSym(list[i], "#") && list[i + 1]?.kind === "num" && adjacent(list[i], list[i + 1])) return i + 2;
+    if (isWord(list[i], "no", "number", "nr")) {
+      let j = i + 1;
+      if (isSym(list[j], ".") && adjacent(list[i], list[j])) j++;
+      if (list[j]?.kind === "num") return j + 1;
+    }
+    return i;
+  };
+  const t = toks[k];
+  let end = k;
+  if (isGroup(t)) end = designation(t.children, 0) === t.children.length && t.children.length > 0 ? k + 1 : k;
+  else end = designation(toks, k);
+  if (end === k) return k;
+  const u = toks[end];
+  const unit = isWord(u) ? unitOfWord(u.text) : null;
+  return unit !== null && CONTAINER_UNITS.has(unit) ? end : k;
+}
+
+/**
+ * COUNT WORD BEGINNING THE NAME (semantic-v2, CONTRACT §12.A A1 as refined): a SINGULAR, non-container count unit right
+ * after a count above one, followed by a PLURAL countable food, begins the food's name — "2 strip steaks", "4 rib eye
+ * steaks", "4 cube steaks", "2 sheet cakes", "2 wedge salads" → `each`, the whole name kept. Before an uncounted food it
+ * is a sloppy plural and stays the unit ("2 clove garlic", "1 1/2 stick butter"); containers are always the unit ("2 can
+ * tomatoes"); a count of one or below keeps the unit ("1 bunch scallions", "1/2 stick butter"); a plural count word agrees
+ * ("2 strips bacon").
+ */
+export function countWordBeginsName(text: string, toks: readonly Tok[], unitRead: UnitRead, value: Rational): boolean {
+  return cmp(value, rational(BigInt(1))) > 0 && countWordBeforePluralFood(text, toks, unitRead);
+}
+
+/** The count-word half of `countWordBeginsName`: a singular non-container count word followed by a plural countable food. */
+export function countWordBeforePluralFood(text: string, toks: readonly Tok[], unitRead: UnitRead): boolean {
+  const u = unitRead.unit;
+  if (u.dimension !== "count" || u.canonical === "each" || PACKAGE_UNITS.has(u.canonical)) return false;
+  const written = text.slice(unitRead.s, unitRead.e).toLowerCase().replace(/\.$/, "");
+  if (written.endsWith("s")) return false;
+  // the food after it, up to a comma, a bracket or a joining word: its last word must be a plural noun
+  let k = unitRead.next;
+  let last: string | null = null;
+  while (isWord(toks[k]) && !FUNCTION_WORDS.has((toks[k] as { lower: string }).lower)) {
+    last = (toks[k] as { lower: string }).lower;
+    k++;
+  }
+  return last !== null && pluralNoun(last);
+}
+
+/** A plural noun by its form ("steaks", "cakes", "salads"; not "asparagus", "hummus", "swiss"), or a zero plural. */
+function pluralNoun(w: string): boolean {
+  return (w.length > 2 && w.endsWith("s") && !/(?:ss|us|is)$/.test(w)) || INVARIANT_PLURALS.has(w);
+}
+
+/**
+ * UNKNOWN MEASURE (semantic-v2, CONTRACT §12.14): where a measure word that is not a registry unit starts at `a` (right
+ * after the number and any size or degree words), the index after it; else `a`. A measure word is
+ *  - a word of UNKNOWN_MEASURES (household vessels and spoons, archaic and foreign units, informal lumps: "1 gill", "2
+ *    drams", "1 tumbler", "2 ladles", "1 teacup", "1 hunk", "1 thumb", "1 stone", "1 pottle"…);
+ *  - a "-ful(l)(s)" measure by its form ("2 fistfuls", "1 can-ful", "1 tub-full", "2 ladlefuls");
+ *  - a vessel named by its use before the food ("1 coffee cup plain flour", "2 soup spoons sugar", "1 wine glass red
+ *    wine", "1 yogurt pot sugar": a plain noun, then VESSEL_MEASURES, then the food);
+ *  - any plain noun (or two) between the number and "of" ("1 hunk of Parmesan", "1 large pot of salted water", "1
+ *    dessert spoon of cocoa") — the registry units were read before this test.
+ */
+export function unknownMeasureAt(toks: readonly Tok[], a: number): number {
+  const w = toks[a];
+  if (!isWord(w)) return a;
+  const next = toks[a + 1];
+  if (UNKNOWN_MEASURES.has(w.lower) || MEASURE_BY_FORM.test(w.lower) || HYPHENATED_VESSEL.test(w.lower)) return a + 1;
+  if (!isPlainNoun(w.lower) || unitOfWord(w.text) !== null) return a;
+  const food = (t: Tok | undefined) => isWord(t) && !FUNCTION_WORDS.has(t.lower);
+  if (isWord(next) && VESSEL_MEASURES.has(next.lower) && (food(toks[a + 2]) || isWord(toks[a + 2], "of"))) return a + 2;
+  if (isWord(next, "of") && toks[a + 2] !== undefined && !isWord(toks[a + 2], "the")) return a + 1;
+  if (isWord(next) && isPlainNoun(next.lower) && unitOfWord(next.text) === null && isWord(toks[a + 2], "of") && food(toks[a + 3])) return a + 2;
+  return a;
+}
+/** "-ful" measures by their form: "fistful", "spoonfuls", "can-ful", "tub-full" (registry ones — cupful, handful — are read before). */
+const MEASURE_BY_FORM = /^\p{L}{2,}-?full?s?$/u;
+/** A vessel named by its use in one hyphenated word ("tea-cup", "soup-spoon", "wine-glass"). */
+const HYPHENATED_VESSEL = /^\p{L}+-(?:cups?|spoons?|glass(?:es)?|mugs?|bowls?)$/u;
+/** Vessels that name a measure after a word saying which one ("coffee cup", "soup spoon", "wine glass", "yogurt pot"). */
+const VESSEL_MEASURES = new Set(["cup", "cups", "spoon", "spoons", "glass", "glasses", "mug", "mugs", "bowl", "bowls", "pot", "pots", "jar", "jars", "tin", "tins"]);
 
 /** A word that can be a measure noun before "of" (not a size, form, remark or function word). */
 function isPlainNoun(w: string): boolean {

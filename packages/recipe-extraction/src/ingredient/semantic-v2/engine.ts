@@ -12,13 +12,18 @@
  * that counts a product's components ("Five spice powder", "Three cheese blend, 1 cup") is read again
  * with the number in the name (§12.9).
  *
- * semantic-v2 (Phase 2B) is semantic-v1 with families A–D repaired under CONTRACT §12. The safeguards
+ * semantic-v2 (Phase 2B) is semantic-v1 with families A–D repaired under CONTRACT §12 and §12.A. The safeguards
  * live in named functions: `nameLeftoverGuard` (name.ts, the general final guard), `multiplierAt` and
  * `fractionUnitAt` (amount.ts), `RESTATEMENT_TOLERANCE` / `sameAmount` / `roundedConversion` (amount.ts),
- * `shareOptions` (alternatives.ts, the option-preservation rule), `postFoodCountUnit` (name.ts, the
- * count-noun rule), `containerCup` and `PACKAGE_UNITS` (amount.ts), `numberInProductName` /
- * `numberNamesProductAt` (product numbers), `remarkSecondAmount` (remarks.ts) and `nonIngredientReason`
- * with its named shapes (classify.ts).
+ * `shareOptions` / `trailingHeadSplit` / `andJoinsTwoFoods` (alternatives.ts, the option-preservation rule and
+ * "and" lists), `postFoodCountUnit` (name.ts, the count-noun rule) and `countWordBeginsName` (amount.ts, §12.A A1),
+ * `containerCup`, `PACKAGE_UNITS` and `canSizeDesignationAt` (amount.ts), `unknownMeasureAt` (amount.ts, §12.14),
+ * `numberInProductName` / `numberNamesProductAt` (product numbers), `remarkSecondAmount` and
+ * `remarkMeasuresAnother` (remarks.ts, §12.11 and §12.A A3) and `nonIngredientReason` with its named shapes
+ * (classify.ts: `equipmentShape` / `agentNounTool`, `nutritionPanel`, `nutrientLabelEnd`, …). Where a family's closed
+ * vocabulary misses but the line has the family's shape, the reading goes to a person (`unclassified`), never to a
+ * confident `ready`: a holder after an unknown word ("2 chicken skewers"), a label with only milligrams, a nutrient
+ * name that is also a UK ingredient weighed in grams.
  *
  * A final check (`guardedParse`) runs the contract validator: a reader that throws, or an output that
  * would not validate (a defect), is replaced by a minimal `needs_review` reading with `unclassified`, so
@@ -28,14 +33,14 @@
 import { REASONS, type AmountUnstated, type IngredientEngine, type ParsedIngredientV1, type ReasonCode, type SpanField, type UnitV1 } from "../../contract";
 import { cmp, fromExactQuantity, rational, toExactQuantity } from "../../rational";
 import { validateParsedIngredientV1 } from "../../validate";
-import { amountStartsAt, foreignSystemRemark, groupAmount, isPriceGroup, PACKAGE_UNITS, readAmountPhrase, readStatedAmount, placeSecondary, sumInSmallest, type AmountSlots } from "./amount";
-import { nonIngredientReason, numericLead } from "./classify";
+import { amountStartsAt, foreignSystemRemark, groupAmount, isPriceGroup, PACKAGE_UNITS, readAmountPhrase, readStatedAmount, placeSecondary, sameAmount, sumInSmallest, type AmountSlots } from "./amount";
+import { equipmentShape, nonIngredientReason, numericLead } from "./classify";
 import { adjacent, isGroup, isNumberish, isSym, isWord, lex, type Tok } from "./lexer";
-import { BULLETS, CONTAINER_UNITS, FRUIT_PART_WORDS, SERVING_LABEL_WORDS, UNIT_WORDS_IN_FOOD_NAMES, FUNCTION_WORDS, INVARIANT_PLURALS, MEASURE_ADJECTIVES, PREP_ADVERBS, REMARK_WORDS, SIZE_WORDS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
+import { APPROX_WORDS, BULLETS, CONTAINER_UNITS, FRUIT_PART_WORDS, NUTRIENT_FOOD_WORDS, SERVING_LABEL_WORDS, UNIT_WORDS_IN_FOOD_NAMES, FUNCTION_WORDS, INVARIANT_PLURALS, MEASURE_ADJECTIVES, PREP_ADVERBS, REMARK_WORDS, SIZE_WORDS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
 import { numberInProductName, readNameRegion, type NameReading } from "./name";
 import { normalizeLine } from "./normalize";
-import { classifyPiece, splitOr, splitTopLevel, textOf, trimEdges, unstatedAt } from "./remarks";
-import { categoryNoun, foodHead, isRemarkOption, shareOptions, uniqueOptions, varietiesOf, withKind } from "./alternatives";
+import { classifyPiece, remarkMeasuresAnother, remarkRestatement, remarkSecondAmount, splitOr, splitTopLevel, textOf, trimEdges, unstatedAt } from "./remarks";
+import { andJoinsTwoFoods, categoryNoun, foodHead, isRemarkOption, shareOptions, uniqueOptions, varietiesOf, withKind } from "./alternatives";
 import { emptyEffects, mergeEffects, type AmountReading } from "./types";
 import { readUnit, type UnitRead } from "./unit";
 
@@ -170,10 +175,15 @@ function andJoinsFoods(seg: readonly Tok[]): boolean {
   return k > 0 && k < seg.length - 1 && plainFoodItem(seg.slice(0, k)) && plainFoodItem(stripPhrase(seg.slice(k + 1)));
 }
 
-/** A singular imprecise measure word with no number ("Pinch", "dash", "handful"): one of it is meant. */
+/**
+ * UNIT WITH NO NUMBER (CONTRACT §12.15): a singular imprecise measure word ("Pinch", "dash", "handful") or a singular
+ * count unit ("Clove of garlic") with no number is one of it; a plural or vague one ("Dashes of bitters", "a few drops")
+ * states none, and a measuring unit ("Cup of flour", "Tablespoon olive oil") may have lost its number (a person checks).
+ */
 function impliedOne(u: UnitRead, text: string): boolean {
   const written = text.slice(u.s, u.e).toLowerCase().replace(/\.$/, "");
-  return u.unit.dimension === "imprecise" && u.unit.canonical !== "inch" && !/(?:s|es)$/.test(written);
+  const singular = !/(?:s|es)$/.test(written) || written === u.unit.canonical;
+  return ((u.unit.dimension === "imprecise" && u.unit.canonical !== "inch") || (u.unit.dimension === "count" && u.unit.canonical !== "each")) && singular && written !== "ea";
 }
 
 // --- The engine -------------------------------------------------------------------------------------
@@ -246,6 +256,9 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
 
   const nonIngredient = nonIngredientReason(toks);
   if (nonIngredient) return { out: unsupported(raw, normalized, [...reasons.filter((r) => r === "input_truncated"), nonIngredient]) };
+  // (semantic-v2, §12.8) "2 chicken skewers", "1 burrito bowl": a holder that is never eaten, after a word that may name
+  // its contents — food on skewers, or the skewers? A person checks.
+  if (equipmentShape(toks) === "unsure") push(reasons, "unclassified");
 
   // Segments at top-level commas/semicolons: the head, then remarks.
   const segments = splitTopLevel(toks);
@@ -441,7 +454,10 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
   if (foreignSystemRemark(head, unit)) push(fx.reasons, "unclassified");
   // (semantic-v2, §12.8) "Sugar 10g", "Salt: 1.2 g": sugar or salt, then only a mass in g/mg — a nutrition-panel
   // line or a UK recipe weight; a person checks
-  if ((nameFromLabel || !amountAtStart) && nr.name !== null && /^(?:sugars?|salt)$/i.test(nr.name.trim()) && unit !== null && (unit.canonical === "g" || unit.canonical === "mg")) push(fx.reasons, "unclassified");
+  if ((nameFromLabel || !amountAtStart) && nr.name !== null && NUTRIENT_FOOD_WORDS.has(nr.name.trim().toLowerCase()) && unit !== null && (unit.canonical === "g" || unit.canonical === "mg")) push(fx.reasons, "unclassified");
+  // (semantic-v2, §12.8 unknown default) "Lycopene 2 mg", "Erythritol: 5 mg": a label, then only milligrams — the shape of a
+  // nutrition fact whose label is not in the nutrient vocabulary; a person checks
+  if ((nameFromLabel || !amountAtStart) && nr.name !== null && unit !== null && unit.canonical === "mg") push(fx.reasons, "unclassified");
 
   // (semantic-v2, §12.3) a size placed before the counted unit was known ("4 salmon fillets (6 oz each)", "2 chicken
   // breasts (6 oz each)"): only packaging takes a package size; of anything else it is a per-piece weight
@@ -583,6 +599,12 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
       push(fx.reasons, "unclassified");
       severalFoods = true; // §12.7 (g): different foods sharing one amount — no name is privileged
     }
+    // (semantic-v2, §12.A A4) "2 cups strawberries and blueberries", "2 tbsp butter and oil": two foods joined by "and" in
+    // the name, with no comma, share the amount too (a fixed compound or modifiers of one head stay one food)
+    if (!severalFoods && nr.name !== null && nr.options === null && listOptions.length === 0 && amt.amountWritten && andJoinsTwoFoods(nr.name)) {
+      push(fx.reasons, "unclassified");
+      severalFoods = true;
+    }
   }
   tails.forEach((seg, idx) => {
     if (idx === usedTail || seg.length === 0) return;
@@ -617,12 +639,49 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
     if (plain) {
       noteRun.push(pfx.notes[0]);
       for (const r of pfx.reasons) push(fx.reasons, r);
+      fx.amountRemarks.push(...pfx.amountRemarks);
       return;
     }
     flushRun();
     mergeEffects(fx, pfx);
   });
   flushRun();
+
+  // (semantic-v2, CONTRACT §12.11, §12.A A3) remarks that state an amount: a second amount (another product, a substitute,
+  // another state, the whole an extracted part comes from, another food) is placed by nobody → review; a restatement of
+  // the same food, whole or prepared ("1 cup chopped onion (1 medium onion)", "1 large onion (about 2 cups chopped)") is an
+  // equivalent, and the note keeps only its describing words
+  for (const r of fx.amountRemarks) {
+    if (remarkSecondAmount(r.toks) || remarkMeasuresAnother(r.toks, nr.name, text)) {
+      fx.unassigned++;
+      continue;
+    }
+    // (only a line with its own amount has an amount to restate)
+    const re = quantity === null ? null : remarkRestatement(text, r.toks);
+    if (re === null || re.amount.quantity?.kind !== "exact") continue;
+    const rq = re.amount.quantity;
+    const ru: UnitV1 = re.amount.unit ?? { canonical: "each", dimension: "count", source: "" };
+    if (ru.dimension === "imprecise") continue; // ("(a pinch)": no amount to restate with)
+    if (unit !== null && quantity?.kind === "exact" && ru.dimension === unit.dimension && (ru.dimension === "mass" || ru.dimension === "volume") && sameAmount(quantity, unit, rq, ru) === false) {
+      fx.unassigned++;
+      continue;
+    }
+    if ((unit !== null && ru.canonical === unit.canonical) || slots.equivalents.some((x) => x.unit.canonical === ru.canonical)) continue;
+    slots.equivalents.push({ quantity: rq, unit: ru });
+    push(fx.reasons, "equivalent_quantity_stated");
+    const nameWords = new Set((nr.name ?? "").toLowerCase().split(/\s+/));
+    const describing = r.toks.filter((t) => isWord(t) && !nameWords.has(t.lower) && !APPROX_WORDS.has(t.lower) && (SIZE_WORDS.has(t.lower) || TRAILING_PREP_WORDS.has(t.lower) || PREP_ADVERBS.has(t.lower) || (REMARK_WORDS.has(t.lower) && !["more", "less", "so", "extra"].includes(t.lower)) || ["ripe"].includes(t.lower)));
+    // (the remark may share its note piece with plain remarks after it: "about 1 medium, divided")
+    const remarkText = textOf(text, r.toks);
+    const at = fx.notes.findIndex((n) => n.s === r.s && n.text.startsWith(remarkText));
+    if (at >= 0) {
+      const rest = fx.notes[at].text.slice(remarkText.length).replace(/^\s*,\s*/, "");
+      const kept = describing.map((t) => (t as { text: string }).text).join(" ");
+      const joined = [kept, rest].filter((x) => x.length > 0).join(", ");
+      if (joined.length > 0) fx.notes[at] = { s: fx.notes[at].s, text: joined };
+      else fx.notes.splice(at, 1);
+    }
+  }
 
   // Alternatives (CONTRACT §7.8): every option, in order; the name is then null. Options are completed only
   // where the grammar says so (alternatives.ts); a word is never invented and an option never dropped.

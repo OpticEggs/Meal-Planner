@@ -139,10 +139,13 @@ describe("counted things", () => {
     expect(read("2 (10-inch) flour tortillas")).toMatchObject({ status: "ready", quantity: { numerator: "2" }, name: "flour tortillas", note: "10-inch" });
   });
 
-  // semantic-v2: "Pinch of salt" → 1 pinch (holdout-v2 label ing-h2-0061); a precise unit gets no amount
-  it("a unit with no number is read; only a singular imprecise measure is one", () => {
+  // semantic-v2: "Pinch of salt" → 1 pinch (holdout-v2 label ing-h2-0061); CONTRACT §12.15 (revised): a singular count unit
+  // is one too ("Bunch of cilantro" → 1 bunch, was needs_review); a measuring unit or a plural gets no amount
+  it("a unit with no number is read; a singular imprecise or count unit is one", () => {
     expect(read("Pinch of salt")).toMatchObject({ status: "ready", quantity: { numerator: "1" }, unit: { canonical: "pinch" }, name: "salt" });
-    expect(read("Bunch of cilantro")).toMatchObject({ status: "needs_review", quantity: null, unit: { canonical: "bunch" }, name: "cilantro" });
+    expect(read("Bunch of cilantro")).toMatchObject({ status: "ready", quantity: { numerator: "1" }, unit: { canonical: "bunch" }, name: "cilantro" });
+    expect(read("Bunches of cilantro")).toMatchObject({ status: "needs_review", quantity: null, unit: { canonical: "bunch" }, name: "cilantro" });
+    expect(read("Cup of flour")).toMatchObject({ status: "needs_review", quantity: null, unit: { canonical: "cup" }, name: "flour" });
   });
 
   it("case of unit words does not change the unit (except T/t, the cooking convention)", () => {

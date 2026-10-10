@@ -1,5 +1,6 @@
 /** semantic-v2 · shared internal shapes (not part of the public contract). */
 import type { AmountUnstated, EquivalentV1, PackageSizeV1, QuantityV1, ReasonCode, UnitV1 } from "../../contract";
+import type { Tok } from "./lexer";
 
 /** A piece of the note with its source offset (the note is assembled in source order). */
 export interface NotePiece {
@@ -25,9 +26,11 @@ export interface Effects {
   unassigned: number;
   /** A remark that only says the amount is approximate ("1 cup water, about", "(approx.)"). */
   approximate: boolean;
+  /** Remarks that state an amount ("(1 lime)", "(about 2 cups chopped)", "from 1/3 cup dry"): decided once the name is known. */
+  amountRemarks: { s: number; toks: Tok[] }[];
 }
 
-export const emptyEffects = (): Effects => ({ notes: [], reasons: [], optional: false, unstated: [], form: null, options: [], unassigned: 0, approximate: false });
+export const emptyEffects = (): Effects => ({ notes: [], reasons: [], optional: false, unstated: [], form: null, options: [], unassigned: 0, approximate: false, amountRemarks: [] });
 
 export function mergeEffects(into: Effects, from: Effects): void {
   into.notes.push(...from.notes);
@@ -38,6 +41,7 @@ export function mergeEffects(into: Effects, from: Effects): void {
   into.options.push(...from.options);
   into.unassigned += from.unassigned;
   into.approximate ||= from.approximate;
+  into.amountRemarks.push(...from.amountRemarks);
 }
 
 /** The amount part of a line. */

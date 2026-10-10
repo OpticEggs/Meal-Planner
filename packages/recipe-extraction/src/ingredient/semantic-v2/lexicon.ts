@@ -196,7 +196,16 @@ export const UNKNOWN_MEASURES = setOf(
     "sachet sachets glass glasses mug mugs spoonful spoonfuls shot shots jigger jiggers cl cls centiliter centiliters centilitre centilitres " +
     "peck pecks bushel bushels dab dabs pat pats lump lumps sliver slivers twist twists nub nubs smidgen smidgens " +
     // semantic-v2 (§12.14): packaging and batch words outside the registry ("1 sleeve saltine crackers", "1 recipe pie dough")
-    "sleeve sleeves recipe recipes batch batches",
+    "sleeve sleeves recipe recipes batch batches roll rolls " +
+    // household vessels and spoons used as measures ("1 teacup sugar", "2 ladles stock", "1 bowl rice", "1 saucer milk")
+    "teacup teacups coffeecup coffeecups tumbler tumblers beaker beakers jug jugs pitcher pitchers carafe carafes decanter decanters bowl bowls " +
+    "saucer saucers ladle ladles spoon spoons soupspoon soupspoons tablespoonful bucket buckets pail pails crate crates pottle pottles sack sacks " +
+    "basket baskets barrel barrels keg kegs flagon flagons tray trays " +
+    // archaic and foreign units ("1 gill cream", "2 drams vanilla", "1 stone potatoes", "1 catty pork")
+    "gill gills dram drams drachm drachms minim minims noggin noggins pony ponies firkin firkins stone stones catty catties tael taels " +
+    // informal lumps and portions ("1 hunk Parmesan", "1 thumb ginger", "1 slab tofu", "a blob of butter")
+    "hunk hunks chunk chunks slab slabs thumb thumbs blob blobs wodge wodges swig swigs slug slugs smidge tad wineglass wineglasses thimble " +
+    "thimbles net nets wheel wheels log logs brick bricks measure measures finger fingers seer seers rack racks leg legs",
 );
 
 /** Words after a number that make it a temperature or a time, never an amount ("350°F", "10 minutes"). */
@@ -239,6 +248,12 @@ export const REMARK_WORDS = setOf(
     "favorite favourite preferably ideally optional kind brand type variety style",
 );
 
+/** Form and sourcing words that offer a food in another form when they open a choice ("fresh … or dried", §12.7 d). */
+export const FORM_CHOICE_WORDS = setOf(
+  "fresh frozen thawed dried dry canned tinned jarred bottled boxed packaged homemade home-made store-bought storebought bought cooked uncooked raw " +
+    "precooked pre-cooked smoked roasted toasted salted unsalted sweetened unsweetened",
+);
+
 /**
  * Adjectives that describe a version of a food — colour, taste, heat, fat and salt level, texture, grade and
  * processing ("red", "unsalted", "low-fat", "extra-virgin", "rolled"). None of them is a food. With the
@@ -258,51 +273,117 @@ export const ADJECTIVE_WORDS = setOf(
 
 
 /**
- * SHARED-HEAD MODIFIERS (semantic-v2, CONTRACT §12.7 b, f): for a product head, the words that name what the product is
- * made from or which kind it is, and that do NOT name a product of that kind on their own — "chicken" is not a broth,
- * "lemon" is not a juice, "hamburger" is not a bun. Before "or … <head>" such a word shares the head ("lemon or lime
- * juice" → lemon juice, lime juice; "chicken, beef, or vegetable broth"); a word that is a product of the kind by itself
- * ("feta or goat cheese", "sriracha or hot sauce", "cumin or chili powder", "tea or apple juice") is not listed, so
- * those options stay as written. A closed list of modifier words per head, not of inputs.
+ * SOURCE CLASSES (semantic-v2, CONTRACT §12.7 b, f): attributive nouns that name what a product is made from — meats,
+ * nuts and seeds, fruits, vegetables, grains. None of them is, on its own, a product of the heads it is listed for below
+ * ("chicken" is not a broth, "almond" is not a butter, "lemon" is not a juice, "pork" is not a sausage). General food
+ * classes, not lists of inputs.
+ */
+const MEAT_SOURCES = "chicken beef pork turkey lamb veal duck goose venison bison buffalo ham fish seafood shrimp crab lobster salmon tuna clam rabbit goat";
+const NUT_SEED_SOURCES = "almond cashew peanut pecan walnut hazelnut pistachio macadamia pine brazil sunflower pumpkin sesame flax flaxseed chia hemp poppy soy soybean";
+const FRUIT_SOURCES = "apple pear lemon lime orange grapefruit tangerine pineapple cranberry grape cherry pomegranate peach mango apricot plum blueberry raspberry strawberry blackberry coconut tomato passion";
+const VEGETABLE_SOURCES = "onion garlic celery carrot mushroom vegetable veggie beet ginger chili chile shallot leek";
+const GRAIN_SOURCES = "rice oat wheat corn rye spelt barley buckwheat millet chickpea tapioca potato quinoa sorghum teff arrowroot";
+
+/**
+ * SHARED-HEAD MODIFIERS (semantic-v2, CONTRACT §12.7 b, f): for a product head, the source classes and the kind words
+ * that do NOT name a product of that kind on their own. Before "or … <head>" such a word shares the head ("lemon or lime
+ * juice" → lemon juice, lime juice; "almond or cashew butter"; "pork or chicken sausage"; "chicken, beef, or vegetable
+ * broth"); a word that is a product of the kind by itself ("feta or goat cheese", "sriracha or hot sauce", "tahini or
+ * peanut butter", "tea or apple juice", "honey or maple syrup") is not listed, so those options stay as written. "_" is a
+ * space ("hot_dog", "whole_wheat"); `$MEAT`, `$NUT`, `$FRUIT`, `$VEG`, `$GRAIN` stand for the source classes above.
  */
 const SHARED_HEADS: Readonly<Record<string, string>> = {
-  broth: "chicken beef vegetable veggie turkey fish seafood bone mushroom veal pork ham lamb duck shrimp miso",
-  stock: "chicken beef vegetable veggie turkey fish seafood bone mushroom veal pork ham lamb duck shrimp",
-  bouillon: "chicken beef vegetable fish",
-  juice: "lemon lime orange grapefruit apple pineapple cranberry grape tomato carrot pomegranate cherry",
-  zest: "lemon lime orange grapefruit",
-  buns: "hamburger burger hot_dog hotdog slider hoagie sub brioche dinner sandwich",
-  rolls: "dinner sandwich hoagie sub kaiser brioche",
-  milk: "almond oat soy rice coconut cashew hemp dairy",
-  oil: "olive vegetable canola coconut sesame peanut avocado sunflower grapeseed corn safflower walnut",
-  vinegar: "rice wine cider apple_cider white_wine red_wine rice_wine balsamic sherry malt champagne white distilled",
-  flour: "all-purpose bread cake pastry almond coconut rice oat chickpea tapioca spelt rye buckwheat corn self-rising",
-  extract: "vanilla almond peppermint lemon orange maple coconut",
-  seeds: "sesame poppy pumpkin sunflower chia flax caraway fennel",
-  noodles: "rice egg glass udon soba",
-  powder: "garlic onion chili chile curry cocoa baking ginger mustard",
-  paste: "tomato curry chili garlic ginger",
+  broth: "$MEAT $VEG bone miso",
+  stock: "$MEAT $VEG bone",
+  bouillon: "$MEAT $VEG",
+  juice: "$FRUIT $VEG",
+  zest: "lemon lime orange grapefruit tangerine",
+  nectar: "$FRUIT",
+  cider: "$FRUIT hard",
+  jam: "$FRUIT",
+  jelly: "$FRUIT",
+  preserves: "$FRUIT",
+  marmalade: "$FRUIT",
+  curd: "$FRUIT",
+  sorbet: "$FRUIT",
+  cheese: "cottage cream goat sheep blue string farmer farmer's",
+  extract: "$FRUIT vanilla almond peppermint mint maple anise",
+  butter: "$NUT apple pumpkin cookie seed",
+  milk: "$NUT $GRAIN coconut goat cow sheep dairy",
+  oil: "$NUT olive vegetable canola coconut avocado grapeseed corn safflower",
+  flour: "$GRAIN $NUT all-purpose bread cake pastry self-rising whole_wheat semolina",
+  sausage: "$MEAT italian breakfast andouille chorizo kielbasa bratwurst polish",
+  tenderloin: "$MEAT",
+  chops: "$MEAT",
+  salt: "$VEG sea kosher table seasoned truffle smoked pink himalayan flaky",
+  sugar: "coconut cane palm date maple turbinado demerara caster confectioners confectioners' icing",
+  vinegar: "rice wine cider apple_cider white_wine red_wine rice_wine balsamic sherry malt champagne distilled coconut",
+  tomatoes: "cherry grape plum roma heirloom beefsteak vine campari",
+  buns: "hamburger burger hot_dog hotdog slider hoagie sub brioche dinner sandwich potato kaiser",
+  rolls: "hamburger burger hot_dog hotdog slider hoagie sub brioche dinner sandwich potato kaiser hawaiian crescent",
+  nuts: "$NUT",
+  seeds: "$NUT caraway fennel cumin coriander mustard nigella",
+  noodles: "$GRAIN egg glass udon soba",
+  powder: "$VEG curry cocoa baking mustard",
+  paste: "$VEG curry",
   sauce: "soy fish tomato barbecue bbq pizza pasta",
   rice: "jasmine basmati arborio sushi",
-  beans: "kidney pinto navy cannellini lima garbanzo great_northern refried black white red green",
-  bread: "white wheat whole_wheat rye sourdough multigrain french italian pita",
-  yogurt: "greek vanilla coconut soy",
-  syrup: "maple corn simple agave golden",
+  beans: "kidney pinto navy cannellini lima garbanzo great_northern refried",
+  bread: "wheat whole_wheat rye sourdough multigrain french italian pita",
+  yogurt: "$FRUIT greek coconut soy",
+  syrup: "$FRUIT maple corn simple agave golden",
   greens: "collard mustard turnip beet salad",
   tortillas: "corn flour",
   scallops: "sea bay",
   seasoning: "taco cajun creole poultry steak fajita",
-  potatoes: "russet yukon_gold red new fingerling baking",
-  steak: "flank skirt hanger flat_iron strip sirloin round cube minute tri-tip porterhouse t-bone",
-  chops: "pork lamb veal",
+  potatoes: "russet yukon_gold new fingerling baking",
+  steak: "$MEAT flank skirt hanger flat_iron strip sirloin round cube minute tri-tip porterhouse t-bone",
 };
+/**
+ * PART HEADS: nouns that name a part or cut taken from a food ("broccoli or cauliflower florets", "salmon or cod
+ * fillets", "walnut or pecan halves", "mango or pineapple chunks"). No single food word is a product of such a head's
+ * kind by itself, so a one-word earlier option always shares it (CONTRACT §12.7 b).
+ */
+export const PART_HEADS = setOf(
+  "halves pieces chunks bits florets fillets filets slices wedges rings spears tips strips cubes segments kernels leaves sprigs stalks ribs hearts " +
+    "crumbs flakes shavings nibs shoots sprouts puree purée",
+);
+const SOURCE_CLASSES: Readonly<Record<string, string>> = { $MEAT: MEAT_SOURCES, $NUT: NUT_SEED_SOURCES, $FRUIT: FRUIT_SOURCES, $VEG: VEGETABLE_SOURCES, $GRAIN: GRAIN_SOURCES };
 export const SHARED_HEAD_MODIFIERS: Readonly<Record<string, ReadonlySet<string>>> = Object.fromEntries(
   Object.entries(SHARED_HEADS).flatMap(([head, mods]) => {
     // ("hot_dog": a two-word source, written with a space in a line)
-    const set = new Set(words(mods).map((w) => w.replace(/_/g, " ")));
-    const singular = head.endsWith("s") ? head.slice(0, -1) : `${head}s`;
-    return [[head, set], [singular, set]];
+    const expanded = words(mods).flatMap((w) => (SOURCE_CLASSES[w] !== undefined ? words(SOURCE_CLASSES[w]) : [w]));
+    const set = new Set(expanded.map((w) => w.replace(/_/g, " ")));
+    const singular = head.endsWith("es") && head !== "tomatoes" && head !== "potatoes" ? head.slice(0, -1) : head.endsWith("s") ? head.slice(0, -1) : `${head}s`;
+    const forms = head === "tomatoes" || head === "potatoes" ? [head, head.slice(0, -2)] : [head, singular];
+    return forms.map((f) => [f, set] as const);
   }),
+);
+
+/**
+ * COMPOUND MODIFIERS: two-word modifiers written before a head ("whole wheat flour", "white wine vinegar", "apple cider
+ * vinegar", "hot dog buns", "Yukon Gold potatoes", "extra virgin olive oil"), so a choice "white or whole wheat flour"
+ * shares only the head "flour". Every two-word source above, and the usual compound modifiers of product names.
+ */
+export const COMPOUND_MODIFIERS: ReadonlySet<string> = new Set([
+  ...Object.values(SHARED_HEADS).flatMap((m) => words(m).filter((w) => w.includes("_")).map((w) => w.replace(/_/g, " "))),
+  "whole wheat", "whole grain", "all purpose", "extra virgin", "stone ground", "self rising", "white wine", "red wine", "rice wine",
+]);
+
+/**
+ * FIXED "AND" COMPOUNDS (CONTRACT §7.6, §12.A A4): names of one food or flavour written with "and" — a closed list of
+ * dish, product and flavour names, matched as whole word sequences.
+ */
+export const AND_COMPOUNDS: readonly string[] = [
+  "salt and pepper", "half and half", "macaroni and cheese", "mac and cheese", "sweet and sour", "hot and sour", "sweet and spicy", "oil and vinegar",
+  "pork and beans", "franks and beans", "beans and franks", "peanut butter and jelly", "cookies and cream", "peaches and cream", "surf and turf",
+  "fish and chips", "bangers and mash", "bread and butter", "salt and vinegar", "sour cream and onion", "spinach and artichoke", "chicken and dumplings",
+  "biscuits and gravy", "corned beef and cabbage", "liver and onions", "pb and j", "pigs in a blanket", "sweet and salty", "salt and pepper seasoning",
+];
+/** Product heads whose name may open with a flavour pair ("salt and vinegar potato chips", "garlic and herb seasoning"). */
+export const FLAVOUR_HEADS = setOf(
+  "sauce sauces dressing dip dips soup soups chips crisps seasoning rub marinade mix blend spread glaze sausage sausages crackers cereal granola bars " +
+    "yogurt bread paste",
 );
 
 /**
@@ -442,6 +523,15 @@ export const INSTRUCTION_VERBS = setOf(
     "scatter sift measure weigh",
 );
 export const WEAK_INSTRUCTION_VERBS = setOf("season whip line spread roll slice set cut chop dice mince peel grate garnish drizzle brush layer fry");
+/**
+ * Imperative verbs that also open food names ("Brown sugar", "Roast chicken", "Top sirloin", "Toast", "Cool Whip"): a line
+ * opening with one is an instruction only when a determiner, preposition or adverb follows it at once in the first
+ * comma segment ("Brown the beef", "Roast for 20 minutes", "Top with cheese", "Cool completely"), or a lone verb ends
+ * with "!" ("Enjoy!") — semantic-v2 (R1 L2).
+ */
+export const FOOD_NAME_VERBS = setOf("brown roast grill cool store top toast sear steam braise crack shake taste enjoy broil poach char flip rest stuff pipe");
+/** Words right after such a verb that make the line a sentence. */
+export const IMPERATIVE_CUES = setOf("the a an all with in into onto over under for until on at to from completely thoroughly well briefly gently lightly immediately again it them");
 /** Words that open a yield line ("Serves 4", "Makes 12 cookies"). */
 export const YIELD_WORDS = setOf("serves serve makes yields yield servings");
 
@@ -456,8 +546,16 @@ export const NUTRIENT_WORDS = setOf(
     "sodium potassium calcium iron fat fats saturated unsaturated monounsaturated polyunsaturated trans sugars added total dietary net per serving " +
     // semantic-v2 (CONTRACT §12.8): the rest of a nutrition panel's vocabulary — vitamins, minerals, caffeine, daily value
     "vitamin vitamins mineral minerals magnesium zinc phosphorus selenium copper manganese iodine chromium molybdenum chloride fluoride " +
-    "folate folic acid niacin riboflavin thiamin thiamine biotin pantothenic choline caffeine omega-3 omega-6 daily value dv amount",
+    "folate folic acid niacin riboflavin thiamin thiamine biotin pantothenic choline caffeine omega-3 omega-6 daily value dv amount " +
+    // abbreviations and spelling variants of a nutrition panel ("Sat. fat", "Carb", "Prot", "Chol", "Sugar alcohols", "Fibre")
+    "sat satfat sat-fat carb prot chol cholest sod fibres fibers alcohols polyols mono poly monounsat polyunsat unsat kcals cal cals " +
+    "saturates monounsaturates polyunsaturates which",
 );
+/**
+ * Words that name a nutrient AND a food bought by weight in UK recipes ("Sugar 10g", "Glucose 50g", "Starch 10 g"): a
+ * line made of one of them and only a mass in g/mg is uncertain (CONTRACT §12.8) — a person checks.
+ */
+export const NUTRIENT_FOOD_WORDS = setOf("sugar sugars salt glucose fructose lactose sucrose maltose dextrose starch alcohol");
 /**
  * Units of a nutrition value ("250 kcal", "10 g", "200 mg", "15%"), abbreviated or spelled out ("20 grams", "300
  * milligrams", "2 micrograms"). Written after a nutrient label only; never read as food units here.
@@ -482,7 +580,8 @@ export const RATING_HEADS = setOf("stars votes ratings reviews rated rating");
  */
 export const TIME_LABEL_WORDS = setOf(
   "prep preparation cook cooking total active inactive hands-on passive ready rest resting chill chilling bake baking rise rising proof proofing " +
-    "marinate marinating freeze freezing soak soaking setting cool cooling time times in for about approximately approx and plus or to up at least overnight wait",
+    "marinate marinating freeze freezing soak soaking setting cool cooling time times in for about approximately approx and plus or to up at least overnight wait " +
+    "pressure slow high low",
 );
 /** Recipe-card metadata labels before a colon ("Course: dinner", "Cuisine: Italian", "Keyword: …"): the value is never food. */
 export const META_LABEL_WORDS = setOf("course courses cuisine cuisines keyword keywords author authors diet diets category categories difficulty level skill tags tag occasion occasions season cost");
@@ -494,11 +593,14 @@ export const PAGE_WORDS = setOf(
   "print jump skip to the a an this our my your recipe recipes see below above card watch video videos nutrition facts fact information info " +
     "instructions instruction directions method notes note advertisement advertisements ad ads sponsored share pin save rate comment comments review " +
     "reviews tips tip faq faqs here click tap scroll continue reading read more back top full post page shopping list add get follow us and for of " +
-    "on in it with how make amount per serving servings information",
+    "on in it with how make amount per serving servings information " +
+    // semantic-v2 (R1 L2): recipe-card controls and prompts ("Cook Mode", "Save to Recipe Box", "Hide Images", "No reviews yet")
+    "mode box content get hide show images image photos photo steps step mark complete did you yet no keep screen awake tried subscribe newsletter " +
+    "email cart cook or as made",
 );
 export const PAGE_KEYWORDS = setOf(
   "print jump skip card watch video videos nutrition facts instructions directions method notes advertisement advertisements sponsored share pin save " +
-    "rate comments reviews tips faq faqs click tap scroll continue amount",
+    "rate comments reviews tips faq faqs click tap scroll continue amount mode hide show images subscribe newsletter tried did get",
 );
 /** Credit lines ("Recipe adapted from …", "Adapted from …", "Recipe by …", "Photo by …"), as opening word sequences. */
 export const CREDIT_OPENERS: readonly (readonly string[])[] = [
@@ -506,21 +608,104 @@ export const CREDIT_OPENERS: readonly (readonly string[])[] = [
   ["photo", "by"], ["photos", "by"], ["photography", "by"], ["inspired", "by"], ["recipe", "source"], ["recipe", "credit"],
 ];
 /**
- * Equipment: head nouns that are equipment, and the modifiers that make an equipment name with an ambiguous head
- * ("baking sheet", "piping bag", "loaf pan", "parchment paper"). Used after a "you will need" label and for a bare
- * equipment line; a container unit followed by a food ("1 bag frozen peas", "2 sheets puff pastry") is food.
+ * EQUIPMENT (semantic-v2, CONTRACT §12.8 non-food items): kitchen TOOLS are nouns that name an implement, a vessel or a
+ * wrapping that is never eaten — pans, dishes, plates, pots, ovens, cookers, skillets, woks, racks of the oven, moulds,
+ * ramekins, liners, foil, twine, wrap, towels, mitts, scales, slicers, peelers, blenders, thermometers… With such a noun
+ * as the head of a line (whatever the words before it say: "1 potato masher", "1 egg slicer", "1 cast iron skillet"),
+ * the line is equipment. A general English class of utensil nouns, not a list of inputs.
  */
-export const EQUIPMENT_HEADS = setOf(
-  "pan pans dish dishes bowl bowls skillet skillets pot pots mixer mixers processor blender thermometer rack racks mold molds mould moulds cutter cutters " +
-    "whisk spatula spatulas ramekin ramekins skewer skewers tray trays board boards knife knives peeler grater zester sieve strainer colander ladle tongs " +
-    "liner liners towel towels twine mandoline steamer wok griddle sheet sheets bag bags tin tins paper foil wrap",
+export const EQUIPMENT_TOOL_HEADS = setOf(
+  "pan pans skillet skillets wok woks saucepan saucepans stockpot stockpots pot pots oven ovens cooker cookers maker makers iron irons griddle " +
+    "griddles dish dishes plate plates platter platters ramekin ramekins mold molds mould moulds tray trays board boards stone stones steel steels " +
+    "mat mats liner liners parchment foil twine towel towels mitt mitts glove gloves scale scales slicer slicers peeler peelers blender blenders " +
+    "processor processors thermometer thermometers grater graters zester zesters masher mashers press presses juicer juicers reamer reamers " +
+    "spinner spinners scraper scrapers torch torches mallet mallets needle needles timer timers spatula spatulas whisk whisks tongs ladle ladles " +
+    "sieve sieves strainer strainers colander colanders mandoline mandolines mandolin knife knives cutter cutters brush brushes pin pins grinder " +
+    "grinders mill mills shaker shakers funnel funnels pestle pestles mortar mortars microplane microplanes toothpick toothpicks cheesecloth " +
+    "kettle kettles baster basters spoon spoons fork forks trivet trivets dehydrator dehydrators opener openers ramekin thermometer cleaver cleavers " +
+    "scissors shears tweezers grill grills smoker smokers chopsticks spiralizer spiralizers baller ballers corer corers sifter sifters squeezer " +
+    "squeezers nutcracker nutcrackers skimmer skimmers silpat springform stand stands spider spiders machine machines circulator circulators",
 );
-export const EQUIPMENT_MODIFIERS = setOf(
-  "baking cookie sheet roasting muffin loaf cake springform bundt tart pie piping pastry parchment wax waxed aluminum aluminium plastic cling " +
-    "zip-top ziplock ziploc resealable freezer cutting mixing stand food hand wire cooling casserole square round rimmed nonstick non-stick cast-iron " +
-    "cupcake silicone wooden bamboo metal " +
-    "oven-safe heatproof heat-proof glass metal kitchen paper",
+/**
+ * KITCHEN ACTION VERBS whose agent nouns ("-er"/"-or": slicer, crusher, pitter, separator, ricer, muddler, sharpener)
+ * name a tool (`agentNounTool`). Verbs whose agent noun names a food are left out: roast, broil, fry, boil, stew, bake
+ * (roaster, broiler, fryer: chickens), cream (creamer), crack (crackers), cool (wine cooler), wrap (wonton wrappers),
+ * dip, fill, season.
+ */
+export const KITCHEN_ACTION_VERBS = setOf(
+  "slice peel grate zest mash juice spin scrape time mix blend open cut pit crush separate beat rice muddle test steam smoke cook make shake grind " +
+    "sift squeeze skim ball core dehydrate spiralize strain dispense sharpen warm poach toast chop dice mince whisk stir press measure scoop " +
+    "pour spread strip divide knead roll seal infuse aerate baste carve scale shuck crimp stuff dredge drain chill freeze shred whip melt grill " +
+    "julienne zest hull stem devein debone fillet",
 );
+
+/**
+ * VESSEL HEADS (semantic-v2, CONTRACT §12.8): nouns that are equipment only in some compounds, because they also hold,
+ * portion or name food ("tea bags", "puff pastry sheets", "cinnamon sticks", "rice paper", "onion rings", "lamb rack",
+ * "peanut butter cups", "wonton wrappers"). Such a head is equipment when the word right before it is a material or
+ * kitchen-use word (EQUIPMENT_MATERIAL_WORDS) or one of the purpose words of that head below ("piping bag", "popsicle
+ * sticks", "wax paper", "tart ring", "cooling rack", "paper baking cups", "mason jars"). With any other word before it,
+ * a `food` head stays food and an `unsure` head (one that holds food but is never eaten: skewers, picks, bowls, jars,
+ * glasses) goes to a person; with no word, or only size and shape words, before them, BARE_EQUIPMENT_HEADS are
+ * equipment ("6 skewers", "1 large bowl"). Each purpose list is a closed class of what that vessel is made for.
+ */
+const VESSEL_HEADS: Readonly<Record<string, [policy: "food" | "unsure", purposes: string]>> = {
+  bag: ["food", "piping pastry icing decorating zip-top ziptop ziplock zip-lock ziploc resealable freezer storage sandwich snack gallon-size quart-size sandwich-size snack-size gallon quart treat oven roasting brining vacuum sous-vide trash garbage cheesecloth jelly nut-milk"],
+  boat: ["food", "gravy sauce"],
+  cup: ["food", "muffin cupcake baking custard souffle soufflé measuring dixie espresso shot"],
+  sheet: ["food", "baking cookie rimmed"],
+  stick: ["food", "popsicle lollipop lolly pop craft cocktail treat"],
+  wrap: ["food", "plastic cling saran beeswax"],
+  wrapper: ["food", "cupcake muffin baking"],
+  paper: ["food", "wax waxed parchment baking kitchen tissue butcher greaseproof cupcake muffin"],
+  ring: ["food", "tart cake pastry mousse egg cookie biscuit flan"],
+  rack: ["food", "wire cooling roasting baking oven drying steaming"],
+  tin: ["food", "muffin loaf cake baking tart pie roasting bundt springform cupcake patty"],
+  bottle: ["food", "spray squeeze"],
+  box: ["food", "cake pizza bento lunch storage cardboard"],
+  container: ["food", "storage freezer"],
+  scoop: ["food", "cookie cream melon portion"],
+  steamer: ["food", "bamboo vegetable electric rice"],
+  mixer: ["food", "stand hand handheld electric"],
+  fryer: ["food", "air deep electric"],
+  string: ["food", "kitchen butcher butcher's baker's cotton"],
+  basket: ["food", "frying fry steamer bread wire"],
+  peel: ["food", "pizza bread baking"],
+  tip: ["food", "piping star round decorating icing pastry"],
+  skewer: ["unsure", "kebab kabob shish long flat"],
+  pick: ["unsure", "cocktail party"],
+  bowl: ["unsure", "salad soup cereal dessert serving mixing"],
+  jar: ["unsure", "mason canning jelly jam kilner preserving storage spice half-pint pint quart sterilized sterilised clean empty"],
+  glass: ["unsure", "wine shot martini highball champagne coupe pint rocks old-fashioned collins drinking tall"],
+};
+const PLURAL_OF: Readonly<Record<string, string>> = { box: "boxes", glass: "glasses" };
+export const EQUIPMENT_VESSEL_HEADS: Readonly<Record<string, { policy: "food" | "unsure"; purposes: ReadonlySet<string> }>> = Object.assign(
+  Object.create(null),
+  Object.fromEntries(
+    Object.entries(VESSEL_HEADS).flatMap(([head, [policy, purposes]]) => {
+      const entry = { policy, purposes: setOf(purposes) };
+      return [[head, entry], [PLURAL_OF[head] ?? `${head}s`, entry]];
+    }),
+  ),
+);
+/** Vessel heads that are equipment with no modifier at all ("6 skewers", "2 bowls", "Cocktail picks"). */
+export const BARE_EQUIPMENT_HEADS = setOf("skewer skewers pick picks bowl bowls");
+/**
+ * Materials and kitchen uses that make ANY vessel head equipment ("wooden skewers", "plastic bag", "glass jars",
+ * "silicone cups", "baking sheets", "mixing bowl", "measuring cups", "kitchen string"). General classes of words.
+ */
+export const EQUIPMENT_MATERIAL_WORDS = setOf(
+  "wooden wood bamboo metal steel stainless stainless-steel aluminum aluminium plastic paper parchment foil silicone glass ceramic cast-iron enamel " +
+    "enameled enamelled nonstick non-stick copper rubber nylon disposable reusable heatproof heat-proof ovenproof oven-proof oven-safe microwave-safe " +
+    "dishwasher-safe freezer-safe airtight muslin mesh fine-mesh " +
+    "baking roasting mixing cutting cooling piping measuring serving storage canning preserving decorating icing kitchen",
+);
+/** Size and shape words of an equipment item ("1 large heavy-bottomed pot", "1 9-inch square pan"): never decide the head. */
+export const EQUIPMENT_SHAPE_WORDS = setOf("deep shallow heavy heavy-bottomed heavy-duty rimmed square round oval rectangular tall wide narrow flat extra");
+/** Count and package nouns before an equipment item ("1 roll kitchen twine", "1 box toothpicks", "2 sheets aluminum foil", "1 pair tongs"). */
+export const EQUIPMENT_COUNT_NOUNS = setOf("roll rolls set sets pair pairs box boxes package packages pack packs packet packets bag bags sheet sheets piece pieces length lengths");
+/** Words that continue an equipment line after its head ("1 piping bag fitted with a star tip", "6 jars with lids"). */
+export const EQUIPMENT_CONTINUATIONS = setOf("with fitted lined greased sprayed for about to that which set placed coated brushed covered");
 /** Words of a label that introduces what to have ready ("You will need:", "You'll need:", "What you'll need:"). */
 export const NEED_WORDS = setOf("need needed needs require required");
 /**
@@ -561,12 +746,18 @@ export const HEADING_WORDS = setOf("ingredients ingredient");
 export const BULLETS = new Set(["-", "•", "·", "*", "–", "—", "‣", "◦", "▪", "▫", "■", "□", "●", "○", "►", "▸", "➤", "→", "✓", "✔", "+", "▢", "☐", "◻", "◽", "❏", "❑"]);
 
 /**
- * REMARK SECOND-AMOUNT MARKERS (CONTRACT §12.11): an amount inside a remark measures a source, another state or a
- * substitute — not the line's food — when the remark also says where it comes from or what it becomes ("from", "makes",
- * "yields"), names a substitution ("use", "substitute", "instead") or another state of the food (dry, uncooked, cooked).
+ * REMARK SECOND-AMOUNT MARKERS (CONTRACT §12.11, §12.A A3): an amount inside a remark measures another product or a
+ * substitute when the remark says what it becomes ("makes", "yields") or names a substitution ("use", "substitute",
+ * "instead"), and another state of the food when it names one (dry, uncooked, cooked, soaked) that the name does not.
+ * "from" alone decides nothing ("1 cup chopped onion (from 1 large onion)" restates the amount, §12.A A3).
  */
-export const REMARK_SOURCE_WORDS = setOf("from makes make yields yield using use substitute substituting instead replace replacing");
+export const REMARK_SOURCE_WORDS = setOf("makes make yields yield using use substitute substituting instead replace replacing");
 export const REMARK_STATE_WORDS = setOf("dry dried uncooked cooked raw");
+/**
+ * Parts EXTRACTED from a food (CONTRACT §12.A A3): an amount of the whole food in a remark measures the source, not the
+ * part ("2 tbsp lime juice (1 lime)", "1 tbsp zest (from 2 oranges)", "1/2 cup egg whites (from 4 eggs)").
+ */
+export const EXTRACTED_PART_WORDS = setOf("juice juices zest zests peel peels rind rinds pulp seeds arils pith flesh whites yolks");
 
 /**
  * Generic recipe components (CONTRACT §12.8): a line with no amount made only of these words, optionally after dish

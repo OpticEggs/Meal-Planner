@@ -12,12 +12,12 @@
  *                                 ingredients ("(or cream)", ", or water") — never silently dropped
  *   anything else               → note text, nested brackets flattened
  */
-import { UNIT_REGISTRY, type AmountUnstated } from "../../contract";
+import { REASONS, UNIT_REGISTRY, type AmountUnstated } from "../../contract";
 import { allWords, hasNumber, isGroup, isSym, isWord, wordsAt, type GroupTok, type Tok } from "./lexer";
-import { ADJECTIVE_WORDS, APPLICATION_GERUNDS, APPROX_WORDS, LEADING_JUNK, PREP_ADVERBS, REMARK_SOURCE_WORDS, REMARK_STATE_WORDS, TRAILING_PREP_WORDS, unitOfWord, FORM_WORDS, FUNCTION_WORDS, IF_DESIRED, REMARK_WORDS, SIZE_WORDS, UNSTATED_PHRASES } from "./lexicon";
+import { ADJECTIVE_WORDS, APPLICATION_GERUNDS, APPROX_WORDS, CARDINALS, EXTRACTED_PART_WORDS, LEADING_JUNK, PART_HEADS, PREP_ADVERBS, REMARK_SOURCE_WORDS, REMARK_STATE_WORDS, TIME_WORDS, TRAILING_PREP_WORDS, unitOfWord, FORM_WORDS, FUNCTION_WORDS, IF_DESIRED, REMARK_WORDS, SIZE_WORDS, UNSTATED_PHRASES } from "./lexicon";
 import { amountStartsAt, isPriceGroup, readAmountPhrase } from "./amount";
 import { readUnit } from "./unit";
-import { emptyEffects, mergeEffects, type Effects } from "./types";
+import { emptyEffects, mergeEffects, type AmountReading, type Effects } from "./types";
 
 // --- Text -------------------------------------------------------------------------------------------
 
@@ -288,8 +288,8 @@ function classifyBare(text: string, toks: readonly Tok[], fx: Effects): void {
       return;
     }
   }
-  // (semantic-v2, §12.11) an amount of a source, another state or a substitute: a second amount → review
-  if (remarkSecondAmount(bare)) fx.unassigned++;
+  // (semantic-v2, §12.11, §12.A A3) a remark with an amount is decided once the name is known (`remarkSecondAmount`)
+  if (remarkHasAmount(bare)) fx.amountRemarks.push({ s, toks: [...bare] });
   // a longer remark: note text; a phrase inside it still says "no fixed amount" when no amount is stated
   const inner = findUnstated(bare);
   if (inner) {
@@ -299,22 +299,98 @@ function classifyBare(text: string, toks: readonly Tok[], fx: Effects): void {
   fx.notes.push({ s, text: flat });
 }
 
-/**
- * REMARK SECOND AMOUNT (CONTRACT §12.11): the remark states an amount (a number, or "half"/"one"…) and marks it as the
- * amount of a source, another state or a substitute — "(from 1/3 cup dry)", "(1 cup dry makes 3 cooked)", "(from 1
- * lime)", "use half for table salt", "(about 6 oz dry)". A remark that only restates or describes ("about 2 medium", "1
- * cup chopped", "cut into 6 pieces") is not one.
- */
-export function remarkSecondAmount(toks: readonly Tok[]): boolean {
-  const ws = allWords(toks);
-  // (a percentage is not an amount: "(85% lean, from the butcher)")
+/** The remark states an amount: a number not followed by "%", or "half"/"one"/"two"/"three" ("85% lean" states none). */
+export function remarkHasAmount(toks: readonly Tok[]): boolean {
   const flatToks: Tok[] = [];
   const walk = (list: readonly Tok[]) => list.forEach((t) => (isGroup(t) ? walk(t.children) : flatToks.push(t)));
   walk(toks);
   const amountNumber = flatToks.some((t, k) => (t.kind === "num" || t.kind === "vulgar") && !isSym(flatToks[k + 1], "%"));
-  const counted = amountNumber || ws.some((w) => w === "half" || w === "one" || w === "two" || w === "three");
-  if (!counted) return false;
+  return amountNumber || allWords(toks).some((w) => w === "half" || w === "one" || w === "two" || w === "three");
+}
+
+/** Singular of a plural noun by its form ("carrots" → "carrot", "tomatoes" → "tomato", "berries" → "berry"). */
+const singularOf = (w: string) => (w.endsWith("ies") ? `${w.slice(0, -3)}y` : w.endsWith("oes") ? w.slice(0, -2) : w.endsWith("s") && !w.endsWith("ss") ? w.slice(0, -1) : w);
+
+/**
+ * REMARK SECOND AMOUNT (CONTRACT §12.11): the remark states an amount (a number, or "half"/"one"…) and its own words mark
+ * it as the amount of another product, a substitute or another state — "(1 cup dry makes 3 cooked)", "use half for table
+ * salt", "(from 1/3 cup dry)", "(about 6 oz uncooked)", "(juice of 1 lime)". A remark that only restates or describes
+ * ("about 2 medium", "1 cup chopped", "cut into 6 pieces") is not one. What the remark measures relative to the NAME
+ * (an extracted part's whole, another food) is decided by `remarkMeasuresAnother` (§12.A A3).
+ */
+export function remarkSecondAmount(toks: readonly Tok[]): boolean {
+  if (!remarkHasAmount(toks)) return false;
+  const ws = allWords(toks);
+  if (ws.some((w, k) => EXTRACTED_PART_WORDS.has(w) && ws[k + 1] === "of")) return true; // "(juice of 1 lime)"
   return ws.some((w) => REMARK_SOURCE_WORDS.has(w) || REMARK_STATE_WORDS.has(w));
+}
+
+/**
+ * REMARK MEASURING ANOTHER THING (CONTRACT §12.A A3): an amount remark — one that opens with its amount ("(1 lime)", "(about
+ * 2 cups chopped)", "from 3 ears") — is a second amount when, beside the NAME, it measures
+ *  - the source of an extracted part: the name is a juice, zest, peel, pulp, seeds… (EXTRACTED_PART_WORDS) — "2 tbsp lime
+ *    juice (1 lime)", "(about 1 lemon)", "1 tbsp zest (from 2 oranges)", with or without a marker word;
+ *  - another state the name does not have ("soaked", "rehydrated");
+ *  - another food — a word that is neither describing, a unit, nor a word of the name ("(from 2 slices bread)" for
+ *    breadcrumbs).
+ * Cutting or mashing does not change the food: a count of whole items or a measure of the prepared food restates the
+ * amount, with or without "from" ("1 cup chopped onion (1 medium onion)", "1 large onion (about 2 cups chopped)", "2 cups
+ * corn kernels (from 3 ears)") — see `remarkRestatement`. A remark that describes with a number ("cut into 6 pieces") is
+ * neither.
+ */
+export function remarkMeasuresAnother(toks: readonly Tok[], name: string | null, text: string): boolean {
+  if (!remarkHasAmount(toks) || !opensWithAmount(text, toks)) return false;
+  const ws = allWords(toks);
+  const nameWs = (name ?? "").toLowerCase().split(/[^\p{L}'-]+/u).filter((w) => w.length > 0);
+  if (ws.some((w) => STATE_CHANGE_WORDS.has(w) && !nameWs.includes(w))) return true;
+  if (nameWs.some((w) => EXTRACTED_PART_WORDS.has(w))) return true;
+  return otherFoodIn(ws, nameWs);
+}
+
+/** States a food is brought to before it is measured (§12.A A3: "soaked", "rehydrated"), beside the REMARK_STATE_WORDS. */
+const STATE_CHANGE_WORDS = new Set(["dry", "dried", "uncooked", "cooked", "raw", "soaked", "rehydrated", "reconstituted"]);
+
+/** Words that may open an amount remark before its number ("about 1 lemon", "from 3 ears", "made from 1/2 cup dry"). */
+const AMOUNT_REMARK_OPENERS = new Set(["about", "approximately", "approx", "roughly", "around", "from", "made", "of", "~"]);
+
+/** The remark opens with an amount, after any AMOUNT_REMARK_OPENERS (a temperature or a time is not an amount). */
+function opensWithAmount(text: string, toks: readonly Tok[]): boolean {
+  let k = 0;
+  while ((isWord(toks[k]) && AMOUNT_REMARK_OPENERS.has((toks[k] as { lower: string }).lower)) || isSym(toks[k], "~", ".")) k++;
+  // (a size is not an amount: "2 cm cubes", "1-inch pieces")
+  return amountStartsAt(text, toks, k) && readAmountPhrase(text, toks, k)?.quantity != null;
+}
+
+/** A word of the remark that names something other than the food: not describing, not a unit or number word, not in the name. */
+function otherFoodIn(ws: readonly string[], nameWs: readonly string[]): boolean {
+  const names = new Set(nameWs.flatMap((w) => [w, singularOf(w)]));
+  return ws.some((w) => {
+    if (names.has(w) || names.has(singularOf(w))) return false;
+    if (FUNCTION_WORDS.has(w) || APPROX_WORDS.has(w) || SIZE_WORDS.has(w) || REMARK_WORDS.has(w) || ADJECTIVE_WORDS.has(w) || TRAILING_PREP_WORDS.has(w) || PREP_ADVERBS.has(w)) return false;
+    // (parts taken whole — kernels, leaves, florets — are the same food, §12.A A3: "3 ears corn (about 2 cups kernels)")
+    if (PART_HEADS.has(w) && !EXTRACTED_PART_WORDS.has(w)) return false;
+    if (unitOfWord(w) !== null || Object.prototype.hasOwnProperty.call(CARDINALS, w) || TIME_WORDS.has(w) || ["half", "each", "total", "whole", "about", "approximately", "roughly", "around", "x", "made", "times"].includes(w)) return false;
+    return true;
+  });
+}
+
+/**
+ * The amount a restating remark gives ("(1 medium onion)" → 1, "(about 2 cups chopped)" → 2 cups, "(from 3 ears)" → 3
+ * ears): the first amount phrase after any "about"/"from", when the rest of the remark only describes the food. Null when
+ * the remark describes something else ("cut into 6 pieces") or states no single amount.
+ */
+export function remarkRestatement(text: string, toks: readonly Tok[]): { amount: AmountReading; leftover: Tok[] } | null {
+  let k = 0;
+  while ((isWord(toks[k]) && AMOUNT_REMARK_OPENERS.has((toks[k] as { lower: string }).lower)) || isSym(toks[k], "~")) k++;
+  if (!amountStartsAt(text, toks, k)) return null;
+  // ("(80/20)", "(90/10)": a lean ratio — two whole numbers that sum to 100 — is a note, never a count, §12.9)
+  const [a, slash, b] = [toks[k], toks[k + 1], toks[k + 2]];
+  if (a?.kind === "num" && isSym(slash, "/") && b?.kind === "num" && Number(a.text) + Number(b.text) === 100) return null;
+  const amount = readAmountPhrase(text, toks, k);
+  if (amount === null || amount.quantity === null || amount.quantity.kind !== "exact" || amount.effects.reasons.some((r) => REASONS[r].class !== "info")) return null;
+  const rest = toks.slice(amount.next);
+  if (rest.some((t) => !isWord(t) || ["into", "in", "to", "for", "or", "and", "plus"].includes(t.lower))) return null;
+  return { amount, leftover: rest };
 }
 
 /** Removes bare price annotations ("$0.25", "$1.23*") from a run. */

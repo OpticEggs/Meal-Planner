@@ -114,8 +114,10 @@ describe("options", () => {
 
   // semantic-v2 (CONTRACT §12.4): a portion noun after the food is the unit ("12 lemon wedges" → 12 wedge "lemon";
   // semantic-v1 kept "lemon wedges", each); product-identity nouns stay ("baby back ribs")
+  // (fix round 1, CONTRACT §12.14: "rack" before a food is a measure outside the registry — was 1 each "rack baby back ribs")
   it("trailing portion nouns are units unless they name the product", () => {
-    expect(read("1 rack baby back ribs")).toMatchObject({ unit: { canonical: "each" }, name: "rack baby back ribs" });
+    expect(read("1 rack baby back ribs")).toMatchObject({ status: "needs_review", unit: null, name: "baby back ribs", reasons: ["unit_unknown"] });
+    expect(read("2 baby back ribs")).toMatchObject({ unit: { canonical: "each" }, name: "baby back ribs" });
     expect(read("12 lemon wedges")).toMatchObject({ unit: { canonical: "wedge" }, name: "lemon" });
   });
 });

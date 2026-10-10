@@ -12,7 +12,9 @@
  *
  * A remark-only option ("or 1 tsp dried") names the same food in another form ("dried thyme").
  */
-import { ADJECTIVE_WORDS, CATEGORY_NOUNS, LEADING_SHARE_WORDS, REMARK_WORDS, SHARED_HEAD_MODIFIERS } from "./lexicon";
+import { ADJECTIVE_WORDS, AND_COMPOUNDS, CATEGORY_NOUNS, COMPOUND_MODIFIERS, FLAVOUR_HEADS, FORM_CHOICE_WORDS, FUNCTION_WORDS, LEADING_SHARE_WORDS, PART_HEADS, PREP_ADVERBS, REMARK_WORDS, SHARED_HEAD_MODIFIERS, SIZE_WORDS } from "./lexicon";
+
+const LEADING_JUNK_WORDS = FUNCTION_WORDS;
 
 const wordsOf = (s: string) => s.split(" ").filter((w) => w.length > 0);
 const lower = (s: string) => s.toLowerCase();
@@ -21,16 +23,17 @@ const capitalised = (w: string) => /^\p{Lu}/u.test(w);
 /**
  * OPTION-PRESERVATION RULE (semantic-v2, CONTRACT §12.7): the options of a choice are returned one for one, in order —
  * never dropped, merged or invented; the only words added are words written in the line and shared by the grammar:
- *  (b1) versions before one head — every earlier option is only version words (adjectives, participles, "un-"/"non-",
- *       %), the last option's leading version words then its head: "white or yellow miso", "fresh or frozen peas", "red
- *       or yellow bell pepper", "1/4 cup red or white wine vinegar";
- *  (b2) sources of the head — every earlier option is a SHARED_HEAD_MODIFIERS word of the last option's head: "lemon or
- *       lime juice", "chicken, beef, or vegetable broth", "hamburger or hot dog buns";
+ *  (b)  a shared trailing head — the last option is a modifier then a head (`trailingHeadSplit`: "Dijon | mustard",
+ *       "whole wheat | flour", "Yukon Gold | potatoes", "white | wine vinegar") and every earlier option is one
+ *       modifier that is not a product of the head's kind by itself: version words ("white or yellow miso", "dark or
+ *       milk chocolate", "red, green, or yellow bell pepper") or a source of the head (SHARED_HEAD_MODIFIERS, by source
+ *       classes: "lemon or lime juice", "almond or cashew butter", "pork or chicken sausage", "onion or garlic salt");
  *  (c)  a leading product-form/variety/preparation word shared forward to bare foods (LEADING_SHARE_WORDS): "ground
  *       beef or turkey", "dried oregano or thyme", "shredded cheddar or Monterey Jack";
- *  (d)  a later option that is only version words takes the first option's head: "whole milk or 2%" → 2% milk, "fresh
- *       thyme or dried" → dried thyme.
- * Anything else stays as written ("kale or Swiss chard", "ham or smoked turkey", "feta or goat cheese").
+ *  (d)  a later option that is only version words replaces the first option's leading modifier (`afterFirstModifier`):
+ *       "whole milk or 2%" → 2% milk, "fresh oregano or dried" → dried oregano, "Yukon Gold potatoes or red" → red
+ *       potatoes, "fresh green beans or frozen" → frozen green beans.
+ * Anything else stays as written ("kale or Swiss chard", "peas or green beans", "feta or goat cheese", "tea or apple juice").
  */
 export function shareOptions(options: readonly string[]): string[] {
   if (options.length < 2) return [...options];
@@ -38,17 +41,9 @@ export function shareOptions(options: readonly string[]): string[] {
   const n = options.length;
   const last = ws[n - 1];
   const firsts = ws.slice(0, -1);
-  // (b1) — the last option's own modifier is its first word (the rest, "bell pepper", "green beans", is the head)
-  if (last.length >= 2 && versionWord(last[0]) && firsts.every((o) => o.length >= 1 && o.every(versionWord))) {
-    const head = last.slice(1).join(" ");
-    return options.map((o, k) => (k === n - 1 ? o : `${o} ${head}`));
-  }
-  // (b2)
-  if (last.length >= 2) {
-    const head = last[last.length - 1];
-    const sources = SHARED_HEAD_MODIFIERS[lower(head)];
-    if (sources !== undefined && firsts.every((o) => sources.has(lower(o.join(" "))))) return options.map((o, k) => (k === n - 1 ? o : `${o} ${head}`));
-  }
+  // (b)
+  const split = trailingHeadSplit(firsts, last);
+  if (split !== null) return options.map((o, k) => (k === n - 1 ? o : `${o} ${split.head}`));
   // (c)
   const first = ws[0];
   let p = 0;
@@ -58,11 +53,73 @@ export function shareOptions(options: readonly string[]): string[] {
     return options.map((o, k) => (k === 0 ? o : `${lead} ${o}`));
   }
   // (d)
-  const head = headOf(options[0]);
-  if (head !== options[0] && ws.slice(1).every((o) => o.length > 0 && o.every((w) => versionWord(w) || REMARK_WORDS.has(lower(w))))) {
-    return options.map((o, k) => (k === 0 ? o : `${o} ${head}`));
+  const later = ws.slice(1);
+  const forms = later.every((o) => o.length > 0 && o.every((w) => FORM_CHOICE_WORDS.has(lower(w))));
+  const rest = forms ? afterFormWord(first) : afterFirstModifier(first);
+  if (rest !== null && later.every((o) => o.length > 0 && o.every((w) => versionWord(w) || REMARK_WORDS.has(lower(w))))) {
+    return options.map((o, k) => (k === 0 ? o : `${o} ${rest}`));
   }
   return [...options];
+}
+
+/**
+ * (§12.7 b) Where the last option's own modifier ends and the shared head begins, when the earlier options can share it:
+ * the modifier is a known compound ("whole wheat", "apple cider", "hot dog" — unless the earlier option makes a compound
+ * with the second word too: "red or white wine vinegar" shares "wine vinegar"), a run of capitalised words ("Yukon Gold",
+ * "Dijon"), or one word. Every earlier option must be one modifier word (or a capitalised run) that is version words or a
+ * source of the head, and must not repeat a word of the head ("flour or almond flour" stays).
+ */
+function trailingHeadSplit(firsts: readonly string[][], last: readonly string[]): { head: string } | null {
+  if (last.length < 2) return null;
+  // sources of the last word (a noun before its product, or any food before a part: "apple or white grape juice" shares
+  // "juice", "walnut or pecan halves" shares "halves") share that word alone
+  const lastWord = lower(last[last.length - 1]);
+  const lastSources = SHARED_HEAD_MODIFIERS[lastWord];
+  const oneWordFood = (o: readonly string[]) => o.length === 1 && !versionWord(o[0]) && lower(o[0]) !== lastWord && !LEADING_JUNK_WORDS.has(lower(o[0]));
+  if (firsts.every((o) => (lastSources !== undefined && lastSources.has(lower(o.join(" "))) && !o.every(versionWord)) || (PART_HEADS.has(lastWord) && oneWordFood(o)))) {
+    return { head: last[last.length - 1] };
+  }
+  let m = 1;
+  const pair = `${lower(last[0])} ${lower(last[1] ?? "")}`;
+  if (last.length >= 3 && COMPOUND_MODIFIERS.has(pair) && !firsts.every((o) => o.length === 1 && COMPOUND_MODIFIERS.has(`${lower(o[0])} ${lower(last[1])}`))) m = 2;
+  else if (capitalised(last[0])) while (m < last.length - 1 && capitalised(last[m])) m++;
+  const head = last.slice(m);
+  const headLower = head.map(lower);
+  const sources = SHARED_HEAD_MODIFIERS[headLower[headLower.length - 1]];
+  const shareable = (o: readonly string[]) => {
+    if (o.length === 0 || o.some((w) => headLower.includes(lower(w)))) return false;
+    const one = o.length === 1 || (o.length <= 3 && o.every(capitalised)) || COMPOUND_MODIFIERS.has(lower(o.join(" ")));
+    if (!one) return false;
+    return o.every(versionWord) || (sources !== undefined && sources.has(lower(o.join(" "))));
+  };
+  return firsts.every(shareable) ? { head: head.join(" ") } : null;
+}
+
+/**
+ * (§12.7 d) For a later option made of form words ("or dried", "or frozen"): the first option after its last leading form
+ * word ("fresh | oregano", "chopped fresh | parsley", "fresh | green beans"); null when it has none.
+ */
+function afterFormWord(first: readonly string[]): string | null {
+  let last = -1;
+  for (let k = 0; k < first.length - 1 && versionWord(first[k]); k++) if (FORM_CHOICE_WORDS.has(lower(first[k]))) last = k;
+  return last >= 0 ? first.slice(last + 1).join(" ") : afterFirstModifier(first);
+}
+
+/**
+ * (§12.7 d) The first option without its first modifier — one version word, a known compound modifier or a run of
+ * capitalised variety words ("fresh | green beans", "whole | milk", "Yukon Gold | potatoes"); null when nothing is left
+ * or the option does not open with a modifier.
+ */
+function afterFirstModifier(first: readonly string[]): string | null {
+  if (first.length < 2) return null;
+  let m = 0;
+  if (COMPOUND_MODIFIERS.has(`${lower(first[0])} ${lower(first[1])}`) && first.length >= 3) m = 2;
+  else if (versionWord(first[0])) m = 1;
+  else if (capitalised(first[0])) {
+    m = 1;
+    while (m < first.length - 1 && capitalised(first[m])) m++;
+  }
+  return m > 0 && m < first.length ? first.slice(m).join(" ") : null;
 }
 
 /** Gerunds that name a version of a food ("whipping cream", "baking potatoes", "cooking apples"). */
@@ -93,11 +150,16 @@ export function headOf(option: string): string {
  * or brown", "oil (vegetable or canola)").
  */
 export function varietiesOf(options: readonly string[], base: string): boolean {
+  // (the named item must name a food: in "red, green, or yellow bell pepper" the first item is one option of a list)
+  if (wordsOf(base).every(versionWord)) return false;
   const head = lower(wordsOf(base).pop() ?? "");
   const sources = SHARED_HEAD_MODIFIERS[head];
+  // a capitalised name is a variety of a food that is not a category ("apples, Granny Smith or Honeycrisp"); of a
+  // category it is a kind ("cheese, Cheddar or Swiss")
+  const named = (ws: readonly string[]) => !categoryNoun(base) && ws.length <= 3 && ws.every(capitalised);
   const variety = (o: string) => {
     const ws = wordsOf(o);
-    return ws.length > 0 && (ws.every(versionWord) || (sources !== undefined && sources.has(lower(o))));
+    return ws.length > 0 && (ws.every((w) => versionWord(w) || (sources !== undefined && sources.has(lower(w)))) || (sources !== undefined && sources.has(lower(o))) || named(ws));
   };
   // every option a variety — or one bare version word among them, which cannot be a food by itself ("bread, white or
   // wheat" → white bread, wheat bread)
@@ -160,4 +222,28 @@ export function uniqueOptions(options: readonly string[]): string[] {
     out.push(o);
   }
   return out;
+}
+
+/**
+ * FOODS JOINED BY "AND" (semantic-v2, CONTRACT §12.A A4, §12.7 g): a name "A and B" (no comma) names two foods sharing one
+ * amount — "strawberries and blueberries", "chopped celery and carrots", "butter and oil", "sesame and flax seeds" — so
+ * no single name is privileged and a person splits it. It stays one food when it is a fixed compound (AND_COMPOUNDS: salt
+ * and pepper, half and half, macaroni and cheese, sweet and sour, oil and vinegar, pork and beans…), when the words before
+ * "and" are only modifiers of one head ("red and yellow bell peppers", "peeled and diced potatoes"), or when the pair
+ * names the flavour of a product after it ("salt and vinegar potato chips", "spinach and artichoke dip": FLAVOUR_HEADS).
+ */
+export function andJoinsTwoFoods(name: string): boolean {
+  const ws = wordsOf(name.replace(/\s*&\s*/g, " and "));
+  const at = ws.findIndex((w) => lower(w) === "and");
+  if (at <= 0 || at >= ws.length - 1) return false;
+  const text = ` ${ws.map(lower).join(" ")} `;
+  if (AND_COMPOUNDS.some((c) => text.includes(` ${c} `))) return false;
+  const left = ws.slice(0, at);
+  const right = ws.slice(at + 1);
+  const describing = (w: string) => versionWord(w) || SIZE_WORDS.has(lower(w)) || PREP_ADVERBS.has(lower(w));
+  if (left.every(describing)) return false; // modifiers of one head
+  // ("kosher salt and black pepper": the seasoning pair, however each is described)
+  if (lower(left[left.length - 1]) === "salt" && /^pepper(?:corns)?$/.test(lower(right[right.length - 1]))) return false;
+  if (right.length >= 2 && FLAVOUR_HEADS.has(lower(right[right.length - 1]))) return false; // a flavour of one product
+  return right.some((w) => !describing(w) && lower(w) !== "and");
 }
