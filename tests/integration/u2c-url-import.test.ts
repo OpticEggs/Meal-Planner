@@ -82,7 +82,7 @@ describe("one step from a link (U-01..U-04)", () => {
     expect(rec.version).toMatchObject({ imageId: d.image_id, sourceAuthor: "Sam Example", sourceSiteName: "Example Kitchen", sourceUrl: WPRM });
     const v2: any = await library.saveRecipeVersionCommand(jon, op(), {
       recipeId: c.result.recipeId, expectedVersionNo: 1, title: "Skillet Taco Rice (ours)", components: [{ key: "main", name: "Main" }],
-      ingredients: [{ componentKey: "main", ingredientName: "rice", quantity: "0.25", unit: "cup" }],
+      ingredients: [{ componentKey: "main", ingredientName: "rice", quantity: "0.25", unit: "cup", sourceRowId: null }], // EQR: a row stated afresh
     } as any);
     expect(v2.status).toBe("accepted");
     expect((await q<any>("SELECT image_id, source_author, source_site_name, source_url FROM recipe_versions WHERE id=$1", [v2.result.versionId]))[0])

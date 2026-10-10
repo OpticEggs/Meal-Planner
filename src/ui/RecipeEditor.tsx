@@ -18,7 +18,9 @@ import { FIELD_LABEL, display, editorInit, editorReducer, isDirty, type EditorAc
  */
 
 type Comp = { id: number; key: string; name: string };
-type Row = { id: number; componentKey: string; ingredientName: string; ingredientKey: string | null; quantity: string; unit: string; form: string | null; note: string | null };
+// sourceRowId (EQR): the stored row this row came from — sent with a save so the server can keep that row's own
+// quantity basis when its number is unchanged; null for a row added here.
+type Row = { id: number; componentKey: string; ingredientName: string; ingredientKey: string | null; quantity: string; unit: string; form: string | null; note: string | null; sourceRowId: string | null };
 type Fields = RecipeFields<Comp, Row>;
 
 let seq = 0;
@@ -40,7 +42,8 @@ function fieldsOfVersion(v: any): Fields {
     components: v?.components?.map((c: any) => ({ id: nextId(), key: c.key, name: c.name })) ?? [{ id: nextId(), key: "main", name: "Main" }],
     rows: v?.ingredients?.map((i: any) => ({
       id: nextId(), componentKey: i.componentKey, ingredientName: i.name, ingredientKey: i.ingredientKey, quantity: i.quantity, unit: i.unit, form: i.form ?? null, note: i.note ?? null,
-    })) ?? [{ id: nextId(), componentKey: "main", ingredientName: "", ingredientKey: null, quantity: "", unit: "g", form: null, note: null }],
+      sourceRowId: i.rowId ?? null,
+    })) ?? [{ id: nextId(), componentKey: "main", ingredientName: "", ingredientKey: null, quantity: "", unit: "g", form: null, note: null, sourceRowId: null }],
   };
 }
 
@@ -141,7 +144,7 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
 
   function addRow() {
     const id = nextId();
-    edit((d) => ({ ...d, rows: [...d.rows, { id, componentKey: d.components[0]?.key ?? "main", ingredientName: "", ingredientKey: null, quantity: "", unit: "g", form: null, note: null }] }));
+    edit((d) => ({ ...d, rows: [...d.rows, { id, componentKey: d.components[0]?.key ?? "main", ingredientName: "", ingredientKey: null, quantity: "", unit: "g", form: null, note: null, sourceRowId: null }] }));
     setFocusId(`re-n-${id}`);
   }
   function removeRow(i: number) {
@@ -208,6 +211,7 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
       ingredients: used.map((x) => ({
         componentKey: x.componentKey, ingredientName: x.ingredientName.trim(), ingredientKey: x.ingredientKey, quantity: x.quantity.trim(), unit: x.unit.trim(),
         ...(x.form ? { form: x.form } : {}), ...(x.note ? { note: x.note } : {}),
+        ...(recipeId ? { sourceRowId: x.sourceRowId } : {}),
       })),
       ...(recipeId ? { expectedVersionNo: seenVersion } : {}), // required by the server for an existing recipe
     });

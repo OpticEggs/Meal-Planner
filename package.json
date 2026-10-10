@@ -21,6 +21,7 @@
     "member:create": "tsx scripts/member-create.ts",
     "member:reset-password": "tsx scripts/member-reset-password.ts",
     "sample:recipes": "tsx scripts/sample-recipes.ts",
+    "audit:legacy-quantities": "tsx scripts/audit-legacy-quantities.ts",
     "verify": "scripts/verify-all.sh"
   },
   "dependencies": {

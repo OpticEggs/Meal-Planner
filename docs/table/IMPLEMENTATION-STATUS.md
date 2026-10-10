@@ -1,6 +1,6 @@
 # Table — Implementation status
 
-_Last updated 2026-10-09 (UTC), after the Recipe Extraction Lab Phase 2 (candidate engine `semantic-v1`, registered but not the default — Gate G2 not met; package only, branch `claude/quirky-gauss-depmd8`, merged with `main` `8c9fd8c`; the app is unchanged by it) and the import-overhaul corrections RIO-01..03 on `main` (reconstructed; the owner's package did not arrive), which followed the lab's Phases 0–1 and the import overhaul and mobile redesign (B28), which followed the bounded pass B10 partial handoff + continuous URL-to-cart journey + phone upgrade rehearsal, which followed the recheck corrections RUC-01/RUC-02 (pilot on Render Free + Neon), which followed the URL-to-cart reprioritization (B25), which followed the multi-source handoff (recipe links, reviewed import, Budget Bytes lane, where to shop, Instacart list link — fixture-only), which followed B21/B22 (database cook-record invariant, stale cooking events) and the free-hosting research, which followed the visual update (B20) and the cook-record idempotency fix
+_Last updated 2026-10-10 (UTC). Lab branch `claude/quirky-gauss-depmd8` (separate workstream, not merged to `main`): Recipe Extraction Lab Phase 2 (candidate engine `semantic-v1`, registered but not the default — Gate G2 not met; package only, branch `claude/quirky-gauss-depmd8`, merged with `main` `8c9fd8c`; the app is unchanged by it). On `main`: after the EQR correction (row lineage, exact "Have enough" binding and review identity, migration 016), which followed exact quantities for new recipe versions (migration 015, read-only legacy audit, upgrade rehearsal), which followed the recheck correction against the original RIO package (RIO-02 descriptors fixed, RIO-01 bounded, RIO-03 completed), which followed the import-overhaul corrections RIO-01..03 (reconstructed; the owner's package had not arrived), which followed the import overhaul and mobile redesign (B28), which followed the bounded pass B10 partial handoff + continuous URL-to-cart journey + phone upgrade rehearsal, which followed the recheck corrections RUC-01/RUC-02 (pilot on Render Free + Neon), which followed the URL-to-cart reprioritization (B25), which followed the multi-source handoff (recipe links, reviewed import, Budget Bytes lane, where to shop, Instacart list link — fixture-only), which followed B21/B22 (database cook-record invariant, stale cooking events) and the free-hosting research, which followed the visual update (B20) and the cook-record idempotency fix
 (B19, delivery review of fb4d771, gate 2), which followed the integration-preparation pass (B9 deployment candidate, B7 nutrition, B5
 Kroger adapter, B8 checklist)._
 
@@ -8,6 +8,9 @@ Kroger adapter, B8 checklist)._
 
 | What | Identity |
 |---|---|
+| EQR correction (review of `dbc105d`) | starting `5aeecc4` · `7332b06` correction (row lineage, exact Have-enough certification, exact review identity, audit ambiguity), `72cf615` rehearsal data — verified at `72cf615`; rehearsals from `43cd1ce` and `dbc105d` PASS |
+| Exact quantities for new recipe versions (EQ) | starting `5e19991` · `dbc105d` migration 015, exact purchasing arithmetic, server-decided basis, read-only legacy audit, upgrade rehearsal — verified at `dbc105d`; rehearsal from `43cd1ce` PASS. Identifiers: main mints D130+/B40+ (`docs/table/IDENTIFIERS.md`) |
+| RIO recheck correction (original package) | starting `8c9fd8c` · `9f7836f` descriptor-aware seasonings (original RIO-02) · `a9fd9de` RIO-01 boundary evidence (tests only) · `43cd1ce` RIO-03 coverage + focus — verified at `43cd1ce`. Lab branch untouched; read-only notice `docs/table/LAB-SOURCE-DELTA-2026-10-09.md` |
 | Import-overhaul corrections RIO-01..03 | starting `12434c0` · `bca110e` per-serving rounding toward zero, unit-aware pepper, held pending row edits — verified at `bca110e`. The Recipe Extraction Lab (branch `claude/quirky-gauss-depmd8`) stays a separate, unintegrated workstream; its provenance reconciliation with `bca110e` was prepared here as a patch (the lab branch had moved to `46a6547`) and applied on the lab branch as `034f2c3` after the lab merged `main` `8c9fd8c` |
 | Import overhaul + redesign (B28) | starting `cb7b56e` · `dfb34cc` member photo backend (worker) · `8e6bd6e` parser, review, seasonings, photo policy, design — verified at `8e6bd6e` |
 | Recipe Extraction Lab, Phases 0–1 (package only — **the app is unchanged**; branch `claude/quirky-gauss-depmd8`, not merged to `main`) | `0306af8` contract v1 · `1079db4`, `d928aea` frozen legacy engines, validators, CLI (worker A) · `2b55fda`, `47ebce6` (holdout freeze), `adc1e06` corpus + scorer (worker B) · `3ca998a` integration — package suite and targeted app checks at `3ca998a` (`evidence/2026-10-09-recipe-extraction-lab/verify-3ca998a/`); verify-all not run (no app code changed) |
@@ -26,7 +29,19 @@ Kroger adapter, B8 checklist)._
 | Restore | `git clone --branch main <bundle> table` or `git clone <bundle> table` |
 | Migrations | `001`–`014` (`014_member_recipe_photo.sql`: a member's own photo on the recipe; `013_partial_handoff.sql`: batch scope and omission summary; `012_recipe_content.sql`: kept-content permission, recipe photos, attribution): `006_nutrition_sources.sql` (B7), `007_kroger.sql` (B5), `008_cook_record_corrections.sql` (B19), `009_cook_record_chain.sql` (B21), `010_recipe_sources.sql`, `011_shopping_destinations.sql` (multi-source); upgrades from a populated 005 database (to 007) a populated 007 database holding duplicate cook records (to 008), a populated 008 database with planted cross-generation violations (to 009), and a populated 009 database (to 011, only `schema_migrations` differs over existing columns) checked |
 
-## Verification (measured on bca110e)
+## Verification (measured on 72cf615)
+
+`scripts/verify-all.sh` → `docs/table/evidence/2026-10-10-verify-72cf615/summary.md`: vitest 1177/1177, Playwright 153/153 (Chromium), mutation self-test PASS, 121 mutations killed / 0 survived / 0 error. Upgrade rehearsals from `43cd1ce` and from `dbc105d`: PASS (`docs/table/evidence/2026-10-10-verify-72cf615/rehearsal-*/summary.txt`).
+
+### Previous run (dbc105d, exact quantities)
+
+`scripts/verify-all.sh` → `docs/table/evidence/2026-10-10-verify-dbc105d/summary.md`: vitest 1164/1164, Playwright 151/151, mutation self-test PASS, 112 killed / 0 survived / 0 error. Upgrade rehearsal from `43cd1ce`: PASS (`docs/table/evidence/2026-10-10-verify-dbc105d/rehearsal/summary.txt`).
+
+### Previous run (43cd1ce, RIO recheck correction)
+
+`scripts/verify-all.sh` → `docs/table/evidence/2026-10-09-verify-43cd1ce/summary.md`: vitest 1142/1142, Playwright 150/150, mutation self-test PASS, 104 killed / 0 survived / 0 error.
+
+### Previous run (bca110e, reconstructed RIO corrections)
 
 `scripts/verify-all.sh` → `docs/table/evidence/2026-10-09-verify-bca110e/summary.md`: vitest 1091/1091, Playwright 145/145, mutation self-test PASS, 102 killed / 0 survived / 0 error.
 
@@ -222,7 +237,7 @@ screenshots), `2026-10-08-verify-2c56267/` (correction pass), `2026-10-08-full-r
 
 ## Next executable task
 
-**Upgrade the pilot that is already running (Render Free + Neon) to `7c79eb6` from your phone — yours to run, `DEPLOYMENT.md` §0.**
+**Upgrade the pilot that is already running (Render Free + Neon) to `72cf615` from your phone — yours to run, `DEPLOYMENT.md` §0 (checklist: migrations 015 and 016).**
 Optionally send the two drafted provider inquiries (`PROVIDER-INQUIRIES.md`, not sent). Then, with a
 separate authorization, **one real recipe import** on the pilot (R1 on; C1/C2 stay off). Kroger product matching follows only
 after its own authorization (K1–K5). No hosting decision is open.

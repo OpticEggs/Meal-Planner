@@ -5,6 +5,7 @@
 import pg from "pg";
 import { randomUUID } from "node:crypto";
 import { RECIPES } from "../tests/fixtures/household";
+import { Q } from "../src/domain/exact";
 
 const INGREDIENT_NAMES: Record<string, [string, string[]]> = {
   chicken_thigh: ["Chicken thighs", ["poultry"]], rice: ["Jasmine rice", ["grain"]], broccoli: ["Broccoli", ["vegetable"]],
@@ -42,7 +43,11 @@ for (const r of RECIPES) {
   for (const [ck, cn, ings] of r.components) {
     await c.query("INSERT INTO recipe_components(recipe_version_id, key, name, sort) VALUES ($1,$2,$3,$4)", [versionId, ck, cn, sort++]);
     for (const [ik, q, u] of ings) {
-      await c.query("INSERT INTO recipe_ingredients(recipe_version_id, component_key, ingredient_key, quantity, unit, sort) VALUES ($1,$2,$3,$4,$5,$6)", [versionId, ck, ik, q, u, sort++]);
+      // Sample amounts are stated per portion as exact decimals: saved with an exact basis (migration 015).
+      await c.query(
+        "INSERT INTO recipe_ingredients(recipe_version_id, component_key, ingredient_key, quantity, unit, sort, quantity_basis, exact_amount, exact_servings) VALUES ($1,$2,$3,$4,$5,$6,'exact',$7,1)",
+        [versionId, ck, ik, q, u, sort++, Q.of(q).toString()],
+      );
     }
   }
   await c.query("UPDATE recipes SET current_version_id=$2 WHERE id=$1", [recipeId, versionId]);

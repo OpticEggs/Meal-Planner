@@ -1,0 +1,10 @@
+$ npx vitest run tests/integration/b21-b22.test.ts -t "B22"
+exit 1 signal 
+--- stdout
+JSON report written to /tmp/table-verify-dbc105d-20261010T013231Z/mutation/mutation-B22_stale_event_accepted.json
+
+--- stderr
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+

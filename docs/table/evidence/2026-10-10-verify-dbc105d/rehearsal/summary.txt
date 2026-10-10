@@ -1,0 +1,13 @@
+Upgrade rehearsal: previous release 43cd1ce → this release dbc105d (2026-10-10T02:01:02Z)
+PASS  1 populated by 43cd1ce: 13 grocery lines; export taken by 43cd1ce
+applied: 015_exact_quantities.sql
+PASS  2 every pre-existing column of every table is unchanged by the migration
+PASS  2 every existing recipe row reads legacy: {"legacy":29}
+PASS  3 this release projects the upgraded week exactly as 43cd1ce did (amounts, packages, to send, fingerprints, approvals)
+PASS  3 43cd1ce still projects the same on the upgraded schema
+PASS  4 after this release saved an exact recipe ({"exact":1,"legacy":29}), 43cd1ce still recomputes every week
+PASS  5 this release's export (legacy and exact rows) restores and re-exports identically
+PASS  5 43cd1ce's pre-upgrade export restores into the new schema, every recipe row legacy
+PASS  5 known limit confirmed: an export containing exact rows needs this release (or later) to restore; 43cd1ce's schema refuses it and nothing was half-restored
+PASS  6 43cd1ce's vitest suite passes on a database with migration 015:  Tests 1142 passed (1142)
+Result: PASS — /tmp/claude-0/-home-user/ae3f20b4-8e59-5d3c-9e16-8b697724019c/scratchpad/eq/rehearsal-dbc105d

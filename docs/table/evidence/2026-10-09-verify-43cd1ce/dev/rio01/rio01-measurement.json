@@ -1,0 +1,80 @@
+{
+ "exactIntegerBoundaries": 7571,
+ "stats": {
+  "current": {
+   "over": 0,
+   "under": 0,
+   "cases": 295472,
+   "maxUnderGap": null
+  },
+  "halfUp12": {
+   "over": 1222,
+   "under": 0,
+   "cases": 295472,
+   "maxUnderGap": null,
+   "exampleOver": {
+    "label": "single",
+    "lines": [
+     {
+      "amount": "1",
+      "unit": "each",
+      "servings": 6,
+      "portions": 6
+     }
+    ],
+    "pkg": [
+     "1",
+     "each"
+    ],
+    "want": 1,
+    "got": 2
+   }
+  },
+  "legacy4": {
+   "over": 1242,
+   "under": 115,
+   "cases": 295472,
+   "maxUnderGap": null,
+   "exampleOver": {
+    "label": "single",
+    "lines": [
+     {
+      "amount": "1",
+      "unit": "each",
+      "servings": 6,
+      "portions": 6
+     }
+    ],
+    "pkg": [
+     "1",
+     "each"
+    ],
+    "want": 1,
+    "got": 2
+   },
+   "exampleUnder": {
+    "label": "pair",
+    "lines": [
+     {
+      "amount": "3",
+      "unit": "lb",
+      "servings": 9,
+      "portions": 9
+     },
+     {
+      "amount": "2/3",
+      "unit": "g",
+      "servings": 9,
+      "portions": 1
+     }
+    ],
+    "pkg": [
+     "1",
+     "lb"
+    ],
+    "want": 4,
+    "got": 3
+   }
+  }
+ }
+}

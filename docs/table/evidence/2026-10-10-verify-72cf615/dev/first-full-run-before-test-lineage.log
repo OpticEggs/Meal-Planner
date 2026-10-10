@@ -1,0 +1,131 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/table
+
+ ❯ tests/integration/exact-quantities.test.ts (12 tests | 2 failed) 8375ms
+   ❯ exact quantities for new recipe versions (12)
+     × EQ-05: a title-only edit of a legacy recipe keeps its rows legacy; a changed amount is the member's exact amount; the accepted dinner keeps its version 667ms
+     × EQ-05b: an unchanged number keeps its basis when the row's unit or name changes — an imported 2/3 stays 2/3, a legacy 0.6667 stays legacy 543ms
+ ❯ tests/integration/ms-sources.test.ts (25 tests | 1 failed) 15535ms
+   ❯ reviewed import (URL-05..15) (8)
+     × URL-13/15: editing an imported recipe keeps a scheduled dinner on its version; archiving the link keeps the recipe and dinner 566ms
+ ❯ tests/integration/plan.contract.test.ts (21 tests | 1 failed) 14097ms
+   ❯ T21 edit a recipe in the library after adopting it (1)
+     × keeps the accepted assignment on its pinned recipe version 622ms
+ ❯ tests/integration/u2c-url-import.test.ts (11 tests | 1 failed) 8380ms
+   ❯ one step from a link (U-01..U-04) (4)
+     × U-02: with a per-site grant for method and photos, the method is kept as editable steps and one photo is stored (type sniffed, hash recorded); confirming carries both and the attribution 800ms
+ ❯ tests/integration/b17.recipes.test.ts (4 tests | 3 failed) 2737ms
+   ❯ B17 recipe versions are edited against the version seen (4)
+     × two edits made from the same version: the first saves, the second is refused with who saved what — Jon first 747ms
+     × two edits made from the same version: the first saves, the second is refused with who saved what — Alex first 641ms
+     × RB17-03: an edit of an existing recipe must name its version; missing, malformed and stale ones write nothing 704ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/b17.recipes.test.ts > B17 recipe versions are edited against the version seen > two edits made from the same version: the first saves, the second is refused with who saved what — Jon first
+ FAIL  tests/integration/b17.recipes.test.ts > B17 recipe versions are edited against the version seen > two edits made from the same version: the first saves, the second is refused with who saved what — Alex first
+AssertionError: expected 'rejected' to be 'accepted' // Object.is equality
+
+Expected: "accepted"
+Received: "rejected"
+
+ ❯ tests/integration/b17.recipes.test.ts:27:24
+     25|       const a = () => saveRecipeVersionCommand(alex, op(), draft(recip…
+     26|       const [x, y] = order === "Jon first" ? await race((jon as Actor)…
+     27|       expect(x.status).toBe("accepted");
+       |                        ^
+     28|       expect(y.status === "rejected" && y.code).toBe("stale_version");
+     29|       const winner = order === "Jon first" ? "Jon" : "Alex";
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  tests/integration/b17.recipes.test.ts > B17 recipe versions are edited against the version seen > RB17-03: an edit of an existing recipe must name its version; missing, malformed and stale ones write nothing
+AssertionError: expected 'rejected' to be 'accepted' // Object.is equality
+
+Expected: "accepted"
+Received: "rejected"
+
+ ❯ tests/integration/b17.recipes.test.ts:59:23
+     57|     expect({ versions: await versions(recipeId), pointer: await pointe…
+     58|     const ok = await saveRecipeVersionCommand(jon, op(), draft(recipeI…
+     59|     expect(ok.status).toBe("accepted");
+       |                       ^
+     60|     expect((await versions(recipeId)).map((v) => v.version_no)).toEqua…
+     61|     expect(await pointer()).not.toBe(before.pointer);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  tests/integration/exact-quantities.test.ts > exact quantities for new recipe versions > EQ-05: a title-only edit of a legacy recipe keeps its rows legacy; a changed amount is the member's exact amount; the accepted dinner keeps its version
+AssertionError: {"status":"rejected","code":"lineage_required","message":"This screen is out of date: reload the recipe, then make your change again. Nothing was saved.","operationId":"op-f602630d-da60-474a-a37c-75144b5fcdf6","command":"SaveRecipeVersion","replayed":false,"seq":null}: expected 'rejected' to be 'accepted' // Object.is equality
+
+Expected: "accepted"
+Received: "rejected"
+
+ ❯ tests/integration/exact-quantities.test.ts:85:41
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  tests/integration/exact-quantities.test.ts > exact quantities for new recipe versions > EQ-05b: an unchanged number keeps its basis when the row's unit or name changes — an imported 2/3 stays 2/3, a legacy 0.6667 stays legacy
+AssertionError: {"status":"rejected","code":"lineage_required","message":"This screen is out of date: reload the recipe, then make your change again. Nothing was saved.","operationId":"op-018559d3-5715-42d8-9bf7-6407a06e4efe","command":"SaveRecipeVersion","replayed":false,"seq":null}: expected 'rejected' to be 'accepted' // Object.is equality
+
+Expected: "accepted"
+Received: "rejected"
+
+ ❯ tests/integration/exact-quantities.test.ts:117:41
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  tests/integration/ms-sources.test.ts > reviewed import (URL-05..15) > URL-13/15: editing an imported recipe keeps a scheduled dinner on its version; archiving the link keeps the recipe and dinner
+AssertionError: {"status":"rejected","code":"lineage_required","message":"This screen is out of date: reload the recipe, then make your change again. Nothing was saved.","operationId":"op-b811a9f5-b6cd-456b-8f23-ef1265d38c25","command":"SaveRecipeVersion","replayed":false,"seq":null}: expected 'rejected' to be 'accepted' // Object.is equality
+
+Expected: "accepted"
+Received: "rejected"
+
+ ❯ tests/integration/ms-sources.test.ts:252:47
+    250|       ingredients: [{ componentKey: "main", ingredientName: "rice", qu…
+    251|     }));
+    252|     expect(edit.status, JSON.stringify(edit)).toBe("accepted");
+       |                                               ^
+    253|     expect((await q<any>("SELECT recipe_version_id FROM cooking_events…
+    254|     expect((await q<any>("SELECT source_url, provenance FROM recipe_ve…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  tests/integration/plan.contract.test.ts > T21 edit a recipe in the library after adopting it > keeps the accepted assignment on its pinned recipe version
+AssertionError: expected 'rejected' to be 'accepted' // Object.is equality
+
+Expected: "accepted"
+Received: "rejected"
+
+ ❯ tests/integration/plan.contract.test.ts:299:22
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  tests/integration/u2c-url-import.test.ts > one step from a link (U-01..U-04) > U-02: with a per-site grant for method and photos, the method is kept as editable steps and one photo is stored (type sniffed, hash recorded); confirming carries both and the attribution
+AssertionError: expected 'rejected' to be 'accepted' // Object.is equality
+
+Expected: "accepted"
+Received: "rejected"
+
+ ❯ tests/integration/u2c-url-import.test.ts:87:23
+     85|       ingredients: [{ componentKey: "main", ingredientName: "rice", qu…
+     86|     } as any);
+     87|     expect(v2.status).toBe("accepted");
+       |                       ^
+     88|     expect((await q<any>("SELECT image_id, source_author, source_site_…
+     89|       .toEqual({ image_id: d.image_id, source_author: "Sam Example", s…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+
+ Test Files  5 failed | 53 passed (58)
+      Tests  8 failed | 1168 passed (1176)
+   Start at  02:39:22
+   Duration  274.68s (tests 94%, import 5%, transform 1%)
+

@@ -25,10 +25,12 @@ async function saveVia(page: Page, recipeId: string, patch: (d: any) => void) {
         recipeId, expectedVersionNo: v.versionNo, title: v.title, cuisine: v.cuisine, summary: v.summary, sourceLabel: v.sourceLabel,
         effortMinutes: v.effortMinutes, effortLevel: v.effortLevel, leftoverFriendly: v.leftoverFriendly, instructions: v.instructions,
         reheatInstructions: v.reheatInstructions, components: v.components.map((c: any) => ({ key: c.key, name: c.name })),
-        ingredients: v.ingredients.map((i: any) => ({ componentKey: i.componentKey, ingredientKey: i.ingredientKey, ingredientName: i.name, quantity: i.quantity, unit: i.unit, form: i.form, note: i.note })),
+        // EQR (2026-10-10): an edit names the stored row each row came from (rows a patch adds are new: null).
+        ingredients: v.ingredients.map((i: any) => ({ componentKey: i.componentKey, ingredientKey: i.ingredientKey, ingredientName: i.name, quantity: i.quantity, unit: i.unit, form: i.form, note: i.note, sourceRowId: i.rowId ?? null })),
       };
       // eslint-disable-next-line no-new-func
       new Function("d", patchSrc)(d);
+      for (const i of d.ingredients) if (!("sourceRowId" in i)) i.sourceRowId = null;
       const res = await fetch("/api/commands/SaveRecipeVersion", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ operationId: `t-${crypto.randomUUID()}`, payload: d }) });
       return res.json();
     },

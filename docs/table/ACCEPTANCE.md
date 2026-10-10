@@ -593,7 +593,7 @@ seasoning modules did not exist. The "Have enough" rounding test fails on the pr
 | ID | What | Tests | Status |
 |---|---|---|---|
 | IO-01 | The reported line → pesto, 1/3 cup, note "homemade (or store-bought)"; clean lines start as Use; only the range and the no-amount line wait; salt and pepper left out | integration IO-01; unit parser table (67 parsed, 22 review cases); e2e IO-E1 | PASS |
-| IO-02 | Confirming gives exact per-serving amounts (1/3 cup ÷ 4 = 0.083333333333; 1 1/2 cups ÷ 4 = 0.375), source link kept, no salt/pepper in the recipe | integration IO-02 | PASS |
+| IO-02 | Confirming gives per-serving amounts from the exact whole-recipe amount: exact when the division ends (1 1/2 cups ÷ 4 = 0.375), otherwise a 12-place approximation (1/3 cup ÷ 4 = 0.083333333333 — not exact; corrected wording 2026-10-09, D131), source link kept, no salt/pepper in the recipe | integration IO-02 | PASS |
 | IO-03 | A typed fraction is accepted ("2 1/2"); nonsense is refused naming the line | integration IO-03 | PASS |
 | IO-04 | No suggestion workflow stored or shown | integration IO-04; e2e IO-E1, U2C-E1 | PASS |
 | IO-05 | Household-private mode keeps the method, not the photo; a per-site photo grant keeps it | integration IO-05; unit CP-02; integration R1-06 | PASS |
@@ -622,6 +622,10 @@ now a visible button opens the picker).
 `CLAUDE-NEXT-PROMPT.txt`) was not present in this session's uploads, the repository or any branch. RIO-01..03 below
 are **reconstructed** from the three problems the owner named (package rounding, seasoning classification, pending
 row edits); their wording and acceptance must be reconciled with the package when it is available.
+
+_Reconciled 2026-10-09: the package arrived with the independent recheck of `8c9fd8c`. The reconstructed RIO-02 (a
+bare "pepper" by the piece) was **not** the original RIO-02 (descriptors in parentheses); see "Original RIO
+correction package" below for the finding-by-finding disposition. The rows here stay as the record of `bca110e`._
 
 Starting `12434c0`; corrections `bca110e`; verified at `bca110e` — `docs/table/evidence/2026-10-09-verify-bca110e/summary.md`: vitest 1091/1091, Playwright 145/145, mutation self-test PASS, 102 killed / 0 survived / 0 error.
 Red on `12434c0` in the real harness: `evidence/2026-10-09-verify-bca110e/dev/` (integration RIO-01/02 against PostgreSQL
@@ -655,3 +659,138 @@ seven commits ending in its holdout-v2 freeze (`dee4ed0` → `46a6547`), so it w
 `evidence/2026-10-09-verify-bca110e/lab-reconciliation/` for the lab session or the owner to apply; it touches only
 `src/legacy/PROVENANCE.json` and that document, not the frozen holdout-v2 labels. These app corrections do not complete or replace the extraction engine; its Phase 3 is unauthorized.
 _Later (lab session, 2026-10-09): applied unchanged on the lab branch as `034f2c3` after merging `main` `8c9fd8c`; lab suite 1917 passed, 11 skipped._
+
+## Original RIO correction package — finding-by-finding (recheck of `8c9fd8c`) — added 2026-10-09
+
+The package (`ORIGINAL-CORRECTION-PACKAGE.zip`, inside `Table-RIO-Delivery-Recheck-8c9fd8c`) arrived after `bca110e`.
+Starting `8c9fd8c` (code `bca110e`); corrections `9f7836f` (RIO-02), `a9fd9de` (RIO-01 tests only), `43cd1ce` (RIO-03);
+verified at `43cd1ce` — `docs/table/evidence/2026-10-09-verify-43cd1ce/summary.md`: vitest 1142/1142, Playwright 150/150, mutation self-test PASS, 104 killed / 0 survived / 0 error.
+Red evidence: `evidence/2026-10-09-verify-43cd1ce/dev/` — the exact original RIO-02 cases on unchanged `bca110e` source
+(19 failing assertions: parser, classifier, import draft, saved-recipe projection), and the RIO-03 focus defect on the
+unchanged review screen.
+
+| Original finding | Original requirement | Disposition | Tests | Status |
+|---|---|---|---|---|
+| RIO-02 | `1 tsp salt (smoked)`, `1 tsp pepper (white)`, `1 tsp salt (garlic)` were omitted; descriptors must survive classification; ordinary salt/black pepper still omitted; bell/chili peppers, specialty seasonings and explicit requests kept | **Fixed.** The classifier now reads the name's parentheses, its comma tail and the line's descriptors; only words describing ordinary salt or black pepper, an amount or a purpose are ignored, and any other word keeps the ingredient (D130). The import folds the descriptor into the name ("smoked salt", so it shares the adjective-first identity). Saved recipes whose ingredient name carries the descriptor ("salt (smoked)") are bought. The pepper-by-the-piece rule (D119) is kept. | unit seasonings + ingredient-line (original cases, nested, comma tail, ordinary phrasings); integration RIO-02a (import → draft → recipe → groceries), RIO-02b (recipe saved earlier), RIO-02c (explicit request); mutations RIO02_descriptors_discarded, RIO02_classifier_ignores_descriptors | PASS |
+| RIO-01 | Keep exact source quantities/divisors far enough to avoid buying an extra package; no broad epsilon; test both rounding directions, combined meals, genuine overages, approvals/partial handoffs, provenance; label approximations honestly | **Partly delivered, precisely bounded.** Storage stays a 12-place approximation rounded toward zero (`bca110e`); `packagesFor` is unchanged and no epsilon was added. Proven: a count is never above the exact source count for recipes saved since `bca110e` (D131). Measured: over 295,472 cases (single recipes; 200,000 pairs of recipes sharing an ingredient; count/volume/mass with conversions; 7,571 exactly on a package boundary) the count equals the exact count in every case. Not proven: exactness — a count could be one low only if the exact week demand passes a boundary by less than 10⁻¹² of the unit per plate. Exact provenance needs an additive schema change; proposed, not built (D131). | unit rio01-boundaries (matrix + control that catches half-up), quantity; integration RIO-01, RIO-01b (exact boundary through approval, partial transfer and retailer request), RIO-01c (genuine overage), RIO-01d (below the boundary); mutation RIO01_per_serving_rounded_half_up | PASS for the stated guarantees |
+| RIO-01 legacy | Old 4-place recipes have the same mechanism | **Not changed** (needs authorized data change). Measured on the same matrix: 4-place half-up storage over-counts 1,242 and under-counts 115 of 295,472 cases (e.g. 3 lb for 9 servings plus a ⅔ g line: 3 packages instead of 4). | evidence `rio01-measurement.json` | OPEN — owner gate |
+| RIO-03 | Save and Save-for-later must not ignore visible row edits; test keystrokes, saved amounts, multiple rows, name/unit, invalid entries, closing/reopening, other-member conflicts, focus | **Kept, completed.** `bca110e`'s guard held in every new case. One defect found and fixed: after Use, Leave out or Cancel focus fell to the page (and a row that moved group lost it); it now returns to that row (D132). | e2e RIO-03a–g (two dirty rows with name/unit/amount; invalid pending amount; Save-for-later + reload + reopen; regrouping; the other member saving meanwhile; focus), each asserting database rows | PASS |
+| — | Keep the pesto import, compact review, member photos, source rights, pepper-by-piece fix, conversions and immutable history | Unchanged; no visual redesign | e2e IO-E1, screens-overhaul, ui-screens, journeys; integration IO-01..05; full suites | PASS |
+
+**Known limitations (not fixed, recorded):** (1) recipes saved before `8e6bd6e` keep 4-place per-serving amounts (above);
+(2) a recipe saved before this fix where a member pressed "Use" on an omitted `salt (smoked)` line stored the name
+`salt` and is still treated as table salt — the descriptor survives only in that line's `From:` note; changing such
+records needs the same authorized data change; (3) an import confirmed before this fix that left `salt (smoked)` out
+lists it in the recipe summary ("Not counted in groceries: …") but has no ingredient row for it.
+
+**Recipe Extraction Lab (separate workstream).** Not touched by this pass. Its owner has already applied the earlier
+reconciliation (`034f2c3` on `claude/quirky-gauss-depmd8`, recording `bca110e`); the patch kept in
+`evidence/2026-10-09-verify-bca110e/lab-reconciliation/` is historical and must not be applied again. This pass changes
+Table's live `ingredient-line.ts` once more; the read-only notice for the lab owner is
+`docs/table/LAB-SOURCE-DELTA-2026-10-09.md`. Nothing here adopts the extraction engine or completes its Phase 3.
+
+## Exact quantities for new recipe versions (EQ) — added 2026-10-10
+
+Owner authorization 2026-10-10 (bounded). Starting `5e19991`; code `dbc105d`; verified at `dbc105d` — `docs/table/evidence/2026-10-10-verify-dbc105d/summary.md`: vitest 1164/1164, Playwright 151/151, mutation self-test PASS, 112 killed / 0 survived / 0 error.
+Red on `5e19991` (`evidence/2026-10-10-verify-dbc105d/dev/eq-red-on-5e19991.log`; taken with the new, not yet used
+`src/domain/exact.ts` present): all ten EQ integration tests failed — no exact columns, no exact fractions on grocery
+lines, and EQ-03's genuine overage was counted short.
+
+| ID | What | Tests | Status |
+|---|---|---|---|
+| EQ-01 | An imported row keeps its exact whole-recipe amount and serving basis next to the stored decimal (`2` for 3; `3/2` for 3; `1/3` for 3) | integration EQ-01; mutation EQ_import_drops_exact | PASS |
+| EQ-02 | 2 cucumbers for 3 servings with all 3 planned need **exactly 2**, alongside the legacy salmon bowls' cucumbers (old and new recipes together) | integration EQ-02; unit exact; mutation EQ_purchase_uses_stored_decimal | PASS |
+| EQ-03 | A genuine amount above a package boundary (2 + 2×10⁻¹² cucumbers) needs another package — no tolerance; the stored-decimal path counted it short | integration EQ-03; mutation EQ_package_tolerance | PASS |
+| EQ-04 | A legacy row (0.6667 per serving) is used exactly as stored and labelled approximate; it is not repaired | integration EQ-04 | PASS |
+| EQ-05/05b | A title-only edit keeps legacy rows legacy; a changed amount is the member's exact amount; an unchanged number keeps its basis when the name or unit changes; the accepted dinner keeps its version | integration EQ-05, EQ-05b; e2e EQ-E1 (real editor); mutation EQ_title_edit_relabels_legacy | PASS |
+| EQ-06 | A client cannot declare a row exact | integration EQ-06; mutation EQ_client_claims_exact | PASS |
+| EQ-07/07b | Unit conversion stays exact: a cup recipe and legacy tablespoon recipes combine in ml to the exact sum on a package boundary; ⅔ of a cup recipe for 2 of 3 servings stays a fraction | integration EQ-07, EQ-07b; mutation EQ_conversion_through_decimal | PASS |
+| EQ-08 | What is at home is subtracted exactly | integration EQ-08 | PASS |
+| EQ-09 | An exact boundary line and a legacy line approve and go in one partial transfer with the counts shown | integration EQ-09 (and RIO-01b) | PASS |
+| EQ-10 | The database refuses incoherent rows (exact without basis, a decimal that does not match, a legacy row claiming one, an unreduced fraction) | integration EQ-10 | PASS |
+| LA-01..03 | Read-only legacy audit on disposable data: recoverable (import draft, earlier version) vs pattern-only, source line without servings, missing; seasoning findings; never writes; refuses a remote host | integration LA-01..03; mutations LA_audit_not_read_only, LA_pattern_counted_as_evidence | PASS |
+| Upgrade | Rehearsal from `43cd1ce` on a throwaway PostgreSQL cluster: populated by `43cd1ce`'s own code (imports, a manual recipe, a planned week, home supply, approvals, a partial transfer); migration 015 left every pre-existing column of every table unchanged; all 29 existing recipe rows read legacy; both releases project the upgraded week identically to before (amounts, packages, to send, fingerprints, approval validity); after this release saved an exact recipe `43cd1ce` still recomputed every week; this release's export round-trips; `43cd1ce`'s pre-upgrade export restores as legacy rows; `43cd1ce`'s whole vitest suite (1142) passes on the new schema | `scripts/rehearse-upgrade.sh 43cd1ce --old-suite` → `evidence/2026-10-10-verify-dbc105d/rehearsal/` | PASS |
+
+**Changed or re-targeted checks (transparent):** mutation `HE_enough_compared_unrounded` re-anchored to the exact
+type (same injected defect); `RIO01_per_serving_rounded_half_up` now runs against the per-serving unit test, because
+through the real commands migration 015 refuses a stored decimal above the exact value (a database error, rightly
+ERROR, not KILLED). No assertion was weakened.
+
+**Limitations before deployment:**
+1. **Legacy rows stay approximations.** Recipes saved before this release keep their decimals (12 places from
+   `8e6bd6e`/`bca110e`, 4 places before `8e6bd6e`) and are counted as stored. Correcting any of them needs a
+   separate authorization and would create a new recipe version (D135).
+2. **Exactness lives in this release.** If the pilot is rolled back to an earlier commit after new recipes were
+   saved, that code ignores the exact columns and counts their stored decimals again (12 places, toward zero) —
+   it still runs correctly (rehearsed), it is just not exact.
+3. **An export made after exact recipes exist restores only into this release or later**; the earlier schema
+   refuses it whole (rehearsed — nothing half-restored). Exports from before the upgrade restore here as legacy rows.
+4. **The audit has not been run on household data.** It was tested on disposable data only and is not connected to
+   Neon. Running it on the household means either a local restore of a household export, or `--remote-read-only`
+   — an owner decision.
+5. No visual change: the recipe screens still show the stored decimal as a kitchen fraction; the exact fraction is
+   in the data and on grocery lines (`meal.rational`, `meal.exact`), not newly displayed.
+6. Manual entry in the recipe editor still takes decimals (B30): a member who types `0.3333` states exactly 0.3333.
+
+## Exact-quantity correction EQR-01/EQR-02 (review of `dbc105d`) — added 2026-10-10
+
+Review package `Table-Exact-Quantities-Correction-dbc105d` (REVIEW.md, probes as source-level characterization).
+Starting `5aeecc4` (code `dbc105d`); correction `7332b06`, rehearsal data `72cf615` (approvals left open across the upgrade); verified at `72cf615` — `docs/table/evidence/2026-10-10-verify-72cf615/summary.md`: vitest 1177/1177, Playwright 153/153 (Chromium), mutation self-test PASS, 121 mutations killed / 0 survived / 0 error.
+Upgrade rehearsals on the committed `72cf615`, each with the previous release's own test suite: from `43cd1ce` PASS, from
+`dbc105d` PASS (`evidence/2026-10-10-verify-72cf615/rehearsal-*/`). The rehearsal data holds a recipe listing cucumber
+twice (an imported 2-for-3 and a typed 0.666666666666), a title-only edit of it, a "some" and a "Have enough"
+observation, a partial transfer, and two approvals left open (soy sauce, black beans). Migration 015 is unchanged; the correction is migration 016.
+
+Red evidence on the reviewed code (`evidence/2026-10-10-verify-72cf615/dev/`): the integration suite on `5aeecc4`
+failed 9 of 12 on the defects (EQR-01d, 02c, 02f are guards that already held); the two browser tests on a
+`5aeecc4` build failed on the defects (the changed cucumber took the onion's legacy label; "Nothing to buy" for
+3.0004 after "Have enough" for 3); LA-04 failed on the audit's first-match recovery. A first run of the integration
+suite with PostgreSQL stopped is kept as `INVALID-eqr-red-db-down.log` — a setup failure, not a result.
+
+| Finding | Disposition | Tests | Status |
+|---|---|---|---|
+| EQR-01A changed amount took another row's legacy label | Basis follows verified lineage (D136): the changed cucumber is exact `1/2`, the untouched onion stays legacy | integration EQR-01a; e2e EQR-E1 | FIXED |
+| EQR-01B new row took another row's 2-for-3 | A new row is exact as typed: `333333333333/500000000000` | integration EQR-01b | FIXED |
+| EQR-01C repeated occurrences collapsed through a title-only save | Each occurrence keeps its own basis through a title-only save and a reorder; 3 plates + 0.000000000001 × 2 plates → exactly 4 + 1 = 5 packages (collapsed: 6) | integration EQR-01c | FIXED |
+| EQR-01 renames/unit changes, invalid lineage | Rename/re-measure with lineage keeps the row's basis; missing, foreign, duplicated, unknown, other-household or malformed lineage refused, nothing saved | integration EQR-01d/e; mutations | FIXED |
+| EQR-01 audit first-match / look-alike inheritance | Ambiguous sources reported as conflicting; verified lineage followed | integration LA-04; mutations LA_first_fitting_line, LA_inherit_more_rows_than_source | FIXED |
+| EQR-02A old "Have enough" stretched to a larger exact requirement | Exact certification (D137): confirmed 3, now 3.0004 shown as 3 → unresolved, 0.0004 still needed, 1 package | integration EQR-02a; e2e EQR-E2 | FIXED |
+| EQR-02 race, both orders | Observation first: bound to the reviewed exact requirement; change first: bound to exactly the shown decimal, never upgraded; 1 package either way | integration EQR-02b (the reviewed change is prepared first so the race is one command against one command) | FIXED |
+| EQR-02 unchanged repeating requirement | ⅔-type requirement confirmed stays confirmed after an unrelated recompute | integration EQR-02c; unit seasonings "Have enough" (legacy rule) | HELD |
+| EQR-02B review identity omitted the exact requirement | Exact requirement and basis in the identity (D138): sub-6th-decimal change → approval stale, the send refused, zero retailer calls; basis-only change → new identity; ½ cup vs 8 tbsp → same identity, approval valid | integration EQR-02d/e/f; mutation EQR_identity_without_exact | FIXED |
+| Deployment wording | Checklist and step 5 now name migrations 015 and 016; rollback warning rewritten; existing settings left as they are | `docs/table/DEPLOYMENT.md` §0 | DONE |
+| Audit check on disposable data | First-match recovery and the look-alike (`known`) map both produced a recoverable amount where the source was ambiguous; now conflicting | integration LA-04 (disposable `table_test` data only) | FIXED |
+| Rehearsal with duplicate rows, a title-only edit, observations and approvals | Upgrade, export/restore and previous-release checks re-run from `43cd1ce` and `dbc105d` | `scripts/rehearse-upgrade.sh <prev> --old-suite` | PASS |
+| Extraction Lab | Read-only interface notice; identifier allocation unchanged; lab branch not written | `docs/table/LAB-QUANTITY-INTERFACE-EQR-2026-10-10.md` | DONE |
+
+**New tests (inventory):** `tests/integration/eqr-corrections.test.ts` — 12 (EQR-01a–e, EQR-02a, 02b × 2 orders,
+02c–f; expected values are literal fractions worked out by hand — `Q` only sums a fixture precondition, itself
+checked against a literal); `tests/integration/legacy-audit.test.ts`
+— LA-04; `tests/e2e/eqr-two-members.spec.ts` — 2 (EQR-E1, EQR-E2: two signed-in members, production server);
+`tests/mutation/run.mjs` — 9 new mutations (EQR_basis_by_equal_number, EQR_lineage_not_verified,
+EQR_lineage_reused, EQR_missing_lineage_guessed, EQR_enough_compared_to_display, EQR_stale_enough_takes_current,
+EQR_identity_without_exact, LA_first_fitting_line, LA_inherit_more_rows_than_source) and 3 re-anchored; rehearsal
+data and checks (`scripts/rehearsal/{populate,snapshot,compare}.mts`, `scripts/rehearse-upgrade.sh`).
+
+**Tests that changed (transparent):** edits through `SaveRecipeVersion` now state lineage, so the existing edit
+tests pass `sourceRowId` (null where the rows are restated, the stored row where inheritance is the point —
+EQ-05/05b); RB17-02's scripted duplicate row is a new occurrence (null). Mutations `F06_enough_uses_current_demand`,
+`HE_enough_compared_unrounded` and `EQ_title_edit_relabels_legacy` were re-anchored to the rewritten lines with the
+same injected defect. A first version of `EQR_lineage_reused` was an equivalent mutant (the count check still caught
+it) and `EQR_stale_enough_takes_current` first SURVIVED because the race raced a two-command plan change; both
+were corrected (mutation and test) and are KILLED. No assertion was weakened.
+
+**Limitations:**
+1. Observations recorded before migration 016 keep the 3-decimal rule; a requirement that grows below the shown
+   precision after such an observation is still covered by it until a member reviews it again.
+2. A screen open from before this release cannot save a recipe edit (`lineage_required`): reload and edit again.
+3. If `dbc105d` was ever deployed and members edited recipes there, those versions keep the bases `dbc105d` gave
+   them (number matching); nothing is rewritten. The audit does not report exact-basis rows; finding such versions
+   would be a separate, authorized check (B43).
+4. Rolling the code back after this upgrade keeps the data but not the behaviour: earlier code counts stored
+   decimals, ignores the certified exact amounts and records no lineage (an edit made there saves legacy-only rows
+   of a new version). A passing old test suite or a 200 from `/api/health` is not equality of exact behaviour.
+5. Upgrading from `dbc105d`: lines with exact rows get a new review identity once; approvals on them become stale
+   and must be given again. Rehearsed: amounts, packages and to-send unchanged on every line; the open soy-sauce
+   approval (exact rows) became stale and stays stale under `dbc105d` after going back; the open black-beans approval
+   (all legacy) stayed valid. From `43cd1ce` no identity changed.

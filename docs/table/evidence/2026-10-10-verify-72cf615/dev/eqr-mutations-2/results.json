@@ -1,0 +1,24 @@
+{
+  "when": "2026-10-10T03:00:40.068Z",
+  "head": "5aeecc4a3d1c437c21bbb9ee6c1fce0466ba928f",
+  "restored": true,
+  "pass": true,
+  "results": [
+    {
+      "name": "EQR_lineage_reused",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: EQR-01e: lineage that is missing, foreign, duplicated, unknown or from another household is refused and nothing is saved"
+    },
+    {
+      "name": "EQR_stale_enough_takes_current",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/2 failed by assertion: EQR-02b: a confirmation racing the increase never certifies the larger requirement (change first)"
+    }
+  ]
+}

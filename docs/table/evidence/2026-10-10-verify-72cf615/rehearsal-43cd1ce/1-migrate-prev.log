@@ -1,0 +1,1 @@
+applied: 001_auth.sql, 002_table.sql, 003_reconciliation.sql, 004_staple_products.sql, 005_staple_management.sql, 006_nutrition_sources.sql, 007_kroger.sql, 008_cook_record_corrections.sql, 009_cook_record_chain.sql, 010_recipe_sources.sql, 011_shopping_destinations.sql, 012_recipe_content.sql, 013_partial_handoff.sql, 014_member_recipe_photo.sql

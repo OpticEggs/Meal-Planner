@@ -48,6 +48,10 @@ const B2122 = "tests/integration/b21-b22.test.ts";
 const MSS = "tests/integration/ms-sources.test.ts";
 const IO = "tests/integration/import-overhaul.test.ts";
 const RIO = "tests/integration/rio-corrections.test.ts";
+const EQ = "tests/integration/exact-quantities.test.ts";
+const QTY = "tests/unit/quantity.test.ts";
+const LA = "tests/integration/legacy-audit.test.ts";
+const EQR = "tests/integration/eqr-corrections.test.ts";
 const PARSE = "tests/unit/recipe-import-ingredient-line.test.ts";
 const SEASON = "tests/unit/seasonings.test.ts";
 const CP = "tests/unit/u2c-content-policy.test.ts";
@@ -88,8 +92,9 @@ const MUTATIONS = [
   { name: "F05_substitute_counts_as_original", file: "src/domain/groceries/projection.ts", suite: REV, pattern: "R-F05", expect: [/R-F05[ab]/],
     edits: [["toP(ol.packages - mis - sub, ol.packageQty, ol.packageUnit)", "toP(ol.packages - mis, ol.packageQty, ol.packageUnit)"]] },
   { name: "F06_enough_uses_current_demand", file: "src/server/commands/groceries.ts", suite: REV, pattern: "R-F06", expect: [/R-F06a/],
-    edits: [["[actor.householdId, cycleId, p.ingredientKey, p.state, p.quantity ?? null, p.unit ? normalizeUnit(p.unit) : null, reviewedDemand, reviewedUnit, actor.memberId],",
-      "[actor.householdId, cycleId, p.ingredientKey, p.state, p.quantity ?? null, p.unit ? normalizeUnit(p.unit) : null, line.meal?.quantity ?? reviewedDemand, line.meal?.unit ?? reviewedUnit, actor.memberId],"]] },
+    // Re-anchored 2026-10-10 (EQR): the insert now also stores the exact certified amount; the defect (bind to the current demand) is unchanged.
+    edits: [["[actor.householdId, cycleId, p.ingredientKey, p.state, p.quantity ?? null, p.unit ? normalizeUnit(p.unit) : null, reviewedDemand, reviewedUnit, reviewedExact, reviewedBinding, actor.memberId],",
+      "[actor.householdId, cycleId, p.ingredientKey, p.state, p.quantity ?? null, p.unit ? normalizeUnit(p.unit) : null, line.meal?.quantity ?? reviewedDemand, line.meal?.unit ?? reviewedUnit, line.meal?.rational ? Q.of(line.meal.rational).toString() : reviewedExact, reviewedBinding, actor.memberId],"]] },
   { name: "F07_capture_into_confirmed_pickup", file: "src/server/commands/groceries.ts", suite: REV, pattern: "R-F07", expect: [/R-F07b/],
     edits: [["      if (!confirmed.rowCount) break;", "      break;"]] },
   { name: "F08_single_week_recompute", file: "src/server/commands/framework.ts", suite: REV, pattern: "R-F08", expect: [/R-F08/],
@@ -302,16 +307,68 @@ MUTATIONS.push(
   { name: "IO_seasoning_bought", file: "src/domain/groceries/projection.ts", suite: SEASON, pattern: "groceries leave", expect: [/salt and black pepper make no grocery line/],
     edits: [["        seasonings.set(l.ingredientKey, sz);\n        continue;", "        seasonings.set(l.ingredientKey, sz);"]] },
   { name: "IO_bell_pepper_is_seasoning", file: "src/domain/groceries/seasonings.ts", suite: SEASON, pattern: "isHouseholdSeasoning", expect: [/not a household seasoning/],
-    edits: [["  if (!words.every((w) => QUALIFIERS.has(w))) return false;", "  if (!words.some((w) => QUALIFIERS.has(w))) return false;"]] },
+    // Re-anchored 2026-10-09 (RIO-02): the line now also admits NEUTRAL words; the injected defect is unchanged.
+    edits: [["  if (!words.every((w) => QUALIFIERS.has(w) || NEUTRAL.has(w))) return false;", "  if (!words.some((w) => QUALIFIERS.has(w) || NEUTRAL.has(w))) return false;"]] },
   { name: "HE_enough_compared_unrounded", file: "src/domain/groceries/projection.ts", suite: SEASON, pattern: "Have enough", expect: [/3-decimal amount/],
-    edits: [["reviewed.gte(mealQty.toDecimalPlaces(SHOWN_PLACES))", "reviewed.gte(mealQty)"]] },
+    // Re-anchored 2026-10-10 (EQ): demand is an exact fraction now; the injected defect (compare unrounded) is unchanged.
+    // Re-anchored 2026-10-10 (EQR): the 3-place rule now applies to observations recorded before migration 016; same defect.
+    edits: [["legacySeen.gte(mealQty.toDecimal(SHOWN_PLACES))", "legacySeen.gte(mealQty)"]] },
   // Import-overhaul corrections (2026-10-09; RIO-01..02 reconstructed — the owner's package did not arrive).
-  { name: "RIO01_per_serving_rounded_half_up", file: "src/domain/quantity.ts", suite: RIO, pattern: "RIO-01", expect: [/RIO-01/],
+  // Re-targeted 2026-10-10 (EQ): migration 015 now REFUSES a stored per-serving decimal above the exact value, so
+  // through the real commands this defect ends in a database error (a non-assertion failure, rightly ERROR). The
+  // same injected defect is checked where it is asserted directly: the per-serving unit test.
+  { name: "RIO01_per_serving_rounded_half_up", file: "src/domain/quantity.ts", suite: QTY, pattern: "perServing", expect: [/perServing|0\.666666666666/],
     edits: [["toDecimalPlaces(12, D.ROUND_DOWN)", "toDecimalPlaces(12)"]] },
   { name: "RIO02_bare_pepper_always_seasoning", file: "src/domain/groceries/seasonings.ts", suite: RIO, pattern: "RIO-02", expect: [/RIO-02/],
     edits: [["  if (barePepper && unit && BOUGHT_BY_PIECE_OR_WEIGHT.has(unit)) return false;", "  void barePepper;"]] },
+  { name: "RIO02_descriptors_discarded", file: "src/domain/groceries/seasonings.ts", suite: RIO, pattern: "RIO-02", expect: [/RIO-02a/],
+    edits: [["  return out;\n}", "  return [];\n}"]] },
+  { name: "RIO02_classifier_ignores_descriptors", file: "src/domain/groceries/seasonings.ts", suite: RIO, pattern: "RIO-02", expect: [/RIO-02b/],
+    edits: [["  if (identityDescriptors(name, descriptors).length) return false;", "  void identityDescriptors;"]] },
   { name: "IO_private_mode_copies_photos", file: "src/server/integrations/recipe-import/content-policy.ts", suite: CP, pattern: "CP-02", expect: [/CP-02/],
     edits: [["    return { instructions: true, photos: false, kind: \"owner_mode\"", "    return { instructions: true, photos: true, kind: \"owner_mode\""]] },
+);
+// Exact quantities for new recipe versions (EQ, 2026-10-10) and the read-only legacy audit.
+MUTATIONS.push(
+  { name: "EQ_purchase_uses_stored_decimal", file: "src/domain/recipes/plate.ts", suite: EQ, pattern: "EQ-0", expect: [/EQ-0[23]/],
+    edits: [["  if (ing.exactAmount && ing.exactServings) return", "  if (false && ing.exactAmount && ing.exactServings) return"]] },
+  { name: "EQ_package_tolerance", file: "src/domain/exact.ts", suite: EQ, pattern: "EQ-03", expect: [/EQ-03/],
+    edits: [["  return Number(demand.div(packageQty).ceil());", "  return Number(demand.div(packageQty).minus(\"0.000000001\").ceil());"]] },
+  { name: "EQ_conversion_through_decimal", file: "src/domain/exact.ts", suite: EQ, pattern: "EQ-07", expect: [/EQ-07b/],
+    edits: [["  return qty.mul(Q.of(uf.factor)).div(Q.of(ut.factor));", "  return Q.of(qty.toDec().mul(uf.factor).div(ut.factor).toDecimalPlaces(12).toFixed());"]] },
+  { name: "EQ_import_drops_exact", file: "src/server/commands/imports.ts", suite: EQ, pattern: "EQ-01", expect: [/EQ-01/],
+    edits: [["          exactAmount: l.decision.quantity, exactServings: d.servings,", ""]] },
+  { name: "EQ_title_edit_relabels_legacy", file: "src/server/commands/library.ts", suite: EQ, pattern: "EQ-05", expect: [/EQ-05/],
+    // Re-anchored 2026-10-10 (EQR): inheritance now follows verified lineage; the defect (an inherited legacy row becomes exact) is unchanged.
+    edits: [[": { basis: \"legacy\" };\n  }\n  const typed", ": { basis: \"exact\", amount: fractionText(Q.of(ing.quantity)), servings: 1 };\n  }\n  const typed"]] },
+  { name: "EQ_client_claims_exact", file: "src/server/commands/library.ts", suite: EQ, pattern: "EQ-06", expect: [/EQ-06/],
+    edits: [["p.ingredients.map(({ exactAmount: _a, exactServings: _s, ...i }) => i)", "p.ingredients"]] },
+  { name: "LA_audit_not_read_only", file: "src/server/audit/legacy-quantities.ts", suite: LA, pattern: "LA-02", expect: [/LA-02/],
+    edits: [["BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY", "BEGIN"]] },
+  { name: "LA_pattern_counted_as_evidence", file: "src/server/audit/legacy-quantities.ts", suite: LA, pattern: "LA-01", expect: [/LA-01/],
+    edits: [["      const recoverable = evidence.kind === \"import_draft\" || evidence.kind === \"earlier_version\";", "      const recoverable = evidence.kind !== \"missing\";"]] },
+);
+// EQR (2026-10-10): row lineage, exact "Have enough" binding, exact review identity, audit ambiguity.
+MUTATIONS.push(
+  { name: "EQR_basis_by_equal_number", file: "src/server/commands/library.ts", suite: EQR, pattern: "EQR-01", expect: [/EQR-01a/],
+    edits: [["      const b = basisOf(ing, ing.sourceRowId ? sources.get(ing.sourceRowId) : undefined);", "      const b = basisOf(ing, [...sources.values()].find((x) => Q.of(x.q).eq(Q.of(ing.quantity))));"]] },
+  { name: "EQR_lineage_not_verified", file: "src/server/commands/library.ts", suite: EQR, pattern: "EQR-01e", expect: [/EQR-01e/],
+    edits: [["        if (found.rowCount !== ids.length) throw invalidLineage();", ""]] },
+  // "Deduplicate, then verify": a reused source row passes both guards (removing only one is an equivalent mutant).
+  { name: "EQR_lineage_reused", file: "src/server/commands/library.ts", suite: EQR, pattern: "EQR-01e", expect: [/EQR-01e/],
+    edits: [[" || new Set(ids).size !== ids.length) throw invalidLineage();", ") throw invalidLineage();"], ["        if (found.rowCount !== ids.length) throw invalidLineage();", "        if (found.rowCount !== new Set(ids).size) throw invalidLineage();"]] },
+  { name: "EQR_missing_lineage_guessed", file: "src/server/commands/library.ts", suite: EQR, pattern: "EQR-01e", expect: [/EQR-01e/],
+    edits: [["      if (ings.some((i) => i.sourceRowId === undefined)) {", "      if (false) {"]] },
+  { name: "EQR_enough_compared_to_display", file: "src/domain/groceries/projection.ts", suite: EQR, pattern: "EQR-02", expect: [/EQR-02a/],
+    edits: [["const covers = exactSeen ? exactSeen.gte(mealQty) :", "const covers = exactSeen ? exactSeen.gte(mealQty.toDecimal(SHOWN_PLACES)) :"]] },
+  { name: "EQR_stale_enough_takes_current", file: "src/server/commands/groceries.ts", suite: EQR, pattern: "EQR-02b", expect: [/change first/],
+    edits: [["      reviewedExact = current ? Q.of(line.meal!.rational!).toString() : Q.of(reviewedDemand).toString();", "      reviewedExact = line.meal?.rational ? Q.of(line.meal.rational).toString() : Q.of(reviewedDemand).toString();"]] },
+  { name: "EQR_identity_without_exact", file: "src/domain/groceries/projection.ts", suite: EQR, pattern: "EQR-02", expect: [/EQR-02[de]/],
+    edits: [["      ...(m?.anyExact && mealQty ? { mealExact: [mealQty.toString(), m.exact ? \"exact\" : \"mixed\"] } : {}),", ""]] },
+  { name: "LA_first_fitting_line", file: "src/server/audit/legacy-quantities.ts", suite: LA, pattern: "LA-04", expect: [/LA-04/],
+    edits: [["        if (amounts.length === 1) {", "        if (amounts.length >= 1) {"]] },
+  { name: "LA_inherit_more_rows_than_source", file: "src/server/audit/legacy-quantities.ts", suite: LA, pattern: "LA-04", expect: [/LA-04/],
+    edits: [["if (earlier.values.size === 1 && !earlier.unrecoverable && here <= earlier.count)", "if (earlier.values.size === 1 && !earlier.unrecoverable)"]] },
 );
 // A harmless change that MUST be classified SURVIVED (proves the classifier can say so).
 const CONTROLS_LIST = [

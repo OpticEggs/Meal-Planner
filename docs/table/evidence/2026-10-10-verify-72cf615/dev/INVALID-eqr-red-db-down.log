@@ -1,0 +1,45 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/table
+
+ ❯ tests/integration/eqr-corrections.test.ts (12 tests | 12 failed) 23ms
+   ❯ EQR-01: the basis follows the ingredient occurrence (5)
+     × EQR-01a: a changed amount is exact as typed — it does not take another row's legacy label because the numbers match 9ms
+     × EQR-01b: a new ingredient typed as 0.666666666666 is that decimal, not another row's 2-for-3 2ms
+     × EQR-01c: two occurrences with the same decimal keep their own bases through a title-only save and a reorder — and the package count with them 1ms
+     × EQR-01d: a renamed or re-measured row whose number is unchanged keeps ITS basis — legacy stays legacy, ⅔ stays ⅔ 1ms
+     × EQR-01e: lineage that is missing, foreign, duplicated, unknown or from another household is refused and nothing is saved 1ms
+   ❯ EQR-02: 'Have enough' certifies the exact requirement reviewed (7)
+     × EQR-02a: confirmed for exactly 3, then the requirement becomes 3.0004 — still shown as 3 — and the confirmation does not stretch to it 1ms
+     × EQR-02b: a confirmation racing the increase never certifies the larger requirement (observation first) 1ms
+     × EQR-02b: a confirmation racing the increase never certifies the larger requirement (change first) 1ms
+     × EQR-02c: an unchanged repeating requirement (⅔ cucumber on top of the week's 1) stays confirmed although its display is shorter 2ms
+     × EQR-02d: a change below the 6th decimal changes the review identity — the earlier approval goes stale and nothing is sent 1ms
+     × EQR-02e: a basis-only change (a legacy ½ cucumber per plate replaced by an exact ½) is a new review identity 1ms
+     × EQR-02f: equal exact requirements written differently (½ cup and 8 tbsp) share one review identity; the approval stays valid 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/eqr-corrections.test.ts > EQR-01: the basis follows the ingredient occurrence > EQR-01a: a changed amount is exact as typed — it does not take another row's legacy label because the numbers match
+ FAIL  tests/integration/eqr-corrections.test.ts > EQR-01: the basis follows the ingredient occurrence > EQR-01b: a new ingredient typed as 0.666666666666 is that decimal, not another row's 2-for-3
+ FAIL  tests/integration/eqr-corrections.test.ts > EQR-01: the basis follows the ingredient occurrence > EQR-01c: two occurrences with the same decimal keep their own bases through a title-only save and a reorder — and the package count with them
+ FAIL  tests/integration/eqr-corrections.test.ts > EQR-01: the basis follows the ingredient occurrence > EQR-01d: a renamed or re-measured row whose number is unchanged keeps ITS basis — legacy stays legacy, ⅔ stays ⅔
+ FAIL  tests/integration/eqr-corrections.test.ts > EQR-01: the basis follows the ingredient occurrence > EQR-01e: lineage that is missing, foreign, duplicated, unknown or from another household is refused and nothing is saved
+ FAIL  tests/integration/eqr-corrections.test.ts > EQR-02: 'Have enough' certifies the exact requirement reviewed > EQR-02a: confirmed for exactly 3, then the requirement becomes 3.0004 — still shown as 3 — and the confirmation does not stretch to it
+ FAIL  tests/integration/eqr-corrections.test.ts > EQR-02: 'Have enough' certifies the exact requirement reviewed > EQR-02b: a confirmation racing the increase never certifies the larger requirement (observation first)
+ FAIL  tests/integration/eqr-corrections.test.ts > EQR-02: 'Have enough' certifies the exact requirement reviewed > EQR-02b: a confirmation racing the increase never certifies the larger requirement (change first)
+ FAIL  tests/integration/eqr-corrections.test.ts > EQR-02: 'Have enough' certifies the exact requirement reviewed > EQR-02c: an unchanged repeating requirement (⅔ cucumber on top of the week's 1) stays confirmed although its display is shorter
+ FAIL  tests/integration/eqr-corrections.test.ts > EQR-02: 'Have enough' certifies the exact requirement reviewed > EQR-02d: a change below the 6th decimal changes the review identity — the earlier approval goes stale and nothing is sent
+ FAIL  tests/integration/eqr-corrections.test.ts > EQR-02: 'Have enough' certifies the exact requirement reviewed > EQR-02e: a basis-only change (a legacy ½ cucumber per plate replaced by an exact ½) is a new review identity
+ FAIL  tests/integration/eqr-corrections.test.ts > EQR-02: 'Have enough' certifies the exact requirement reviewed > EQR-02f: equal exact requirements written differently (½ cup and 8 tbsp) share one review identity; the approval stays valid
+Error: connect ECONNREFUSED 127.0.0.1:54329
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  12 failed (12)
+   Start at  02:36:06
+   Duration  1.81s (transform 60%, import 38%, tests 1%)
+

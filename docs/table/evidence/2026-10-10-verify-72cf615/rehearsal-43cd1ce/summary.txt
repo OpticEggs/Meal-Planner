@@ -1,0 +1,13 @@
+Upgrade rehearsal: previous release 43cd1ce → this release 72cf615 (2026-10-10T04:25:46Z)
+PASS  1 populated by 43cd1ce: 13 grocery lines; export taken by 43cd1ce
+applied: 015_exact_quantities.sql, 016_exact_lineage_and_review.sql
+PASS  2 every pre-existing column of every table is unchanged by the migration
+PASS  2 every existing recipe row keeps its basis (before: {"column":"absent"}; after: {"legacy":34})
+PASS  3 this release projects the upgraded week as 43cd1ce did: amounts, packages, to send and status on every line; review identity changed only where exact rows are behind a line: none
+PASS  3 43cd1ce still projects the same amounts, packages and to-send on the upgraded schema (an approval this release marked stale stays stale: none)
+PASS  4 after this release saved an exact recipe ({"exact":1,"legacy":34}), 43cd1ce still recomputes every week
+PASS  5 this release's export (legacy and exact rows) restores and re-exports identically
+PASS  5 43cd1ce's pre-upgrade export restores into the new schema with every row's basis as it was ({"legacy":34})
+PASS  5 known limit confirmed: an export containing exact rows needs this release (or later) to restore; 43cd1ce's schema refuses it and nothing was half-restored
+PASS  6 43cd1ce's vitest suite passes on the upgraded database (all migrations of this release):  Tests 1142 passed (1142)
+Result: PASS — /tmp/claude-0/-home-user/ae3f20b4-8e59-5d3c-9e16-8b697724019c/scratchpad/eqr/final-43cd1ce

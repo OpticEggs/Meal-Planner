@@ -1,0 +1,16 @@
+{
+  "when": "2026-10-09T23:16:52.474Z",
+  "head": "8c9fd8ca82f0a4c8787d9089c0954be6e650e1a2",
+  "restored": true,
+  "pass": true,
+  "results": [
+    {
+      "name": "IO_bell_pepper_is_seasoning",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "18/45 failed by assertion: \"red bell pepper\" → not a household seasoning | \"bell pepper\" → not a household seasoning | \"jalapeño pepper\" → not a household seasoning"
+    }
+  ]
+}

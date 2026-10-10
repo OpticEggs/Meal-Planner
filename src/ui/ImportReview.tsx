@@ -123,6 +123,10 @@ function DraftReview({ b, onDone }: { b: any; onDone: () => void }) {
   const [pending, setPending] = useState<Record<number, string>>({});
   const [held, setHeld] = useState(false);
   const [reveal, setReveal] = useState<{ i: number; tick: number } | null>(null);
+  // After Use, Leave out or Cancel the row's editor closes (and the row may move to another group): focus
+  // goes back to that row's main button instead of falling to the page.
+  const [settled, setSettled] = useState<number | null>(null);
+  const onSettled = useCallback((i: number | null) => setSettled(i), []);
   const onPending = useCallback((i: number, name: string | null) => setPending((p) => {
     if ((p[i] ?? null) === name) return p;
     const next = { ...p };
@@ -197,21 +201,21 @@ function DraftReview({ b, onDone }: { b: any; onDone: () => void }) {
         <section aria-labelledby="check-h" className="group">
           <h3 id="check-h" className="group-title">Needs a quick check</h3>
           <ol className="rows" data-testid="draft-check">
-            {check.map(({ l, i }) => <LineRow key={i} i={i} line={l} onChange={(dec) => setDecision(i, dec)} onPending={onPending} reveal={reveal?.i === i ? reveal.tick : 0} openByDefault />)}
+            {check.map(({ l, i }) => <LineRow key={i} i={i} line={l} onChange={(dec) => setDecision(i, dec)} onPending={onPending} reveal={reveal?.i === i ? reveal.tick : 0} settled={settled === i} onSettled={onSettled} openByDefault />)}
           </ol>
         </section>
       )}
       <section aria-labelledby="ing-h" className="group">
         <h3 id="ing-h" className="group-title">Ingredients</h3>
         <ol className="rows" data-testid="draft-lines">
-          {using.map(({ l, i }) => <LineRow key={i} i={i} line={l} onChange={(dec) => setDecision(i, dec)} onPending={onPending} reveal={reveal?.i === i ? reveal.tick : 0} />)}
+          {using.map(({ l, i }) => <LineRow key={i} i={i} line={l} onChange={(dec) => setDecision(i, dec)} onPending={onPending} reveal={reveal?.i === i ? reveal.tick : 0} settled={settled === i} onSettled={onSettled} />)}
         </ol>
       </section>
       {left.length > 0 && (
         <section aria-labelledby="left-h" className="group">
           <h3 id="left-h" className="group-title">Not added to groceries</h3>
           <ol className="rows" data-testid="draft-left-out">
-            {left.map(({ l, i }) => <LineRow key={i} i={i} line={l} onChange={(dec) => setDecision(i, dec)} onPending={onPending} reveal={reveal?.i === i ? reveal.tick : 0} />)}
+            {left.map(({ l, i }) => <LineRow key={i} i={i} line={l} onChange={(dec) => setDecision(i, dec)} onPending={onPending} reveal={reveal?.i === i ? reveal.tick : 0} settled={settled === i} onSettled={onSettled} />)}
           </ol>
         </section>
       )}
@@ -267,10 +271,12 @@ function lineStatus(line: DraftLine): string | null {
   return r.replace(/^No amount given \((.*)\)$/, "No amount given ($1)");
 }
 
-function LineRow({ i, line, onChange, onPending, reveal, openByDefault }: {
-  i: number; line: DraftLine; onChange: (d: LineDecision | null) => void; onPending: (i: number, name: string | null) => void; reveal: number; openByDefault?: boolean;
+function LineRow({ i, line, onChange, onPending, reveal, settled, onSettled, openByDefault }: {
+  i: number; line: DraftLine; onChange: (d: LineDecision | null) => void; onPending: (i: number, name: string | null) => void; reveal: number;
+  settled: boolean; onSettled: (i: number | null) => void; openByDefault?: boolean;
 }) {
   const [open, setOpen] = useState(!!openByDefault);
+  const mainRef = useRef<HTMLButtonElement>(null);
   const applyRef = useRef<HTMLButtonElement>(null);
   const amountRef = useRef<HTMLInputElement>(null);
   const id = useId();
@@ -293,13 +299,18 @@ function LineRow({ i, line, onChange, onPending, reveal, openByDefault }: {
   }, [dirty, form.name, i, name, onPending]);
   useEffect(() => () => onPending(i, null), [i, onPending]);
   useEffect(() => {
+    if (!settled) return;
+    mainRef.current?.focus();
+    onSettled(null);
+  }, [settled, onSettled]);
+  useEffect(() => {
     if (!reveal) return;
     setOpen(true);
     requestAnimationFrame(() => (applyRef.current && !applyRef.current.disabled ? applyRef.current : amountRef.current)?.focus());
   }, [reveal]);
   return (
     <li className={`row-item ${kind}`} data-testid="draft-line" data-raw={line.raw} data-state={kind}>
-      <button type="button" className="row-main" aria-expanded={open} aria-controls={`${id}-ed`} onClick={() => setOpen((o) => !o)}>
+      <button ref={mainRef} type="button" className="row-main" aria-expanded={open} aria-controls={`${id}-ed`} onClick={() => setOpen((o) => !o)}>
         <span className="row-text">
           {use ? (
             <span className="line1"><span className="amt">{amountText(use.quantity, use.unit)}</span> <span className="nm">{use.name}</span></span>
@@ -334,9 +345,9 @@ function LineRow({ i, line, onChange, onPending, reveal, openByDefault }: {
           </div>
           {!amountOk && form.quantity && !parseAmount(form.quantity) && <p className="field-error small">Use a number or fraction, like 2, 1/3 or 1 1/2.</p>}
           <div className="row">
-            <button ref={applyRef} type="button" className="btn primary small" disabled={!amountOk} onClick={() => { onChange({ ...form, use: true, quantity: form.quantity.trim() }); setOpen(false); }} aria-label={`Use line ${i + 1}: ${line.raw}`}>Use</button>
-            <button type="button" className="btn line small" onClick={() => { onChange({ use: false }); setOpen(false); }} aria-label={`Leave out line ${i + 1}: ${line.raw}`}>Leave out</button>
-            <button type="button" className="btn quiet small" onClick={() => { setForm(draft); setOpen(false); }} aria-label={`Cancel changes to line ${i + 1}`}>Cancel</button>
+            <button ref={applyRef} type="button" className="btn primary small" disabled={!amountOk} onClick={() => { onChange({ ...form, use: true, quantity: form.quantity.trim() }); setOpen(false); onSettled(i); }} aria-label={`Use line ${i + 1}: ${line.raw}`}>Use</button>
+            <button type="button" className="btn line small" onClick={() => { onChange({ use: false }); setOpen(false); onSettled(i); }} aria-label={`Leave out line ${i + 1}: ${line.raw}`}>Leave out</button>
+            <button type="button" className="btn quiet small" onClick={() => { setForm(draft); setOpen(false); onSettled(i); }} aria-label={`Cancel changes to line ${i + 1}`}>Cancel</button>
           </div>
         </div>
       )}
