@@ -63,7 +63,7 @@ describe("(e) lists, (f) 'X, A or B'", () => {
     ["1 cup milk/cream", ["milk", "cream"]], ["2 tbsp butter and/or oil", ["butter", "oil"]],
     ["1 cup broth, chicken or vegetable", ["chicken broth", "vegetable broth"]], ["1 cup flour, all-purpose or bread", ["all-purpose flour", "bread flour"]],
     ["1 cup sugar, white or brown", ["white sugar", "brown sugar"]], ["4 slices bread, white or wheat", ["white bread", "wheat bread"]],
-    ["1 cup nuts, pecans or walnuts", ["pecans", "walnuts"]], ["1 cup cheese, cheddar or Swiss", ["cheddar", "Swiss"]],
+    ["1 cup nuts, pecans or walnuts", ["pecans", "walnuts"]], ["1 cup cheese, cheddar or Swiss", ["cheddar cheese", "Swiss cheese"]], // semantic-v3: kinds of a product bought by weight take its name
     ["1 tbsp oil (vegetable or canola)", ["vegetable oil", "canola oil"]], ["1 cup cream (heavy or whipping)", ["heavy cream", "whipping cream"]],
     ["1/2 cup chopped nuts (pecans or walnuts)", ["pecans", "walnuts"]],
   ])("%s", (line, options) => {

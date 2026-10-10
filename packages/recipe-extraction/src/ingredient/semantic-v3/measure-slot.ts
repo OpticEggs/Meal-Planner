@@ -24,7 +24,7 @@
  */
 import { cmp, rational, type Rational } from "../../rational";
 import { NOT_ALIASES } from "../../unit-aliases";
-import { drinkWord, foodWord, meatOrFishWord, plainWord, twoWordFood, vesselLikeWord } from "./foods";
+import { bakedWord, drinkWord, foodWord, meatOrFishWord, plainWord, twoWordFood, vesselLikeWord } from "./foods";
 import { isWord, type Tok } from "./lexer";
 import {
   APPLIANCE_WORDS, BOTTLE_SIZE_WORDS, CUT_PART_WORDS, EQUIPMENT_TOOL_HEADS, EQUIPMENT_VESSEL_HEADS, FUNCTION_WORDS, INVARIANT_PLURALS, PART_NOUNS, ROMANCE_JOINERS,
@@ -67,6 +67,17 @@ function runEnd(toks: readonly Tok[], a: number): number {
  * Where an unresolved measure word stands at `a` (after the count and any size words), the index after it; else `a`.
  * `count` is the bare count before it.
  */
+/**
+ * (semantic-v3) NUMBER AGREEMENT for a measure word (§13.2): with a count above one, a singular word before a plural food
+ * head is not what is counted — it describes the items ("4 shot-glass desserts", "6 mug cakes"). `at` is the measure word.
+ */
+export function countAgreesPastMeasure(toks: readonly Tok[], at: number, count: Rational): boolean {
+  const w = toks[at];
+  if (!isWord(w) || cmp(count, rational(BigInt(1))) <= 0 || regularPlural(w.lower)) return false;
+  const end = runEnd(toks, at);
+  return end > at && regularPlural((toks[end] as { lower: string }).lower);
+}
+
 export function unresolvedMeasureAt(toks: readonly Tok[], a: number, count: Rational): number {
   const w = toks[a];
   const next = toks[a + 1];
@@ -90,8 +101,9 @@ export function unresolvedMeasureAt(toks: readonly Tok[], a: number, count: Rati
   const agrees = above1 && readsPlural(head);
   // 3. a part, piece, shape, strand or spray of a food
   if (PART_NOUNS.has(lw) && !agrees && !(CUT_PART_WORDS.has(lw) && meatOrFishWord(head))) return a + 1;
-  // 4. a vessel or utensil that holds food
-  if (holdingUtensil(lw) && !agrees) return a + 1;
+  // 4. a vessel or utensil that holds food — not a baked dish named after the vessel it is baked in ("1 skillet cookie",
+  // "1 skillet cornbread"; "1 skillet cornbread batter" is a measure of batter)
+  if (holdingUtensil(lw) && !agrees && !(end === a + 1 && bakedWord(head))) return a + 1;
   // 5. a bottle size before a drink
   if (BOTTLE_SIZE_WORDS.has(lw) && drinkWord(head)) return a + 1;
   return a;

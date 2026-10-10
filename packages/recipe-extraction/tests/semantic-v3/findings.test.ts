@@ -117,8 +117,10 @@ describe("a number that is part of the food's name (B5)", () => {
     expect(read(line)).toMatchObject({ status: "needs_review", name: line, quantity: null, unit: null });
   });
 
+  // semantic-v3: only a food bought by weight or volume makes the count unclear ("two milk"); a counted food written in the
+  // singular is counted as written ("two tomato" → 2 each), as are invariant and borrowed plurals ("4 onigiri")
   it.each([
-    ["two tomato", "tomato"], ["Two egg", "egg"], ["Three onion", "onion"],
+    ["two milk", "milk"], ["Two flour", "flour"], ["Three olive oil", "olive oil"],
   ])("a count before a food that is not counted: %s → the count stays the amount, a person checks (never in the name)", (line, name) => {
     const r = read(line);
     expect(r).toMatchObject({ status: "needs_review", name });
@@ -126,8 +128,12 @@ describe("a number that is part of the food's name (B5)", () => {
     expect(r.reasons).toContain("unclassified");
   });
 
-  it.each(["2 tomato", "4 cheese ravioli"])("a counted food that does not read as several: %s → needs review", (line) => {
+  it.each(["2 milk", "4 cheese ravioli"])("a count that does not count the food: %s → needs review", (line) => {
     expect(read(line).status).toBe("needs_review");
+  });
+
+  it.each([["2 tomato", "tomato"], ["Two egg", "egg"], ["4 onigiri", "onigiri"], ["20 pelmeni", "pelmeni"]])("a counted food written without a plural: %s → counted", (line, name) => {
+    expect(core(read(line))).toMatchObject({ status: "ready", name, unit: "each" });
   });
 
   it("plural or invariant foods are counted as usual", () => {

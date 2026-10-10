@@ -305,7 +305,7 @@ describe("R1 round 3, item 1: the word right after a count", () => {
   it.each([
     ["1 pot roast", "pot roast", "1"], ["2 pot pies", "pot pies", "2"], ["1 bouquet garni", "bouquet garni", "1"], ["4 hand pies", "hand pies", "4"],
     ["2 mug cakes", "mug cakes", "2"], ["1 pan pizza", "pan pizza", "1"], ["6 baking potatoes", "baking potatoes", "6"], ["1 standing rib roast", "standing rib roast", "1"],
-    ["2 glorped apples", "glorped apples", "2"], ["4 Roma Tomatoes", "Roma Tomatoes", "4"], ["1 Large Egg", "Egg", "1"], ["3 passion fruit", "passion fruit", "3"],
+    ["4 Roma Tomatoes", "Roma Tomatoes", "4"], ["1 Large Egg", "Egg", "1"], ["3 passion fruit", "passion fruit", "3"],
     ["1 dragon fruit", "dragon fruit", "1"], ["2 string beans", "string beans", "2"], ["1 side of salmon", "side of salmon", "1"],
   ])("negative control, a food: %s → %s, %s each", (line, name, q) => {
     expect(core(read(line))).toEqual({ status: "ready", name, quantity: q, unit: "each" });
@@ -313,7 +313,11 @@ describe("R1 round 3, item 1: the word right after a count", () => {
 
   it("a Title Case line carries no brand signal; elsewhere a capitalised name before a food is a brand or variety", () => {
     expectAbstention(read("2 Zorble Apples"));
-    expect(core(read("2 Zorble apples"))).toEqual({ status: "ready", name: "Zorble apples", quantity: "2", unit: "each" });
+    // semantic-v3 (R1 §5 paths 2–3): with a bare count an unknown capitalised word or an "-ed" word of no known verb is an
+    // unrecognised word (§13.2), never a brand or a modifier by its form; after a declared unit a brand is read
+    expectAbstention(read("2 Zorble apples"));
+    expectAbstention(read("2 glorped apples"));
+    expect(core(read("1 can Zorble tomatoes"))).toEqual({ status: "ready", name: "Zorble tomatoes", quantity: "1", unit: "can" });
     expect(core(read("2 Hass avocados"))).toEqual({ status: "ready", name: "Hass avocados", quantity: "2", unit: "each" });
   });
 });

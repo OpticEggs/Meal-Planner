@@ -39,14 +39,21 @@ describe("a count, then a package size and a container (N2)", () => {
     ["2 400g cans chickpeas", "2", "can", "400 g", "chickpeas"], ["1 400 ml can coconut milk", "1", "can", "400 ml", "coconut milk"],
     ["2 200 g packs halloumi", "2", "package", "200 g", "halloumi"], ["1 500 g bag pasta", "1", "bag", "500 g", "pasta"],
     ["3 250 ml cartons stock", "3", "carton", "250 ml", "stock"], ["1 750 ml bottle wine", "1", "bottle", "750 ml", "wine"],
-    ["4 125 g pots yogurt", "4", "container", "125 g", "yogurt"], ["2 100 g bars chocolate", "2", "block", "100 g", "chocolate"],
     ["3 400 g tins tomatoes", "3", "tin", "400 g", "tomatoes"],
     ["1 330 ml can soda", "1", "can", "330 ml", "soda"], ["2 125 g balls mozzarella", "2", "ball", "125 g", "mozzarella"],
-    ["1 900 g tub yogurt", "1", "container", "900 g", "yogurt"], ["2 12 fl oz bottles beer", "2", "bottle", "12 fl_oz", "beer"],
+    ["2 12 fl oz bottles beer", "2", "bottle", "12 fl_oz", "beer"],
   ])("%s", (line, q, unit, pkg, name) => {
     const r = read(line);
     expect(core(r)).toEqual({ status: "ready", name, quantity: q, unit });
     expect(amountText(r.packageSize)).toBe(pkg);
+  });
+
+  // semantic-v3 (CONTRACT §13.1): pots, bars and tubs are not declared unit words — nothing is read, the count, size and noun
+  // stay in the note (owner requirement 2)
+  it.each([
+    ["4 125 g pots yogurt", "yogurt", "4 125 g pots"], ["2 100 g bars chocolate", "chocolate", "2 100 g bars"], ["1 900 g tub yogurt", "yogurt", "1 900 g tub"],
+  ])("%s → needs review, no amount", (line, name, note) => {
+    expect(read(line)).toMatchObject({ status: "needs_review", name, note, quantity: null, unit: null, packageSize: null });
   });
 
   it("a thousands group with no container is still ambiguous", () => {
@@ -227,9 +234,11 @@ describe("options are never invented, dropped or stripped of their food (SF-a)",
   // semantic-v2 (CONTRACT §12.7 e, f): "X, A or B" lists kinds of a category X as [A, B] and is otherwise a list of every
   // item; semantic-v1 kept X as the name with the choice in the note (an S5 shape: one option privileged)
   it.each([
-    ["1 cup cheese, cheddar or Swiss", ["cheddar", "Swiss"]], ["1 lb fish, cod or haddock", ["cod", "haddock"]],
+    // semantic-v3 (§12.7 f, 2C corpus FL-B3): kinds of a product bought by weight ("cheese, cheddar or Swiss") and cultivars
+    // ("lettuce, romaine or iceberg") take the food's name
+    ["1 cup cheese, cheddar or Swiss", ["cheddar cheese", "Swiss cheese"]], ["1 lb fish, cod or haddock", ["cod", "haddock"]],
     ["1 lb pasta, penne or rigatoni", ["penne", "rigatoni"]], ["1 lb beef, chuck or brisket", ["chuck", "brisket"]],
-    ["2 cups lettuce, romaine or iceberg", ["romaine", "iceberg"]], ["1 cup milk, cream or half-and-half", ["milk", "cream", "half-and-half"]],
+    ["2 cups lettuce, romaine or iceberg", ["romaine lettuce", "iceberg lettuce"]], ["1 cup milk, cream or half-and-half", ["milk", "cream", "half-and-half"]],
   ])("kinds of a category, or a list: %s → every option, no name", (line, options) => {
     expect(read(line)).toMatchObject({ status: "needs_review", name: null, alternatives: options });
   });
@@ -250,7 +259,8 @@ describe("number words inside names, unit words that begin names (SF-c, SF-d)", 
 });
 
 describe("a count never goes into the name (SF-e)", () => {
-  it.each([["2 chicken breast, about 1 lb", "chicken breast", "2"], ["3 chicken thigh, about 1.5 lb", "chicken thigh", "3"], ["Two egg", "egg", "2"], ["Three onion", "onion", "3"], ["Four apple", "apple", "4"]])(
+  // (semantic-v3: "Two egg", "Three onion" are counted as written — see findings.test.ts)
+  it.each([["2 chicken breast, about 1 lb", "chicken breast", "2"], ["3 chicken thigh, about 1.5 lb", "chicken thigh", "3"], ["Two milk", "milk", "2"], ["Three flour", "flour", "3"]])(
     "%s",
     (line, name, q) => {
       const r = read(line);

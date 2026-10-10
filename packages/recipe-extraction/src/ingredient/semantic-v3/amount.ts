@@ -23,7 +23,7 @@ import {
 import { andFraction, fractionUnitWord, readNumber, type NumberRead } from "./quantity";
 import { compoundFood, describingWord, foodWord, measureGerund, plainWord, recognisedFoodHead, twoWordFood } from "./foods";
 import { emptyEffects, type AmountReading, type Effects } from "./types";
-import { unresolvedMeasureAt } from "./measure-slot";
+import { countAgreesPastMeasure, unresolvedMeasureAt } from "./measure-slot";
 import { NOT_ALIASES } from "../../unit-aliases";
 import { readUnit, type UnitRead } from "./unit";
 import { unitV1 } from "../../units";
@@ -750,6 +750,8 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
     // (semantic-v3) a noun that heads a Romance dish name is the food, not a measure ("4 pots de crème", "6 pan de bono")
     const romanceHead = isWord(toks[a]) && isWord(toks[a + 1]) && ROMANCE_JOINERS.has(plainWord((toks[a + 1] as { lower: string }).lower)) && isWord(toks[a + 2]);
     let m = countWordBeforePluralFoodName(toks, a, n1.value) || romanceHead ? a : unknownMeasureAt(toks, a);
+    // (semantic-v3) a singular measure word before a plural food the count agrees with describes the items
+    if (m === a + 1 && countAgreesPastMeasure(toks, a, n1.value)) m = a;
     // (semantic-v3, CONTRACT §13.2) the measure slot accounted for structurally: an undeclared noun that names what is
     // counted — a NOT_ALIASES noun, a plural that agrees with the count, a part noun, a holding utensil, a bottle size
     if (m === a && !romanceHead && !countWordBeforePluralFoodName(toks, a, n1.value)) m = unresolvedMeasureAt(toks, a, n1.value);

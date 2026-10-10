@@ -105,7 +105,10 @@ describe("numbers that name the food (§12.9)", () => {
   it("negative controls: a plural head makes the number a count; other singular nouns are not components", () => {
     expect(core(read("Twelve cherry tomatoes"))).toEqual({ status: "ready", name: "cherry tomatoes", quantity: "12", unit: "each" });
     expect(core(read("2 cheese pizzas"))).toEqual({ status: "ready", name: "cheese pizzas", quantity: "2", unit: "each" });
-    expect(read("2 chicken breast")).toMatchObject({ status: "needs_review", name: "chicken breast", quantity: { numerator: "2" } });
+    // semantic-v3: a counted food written without a plural is counted as written (only a food bought by weight or volume
+    // makes a count unclear: "2 milk")
+    expect(core(read("2 chicken breast"))).toEqual({ status: "ready", name: "chicken breast", quantity: "2", unit: "each" });
+    expect(read("2 milk")).toMatchObject({ status: "needs_review", name: "milk", quantity: { numerator: "2" } });
     expect(read("1 cup 3 eggs")).toMatchObject({ status: "needs_review", name: null });
     expect(read("0 g sugar").reasons).toContain("quantity_not_positive");
   });
