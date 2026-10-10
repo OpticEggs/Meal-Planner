@@ -378,3 +378,6 @@ leaves open. Unit and container lists refer to `UNIT_REGISTRY` (`src/contract.ts
     the food (`1 m sausage`) → `needs_review`. A unit qualified as non-US (`UK`, `imperial`, `metric cup`,
     `Australian tablespoon`) whose size differs from the registry's (`1 pint milk (UK)`, `1 UK pint milk`) →
     `needs_review`.
+15. *(restated)* **Imprecise unit with no number** — reads as one (`Pinch of salt` → 1 `pinch`, frozen h2-0061;
+    `Dash of hot sauce`, `a splash of milk`); a size word before it goes to `note` (`Small pinch of salt` → 1
+    `pinch`, note `small`). Added 2026-10-10, before holdout-v3, to document the frozen convention.
