@@ -1,0 +1,9 @@
+legacy-table-import-2              dev.jsonl          lines 182  engineError 0  invalid 0  nondeterministic 0
+legacy-table-import-2              holdout.jsonl      lines 128  engineError 0  invalid 0  nondeterministic 0
+legacy-table-import-2              holdout-v2.jsonl   lines 359  engineError 0  invalid 0  nondeterministic 0
+legacy-table-import-2+suggestion   dev.jsonl          lines 182  engineError 0  invalid 0  nondeterministic 0
+legacy-table-import-2+suggestion   holdout.jsonl      lines 128  engineError 0  invalid 0  nondeterministic 0
+legacy-table-import-2+suggestion   holdout-v2.jsonl   lines 359  engineError 0  invalid 0  nondeterministic 0
+semantic-v1                        dev.jsonl          lines 182  engineError 0  invalid 0  nondeterministic 0
+semantic-v1                        holdout.jsonl      lines 128  engineError 0  invalid 0  nondeterministic 0
+semantic-v1                        holdout-v2.jsonl   lines 359  engineError 0  invalid 0  nondeterministic 0

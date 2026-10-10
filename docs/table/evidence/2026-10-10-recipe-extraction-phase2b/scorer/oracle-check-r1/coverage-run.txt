@@ -1,0 +1,50 @@
+C1                       8  O01 O02 O03 O04 O05 O06 O07 O71
+C1+                      5  O01 O05 O06 O07 O71
+C1 detail-only           3  O02 O03 O04
+C2                      21  O08 O09 O10 O11 O12 O13 O14 O15 O16 O17 O18 O19 O20 O21 O22 O24 O63 O64 O65 O66 O68
+C2 high                 19  O09 O10 O11 O13 O14 O15 O16 O17 O18 O19 O20 O21 O22 O24 O63 O64 O65 O66 O68
+C2 medium                2  O08 O12
+C3                      10  O23 O32 O33 O34 O35 O36 O37 O38 O67 O70
+C3a                      3  O32 O33 O67
+C3b                      5  O23 O34 O35 O38 O70
+C3c                      1  O36
+C3x                      1  O37
+C4                       1  O39
+C5                      14  O25 O26 O27 O28 O29 O30 O31 O40 O41 O42 O43 O44 O45 O62
+C5a                      3  O27 O40 O42
+C5b                      7  O25 O26 O28 O29 O41 O45 O62
+C5c                      2  O31 O43
+C5x                      2  O30 O44
+C6                       1  O46
+C7                       2  O47 O50
+C8                       2  O48 O49
+CE                      12  O51 O52 O53 O54 O55 O56 O57 O58 O59 O60 O61 O69
+CE.engineError           3  O51 O60 O61
+CE.invalid               8  O52 O53 O54 O55 O56 O57 O58 O69
+CE.nondeterministic      2  O59 O60
+S1                       5  O18 O45 O49 O62 O68
+S2                       7  O13 O14 O15 O22 O63 O64 O66
+S3                       7  O19 O20 O21 O22 O23 O62 O63
+S4                       3  O15 O16 O24
+S5                       3  O24 O25 O26
+S6                       2  O22 O23
+S7                       2  O11 O64
+S8                       2  O17 O18
+accept:alternatives      2  O26 O27
+accept:name,note         2  O05 O67
+accept:note              1  O06
+bareNoAmount=true        5  O16 O42 O43 O45 O52
+droppedOption            1  O29
+inventedOption           2  O28 O38
+overlap(S1+S3)           1  O62
+overlap(S1+S8)           1  O18
+overlap(S2+S3)           1  O63
+overlap(S2+S3+S6)        1  O22
+overlap(S2+S4)           1  O15
+overlap(S2+S7)           1  O64
+overlap(S3+S6)           1  O23
+overlap(S4+S5)           1  O24
+strict≠accepted          2  O05 O06
+
+covers-tag check:
+  0 covers tags contradicted by the recomputation
