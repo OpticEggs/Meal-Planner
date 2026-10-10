@@ -13,6 +13,7 @@ import * as imports from "@/server/commands/imports";
 import { auditLegacyQuantities, auditTargetAllowed } from "@/server/audit/legacy-quantities";
 import { saveRecipeVersionCommand } from "@/server/commands/library";
 import { parseIngredientLine } from "@/server/integrations/recipe-import/ingredient-line";
+import { imported } from "./eq-helpers";
 
 const run = promisify(execFile);
 
@@ -27,7 +28,7 @@ const state = () =>
 
 const line = (raw: string, decision: unknown, status?: string) => ({ raw, parsed: { ...parseIngredientLine(raw), ...(status ? { status } : {}) }, decision });
 
-async function oldVersion(fx: any, recipeId: string | null, versionNo: number, title: string, provenance: string, draftId: string | null, rows: [string, string, string, string | null][]) {
+async function oldVersion(fx: any, recipeId: string | null, versionNo: number, title: string, provenance: string, draftId: string | null, rows: [string, string, string, string | null, string?][]) {
   const rid = recipeId ?? (await q<any>("INSERT INTO recipes(household_id, created_by) VALUES ($1,$2) RETURNING id", [fx.householdId, fx.members.jon]))[0].id;
   const [v] = await q<any>(
     "INSERT INTO recipe_versions(recipe_id, household_id, version_no, title, instructions, provenance, estimate, created_by, import_draft_id) VALUES ($1,$2,$3,$4,'',$5,false,$6,$7) RETURNING id",
@@ -35,9 +36,9 @@ async function oldVersion(fx: any, recipeId: string | null, versionNo: number, t
   );
   await q("INSERT INTO recipe_components(recipe_version_id, key, name) VALUES ($1,'main','Main')", [v.id]);
   let sort = 0;
-  for (const [k, qty, unit, note] of rows) {
+  for (const [k, qty, unit, note, src] of rows) {
     await q("INSERT INTO ingredients(household_id, key, name) VALUES ($1,$2,$3) ON CONFLICT DO NOTHING", [fx.householdId, k, k.replace(/_/g, " ")]);
-    await q("INSERT INTO recipe_ingredients(recipe_version_id, component_key, ingredient_key, quantity, unit, note, sort) VALUES ($1,'main',$2,$3,$4,$5,$6)", [v.id, k, qty, unit, note, sort++]);
+    await q("INSERT INTO recipe_ingredients(recipe_version_id, component_key, ingredient_key, quantity, unit, note, sort, source_row_id) VALUES ($1,'main',$2,$3,$4,$5,$6,$7)", [v.id, k, qty, unit, note, sort++, src ?? null]);
   }
   await q("UPDATE recipes SET current_version_id=$2 WHERE id=$1", [rid, v.id]);
   return { recipeId: rid as string, versionId: v.id as string };
@@ -156,6 +157,58 @@ describe("legacy quantity audit (read-only)", () => {
     expect(of(c2.versionId).map((r) => [r.evidence.kind, r.recoverable])).toEqual([["earlier_version", true]]);
     // d): the inherited row is legacy and traced through its lineage; the new row is exact and not reported.
     expect(of(d.result.versionId)).toEqual([expect.objectContaining({ recoverable: true, evidence: expect.objectContaining({ kind: "earlier_version", versionNo: 1, amount: "2", servings: 3, via: "lineage" }) })]);
+  });
+
+  it("LA-05: source evidence stops where a member changed the amount — a later legacy copy is not 'recoverable' to the superseded import (AUD-01)", async () => {
+    const { fx, jon } = await fresh();
+    // A) This release: import 2 cucumbers and 3 onions for 3 servings, then a member changes the cucumber to 0.5 a
+    //    serving (the onion is kept as it was). The writer stores exact 1/2 with lineage back to the imported row.
+    const v1 = await imported(jon, "Cucumber change", 3, "2 each cucumber\n3 each onion");
+    const r1 = await q<any>("SELECT id, ingredient_key AS key, quantity_basis AS basis, exact_amount AS amount, exact_servings AS servings FROM recipe_ingredients WHERE recipe_version_id=$1 ORDER BY sort", [v1.versionId]);
+    expect(r1.map((r) => [r.key, r.basis, r.amount, r.servings])).toEqual([["cucumber", "exact", "2", 3], ["onion", "exact", "3", 3]]);
+    const v2: any = await saveRecipeVersionCommand(jon, op(), {
+      recipeId: v1.recipeId, expectedVersionNo: 1, title: "Cucumber change", instructions: "", components: [{ key: "main", name: "Main" }],
+      ingredients: [
+        { componentKey: "main", ingredientName: "cucumber", ingredientKey: "cucumber", quantity: "0.5", unit: "each", sourceRowId: r1[0].id },
+        { componentKey: "main", ingredientName: "onion", ingredientKey: "onion", quantity: "1", unit: "each", sourceRowId: r1[1].id },
+      ],
+    });
+    expect(v2.status, JSON.stringify(v2)).toBe("accepted");
+    const r2 = await q<any>("SELECT id, ingredient_key AS key, quantity::text AS q, quantity_basis AS basis, exact_amount AS amount, exact_servings AS servings, source_row_id AS src FROM recipe_ingredients WHERE recipe_version_id=$1 ORDER BY sort", [v2.result.versionId]);
+    expect(r2.map((r) => [r.key, r.q, r.basis, r.amount, r.servings, r.src])).toEqual([
+      ["cucumber", "0.5", "exact", "1/2", 1, r1[0].id],
+      ["onion", "1", "exact", "3", 3, r1[1].id],
+    ]);
+    // Later, an older release (after a rollback) saves version 3 as it always did: legacy decimals, no lineage.
+    const v3 = await oldVersion(fx, v1.recipeId, 3, "Cucumber change (old app)", "manual", null, [["cucumber", "0.5", "each", null], ["onion", "1", "each", null]]);
+    // And a legacy row that does carry lineage to the changed row (the direct path; constructed on disposable data).
+    const v4 = await oldVersion(fx, v1.recipeId, 4, "Cucumber change (lineage)", "manual", null, [["cucumber", "0.5", "each", null, r2[0].id]]);
+
+    // B) Lineage alone does not carry an amount across a change: a legacy import row (2 for 3, stored 0.6667) and a
+    //    legacy row of a later version that names it as its source but stores 0.5 — then a legacy copy of that.
+    const dB = await oldDraft(fx, jon, "beans-change", 3, [line("2 cup black beans", { use: true, name: "black beans", quantity: "2", unit: "cup", form: "raw" })]);
+    const b1 = await oldVersion(fx, null, 1, "Beans", "imported", dB, [["black_beans", "0.6667", "cup", "From: 2 cup black beans"]]);
+    const [b1row] = await q<any>("SELECT id FROM recipe_ingredients WHERE recipe_version_id=$1", [b1.versionId]);
+    const b2 = await oldVersion(fx, b1.recipeId, 2, "Beans (less)", "manual", null, [["black_beans", "0.5", "cup", null, b1row.id]]);
+    const b3 = await oldVersion(fx, b1.recipeId, 3, "Beans (old app)", "manual", null, [["black_beans", "0.5", "cup", null]]);
+
+    const c = await db();
+    const report = await auditLegacyQuantities(c, { householdId: fx.householdId });
+    await c.end();
+    const at = (versionId: string, key: string) => report.rows.find((r) => r.versionId === versionId && r.ingredientKey === key)!;
+    // The member's deliberate 1/2 a serving is what a legacy copy of it goes back to — never the import's 2 for 3.
+    expect(at(v3.versionId, "cucumber")).toMatchObject({ recoverable: true, evidence: { kind: "earlier_version", versionNo: 2, amount: "1/2", servings: 1, via: "same_row" } });
+    expect(at(v4.versionId, "cucumber")).toMatchObject({ recoverable: true, evidence: { kind: "earlier_version", versionNo: 2, amount: "1/2", servings: 1, via: "lineage" } });
+    // Genuine unchanged recovery is kept: the onion was never changed, so the import still applies.
+    expect(at(v3.versionId, "onion")).toMatchObject({ recoverable: true, evidence: { kind: "earlier_version", amount: "3", servings: 3, via: "same_row" } });
+    // B: the source's 2 for 3 does not give the stored 0.5 → conflicting, not recoverable; and nothing recoverable
+    //    is passed on to the later copy.
+    expect(at(b1.versionId, "black_beans")).toMatchObject({ recoverable: true, evidence: { kind: "import_draft", amount: "2", servings: 3 } });
+    expect(at(b2.versionId, "black_beans")).toMatchObject({ recoverable: false, proposal: null, evidence: { kind: "conflicting" } });
+    expect((at(b2.versionId, "black_beans").evidence as any).detail).toMatch(/2 for 3 servings.*0\.5/);
+    expect(at(b3.versionId, "black_beans")).toMatchObject({ recoverable: false, evidence: { kind: "conflicting" } });
+    // No reported row anywhere names the superseded 2/3 for a stored 0.5.
+    expect(report.rows.filter((r) => r.quantity === "0.5" && r.recoverable && (r.evidence as any).amount === "2")).toEqual([]);
   });
 
   it("LA-02: it never writes — every statement is a read inside a READ ONLY transaction that is rolled back, and nothing changed", async () => {

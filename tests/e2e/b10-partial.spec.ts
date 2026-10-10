@@ -22,8 +22,11 @@ test("B10-E1: send only the ready items — exact subset sent, the rest named an
   const alex = await groceries(browser, "alex");
   const p = jon.page;
   await p.getByRole("button", { name: "Approve 1 package of Jasmine rice" }).click();
-  await p.getByRole("button", { name: "Approve 2 packages of Broccoli" }).click();
   await expect(p.getByTestId("line-rice")).toContainText("Approved ×1");
+  // Writes pause while the screen re-reads after a change (by design: no decision from a view that is not current).
+  // Tap the next approval once it is current again — a tap during that moment lands on a disabled button.
+  await expect(p.getByTestId("currency")).toHaveAttribute("data-currency", "current");
+  await p.getByRole("button", { name: "Approve 2 packages of Broccoli" }).click();
   await expect(p.getByTestId("line-broccoli")).toContainText("Approved ×2");
   await expect(p.getByTestId("send")).toBeDisabled(); // the whole-list Send is unchanged: not everything is ready
   await p.getByTestId("prepare-partial").click();
