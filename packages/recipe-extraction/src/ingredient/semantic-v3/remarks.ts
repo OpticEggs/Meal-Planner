@@ -457,3 +457,39 @@ function dimensionOfWord(w: string): string {
   const c = unitOfWord(w);
   return c === null ? "" : UNIT_REGISTRY[c].dimension;
 }
+
+/** (semantic-v3) Prepositions that join a separately measured food to the line's food ("dissolved in", "mixed with", "whisked into"). */
+export const COMBINING_PREPOSITIONS = new Set(["in", "into", "with", "to", "and"]);
+
+/**
+ * REMARK OF A DIFFERENT FOOD (semantic-v3, CONTRACT §13.3, §12.11): the remark joins a SEPARATELY MEASURED other food to the
+ * line's food — after "in", "into", "with", "to" or "and", an amount (a number with a unit, or a count) followed by a word
+ * naming something other than the food ("dissolved in 3 tbsp hot water", "mixed with 2 tbsp water", "soaked in 1/4 cup
+ * rum", "(soaked in 6 tbsp water)", "bloomed in 1/4 cup cold water"). It is a second amount: a person decides; nothing is
+ * merged, multiplied or dropped. Not one: a dimension or a count of the same food's pieces ("cut into 1-inch cubes", "cut
+ * into 8 wedges" — no other food), a time or temperature ("baked at 350°F", "soaked for 2 hours"), a purpose after the
+ * amount ("plus 2 tbsp for dusting"), a remark with no amount ("soaked in warm water").
+ */
+export function remarkCombinesAnother(toks: readonly Tok[], name: string | null, text: string): boolean {
+  const flat: Tok[] = [];
+  const walk = (list: readonly Tok[]) => list.forEach((t) => (isGroup(t) ? walk(t.children) : flat.push(t)));
+  walk(toks);
+  const nameWs = (name ?? "").toLowerCase().split(/[^\p{L}'-]+/u).filter((w) => w.length > 0);
+  for (let k = 0; k + 1 < flat.length; k++) {
+    const p = flat[k];
+    if (!isWord(p) || !COMBINING_PREPOSITIONS.has(p.lower)) continue;
+    if (!amountStartsAt(text, flat, k + 1)) continue;
+    const a = readAmountPhrase(text, flat, k + 1);
+    if (a === null || a.quantity === null || (a.unit !== null && a.unit.canonical === "inch")) continue;
+    // the words after the amount, up to a purpose ("for", "to") or the end
+    const after: string[] = [];
+    for (let j = a.next; j < flat.length; j++) {
+      const t = flat[j];
+      if (!isWord(t)) continue;
+      if (["for", "to", "until", "or"].includes(t.lower)) break;
+      after.push(t.lower);
+    }
+    if (after.length > 0 && otherFoodIn(after, nameWs)) return true;
+  }
+  return false;
+}

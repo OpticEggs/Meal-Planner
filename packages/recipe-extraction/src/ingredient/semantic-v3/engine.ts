@@ -55,8 +55,8 @@ import { adjacent, isGroup, isNumberish, isSym, isWord, lex, type Tok } from "./
 import { APPROX_WORDS, BULLETS, CONTAINER_UNITS, FRUIT_PART_WORDS, NUTRIENT_FOOD_WORDS, SERVING_LABEL_WORDS, UNIT_WORDS_IN_FOOD_NAMES, FUNCTION_WORDS, INVARIANT_PLURALS, MEASURE_ADJECTIVES, PREP_ADVERBS, REMARK_WORDS, ROMANCE_JOINERS, SIZE_WORDS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
 import { numberInProductName, readNameRegion, type NameReading } from "./name";
 import { normalizeLine } from "./normalize";
-import { classifyPiece, remarkMeasuresAnother, remarkRestatement, remarkSecondAmount, splitOr, splitTopLevel, textOf, trimEdges, unstatedAt } from "./remarks";
-import { compoundFoodEnding, foodWord, homographHeadAfterCapital, massFoodWord, plainWord, recognisedFoodHead } from "./foods";
+import { classifyPiece, COMBINING_PREPOSITIONS, remarkCombinesAnother, remarkMeasuresAnother, remarkRestatement, remarkSecondAmount, splitOr, splitTopLevel, textOf, trimEdges, unstatedAt } from "./remarks";
+import { compoundFoodEnding, foodWord, homographHeadAfterCapital, massFoodWord, meatOrFishWord, plainWord, recognisedFoodHead } from "./foods";
 import { andJoinsTwoFoods, categoryNoun, foodHead, isRemarkOption, shareOptions, uniqueOptions, varietiesOf, withKind } from "./alternatives";
 import { emptyEffects, mergeEffects, type AmountReading } from "./types";
 import { readUnit, type UnitRead } from "./unit";
@@ -443,6 +443,16 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
       tails = tails.slice(1);
     }
   }
+  // (semantic-v3, CONTRACT §13.3) "1 tbsp cornstarch mixed with 2 tbsp water": a participle and a preposition before a
+  // second amount, with no comma, begin a remark — the name ends before them and the remark is read like one after a comma
+  if (amount !== null) {
+    const p = region.findIndex((t, k) => k > 0 && isWord(t) && /\p{L}{3,}(?:ed|en)$/u.test(t.text) && isWord(region[k + 1]) && COMBINING_PREPOSITIONS.has((region[k + 1] as { lower: string }).lower) && amountStartsAt(text, region, k + 2));
+    if (p > 0) {
+      tails = [region.slice(p), ...tails];
+      if (usedTail >= 0) usedTail++;
+      region = region.slice(0, p);
+    }
+  }
   const amt = amount ?? noAmount();
   mergeEffects(fx, amt.effects);
   if (negative && amt.amountWritten) {
@@ -707,7 +717,7 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
   // the same food, whole or prepared ("1 cup chopped onion (1 medium onion)", "1 large onion (about 2 cups chopped)") is an
   // equivalent, and the note keeps only its describing words
   for (const r of fx.amountRemarks) {
-    if (remarkSecondAmount(r.toks) || remarkMeasuresAnother(r.toks, nr.name, text)) {
+    if (remarkSecondAmount(r.toks) || remarkMeasuresAnother(r.toks, nr.name, text) || remarkCombinesAnother(r.toks, nr.name, text)) {
       fx.unassigned++;
       continue;
     }
@@ -771,7 +781,12 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
     // "cheese, cheddar or Swiss") → the kinds; otherwise a list in which every item is an option ("raisins, cranberries
     // or cherries", "chicken, beef or vegetable stock") — never one option privileged or dropped
     const asList = shareOptions([base[0], ...variants]);
-    if (varietiesOf(variants, base[0])) base = variants.map((v) => withKind(v, base[0]));
+    // (semantic-v3, CONTRACT §12.7 f) after a category noun, options written as singular kind words ("cheese, cheddar or
+    // monterey jack", "lettuce, romaine or green leaf") are kinds of that food and take its name; plural options are foods
+    // of their own ("nuts, pecans or walnuts")
+    // (a fish or meat named alone is a food of its own: "fish, cod or halibut")
+    const singularKinds = categoryNoun(base[0]) && variants.every((v) => !v.split(/\s+/).some((w) => /[^s]s$/i.test(w) && !/(?:ss|us|is)$/i.test(w)) && !meatOrFishWord(v.split(/\s+/).pop() ?? ""));
+    if (varietiesOf(variants, base[0]) || singularKinds) base = variants.map((v) => withKind(v, base[0]));
     else if (asList.some((x, k) => x !== [base[0], ...variants][k])) base = asList; // "chicken, beef or vegetable stock"
     else if (categoryNoun(base[0])) base = shareOptions(variants);
     else base = asList;
@@ -820,7 +835,14 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
   // (round 3, R1 item 1) on a Title Case line capitals carry no brand or variety signal: the words are judged in lower
   // case ("2 Sips Dark Rum", "1 Big Green Egg"; "4 Roma Tomatoes" stays a variety)
   const titleCase = titleCaseLine(head);
-  const recognises = (n: string) => recognisedFoodHead(titleCase ? n.toLowerCase() : n);
+  // (semantic-v3, CONTRACT §13.2) where the name stands: after a declared unit word, or after a count that agrees with a
+  // plural food head — only then may a brand or a tool word stand before the head
+  const slotResolved = unit !== null && unit.canonical !== "each" && unitSpan !== null;
+  const countAgrees = (n: string) => {
+    const last = n.trim().split(/\s+/).pop()?.toLowerCase() ?? "";
+    return quantity !== null && quantity.kind === "exact" && BigInt(quantity.numerator) > BigInt(quantity.denominator) && (/[^s]s$/.test(last) || INVARIANT_PLURALS.has(last));
+  };
+  const recognises = (n: string) => recognisedFoodHead(titleCase ? n.toLowerCase() : n, { slotResolved: slotResolved || titleCase, countAgrees: countAgrees(n) });
   // (a food container written as the unit says the item is its contents: "1 bottle margarita mixer", "1 bottle mixer")
   const containerOfFood = unit !== null && ["bottle", "can", "jar", "carton", "tin"].includes(unit.canonical);
   const containedMixer = containerOfFood && name !== null && /(?:^|\s)mixers?$/i.test(name) && (/^\S+$/.test(name) || recognises(name.replace(/\s+mixers?$/i, "")));

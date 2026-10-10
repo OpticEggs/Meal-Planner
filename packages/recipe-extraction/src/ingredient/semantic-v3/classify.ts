@@ -367,7 +367,7 @@ const EQUIPMENT_STOPS = new Set(["of", "for", "the", "with", "in", "into", "to",
  *    otherwise the vessel's policy: food ("2 tea bags", "4 lasagna sheets") or unsure ("2 chicken skewers": a person).
  * A measured amount (a mass or volume unit after the count) is never equipment.
  */
-export function equipmentShape(toks: readonly Tok[]): "equipment" | "unsure" | null {
+export function equipmentShape(toks: readonly Tok[], foodPurpose = false): "equipment" | "unsure" | null {
   const end = toks.findIndex((t) => isSym(t, ",", ";"));
   const seg = end < 0 ? toks : toks.slice(0, end);
   // the content words, with the count, the sizes and the brackets left out
@@ -415,6 +415,8 @@ export function equipmentShape(toks: readonly Tok[]): "equipment" | "unsure" | n
   // a count noun before the item ("1 roll kitchen twine", "1 box toothpicks", "2 sheets aluminum foil", "1 sheet of wax paper")
   if (content.length >= 2 && EQUIPMENT_COUNT_NOUNS.has(content[0].lower)) {
     k = 1;
+    // (semantic-v3) a food container before it ("1 bag walnut crackers", "1 box fish slices") holds food
+    if (FOOD_CONTAINER_NOUNS.has(content[0].lower)) foodPurpose = true;
     if (content[1].lower === "of" && content.length >= 3) k = 2;
   } else {
     // a measured amount ("1 cup …", "2 tbsp …", "a pinch …") is food, unless a sure equipment item follows it ("1 cup
@@ -429,7 +431,9 @@ export function equipmentShape(toks: readonly Tok[]): "equipment" | "unsure" | n
     }
     if (u !== null && content.length >= 2) {
       const dim = UNIT_REGISTRY[u].dimension;
-      if (dim === "mass" || dim === "volume" || dim === "imprecise") return equipmentShape(seg.slice(content[0].at + 1)) === "equipment" ? "equipment" : null;
+      // (semantic-v3, CONTRACT §13.5) a weighed or measured amount is of food: a purpose word that is itself a food does
+      // not make it equipment ("300 g fish slices", "2 lb pork rib racks")
+      if (dim === "mass" || dim === "volume" || dim === "imprecise") return equipmentShape(seg.slice(content[0].at + 1), true) === "equipment" ? "equipment" : null;
     }
   }
   for (let j = k; j < content.length; j++) {
@@ -450,7 +454,7 @@ export function equipmentShape(toks: readonly Tok[]): "equipment" | "unsure" | n
     // it: a person checks; "1 baking tray", "1 serving platter", "1 cutting board" stay equipment
     if (tool && SERVING_TOOL_HEADS.has(w) && j > k && foodWord(content[j - 1].lower) && !EQUIPMENT_MATERIAL_WORDS.has(content[j - 1].lower)) return "unsure";
     if (tool) return "equipment";
-    return vesselVerdict(content.slice(k, j).map((c) => c.lower), w);
+    return vesselVerdict(content.slice(k, j).map((c) => c.lower), w, foodPurpose);
   }
   return null;
 }
@@ -469,12 +473,24 @@ export function agentNounTool(word: string): boolean {
   return candidates.some((c) => c.length > 0 && KITCHEN_ACTION_VERBS.has(c));
 }
 
+/** (semantic-v3) The meats named by their animal ("lamb rib rack", "pork rib racks"): a cut's holder word after them is the cut. */
+const MEAT_ANIMAL_WORDS = new Set(["beef", "pork", "lamb", "veal", "mutton", "goat", "venison", "bison", "boar", "elk", "rabbit", "chicken", "turkey", "duck", "goose", "hogget"]);
+
+/** (semantic-v3) Count nouns of food packaging before an item ("1 bag …", "1 box …", "1 package …"). */
+const FOOD_CONTAINER_NOUNS = new Set(["bag", "bags", "box", "boxes", "package", "packages", "pack", "packs", "packet", "packets"]);
+
 /** A vessel head with the words before it (CONTRACT §12.8; see `equipmentShape`). */
-function vesselVerdict(before: readonly string[], head: string): "equipment" | "unsure" | null {
+function vesselVerdict(before: readonly string[], head: string, foodPurpose = false): "equipment" | "unsure" | null {
   const entry = EQUIPMENT_VESSEL_HEADS[head];
   const mods = before.filter((w) => (!SIZE_WORDS.has(w) && !EQUIPMENT_SHAPE_WORDS.has(w)) || entry.purposes.has(w)); // ("deep fryer")
   if (mods.length === 0) return BARE_EQUIPMENT_HEADS.has(head) ? "equipment" : null;
   const prev = mods[mods.length - 1];
+  // (semantic-v3, CONTRACT §13.5) a purpose word that is itself a food never makes food unsupported: after a weighed amount
+  // or a food container, after another food ("1 lamb rib rack"), or before a plural portion head ("6 fish slices") the
+  // head is that food's part; alone ("1 fish slice", "1 lobster cracker") it stays the tool
+  const pluralPortion = /[^s]s$/.test(head) && ["slices", "racks"].includes(head);
+  const otherFood = mods.length >= 2 && MEAT_ANIMAL_WORDS.has(mods[mods.length - 2]);
+  if (entry.purposes.has(prev) && foodWord(prev) && !EQUIPMENT_MATERIAL_WORDS.has(prev) && (foodPurpose || otherFood || pluralPortion)) return entry.policy === "unsure" ? "unsure" : null;
   if (EQUIPMENT_VESSEL_HEADS[prev] !== undefined && !EQUIPMENT_MATERIAL_WORDS.has(prev) && !entry.purposes.has(prev)) {
     // "rice paper wrappers": the vessel word before is judged in turn ("rice paper" is food)
     const inner = vesselVerdict(mods.slice(0, -1), prev);

@@ -15,7 +15,7 @@
 import { ADJECTIVE_WORDS, AND_COMPOUNDS, CATEGORY_NOUNS, COMPOUND_MODIFIERS, FLAVOUR_HEADS, FORM_CHOICE_WORDS, FUNCTION_WORDS, LEADING_SHARE_WORDS, PART_HEADS, PREP_ADVERBS, REMARK_WORDS, SHARED_HEAD_MODIFIERS, SIZE_WORDS } from "./lexicon";
 
 const LEADING_JUNK_WORDS = FUNCTION_WORDS;
-import { foodWord, varietyWord } from "./foods";
+import { describingWord, foodWord, massFoodWord, sameKindAs, varietyWord } from "./foods";
 
 const wordsOf = (s: string) => s.split(" ").filter((w) => w.length > 0);
 const lower = (s: string) => s.toLowerCase();
@@ -100,7 +100,9 @@ function trailingHeadSplit(firsts: readonly string[][], last: readonly string[])
     if (o.every(versionWord) || (sources !== undefined && sources.has(lower(o.join(" "))))) return true;
     // (round 3) two varieties of one head: capitalised names ("Thai or Genovese basil") or variety words ("butter or
     // iceberg lettuce", "cherry or grape tomatoes")
-    return (o.every(capitalised) && capitalised(last[0]) && !head.some(capitalised)) || (o.length === 1 && m === 1 && varietyWord(o[0]) && varietyWord(last[0]));
+    return (o.every(capitalised) && capitalised(last[0]) && !head.some(capitalised)) || (o.length === 1 && m === 1 && varietyWord(o[0]) && varietyWord(last[0]))
+      // (semantic-v3) two kinds of the head's own class ("cremini or shiitake mushrooms")
+      || (o.length === 1 && m === 1 && head.length === 1 && [o[0], last[0]].every((w) => sameKindAs(w, head[0]) && !describingWord(w) && !/[^s]s$/i.test(w)));
   };
   return firsts.every(shareable) ? { head: head.join(" ") } : null;
 }
@@ -173,7 +175,10 @@ export function varietiesOf(options: readonly string[], base: string): boolean {
   };
   // every option a variety — or one bare version word among them, which cannot be a food by itself ("bread, white or
   // wheat" → white bread, wheat bread)
-  return options.length >= 2 && (options.every(variety) || options.some((o) => wordsOf(o).length === 1 && versionWord(o)));
+  // (semantic-v3, CONTRACT §12.7 f) an option that is only a cultivar or variety word of the named food ("lettuce, romaine
+  // or green leaf", "apples, honeycrisp or gala") makes the list varieties of that food: each option takes its name
+  const cultivar = (o: string) => wordsOf(o).length > 0 && wordsOf(o).every((w) => varietyWord(w) && !massFoodWord(w)) && !categoryNoun(base);
+  return options.length >= 2 && (options.every(variety) || options.some((o) => wordsOf(o).length === 1 && versionWord(o)) || options.some(cultivar));
 }
 
 /** (§12.7 f) The named food is a category whose kinds are listed ("nuts, pecans or walnuts"). */
@@ -263,7 +268,11 @@ export function andJoinsTwoFoods(name: string): boolean {
     const head = right[right.length - 1];
     const b = right[right.length - 2];
     const a = left[left.length - 1];
-    if (!PART_HEADS.has(lower(head)) && !PART_HEADS.has(lower(head).replace(/s$/, "")) && foodWord(head) && foodWord(a) && foodWord(b) && !describing(a) && !describing(b)) return false;
+    // (semantic-v3, CONTRACT §13.4) a PLURAL first food is a food of its own, not what the second is made of: "fresh peas
+    // and fava beans", "sun-dried tomatoes and kalamata olives" list two foods (a component word is singular: "black bean
+    // and corn salsa")
+    const ownFood = /[^s]s$/.test(lower(a)) && !/(?:ss|us|is)$/.test(lower(a));
+    if (!ownFood && !PART_HEADS.has(lower(head)) && !PART_HEADS.has(lower(head).replace(/s$/, "")) && foodWord(head) && foodWord(a) && foodWord(b) && !describing(a) && !describing(b)) return false;
   }
   return right.some((w) => !describing(w) && lower(w) !== "and");
 }
