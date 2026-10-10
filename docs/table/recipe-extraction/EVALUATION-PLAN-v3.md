@@ -160,4 +160,8 @@ It needs a separately authorized Phase 3.
    count words before the food, the rounding allowance (ml/g, half up), prepared vs extracted remark amounts, `and`
    lists. Prospective only; no frozen label, threshold or acceptance rule changed. Candidate-review counterexamples
    (R1, round 1) were added to the exposed regression corpus as required development coverage.
+5. **2026-10-10, before candidate freeze and before any holdout-v3 line** — CONTRACT §12.A A5 (imprecise units follow
+   A1's number agreement) and A6 (a size in brackets after the food on a container line is the packageSize), after
+   candidate review R1 round 2. The required regression harness now accepts a safe abstention on non-ingredient labels
+   (C8, which G2 does not count as an error). Neither changes a G2 threshold or the scorer.
 
