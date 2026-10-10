@@ -1,0 +1,73 @@
+O01  ok    C1+ [] strict=C1+ ce=000 bare=0 inv=0 drop=0
+O02  ok    C1 detail [] strict=C1 ce=000 bare=0 inv=0 drop=0
+O03  ok    C1 detail [] strict=C1 ce=000 bare=0 inv=0 drop=0
+O04  ok    C1 detail [] strict=C1 ce=000 bare=0 inv=0 drop=0
+O05  ok    C1+ [] strict=C2 ce=000 bare=0 inv=0 drop=0
+O06  ok    C1+ [] strict=C1 ce=000 bare=0 inv=0 drop=0
+O07  ok    C1+ [] strict=C1+ ce=000 bare=0 inv=0 drop=0
+O08  ok    C2 medium [] strict=C2 ce=000 bare=0 inv=0 drop=0
+O09  ok    C2 high [] strict=C2 ce=000 bare=0 inv=0 drop=0
+O10  ok    C2 high [] strict=C2 ce=000 bare=0 inv=0 drop=0
+O11  ok    C2 high [S7] strict=C2 ce=000 bare=0 inv=0 drop=0
+O12  ok    C2 medium [] strict=C2 ce=000 bare=0 inv=0 drop=0
+O13  ok    C2 high [S2] strict=C2 ce=000 bare=0 inv=0 drop=0
+O14  ok    C2 high [S2] strict=C2 ce=000 bare=0 inv=0 drop=0
+O15  ok    C2 high [S2 S4] strict=C2 ce=000 bare=0 inv=0 drop=0
+O16  ok    C2 high [S4] strict=C2 ce=000 bare=1 inv=0 drop=0
+O17  ok    C2 high [S8] strict=C2 ce=000 bare=0 inv=0 drop=0
+O18  ok    C2 high [S1 S8] strict=C2 ce=000 bare=0 inv=0 drop=0
+O19  ok    C2 high [S3] strict=C2 ce=000 bare=0 inv=0 drop=0
+O20  ok    C2 high [S3] strict=C2 ce=000 bare=0 inv=0 drop=0
+O21  ok    C2 high [S3] strict=C2 ce=000 bare=0 inv=0 drop=0
+O22  ok    C2 high [S2 S3 S6] strict=C2 ce=000 bare=0 inv=0 drop=0
+O23  ok    C3b [S3 S6] strict=C3 ce=000 bare=0 inv=0 drop=0
+O24  ok    C2 high [S4 S5] strict=C2 ce=000 bare=0 inv=0 drop=0
+O25  ok    C5b [S5] strict=C5 ce=000 bare=0 inv=0 drop=0
+O26  ok    C5b [S5] strict=C5 ce=000 bare=0 inv=0 drop=0
+O27  ok    C5a [] strict=C5 ce=000 bare=0 inv=0 drop=0
+O28  ok    C5b [] strict=C5 ce=000 bare=0 inv=1 drop=0
+O29  ok    C5b [] strict=C5 ce=000 bare=0 inv=0 drop=1
+O30  ok    C5x [] strict=C5 ce=000 bare=0 inv=0 drop=0
+O31  ok    C5c [] strict=C5 ce=000 bare=0 inv=0 drop=0
+O32  ok    C3a [] strict=C3 ce=000 bare=0 inv=0 drop=0
+O33  ok    C3a [] strict=C3 ce=000 bare=0 inv=0 drop=0
+O34  ok    C3b [] strict=C3 ce=000 bare=0 inv=0 drop=0
+O35  ok    C3b [] strict=C3 ce=000 bare=0 inv=0 drop=0
+O36  ok    C3c [] strict=C3 ce=000 bare=0 inv=0 drop=0
+O37  ok    C3x [] strict=C3 ce=000 bare=0 inv=0 drop=0
+O38  ok    C3b [] strict=C3 ce=000 bare=0 inv=1 drop=0
+O39  ok    C4 [] strict=C4 ce=000 bare=0 inv=0 drop=0
+O40  ok    C5a [] strict=C5 ce=000 bare=0 inv=0 drop=0
+O41  ok    C5b [] strict=C5 ce=000 bare=0 inv=0 drop=0
+O42  ok    C5a [] strict=C5 ce=000 bare=1 inv=0 drop=0
+O43  ok    C5c [] strict=C5 ce=000 bare=1 inv=0 drop=0
+O44  ok    C5x [] strict=C5 ce=000 bare=0 inv=0 drop=0
+O45  ok    C5b [S1] strict=C5 ce=000 bare=1 inv=0 drop=0
+O46  ok    C6 [] strict=C6 ce=000 bare=0 inv=0 drop=0
+O47  ok    C7 [] strict=C7 ce=000 bare=0 inv=0 drop=0
+O48  ok    C8 [] strict=C8 ce=000 bare=0 inv=0 drop=0
+O49  ok    C8 [S1] strict=C8 ce=000 bare=0 inv=0 drop=0
+O50  ok    C7 [] strict=C7 ce=000 bare=0 inv=0 drop=0
+O51  ok    CE [] strict=CE ce=100 bare=0 inv=0 drop=0
+O52  ok    CE [] strict=CE ce=010 bare=1 inv=0 drop=0  validator: ingredient.status: expected one of ready, needs_review, unsupported | ingredient.status: expected one of ready, needs_review, unsupported
+O53  ok    CE [] strict=CE ce=010 bare=0 inv=0 drop=0  validator: ingredient.quantity: a ready line cannot have a range | ingredient.quantity: a ready line cannot have a range
+O54  ok    CE [] strict=CE ce=010 bare=0 inv=0 drop=0  validator: ingredient.name: a ready line needs a name | ingredient.alternatives: a ready line cannot offer a choice of ingredients
+O55  ok    CE [] strict=CE ce=010 bare=0 inv=0 drop=0  validator: ingredient.amountUnstated: a ready line without a quantity must say why (amountUnstated) | ingredient.amountUnstated: a ready line without a quantity must say why (amountUnstated)
+O56  ok    CE [] strict=CE ce=010 bare=0 inv=0 drop=0  validator: ingredient: unknown key "confidence" | ingredient: unknown key "confidence"
+O57  ok    CE [] strict=CE ce=010 bare=0 inv=0 drop=0  validator: ingredient.quantity: numerator/denominator are not a canonical reduced fraction (digits only, no leading zeros, gcd 1, denominator ≥ 1) | ingredient.quantity: numerator/denominator are not a canonical reduced fraction (digits only, no leading zeros, gcd 1, denominator ≥ 1)
+O58  ok    CE [] strict=CE ce=010 bare=0 inv=0 drop=0  validator: ingredient.status: "needs_review" needs at least one review reason | ingredient.status: "needs_review" needs at least one review reason
+O59  ok    CE [] strict=CE ce=001 bare=0 inv=0 drop=0
+O60  ok    CE [] strict=CE ce=101 bare=0 inv=0 drop=0
+O61  ok    CE [] strict=CE ce=100 bare=0 inv=0 drop=0
+O62  ok    C5b [S1 S3] strict=C5 ce=000 bare=0 inv=0 drop=0
+O63  ok    C2 high [S2 S3] strict=C2 ce=000 bare=0 inv=0 drop=0
+O64  ok    C2 high [S2 S7] strict=C2 ce=000 bare=0 inv=0 drop=0
+O65  ok    C2 high [] strict=C2 ce=000 bare=0 inv=0 drop=0
+O66  ok    C2 high [S2] strict=C2 ce=000 bare=0 inv=0 drop=0
+O67  ok    C3a [] strict=C3 ce=000 bare=0 inv=0 drop=0
+O68  ok    C2 high [S1] strict=C2 ce=000 bare=0 inv=0 drop=0
+O69  ok    CE [] strict=CE ce=010 bare=0 inv=0 drop=0  validator: ingredient.unit: a ready line with a quantity needs a unit | ingredient.unit: a ready line with a quantity needs a unit
+O70  ok    C3b [] strict=C3 ce=000 bare=0 inv=0 drop=0
+O71  ok    C1+ [] strict=C1+ ce=000 bare=0 inv=0 drop=0
+
+71/71 oracles agree on every recorded field

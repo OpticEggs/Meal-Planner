@@ -141,3 +141,11 @@ It needs a separately authorized Phase 3.
    for holdout-v3 labels, was revised after the independent label checker's review (`9cd400c`; disposition in
    `evidence/2026-10-10-recipe-extraction-phase2b/label-check/`). No threshold, class, severity rule or acceptance
    basis changed.
+2. **2026-10-10, before candidate freeze and before any holdout-v3 line** — decisions on three scorer ambiguities found
+   by the independent oracle check (R1, `evidence/…/scorer/ORACLE-CHECK.md`), each the stricter reading:
+   (a) validity is checked on **both** parses; a line is invalid (→ CE) if either parse fails the validator;
+   (b) S6 fires when the label has a packageSize and the engine has none and states a mass or volume unit, **whether or
+   not** it states a quantity; (c) two engine errors with different messages also count as nondeterministic (the line
+   is CE either way). Informational review-only flags: an **invented option** is an engine option that matches no
+   label option (nor an accepted one); a **dropped option** is a label option missing from an engine list that
+   invents none. No threshold or acceptance rule changed.
