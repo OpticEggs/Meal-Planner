@@ -13,7 +13,7 @@ import { labelToReading, outcomeControlEngines } from "../controls";
 import { FREEZE_V2_FILE, FREEZE_V2_RULE, computeFreezeV2, freezeV2Status, verifyFreezeV2 } from "../freeze";
 import { checkInvariants } from "../invariants";
 import { LabelValidationError, loadIngredientCases, parseIngredientJsonl } from "../labels";
-import { DEBATABLE_CASES } from "../outcomes";
+import { DEBATABLE_CASES, type OutcomesSection } from "../outcomes";
 import { renderMarkdown } from "../report";
 import { CATEGORIES, SPLITS, V1_SPLITS } from "../types";
 import { copyFixtures, FIXTURES } from "./helpers";
@@ -167,8 +167,8 @@ describe("pre-freeze adjudication (2026-10-09)", () => {
   });
 
   it("the pre-registered debatable cases exist in holdout-v2 and say so in their rationale", () => {
-    expect(DEBATABLE_CASES).toEqual(["ing-h2-0087"]);
-    for (const id of DEBATABLE_CASES) expect(byId(id).rationale).toMatch(/DEBATABLE — PRE-REGISTERED/);
+    expect(DEBATABLE_CASES).toEqual({ holdout2: ["ing-h2-0087"] });
+    for (const id of DEBATABLE_CASES.holdout2) expect(byId(id).rationale).toMatch(/DEBATABLE — PRE-REGISTERED/);
   });
 });
 
@@ -310,7 +310,7 @@ describe("command line: --split holdout2, --print-freeze-v2 and the outcomes sec
       expect(Object.keys(r.corpus.ingredientCases)).toEqual(["dev", "holdout"]);
       expect(r.corpus.files.map((f) => f.path)).not.toContain("fixtures/ingredients/holdout-v2.jsonl");
       expect(Object.keys(r.outcomes!.engines[0].sets)).toEqual(["dev", "holdout"]);
-      expect(r.outcomes!.holdout2Freeze).toBeNull();
+      expect((r.outcomes as OutcomesSection).freezes).toEqual({});
     }
     expect(seen).toBe(0);
   });
@@ -331,25 +331,31 @@ describe("command line: --split holdout2, --print-freeze-v2 and the outcomes sec
     expect(r.corpus.files.map((f) => f.path)).toEqual(["fixtures/ingredients/holdout-v2.jsonl"]);
     expect(r.corpus.pages).toEqual({});
     expect(Object.keys(r.ingredientEngines[0].splits)).toEqual(["holdout2"]);
-    const o = r.outcomes!;
-    expect(o.plan).toBe("EVALUATION-PLAN-v2");
+    const o = r.outcomes as OutcomesSection;
+    expect(o.plan).toBe("EVALUATION-PLAN-v3");
+    expect(o.scorer).toMatchObject({ id: "outcomes", version: "v3", plan: "EVALUATION-PLAN-v3", source: "bench/outcomes.ts" });
+    expect(o.scorer.sha256).toMatch(/^[0-9a-f]{64}$/);
     expect(o.z).toBe(1.959964);
-    expect(o.holdout2Freeze).toEqual(freezeV2Status(FIXTURES));
+    expect(o.freezes).toEqual({ holdout2: freezeV2Status(FIXTURES) });
     expect(Object.keys(o.engines[0].sets)).toEqual(["holdout2"]);
-    expect(o.engines[0].sets.holdout2!.acceptance!.a1ToA5Met).toBe(true);
+    const acc = o.engines[0].sets.holdout2!.acceptance!;
+    expect(acc.a1ToA5Met).toBe(true);
+    expect(acc.basis).toMatch(/^historical — holdout-v2 is exposed/);
     const md = renderMarkdown(r);
-    expect(md).toContain("## Outcomes (EVALUATION-PLAN-v2)");
-    expect(md).toContain("#### holdout-v2 (fresh)");
-    expect(md).toContain("##### Acceptance — Gate G2 on holdout-v2 (fresh), engine `control:oracle`");
+    expect(md).toContain("## Outcomes (outcomes v3, EVALUATION-PLAN-v3)");
+    expect(md).toContain(`source \`bench/outcomes.ts\` SHA-256 \`${o.scorer.sha256}\``);
+    expect(md).toContain("#### holdout-v2 (exposed; historical acceptance set)");
+    expect(md).toContain("##### Acceptance — Gate G2 on holdout-v2 (exposed; historical acceptance set), engine `control:oracle`");
+    expect(md).toContain("Basis: historical — holdout-v2 is exposed");
     expect(md).toContain("| A1 | C1 on R ≥ 98 % |");
     expect(md).toContain("**met with confidence**");
-    expect(md).toContain("##### By source — holdout-v2 (fresh)");
-    if (!o.holdout2Freeze!.frozen) expect(md).toContain("Holdout-v2 freeze: **NOT FROZEN**");
+    expect(md).toContain("##### By source — holdout-v2 (exposed; historical acceptance set)");
+    if (!o.freezes.holdout2!.frozen) expect(md).toContain("Holdout-v2 freeze: **NOT FROZEN**");
   });
 
   it("an oz/fl_oz saboteur fails A4 in the report; zero counts state their upper bound", async () => {
     const r = (await run(parseArgs(["--split", "holdout2", "--engine", "control:oz-swap"]), deps().d)).report!;
-    const acc = r.outcomes!.engines[0].sets.holdout2!.acceptance!;
+    const acc = (r.outcomes as OutcomesSection).engines[0].sets.holdout2!.acceptance!;
     expect(acc.criteria.find((c) => c.id === "A4")!.status).toBe("not met");
     const md = renderMarkdown(r);
     expect(md).toMatch(/\| \*\*S3 cross-dimension\*\* \(of N\) \| [1-9]\d*\/\d+ \|/);
@@ -367,7 +373,7 @@ describe("command line: --split holdout2, --print-freeze-v2 and the outcomes sec
 
   it("a dev-only run has an outcomes section without holdout-v2 freeze status or acceptance", async () => {
     const r = (await run(parseArgs(["--split", "dev", "--engine", "control:oracle"]), deps().d)).report!;
-    expect(r.outcomes!.holdout2Freeze).toBeNull();
+    expect((r.outcomes as OutcomesSection).freezes).toEqual({});
     expect(r.outcomes!.engines[0].sets.dev!.acceptance).toBeNull();
     expect(renderMarkdown(r)).not.toContain("Holdout-v2 freeze");
   });

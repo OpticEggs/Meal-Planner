@@ -15,7 +15,29 @@ import { pageExtractor, selectIngredientEngines, type PageExtractor } from "./en
 import { computeFreeze, computeFreezeV2, freezeV2Status, sha256Hex } from "./freeze";
 import { checkInvariants } from "./invariants";
 import { INGREDIENT_FILES, PAGE_LABELS_FILE, loadIngredientCases, loadPageLabels } from "./labels";
-import { engineOutcomes, memoizeEngine, outcomesSection, type EngineOutcomes } from "./outcomes";
+import {
+  engineOutcomes as engineOutcomesV2,
+  memoizeEngine as memoizeEngineV2,
+  outcomesSection as outcomesSectionV2,
+  type EngineOutcomes as EngineOutcomesV2,
+  type IngredientCaseV2,
+  type OutcomeSetReport as OutcomeSetReportV2,
+} from "./archive/outcomes-v2";
+import {
+  ACCEPTANCE_SPLITS,
+  SCORER_DEPENDENCIES,
+  SCORER_SOURCE,
+  engineOutcomes,
+  observeAll,
+  outcomesSection,
+  replayEngine,
+  scorerIdentity,
+  type AcceptanceSplit,
+  type EngineOutcomes,
+  type HoldoutFreezeStatus,
+  type OutcomeSetReport,
+  type ScorerIdentity,
+} from "./outcomes";
 import { buildReport, renderMarkdown, reportJson, type BenchReport, type CorpusFile, type PageRun, type TimingEntry } from "./report";
 import { scoreIngredients, scorePages, type IngredientScore } from "./score";
 import { fraction } from "./stats";
@@ -27,7 +49,14 @@ export const FIXTURES_DIR = path.join(PACKAGE_ROOT, "fixtures");
 export const USAGE = `Recipe extraction benchmark (local fixtures only; no network).
 
 Usage: tsx bench/cli.ts [options]
-  --engine <id>          ingredient engine to score (repeatable; default: every registered engine)
+  --engine <id>          ingredient engine to score (repeatable; default: every registered engine);
+                         with --pages, pages are scored once per requested engine
+  --engines <id,id,...>  score only these registered engines, as if no others were registered
+                         (pages, with --pages, use the extractor's default as without --engine)
+  --scorer outcomes-v3|outcomes-v2
+                         outcome scorer (default outcomes-v3 = bench/outcomes.ts, EVALUATION-PLAN-v3;
+                         outcomes-v2 = the archived bench/archive/ scorer, for reproducing the
+                         historical holdout-v2 report)
   --split dev|holdout|holdout2|all|every
                          cases to score (default all = dev + holdout-v1, as in Phase 1; holdout-v2 is
                          opt-in only: holdout2 alone, or every = dev + holdout-v1 + holdout-v2;
@@ -53,6 +82,10 @@ export function splitsFor(selection: SplitSelection): Split[] {
   return [selection];
 }
 
+/** The outcome scorer of a run: outcomes v3 (default) or the archived outcomes v2. */
+export const SCORERS = ["outcomes-v3", "outcomes-v2"] as const;
+export type ScorerChoice = (typeof SCORERS)[number];
+
 export interface CliOptions {
   engines: string[];
   split: SplitSelection;
@@ -63,6 +96,10 @@ export interface CliOptions {
   printFreeze: string | null;
   /** Set only by --print-freeze-v2 (absent otherwise). */
   printFreezeV2?: string;
+  /** Set only by --scorer (absent = outcomes-v3). */
+  scorer?: ScorerChoice;
+  /** Set only by --engines: the registered engines to keep (absent = no restriction). */
+  onlyEngines?: string[];
   help: boolean;
 }
 
@@ -79,6 +116,18 @@ export function parseArgs(argv: readonly string[]): CliOptions {
       case "--engine":
         o.engines.push(value());
         break;
+      case "--engines": {
+        const ids = value().split(",").map((x) => x.trim()).filter((x) => x !== "");
+        if (ids.length === 0) throw new UsageError("--engines needs a comma-separated list of engine ids");
+        o.onlyEngines = [...(o.onlyEngines ?? []), ...ids];
+        break;
+      }
+      case "--scorer": {
+        const v = value();
+        if (!(SCORERS as readonly string[]).includes(v)) throw new UsageError(`--scorer must be ${SCORERS.join(" or ")} (got ${v})`);
+        o.scorer = v as ScorerChoice;
+        break;
+      }
       case "--split": {
         const v = value();
         if (v !== "all" && v !== "every" && !(SPLITS as readonly string[]).includes(v)) throw new UsageError(`--split must be dev, holdout, holdout2, all or every (got ${v})`);
@@ -117,6 +166,7 @@ export function parseArgs(argv: readonly string[]): CliOptions {
         throw new UsageError(`unknown option ${a}`);
     }
   }
+  if (o.onlyEngines && o.engines.length > 0) throw new UsageError("--engine and --engines cannot be combined");
   return o;
 }
 
@@ -170,23 +220,59 @@ function summaryLine(s: IngredientScore): string[] {
   return out;
 }
 
-/** One stdout line per set: the EVALUATION-PLAN-v2 outcome classes, severe errors and (holdout2) Gate G2. */
-function outcomeLines(e: EngineOutcomes | undefined): string[] {
+/** One stdout line per set: the outcome classes, severe errors and (acceptance sets) Gate G2. */
+function outcomeLines(e: EngineOutcomes | EngineOutcomesV2 | undefined): string[] {
   if (!e) return [];
   const out: string[] = [];
+  const sets = e.sets as Partial<Record<Split, OutcomeSetReport | OutcomeSetReportV2>>;
   for (const split of SPLITS) {
-    const s = e.sets[split];
+    const s = sets[split];
     if (!s) continue;
     const o = s.aggregate.outcomes;
     const severe = s.aggregate.severe;
     const sev = (["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"] as const).map((k) => `${k}:${severe[k].num}`).join(" ");
     const g2 = s.acceptance ? `  G2 ${s.acceptance.criteria.slice(0, 5).map((c) => `${c.id} ${c.status}`).join(", ")}` : "";
+    const v = "validity" in s.aggregate ? `  invalid ${s.aggregate.validity.invalidOutput.num} error ${s.aggregate.validity.engineError.num} nondet ${s.aggregate.validity.nondeterministic.num}` : "";
     out.push(
       `  outcomes ${split.padEnd(8)} C1 ${fraction(o.C1)}  C1+ ${fraction(o.C1plus)}  C2 ${o.C2.num} (H${o.C2High.num}/M${o.C2Medium.num})  C3+C4 ${fraction(o.C3plusC4)}  ` +
-        `C5 ${fraction(o.C5)}  C7 ${fraction(o.C7)}  CE ${o.CE.num}  ${sev}${g2}`,
+        `C5 ${fraction(o.C5)}  C7 ${fraction(o.C7)}  CE ${o.CE.num}${v}  ${sev}${g2}`,
     );
   }
   return out;
+}
+
+/** The engines a run scores: `--engine` ids (in that order), `--engines` (registry order), or all. */
+function selectEngines(opts: CliOptions, deps: RunDeps): IngredientEngine[] {
+  if (!opts.onlyEngines) return deps.ingredientEngines(opts.engines);
+  const all = deps.ingredientEngines([]);
+  const known = new Set(all.map((e) => e.id));
+  const unknown = opts.onlyEngines.filter((id) => !known.has(id));
+  if (unknown.length > 0) throw new Error(`unknown engine id(s): ${unknown.join(", ")} (registered: ${[...known].join(", ")})`);
+  return all.filter((e) => opts.onlyEngines!.includes(e.id));
+}
+
+/** Freeze status of every acceptance set the run scores. */
+function acceptanceFreezes(fixturesDir: string, splits: readonly Split[]): Partial<Record<AcceptanceSplit, HoldoutFreezeStatus>> {
+  const out: Partial<Record<AcceptanceSplit, HoldoutFreezeStatus>> = {};
+  for (const s of ACCEPTANCE_SPLITS) if (splits.includes(s)) out[s] = HOLDOUT_FREEZE_STATUS[s](fixturesDir);
+  return out;
+}
+const HOLDOUT_FREEZE_STATUS: Record<AcceptanceSplit, (fixturesDir: string) => HoldoutFreezeStatus> = { holdout2: freezeV2Status };
+
+/** SHA-256 of a package file, or null when it cannot be read. */
+function packageFileSha256(packageRoot: string, rel: string): string | null {
+  try {
+    return sha256Hex(readFileSync(path.join(packageRoot, rel)));
+  } catch {
+    return null;
+  }
+}
+
+/** The outcomes v3 scorer identity of the code that is running: SHA-256 of bench/outcomes.ts and its dependencies. */
+export function scorerIdentityOf(packageRoot: string): ScorerIdentity {
+  const deps: Record<string, string | null> = {};
+  for (const d of SCORER_DEPENDENCIES) deps[d] = packageFileSha256(packageRoot, d);
+  return scorerIdentity(packageFileSha256(packageRoot, SCORER_SOURCE), deps);
 }
 
 /** The benchmark run behind `main`. */
@@ -233,25 +319,38 @@ export async function run(opts: CliOptions, deps: RunDeps): Promise<RunResult> {
     scorePagesToo = p.length > 0;
   }
 
-  let engines: IngredientEngine[] = [];
+  const scorer: ScorerChoice = opts.scorer ?? "outcomes-v3";
+  let selected: IngredientEngine[] = [];
   let extract: PageExtractor | null = null;
   try {
-    // Memoized: the §9 scorer and the outcome scorer see the same single reading of each line.
-    if (cases.length > 0) engines = deps.ingredientEngines(opts.engines).map(memoizeEngine);
+    if (cases.length > 0) selected = selectEngines(opts, deps);
     if (scorePagesToo) extract = deps.pageExtractor();
   } catch (err) {
     deps.stderr((err as Error).message);
     return noReport(1);
   }
 
+  // The §9 field scorer and the outcome scorer see the same reading of each line: v3 parses every line
+  // twice (nondeterminism check) and replays the first parse; v2 memoizes a single parse.
   const timing: TimingEntry[] = [];
   const scores: IngredientScore[] = [];
-  const outcomes: EngineOutcomes[] = [];
-  for (const engine of engines) {
+  const outcomes: (EngineOutcomes | EngineOutcomesV2)[] = [];
+  const engines: IngredientEngine[] = [];
+  for (const raw of selected) {
     const t0 = deps.now();
-    scores.push(scoreIngredients(cases, engine));
-    outcomes.push(engineOutcomes(cases, engine));
-    timing.push({ label: `ingredients · ${engine.id}`, items: cases.length, totalMs: deps.now() - t0 });
+    if (scorer === "outcomes-v2") {
+      const engine = memoizeEngineV2(raw);
+      scores.push(scoreIngredients(cases, engine));
+      outcomes.push(engineOutcomesV2(cases as unknown as IngredientCaseV2[], engine));
+      engines.push(engine);
+    } else {
+      const observations = observeAll(cases, raw);
+      const engine = replayEngine(raw, observations);
+      scores.push(scoreIngredients(cases, engine));
+      outcomes.push(engineOutcomes(cases, raw, observations));
+      engines.push(engine);
+    }
+    timing.push({ label: `ingredients · ${raw.id}`, items: cases.length, totalMs: deps.now() - t0 });
   }
 
   const pageRuns: PageRun[] = [];
@@ -290,7 +389,10 @@ export async function run(opts: CliOptions, deps: RunDeps): Promise<RunResult> {
     freezeProblems: [],
     ingredientScores: scores,
     pageRuns,
-    outcomes: outcomesSection(outcomes, splits.includes("holdout2") ? freezeV2Status(deps.fixturesDir) : null),
+    outcomes:
+      scorer === "outcomes-v2"
+        ? outcomesSectionV2(outcomes as EngineOutcomesV2[], splits.includes("holdout2") ? freezeV2Status(deps.fixturesDir) : null)
+        : outcomesSection(outcomes as EngineOutcomes[], acceptanceFreezes(deps.fixturesDir, splits), scorerIdentityOf(PACKAGE_ROOT)),
   });
   const json = reportJson(report);
   const markdown = renderMarkdown(report, timing);

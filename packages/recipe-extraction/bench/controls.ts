@@ -4,7 +4,7 @@
  * that failure (bench/__tests__/mutation-controls.test.ts). Never a parser: an input that is not in the
  * corpus gets an honest "unclassified" needs_review reading. Pure.
  */
-import type { Dimension, ExactQuantity, IngredientEngine, ParsedIngredientV1, QuantityV1, RecipeCandidateV1, RecipeExtractionV1, ReasonCode, UnitV1 } from "../src/contract";
+import { REASONS, type Dimension, type ExactQuantity, type IngredientEngine, type ParsedIngredientV1, type QuantityV1, type RecipeCandidateV1, type RecipeExtractionV1, type ReasonCode, type UnitV1 } from "../src/contract";
 import { formatMixed, fromExactQuantity, parseRationalText, rational, toDecimal, toExactQuantity, type Rational } from "../src/rational";
 import { parseLabelExact, parseLabelQuantity, unitDimension, type IngredientCase, type LabelAmount, type PageLabel } from "./types";
 
@@ -180,30 +180,54 @@ const nullCore = (r: ParsedIngredientV1): ParsedIngredientV1 => ({
   amountUnstated: null,
 });
 
+/** The reasons of a reading that may stay on a ready line (info class only). */
+const infoReasons = (r: ParsedIngredientV1): ReasonCode[] => r.reasons.filter((x) => REASONS[x].class === "info");
+
 /**
- * Mutation controls for the EVALUATION-PLAN-v2 outcome scorer (bench/outcomes.ts): the oracle and one
- * saboteur per outcome class / severe code it must trip (bench/__tests__/outcome-controls.test.ts).
+ * Mutation controls for the outcomes v3 scorer (bench/outcomes.ts): the oracle and one saboteur per
+ * outcome class / severe code it must trip (bench/__tests__/outcome-controls.test.ts). Every semantic
+ * saboteur returns contract-valid, deterministic readings (an invalid one would be CE, not the code it
+ * tests); the CE saboteurs at the end break exactly one of validity, error and determinism.
  */
 export function outcomeControlEngines(cases: readonly IngredientCase[]): Record<string, IngredientEngine> {
   const mk = (id: string, description: string, t?: Sabotage) => engineFromLabels(id, description, cases, t);
+  const calls = new Map<string, number>();
   return {
     oracle: mk("control:oracle", "Returns every label exactly."),
-    dropAmount: mk("control:drop-amount", "Ready-labelled lines with an amount come back ready with quantity null (S2).", (r, c) =>
-      c.expect.status === "ready" && c.expect.quantity !== null ? { ...r, quantity: null } : r),
+    dropAmount: mk("control:drop-amount", "Ready-labelled lines with an amount come back ready with quantity null and amountUnstated 'other' (S2).", (r, c) =>
+      c.expect.status === "ready" && c.expect.quantity !== null ? { ...r, quantity: null, amountUnstated: r.amountUnstated ?? "other" } : r),
     ozSwap: mk("control:oz-swap", "oz and fl_oz exchanged in unit, package size and equivalents (S3).", (r) => ({
       ...r,
       unit: swapOz(r.unit),
       packageSize: r.packageSize ? { ...r.packageSize, unit: swapOz(r.packageSize.unit)! } : null,
       equivalents: r.equivalents.map((x) => ({ ...x, unit: swapOz(x.unit)! })),
     })),
-    readyOnNeedsReview: mk("control:ready-on-needs-review", "needs_review labels come back ready, fields as labelled (S4).", (r, c) =>
-      c.expect.status === "needs_review" ? { ...r, status: "ready", reasons: [] } : r),
+    readyOnNeedsReview: mk(
+      "control:ready-on-needs-review",
+      "needs_review labels come back ready, made contract-valid: the first option as the name, the lower end of a range, 'as needed' for a missing amount, 'each' for a unitless amount (S4).",
+      (r, c) => {
+        if (c.expect.status !== "needs_review") return r;
+        const quantity = r.quantity?.kind === "range" ? r.quantity.min : r.quantity;
+        return {
+          ...r,
+          status: "ready",
+          name: r.name ?? r.alternatives[0] ?? "(food)",
+          alternatives: [],
+          quantity,
+          unit: quantity !== null ? (r.unit ?? unit("each")) : r.unit,
+          amountUnstated: quantity === null ? (r.amountUnstated ?? "as_needed") : r.amountUnstated,
+          reasons: infoReasons(r),
+        };
+      },
+    ),
     readyOnUnsupported: mk("control:ready-on-unsupported", "unsupported labels come back ready with the line as the name (S8).", (r, c) =>
       c.expect.status === "unsupported" ? { ...r, status: "ready", name: r.normalized === "" ? "(empty)" : r.normalized, amountUnstated: "other", reasons: [] } : r),
     inventAmount: mk("control:invent-amount", "Every ingredient line without a labelled amount gets 1 (each when no unit) (S1).", (r, c) =>
       c.expect.quantity === null && c.expect.status !== "unsupported" ? { ...r, quantity: exact(rational(BigInt(1))), unit: r.unit ?? unit("each") } : r),
-    firstAlternative: mk("control:first-alternative", "A choice of ingredients comes back ready as its first option, no alternatives (S5).", (r, c) =>
-      c.expect.alternatives.length >= 2 ? { ...r, status: "ready", name: c.expect.alternatives[0], alternatives: [], reasons: [] } : r),
+    firstAlternative: mk("control:first-alternative", "A choice of ingredients comes back ready as its first option, no alternatives ('as needed' when no amount) (S5).", (r, c) =>
+      c.expect.alternatives.length >= 2
+        ? { ...r, status: "ready", name: c.expect.alternatives[0], alternatives: [], amountUnstated: r.quantity === null ? (r.amountUnstated ?? "as_needed") : r.amountUnstated, reasons: infoReasons(r) }
+        : r),
     foldPackage: mk("control:fold-package", "count × package size folded into the size's unit; package size dropped (S6).", (r, c) => {
       const p = c.expect.packageSize;
       const q = c.expect.quantity === null ? null : parseLabelQuantity(c.expect.quantity);
@@ -224,6 +248,19 @@ export function outcomeControlEngines(cases: readonly IngredientCase[]): Record<
     })),
     allAbstain: mk("control:all-abstain", "Every line needs_review with nothing read (C3c/C5c/C8).", (r) => ({ ...nullCore(r), status: "needs_review", reasons: ["unclassified"] })),
     allUnsupported: mk("control:all-unsupported", "Every line unsupported, nothing read (C4/C6/C7).", (r) => ({ ...nullCore(r), status: "unsupported", reasons: ["not_an_ingredient"] })),
+    // CE saboteurs (SCORE-02): each breaks one dimension; the scorer must give CE and no S code.
+    invalidReady: mk("control:invalid-ready", "Ready-labelled lines with an amount come back ready with quantity null and no amountUnstated: contract-invalid (CE).", (r, c) =>
+      c.expect.status === "ready" && c.expect.quantity !== null ? { ...r, quantity: null, amountUnstated: null } : r),
+    throwOnNeedsReview: mk("control:throw-on-needs-review", "Throws on every needs_review-labelled line (CE, engine error).", (r, c) => {
+      if (c.expect.status === "needs_review") throw new Error(`refused ${c.id}`);
+      return r;
+    }),
+    nondeterministicNote: mk("control:nondeterministic-note", "Every second parse of a ready-labelled line has a different note (CE, nondeterministic).", (r, c) => {
+      if (c.expect.status !== "ready") return r;
+      const k = (calls.get(c.input) ?? 0) + 1;
+      calls.set(c.input, k);
+      return k % 2 === 0 ? { ...r, note: `${r.note ?? ""} (second parse)`.trim() } : r;
+    }),
   };
 }
 
