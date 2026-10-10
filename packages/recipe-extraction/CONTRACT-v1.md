@@ -432,3 +432,74 @@ is prospective (no frozen label changes) and is checked by the label checker bef
 - **A6 → §12.3, package size after the food.** A mass or volume size in brackets after the food on a container line
   is that container's packageSize, whatever else the bracket holds (`1 can tomatoes (14.5 oz, undrained)` → 1 `can`,
   packageSize 14.5 `oz`, note `undrained`), as in §7.4 `2 cans (15 oz each)`.
+
+## 13. Phase 2C interpretations (2026-10-10; prospective — before `semantic-v3` and before any holdout-v4)
+
+Written by the coordinator after the Phase 2B evaluation (holdout-v3, G2 FAIL). The label checker R2 reviews them,
+blind to every engine, before any candidate is frozen. **No historical label changes, no rescoring**: dev, holdout-v1,
+holdout-v2 and holdout-v3 keep their frozen labels and their reports stay as published; every item is consistent with
+them. They settle what §7/§12 left to the registry or to an unranked pair of rules.
+
+1. *(new)* **Declared unit words.**
+   - **Where they are declared.** The written words that name a `UNIT_REGISTRY` code are declared in one table,
+     `src/unit-aliases.ts`. The generated, read-only manifest `docs/table/recipe-extraction/UNIT-ALIASES-v1.md` is
+     produced from that table and never edited by hand.
+   - **What counts as an alias of code X.** Only X's own word qualifies:
+     - the canonical word and its plural;
+     - a standard abbreviation or clipping of it, with or without a final period (`pkg.`, `pk`, `pack`, `btl`, `ctn`, `env`);
+     - a spelling variant (`litre`, `gramme`, `filet`);
+     - the `-ful` form of a measuring unit (`cupful`, `teaspoonful`);
+     - the case conventions `T` (tablespoon) and `t` (teaspoon).
+   - **What is never an alias.** A different noun for a similar thing: `tub`, `pot`, `bar`, `rasher`, `punnet`. An
+     amount before such a noun is an unknown unit (§12.14) → `needs_review`, unit null.
+   - **How the label reads.** The quantity is the number as written; the noun goes in `note` (holdout-v3 0075, 0193).
+   - **Changing the table.** Adding an alias is a prospective contract change, logged here and in
+     `fixtures/LABEL-CHANGES.md`, and never applied to an earlier evaluation.
+2. *(new)* **The measure slot is accounted for structurally (§12.14 extended).**
+   - **Every word between the amount and the food must be accounted for** as one of:
+     - a declared unit word (item 1);
+     - a size or degree word (§12.10);
+     - a modifier of the food (variety, colour, origin, form, preparation participle, brand);
+     - a part of the food's own name.
+   - **A noun that is none of these makes the line `needs_review`**, with no unit and no count read into the name (§12.14). This covers a noun that names a portion, shape, cut-off or dispenser of another food, as in `3 stems lemongrass`, `2 fronds dill`, `1 cob corn`, `20 threads saffron`, `2 cones piloncillo`, `1 disc Mexican chocolate`, `1 heel sourdough`, `2 sprays cooking oil`, `1 blade mace`, `1 split prosecco`. It also covers a vessel or tool, as in `1 saucepan water` and `1 wok oil`.
+     - **Label:** `needs_review`, name = the food, quantity = the number, unit null, the noun in `note`.
+     - **Engine.** Under owner requirement 2, an engine reading leaves the quantity empty and keeps the phrase in `note`. It never pre-fills a count of an unresolved measure.
+     - **Scoring.** Both readings are `needs_review`. The label's quantity records what was written; it is not a prompt to fill a count.
+   - **Where the rule does not apply.** It applies only when a food follows the noun. A noun that is itself the food's head keeps its reading (`4 waffle cones` → 4 `each` `waffle cones`; `4 pots de crème` → 4 `each` `pots de crème`, a dish name, never a container).
+   - **A recognised food does not validate an unaccounted word before it.** An unrecognised food is not thereby non-food: it is `needs_review` with its text kept, never `unsupported` (owner requirements, PHASE-2B-PLAN §6.3).
+3. *(restated, §12.11 and §12.A A3)* **Remark amounts of a different food.**
+   - **Second amount.** A remark that brings in a separately measured food is a second amount → `needs_review`. This covers `dissolved in`, `mixed with`, `soaked in`, `diluted with`, `whisked into`, and `plus N <unit> <another food>`, for example `1 tbsp tamarind paste, dissolved in 3 tbsp hot water` and `1 tsp cornstarch mixed with 2 tbsp water`.
+     - **Label:** name = the line's food; quantity and unit = the first-stated amount; the remark as written in `note`. Nothing is merged, multiplied or dropped. Preparation water is a different food (no exemption).
+   - **Not second amounts** (unchanged):
+     - same-food restatements (item 6 / A3);
+     - a package size (§12.3);
+     - a dimension (`cut into 1-inch cubes`);
+     - a same-ingredient compound (`plus 2 tablespoons for dusting`, §12.11–12);
+     - a time or temperature;
+     - a remark with no amount (`soaked in warm water`).
+4. *(restated, §12.A A4)* **Coordinated foods.** Two or more foods after one amount, joined by `and`, `&` or commas, are a list → `needs_review`. This holds whether or not either food's name has several words (`1 cup fresh peas and fava beans`, `1/2 cup sun-dried tomatoes and kalamata olives`).
+   - **Label:** quantity and unit = the shared amount; name null; `alternatives` empty, because a list is not a choice (§12.7 g). Each food's text may be kept in `note`. No share of the amount is assigned to a food.
+   - **These stay one food:**
+     - the fixed compounds of §7.6 and §12.A A4;
+     - modifiers joined by `and` before one head (`red and yellow bell peppers`, `salt and vinegar potato chips`).
+   - Product-or-list pairs stay debatable (item 6).
+5. *(restated, §12.8)* **Equipment and non-food lines.** A line that names a non-food item is `unsupported`, with or without an amount. This covers:
+   - a vessel, tool, appliance, fuel, cleaning product or tableware;
+   - a brand of one (`1 Le Creuset tagine`, `1 Pyrex casserole`, `1 bag Tide pods`, `1 bag cherry wood chunks`, `1 cow creamer`, `1 salt pig`).
+
+   A `needs_review` reading of such a line with no amount, unit, package or options is a **safe abstention**. It is reported separately (C8) and is never counted as a correct rejection. A word that also names a tool's purpose never makes a food `unsupported` (`300 g fish slices`, `2 lb pork rib racks`, `1 bag walnut crackers` are food).
+6. *(new, evaluation rule)* **Contract-named debatable shapes are not firm labels.** The shapes the contract itself calls debatable are never written as firm labels in a holdout:
+   - §12.4 `ice cubes` / `sugar cubes`;
+   - §12.A A1 a count of one before a countable food naming a cut or dish (`1 strip steak`, `1 sheet cake`, `1 head cheese`);
+   - A3 meat taken off the bone and drained canned food;
+   - A4 product-or-list pairs (`peas and carrots`);
+   - A5 `2 pound cakes`.
+
+   A case the label checker finds debatable is pre-registered as `debatable: true` and left out of the firm acceptance set. The all-case figure is reported beside it. Holdout-v3's published results, which counted every case, are unchanged.
+7. *(new; settles §12.8 for future labels)* **Role labels and headings.**
+   - A role label followed by a food after the colon is an ingredient. The heading reading of `For (the)` applies only when nothing follows the colon: `For garnish: pomegranate arils` → `ready`, `for_garnish`.
+   - A role label may carry `(optional)`: `Garnish (optional): microgreens` → `ready`, `for_garnish`, optional (as frozen holdout-v3 0248).
+   - A line of only generic component words, optionally followed by `(optional)`, is a heading: `Topping (optional)` → `unsupported`.
+
+   These settle holdout-v3's two debatable heading cases (0104, 0211) for future sets only.
+8. *(restated, §7.4 and §12.3)* **A canonical container is not a package size.** A count of containers with no stated size has `packageSize` null; no size is inferred from the container or the food.

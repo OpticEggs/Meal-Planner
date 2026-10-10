@@ -1,0 +1,72 @@
+# input	status	name	qty	unit	pkg	alts	flags (D debatable, S status-only, N no amount/unit/package allowed)	ref	family
+1 tbsp tamarind paste, dissolved in 3 tbsp hot water	needs_review	tamarind paste	1	tbsp	-	-	-	FL-A2	A
+1 tbsp cornstarch mixed with 2 tbsp cold water	needs_review	cornstarch	1	tbsp	-	-	-	FL-A2	A
+2 tsp instant yeast, dissolved in 1/4 cup warm water	needs_review	instant yeast	2	tsp	-	-	-	FL-A2	A
+1/2 cup raisins, soaked in 1/4 cup dark rum	needs_review	raisins	1/2	cup	-	-	-	FL-A2	A
+1 pinch saffron, steeped in 2 tbsp hot milk	needs_review	saffron	1	pinch	-	-	-	FL-A2	A
+2 tbsp white miso, whisked into 1 cup warm water	needs_review	white miso	2	tbsp	-	-	-	FL-A2	A
+1 envelope unflavored gelatin, bloomed in 1/4 cup cold water	needs_review	unflavored gelatin	1	envelope	-	-	-	FL-A2	A
+3 tbsp cocoa powder mixed with 3 tbsp boiling water	needs_review	cocoa powder	3	tbsp	-	-	-	FL-A2	A
+1 tsp baking soda, dissolved in 1 tbsp vinegar	needs_review	baking soda	1	tsp	-	-	-	FL-A2	A
+2 tbsp chia seeds (soaked in 6 tbsp water)	needs_review	chia seeds	2	tbsp	-	-	-	FL-A2	A
+1 tbsp tamarind paste, dissolved in hot water	ready	tamarind paste	1	tbsp	-	-	-	FL-A-control	A
+1 lb beef chuck, cut into 1-inch cubes	ready	beef chuck	1	lb	-	-	-	FL-A-control	A
+1 cup all-purpose flour, plus 2 tbsp for dusting	ready	all-purpose flour	18	tbsp	-	-	-	FL-A-control	A
+2 tbsp butter, softened, plus more for the pan	ready	butter	2	tbsp	-	-	-	FL-A-control	A
+1 tbsp neutral oil, heated to 350°F	ready	neutral oil	1	tbsp	-	-	-	FL-A-control	A
+1 cup basmati rice, soaked for 20 minutes	ready	basmati rice	1	cup	-	-	-	FL-A-control	A
+1 (14 oz) can coconut milk	ready	coconut milk	1	can	14 oz	-	-	FL-A-control	A
+1/2 cup dried apricots, soaked in boiling water	ready	dried apricots	1/2	cup	-	-	-	FL-A-control	A
+1 cup fresh peas and fava beans	needs_review	-	1	cup	-	-	-	FL-B1	B
+2 cups broccoli florets and cauliflower florets	needs_review	-	2	cup	-	-	-	FL-B1	B
+1/2 cup dried cranberries and toasted walnuts	needs_review	-	1/2	cup	-	-	-	FL-B1	B
+1 lb ground pork and ground veal	needs_review	-	1	lb	-	-	-	FL-B1	B
+2 cups cherry tomatoes and diced cucumber	needs_review	-	2	cup	-	-	-	FL-B1	B
+1 cup shredded carrots & red cabbage	needs_review	-	1	cup	-	-	-	FL-B1	B
+3/4 cup golden raisins and chopped dates	needs_review	-	3/4	cup	-	-	-	FL-B1	B
+1/4 cup pine nuts and pumpkin seeds, toasted	needs_review	-	1/4	cup	-	-	-	FL-B1	B
+3 red and yellow bell peppers	ready	red and yellow bell peppers	3	each	-	-	-	FL-B-control	B
+1 bag salt and vinegar potato chips	ready	salt and vinegar potato chips	1	bag	-	-	-	FL-B-control	B
+1 cup half-and-half	ready	half-and-half	1	cup	-	-	-	FL-B-control	B
+1/2 cup sweet and sour sauce	ready	sweet and sour sauce	1/2	cup	-	-	-	FL-B-control	B
+1 box macaroni and cheese	ready	macaroni and cheese	1	box	-	-	-	FL-B-control	B
+1 can pork and beans	ready	pork and beans	1	can	-	-	-	FL-B-control	B
+1 head lettuce, romaine or green leaf	needs_review	-	1	head	-	romaine lettuce;green leaf lettuce	-	FL-B3	B
+1 bunch kale, curly or lacinato	needs_review	-	1	bunch	-	curly kale;lacinato kale	-	FL-B3	B
+2 cups cheese, cheddar or monterey jack	needs_review	-	2	cup	-	cheddar cheese;monterey jack cheese	-	FL-B3	B
+1 lb cremini or shiitake mushrooms	needs_review	-	1	lb	-	cremini mushrooms;shiitake mushrooms	-	FL-B4	B
+2 cups white or brown rice	needs_review	-	2	cup	-	white rice;brown rice	-	FL-B4	B
+1 saucepan water	needs_review	*	-	-	-	-	N	FL-C3	C
+1 stockpot water	needs_review	*	-	-	-	-	N	FL-C3	C
+1 saucepan milk	needs_review	*	-	-	-	-	N	FL-C3	C
+1 wok oil	needs_review	*	-	-	-	-	N	FL-C3	C
+1 colander pasta	needs_review	*	-	-	-	-	N	FL-C3	C
+1 sieve flour	needs_review	*	-	-	-	-	N	FL-C3	C
+2 saucepans water	needs_review	*	-	-	-	-	N	FL-C3	C
+1 kettle water	needs_review	*	-	-	-	-	N	FL-C3	C
+1 skillet cornbread batter	needs_review	*	-	-	-	-	N	FL-C3	C
+300 g fish slices	ready	fish slices	300	g	-	-	-	FL-C6	C
+1 lb fish slices	ready	fish slices	1	lb	-	-	-	FL-C6	C
+6 fish slices, patted dry	ready	fish slices	6	each	-	-	-	FL-C6	C
+2 lb pork rib racks	ready	pork rib racks	2	lb	-	-	-	FL-C6	C
+1 lamb rib rack	ready	lamb rib rack	1	each	-	-	-	FL-C6	C
+1 bag walnut crackers	ready	walnut crackers	1	bag	-	-	-	FL-C6	C
+1 salt pig	unsupported	-	-	-	-	-	-	FL-C2	D
+1 pepper mill	unsupported	-	-	-	-	-	-	FL-C2	D
+1 Staub cocotte	unsupported	-	-	-	-	-	-	FL-C2	D
+1 cast-iron Dutch oven	unsupported	-	-	-	-	-	-	FL-C2	D
+1 bag hickory wood chunks	unsupported	-	-	-	-	-	-	FL-C2	D
+1 box dishwasher pods	unsupported	-	-	-	-	-	-	FL-C2	D
+1 small tub creme fraiche	needs_review	*	-	-	-	-	N	FL-D1	C
+1 small tub crème fraîche	needs_review	*	-	-	-	-	N	FL-D1	C
+2 tubs Greek yogurt	needs_review	*	-	-	-	-	N	FL-D1	C
+1 tub sour cream	needs_review	*	-	-	-	-	N	FL-D1	C
+1 bar dark chocolate	needs_review	*	-	-	-	-	N	FL-D1	C
+2 bars cream cheese	needs_review	*	-	-	-	-	N	FL-D1	C
+4 125 g pots yogurt	needs_review	*	-	-	-	-	N	FL-D1	C
+1 punnet strawberries	needs_review	*	-	-	-	-	N	FL-D1	C
+3 rashers back bacon	needs_review	*	-	-	-	-	N	FL-D1	C
+1 pkg. (8 oz) cream cheese	ready	cream cheese	1	package	8 oz	-	-	FL-D-control	C
+2 packs instant ramen	ready	instant ramen	2	package	-	-	-	FL-D-control	C
+1 container sour cream	ready	sour cream	1	container	-	-	-	FL-D-control	C
+1 block firm tofu	ready	firm tofu	1	block	-	-	-	FL-D-control	C

@@ -1,0 +1,3452 @@
+# 2C corpus (3510 firm cases): exact / safe abstention / FAIL
+
+| group | n | legacy-table-import-2 | semantic-v1 | semantic-v2 |
+|---|---|---|---|---|
+| candidate-review-r1 | 152 | 3 / 12 / 137 | 20 / 0 / 132 | 152 / 0 / 0 |
+| candidate-review-r1-earlier | 1759 | 530 / 269 / 960 | 1111 / 132 / 516 | 1690 / 65 / 4 |
+| candidate-review-r1-round2 | 90 | 13 / 2 / 75 | 30 / 0 / 60 | 59 / 31 / 0 |
+| candidate-review-r1-round3 | 63 | 18 / 0 / 45 | 21 / 0 / 42 | 56 / 7 / 0 |
+| candidate-review-r1-round4 | 568 | 276 / 11 / 281 | 328 / 5 / 235 | 430 / 51 / 87 |
+| coordinator-2c:FL-A-control | 8 | 3 / 0 / 5 | 7 / 0 / 1 | 8 / 0 / 0 |
+| coordinator-2c:FL-A2 | 10 | 0 / 0 / 10 | 0 / 0 / 10 | 0 / 0 / 10 |
+| coordinator-2c:FL-B-control | 6 | 3 / 0 / 3 | 6 / 0 / 0 | 6 / 0 / 0 |
+| coordinator-2c:FL-B1 | 8 | 0 / 0 / 8 | 0 / 0 / 8 | 7 / 0 / 1 |
+| coordinator-2c:FL-B3 | 3 | 0 / 0 / 3 | 1 / 0 / 2 | 1 / 0 / 2 |
+| coordinator-2c:FL-B4 | 2 | 0 / 0 / 2 | 2 / 0 / 0 | 1 / 0 / 1 |
+| coordinator-2c:FL-C2 | 6 | 0 / 0 / 6 | 0 / 0 / 6 | 2 / 3 / 1 |
+| coordinator-2c:FL-C3 | 9 | 0 / 0 / 9 | 0 / 0 / 9 | 1 / 0 / 8 |
+| coordinator-2c:FL-C6 | 6 | 5 / 0 / 1 | 5 / 0 / 1 | 0 / 0 / 6 |
+| coordinator-2c:FL-D-control | 4 | 0 / 0 / 4 | 4 / 0 / 0 | 4 / 0 / 0 |
+| coordinator-2c:FL-D1 | 9 | 1 / 0 / 8 | 2 / 0 / 7 | 3 / 0 / 6 |
+| coordinator:FH-SF1 | 4 | 0 / 0 / 4 | 0 / 0 / 4 | 4 / 0 / 0 |
+| coordinator:FH-SF1-control | 2 | 0 / 0 / 2 | 2 / 0 / 0 | 2 / 0 / 0 |
+| coordinator:FH-SF2 | 8 | 0 / 8 / 0 | 0 / 0 / 8 | 8 / 0 / 0 |
+| coordinator:FH-SF2-control | 2 | 0 / 2 / 0 | 2 / 0 / 0 | 2 / 0 / 0 |
+| coordinator:FH-SF2-food-control | 5 | 3 / 0 / 2 | 5 / 0 / 0 | 5 / 0 / 0 |
+| coordinator:FH-SF3 | 4 | 0 / 0 / 4 | 0 / 0 / 4 | 4 / 0 / 0 |
+| coordinator:FH-SF3-control | 3 | 1 / 0 / 2 | 3 / 0 / 0 | 3 / 0 / 0 |
+| coordinator:FH-SF3-identity-control | 4 | 4 / 0 / 0 | 4 / 0 / 0 | 4 / 0 / 0 |
+| coordinator:FH-SF4 | 7 | 0 / 0 / 7 | 0 / 0 / 7 | 7 / 0 / 0 |
+| coordinator:FH-SF4-control | 1 | 0 / 0 / 1 | 1 / 0 / 0 | 1 / 0 / 0 |
+| coordinator:K1 | 5 | 0 / 0 / 5 | 0 / 0 / 5 | 5 / 0 / 0 |
+| coordinator:K2 | 11 | 0 / 0 / 11 | 0 / 0 / 11 | 11 / 0 / 0 |
+| coordinator:K2-control | 3 | 0 / 0 / 3 | 1 / 0 / 2 | 3 / 0 / 0 |
+| coordinator:K3 | 7 | 0 / 7 / 0 | 0 / 0 / 7 | 7 / 0 / 0 |
+| coordinator:K3-control | 4 | 0 / 4 / 0 | 4 / 0 / 0 | 4 / 0 / 0 |
+| coordinator:K4 | 6 | 4 / 2 / 0 | 0 / 0 / 6 | 6 / 0 / 0 |
+| coordinator:R1-MEDIUM | 4 | 0 / 0 / 4 | 2 / 0 / 2 | 4 / 0 / 0 |
+| coordinator:R1R2-REPORTED | 1 | 0 / 0 / 1 | 1 / 0 / 0 | 1 / 0 / 0 |
+| coordinator:R3-S1 | 32 | 0 / 0 / 32 | 4 / 0 / 28 | 32 / 0 / 0 |
+| coordinator:R3-S2 | 4 | 0 / 0 / 4 | 0 / 0 / 4 | 4 / 0 / 0 |
+| coordinator:R3-S2-control | 2 | 2 / 0 / 0 | 2 / 0 / 0 | 2 / 0 / 0 |
+| coordinator:R3-S3 | 2 | 1 / 0 / 1 | 0 / 0 / 2 | 2 / 0 / 0 |
+| final-head-probe | 658 | 161 / 82 / 415 | 591 / 19 / 48 | 658 / 0 / 0 |
+| holdout-v1 | 2 | 0 / 0 / 2 | 0 / 0 / 2 | 2 / 0 / 0 |
+| holdout-v2 | 26 | 1 / 3 / 22 | 0 / 3 / 23 | 26 / 0 / 0 |
+| **all** | 3510 | 1029 / 402 / 2079 | 2159 / 159 / 1192 | 3227 / 157 / 126 |
+
+## legacy-table-import-2: 2079 failing firm cases
+
+- rx2c-0001	"1 tbsp tamarind paste, dissolved in 3 tbsp hot water"	name: want "tamarind paste", got "1 tbsp tamarind paste"; quantity: want "1", got null; unit: want "tbsp", got null
+- rx2c-0002	"1 tbsp cornstarch mixed with 2 tbsp cold water"	name: want "cornstarch", got "1 tbsp cornstarch mixed with 2 tbsp cold water"; quantity: want "1", got null; unit: want "tbsp", got null
+- rx2c-0003	"2 tsp instant yeast, dissolved in 1/4 cup warm water"	name: want "instant yeast", got "2 tsp instant yeast"; quantity: want "2", got null; unit: want "tsp", got null
+- rx2c-0004	"1/2 cup raisins, soaked in 1/4 cup dark rum"	name: want "raisins", got "1/2 cup raisins"; quantity: want "1/2", got null; unit: want "cup", got null
+- rx2c-0005	"1 pinch saffron, steeped in 2 tbsp hot milk"	name: want "saffron", got "pinch saffron"; unit: want "pinch", got null
+- rx2c-0006	"2 tbsp white miso, whisked into 1 cup warm water"	name: want "white miso", got "2 tbsp white miso"; quantity: want "2", got null; unit: want "tbsp", got null
+- rx2c-0007	"1 envelope unflavored gelatin, bloomed in 1/4 cup cold water"	name: want "unflavored gelatin", got "envelope unflavored gelatin"; unit: want "envelope", got null
+- rx2c-0008	"3 tbsp cocoa powder mixed with 3 tbsp boiling water"	name: want "cocoa powder", got "3 tbsp cocoa powder mixed with 3 tbsp boiling water"; quantity: want "3", got null; unit: want "tbsp", got null
+- rx2c-0009	"1 tsp baking soda, dissolved in 1 tbsp vinegar"	name: want "baking soda", got "1 tsp baking soda"; quantity: want "1", got null; unit: want "tsp", got null
+- rx2c-0010	"2 tbsp chia seeds (soaked in 6 tbsp water)"	name: want "chia seeds", got "2 tbsp chia seeds (soaked in 6 tbsp water)"; quantity: want "2", got null; unit: want "tbsp", got null
+- rx2c-0012	"1 lb beef chuck, cut into 1-inch cubes"	status: want ready, got needs_review; name: want "beef chuck", got "1 lb beef chuck"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-0013	"1 cup all-purpose flour, plus 2 tbsp for dusting"	status: want ready, got needs_review; name: want "all-purpose flour", got "1 cup all-purpose flour"; quantity: want "18", got null; unit: want "tbsp", got null
+- rx2c-0015	"1 tbsp neutral oil, heated to 350°F"	status: want ready, got needs_review; name: want "neutral oil", got "1 tbsp neutral oil"; quantity: want "1", got null; unit: want "tbsp", got null
+- rx2c-0016	"1 cup basmati rice, soaked for 20 minutes"	status: want ready, got needs_review; name: want "basmati rice", got "1 cup basmati rice"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0017	"1 (14 oz) can coconut milk"	status: want ready, got needs_review; name: want "coconut milk", got "1 (14 oz) can coconut milk"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "14 oz", got null
+- rx2c-0019	"1 cup fresh peas and fava beans"	status: want needs_review, got ready; name: want null, got "fresh peas and fava beans"
+- rx2c-0020	"2 cups broccoli florets and cauliflower florets"	status: want needs_review, got ready; name: want null, got "broccoli florets and cauliflower florets"
+- rx2c-0021	"1/2 cup dried cranberries and toasted walnuts"	status: want needs_review, got ready; name: want null, got "dried cranberries and toasted walnuts"
+- rx2c-0022	"1 lb ground pork and ground veal"	status: want needs_review, got ready; name: want null, got "ground pork and ground veal"
+- rx2c-0023	"2 cups cherry tomatoes and diced cucumber"	status: want needs_review, got ready; name: want null, got "cherry tomatoes and diced cucumber"
+- rx2c-0024	"1 cup shredded carrots & red cabbage"	status: want needs_review, got ready; name: want null, got "shredded carrots & red cabbage"
+- rx2c-0025	"3/4 cup golden raisins and chopped dates"	status: want needs_review, got ready; name: want null, got "golden raisins and chopped dates"
+- rx2c-0026	"1/4 cup pine nuts and pumpkin seeds, toasted"	status: want needs_review, got ready; name: want null, got "pine nuts and pumpkin seeds"
+- rx2c-0028	"1 bag salt and vinegar potato chips"	status: want ready, got needs_review; name: want "salt and vinegar potato chips", got "bag salt and vinegar potato chips"; unit: want "bag", got null
+- rx2c-0031	"1 box macaroni and cheese"	status: want ready, got needs_review; name: want "macaroni and cheese", got "box macaroni and cheese"; unit: want "box", got null
+- rx2c-0032	"1 can pork and beans"	status: want ready, got needs_review; name: want "pork and beans", got "can pork and beans"; unit: want "can", got null
+- rx2c-0033	"1 head lettuce, romaine or green leaf"	name: want null, got "head lettuce"; quantity: want "1", got null; unit: want "head", got null; alternatives: want ["romaine lettuce","green leaf lettuce"], got []
+- rx2c-0034	"1 bunch kale, curly or lacinato"	name: want null, got "bunch kale"; quantity: want "1", got null; unit: want "bunch", got null; alternatives: want ["curly kale","lacinato kale"], got []
+- rx2c-0035	"2 cups cheese, cheddar or monterey jack"	name: want null, got "2 cups cheese"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["cheddar cheese","monterey jack cheese"], got []
+- rx2c-0036	"1 lb cremini or shiitake mushrooms"	name: want null, got "1 lb cremini or shiitake mushrooms"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["cremini mushrooms","shiitake mushrooms"], got []
+- rx2c-0037	"2 cups white or brown rice"	name: want null, got "2 cups white or brown rice"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["white rice","brown rice"], got []
+- rx2c-0038	"1 saucepan water"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0039	"1 stockpot water"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0040	"1 saucepan milk"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0041	"1 wok oil"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0042	"1 colander pasta"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0043	"1 sieve flour"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0044	"2 saucepans water"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0045	"1 kettle water"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0046	"1 skillet cornbread batter"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0052	"1 bag walnut crackers"	status: want ready, got needs_review; name: want "walnut crackers", got "bag walnut crackers"; unit: want "bag", got null
+- rx2c-0053	"1 salt pig"	status: want unsupported, got ready; name: want null, got "salt pig"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0054	"1 pepper mill"	status: want unsupported, got ready; name: want null, got "pepper mill"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0055	"1 Staub cocotte"	status: want unsupported, got ready; name: want null, got "Staub cocotte"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0056	"1 cast-iron Dutch oven"	status: want unsupported, got ready; name: want null, got "cast-iron Dutch oven"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0057	"1 bag hickory wood chunks"	status: want unsupported, got needs_review; name: want null, got "bag hickory wood chunks"; quantity: want null, got "1"
+- rx2c-0058	"1 box dishwasher pods"	status: want unsupported, got needs_review; name: want null, got "box dishwasher pods"; quantity: want null, got "1"
+- rx2c-0059	"1 small tub creme fraiche"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0060	"1 small tub crème fraîche"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0061	"2 tubs Greek yogurt"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0062	"1 tub sour cream"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0063	"1 bar dark chocolate"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0064	"2 bars cream cheese"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0066	"1 punnet strawberries"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0067	"3 rashers back bacon"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0068	"1 pkg. (8 oz) cream cheese"	status: want ready, got needs_review; name: want "cream cheese", got "pkg. (8 oz) cream cheese"; quantity: want "1", got null; unit: want "package", got null; packageSize: want "8 oz", got null
+- rx2c-0069	"2 packs instant ramen"	name: want "instant ramen", got "packs instant ramen"; unit: want "package", got "each"
+- rx2c-0070	"1 container sour cream"	status: want ready, got needs_review; name: want "sour cream", got "container sour cream"; unit: want "container", got null
+- rx2c-0071	"1 block firm tofu"	status: want ready, got needs_review; name: want "firm tofu", got "block firm tofu"; unit: want "block", got null
+- rx2c-0072	"1/2 tsp 5-spice powder"	status: want ready, got needs_review; name: want "5-spice powder", got "1/2 tsp 5-spice powder"; quantity: want "1/2", got null; unit: want "tsp", got null
+- rx2c-0073	"500 g 00 flour"	status: want ready, got needs_review; name: want "00 flour", got "500 g 00 flour"; quantity: want "500", got null; unit: want "g", got null
+- rx2c-0074	"eight cardamom pods"	status: want ready, got needs_review; name: want "cardamom", got "eight cardamom pods"; quantity: want "8", got null; unit: want "pod", got null
+- rx2c-0075	"Pinch of salt"	status: want ready, got needs_review; name: want "salt", got "Pinch of salt"; quantity: want "1", got null; unit: want "pinch", got null
+- rx2c-0076	"2 celery ribs, diced"	name: want "celery", got "celery ribs"; unit: want "rib", got "each"
+- rx2c-0077	"2 star anise pods"	name: want "star anise", got "star anise pods"; unit: want "pod", got "each"
+- rx2c-0078	"3 (5.3 oz) cups vanilla Greek yogurt"	status: want ready, got needs_review; name: want "vanilla Greek yogurt", got "3 (5.3 oz) cups vanilla Greek yogurt"; quantity: want "3", got null; unit: want "container", got null; packageSize: want "5 3/10 oz", got null
+- rx2c-0079	"2 tsp + ½ tsp sea salt"	status: want ready, got needs_review; name: want "sea salt", got "2 tsp + ½ tsp sea salt"; quantity: want "2 1/2", got null; unit: want "tsp", got null
+- rx2c-0080	"1 cup plus 1/3 cup sugar"	status: want ready, got needs_review; name: want "sugar", got "1 cup plus 1/3 cup sugar"; quantity: want "1 1/3", got null; unit: want "cup", got null
+- rx2c-0081	"3 cups (750 ml) / 25 fl oz chicken stock"	status: want ready, got needs_review; name: want "chicken stock", got "3 cups (750 ml) / 25 fl oz chicken stock"; quantity: want "3", got null; unit: want "cup", got null
+- rx2c-0082	"93/7 ground turkey, 1 lb"	status: want ready, got needs_review; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-0083	"1 lb large raw shrimp, peeled, tails on"	name: want "shrimp", got "raw shrimp"
+- rx2c-0084	"1 cup cooked quinoa (from 1/3 cup dry)"	name: want "quinoa", got "1 cup cooked quinoa (from 1/3 cup dry)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0085	"Juice of 2 limes"	status: want ready, got needs_review; name: want "limes" (or lime juice | juice of limes), got "Juice of 2 limes"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-0086	"Zest of ½ orange"	status: want ready, got needs_review; name: want "orange" (or orange zest | zest of orange), got "Zest of ½ orange"; quantity: want "1/2", got null; unit: want "each", got null
+- rx2c-0087	"4 cups kale or Swiss chard (stems removed)"	name: want null, got "4 cups kale or Swiss chard"; quantity: want "4", got null; unit: want "cup", got null; alternatives: want ["kale","Swiss chard"], got []
+- rx2c-0088	"1 tbsp maple syrup, honey, or agave"	name: want null, got "1 tbsp maple syrup"; quantity: want "1", got null; unit: want "tbsp", got null; alternatives: want ["maple syrup","honey","agave"], got []
+- rx2c-0089	"1 (15 oz) can chickpeas or white beans, drained"	name: want null, got "1 (15 oz) can chickpeas or white beans"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "15 oz", got null; alternatives: want ["chickpeas","white beans"], got []
+- rx2c-0090	"⅔ cup hummus (store-bought (or see recipe))"	status: want ready, got needs_review; name: want "hummus", got "⅔ cup hummus (store-bought )"; quantity: want "2/3", got null; unit: want "cup", got null
+- rx2c-0092	"eggs x 3"	status: want ready, got needs_review; name: want "eggs", got "eggs x 3"; quantity: want "3", got null; unit: want "each", got null
+- rx2c-0093	"between 2 and 3 cups water"	name: want "water", got "between 2 and 3 cups water"; quantity: want "2..3", got null; unit: want "cup", got null
+- rx2c-0097	"1 cup rice (1 cup dry makes 3 cooked)"	name: want "rice", got "1 cup rice (1 cup dry makes 3 cooked)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0098	"1 1/3 cups chicken stock (homemade (or low-sodium boxed))"	status: want ready, got needs_review; name: want "chicken stock", got "1 1/3 cups chicken stock (homemade )"; quantity: want "1 1/3", got null; unit: want "cup", got null
+- rx2c-0099	"1 cup buttermilk or plain yogurt"	name: want null, got "1 cup buttermilk or plain yogurt"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["buttermilk","plain yogurt"], got []
+- rx2c-0100	"a half-cup milk"	status: want ready, got needs_review; name: want "milk", got "a half-cup milk"; quantity: want "1/2", got null; unit: want "cup", got null
+- rx2c-0101	"a quarter-cup sugar"	status: want ready, got needs_review; name: want "sugar", got "a quarter-cup sugar"; quantity: want "1/4", got null; unit: want "cup", got null
+- rx2c-0102	"a quarter-pound beef"	status: want ready, got needs_review; name: want "beef", got "a quarter-pound beef"; quantity: want "1/4", got null; unit: want "lb", got null
+- rx2c-0103	"a half-pound ground beef"	status: want ready, got needs_review; name: want "ground beef", got "a half-pound ground beef"; quantity: want "1/2", got null; unit: want "lb", got null
+- rx2c-0105	"a half-cup of milk"	status: want ready, got needs_review; name: want "milk", got "a half-cup of milk"; quantity: want "1/2", got null; unit: want "cup", got null
+- rx2c-0106	"400g (14oz) can chopped tomatoes"	status: want ready, got needs_review; name: want "chopped tomatoes", got "400g (14oz) can chopped tomatoes"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "400 g", got null
+- rx2c-0107	"400 g (14 oz) can tomatoes"	status: want ready, got needs_review; name: want "tomatoes", got "400 g (14 oz) can tomatoes"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "400 g", got null
+- rx2c-0108	"400g/14oz can chopped tomatoes"	status: want ready, got needs_review; name: want "chopped tomatoes", got "400g/14oz can chopped tomatoes"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "400 g", got null
+- rx2c-0109	"400 g / 14 oz can tomatoes"	status: want ready, got needs_review; name: want "tomatoes", got "400 g / 14 oz can tomatoes"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "400 g", got null
+- rx2c-0110	"14 oz (400 g) can tomatoes"	status: want ready, got needs_review; name: want "tomatoes", got "14 oz (400 g) can tomatoes"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "14 oz", got null
+- rx2c-0111	"15 oz (425 g) can black beans"	status: want ready, got needs_review; name: want "black beans", got "15 oz (425 g) can black beans"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "15 oz", got null
+- rx2c-0112	"400ml (14fl oz) can coconut milk"	status: want ready, got needs_review; name: want "coconut milk", got "400ml (14fl oz) can coconut milk"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "400 ml", got null
+- rx2c-0113	"28 oz (794 g) can whole tomatoes"	status: want ready, got needs_review; name: want "whole tomatoes", got "28 oz (794 g) can whole tomatoes"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "28 oz", got null
+- rx2c-0114	"8 oz (225 g) package cream cheese"	status: want ready, got needs_review; name: want "cream cheese", got "8 oz (225 g) package cream cheese"; quantity: want "1", got null; unit: want "package", got null; packageSize: want "8 oz", got null
+- rx2c-0115	"8-oz (225 g) package cream cheese"	status: want ready, got needs_review; name: want "cream cheese", got "8-oz (225 g) package cream cheese"; quantity: want "1", got null; unit: want "package", got null; packageSize: want "8 oz", got null
+- rx2c-0116	"16 oz (1 lb) bag frozen peas"	status: want ready, got needs_review; name: want "frozen peas", got "16 oz (1 lb) bag frozen peas"; quantity: want "1", got null; unit: want "bag", got null; packageSize: want "16 oz", got null
+- rx2c-0117	"400ml can coconut milk"	name: want "coconut milk", got "can coconut milk"; quantity: want "1", got "400"; unit: want "can", got "ml"; packageSize: want "400 ml", got null
+- rx2c-0118	"1 x 400g (14oz) can tomatoes"	status: want ready, got needs_review; name: want "tomatoes", got "1 x 400g (14oz) can tomatoes"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "400 g", got null
+- rx2c-0119	"400 g can (14 oz) tomatoes"	status: want ready, got needs_review; name: want "tomatoes", got "400 g can (14 oz) tomatoes"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "400 g", got null
+- rx2c-0137	"1 lb ham or smoked turkey"	name: want null, got "1 lb ham or smoked turkey"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["ham","smoked turkey"], got []
+- rx2c-0138	"1 lb sausage or ground beef"	name: want null, got "1 lb sausage or ground beef"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["sausage","ground beef"], got []
+- rx2c-0139	"1 cup tea or apple juice"	name: want null, got "1 cup tea or apple juice"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["tea","apple juice"], got []
+- rx2c-0140	"2 cups lettuce or mixed greens"	name: want null, got "2 cups lettuce or mixed greens"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["lettuce","mixed greens"], got []
+- rx2c-0141	"1/2 cup Parmesan or Pecorino Romano"	name: want null, got "1/2 cup Parmesan or Pecorino Romano"; quantity: want "1/2", got null; unit: want "cup", got null; alternatives: want ["Parmesan","Pecorino Romano"], got []
+- rx2c-0142	"1 lb chicken or firm tofu"	name: want null, got "1 lb chicken or firm tofu"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["chicken","firm tofu"], got []
+- rx2c-0143	"1/4 cup rum or orange juice"	name: want null, got "1/4 cup rum or orange juice"; quantity: want "1/4", got null; unit: want "cup", got null; alternatives: want ["rum","orange juice"], got []
+- rx2c-0144	"1 lb pasta or zucchini noodles"	name: want null, got "1 lb pasta or zucchini noodles"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["pasta","zucchini noodles"], got []
+- rx2c-0145	"4 slices bacon or smoked ham"	name: want null, got "slices bacon or smoked ham"; quantity: want "4", got null; unit: want "slice", got null; alternatives: want ["bacon","smoked ham"], got []
+- rx2c-0146	"1 cup kale or Swiss chard"	name: want null, got "1 cup kale or Swiss chard"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["kale","Swiss chard"], got []
+- rx2c-0147	"1 shallot or red onion"	name: want null, got "1 shallot or red onion"; quantity: want "1", got null; unit: want "each", got null; alternatives: want ["shallot","red onion"], got []
+- rx2c-0148	"1 leek or yellow onion"	name: want null, got "1 leek or yellow onion"; quantity: want "1", got null; unit: want "each", got null; alternatives: want ["leek","yellow onion"], got []
+- rx2c-0149	"1 cup peas or green beans"	name: want null, got "1 cup peas or green beans"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["peas","green beans"], got []
+- rx2c-0150	"2 tbsp brandy or dry sherry"	name: want null, got "2 tbsp brandy or dry sherry"; quantity: want "2", got null; unit: want "tbsp", got null; alternatives: want ["brandy","dry sherry"], got []
+- rx2c-0151	"1 cup apples or ripe pears"	name: want null, got "1 cup apples or ripe pears"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["apples","ripe pears"], got []
+- rx2c-0152	"1 tsp cumin or chili powder"	name: want null, got "1 tsp cumin or chili powder"; quantity: want "1", got null; unit: want "tsp", got null; alternatives: want ["cumin","chili powder"], got []
+- rx2c-0153	"1 cup spinach or baby kale"	name: want null, got "1 cup spinach or baby kale"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["spinach","baby kale"], got []
+- rx2c-0154	"2 tbsp tahini or peanut butter"	name: want null, got "2 tbsp tahini or peanut butter"; quantity: want "2", got null; unit: want "tbsp", got null; alternatives: want ["tahini","peanut butter"], got []
+- rx2c-0155	"1 cup mayonnaise or Greek yogurt"	name: want null, got "1 cup mayonnaise or Greek yogurt"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["mayonnaise","Greek yogurt"], got []
+- rx2c-0156	"1 tbsp sriracha or hot sauce"	name: want null, got "1 tbsp sriracha or hot sauce"; quantity: want "1", got null; unit: want "tbsp", got null; alternatives: want ["sriracha","hot sauce"], got []
+- rx2c-0157	"1 cup raisins or dried cranberries"	name: want null, got "1 cup raisins or dried cranberries"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["raisins","dried cranberries"], got []
+- rx2c-0158	"1/2 cup feta or goat cheese"	name: want null, got "1/2 cup feta or goat cheese"; quantity: want "1/2", got null; unit: want "cup", got null; alternatives: want ["feta","goat cheese"], got []
+- rx2c-0159	"1 lb shrimp or sea scallops"	name: want null, got "1 lb shrimp or sea scallops"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["shrimp","sea scallops"], got []
+- rx2c-0160	"1 tsp oregano or Italian seasoning"	name: want null, got "1 tsp oregano or Italian seasoning"; quantity: want "1", got null; unit: want "tsp", got null; alternatives: want ["oregano","Italian seasoning"], got []
+- rx2c-0161	"1 cup quinoa or brown rice"	name: want null, got "1 cup quinoa or brown rice"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["quinoa","brown rice"], got []
+- rx2c-0162	"1 tbsp capers or green olives"	name: want null, got "1 tbsp capers or green olives"; quantity: want "1", got null; unit: want "tbsp", got null; alternatives: want ["capers","green olives"], got []
+- rx2c-0163	"2 tbsp parsley or fresh cilantro"	name: want null, got "2 tbsp parsley or fresh cilantro"; quantity: want "2", got null; unit: want "tbsp", got null; alternatives: want ["parsley","fresh cilantro"], got []
+- rx2c-0164	"1 cup cream or whole milk"	name: want null, got "1 cup cream or whole milk"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["cream","whole milk"], got []
+- rx2c-0165	"1 tbsp Dijon or whole grain mustard"	name: want null, got "1 tbsp Dijon or whole grain mustard"; quantity: want "1", got null; unit: want "tbsp", got null; alternatives: want ["Dijon","whole grain mustard"], got []
+- rx2c-0166	"1 cup broth, chicken or vegetable"	name: want null, got "1 cup broth"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["chicken broth","vegetable broth"], got []
+- rx2c-0167	"1 cup flour, all-purpose or bread"	name: want null, got "1 cup flour"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["all-purpose flour","bread flour"], got []
+- rx2c-0168	"1 cup stock, chicken or vegetable"	name: want null, got "1 cup stock"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["chicken stock","vegetable stock"], got []
+- rx2c-0169	"1/3 cup (5 tbsp) butter"	status: want ready, got needs_review; name: want "butter", got "1/3 cup (5 tbsp) butter"; quantity: want "1/3", got null; unit: want "cup", got null
+- rx2c-0170	"2/3 cup (10 tbsp) sugar"	status: want ready, got needs_review; name: want "sugar", got "2/3 cup (10 tbsp) sugar"; quantity: want "2/3", got null; unit: want "cup", got null
+- rx2c-0171	"2 cups (500 ml / 17 fl oz) stock"	status: want ready, got needs_review; name: want "stock", got "2 cups (500 ml / 17 fl oz) stock"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-0172	"1 cup (250 ml) (8.5 fl oz) milk"	status: want ready, got needs_review; name: want "milk", got "1 cup (250 ml) (8.5 fl oz) milk"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0176	"1 m sausage"	status: want needs_review, got ready
+- rx2c-0177	"1x cup milk"	status: want ready, got needs_review; name: want "milk", got "1x cup milk"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0178	"1x can chickpeas"	status: want ready, got needs_review; name: want "chickpeas", got "1x can chickpeas"; quantity: want "1", got null; unit: want "can", got null
+- rx2c-0179	"2x cans chickpeas"	status: want ready, got needs_review; name: want "chickpeas", got "2x cans chickpeas"; quantity: want "2", got null; unit: want "can", got null
+- rx2c-0180	"1 x can chickpeas"	name: want "chickpeas", got "x can chickpeas"; unit: want "can", got "each"
+- rx2c-0182	"2x 400g tins tomatoes"	status: want ready, got needs_review; name: want "tomatoes", got "2x 400g tins tomatoes"; quantity: want "2", got null; unit: want "tin", got null; packageSize: want "400 g", got null
+- rx2c-0183	"2 x 15 oz cans beans"	status: want ready, got needs_review; name: want "beans", got "2 x 15 oz cans beans"; quantity: want "2", got null; unit: want "can", got null; packageSize: want "15 oz", got null
+- rx2c-0194	"1 scoop protein powder"	status: want ready, got needs_review; name: want "protein powder", got "scoop protein powder"; unit: want "scoop", got null
+- rx2c-0198	"1 bottle vitamin water"	status: want ready, got needs_review; name: want "vitamin water", got "bottle vitamin water"; unit: want "bottle", got null
+- rx2c-0199	"2 cups spinach, kale, or chard"	name: want null, got "2 cups spinach"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["spinach","kale","chard"], got []
+- rx2c-0200	"1 tsp thyme, rosemary, or oregano"	name: want null, got "1 tsp thyme"; quantity: want "1", got null; unit: want "tsp", got null; alternatives: want ["thyme","rosemary","oregano"], got []
+- rx2c-0201	"2 tbsp butter, ghee, or oil"	name: want null, got "2 tbsp butter"; quantity: want "2", got null; unit: want "tbsp", got null; alternatives: want ["butter","ghee","oil"], got []
+- rx2c-0202	"1 lb chicken, pork, or tofu"	name: want null, got "1 lb chicken"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["chicken","pork","tofu"], got []
+- rx2c-0203	"1 cup milk, cream, or half-and-half"	name: want null, got "1 cup milk"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["milk","cream","half-and-half"], got []
+- rx2c-0204	"1 cup pecans, walnuts, or almonds"	name: want null, got "1 cup pecans"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["pecans","walnuts","almonds"], got []
+- rx2c-0205	"1/2 cup raisins, cranberries or cherries"	name: want null, got "1/2 cup raisins"; quantity: want "1/2", got null; unit: want "cup", got null; alternatives: want ["raisins","cranberries","cherries"], got []
+- rx2c-0206	"1 cup pecans or walnuts or almonds"	name: want null, got "1 cup pecans or walnuts or almonds"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["pecans","walnuts","almonds"], got []
+- rx2c-0207	"4 lemon wedges"	name: want "lemon", got "lemon wedges"; unit: want "wedge", got "each"
+- rx2c-0208	"2 cinnamon sticks"	name: want "cinnamon", got "cinnamon sticks"; unit: want "stick", got "each"
+- rx2c-0209	"2 bacon strips"	name: want "bacon", got "bacon strips"; unit: want "strip", got "each"
+- rx2c-0210	"2 lettuce heads"	name: want "lettuce", got "lettuce heads"; unit: want "head", got "each"
+- rx2c-0217	"lime wedges, to serve"	status: want ready, got needs_review
+- rx2c-0218	"3 garlic cloves"	name: want "garlic", got "garlic cloves"; unit: want "clove", got "each"
+- rx2c-0219	"4 oz dark or milk chocolate"	name: want null, got "4 oz dark or milk chocolate"; quantity: want "4", got null; unit: want "oz", got null; alternatives: want ["dark chocolate","milk chocolate"], got []
+- rx2c-0220	"1 cup red, green, or yellow bell pepper"	name: want null, got "1 cup red"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["red bell pepper","green bell pepper","yellow bell pepper"], got []
+- rx2c-0221	"2 cups red, yellow or orange peppers"	name: want null, got "2 cups red"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["red peppers","yellow peppers","orange peppers"], got []
+- rx2c-0222	"1 (No. 2) can corn"	status: want ready, got needs_review; name: want "corn", got "1 (No. 2) can corn"; quantity: want "1", got null; unit: want "can", got null
+- rx2c-0223	"2 cups acorn or butternut squash"	name: want null, got "2 cups acorn or butternut squash"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["acorn squash","butternut squash"], got []
+- rx2c-0224	"2 half-pound strip steaks"	name: want "strip steaks", got "half-pound strip steaks"
+- rx2c-0225	"3 tablespoons lemon juice (about 1 lemon)"	name: want "lemon juice", got "3 tablespoons lemon juice (about 1 lemon)"; quantity: want "3", got null; unit: want "tbsp", got null
+- rx2c-0226	"1 cup grated carrot (2 medium carrots)"	status: want ready, got needs_review; name: want "grated carrot" (or carrot), got "1 cup grated carrot (2 medium carrots)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0227	"1 large onion (about 2 cups chopped)"	status: want ready, got needs_review; name: want "onion", got "1 large onion (about 2 cups chopped)"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-0228	"1 gill single cream"	status: want needs_review, got ready
+- rx2c-0229	"2 drams vanilla essence"	status: want needs_review, got ready
+- rx2c-0230	"1 tumbler orange juice"	status: want needs_review, got ready
+- rx2c-0231	"2 ladles chicken stock"	status: want needs_review, got ready
+- rx2c-0232	"1 teacup caster sugar"	status: want needs_review, got ready
+- rx2c-0233	"1 dessert spoon cocoa powder"	status: want needs_review, got ready
+- rx2c-0234	"1 thumb fresh ginger"	status: want needs_review, got ready
+- rx2c-0235	"2 tbsp fresh oregano or dried"	name: want null, got "2 tbsp fresh oregano or dried"; quantity: want "2", got null; unit: want "tbsp", got null; alternatives: want ["fresh oregano","dried oregano"], got []
+- rx2c-0236	"2 cups chopped celery and carrots"	status: want needs_review, got ready
+- rx2c-0237	"1 cup onion and bell pepper, diced"	status: want needs_review, got ready
+- rx2c-0238	"1/4 cup chopped parsley and mint"	status: want needs_review, got ready
+- rx2c-0239	"2 cups strawberries and blueberries"	status: want needs_review, got ready
+- rx2c-0240	"2 strip steaks"	status: want ready, got needs_review; unit: want "each", got null
+- rx2c-0242	"2 sheet cakes"	status: want ready, got needs_review; unit: want "each", got null
+- rx2c-0247	"1 rolling pin"	status: want unsupported, got ready; name: want null, got "rolling pin"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0249	"1 large Dutch oven"	status: want unsupported, got ready; name: want null, got "Dutch oven"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0253	"6 popsicle sticks"	status: want unsupported, got ready; name: want null, got "popsicle sticks"; quantity: want null, got "6"; unit: want null, got "each"
+- rx2c-0254	"1 roll kitchen twine"	status: want unsupported, got ready; name: want null, got "roll kitchen twine"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0255	"1 box toothpicks"	status: want unsupported, got needs_review; name: want null, got "box toothpicks"; quantity: want null, got "1"
+- rx2c-0256	"12 paper baking cups"	status: want unsupported, got ready; name: want null, got "paper baking cups"; quantity: want null, got "12"; unit: want null, got "each"
+- rx2c-0257	"24 mini cupcake liners"	status: want unsupported, got ready; name: want null, got "mini cupcake liners"; quantity: want null, got "24"; unit: want null, got "each"
+- rx2c-0258	"2 sheets aluminum foil"	status: want unsupported, got needs_review; name: want null, got "sheets aluminum foil"; quantity: want null, got "2"
+- rx2c-0259	"1 gallon-size zip-top bag"	status: want unsupported, got ready; name: want null, got "gallon-size zip-top bag"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0260	"1 kitchen scale"	status: want unsupported, got ready; name: want null, got "kitchen scale"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0261	"1 pastry brush"	status: want unsupported, got ready; name: want null, got "pastry brush"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0262	"1 instant-read thermometer"	status: want unsupported, got ready; name: want null, got "instant-read thermometer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0263	"1 pizza stone"	status: want unsupported, got ready; name: want null, got "pizza stone"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0264	"1 piping bag fitted with a star tip"	status: want unsupported, got ready; name: want null, got "piping bag fitted with a star tip"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0265	"1 spice grinder"	status: want unsupported, got ready; name: want null, got "spice grinder"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0266	"2 mason jars"	status: want unsupported, got ready; name: want null, got "mason jars"; quantity: want null, got "2"; unit: want null, got "each"
+- rx2c-0267	"1 cocktail shaker"	status: want unsupported, got ready; name: want null, got "cocktail shaker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0268	"1 cast iron skillet"	status: want unsupported, got ready; name: want null, got "cast iron skillet"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0269	"1 wok"	status: want unsupported, got ready; name: want null, got "wok"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0270	"1 candy thermometer"	status: want unsupported, got ready; name: want null, got "candy thermometer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0271	"6 lollipop sticks"	status: want unsupported, got ready; name: want null, got "lollipop sticks"; quantity: want null, got "6"; unit: want null, got "each"
+- rx2c-0272	"1 egg slicer"	status: want unsupported, got ready; name: want null, got "egg slicer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0273	"1 package wooden skewers"	status: want unsupported, got needs_review; name: want null, got "package wooden skewers"; quantity: want null, got "1"
+- rx2c-0274	"1 baking stone"	status: want unsupported, got ready; name: want null, got "baking stone"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0275	"1 stockpot"	status: want unsupported, got ready; name: want null, got "stockpot"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0276	"1 large saucepan"	status: want unsupported, got ready; name: want null, got "saucepan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0277	"1 ice cream maker"	status: want unsupported, got ready; name: want null, got "ice cream maker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0278	"1 waffle iron"	status: want unsupported, got ready; name: want null, got "waffle iron"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0279	"1 immersion blender"	status: want unsupported, got ready; name: want null, got "immersion blender"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0280	"1 box grater"	status: want unsupported, got needs_review; name: want null, got "box grater"; quantity: want null, got "1"
+- rx2c-0281	"1 grill pan"	status: want unsupported, got ready; name: want null, got "grill pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0282	"1 meat mallet"	status: want unsupported, got ready; name: want null, got "meat mallet"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0283	"1 mortar and pestle"	status: want unsupported, got ready; name: want null, got "mortar and pestle"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0284	"1 microplane"	status: want unsupported, got ready; name: want null, got "microplane"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0285	"1 salad spinner"	status: want unsupported, got ready; name: want null, got "salad spinner"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0286	"1 bench scraper"	status: want unsupported, got ready; name: want null, got "bench scraper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0287	"1 kitchen torch"	status: want unsupported, got ready; name: want null, got "kitchen torch"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0288	"6 canning jars with lids"	status: want unsupported, got ready; name: want null, got "canning jars with lids"; quantity: want null, got "6"; unit: want null, got "each"
+- rx2c-0289	"1 heavy-bottomed pot"	status: want unsupported, got ready; name: want null, got "heavy-bottomed pot"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0290	"1 sheet of wax paper"	status: want unsupported, got needs_review; name: want null, got "sheet of wax paper"; quantity: want null, got "1"
+- rx2c-0291	"1 roll plastic wrap"	status: want unsupported, got ready; name: want null, got "roll plastic wrap"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0292	"2 pieces kitchen string"	status: want unsupported, got needs_review; name: want null, got "pieces kitchen string"; quantity: want null, got "2"
+- rx2c-0293	"12 cupcake wrappers"	status: want unsupported, got ready; name: want null, got "cupcake wrappers"; quantity: want null, got "12"; unit: want null, got "each"
+- rx2c-0294	"1 package paper towels"	status: want unsupported, got needs_review; name: want null, got "package paper towels"; quantity: want null, got "1"
+- rx2c-0295	"1 bag ice pop molds"	status: want unsupported, got needs_review; name: want null, got "bag ice pop molds"; quantity: want null, got "1"
+- rx2c-0296	"1 tart ring"	status: want unsupported, got ready; name: want null, got "tart ring"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0297	"1 baking steel"	status: want unsupported, got ready; name: want null, got "baking steel"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0298	"1 rubber spatula"	status: want unsupported, got ready; name: want null, got "rubber spatula"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0299	"1 offset spatula"	status: want unsupported, got ready; name: want null, got "offset spatula"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0300	"1 vegetable peeler"	status: want unsupported, got ready; name: want null, got "vegetable peeler"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0301	"1 garlic press"	status: want unsupported, got ready; name: want null, got "garlic press"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0302	"1 citrus juicer"	status: want unsupported, got ready; name: want null, got "citrus juicer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0303	"1 deep-fry thermometer"	status: want unsupported, got ready; name: want null, got "deep-fry thermometer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0304	"1 trussing needle"	status: want unsupported, got ready; name: want null, got "trussing needle"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0305	"2 oven mitts"	status: want unsupported, got ready; name: want null, got "oven mitts"; quantity: want null, got "2"; unit: want null, got "each"
+- rx2c-0306	"1 kitchen timer"	status: want unsupported, got ready; name: want null, got "kitchen timer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0307	"1 sushi mat"	status: want unsupported, got ready; name: want null, got "sushi mat"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0308	"1 potato masher"	status: want unsupported, got ready; name: want null, got "potato masher"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0309	"4 rib eye steaks"	status: want ready, got needs_review; unit: want "each", got null
+- rx2c-0310	"4 strip loin steaks"	status: want ready, got needs_review; unit: want "each", got null
+- rx2c-0312	"1 coffee cup plain flour"	status: want needs_review, got ready
+- rx2c-0313	"1 wine glass red wine"	status: want needs_review, got ready
+- rx2c-0314	"2 soup spoons sugar"	status: want needs_review, got ready
+- rx2c-0315	"1 bowl cooked rice"	status: want needs_review, got ready
+- rx2c-0316	"2 fistfuls spinach"	status: want needs_review, got ready
+- rx2c-0317	"1 pottle cream"	status: want needs_review, got ready
+- rx2c-0318	"1 hunk Parmesan"	status: want needs_review, got ready
+- rx2c-0319	"1 chunk fresh ginger"	status: want needs_review, got ready
+- rx2c-0320	"1 slab tofu"	status: want needs_review, got ready
+- rx2c-0321	"1 tub-full yogurt"	status: want needs_review, got ready
+- rx2c-0322	"1 can-ful water"	status: want needs_review, got ready
+- rx2c-0323	"1 stone potatoes"	status: want needs_review, got ready
+- rx2c-0324	"1 crate oranges"	status: want needs_review, got ready
+- rx2c-0325	"1 carafe white wine"	status: want needs_review, got ready
+- rx2c-0326	"1 bucket ice"	status: want needs_review, got ready
+- rx2c-0327	"1 saucer milk"	status: want needs_review, got ready
+- rx2c-0328	"2 tsp fresh rosemary or dried"	name: want null, got "2 tsp fresh rosemary or dried"; quantity: want "2", got null; unit: want "tsp", got null; alternatives: want ["fresh rosemary","dried rosemary"], got []
+- rx2c-0329	"1/4 cup fresh basil or dried"	name: want null, got "1/4 cup fresh basil or dried"; quantity: want "1/4", got null; unit: want "cup", got null; alternatives: want ["fresh basil","dried basil"], got []
+- rx2c-0330	"1 tbsp fresh sage or dried"	name: want null, got "1 tbsp fresh sage or dried"; quantity: want "1", got null; unit: want "tbsp", got null; alternatives: want ["fresh sage","dried sage"], got []
+- rx2c-0331	"2 cups fresh cherries or frozen"	name: want null, got "2 cups fresh cherries or frozen"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["fresh cherries","frozen cherries"], got []
+- rx2c-0332	"1 lb fresh green beans or frozen"	name: want null, got "1 lb fresh green beans or frozen"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["fresh green beans","frozen green beans"], got []
+- rx2c-0333	"1 tbsp dried dill or fresh"	name: want null, got "1 tbsp dried dill or fresh"; quantity: want "1", got null; unit: want "tbsp", got null; alternatives: want ["dried dill","fresh dill"], got []
+- rx2c-0334	"1/2 cup raisins and cranberries"	status: want needs_review, got ready
+- rx2c-0335	"1 cup diced onion and celery"	status: want needs_review, got ready
+- rx2c-0336	"2 tbsp butter and oil"	status: want needs_review, got ready
+- rx2c-0337	"1 cup chopped carrots and parsnips"	status: want needs_review, got ready
+- rx2c-0338	"4 cups broccoli and cauliflower florets"	status: want needs_review, got ready
+- rx2c-0339	"1 lb shrimp and scallops"	status: want needs_review, got ready
+- rx2c-0340	"2 cups spinach and kale"	status: want needs_review, got ready
+- rx2c-0341	"1/4 cup sesame and flax seeds"	status: want needs_review, got ready
+- rx2c-0342	"1 cup sliced peppers and onions"	status: want needs_review, got ready
+- rx2c-0343	"2 tbsp lime juice (juice of 1 lime)"	name: want "lime juice", got "2 tbsp lime juice (juice of 1 lime)"; quantity: want "2", got null; unit: want "tbsp", got null
+- rx2c-0344	"3 tbsp orange juice (1 orange)"	name: want "orange juice", got "3 tbsp orange juice (1 orange)"; quantity: want "3", got null; unit: want "tbsp", got null
+- rx2c-0345	"1 cup chopped onion (1 medium onion)"	status: want ready, got needs_review; name: want "chopped onion" (or onion), got "1 cup chopped onion (1 medium onion)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0346	"2 cups diced tomatoes (about 3 tomatoes)"	status: want ready, got needs_review; name: want "diced tomatoes" (or tomatoes), got "2 cups diced tomatoes (about 3 tomatoes)"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-0347	"1 cup mashed banana (2 ripe bananas)"	status: want ready, got needs_review; name: want "mashed banana" (or banana), got "1 cup mashed banana (2 ripe bananas)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0348	"1 cup shredded zucchini (about 1 medium)"	status: want ready, got needs_review; name: want "shredded zucchini" (or zucchini), got "1 cup shredded zucchini (about 1 medium)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0353	"1 cup almond or cashew butter"	name: want null, got "1 cup almond or cashew butter"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["almond butter","cashew butter"], got []
+- rx2c-0354	"1 lb pork or chicken sausage"	name: want null, got "1 lb pork or chicken sausage"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["pork sausage","chicken sausage"], got []
+- rx2c-0355	"1 lb chicken or turkey sausage"	name: want null, got "1 lb chicken or turkey sausage"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["chicken sausage","turkey sausage"], got []
+- rx2c-0356	"1 pint cherry or grape tomatoes"	name: want null, got "pint cherry or grape tomatoes"; quantity: want "1", got null; unit: want "pint", got null; alternatives: want ["cherry tomatoes","grape tomatoes"], got []
+- rx2c-0357	"1 cup peanut or almond butter"	name: want null, got "1 cup peanut or almond butter"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["peanut butter","almond butter"], got []
+- rx2c-0358	"1 tsp onion or garlic salt"	name: want null, got "1 tsp onion or garlic salt"; quantity: want "1", got null; unit: want "tsp", got null; alternatives: want ["onion salt","garlic salt"], got []
+- rx2c-0359	"1 lb beef or pork tenderloin"	name: want null, got "1 lb beef or pork tenderloin"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["beef tenderloin","pork tenderloin"], got []
+- rx2c-0360	"1 cup coconut or brown sugar"	name: want null, got "1 cup coconut or brown sugar"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["coconut sugar","brown sugar"], got []
+- rx2c-0361	"1 cup macadamia or cashew nuts"	name: want null, got "1 cup macadamia or cashew nuts"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["macadamia nuts","cashew nuts"], got []
+- rx2c-0362	"4 slider or dinner rolls"	name: want null, got "4 slider or dinner rolls"; quantity: want "4", got null; unit: want "each", got null; alternatives: want ["slider rolls","dinner rolls"], got []
+- rx2c-0363	"1 tbsp yellow or Dijon mustard"	name: want null, got "1 tbsp yellow or Dijon mustard"; quantity: want "1", got null; unit: want "tbsp", got null; alternatives: want ["yellow mustard","Dijon mustard"], got []
+- rx2c-0364	"2 cups apple or pear cider"	name: want null, got "2 cups apple or pear cider"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["apple cider","pear cider"], got []
+- rx2c-0365	"1 cup white or whole wheat flour"	name: want null, got "1 cup white or whole wheat flour"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["white flour","whole wheat flour"], got []
+- rx2c-0366	"1 cup red, yellow, or orange bell pepper, diced"	name: want null, got "1 cup red"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["red bell pepper","yellow bell pepper","orange bell pepper"], got []
+- rx2c-0367	"1 cup flour (all-purpose or whole wheat)"	name: want null, got "1 cup flour"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["all-purpose flour","whole wheat flour"], got []
+- rx2c-0368	"2 apples, Granny Smith or Honeycrisp"	name: want null, got "2 apples"; quantity: want "2", got null; unit: want "each", got null; alternatives: want ["Granny Smith apples","Honeycrisp apples"], got []
+- rx2c-0369	"1 lb Yukon Gold potatoes or red"	name: want null, got "1 lb Yukon Gold potatoes or red"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["Yukon Gold potatoes","red potatoes"], got []
+- rx2c-0370	"1 #10 can diced tomatoes"	status: want ready, got needs_review; name: want "diced tomatoes", got "1 #10 can diced tomatoes"; quantity: want "1", got null; unit: want "can", got null
+- rx2c-0371	"2 No. 303 cans cut green beans"	status: want ready, got needs_review; name: want "cut green beans" (or green beans), got "2 No. 303 cans cut green beans"; quantity: want "2", got null; unit: want "can", got null
+- rx2c-0372	"2 cups minus 1/4 cup sugar"	status: want ready, got needs_review; name: want "sugar", got "2 cups minus 1/4 cup sugar"; quantity: want "7/4", got null; unit: want "cup", got null
+- rx2c-0374	"1 tbsp Heinz 57 sauce"	status: want ready, got needs_review; name: want "Heinz 57 sauce", got "1 tbsp Heinz 57 sauce"; quantity: want "1", got null; unit: want "tbsp", got null
+- rx2c-0375	"a half-inch piece fresh ginger"	status: want ready, got needs_review; name: want "fresh ginger" (or ginger), got "a half-inch piece fresh ginger"; quantity: want "1", got null; unit: want "piece", got null
+- rx2c-0376	"1 splatter guard"	status: want unsupported, got ready; name: want null, got "splatter guard"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0377	"1 dough hook"	status: want unsupported, got ready; name: want null, got "dough hook"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0378	"1 popover tin"	status: want unsupported, got ready; name: want null, got "popover tin"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0379	"1 pizza wheel"	status: want unsupported, got ready; name: want null, got "pizza wheel"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0380	"1 cooling grid"	status: want unsupported, got ready; name: want null, got "cooling grid"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0381	"1 double boiler"	status: want unsupported, got ready; name: want null, got "double boiler"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0382	"1 bain-marie"	status: want unsupported, got ready; name: want null, got "bain-marie"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0383	"1 comal"	status: want unsupported, got ready; name: want null, got "comal"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0384	"1 molcajete"	status: want unsupported, got ready; name: want null, got "molcajete"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0385	"1 chinois"	status: want unsupported, got ready; name: want null, got "chinois"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0386	"1 proofing basket"	status: want unsupported, got ready; name: want null, got "proofing basket"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0387	"1 banneton"	status: want unsupported, got ready; name: want null, got "banneton"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0388	"1 cake dome"	status: want unsupported, got ready; name: want null, got "cake dome"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0389	"1 bag pie weights"	status: want unsupported, got needs_review; name: want null, got "bag pie weights"; quantity: want null, got "1"
+- rx2c-0390	"1 box cling film"	status: want unsupported, got needs_review; name: want null, got "box cling film"; quantity: want null, got "1"
+- rx2c-0391	"1 decorating comb"	status: want unsupported, got ready; name: want null, got "decorating comb"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0392	"1 cake leveler"	status: want unsupported, got ready; name: want null, got "cake leveler"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0393	"1 turntable"	status: want unsupported, got ready; name: want null, got "turntable"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0394	"6 cocktail umbrellas"	status: want unsupported, got ready; name: want null, got "cocktail umbrellas"; quantity: want null, got "6"; unit: want null, got "each"
+- rx2c-0395	"12 paper straws"	status: want unsupported, got ready; name: want null, got "paper straws"; quantity: want null, got "12"; unit: want null, got "each"
+- rx2c-0396	"1 nut milk bag"	status: want unsupported, got ready; name: want null, got "nut milk bag"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0397	"1 muslin cloth"	status: want unsupported, got ready; name: want null, got "muslin cloth"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0398	"1 apron"	status: want unsupported, got ready; name: want null, got "apron"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0399	"1 popcorn popper"	status: want unsupported, got ready; name: want null, got "popcorn popper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0400	"1 corkscrew"	status: want unsupported, got ready; name: want null, got "corkscrew"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0401	"1 dough docker"	status: want unsupported, got ready; name: want null, got "dough docker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0402	"1 fondue set"	status: want unsupported, got ready; name: want null, got "fondue set"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0403	"1 pastry wheel"	status: want unsupported, got ready; name: want null, got "pastry wheel"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0405	"1 oil mister"	status: want unsupported, got ready; name: want null, got "oil mister"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0406	"1 bread lame"	status: want unsupported, got ready; name: want null, got "bread lame"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0407	"1 swirl heavy cream"	status: want needs_review, got ready
+- rx2c-0408	"2 squirts lemon juice"	status: want needs_review, got ready
+- rx2c-0409	"1 tot dark rum"	status: want needs_review, got ready
+- rx2c-0410	"1 bundle asparagus"	status: want needs_review, got ready
+- rx2c-0411	"1 hand bananas"	status: want needs_review, got ready
+- rx2c-0412	"1 twig rosemary"	status: want needs_review, got ready
+- rx2c-0413	"1 nip whisky"	status: want needs_review, got ready
+- rx2c-0414	"1 snifter cognac"	status: want needs_review, got ready
+- rx2c-0415	"1 flask brandy"	status: want needs_review, got ready
+- rx2c-0416	"1 eggcup rice"	status: want needs_review, got ready
+- rx2c-0417	"1 cake fresh yeast"	status: want needs_review, got ready
+- rx2c-0418	"1 shake paprika"	status: want needs_review, got ready
+- rx2c-0419	"1 smear Marmite"	status: want needs_review, got ready
+- rx2c-0420	"1 knuckle ginger"	status: want needs_review, got ready
+- rx2c-0421	"2 clusters grapes"	status: want needs_review, got ready
+- rx2c-0422	"1 tub-load ice"	status: want needs_review, got ready
+- rx2c-0423	"1 can tomatoes (14.5 oz, undrained)"	status: want ready, got needs_review; name: want "tomatoes", got "can tomatoes (14.5 oz, undrained)"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "14.5 oz", got null
+- rx2c-0424	"6 drop biscuits"	status: want ready, got needs_review; unit: want "each", got null
+- rx2c-0425	"12 drop cookies"	status: want ready, got needs_review; unit: want "each", got null
+- rx2c-0426	"4 sprinkle donuts"	status: want ready, got needs_review; unit: want "each", got null
+- rx2c-0433	"1 leg of lamb (about 5 lb)"	status: want ready, got needs_review; name: want "leg of lamb", got "1 leg of lamb (about 5 lb)"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-0442	"1 jar black bean and corn salsa"	status: want ready, got needs_review; name: want "black bean and corn salsa", got "jar black bean and corn salsa"; unit: want "jar", got null
+- rx2c-0443	"1 pack bacon and cheese pierogies"	name: want "bacon and cheese pierogies", got "pack bacon and cheese pierogies"; unit: want "package", got "each"
+- rx2c-0444	"1 bag apple and cinnamon oatmeal"	status: want ready, got needs_review; name: want "apple and cinnamon oatmeal", got "bag apple and cinnamon oatmeal"; unit: want "bag", got null
+- rx2c-0445	"1 jar garlic and herb cream cheese"	status: want ready, got needs_review; name: want "garlic and herb cream cheese", got "jar garlic and herb cream cheese"; unit: want "jar", got null
+- rx2c-0446	"1 lb large shrimp (21-25 count)"	status: want ready, got needs_review; name: want "shrimp", got "1 lb large shrimp (21-25 count)"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-0447	"2 cups vanilla or plain yogurt"	name: want null, got "2 cups vanilla or plain yogurt"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["vanilla yogurt","plain yogurt"], got []
+- rx2c-0448	"1 tbsp date or maple syrup"	name: want null, got "1 tbsp date or maple syrup"; quantity: want "1", got null; unit: want "tbsp", got null; alternatives: want ["date syrup","maple syrup"], got []
+- rx2c-0449	"1 cup chocolate or butterscotch chips"	name: want null, got "1 cup chocolate or butterscotch chips"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["chocolate chips","butterscotch chips"], got []
+- rx2c-0450	"1 tbsp clover or wildflower honey"	name: want null, got "1 tbsp clover or wildflower honey"; quantity: want "1", got null; unit: want "tbsp", got null; alternatives: want ["clover honey","wildflower honey"], got []
+- rx2c-0451	"2 chamomile or mint tea bags"	name: want null, got "2 chamomile or mint tea bags"; quantity: want "2", got null; unit: want "each", got null; alternatives: want ["chamomile tea bags","mint tea bags"], got []
+- rx2c-0452	"1 lb Black Forest or honey ham"	name: want null, got "1 lb Black Forest or honey ham"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["Black Forest ham","honey ham"], got []
+- rx2c-0453	"8 slices turkey or pork bacon"	name: want null, got "slices turkey or pork bacon"; quantity: want "8", got null; unit: want "slice", got null; alternatives: want ["turkey bacon","pork bacon"], got []
+- rx2c-0454	"1/2 cup rice or plum wine"	name: want null, got "1/2 cup rice or plum wine"; quantity: want "1/2", got null; unit: want "cup", got null; alternatives: want ["rice wine","plum wine"], got []
+- rx2c-0455	"1 cup goat or sheep milk yogurt"	name: want null, got "1 cup goat or sheep milk yogurt"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["goat milk yogurt","sheep milk yogurt"], got []
+- rx2c-0456	"2 cups pear or apple sauce"	name: want null, got "2 cups pear or apple sauce"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["pear sauce","apple sauce"], got []
+- rx2c-0457	"2 tbsp mango or peach chutney"	name: want null, got "2 tbsp mango or peach chutney"; quantity: want "2", got null; unit: want "tbsp", got null; alternatives: want ["mango chutney","peach chutney"], got []
+- rx2c-0458	"1 lb spinach or egg fettuccine"	name: want null, got "1 lb spinach or egg fettuccine"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["spinach fettuccine","egg fettuccine"], got []
+- rx2c-0459	"2 cups vanilla or chocolate pudding"	name: want null, got "2 cups vanilla or chocolate pudding"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["vanilla pudding","chocolate pudding"], got []
+- rx2c-0460	"1 tsp lavender or rose water"	name: want null, got "1 tsp lavender or rose water"; quantity: want "1", got null; unit: want "tsp", got null; alternatives: want ["lavender water","rose water"], got []
+- rx2c-0461	"1 lb Mexican or Spanish chorizo"	name: want null, got "1 lb Mexican or Spanish chorizo"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["Mexican chorizo","Spanish chorizo"], got []
+- rx2c-0462	"1 #2½ can pumpkin purée"	status: want ready, got needs_review; name: want "pumpkin purée", got "1 #2½ can pumpkin purée"; quantity: want "1", got null; unit: want "can", got null
+- rx2c-0463	"2 No. 2 1/2 cans apricots"	status: want ready, got needs_review; name: want "apricots", got "2 No. 2 1/2 cans apricots"; quantity: want "2", got null; unit: want "can", got null
+- rx2c-0464	"1 large (#2) can crushed pineapple"	status: want ready, got needs_review; name: want "crushed pineapple", got "1 large (#2) can crushed pineapple"; quantity: want "1", got null; unit: want "can", got null
+- rx2c-0465	"Scant cup sugar"	name: want "sugar", got "Scant cup sugar"; unit: want "cup", got null
+- rx2c-0466	"1 Sunbeam mixer"	status: want unsupported, got ready; name: want null, got "Sunbeam mixer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0467	"1 Kenwood Chef mixer"	status: want unsupported, got ready; name: want null, got "Kenwood Chef mixer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0468	"1 Bosch mixer"	status: want unsupported, got ready; name: want null, got "Bosch mixer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0469	"1 Hamilton Beach mixer"	status: want unsupported, got ready; name: want null, got "Hamilton Beach mixer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0470	"1 Big Green Egg"	status: want unsupported, got ready; name: want null, got "Big Green Egg"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0471	"1 Kamado Joe"	status: want unsupported, got ready; name: want null, got "Kamado Joe"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0472	"1 crumpet ring"	status: want unsupported, got ready; name: want null, got "crumpet ring"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0473	"1 bacon rack"	status: want unsupported, got ready; name: want null, got "bacon rack"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0474	"1 fish slice"	status: want unsupported, got ready; name: want null, got "fish slice"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0475	"1 tea ball"	status: want unsupported, got ready; name: want null, got "tea ball"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0476	"1 egg cup"	status: want unsupported, got ready; name: want null, got "egg cup"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0477	"1 lobster cracker"	status: want unsupported, got ready; name: want null, got "lobster cracker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0478	"2 crab crackers"	status: want unsupported, got ready; name: want null, got "crab crackers"; quantity: want null, got "2"; unit: want null, got "each"
+- rx2c-0479	"1 bag hickory wood chips"	status: want unsupported, got needs_review; name: want null, got "bag hickory wood chips"; quantity: want null, got "1"
+- rx2c-0480	"1 bag mesquite chips"	status: want unsupported, got needs_review; name: want null, got "bag mesquite chips"; quantity: want null, got "1"
+- rx2c-0481	"1 banana hanger"	status: want unsupported, got ready; name: want null, got "banana hanger"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0482	"1 helping mashed potatoes"	status: want needs_review, got ready
+- rx2c-0483	"1 dusting cocoa powder"	status: want needs_review, got ready
+- rx2c-0484	"1 sprinkling brown sugar"	status: want needs_review, got ready
+- rx2c-0485	"1 smattering chopped chives"	status: want needs_review, got ready
+- rx2c-0486	"1 scattering sesame seeds"	status: want needs_review, got ready
+- rx2c-0487	"1 slathering softened butter"	status: want needs_review, got ready
+- rx2c-0488	"1 drizzling warm honey"	status: want needs_review, got ready
+- rx2c-0489	"1 dousing hot sauce"	status: want needs_review, got ready
+- rx2c-0490	"1 square baking chocolate"	status: want needs_review, got ready
+- rx2c-0491	"1 bouquet flat-leaf parsley"	status: want needs_review, got ready
+- rx2c-0492	"1 spritz lime juice"	status: want needs_review, got ready
+- rx2c-0493	"2 Sips Dark Rum"	status: want needs_review, got ready
+- rx2c-0494	"1 Gulp Lemonade"	status: want needs_review, got ready
+- rx2c-0495	"1 pot chili"	status: want needs_review, got ready
+- rx2c-0496	"1 casserole dish baked ziti"	status: want needs_review, got ready
+- rx2c-0497	"1 large pot salted water"	status: want needs_review, got ready
+- rx2c-0498	"1 kettle boiling water"	status: want needs_review, got ready
+- rx2c-0500	"1 carton barista oat milk"	status: want ready, got needs_review; name: want "barista oat milk", got "carton barista oat milk"; unit: want "carton", got null
+- rx2c-0501	"4 slices prosciutto di Parma"	status: want ready, got needs_review; name: want "prosciutto di Parma", got "slices prosciutto di Parma"; unit: want "slice", got null
+- rx2c-0506	"1 can straw mushrooms"	status: want ready, got needs_review; name: want "straw mushrooms", got "can straw mushrooms"; unit: want "can", got null
+- rx2c-0513	"1/2 cup chopped dates (8 Medjool)"	status: want ready, got needs_review; name: want "chopped dates" (or dates), got "1/2 cup chopped dates (8 Medjool)"; quantity: want "1/2", got null; unit: want "cup", got null
+- rx2c-0514	"3 cups cubed watermelon (1/4 melon)"	status: want ready, got needs_review; name: want "cubed watermelon" (or watermelon), got "3 cups cubed watermelon (1/4 melon)"; quantity: want "3", got null; unit: want "cup", got null
+- rx2c-0518	"1 cup Thai or Genovese basil"	name: want null, got "1 cup Thai or Genovese basil"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["Thai basil","Genovese basil"], got []
+- rx2c-0519	"2 cups butter or iceberg lettuce"	name: want null, got "2 cups butter or iceberg lettuce"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["butter lettuce","iceberg lettuce"], got []
+- rx2c-0520	"4 pint jars"	status: want unsupported, got needs_review; name: want null, got "pint jars"; quantity: want null, got "4"
+- rx2c-0521	"1 box 5-minute rice"	status: want ready, got needs_review; name: want "5-minute rice", got "box 5-minute rice"; unit: want "box", got null
+- rx2c-0522	"1 pack 2-minute noodles"	status: want ready, got needs_review; name: want "2-minute noodles", got "1 pack 2-minute noodles"; quantity: want "1", got null; unit: want "package", got null
+- rx2c-0525	"1 package toaster pastries"	status: want ready, got needs_review; name: want "toaster pastries", got "package toaster pastries"; unit: want "package", got null
+- rx2c-0528	"1 scoop whey protein isolate"	status: want ready, got needs_review; name: want "whey protein isolate", got "scoop whey protein isolate"; unit: want "scoop", got null
+- rx2c-0531	"1-1/4 cups buttermilk"	status: want ready, got needs_review; name: want "buttermilk", got "1-1/4 cups buttermilk"; quantity: want "5/4", got null; unit: want "cup", got null
+- rx2c-0533	"2⅔ cups water"	status: want ready, got needs_review; name: want "water", got "2⅔ cups water"; quantity: want "8/3", got null; unit: want "cup", got null
+- rx2c-0534	"1⁄3 cup honey"	status: want ready, got needs_review; name: want "honey", got "1⁄3 cup honey"; quantity: want "1/3", got null; unit: want "cup", got null
+- rx2c-0539	"1-1/2 lb pork tenderloin"	status: want ready, got needs_review; name: want "pork tenderloin", got "1-1/2 lb pork tenderloin"; quantity: want "3/2", got null; unit: want "lb", got null
+- rx2c-0540	"2-1/4 cups bread flour"	status: want ready, got needs_review; name: want "bread flour", got "2-1/4 cups bread flour"; quantity: want "9/4", got null; unit: want "cup", got null
+- rx2c-0549	"2-3 tablespoons olive oil"	name: want "olive oil", got "2-3 tablespoons olive oil"; quantity: want "2..3", got null; unit: want "tbsp", got null
+- rx2c-0550	"1 to 2 teaspoons red pepper flakes"	name: want "red pepper flakes", got "1 to 2 teaspoons red pepper flakes"; quantity: want "1..2", got null; unit: want "tsp", got null
+- rx2c-0551	"3 or 4 sprigs thyme"	name: want "thyme", got "3 or 4 sprigs thyme"; quantity: want "3..4", got null; unit: want "sprig", got null
+- rx2c-0552	"1–2 jalapeños"	name: want "jalapeños", got "1–2 jalapeños"; quantity: want "1..2", got null; unit: want "each", got null
+- rx2c-0553	"2 - 3 cloves garlic"	name: want "garlic", got "2 - 3 cloves garlic"; quantity: want "2..3", got null; unit: want "clove", got null
+- rx2c-0554	"1/2-1 tsp salt"	name: want "salt", got "1/2-1 tsp salt"; quantity: want "1/2..1", got null; unit: want "tsp", got null
+- rx2c-0555	"1 1/2 - 2 cups milk"	name: want "milk", got "1 1/2 - 2 cups milk"; quantity: want "3/2..2", got null; unit: want "cup", got null
+- rx2c-0556	"1½–2 lb ground beef"	name: want "ground beef", got "1½–2 lb ground beef"; quantity: want "3/2..2", got null; unit: want "lb", got null
+- rx2c-0557	"1/4-1/2 tsp cayenne"	name: want "cayenne", got "1/4-1/2 tsp cayenne"; quantity: want "1/4..1/2", got null; unit: want "tsp", got null
+- rx2c-0558	"4-6 chicken thighs"	name: want "chicken thighs", got "4-6 chicken thighs"; quantity: want "4..6", got null; unit: want "each", got null
+- rx2c-0559	"6-8 oz dried pasta"	name: want "dried pasta" (or pasta), got "6-8 oz dried pasta"; quantity: want "6..8", got null; unit: want "oz", got null
+- rx2c-0560	"12-16 ounces penne"	name: want "penne", got "12-16 ounces penne"; quantity: want "12..16", got null; unit: want "oz", got null
+- rx2c-0561	"1 or 2 shallots"	name: want "shallots", got "1 or 2 shallots"; quantity: want "1..2", got null; unit: want "each", got null
+- rx2c-0562	"2 or 3 tablespoons milk"	name: want "milk", got "2 or 3 tablespoons milk"; quantity: want "2..3", got null; unit: want "tbsp", got null
+- rx2c-0563	"two eggs"	status: want ready, got needs_review; name: want "eggs", got "two eggs"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-0564	"One 14-ounce can coconut milk"	status: want ready, got needs_review; name: want "coconut milk", got "One 14-ounce can coconut milk"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "14 oz", got null
+- rx2c-0565	"a pinch of nutmeg"	status: want ready, got needs_review; name: want "nutmeg", got "a pinch of nutmeg"; quantity: want "1", got null; unit: want "pinch", got null
+- rx2c-0566	"half a lemon"	status: want ready, got needs_review; name: want "lemon", got "half a lemon"; quantity: want "1/2", got null; unit: want "each", got null
+- rx2c-0567	"a dozen eggs"	status: want ready, got needs_review; name: want "eggs", got "a dozen eggs"; quantity: want "12", got null; unit: want "each", got null
+- rx2c-0568	"twelve cherry tomatoes"	status: want ready, got needs_review; name: want "cherry tomatoes", got "twelve cherry tomatoes"; quantity: want "12", got null; unit: want "each", got null
+- rx2c-0569	"three cloves garlic, minced"	status: want ready, got needs_review; name: want "garlic", got "three cloves garlic"; quantity: want "3", got null; unit: want "clove", got null
+- rx2c-0571	"a few sprigs of rosemary"	name: want "rosemary", got "a few sprigs of rosemary"; unit: want "sprig", got null
+- rx2c-0573	"a 2-inch piece of ginger"	status: want ready, got needs_review; name: want "ginger", got "a 2-inch piece of ginger"; quantity: want "1", got null; unit: want "piece", got null
+- rx2c-0574	"one and a half cups milk"	status: want ready, got needs_review; name: want "milk", got "one and a half cups milk"; quantity: want "3/2", got null; unit: want "cup", got null
+- rx2c-0575	"a quarter cup sugar"	status: want ready, got needs_review; name: want "sugar", got "a quarter cup sugar"; quantity: want "1/4", got null; unit: want "cup", got null
+- rx2c-0576	"half cup cream"	status: want ready, got needs_review; name: want "cream", got "half cup cream"; quantity: want "1/2", got null; unit: want "cup", got null
+- rx2c-0577	"ten ounces spinach"	status: want ready, got needs_review; name: want "spinach", got "ten ounces spinach"; quantity: want "10", got null; unit: want "oz", got null
+- rx2c-0578	"four tablespoons butter"	status: want ready, got needs_review; name: want "butter", got "four tablespoons butter"; quantity: want "4", got null; unit: want "tbsp", got null
+- rx2c-0579	"an onion, diced"	status: want ready, got needs_review; name: want "onion", got "an onion"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-0580	"one 28-oz can crushed tomatoes"	status: want ready, got needs_review; name: want "crushed tomatoes", got "one 28-oz can crushed tomatoes"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "28 oz", got null
+- rx2c-0581	"two 15-ounce cans black beans"	status: want ready, got needs_review; name: want "black beans", got "two 15-ounce cans black beans"; quantity: want "2", got null; unit: want "can", got null; packageSize: want "15 oz", got null
+- rx2c-0582	"a third cup of oil"	status: want ready, got needs_review; name: want "oil", got "a third cup of oil"; quantity: want "1/3", got null; unit: want "cup", got null
+- rx2c-0583	"one-half cup milk"	status: want ready, got needs_review; name: want "milk", got "one-half cup milk"; quantity: want "1/2", got null; unit: want "cup", got null
+- rx2c-0584	"three-quarters cup sugar"	status: want ready, got needs_review; name: want "sugar", got "three-quarters cup sugar"; quantity: want "3/4", got null; unit: want "cup", got null
+- rx2c-0585	"a 5-pound bag of potatoes"	status: want ready, got needs_review; name: want "potatoes", got "a 5-pound bag of potatoes"; quantity: want "1", got null; unit: want "bag", got null; packageSize: want "5 lb", got null
+- rx2c-0586	"2 cups broth (homemade (see note) or store-bought)"	status: want ready, got needs_review; name: want "broth", got "2 cups broth (homemade or store-bought)"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-0587	"1 (8 oz) package cream cheese (softened (room temperature))"	status: want ready, got needs_review; name: want "cream cheese", got "1 (8 oz) package cream cheese (softened )"; quantity: want "1", got null; unit: want "package", got null; packageSize: want "8 oz", got null
+- rx2c-0589	"2 tbsp butter (melted (and cooled))"	name: want "butter", got "butter (melted )"
+- rx2c-0591	"3 tbsp gochujang (Korean chili paste), or to taste"	status: want ready, got needs_review; name: want "gochujang", got "3 tbsp gochujang"; quantity: want "3", got null; unit: want "tbsp", got null
+- rx2c-0593	"1 cup (2 sticks) unsalted butter"	status: want ready, got needs_review; name: want "unsalted butter", got "1 cup (2 sticks) unsalted butter"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0594	"1 cup (8 oz) sour cream"	status: want ready, got needs_review; name: want "sour cream", got "1 cup (8 oz) sour cream"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0595	"200 g (7 oz) dark chocolate, chopped"	status: want ready, got needs_review; name: want "dark chocolate", got "200 g (7 oz) dark chocolate"; quantity: want "200", got null; unit: want "g", got null
+- rx2c-0596	"1 cup (240 ml) whole milk"	status: want ready, got needs_review; name: want "whole milk", got "1 cup (240 ml) whole milk"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0597	"2 tbsp (30 ml) lemon juice"	status: want ready, got needs_review; name: want "lemon juice", got "2 tbsp (30 ml) lemon juice"; quantity: want "2", got null; unit: want "tbsp", got null
+- rx2c-0598	"1 cup grated Parmesan (about 3 oz)"	status: want ready, got needs_review; name: want "grated Parmesan" (or Parmesan), got "1 cup grated Parmesan (about 3 oz)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0599	"1 lb lean ground beef (90/10)"	status: want ready, got needs_review; name: want "lean ground beef", got "1 lb lean ground beef (90/10)"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-0600	"2 cups basil (packed) (about 2 oz)"	status: want ready, got needs_review; name: want "basil", got "2 cups basil (about 2 oz)"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-0601	"1 can (15 oz) pumpkin puree (not pie filling)"	status: want ready, got needs_review; name: want "pumpkin puree", got "can (15 oz) pumpkin puree"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "15 oz", got null
+- rx2c-0602	"2 tbsp butter or olive oil"	name: want null, got "2 tbsp butter or olive oil"; quantity: want "2", got null; unit: want "tbsp", got null; alternatives: want ["butter","olive oil"], got []
+- rx2c-0603	"1 cup blueberries (fresh or frozen)"	status: want ready, got needs_review; name: want "blueberries", got "1 cup blueberries"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0604	"2 cups spinach, fresh or frozen"	status: want ready, got needs_review; name: want "spinach", got "2 cups spinach"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-0605	"1/2 cup pecans or walnuts, chopped"	name: want null, got "1/2 cup pecans or walnuts"; quantity: want "1/2", got null; unit: want "cup", got null; alternatives: want ["pecans","walnuts"], got []
+- rx2c-0606	"1 lb ground turkey or chicken"	name: want null, got "1 lb ground turkey or chicken"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["ground turkey","ground chicken"], got []
+- rx2c-0607	"1 cup heavy cream or half-and-half"	name: want null, got "1 cup heavy cream or half-and-half"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["heavy cream","half-and-half"], got []
+- rx2c-0612	"1 cup mozzarella or provolone, shredded"	name: want null, got "1 cup mozzarella or provolone"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["mozzarella","provolone"], got []
+- rx2c-0613	"1 can (15 oz) black beans or kidney beans, drained"	name: want null, got "can (15 oz) black beans or kidney beans"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "15 oz", got null; alternatives: want ["black beans","kidney beans"], got []
+- rx2c-0614	"Fresh basil or parsley, for garnish"	name: want null, got "Fresh basil or parsley"; alternatives: want ["fresh basil","fresh parsley"], got []
+- rx2c-0615	"1 cup orange juice (freshly squeezed or bottled)"	status: want ready, got needs_review; name: want "orange juice", got "1 cup orange juice"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0616	"1 cup almond milk or oat milk"	name: want null, got "1 cup almond milk or oat milk"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["almond milk","oat milk"], got []
+- rx2c-0617	"2 cups arugula or baby spinach"	name: want null, got "2 cups arugula or baby spinach"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["arugula","baby spinach"], got []
+- rx2c-0618	"1/4 cup maple syrup or honey"	name: want null, got "1/4 cup maple syrup or honey"; quantity: want "1/4", got null; unit: want "cup", got null; alternatives: want ["maple syrup","honey"], got []
+- rx2c-0620	"1 cup shredded cheddar or Monterey Jack"	name: want null, got "1 cup shredded cheddar or Monterey Jack"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["shredded cheddar","shredded Monterey Jack"], got []
+- rx2c-0621	"1 tbsp rice vinegar or white wine vinegar"	name: want null, got "1 tbsp rice vinegar or white wine vinegar"; quantity: want "1", got null; unit: want "tbsp", got null; alternatives: want ["rice vinegar","white wine vinegar"], got []
+- rx2c-0622	"1 lemon or lime"	name: want null, got "1 lemon or lime"; quantity: want "1", got null; unit: want "each", got null; alternatives: want ["lemon","lime"], got []
+- rx2c-0623	"1 cup tomato sauce (jarred or homemade)"	status: want ready, got needs_review; name: want "tomato sauce", got "1 cup tomato sauce"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0624	"1/2 cup sour cream or Greek yogurt"	name: want null, got "1/2 cup sour cream or Greek yogurt"; quantity: want "1/2", got null; unit: want "cup", got null; alternatives: want ["sour cream","Greek yogurt"], got []
+- rx2c-0626	"1 tbsp chopped parsley or cilantro"	name: want null, got "1 tbsp chopped parsley or cilantro"; quantity: want "1", got null; unit: want "tbsp", got null; alternatives: want ["chopped parsley","chopped cilantro"], got []
+- rx2c-0627	"2 cups cooked rice or quinoa"	name: want null, got "2 cups cooked rice or quinoa"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["rice","quinoa"], got []
+- rx2c-0629	"2 (14.5 oz) cans fire-roasted tomatoes"	status: want ready, got needs_review; name: want "fire-roasted tomatoes", got "2 (14.5 oz) cans fire-roasted tomatoes"; quantity: want "2", got null; unit: want "can", got null; packageSize: want "14.5 oz", got null
+- rx2c-0630	"1 (28-ounce) can crushed tomatoes"	status: want ready, got needs_review; name: want "crushed tomatoes", got "1 (28-ounce) can crushed tomatoes"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "28 oz", got null
+- rx2c-0631	"1 15-oz can chickpeas, drained and rinsed"	status: want ready, got needs_review; name: want "chickpeas", got "1 15-oz can chickpeas"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "15 oz", got null
+- rx2c-0632	"2 cans (15 oz each) cannellini beans"	status: want ready, got needs_review; name: want "cannellini beans", got "cans (15 oz each) cannellini beans"; quantity: want "2", got null; unit: want "can", got null; packageSize: want "15 oz", got null
+- rx2c-0633	"1 (1-pound) bag baby carrots"	status: want ready, got needs_review; name: want "baby carrots", got "1 (1-pound) bag baby carrots"; quantity: want "1", got null; unit: want "bag", got null; packageSize: want "1 lb", got null
+- rx2c-0634	"3 (6 oz) containers plain yogurt"	status: want ready, got needs_review; name: want "plain yogurt", got "3 (6 oz) containers plain yogurt"; quantity: want "3", got null; unit: want "container", got null; packageSize: want "6 oz", got null
+- rx2c-0635	"1 (0.25 oz) envelope active dry yeast"	status: want ready, got needs_review; name: want "active dry yeast", got "1 (0.25 oz) envelope active dry yeast"; quantity: want "1", got null; unit: want "envelope", got null; packageSize: want "1/4 oz", got null
+- rx2c-0636	"2 (8-ounce) packages cream cheese"	status: want ready, got needs_review; name: want "cream cheese", got "2 (8-ounce) packages cream cheese"; quantity: want "2", got null; unit: want "package", got null; packageSize: want "8 oz", got null
+- rx2c-0637	"1 (12 fl oz) bottle beer"	status: want ready, got needs_review; name: want "beer", got "1 (12 fl oz) bottle beer"; quantity: want "1", got null; unit: want "bottle", got null; packageSize: want "12 fl_oz", got null
+- rx2c-0638	"1 jar (24 oz) marinara sauce"	status: want ready, got needs_review; name: want "marinara sauce", got "jar (24 oz) marinara sauce"; quantity: want "1", got null; unit: want "jar", got null; packageSize: want "24 oz", got null
+- rx2c-0639	"4 (6-oz) salmon fillets"	status: want ready, got needs_review; name: want "salmon", got "4 (6-oz) salmon fillets"; quantity: want "4", got null; unit: want "fillet", got null
+- rx2c-0640	"1 14 oz can coconut milk"	status: want ready, got needs_review; name: want "coconut milk", got "1 14 oz can coconut milk"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "14 oz", got null
+- rx2c-0641	"2 x 400g tins chopped tomatoes"	status: want ready, got needs_review; name: want "chopped tomatoes", got "2 x 400g tins chopped tomatoes"; quantity: want "2", got null; unit: want "tin", got null; packageSize: want "400 g", got null
+- rx2c-0642	"1 x 250 g pack halloumi"	status: want ready, got needs_review; name: want "halloumi", got "1 x 250 g pack halloumi"; quantity: want "1", got null; unit: want "package", got null; packageSize: want "250 g", got null
+- rx2c-0643	"1 12-ounce package frozen spinach, thawed"	status: want ready, got needs_review; name: want "frozen spinach", got "1 12-ounce package frozen spinach"; quantity: want "1", got null; unit: want "package", got null; packageSize: want "12 oz", got null
+- rx2c-0644	"3 cans (5 oz each) tuna, drained"	status: want ready, got needs_review; name: want "tuna", got "cans (5 oz each) tuna"; quantity: want "3", got null; unit: want "can", got null; packageSize: want "5 oz", got null
+- rx2c-0645	"2 8-oz packages cream cheese"	status: want ready, got needs_review; name: want "cream cheese", got "2 8-oz packages cream cheese"; quantity: want "2", got null; unit: want "package", got null; packageSize: want "8 oz", got null
+- rx2c-0646	"3 12-inch flour tortillas"	status: want ready, got needs_review; name: want "flour tortillas", got "3 12-inch flour tortillas"; quantity: want "3", got null; unit: want "each", got null
+- rx2c-0647	"1 2-lb bag carrots"	status: want ready, got needs_review; name: want "carrots", got "1 2-lb bag carrots"; quantity: want "1", got null; unit: want "bag", got null; packageSize: want "2 lb", got null
+- rx2c-0648	"1 5-oz bag arugula"	status: want ready, got needs_review; name: want "arugula", got "1 5-oz bag arugula"; quantity: want "1", got null; unit: want "bag", got null; packageSize: want "5 oz", got null
+- rx2c-0649	"2 1-lb packages ground beef"	status: want ready, got needs_review; name: want "ground beef", got "2 1-lb packages ground beef"; quantity: want "2", got null; unit: want "package", got null; packageSize: want "1 lb", got null
+- rx2c-0650	"1 28 oz can whole peeled tomatoes"	status: want ready, got needs_review; name: want "whole peeled tomatoes", got "1 28 oz can whole peeled tomatoes"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "28 oz", got null
+- rx2c-0651	"1 (16 oz) box penne"	status: want ready, got needs_review; name: want "penne", got "1 (16 oz) box penne"; quantity: want "1", got null; unit: want "box", got null; packageSize: want "16 oz", got null
+- rx2c-0652	"1/2 (14 oz) can coconut milk"	status: want ready, got needs_review; name: want "coconut milk", got "1/2 (14 oz) can coconut milk"; quantity: want "1/2", got null; unit: want "can", got null; packageSize: want "14 oz", got null
+- rx2c-0653	"1 can tomato paste (6 oz)"	status: want ready, got needs_review; name: want "tomato paste", got "can tomato paste (6 oz)"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "6 oz", got null
+- rx2c-0654	"1 package (8 oz) mushrooms, sliced"	status: want ready, got needs_review; name: want "mushrooms", got "package (8 oz) mushrooms"; quantity: want "1", got null; unit: want "package", got null; packageSize: want "8 oz", got null
+- rx2c-0655	"1 large (28 oz) can tomatoes"	status: want ready, got needs_review; name: want "tomatoes", got "1 large (28 oz) can tomatoes"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "28 oz", got null
+- rx2c-0656	"2 (10 oz) bags frozen broccoli florets"	status: want ready, got needs_review; name: want "frozen broccoli florets", got "2 (10 oz) bags frozen broccoli florets"; quantity: want "2", got null; unit: want "bag", got null; packageSize: want "10 oz", got null
+- rx2c-0657	"1 (14-ounce) block extra-firm tofu"	status: want ready, got needs_review; name: want "extra-firm tofu", got "1 (14-ounce) block extra-firm tofu"; quantity: want "1", got null; unit: want "block", got null; packageSize: want "14 oz", got null
+- rx2c-0658	"1 (750 ml) bottle dry red wine"	status: want ready, got needs_review; name: want "dry red wine", got "1 (750 ml) bottle dry red wine"; quantity: want "1", got null; unit: want "bottle", got null; packageSize: want "750 ml", got null
+- rx2c-0659	"1 (32 oz) carton chicken broth"	status: want ready, got needs_review; name: want "chicken broth", got "1 (32 oz) carton chicken broth"; quantity: want "1", got null; unit: want "carton", got null; packageSize: want "32 oz", got null
+- rx2c-0660	"1 (1 lb) loaf French bread"	status: want ready, got needs_review; name: want "French bread", got "1 (1 lb) loaf French bread"; quantity: want "1", got null; unit: want "loaf", got null; packageSize: want "1 lb", got null
+- rx2c-0661	"1 (2 1/4 tsp) packet instant yeast"	status: want ready, got needs_review; name: want "instant yeast", got "1 (2 1/4 tsp) packet instant yeast"; quantity: want "1", got null; unit: want "packet", got null; packageSize: want "9/4 tsp", got null
+- rx2c-0662	"1 package (1/4 oz) yeast"	status: want ready, got needs_review; name: want "yeast", got "package (1/4 oz) yeast"; quantity: want "1", got null; unit: want "package", got null; packageSize: want "1/4 oz", got null
+- rx2c-0663	"1 (14 oz) can (400 g) coconut milk"	status: want ready, got needs_review; name: want "coconut milk", got "1 (14 oz) can (400 g) coconut milk"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "14 oz", got null
+- rx2c-0664	"1 (5.3 oz) container Greek yogurt"	status: want ready, got needs_review; name: want "Greek yogurt", got "1 (5.3 oz) container Greek yogurt"; quantity: want "1", got null; unit: want "container", got null; packageSize: want "53/10 oz", got null
+- rx2c-0665	"2 (6 fl oz) cans pineapple juice"	status: want ready, got needs_review; name: want "pineapple juice", got "2 (6 fl oz) cans pineapple juice"; quantity: want "2", got null; unit: want "can", got null; packageSize: want "6 fl_oz", got null
+- rx2c-0666	"1 (12-fluid ounce) can evaporated milk"	status: want ready, got needs_review; name: want "evaporated milk", got "1 (12-fluid ounce) can evaporated milk"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "12 fl_oz", got null
+- rx2c-0667	"2 sticks butter"	status: want ready, got needs_review; name: want "butter", got "sticks butter"; unit: want "stick", got null
+- rx2c-0668	"1 head cauliflower, cut into florets"	status: want ready, got needs_review; name: want "cauliflower", got "head cauliflower"; unit: want "head", got null
+- rx2c-0669	"1 bunch cilantro"	status: want ready, got needs_review; name: want "cilantro", got "bunch cilantro"; unit: want "bunch", got null
+- rx2c-0670	"2 ears corn, husked"	status: want ready, got needs_review; name: want "corn", got "ears corn"; unit: want "ear", got null
+- rx2c-0671	"6 cloves garlic"	status: want ready, got needs_review; name: want "garlic", got "cloves garlic"; unit: want "clove", got null
+- rx2c-0674	"1 (9-inch) unbaked pie crust"	status: want ready, got needs_review; name: want "unbaked pie crust" (or pie crust), got "1 (9-inch) unbaked pie crust"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-0677	"6 garlic cloves, smashed"	name: want "garlic", got "garlic cloves"; unit: want "clove", got "each"
+- rx2c-0678	"2 thyme sprigs"	name: want "thyme", got "thyme sprigs"; unit: want "sprig", got "each"
+- rx2c-0679	"1 garlic bulb"	name: want "garlic", got "garlic bulb"; unit: want "bulb", got "each"
+- rx2c-0680	"4 bacon slices"	name: want "bacon", got "bacon slices"; unit: want "slice", got "each"
+- rx2c-0681	"2 celery stalks"	name: want "celery", got "celery stalks"; unit: want "stalk", got "each"
+- rx2c-0683	"3 links Italian sausage"	status: want ready, got needs_review; name: want "Italian sausage", got "links Italian sausage"; unit: want "link", got null
+- rx2c-0684	"1 ball fresh mozzarella"	name: want "fresh mozzarella", got "ball fresh mozzarella"; unit: want "ball", got "each"
+- rx2c-0685	"1 tube refrigerated biscuit dough"	name: want "refrigerated biscuit dough", got "tube refrigerated biscuit dough"; unit: want "tube", got "each"
+- rx2c-0686	"2 sheets puff pastry, thawed"	status: want ready, got needs_review; name: want "puff pastry", got "sheets puff pastry"; unit: want "sheet", got null
+- rx2c-0687	"4 strips lemon zest"	status: want ready, got needs_review; name: want "lemon zest", got "strips lemon zest"; unit: want "strip", got null
+- rx2c-0688	"1 loaf ciabatta"	status: want ready, got needs_review; name: want "ciabatta", got "loaf ciabatta"; unit: want "loaf", got null
+- rx2c-0689	"2 cubes chicken bouillon"	name: want "chicken bouillon", got "cubes chicken bouillon"; unit: want "cube", got "each"
+- rx2c-0690	"1 packet taco seasoning"	status: want ready, got needs_review; name: want "taco seasoning", got "packet taco seasoning"; unit: want "packet", got null
+- rx2c-0691	"1 envelope unflavored gelatin"	status: want ready, got needs_review; name: want "unflavored gelatin", got "envelope unflavored gelatin"; unit: want "envelope", got null
+- rx2c-0692	"1 tin sardines"	status: want ready, got needs_review; name: want "sardines", got "tin sardines"; unit: want "tin", got null
+- rx2c-0697	"6 fl oz (180 ml) orange juice"	status: want ready, got needs_review; name: want "orange juice", got "6 fl oz (180 ml) orange juice"; quantity: want "6", got null; unit: want "fl_oz", got null
+- rx2c-0698	"10 oz (283 g) frozen spinach"	status: want ready, got needs_review; name: want "frozen spinach", got "10 oz (283 g) frozen spinach"; quantity: want "10", got null; unit: want "oz", got null
+- rx2c-0699	"2 ozs feta"	name: want "feta", got "ozs feta"; unit: want "oz", got "each"
+- rx2c-0701	"1 oz (2 tbsp) butter"	status: want ready, got needs_review; name: want "butter", got "1 oz (2 tbsp) butter"; quantity: want "1", got null; unit: want "oz", got null
+- rx2c-0703	"1 fluid oz bitters"	name: want "bitters", got "fluid oz bitters"; unit: want "fl_oz", got "each"
+- rx2c-0704	"1 ounce (2 tablespoons) dark rum"	status: want ready, got needs_review; name: want "dark rum", got "1 ounce (2 tablespoons) dark rum"; quantity: want "1", got null; unit: want "oz", got null
+- rx2c-0705	"1 lb 8 oz potatoes"	status: want ready, got needs_review; name: want "potatoes", got "1 lb 8 oz potatoes"; quantity: want "24", got null; unit: want "oz", got null
+- rx2c-0706	"2 cups plus 2 tablespoons flour"	status: want ready, got needs_review; name: want "flour", got "2 cups plus 2 tablespoons flour"; quantity: want "34", got null; unit: want "tbsp", got null
+- rx2c-0707	"1 tbsp + 1 tsp sugar"	status: want ready, got needs_review; name: want "sugar", got "1 tbsp + 1 tsp sugar"; quantity: want "4", got null; unit: want "tsp", got null
+- rx2c-0708	"1/4 cup plus 2 tbsp milk"	status: want ready, got needs_review; name: want "milk", got "1/4 cup plus 2 tbsp milk"; quantity: want "6", got null; unit: want "tbsp", got null
+- rx2c-0709	"1/2 cup + 2 tbsp sugar"	status: want ready, got needs_review; name: want "sugar", got "1/2 cup + 2 tbsp sugar"; quantity: want "10", got null; unit: want "tbsp", got null
+- rx2c-0710	"2 lbs 4 oz pork shoulder"	status: want ready, got needs_review; name: want "pork shoulder", got "2 lbs 4 oz pork shoulder"; quantity: want "36", got null; unit: want "oz", got null
+- rx2c-0711	"1 cup / 240 ml water"	status: want ready, got needs_review; name: want "water", got "1 cup / 240 ml water"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0712	"1 pound (450 g) ground beef"	status: want ready, got needs_review; name: want "ground beef", got "1 pound (450 g) ground beef"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-0713	"2 cups (about 10 oz) frozen corn"	status: want ready, got needs_review; name: want "frozen corn", got "2 cups (about 10 oz) frozen corn"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-0714	"3 tbsp (45 g) butter"	status: want ready, got needs_review; name: want "butter", got "3 tbsp (45 g) butter"; quantity: want "3", got null; unit: want "tbsp", got null
+- rx2c-0715	"1 kg (2.2 lb) beef chuck"	status: want ready, got needs_review; name: want "beef chuck", got "1 kg (2.2 lb) beef chuck"; quantity: want "1", got null; unit: want "kg", got null
+- rx2c-0716	"250 ml (1 cup) cream"	status: want ready, got needs_review; name: want "cream", got "250 ml (1 cup) cream"; quantity: want "250", got null; unit: want "ml", got null
+- rx2c-0717	"1 1/2 cups (360 ml) milk, warmed"	status: want ready, got needs_review; name: want "milk", got "1 1/2 cups (360 ml) milk"; quantity: want "3/2", got null; unit: want "cup", got null
+- rx2c-0718	"113 g (1/2 cup) butter"	status: want ready, got needs_review; name: want "butter", got "113 g (1/2 cup) butter"; quantity: want "113", got null; unit: want "g", got null
+- rx2c-0719	"1 stick (1/2 cup) butter"	status: want ready, got needs_review; name: want "butter", got "stick (1/2 cup) butter"; quantity: want "1", got null; unit: want "stick", got null
+- rx2c-0720	"1 1/2 sticks butter"	status: want ready, got needs_review; name: want "butter", got "sticks butter"; unit: want "stick", got null
+- rx2c-0721	"3/4 stick butter, melted"	status: want ready, got needs_review; name: want "butter", got "stick butter"; unit: want "stick", got null
+- rx2c-0722	"6 cups (1.5 L) vegetable broth"	status: want ready, got needs_review; name: want "vegetable broth", got "6 cups (1.5 L) vegetable broth"; quantity: want "6", got null; unit: want "cup", got null
+- rx2c-0723	"2 cups (1 pint) strawberries"	status: want ready, got needs_review; name: want "strawberries", got "2 cups (1 pint) strawberries"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-0724	"1 cup (5 oz) all-purpose flour"	status: want ready, got needs_review; name: want "all-purpose flour", got "1 cup (5 oz) all-purpose flour"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0725	"1 gallon (16 cups) water"	status: want ready, got needs_review; name: want "water", got "gallon (16 cups) water"; quantity: want "1", got null; unit: want "gallon", got null
+- rx2c-0726	"1 tablespoon (3 teaspoons) cumin"	status: want ready, got needs_review; name: want "cumin", got "1 tablespoon (3 teaspoons) cumin"; quantity: want "1", got null; unit: want "tbsp", got null
+- rx2c-0727	"1 cup (250 g) mascarpone"	status: want ready, got needs_review; name: want "mascarpone", got "1 cup (250 g) mascarpone"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0728	"1 cup sugar (200g)"	status: want ready, got needs_review; name: want "sugar", got "1 cup sugar (200g)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0729	"1 cup walnuts (4 oz)"	status: want ready, got needs_review; name: want "walnuts", got "1 cup walnuts (4 oz)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0730	"8 oz (1 cup) ricotta"	status: want ready, got needs_review; name: want "ricotta", got "8 oz (1 cup) ricotta"; quantity: want "8", got null; unit: want "oz", got null
+- rx2c-0731	"1/4 oz (1 packet) active dry yeast"	status: want ready, got needs_review; name: want "active dry yeast", got "1/4 oz (1 packet) active dry yeast"; quantity: want "1/4", got null; unit: want "oz", got null
+- rx2c-0732	"2 1/4 tsp (1 envelope) yeast"	status: want ready, got needs_review; name: want "yeast", got "2 1/4 tsp (1 envelope) yeast"; quantity: want "9/4", got null; unit: want "tsp", got null
+- rx2c-0733	"500g (1lb 2oz) pasta"	status: want ready, got needs_review; name: want "pasta", got "500g (1lb 2oz) pasta"; quantity: want "500", got null; unit: want "g", got null
+- rx2c-0734	"3 medium potatoes (about 1 lb)"	status: want ready, got needs_review; name: want "potatoes", got "3 medium potatoes (about 1 lb)"; quantity: want "3", got null; unit: want "each", got null
+- rx2c-0735	"2 large onions (about 1 1/2 lb), sliced"	status: want ready, got needs_review; name: want "onions", got "2 large onions (about 1 1/2 lb)"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-0736	"1 cup (about 2 medium) diced onion"	status: want ready, got needs_review; name: want "diced onion" (or onion), got "1 cup (about 2 medium) diced onion"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0737	"flour, 2 cups"	status: want ready, got needs_review; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-0738	"Butter – 100 g"	status: want ready, got needs_review; name: want "Butter", got "Butter – 100 g"; quantity: want "100", got null; unit: want "g", got null
+- rx2c-0739	"Eggs: 3"	status: want ready, got needs_review; name: want "Eggs", got "Eggs: 3"; quantity: want "3", got null; unit: want "each", got null
+- rx2c-0740	"7-Up soda, 1 can"	status: want ready, got needs_review; quantity: want "1", got null; unit: want "can", got null
+- rx2c-0741	"about 2 cups cooked rice"	status: want ready, got needs_review; name: want "rice", got "about 2 cups cooked rice"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-0742	"~1 tsp salt"	status: want ready, got needs_review; name: want "salt", got "~1 tsp salt"; quantity: want "1", got null; unit: want "tsp", got null
+- rx2c-0743	"approximately 3 lbs pork shoulder"	status: want ready, got needs_review; name: want "pork shoulder", got "approximately 3 lbs pork shoulder"; quantity: want "3", got null; unit: want "lb", got null
+- rx2c-0744	"roughly 1/2 cup parsley, chopped"	status: want ready, got needs_review; name: want "parsley", got "roughly 1/2 cup parsley"; quantity: want "1/2", got null; unit: want "cup", got null
+- rx2c-0745	"Salt and pepper to taste"	status: want ready, got needs_review; name: want "salt and pepper", got "Salt and pepper to taste"
+- rx2c-0746	"Olive oil, for drizzling"	status: want ready, got needs_review
+- rx2c-0747	"Lemon wedges, for serving"	status: want ready, got needs_review
+- rx2c-0748	"Chopped chives, to garnish"	status: want ready, got needs_review
+- rx2c-0749	"Cooking spray, as needed"	status: want ready, got needs_review
+- rx2c-0750	"flour, for dusting"	status: want ready, got needs_review
+- rx2c-0752	"1 tsp salt, plus more to taste"	status: want ready, got needs_review; name: want "salt", got "1 tsp salt"; quantity: want "1", got null; unit: want "tsp", got null
+- rx2c-0753	"Vegetable oil for frying"	status: want ready, got needs_review; name: want "Vegetable oil", got "Vegetable oil for frying"
+- rx2c-0755	"1/4 cup raisins (optional)"	status: want ready, got needs_review; name: want "raisins", got "1/4 cup raisins"; quantity: want "1/4", got null; unit: want "cup", got null
+- rx2c-0756	"optional: 1 tsp chili flakes"	status: want ready, got needs_review; name: want "chili flakes", got "optional: 1 tsp chili flakes"; quantity: want "1", got null; unit: want "tsp", got null
+- rx2c-0757	"2 tbsp capers, optional"	status: want ready, got needs_review; name: want "capers", got "2 tbsp capers"; quantity: want "2", got null; unit: want "tbsp", got null
+- rx2c-0758	"2 cups cooked brown rice"	name: want "brown rice", got "cooked brown rice"
+- rx2c-0759	"1 lb uncooked spaghetti"	name: want "spaghetti", got "uncooked spaghetti"
+- rx2c-0760	"3 cups shredded cooked chicken"	name: want "shredded chicken" (or chicken), got "shredded cooked chicken"
+- rx2c-0761	"1 cup raw cashews"	name: want "cashews", got "raw cashews"
+- rx2c-0764	"1 lb raw shrimp"	name: want "shrimp", got "raw shrimp"
+- rx2c-0765	"1 cup uncooked white rice"	name: want "white rice", got "uncooked white rice"
+- rx2c-0766	"1 cup 2% milk"	status: want ready, got needs_review; name: want "2% milk", got "1 cup 2% milk"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0784	"1 lb. 93% lean ground turkey"	status: want ready, got needs_review; name: want "93% lean ground turkey", got "1 lb. 93% lean ground turkey"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-0785	"1 cup 1% milk"	status: want ready, got needs_review; name: want "1% milk", got "1 cup 1% milk"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0786	"1/4 cup 100% pure maple syrup"	status: want ready, got needs_review; name: want "100% pure maple syrup" (or pure maple syrup), got "1/4 cup 100% pure maple syrup"; quantity: want "1/4", got null; unit: want "cup", got null
+- rx2c-0787	"1 cup 0% Greek yogurt"	status: want ready, got needs_review; name: want "0% Greek yogurt", got "1 cup 0% Greek yogurt"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0806	"1 cup 7-Up"	status: want ready, got needs_review; name: want "7-Up", got "1 cup 7-Up"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0807	"2 tbsp V8 juice"	status: want ready, got needs_review; name: want "V8 juice", got "2 tbsp V8 juice"; quantity: want "2", got null; unit: want "tbsp", got null
+- rx2c-0808	"1 tsp Chinese 5 spice"	status: want ready, got needs_review; name: want "Chinese 5 spice", got "1 tsp Chinese 5 spice"; quantity: want "1", got null; unit: want "tsp", got null
+- rx2c-0840	"12 oz. bacon, cut into 1-inch pieces"	status: want ready, got needs_review; name: want "bacon", got "12 oz. bacon"; quantity: want "12", got null; unit: want "oz", got null
+- rx2c-0841	"2 lbs. potatoes, cut into 2-inch chunks"	status: want ready, got needs_review; name: want "potatoes", got "2 lbs. potatoes"; quantity: want "2", got null; unit: want "lb", got null
+- rx2c-0842	"1 cup water (110°F)"	status: want ready, got needs_review; name: want "water", got "1 cup water (110°F)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0843	"1 9-inch pie crust"	status: want ready, got needs_review; name: want "pie crust", got "1 9-inch pie crust"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-0844	"1 cup sugar + more for sprinkling"	name: want "sugar", got "sugar + more for sprinkling"
+- rx2c-0849	"1 lg egg"	name: want "egg", got "lg egg"
+- rx2c-0850	"3 med. tomatoes"	name: want "tomatoes", got "med. tomatoes"
+- rx2c-0851	"1 qt chicken stock"	status: want ready, got needs_review; name: want "chicken stock", got "qt chicken stock"; unit: want "quart", got null
+- rx2c-0852	"1 pt heavy cream"	status: want ready, got needs_review; name: want "heavy cream", got "pt heavy cream"; unit: want "pint", got null
+- rx2c-0853	"1 gal whole milk"	status: want ready, got needs_review; name: want "whole milk", got "gal whole milk"; unit: want "gallon", got null
+- rx2c-0856	"1 dl cream"	name: want "cream", got "dl cream"; unit: want "dl", got "each"
+- rx2c-0860	"1 lb. each ground beef and ground pork"	status: want needs_review, got ready; name: want null, got "each ground beef and ground pork"
+- rx2c-0861	"2 eggs + 1 yolk"	name: want null, got "2 eggs + 1 yolk"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-0865	"a handful of fresh basil leaves"	status: want ready, got needs_review; name: want "fresh basil leaves" (or basil leaves | basil), got "a handful of fresh basil leaves"; quantity: want "1", got null; unit: want "handful", got null
+- rx2c-0866	"a splash of vinegar"	status: want ready, got needs_review; name: want "vinegar", got "a splash of vinegar"; quantity: want "1", got null; unit: want "splash", got null
+- rx2c-0867	"a knob of butter"	status: want ready, got needs_review; name: want "butter", got "a knob of butter"; quantity: want "1", got null; unit: want "knob", got null
+- rx2c-0868	"1 small bunch parsley"	name: want "parsley", got "bunch parsley"; unit: want "bunch", got "each"
+- rx2c-0869	"2 heaping tablespoons cocoa powder"	name: want "cocoa powder", got "heaping tablespoons cocoa powder"; unit: want "tbsp", got "each"
+- rx2c-0870	"1 level tsp baking powder"	name: want "baking powder", got "level tsp baking powder"; unit: want "tsp", got "each"
+- rx2c-0871	"1 scant cup sugar"	name: want "sugar", got "scant cup sugar"; unit: want "cup", got "each"
+- rx2c-0877	"1,5 kg flour"	name: want "flour", got "1"; unit: want "kg", got null
+- rx2c-0878	"1,000 g flour"	name: want "flour", got "1"; unit: want "g", got null
+- rx2c-0879	"0 g sugar"	name: want "sugar", got "0 g sugar"; unit: want "g", got null
+- rx2c-0880	"1 inch ginger, grated"	status: want ready, got needs_review; name: want "ginger", got "inch ginger"; unit: want "inch", got null
+- rx2c-0881	"2 drops almond extract"	status: want ready, got needs_review; name: want "almond extract", got "drops almond extract"; unit: want "drop", got null
+- rx2c-0882	"1 dash hot sauce"	status: want ready, got needs_review; name: want "hot sauce", got "dash hot sauce"; unit: want "dash", got null
+- rx2c-0883	"1 1/2 lb beef, cut into 1 1/2-inch cubes"	status: want ready, got needs_review; name: want "beef", got "1 1/2 lb beef"; quantity: want "3/2", got null; unit: want "lb", got null
+- rx2c-0885	"1 cup milk, warmed to 110 degrees"	status: want ready, got needs_review; name: want "milk", got "1 cup milk"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0886	"6 tbsp butter, cut into 6 pieces"	status: want ready, got needs_review; name: want "butter", got "6 tbsp butter"; quantity: want "6", got null; unit: want "tbsp", got null
+- rx2c-0888	"1/2 cup chopped fresh cilantro, plus more for garnish"	status: want ready, got needs_review; name: want "chopped fresh cilantro" (or fresh cilantro | cilantro), got "1/2 cup chopped fresh cilantro"; quantity: want "1/2", got null; unit: want "cup", got null
+- rx2c-0889	"1 onion, halved and sliced 1/4 inch thick"	status: want ready, got needs_review; name: want "onion", got "1 onion"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-0890	"2 tsp kosher salt (such as Diamond Crystal; use half for table salt)"	status: want needs_review, got ready
+- rx2c-0891	"1 cup rice, rinsed until water runs clear (about 3 times)"	status: want ready, got needs_review; name: want "rice", got "1 cup rice"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0892	"1 lb carrots (about 6 medium)"	status: want ready, got needs_review; name: want "carrots", got "1 lb carrots (about 6 medium)"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-0898	"2 cups milk, or as needed"	status: want ready, got needs_review; name: want "milk", got "2 cups milk"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-0899	"1 lb fresh or frozen cranberries"	name: want null, got "1 lb fresh or frozen cranberries"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["fresh cranberries","frozen cranberries"], got []
+- rx2c-0900	"3 cups chicken or turkey stock"	name: want null, got "3 cups chicken or turkey stock"; quantity: want "3", got null; unit: want "cup", got null; alternatives: want ["chicken stock","turkey stock"], got []
+- rx2c-0901	"1/2 tsp each salt and pepper"	status: want needs_review, got ready; name: want null, got "each salt and pepper"
+- rx2c-0902	"1 tbsp each chopped parsley and dill"	status: want needs_review, got ready; name: want null, got "each chopped parsley and dill"
+- rx2c-0904	"1 bunch kale (about 8 oz), stems removed"	status: want ready, got needs_review; name: want "kale", got "bunch kale (about 8 oz)"; quantity: want "1", got null; unit: want "bunch", got null
+- rx2c-0905	"4 boneless pork chops (1-inch thick)"	status: want ready, got needs_review; name: want "boneless pork chops", got "4 boneless pork chops (1-inch thick)"; quantity: want "4", got null; unit: want "each", got null
+- rx2c-0906	"2 (6 oz) boneless skinless chicken breasts"	status: want ready, got needs_review; name: want "boneless skinless chicken breasts", got "2 (6 oz) boneless skinless chicken breasts"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-0907	"1 (15.25 oz) can corn, drained"	status: want ready, got needs_review; name: want "corn", got "1 (15.25 oz) can corn"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "61/4 oz", got null
+- rx2c-0908	"1 (10.75 oz) can condensed cream of mushroom soup"	status: want ready, got needs_review; name: want "condensed cream of mushroom soup", got "1 (10.75 oz) can condensed cream of mushroom soup"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "43/4 oz", got null
+- rx2c-0909	"2 (3 oz) packages ramen noodles"	status: want ready, got needs_review; name: want "ramen noodles", got "2 (3 oz) packages ramen noodles"; quantity: want "2", got null; unit: want "package", got null; packageSize: want "3 oz", got null
+- rx2c-0910	"1 (6-inch) piece daikon"	status: want ready, got needs_review; name: want "daikon", got "1 (6-inch) piece daikon"; quantity: want "1", got null; unit: want "piece", got null
+- rx2c-0911	"2 dozen eggs"	name: want "eggs", got "dozen eggs"; quantity: want "24", got "2"
+- rx2c-0912	"1/2 dozen eggs"	name: want "eggs", got "dozen eggs"; quantity: want "6", got "1/2"
+- rx2c-0914	"1 cup flour, plus 2 tablespoons for dusting"	status: want ready, got needs_review; name: want "flour", got "1 cup flour"; quantity: want "18", got null; unit: want "tbsp", got null
+- rx2c-0915	"1/3 c + 1 Tbsp oil"	status: want ready, got needs_review; name: want "oil", got "1/3 c + 1 Tbsp oil"; quantity: want "19/3", got null; unit: want "tbsp", got null
+- rx2c-0916	"1/3 cup plus 1 teaspoon sugar"	status: want ready, got needs_review; name: want "sugar", got "1/3 cup plus 1 teaspoon sugar"; quantity: want "17", got null; unit: want "tsp", got null
+- rx2c-0917	"2 tbsp. + 2 tsp. honey"	status: want ready, got needs_review; name: want "honey", got "2 tbsp. + 2 tsp. honey"; quantity: want "8", got null; unit: want "tsp", got null
+- rx2c-0918	"1 kg 200 g potatoes"	status: want ready, got needs_review; name: want "potatoes", got "1 kg 200 g potatoes"; quantity: want "1200", got null; unit: want "g", got null
+- rx2c-0919	"1 cup + 1 tbsp (130 g) flour"	status: want ready, got needs_review; name: want "flour", got "1 cup + 1 tbsp (130 g) flour"; quantity: want "17", got null; unit: want "tbsp", got null
+- rx2c-0920	"1 quart (4 cups) chicken stock"	status: want ready, got needs_review; name: want "chicken stock", got "quart (4 cups) chicken stock"; quantity: want "1", got null; unit: want "quart", got null
+- rx2c-0922	"1 lb. (16 oz.) spaghetti"	status: want ready, got needs_review; name: want "spaghetti", got "1 lb. (16 oz.) spaghetti"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-0923	"2 Tbsp. (1 oz.) butter"	status: want ready, got needs_review; name: want "butter", got "2 Tbsp. (1 oz.) butter"; quantity: want "2", got null; unit: want "tbsp", got null
+- rx2c-0924	"1 cup chopped onion (1 medium)"	status: want ready, got needs_review; name: want "chopped onion" (or onion), got "1 cup chopped onion (1 medium)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0925	"1 medium onion (1 cup chopped)"	status: want ready, got needs_review; name: want "onion", got "1 medium onion (1 cup chopped)"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-0926	"3 cloves garlic (1 tbsp minced)"	status: want ready, got needs_review; name: want "garlic", got "cloves garlic (1 tbsp minced)"; quantity: want "3", got null; unit: want "clove", got null
+- rx2c-0927	"2 lbs (about 4) chicken breasts"	status: want ready, got needs_review; name: want "chicken breasts", got "2 lbs (about 4) chicken breasts"; quantity: want "2", got null; unit: want "lb", got null
+- rx2c-0928	"4 chicken breasts (about 2 lbs)"	status: want ready, got needs_review; name: want "chicken breasts", got "4 chicken breasts (about 2 lbs)"; quantity: want "4", got null; unit: want "each", got null
+- rx2c-0929	"450g/1lb minced beef"	status: want ready, got needs_review; name: want "minced beef", got "450g/1lb minced beef"; quantity: want "450", got null; unit: want "g", got null
+- rx2c-0930	"2 lb (900 g) bone-in chicken thighs"	status: want ready, got needs_review; name: want "bone-in chicken thighs", got "2 lb (900 g) bone-in chicken thighs"; quantity: want "2", got null; unit: want "lb", got null
+- rx2c-0931	"1 oz. (28 g) chocolate"	status: want ready, got needs_review; name: want "chocolate", got "1 oz. (28 g) chocolate"; quantity: want "1", got null; unit: want "oz", got null
+- rx2c-0932	"1/2 to 3/4 cup milk"	name: want "milk", got "1/2 to 3/4 cup milk"; quantity: want "1/2..3/4", got null; unit: want "cup", got null
+- rx2c-0933	"2 to 2 1/2 lbs chicken"	name: want "chicken", got "2 to 2 1/2 lbs chicken"; quantity: want "2..5/2", got null; unit: want "lb", got null
+- rx2c-0934	"1 ⅓ – 1 ½ cups water"	name: want "water", got "1 ⅓ – 1 ½ cups water"; quantity: want "4/3..3/2", got null; unit: want "cup", got null
+- rx2c-0935	"2 1/2-3 cups broth"	name: want "broth", got "2 1/2-3 cups broth"; quantity: want "5/2..3", got null; unit: want "cup", got null
+- rx2c-0936	"2—3 tbsp lemon juice"	name: want "lemon juice", got "2—3 tbsp lemon juice"; quantity: want "2..3", got null; unit: want "tbsp", got null
+- rx2c-0937	"½ - 1 tsp chili powder"	name: want "chili powder", got "½ - 1 tsp chili powder"; quantity: want "1/2..1", got null; unit: want "tsp", got null
+- rx2c-0938	"1/2 of a lemon"	name: want "lemon", got "a lemon"
+- rx2c-0939	"1 and 1/2 cups sugar"	status: want ready, got needs_review; name: want "sugar", got "1 and 1/2 cups sugar"; quantity: want "3/2", got null; unit: want "cup", got null
+- rx2c-0942	"1 lb 80/20 ground beef"	status: want ready, got needs_review; name: want "80/20 ground beef", got "1 lb 80/20 ground beef"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-0943	"1 lb 85% lean ground beef"	status: want ready, got needs_review; name: want "85% lean ground beef", got "1 lb 85% lean ground beef"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-0944	"1 cup 2 percent milk"	status: want ready, got needs_review; name: want "2 percent milk", got "1 cup 2 percent milk"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0949	"2 tbsp A1 sauce"	status: want ready, got needs_review; name: want "A1 sauce", got "2 tbsp A1 sauce"; quantity: want "2", got null; unit: want "tbsp", got null
+- rx2c-0950	"1/2 cup 10X sugar"	status: want ready, got needs_review; name: want "10X sugar", got "1/2 cup 10X sugar"; quantity: want "1/2", got null; unit: want "cup", got null
+- rx2c-0951	"1 cup 7 grain cereal"	status: want ready, got needs_review; name: want "7 grain cereal", got "1 cup 7 grain cereal"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0952	"1 cup 00 pizza flour"	status: want ready, got needs_review; name: want "00 pizza flour", got "1 cup 00 pizza flour"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0956	"2 15-oz cans black beans"	status: want ready, got needs_review; name: want "black beans", got "2 15-oz cans black beans"; quantity: want "2", got null; unit: want "can", got null; packageSize: want "15 oz", got null
+- rx2c-0957	"2 15 oz cans black beans"	status: want ready, got needs_review; name: want "black beans", got "2 15 oz cans black beans"; quantity: want "2", got null; unit: want "can", got null; packageSize: want "15 oz", got null
+- rx2c-0958	"2 14.5 oz cans diced tomatoes"	status: want ready, got needs_review; name: want "diced tomatoes", got "2 14.5 oz cans diced tomatoes"; quantity: want "2", got null; unit: want "can", got null; packageSize: want "29/2 oz", got null
+- rx2c-0959	"3 6-ounce cans tomato paste"	status: want ready, got needs_review; name: want "tomato paste", got "3 6-ounce cans tomato paste"; quantity: want "3", got null; unit: want "can", got null; packageSize: want "6 oz", got null
+- rx2c-0960	"1 1-lb loaf bread"	status: want ready, got needs_review; name: want "bread", got "1 1-lb loaf bread"; quantity: want "1", got null; unit: want "loaf", got null; packageSize: want "1 lb", got null
+- rx2c-0961	"2 7-oz containers Greek yogurt"	status: want ready, got needs_review; name: want "Greek yogurt", got "2 7-oz containers Greek yogurt"; quantity: want "2", got null; unit: want "container", got null; packageSize: want "7 oz", got null
+- rx2c-0962	"1 12 oz bag chocolate chips"	status: want ready, got needs_review; name: want "chocolate chips", got "1 12 oz bag chocolate chips"; quantity: want "1", got null; unit: want "bag", got null; packageSize: want "12 oz", got null
+- rx2c-0963	"One (8-ounce) package cream cheese"	status: want ready, got needs_review; name: want "cream cheese", got "One (8-ounce) package cream cheese"; quantity: want "1", got null; unit: want "package", got null; packageSize: want "8 oz", got null
+- rx2c-0964	"1 pkg (8 oz) cream cheese"	status: want ready, got needs_review; name: want "cream cheese", got "pkg (8 oz) cream cheese"; quantity: want "1", got null; unit: want "package", got null; packageSize: want "8 oz", got null
+- rx2c-0965	"1 8-oz. pkg. cream cheese"	status: want ready, got needs_review; name: want "cream cheese", got "1 8-oz. pkg. cream cheese"; quantity: want "1", got null; unit: want "package", got null; packageSize: want "8 oz", got null
+- rx2c-0966	"2 pkgs (3 oz each) gelatin"	status: want ready, got needs_review; name: want "gelatin", got "pkgs (3 oz each) gelatin"; quantity: want "2", got null; unit: want "package", got null; packageSize: want "3 oz", got null
+- rx2c-0967	"1 (15 oz.) can black beans, rinsed"	status: want ready, got needs_review; name: want "black beans", got "1 (15 oz.) can black beans"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "15 oz", got null
+- rx2c-0968	"1 can black beans (15 ounces)"	status: want ready, got needs_review; name: want "black beans", got "can black beans (15 ounces)"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "15 oz", got null
+- rx2c-0969	"1 lg. can (28 oz.) tomatoes"	status: want ready, got needs_review; name: want "tomatoes", got "1 lg. can (28 oz.) tomatoes"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "28 oz", got null
+- rx2c-0970	"1 small can (4 oz) green chiles"	status: want ready, got needs_review; name: want "green chiles", got "1 small can (4 oz) green chiles"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "4 oz", got null
+- rx2c-0971	"2 cans (10 3/4 oz each) condensed soup"	status: want ready, got needs_review; name: want "condensed soup", got "cans (10 3/4 oz each) condensed soup"; quantity: want "2", got null; unit: want "can", got null; packageSize: want "43/4 oz", got null
+- rx2c-0972	"1 (6.5 oz) jar artichoke hearts"	status: want ready, got needs_review; name: want "artichoke hearts", got "1 (6.5 oz) jar artichoke hearts"; quantity: want "1", got null; unit: want "jar", got null; packageSize: want "13/2 oz", got null
+- rx2c-0973	"1 (1 oz) packet ranch seasoning"	status: want ready, got needs_review; name: want "ranch seasoning", got "1 (1 oz) packet ranch seasoning"; quantity: want "1", got null; unit: want "packet", got null; packageSize: want "1 oz", got null
+- rx2c-0974	"1 bag (12 oz) cranberries"	status: want ready, got needs_review; name: want "cranberries", got "bag (12 oz) cranberries"; quantity: want "1", got null; unit: want "bag", got null; packageSize: want "12 oz", got null
+- rx2c-0975	"1 box (1 lb) spaghetti"	status: want ready, got needs_review; name: want "spaghetti", got "box (1 lb) spaghetti"; quantity: want "1", got null; unit: want "box", got null; packageSize: want "1 lb", got null
+- rx2c-0976	"1 bottle (750 ml) wine"	status: want ready, got needs_review; name: want "wine", got "bottle (750 ml) wine"; quantity: want "1", got null; unit: want "bottle", got null; packageSize: want "750 ml", got null
+- rx2c-0977	"1 (14 fl. oz.) can coconut milk"	status: want ready, got needs_review; name: want "coconut milk", got "1 (14 fl. oz.) can coconut milk"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "14 fl_oz", got null
+- rx2c-0978	"1 can (13.5 oz) coconut milk"	status: want ready, got needs_review; name: want "coconut milk", got "can (13.5 oz) coconut milk"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "27/2 oz", got null
+- rx2c-0979	"1 x 400 g can chickpeas"	status: want ready, got needs_review; name: want "chickpeas", got "1 x 400 g can chickpeas"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "400 g", got null
+- rx2c-0981	"2 fl. ounces lime juice"	name: want "lime juice", got "fl. ounces lime juice"; unit: want "fl_oz", got "each"
+- rx2c-0984	"1/2 cup red or white wine"	name: want null, got "1/2 cup red or white wine"; quantity: want "1/2", got null; unit: want "cup", got null; alternatives: want ["red wine","white wine"], got []
+- rx2c-0985	"1 red or yellow bell pepper"	name: want null, got "1 red or yellow bell pepper"; quantity: want "1", got null; unit: want "each", got null; alternatives: want ["red bell pepper","yellow bell pepper"], got []
+- rx2c-0986	"1 lb shrimp, fresh or frozen"	status: want ready, got needs_review; name: want "shrimp", got "1 lb shrimp"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-0987	"1 cup brown or white rice"	name: want null, got "1 cup brown or white rice"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["brown rice","white rice"], got []
+- rx2c-0988	"1 cup sweet or dry vermouth"	name: want null, got "1 cup sweet or dry vermouth"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["sweet vermouth","dry vermouth"], got []
+- rx2c-0989	"4 hamburger or hot dog buns"	name: want null, got "4 hamburger or hot dog buns"; quantity: want "4", got null; unit: want "each", got null; alternatives: want ["hamburger buns","hot dog buns"], got []
+- rx2c-0990	"1 lb bacon or pancetta"	name: want null, got "1 lb bacon or pancetta"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["bacon","pancetta"], got []
+- rx2c-0992	"1 cup sugar (or to taste)"	status: want ready, got needs_review; name: want "sugar", got "1 cup sugar"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-0999	"2 tbsp lemon or lime juice"	name: want null, got "2 tbsp lemon or lime juice"; quantity: want "2", got null; unit: want "tbsp", got null; alternatives: want ["lemon juice","lime juice"], got []
+- rx2c-1000	"1 cup cilantro or flat-leaf parsley"	name: want null, got "1 cup cilantro or flat-leaf parsley"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["cilantro","flat-leaf parsley"], got []
+- rx2c-1001	"1 cup ricotta or cottage cheese"	name: want null, got "1 cup ricotta or cottage cheese"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["ricotta","cottage cheese"], got []
+- rx2c-1002	"1 tbsp sambal oelek or sriracha"	name: want null, got "1 tbsp sambal oelek or sriracha"; quantity: want "1", got null; unit: want "tbsp", got null; alternatives: want ["sambal oelek","sriracha"], got []
+- rx2c-1003	"2 cups penne or rigatoni"	name: want null, got "2 cups penne or rigatoni"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["penne","rigatoni"], got []
+- rx2c-1004	"1 lb tilapia or other mild fish"	name: want null, got "1 lb tilapia or other mild fish"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["tilapia","other mild fish"], got []
+- rx2c-1005	"1 cup feta or goat cheese"	name: want null, got "1 cup feta or goat cheese"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["feta","goat cheese"], got []
+- rx2c-1030	"Sugar 10g"	name: want "Sugar", got "Sugar 10g"; quantity: want "10", got null; unit: want "g", got null
+- rx2c-1036	"1 jumbo onion"	name: want "onion", got "jumbo onion"
+- rx2c-1039	"1 cup small curd cottage cheese"	name: want "small curd cottage cheese", got "curd cottage cheese"
+- rx2c-1043	"1 medium head cabbage"	name: want "cabbage", got "head cabbage"; unit: want "head", got "each"
+- rx2c-1044	"1 small handful parsley"	name: want "parsley", got "handful parsley"; unit: want "handful", got "each"
+- rx2c-1045	"1 big pinch salt"	name: want "salt", got "big pinch salt"; unit: want "pinch", got "each"
+- rx2c-1066	"1 package frozen puff pastry"	status: want ready, got needs_review; name: want "frozen puff pastry", got "package frozen puff pastry"; unit: want "package", got null
+- rx2c-1075	"2 cups uncooked long-grain rice"	name: want "long-grain rice", got "uncooked long-grain rice"
+- rx2c-1076	"1 lb raw almonds"	name: want "almonds", got "raw almonds"
+- rx2c-1077	"1/2 cup raw pumpkin seeds"	name: want "pumpkin seeds", got "raw pumpkin seeds"
+- rx2c-1078	"a half-gallon milk"	status: want ready, got needs_review; name: want "milk", got "a half-gallon milk"; quantity: want "1/2", got null; unit: want "gallon", got null
+- rx2c-1079	"a quarter-teaspoon salt"	status: want ready, got needs_review; name: want "salt", got "a quarter-teaspoon salt"; quantity: want "1/4", got null; unit: want "tsp", got null
+- rx2c-1080	"two-thirds cup sugar"	status: want ready, got needs_review; name: want "sugar", got "two-thirds cup sugar"; quantity: want "2/3", got null; unit: want "cup", got null
+- rx2c-1081	"one-quarter cup oil"	status: want ready, got needs_review; name: want "oil", got "one-quarter cup oil"; quantity: want "1/4", got null; unit: want "cup", got null
+- rx2c-1082	"a 3-pound whole chicken"	status: want ready, got needs_review; name: want "whole chicken", got "a 3-pound whole chicken"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-1083	"Juice of 1 lemon"	status: want ready, got needs_review; name: want "lemon" (or lemon juice | juice of lemon), got "Juice of 1 lemon"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-1086	"1 can coconut milk, full-fat"	status: want ready, got needs_review; name: want "coconut milk", got "can coconut milk"; unit: want "can", got null
+- rx2c-1091	"1 cup chopped tomatoes (2 medium)"	status: want ready, got needs_review; name: want "chopped tomatoes" (or tomatoes), got "1 cup chopped tomatoes (2 medium)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-1092	"2 cups shredded mozzarella (8 oz)"	status: want ready, got needs_review; name: want "shredded mozzarella", got "2 cups shredded mozzarella (8 oz)"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-1093	"4 oz cream cheese (half of an 8-oz package)"	status: want ready, got needs_review; name: want "cream cheese", got "4 oz cream cheese (half of an 8-oz package)"; quantity: want "4", got null; unit: want "oz", got null
+- rx2c-1094	"1/2 (8 oz) package cream cheese"	status: want ready, got needs_review; name: want "cream cheese", got "1/2 (8 oz) package cream cheese"; quantity: want "1/2", got null; unit: want "package", got null; packageSize: want "8 oz", got null
+- rx2c-1095	"1 (8 oz) package cream cheese, plus 2 oz"	name: want "cream cheese", got "1 (8 oz) package cream cheese"; quantity: want "1", got null; unit: want "package", got null; packageSize: want "8 oz", got null
+- rx2c-1096	"3 eggs plus 1 egg yolk"	name: want null, got "3 eggs plus 1 egg yolk"; quantity: want "3", got null; unit: want "each", got null
+- rx2c-1112	"Salt: 1.2 g"	name: want "Salt", got "Salt: 1.2 g"; quantity: want "6/5", got null; unit: want "g", got null
+- rx2c-1125	"1 lb. 2 oz. (510 g) flour"	status: want ready, got needs_review; name: want "flour", got "1 lb. 2 oz. (510 g) flour"; quantity: want "18", got null; unit: want "oz", got null
+- rx2c-1126	"8 oz. (2 sticks) butter"	status: want ready, got needs_review; name: want "butter", got "8 oz. (2 sticks) butter"; quantity: want "8", got null; unit: want "oz", got null
+- rx2c-1127	"2 cups (16 fl oz) milk"	status: want ready, got needs_review; name: want "milk", got "2 cups (16 fl oz) milk"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-1128	"2 cups (16 oz) milk"	status: want ready, got needs_review; name: want "milk", got "2 cups (16 oz) milk"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-1129	"1 pint (2 cups) blueberries"	status: want ready, got needs_review; name: want "blueberries", got "pint (2 cups) blueberries"; quantity: want "1", got null; unit: want "pint", got null
+- rx2c-1130	"1 pint cherry tomatoes"	status: want ready, got needs_review; name: want "cherry tomatoes", got "pint cherry tomatoes"; unit: want "pint", got null
+- rx2c-1131	"1 quart strawberries"	status: want ready, got needs_review; name: want "strawberries", got "quart strawberries"; unit: want "quart", got null
+- rx2c-1132	"2 cups (1/2 lb) cheese"	status: want ready, got needs_review; name: want "cheese", got "2 cups (1/2 lb) cheese"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-1133	"1 tbsp. (15 ml) olive oil"	status: want ready, got needs_review; name: want "olive oil", got "1 tbsp. (15 ml) olive oil"; quantity: want "1", got null; unit: want "tbsp", got null
+- rx2c-1134	"15 mL (1 tbsp) olive oil"	status: want ready, got needs_review; name: want "olive oil", got "15 mL (1 tbsp) olive oil"; quantity: want "15", got null; unit: want "ml", got null
+- rx2c-1136	"1 Tbsp + 1 tsp (20 ml) lemon juice"	status: want ready, got needs_review; name: want "lemon juice", got "1 Tbsp + 1 tsp (20 ml) lemon juice"; quantity: want "4", got null; unit: want "tsp", got null
+- rx2c-1137	"100g/3.5oz butter"	status: want ready, got needs_review; name: want "butter", got "100g/3.5oz butter"; quantity: want "100", got null; unit: want "g", got null
+- rx2c-1138	"75g (⅓ cup) sugar"	status: want ready, got needs_review; name: want "sugar", got "75g (⅓ cup) sugar"; quantity: want "75", got null; unit: want "g", got null
+- rx2c-1139	"1¼ cups (300ml) milk"	status: want ready, got needs_review; name: want "milk", got "1¼ cups (300ml) milk"; quantity: want "5/4", got null; unit: want "cup", got null
+- rx2c-1141	"¾ lb. (340 g) fettuccine"	status: want ready, got needs_review; name: want "fettuccine", got "¾ lb. (340 g) fettuccine"; quantity: want "3/4", got null; unit: want "lb", got null
+- rx2c-1142	"1/2 pound (8 ounces) mushrooms"	status: want ready, got needs_review; name: want "mushrooms", got "1/2 pound (8 ounces) mushrooms"; quantity: want "1/2", got null; unit: want "lb", got null
+- rx2c-1143	"1 1/2 pounds (680 grams) beef"	status: want ready, got needs_review; name: want "beef", got "1 1/2 pounds (680 grams) beef"; quantity: want "3/2", got null; unit: want "lb", got null
+- rx2c-1146	"1 lb (0.45 kg) potatoes"	status: want ready, got needs_review; name: want "potatoes", got "1 lb (0.45 kg) potatoes"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-1147	"3 large eggs (150 g)"	status: want ready, got needs_review; name: want "eggs", got "3 large eggs (150 g)"; quantity: want "3", got null; unit: want "each", got null
+- rx2c-1148	"2 egg whites (60 g)"	status: want ready, got needs_review; name: want "egg whites", got "2 egg whites (60 g)"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-1149	"1 cup (100 g) walnut halves"	status: want ready, got needs_review; name: want "walnut halves", got "1 cup (100 g) walnut halves"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-1150	"1/2 tsp (2.5 ml) salt"	status: want ready, got needs_review; name: want "salt", got "1/2 tsp (2.5 ml) salt"; quantity: want "1/2", got null; unit: want "tsp", got null
+- rx2c-1151	"1 tsp (5 g) salt"	status: want ready, got needs_review; name: want "salt", got "1 tsp (5 g) salt"; quantity: want "1", got null; unit: want "tsp", got null
+- rx2c-1152	"1 stick (4 oz) butter"	status: want ready, got needs_review; name: want "butter", got "stick (4 oz) butter"; quantity: want "1", got null; unit: want "stick", got null
+- rx2c-1153	"1 lb (4 sticks) butter"	status: want ready, got needs_review; name: want "butter", got "1 lb (4 sticks) butter"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-1154	"2 tbsp (1/4 stick) butter"	status: want ready, got needs_review; name: want "butter", got "2 tbsp (1/4 stick) butter"; quantity: want "2", got null; unit: want "tbsp", got null
+- rx2c-1155	"1 envelope (1 tbsp) unflavored gelatin"	status: want ready, got needs_review; name: want "unflavored gelatin", got "envelope (1 tbsp) unflavored gelatin"; quantity: want "1", got null; unit: want "envelope", got null; packageSize: want "1 tbsp", got null
+- rx2c-1156	"1 package (3.4 oz) instant pudding mix"	status: want ready, got needs_review; name: want "instant pudding mix", got "package (3.4 oz) instant pudding mix"; quantity: want "1", got null; unit: want "package", got null; packageSize: want "17/5 oz", got null
+- rx2c-1157	"1 can (12 oz) soda"	status: want ready, got needs_review; name: want "soda", got "can (12 oz) soda"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "12 oz", got null
+- rx2c-1158	"2 cans tuna"	status: want ready, got needs_review; name: want "tuna", got "cans tuna"; unit: want "can", got null
+- rx2c-1159	"1 can of beans"	status: want ready, got needs_review; name: want "beans", got "can of beans"; unit: want "can", got null
+- rx2c-1160	"3 heads garlic"	status: want ready, got needs_review; name: want "garlic", got "heads garlic"; unit: want "head", got null
+- rx2c-1161	"2 heads of lettuce"	status: want ready, got needs_review; name: want "lettuce", got "heads of lettuce"; unit: want "head", got null
+- rx2c-1162	"1 piece of ginger"	status: want ready, got needs_review; name: want "ginger", got "piece of ginger"; unit: want "piece", got null
+- rx2c-1163	"3 pieces of chicken"	status: want ready, got needs_review; name: want "chicken", got "pieces of chicken"; unit: want "piece", got null
+- rx2c-1164	"2 fillets of salmon"	status: want ready, got needs_review; name: want "salmon", got "fillets of salmon"; unit: want "fillet", got null
+- rx2c-1165	"2 sprigs of mint"	status: want ready, got needs_review; name: want "mint", got "sprigs of mint"; unit: want "sprig", got null
+- rx2c-1166	"1 pinch of saffron threads"	status: want ready, got needs_review; name: want "saffron threads", got "pinch of saffron threads"; unit: want "pinch", got null
+- rx2c-1167	"2 cubes of sugar"	name: want "sugar", got "cubes of sugar"; unit: want "cube", got "each"
+- rx2c-1168	"1 bottle hot sauce"	status: want ready, got needs_review; name: want "hot sauce", got "bottle hot sauce"; unit: want "bottle", got null
+- rx2c-1170	"1 stick cinnamon"	status: want ready, got needs_review; name: want "cinnamon", got "stick cinnamon"; unit: want "stick", got null
+- rx2c-1171	"1 knob ginger"	status: want ready, got needs_review; name: want "ginger", got "knob ginger"; unit: want "knob", got null
+- rx2c-1175	"1 pint vanilla ice cream"	status: want ready, got needs_review; name: want "vanilla ice cream", got "pint vanilla ice cream"; unit: want "pint", got null
+- rx2c-1177	"1 cup milk/cream"	status: want needs_review, got ready; name: want null, got "milk/cream"; alternatives: want ["milk","cream"], got []
+- rx2c-1178	"2 tbsp butter/margarine"	status: want needs_review, got ready; name: want null, got "butter/margarine"; alternatives: want ["butter","margarine"], got []
+- rx2c-1179	"1 cup chicken/vegetable stock"	status: want needs_review, got ready; name: want null, got "chicken/vegetable stock"; alternatives: want ["chicken stock","vegetable stock"], got []
+- rx2c-1180	"1 tbsp lemon/lime juice"	status: want needs_review, got ready; name: want null, got "lemon/lime juice"; alternatives: want ["lemon juice","lime juice"], got []
+- rx2c-1181	"1 cup broth or water"	name: want null, got "1 cup broth or water"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["broth","water"], got []
+- rx2c-1182	"1 cup spinach or more"	status: want ready, got needs_review; name: want "spinach", got "1 cup spinach or more"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-1183	"1 cup water or as needed"	status: want ready, got needs_review; name: want "water", got "1 cup water or as needed"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-1184	"1 tsp salt or less"	status: want ready, got needs_review; name: want "salt", got "1 tsp salt or less"; quantity: want "1", got null; unit: want "tsp", got null
+- rx2c-1185	"salt, or to taste"	status: want ready, got needs_review
+- rx2c-1186	"1-2 tbsp honey or maple syrup"	name: want null, got "1-2 tbsp honey or maple syrup"; quantity: want "1..2", got null; unit: want "tbsp", got null; alternatives: want ["honey","maple syrup"], got []
+- rx2c-1187	"butter or oil, for greasing"	name: want null, got "butter or oil"; alternatives: want ["butter","oil"], got []
+- rx2c-1188	"1 lb fettuccine or linguine"	name: want null, got "1 lb fettuccine or linguine"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["fettuccine","linguine"], got []
+- rx2c-1191	"1 cup Greek yogurt or sour cream, plus more for serving"	name: want null, got "1 cup Greek yogurt or sour cream"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["Greek yogurt","sour cream"], got []
+- rx2c-1201	"2 oz (60 ml) espresso"	status: want ready, got needs_review; name: want "espresso", got "2 oz (60 ml) espresso"; quantity: want "2", got null; unit: want "oz", got null
+- rx2c-1203	"4 fluid oz. rum"	name: want "rum", got "fluid oz. rum"; unit: want "fl_oz", got "each"
+- rx2c-1206	"4 fl-oz juice"	name: want "juice", got "fl-oz juice"; unit: want "fl_oz", got "each"
+- rx2c-1210	"1. 2 cups flour"	status: want ready, got needs_review; name: want "flour", got "1. 2 cups flour"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-1211	"1) 1/2 cup milk"	status: want ready, got needs_review; name: want "milk", got "1) 1/2 cup milk"; quantity: want "1/2", got null; unit: want "cup", got null
+- rx2c-1212	"10. 1 tsp vanilla"	status: want ready, got needs_review; name: want "vanilla", got "10. 1 tsp vanilla"; quantity: want "1", got null; unit: want "tsp", got null
+- rx2c-1213	"a) 1 cup rice"	status: want ready, got needs_review; name: want "rice", got "a) 1 cup rice"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-1214	"▢ 1 cup sugar"	status: want ready, got needs_review; name: want "sugar", got "▢ 1 cup sugar"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-1215	"☐ 2 tbsp butter"	status: want ready, got needs_review; name: want "butter", got "☐ 2 tbsp butter"; quantity: want "2", got null; unit: want "tbsp", got null
+- rx2c-1216	"✓ 1 egg"	status: want ready, got needs_review; name: want "egg", got "✓ 1 egg"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-1240	"1 lb jumbo sea scallops"	name: want "sea scallops", got "jumbo sea scallops"
+- rx2c-1241	"between 1 and 2 tbsp sugar"	name: want "sugar", got "between 1 and 2 tbsp sugar"; quantity: want "1..2", got null; unit: want "tbsp", got null
+- rx2c-1376	"2 bunches mizuna"	status: want ready, got needs_review; name: want "mizuna", got "bunches mizuna"; unit: want "bunch", got null
+- rx2c-1377	"1 head radicchio di Treviso"	status: want ready, got needs_review; name: want "radicchio di Treviso", got "head radicchio di Treviso"; unit: want "head", got null
+- rx2c-1378	"2 heads puntarelle"	status: want ready, got needs_review; name: want "puntarelle", got "heads puntarelle"; unit: want "head", got null
+- rx2c-1379	"3 heads escarole"	status: want ready, got needs_review; name: want "escarole", got "heads escarole"; unit: want "head", got null
+- rx2c-1380	"4 heads baby bok choy"	status: want ready, got needs_review; name: want "baby bok choy", got "heads baby bok choy"; unit: want "head", got null
+- rx2c-1381	"2 bunches garlic chives"	status: want ready, got needs_review; name: want "garlic chives", got "bunches garlic chives"; unit: want "bunch", got null
+- rx2c-1382	"6 sprigs lemon verbena"	status: want ready, got needs_review; name: want "lemon verbena", got "sprigs lemon verbena"; unit: want "sprig", got null
+- rx2c-1383	"3 stalks Chinese celery"	status: want ready, got needs_review; name: want "Chinese celery", got "stalks Chinese celery"; unit: want "stalk", got null
+- rx2c-1384	"2 ears Silver Queen corn"	status: want ready, got needs_review; name: want "Silver Queen corn", got "ears Silver Queen corn"; unit: want "ear", got null
+- rx2c-1385	"1 bulb elephant garlic"	status: want ready, got needs_review; name: want "elephant garlic", got "bulb elephant garlic"; unit: want "bulb", got null
+- rx2c-1386	"6 cloves black garlic"	status: want ready, got needs_review; name: want "black garlic", got "cloves black garlic"; unit: want "clove", got null
+- rx2c-1387	"4 pods black cardamom"	name: want "black cardamom", got "pods black cardamom"; unit: want "pod", got "each"
+- rx2c-1388	"2 links boudin blanc"	status: want ready, got needs_review; name: want "boudin blanc", got "links boudin blanc"; unit: want "link", got null
+- rx2c-1389	"4 links chorizo verde"	status: want ready, got needs_review; name: want "chorizo verde", got "links chorizo verde"; unit: want "link", got null
+- rx2c-1390	"2 slices brioche"	status: want ready, got needs_review; name: want "brioche", got "slices brioche"; unit: want "slice", got null
+- rx2c-1391	"8 strips thick-cut bacon"	status: want ready, got needs_review; name: want "thick-cut bacon", got "strips thick-cut bacon"; unit: want "strip", got null
+- rx2c-1392	"4 fillets Arctic char"	status: want ready, got needs_review; name: want "Arctic char", got "fillets Arctic char"; unit: want "fillet", got null
+- rx2c-1393	"1 stick unsalted European-style butter"	status: want ready, got needs_review; name: want "unsalted European-style butter", got "stick unsalted European-style butter"; unit: want "stick", got null
+- rx2c-1394	"2 wedges Brie de Meaux"	name: want "Brie de Meaux", got "wedges Brie de Meaux"; unit: want "wedge", got "each"
+- rx2c-1395	"1 block halloumi"	status: want ready, got needs_review; name: want "halloumi", got "block halloumi"; unit: want "block", got null
+- rx2c-1396	"1 loaf seeded rye"	status: want ready, got needs_review; name: want "seeded rye", got "loaf seeded rye"; unit: want "loaf", got null
+- rx2c-1397	"1 ball fresh pizza dough"	name: want "fresh pizza dough", got "ball fresh pizza dough"; unit: want "ball", got "each"
+- rx2c-1398	"2 pieces candied ginger"	status: want ready, got needs_review; name: want "candied ginger", got "pieces candied ginger"; unit: want "piece", got null
+- rx2c-1399	"2 pieces dried kelp"	status: want ready, got needs_review; name: want "dried kelp", got "pieces dried kelp"; unit: want "piece", got null
+- rx2c-1400	"3 cubes frozen pesto"	name: want "frozen pesto", got "cubes frozen pesto"; unit: want "cube", got "each"
+- rx2c-1401	"1 cube vegetable bouillon"	name: want "vegetable bouillon", got "cube vegetable bouillon"; unit: want "cube", got "each"
+- rx2c-1402	"2 cans hominy"	status: want ready, got needs_review; name: want "hominy", got "cans hominy"; unit: want "can", got null
+- rx2c-1403	"1 can mackerel in tomato sauce"	status: want ready, got needs_review; name: want "mackerel in tomato sauce" (or mackerel), got "can mackerel in tomato sauce"; unit: want "can", got null
+- rx2c-1404	"1 jar ajvar"	status: want ready, got needs_review; name: want "ajvar", got "jar ajvar"; unit: want "jar", got null
+- rx2c-1405	"1 jar lingonberry jam"	status: want ready, got needs_review; name: want "lingonberry jam", got "jar lingonberry jam"; unit: want "jar", got null
+- rx2c-1406	"1 bottle pomegranate molasses"	status: want ready, got needs_review; name: want "pomegranate molasses", got "bottle pomegranate molasses"; unit: want "bottle", got null
+- rx2c-1407	"1 tube wasabi paste"	name: want "wasabi paste", got "tube wasabi paste"; unit: want "tube", got "each"
+- rx2c-1408	"1 bag frozen edamame"	status: want ready, got needs_review; name: want "frozen edamame", got "bag frozen edamame"; unit: want "bag", got null
+- rx2c-1409	"1 bag masa harina"	status: want ready, got needs_review; name: want "masa harina", got "bag masa harina"; unit: want "bag", got null
+- rx2c-1410	"1 packet dashi powder"	status: want ready, got needs_review; name: want "dashi powder", got "packet dashi powder"; unit: want "packet", got null
+- rx2c-1411	"1 envelope ranch seasoning"	status: want ready, got needs_review; name: want "ranch seasoning", got "envelope ranch seasoning"; unit: want "envelope", got null
+- rx2c-1412	"1 carton bone broth"	status: want ready, got needs_review; name: want "bone broth", got "carton bone broth"; unit: want "carton", got null
+- rx2c-1413	"1 container labneh"	status: want ready, got needs_review; name: want "labneh", got "container labneh"; unit: want "container", got null
+- rx2c-1414	"1 tin smoked mussels"	status: want ready, got needs_review; name: want "smoked mussels", got "tin smoked mussels"; unit: want "tin", got null
+- rx2c-1415	"1 bottle barrel-aged stout"	status: want ready, got needs_review; name: want "barrel-aged stout", got "bottle barrel-aged stout"; unit: want "bottle", got null
+- rx2c-1416	"1 bottle cask-strength bourbon"	status: want ready, got needs_review; name: want "cask-strength bourbon", got "bottle cask-strength bourbon"; unit: want "bottle", got null
+- rx2c-1456	"1/3 cup kefir"	status: want ready, got needs_review; name: want "kefir", got "1/3 cup kefir"; quantity: want "1/3", got null; unit: want "cup", got null
+- rx2c-1482	"1 bag kettle-cooked potato chips"	status: want ready, got needs_review; name: want "kettle-cooked potato chips", got "bag kettle-cooked potato chips"; unit: want "bag", got null
+- rx2c-1483	"1 bag kettle crisps"	status: want ready, got needs_review; name: want "kettle crisps", got "bag kettle crisps"; unit: want "bag", got null
+- rx2c-1498	"1 sheet brick pastry"	status: want ready, got needs_review; name: want "brick pastry", got "sheet brick pastry"; unit: want "sheet", got null
+- rx2c-1506	"1 bottle Kitchen Bouquet"	status: want ready, got needs_review; name: want "Kitchen Bouquet", got "bottle Kitchen Bouquet"; unit: want "bottle", got null
+- rx2c-1520	"8 drop donuts"	status: want ready, got needs_review; unit: want "each", got null
+- rx2c-1525	"2 bags microwave popcorn"	status: want ready, got needs_review; name: want "microwave popcorn", got "bags microwave popcorn"; unit: want "bag", got null
+- rx2c-1527	"1 jar fridge pickles"	status: want ready, got needs_review; name: want "fridge pickles", got "jar fridge pickles"; unit: want "jar", got null
+- rx2c-1528	"1 jar refrigerator pickles"	status: want ready, got needs_review; name: want "refrigerator pickles", got "jar refrigerator pickles"; unit: want "jar", got null
+- rx2c-1544	"1 jar pot-set yogurt"	status: want ready, got needs_review; name: want "pot-set yogurt", got "jar pot-set yogurt"; unit: want "jar", got null
+- rx2c-1548	"1 packet hot pot seasoning"	status: want ready, got needs_review; name: want "hot pot seasoning", got "packet hot pot seasoning"; unit: want "packet", got null
+- rx2c-1558	"1 bucket fried chicken"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1559	"1 Ninja Creami"	status: want unsupported, got ready; name: want null, got "Ninja Creami"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1560	"1 Instant Vortex air fryer"	status: want unsupported, got ready; name: want null, got "Instant Vortex air fryer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1561	"1 Cosori air fryer"	status: want unsupported, got ready; name: want null, got "Cosori air fryer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1562	"1 Blendtec blender"	status: want unsupported, got ready; name: want null, got "Blendtec blender"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1563	"1 Lodge cast-iron skillet"	status: want unsupported, got ready; name: want null, got "Lodge cast-iron skillet"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1564	"1 Staub braiser"	status: want unsupported, got ready; name: want null, got "Staub braiser"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1565	"1 Le Creuset tagine"	status: want unsupported, got ready; name: want null, got "Le Creuset tagine"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1566	"1 Emile Henry tagine"	status: want unsupported, got ready; name: want null, got "Emile Henry tagine"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1567	"1 Emile Henry pie dish"	status: want unsupported, got ready; name: want null, got "Emile Henry pie dish"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1568	"1 Nordic Ware Bundt pan"	status: want unsupported, got ready; name: want null, got "Nordic Ware Bundt pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1569	"1 Hamilton Beach toaster"	status: want unsupported, got ready; name: want null, got "Hamilton Beach toaster"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1570	"1 Smeg kettle"	status: want unsupported, got ready; name: want null, got "Smeg kettle"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1571	"1 Bodum French press"	status: want unsupported, got ready; name: want null, got "Bodum French press"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1573	"1 Keurig"	status: want unsupported, got ready; name: want null, got "Keurig"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1574	"1 Traeger grill"	status: want unsupported, got ready; name: want null, got "Traeger grill"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1575	"1 Weber Smokey Mountain"	status: want unsupported, got ready; name: want null, got "Weber Smokey Mountain"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1576	"1 Blackstone griddle"	status: want unsupported, got ready; name: want null, got "Blackstone griddle"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1577	"1 Masterbuilt turkey fryer"	status: want unsupported, got ready; name: want null, got "Masterbuilt turkey fryer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1578	"1 Presto FryDaddy"	status: want unsupported, got ready; name: want null, got "Presto FryDaddy"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1579	"1 Whirley Pop popcorn popper"	status: want unsupported, got ready; name: want null, got "Whirley Pop popcorn popper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1580	"1 Pyrex casserole"	status: want unsupported, got ready; name: want null, got "Pyrex casserole"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1581	"1 Corningware casserole dish"	status: want unsupported, got ready; name: want null, got "Corningware casserole dish"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1582	"1 Anova sous vide"	status: want unsupported, got ready; name: want null, got "Anova sous vide"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1583	"1 Joule sous vide circulator"	status: want unsupported, got ready; name: want null, got "Joule sous vide circulator"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1584	"1 OXO salad spinner"	status: want unsupported, got ready; name: want null, got "OXO salad spinner"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1585	"1 Zyliss garlic press"	status: want unsupported, got ready; name: want null, got "Zyliss garlic press"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1586	"1 Microplane zester"	status: want unsupported, got ready; name: want null, got "Microplane zester"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1587	"1 Silpat baking mat"	status: want unsupported, got ready; name: want null, got "Silpat baking mat"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1588	"1 Mauviel copper saucepan"	status: want unsupported, got ready; name: want null, got "Mauviel copper saucepan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1589	"1 Wüsthof paring knife"	status: want unsupported, got ready; name: want null, got "Wüsthof paring knife"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1590	"1 Benriner mandoline"	status: want unsupported, got ready; name: want null, got "Benriner mandoline"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1591	"1 Thermapen thermometer"	status: want unsupported, got ready; name: want null, got "Thermapen thermometer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1592	"1 Cuisinart hand mixer"	status: want unsupported, got ready; name: want null, got "Cuisinart hand mixer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1593	"1 Hamilton Beach Hot Pot"	status: want unsupported, got ready; name: want null, got "Hamilton Beach Hot Pot"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1594	"1 Chefman egg cooker"	status: want unsupported, got ready; name: want null, got "Chefman egg cooker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1595	"1 Yeti tumbler"	status: want unsupported, got ready; name: want null, got "Yeti tumbler"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1596	"1 Brita pitcher"	status: want unsupported, got ready; name: want null, got "Brita pitcher"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1597	"1 Igloo cooler"	status: want unsupported, got ready; name: want null, got "Igloo cooler"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1598	"1 Yeti cooler"	status: want unsupported, got ready; name: want null, got "Yeti cooler"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1599	"1 Le Creuset pâté terrine"	status: want unsupported, got ready; name: want null, got "Le Creuset pâté terrine"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1600	"1 cow creamer"	status: want unsupported, got ready; name: want null, got "cow creamer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1601	"1 ceramic pie bird"	status: want unsupported, got ready; name: want null, got "ceramic pie bird"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1602	"1 honey dipper"	status: want unsupported, got ready; name: want null, got "honey dipper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1603	"1 turkey fryer"	status: want unsupported, got ready; name: want null, got "turkey fryer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1604	"1 vertical chicken roaster"	status: want unsupported, got ready; name: want null, got "vertical chicken roaster"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1605	"1 pig roaster"	status: want unsupported, got ready; name: want null, got "pig roaster"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1606	"1 tamale steamer"	status: want unsupported, got ready; name: want null, got "tamale steamer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1607	"1 bag cherry wood chunks"	status: want unsupported, got needs_review; name: want null, got "bag cherry wood chunks"; quantity: want null, got "1"
+- rx2c-1608	"1 bag apple wood chunks"	status: want unsupported, got needs_review; name: want null, got "bag apple wood chunks"; quantity: want null, got "1"
+- rx2c-1609	"1 bag charcoal briquettes"	status: want unsupported, got needs_review; name: want null, got "bag charcoal briquettes"; quantity: want null, got "1"
+- rx2c-1610	"1 bag hardwood pellets"	status: want unsupported, got needs_review; name: want null, got "bag hardwood pellets"; quantity: want null, got "1"
+- rx2c-1611	"1 cedar plank"	status: want unsupported, got ready; name: want null, got "cedar plank"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1612	"2 alder planks"	status: want unsupported, got ready; name: want null, got "alder planks"; quantity: want null, got "2"; unit: want null, got "each"
+- rx2c-1613	"1 bag oak wood chips"	status: want unsupported, got needs_review; name: want null, got "bag oak wood chips"; quantity: want null, got "1"
+- rx2c-1614	"1 bag maple wood chips"	status: want unsupported, got needs_review; name: want null, got "bag maple wood chips"; quantity: want null, got "1"
+- rx2c-1615	"1 butter churn"	status: want unsupported, got ready; name: want null, got "butter churn"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1616	"1 egg poacher"	status: want unsupported, got ready; name: want null, got "egg poacher"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1617	"1 pie crust shield"	status: want unsupported, got ready; name: want null, got "pie crust shield"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1618	"1 pie server"	status: want unsupported, got ready; name: want null, got "pie server"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1619	"1 cookie stamp"	status: want unsupported, got ready; name: want null, got "cookie stamp"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1620	"1 doughnut pan"	status: want unsupported, got ready; name: want null, got "doughnut pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1621	"1 popover pan"	status: want unsupported, got ready; name: want null, got "popover pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1622	"1 muffin top pan"	status: want unsupported, got ready; name: want null, got "muffin top pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1623	"1 taco holder"	status: want unsupported, got ready; name: want null, got "taco holder"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1624	"1 corn stripper"	status: want unsupported, got ready; name: want null, got "corn stripper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1625	"1 garlic keeper"	status: want unsupported, got ready; name: want null, got "garlic keeper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1626	"1 bread bin"	status: want unsupported, got ready; name: want null, got "bread bin"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1627	"1 dough whisk"	status: want unsupported, got ready; name: want null, got "dough whisk"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1628	"1 ravioli stamp"	status: want unsupported, got ready; name: want null, got "ravioli stamp"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1629	"1 gnocchi board"	status: want unsupported, got ready; name: want null, got "gnocchi board"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1630	"1 onigiri mold"	status: want unsupported, got ready; name: want null, got "onigiri mold"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1631	"1 rice paddle"	status: want unsupported, got ready; name: want null, got "rice paddle"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1632	"1 tamagoyaki pan"	status: want unsupported, got ready; name: want null, got "tamagoyaki pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1633	"1 takoyaki pan"	status: want unsupported, got ready; name: want null, got "takoyaki pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1634	"1 tortilla warmer"	status: want unsupported, got ready; name: want null, got "tortilla warmer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1635	"1 bean pot"	status: want unsupported, got ready; name: want null, got "bean pot"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1636	"1 crepe spreader"	status: want unsupported, got ready; name: want null, got "crepe spreader"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1637	"1 churro maker"	status: want unsupported, got ready; name: want null, got "churro maker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1638	"1 snow cone machine"	status: want unsupported, got ready; name: want null, got "snow cone machine"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1639	"1 cream whipper"	status: want unsupported, got ready; name: want null, got "cream whipper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1640	"1 soda siphon"	status: want unsupported, got ready; name: want null, got "soda siphon"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1641	"1 milk frother"	status: want unsupported, got ready; name: want null, got "milk frother"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1642	"1 tea cozy"	status: want unsupported, got ready; name: want null, got "tea cozy"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1643	"1 burr grinder"	status: want unsupported, got ready; name: want null, got "burr grinder"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1644	"1 gooseneck kettle"	status: want unsupported, got ready; name: want null, got "gooseneck kettle"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1645	"1 espresso tamper"	status: want unsupported, got ready; name: want null, got "espresso tamper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1646	"1 knock box"	status: want unsupported, got ready; name: want null, got "knock box"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1647	"1 bar spoon"	status: want unsupported, got ready; name: want null, got "bar spoon"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1648	"1 muddler"	status: want unsupported, got ready; name: want null, got "muddler"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1649	"1 wine key"	status: want unsupported, got ready; name: want null, got "wine key"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1650	"1 jar opener"	status: want unsupported, got needs_review; name: want null, got "jar opener"; quantity: want null, got "1"
+- rx2c-1651	"1 lid lifter"	status: want unsupported, got ready; name: want null, got "lid lifter"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1652	"1 spoon rest"	status: want unsupported, got ready; name: want null, got "spoon rest"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1653	"4 kitchen sponges"	status: want unsupported, got ready; name: want null, got "kitchen sponges"; quantity: want null, got "4"; unit: want null, got "each"
+- rx2c-1654	"1 roll Bounty paper towels"	status: want unsupported, got ready; name: want null, got "roll Bounty paper towels"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1655	"1 box Hefty slider bags"	status: want unsupported, got needs_review; name: want null, got "box Hefty slider bags"; quantity: want null, got "1"
+- rx2c-1656	"1 roll Reynolds parchment paper"	status: want unsupported, got ready; name: want null, got "roll Reynolds parchment paper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1657	"1 box Glad ForceFlex trash bags"	status: want unsupported, got needs_review; name: want null, got "box Glad ForceFlex trash bags"; quantity: want null, got "1"
+- rx2c-1658	"1 package Solo cups"	status: want unsupported, got needs_review; name: want null, got "package Solo cups"; quantity: want null, got "1"
+- rx2c-1659	"1 pack Dixie cups"	status: want unsupported, got ready; name: want null, got "pack Dixie cups"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1660	"1 box birthday candles"	status: want unsupported, got needs_review; name: want null, got "box birthday candles"; quantity: want null, got "1"
+- rx2c-1661	"1 package cupcake toppers"	status: want unsupported, got needs_review; name: want null, got "package cupcake toppers"; quantity: want null, got "1"
+- rx2c-1662	"1 box bamboo skewers"	status: want unsupported, got needs_review; name: want null, got "box bamboo skewers"; quantity: want null, got "1"
+- rx2c-1663	"1 box Ziploc freezer bags"	status: want unsupported, got needs_review; name: want null, got "box Ziploc freezer bags"; quantity: want null, got "1"
+- rx2c-1664	"1 package coffee filters"	status: want unsupported, got needs_review; name: want null, got "package coffee filters"; quantity: want null, got "1"
+- rx2c-1665	"1 package cheesecloth"	status: want unsupported, got needs_review; name: want null, got "package cheesecloth"; quantity: want null, got "1"
+- rx2c-1666	"1 pack chopsticks"	status: want unsupported, got ready; name: want null, got "pack chopsticks"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1667	"1 box Cascade pods"	status: want unsupported, got needs_review; name: want null, got "box Cascade pods"; quantity: want null, got "1"
+- rx2c-1668	"1 bag Tide pods"	status: want unsupported, got needs_review; name: want null, got "bag Tide pods"; quantity: want null, got "1"
+- rx2c-1669	"1 bottle dish soap"	status: want unsupported, got needs_review; name: want null, got "bottle dish soap"; quantity: want null, got "1"
+- rx2c-1670	"1 bottle hand soap"	status: want unsupported, got needs_review; name: want null, got "bottle hand soap"; quantity: want null, got "1"
+- rx2c-1671	"1 roll butcher paper"	status: want unsupported, got ready; name: want null, got "roll butcher paper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1672	"1 Large Mixing Bowl"	status: want unsupported, got ready; name: want null, got "Mixing Bowl"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1673	"2 Pastry Brushes"	status: want unsupported, got ready; name: want null, got "Pastry Brushes"; quantity: want null, got "2"; unit: want null, got "each"
+- rx2c-1674	"1 split prosecco"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1675	"2 splits cava"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1676	"1 cone piloncillo"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1677	"2 cones piloncillo"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1678	"1 cone jaggery"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1679	"2 discs Mexican chocolate"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1680	"1 disk Ibarra chocolate"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1681	"3 stems lemongrass"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1682	"4 stems mint"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1683	"2 fronds dill"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1684	"1 frond fennel"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1685	"2 cobs sweetcorn"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1686	"1 cob corn"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1687	"20 threads saffron"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1688	"2 strands saffron"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1689	"1 lobe foie gras"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1690	"1 heel sourdough"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1691	"2 pumps vanilla syrup"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1692	"3 pumps caramel sauce"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1693	"1 spray avocado oil"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1694	"2 sprays cooking oil"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1695	"1 dropper vanilla extract"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1696	"1 eyedropper lemon extract"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1697	"2 K-cups hazelnut coffee"	status: want needs_review, got ready
+- rx2c-1698	"1 capsule espresso"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1699	"1 tallboy lager"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1700	"1 crowler IPA"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1701	"1 schooner lager"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1702	"1 tankard ale"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1703	"1 stein Oktoberfest beer"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1704	"1 goblet red wine"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1705	"1 coupe champagne"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1706	"1 thermos coffee"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1707	"1 urn coffee"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1708	"1 vial rosewater"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1709	"1 jeroboam champagne"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1710	"1 magnum rosé"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1711	"1 order fries"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1712	"1 basket onion rings"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1713	"1 side coleslaw"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1714	"1 plate nachos"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1715	"1 skosh cinnamon"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1716	"1 smidgeon nutmeg"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1717	"1 hint orange zest"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1718	"1 touch cayenne"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1719	"1 whiff smoked paprika"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1720	"1 swoosh balsamic glaze"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1721	"1 squiggle mayo"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1722	"1 zigzag sriracha mayo"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1723	"1 ribbon caramel"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1724	"1 film olive oil"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1725	"1 veil powdered sugar"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1726	"1 blanket shredded cheese"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1727	"1 mound mashed potatoes"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1728	"1 heap rice"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1729	"1 pile fries"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1730	"1 stack pancakes"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1731	"1 bite dark chocolate"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1732	"1 blade mace"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1733	"2 blades mace"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1734	"1 scraping nutmeg"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1735	"1 grating lemon zest"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1736	"1 spattering hot sauce"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1737	"1 Pump Vanilla Syrup"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1738	"1 Solo cup beer"	status: want needs_review, got ready
+- rx2c-1739	"1 shot glass tequila"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1740	"1 juice glass orange juice"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1741	"1 demitasse espresso"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1742	"1 hamper apples"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1743	"1 tetra pak coconut water"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1744	"1 tray lasagna"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1745	"chicken drumsticks x 6"	status: want ready, got needs_review; name: want "chicken drumsticks", got "chicken drumsticks x 6"; quantity: want "6", got null; unit: want "each", got null
+- rx2c-1746	"avocados x 2"	status: want ready, got needs_review; name: want "avocados", got "avocados x 2"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-1747	"shallots x3"	status: want ready, got needs_review; name: want "shallots", got "shallots x3"; quantity: want "3", got null; unit: want "each", got null
+- rx2c-1748	"corn tortillas ×8"	status: want ready, got needs_review; name: want "corn tortillas", got "corn tortillas ×8"; quantity: want "8", got null; unit: want "each", got null
+- rx2c-1749	"4x chicken breasts"	status: want ready, got needs_review; name: want "chicken breasts", got "4x chicken breasts"; quantity: want "4", got null; unit: want "each", got null
+- rx2c-1750	"2x red onions"	status: want ready, got needs_review; name: want "red onions", got "2x red onions"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-1751	"1x bunch coriander"	status: want ready, got needs_review; name: want "coriander", got "1x bunch coriander"; quantity: want "1", got null; unit: want "bunch", got null
+- rx2c-1752	"2 x 200 g packs halloumi"	status: want ready, got needs_review; name: want "halloumi", got "2 x 200 g packs halloumi"; quantity: want "2", got null; unit: want "package", got null; packageSize: want "200 g", got null
+- rx2c-1753	"3 x 160 g tins tuna"	status: want ready, got needs_review; name: want "tuna", got "3 x 160 g tins tuna"; quantity: want "3", got null; unit: want "tin", got null; packageSize: want "160 g", got null
+- rx2c-1754	"limes x 4, juiced"	status: want ready, got needs_review; name: want "limes", got "limes x 4"; quantity: want "4", got null; unit: want "each", got null
+- rx2c-1757	"6 sprinkle cupcakes"	status: want ready, got needs_review; unit: want "each", got null
+- rx2c-1758	"10 drop sugar biscuits"	status: want ready, got needs_review; unit: want "each", got null
+- rx2c-1759	"1 can coconut milk (13.5 oz, unsweetened)"	status: want ready, got needs_review; name: want "coconut milk", got "can coconut milk (13.5 oz, unsweetened)"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "13.5 oz", got null
+- rx2c-1760	"1 jar roasted red peppers (12 oz, drained)"	status: want ready, got needs_review; name: want "roasted red peppers", got "jar roasted red peppers (12 oz, drained)"; quantity: want "1", got null; unit: want "jar", got null; packageSize: want "12 oz", got null
+- rx2c-1761	"1 bag baby kale (5 oz)"	status: want ready, got needs_review; name: want "baby kale", got "bag baby kale (5 oz)"; quantity: want "1", got null; unit: want "bag", got null; packageSize: want "5 oz", got null
+- rx2c-1762	"2 cans black beans (15 oz each, rinsed)"	status: want ready, got needs_review; name: want "black beans", got "cans black beans (15 oz each, rinsed)"; quantity: want "2", got null; unit: want "can", got null; packageSize: want "15 oz", got null
+- rx2c-1763	"1 box lasagna noodles (16 oz)"	status: want ready, got needs_review; name: want "lasagna noodles", got "box lasagna noodles (16 oz)"; quantity: want "1", got null; unit: want "box", got null; packageSize: want "16 oz", got null
+- rx2c-1764	"1 carton vegetable broth (32 fl oz)"	status: want ready, got needs_review; name: want "vegetable broth", got "carton vegetable broth (32 fl oz)"; quantity: want "1", got null; unit: want "carton", got null; packageSize: want "32 fl_oz", got null
+- rx2c-1765	"1 bottle rosé (750 ml, chilled)"	status: want ready, got needs_review; name: want "rosé", got "bottle rosé (750 ml, chilled)"; quantity: want "1", got null; unit: want "bottle", got null; packageSize: want "750 ml", got null
+- rx2c-1766	"1 tin anchovies (2 oz, oil reserved)"	status: want ready, got needs_review; name: want "anchovies", got "tin anchovies (2 oz, oil reserved)"; quantity: want "1", got null; unit: want "tin", got null; packageSize: want "2 oz", got null
+- rx2c-1767	"1 package goat cheese (4 oz, crumbled)"	status: want ready, got needs_review; name: want "goat cheese", got "package goat cheese (4 oz, crumbled)"; quantity: want "1", got null; unit: want "package", got null; packageSize: want "4 oz", got null
+- rx2c-1768	"1 jar marinara (24 oz)"	status: want ready, got needs_review; name: want "marinara", got "jar marinara (24 oz)"; quantity: want "1", got null; unit: want "jar", got null; packageSize: want "24 oz", got null
+- rx2c-1769	"1 cup Greek or Icelandic yogurt"	name: want null, got "1 cup Greek or Icelandic yogurt"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["Greek yogurt","Icelandic yogurt"], got []
+- rx2c-1770	"1/2 cup pecans or walnuts"	name: want null, got "1/2 cup pecans or walnuts"; quantity: want "1/2", got null; unit: want "cup", got null; alternatives: want ["pecans","walnuts"], got []
+- rx2c-1771	"2 Yukon Gold or russet potatoes"	name: want null, got "2 Yukon Gold or russet potatoes"; quantity: want "2", got null; unit: want "each", got null; alternatives: want ["Yukon Gold potatoes","russet potatoes"], got []
+- rx2c-1772	"4 cups vegetable or chicken stock"	name: want null, got "4 cups vegetable or chicken stock"; quantity: want "4", got null; unit: want "cup", got null; alternatives: want ["vegetable stock","chicken stock"], got []
+- rx2c-1773	"1 bunch cilantro or parsley"	name: want null, got "bunch cilantro or parsley"; quantity: want "1", got null; unit: want "bunch", got null; alternatives: want ["cilantro","parsley"], got []
+- rx2c-1774	"2 tsp Aleppo or Urfa pepper"	name: want null, got "2 tsp Aleppo or Urfa pepper"; quantity: want "2", got null; unit: want "tsp", got null; alternatives: want ["Aleppo pepper","Urfa pepper"], got []
+- rx2c-1775	"6 corn or flour tortillas"	name: want null, got "6 corn or flour tortillas"; quantity: want "6", got null; unit: want "each", got null; alternatives: want ["corn tortillas","flour tortillas"], got []
+- rx2c-1776	"1 can cannellini or great northern beans"	name: want null, got "can cannellini or great northern beans"; quantity: want "1", got null; unit: want "can", got null; alternatives: want ["cannellini beans","great northern beans"], got []
+- rx2c-1777	"2 tbsp sherry or rice vinegar"	name: want null, got "2 tbsp sherry or rice vinegar"; quantity: want "2", got null; unit: want "tbsp", got null; alternatives: want ["sherry vinegar","rice vinegar"], got []
+- rx2c-1778	"1 cup arborio or carnaroli rice"	name: want null, got "1 cup arborio or carnaroli rice"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["arborio rice","carnaroli rice"], got []
+- rx2c-1780	"2 cups cherries and apricots"	status: want needs_review, got ready
+- rx2c-1781	"1 lb squid and shrimp"	status: want needs_review, got ready
+- rx2c-1782	"3 tbsp ghee and oil"	status: want needs_review, got ready
+- rx2c-1783	"1 cup raisins and currants"	status: want needs_review, got ready
+- rx2c-1784	"1 cup chopped dill and parsley"	status: want needs_review, got ready
+- rx2c-1787	"1 bag salt and vinegar crisps"	status: want ready, got needs_review; name: want "salt and vinegar crisps", got "bag salt and vinegar crisps"; unit: want "bag", got null
+- rx2c-1788	"1 jar sweet and spicy pickles"	status: want ready, got needs_review; name: want "sweet and spicy pickles", got "jar sweet and spicy pickles"; unit: want "jar", got null
+- rx2c-1790	"1 cup mashed banana (2 large bananas)"	status: want ready, got needs_review; name: want "mashed banana" (or banana), got "1 cup mashed banana (2 large bananas)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-1791	"1 cup grated zucchini (1 medium zucchini)"	status: want ready, got needs_review; name: want "grated zucchini" (or zucchini), got "1 cup grated zucchini (1 medium zucchini)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-1792	"2 cups sliced leeks (about 2 leeks)"	status: want ready, got needs_review; name: want "sliced leeks" (or leeks), got "2 cups sliced leeks (about 2 leeks)"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-1811	"1 jar barrel pickles"	status: want ready, got needs_review; name: want "barrel pickles", got "jar barrel pickles"; unit: want "jar", got null
+- rx2c-1831	"4 cloves garlic, finely grated"	status: want ready, got needs_review; name: want "garlic", got "cloves garlic"; unit: want "clove", got null
+- rx2c-1834	"2 cups cooked jasmine rice"	name: want "jasmine rice", got "cooked jasmine rice"
+- rx2c-1835	"1 can (14.5 oz) fire-roasted diced tomatoes"	status: want ready, got needs_review; name: want "fire-roasted diced tomatoes", got "can (14.5 oz) fire-roasted diced tomatoes"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "14.5 oz", got null
+- rx2c-1836	"1/3 cup extra virgin olive oil"	status: want ready, got needs_review; name: want "extra virgin olive oil", got "1/3 cup extra virgin olive oil"; quantity: want "1/3", got null; unit: want "cup", got null
+- rx2c-1840	"6 slices thick-cut bacon, chopped"	status: want ready, got needs_review; name: want "thick-cut bacon", got "slices thick-cut bacon"; unit: want "slice", got null
+- rx2c-1845	"1 bunch lacinato kale, stems removed"	status: want ready, got needs_review; name: want "lacinato kale", got "bunch lacinato kale"; unit: want "bunch", got null
+- rx2c-1856	"1 lb 85% lean ground turkey"	status: want ready, got needs_review; name: want "85% lean ground turkey", got "1 lb 85% lean ground turkey"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-1858	"1 pint grape tomatoes, halved"	status: want ready, got needs_review; name: want "grape tomatoes", got "pint grape tomatoes"; unit: want "pint", got null
+- rx2c-1864	"1 15-ounce can cannellini beans, rinsed"	status: want ready, got needs_review; name: want "cannellini beans", got "1 15-ounce can cannellini beans"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "15 oz", got null
+- rx2c-1875	"2 sprigs fresh marjoram"	status: want ready, got needs_review; name: want "fresh marjoram" (or marjoram), got "sprigs fresh marjoram"; unit: want "sprig", got null
+- rx2c-1880	"1/3 cup Kewpie mayonnaise"	status: want ready, got needs_review; name: want "Kewpie mayonnaise", got "1/3 cup Kewpie mayonnaise"; quantity: want "1/3", got null; unit: want "cup", got null
+- rx2c-1883	"1 can (13.66 oz) full-fat coconut milk"	status: want ready, got needs_review; name: want "full-fat coconut milk", got "can (13.66 oz) full-fat coconut milk"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "683/50 oz", got null
+- rx2c-1885	"1 large sweet potato, peeled and cut into 1-inch cubes"	status: want ready, got needs_review; name: want "sweet potato", got "1 large sweet potato"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-1886	"12 oz uncooked rigatoni"	name: want "rigatoni", got "uncooked rigatoni"
+- rx2c-1889	"2/3 cup crème fraîche"	status: want ready, got needs_review; name: want "crème fraîche", got "2/3 cup crème fraîche"; quantity: want "2/3", got null; unit: want "cup", got null
+- rx2c-1897	"1/3 cup dried currants"	status: want ready, got needs_review; name: want "dried currants", got "1/3 cup dried currants"; quantity: want "1/3", got null; unit: want "cup", got null
+- rx2c-1908	"1 small head radicchio"	name: want "radicchio", got "head radicchio"; unit: want "head", got "each"
+- rx2c-1916	"1 pint fresh raspberries"	status: want ready, got needs_review; name: want "fresh raspberries" (or raspberries), got "pint fresh raspberries"; unit: want "pint", got null
+- rx2c-1917	"1 quart low-fat buttermilk"	status: want ready, got needs_review; name: want "low-fat buttermilk", got "quart low-fat buttermilk"; unit: want "quart", got null
+- rx2c-1918	"1/2 gallon apple cider"	status: want ready, got needs_review; name: want "apple cider", got "gallon apple cider"; unit: want "gallon", got null
+- rx2c-1922	"3 dl single cream"	name: want "single cream", got "dl single cream"; unit: want "dl", got "each"
+- rx2c-1926	"3 pieces candied ginger, chopped"	status: want ready, got needs_review; name: want "candied ginger", got "pieces candied ginger"; unit: want "piece", got null
+- rx2c-1927	"2 heads Belgian endive"	status: want ready, got needs_review; name: want "Belgian endive", got "heads Belgian endive"; unit: want "head", got null
+- rx2c-1928	"4 ears sweet corn, husked"	status: want ready, got needs_review; name: want "sweet corn", got "ears sweet corn"; unit: want "ear", got null
+- rx2c-1929	"Freshly grated nutmeg, for serving"	status: want ready, got needs_review
+- rx2c-1931	"Cornmeal, for dusting the pan"	status: want ready, got needs_review
+- rx2c-1932	"Canola oil, for deep-frying"	status: want ready, got needs_review
+- rx2c-1936	"1 (16 oz) package frozen mixed vegetables"	status: want ready, got needs_review; name: want "frozen mixed vegetables", got "1 (16 oz) package frozen mixed vegetables"; quantity: want "1", got null; unit: want "package", got null; packageSize: want "16 oz", got null
+- rx2c-1938	"a half cup of granulated sugar"	status: want ready, got needs_review; name: want "granulated sugar", got "a half cup of granulated sugar"; quantity: want "1/2", got null; unit: want "cup", got null
+- rx2c-1939	"half cup chopped pecans"	status: want ready, got needs_review; name: want "chopped pecans" (or pecans), got "half cup chopped pecans"; quantity: want "1/2", got null; unit: want "cup", got null
+- rx2c-1940	"a quarter-cup olive oil"	status: want ready, got needs_review; name: want "olive oil", got "a quarter-cup olive oil"; quantity: want "1/4", got null; unit: want "cup", got null
+- rx2c-1941	"quarter cup clover honey"	status: want ready, got needs_review; name: want "clover honey", got "quarter cup clover honey"; quantity: want "1/4", got null; unit: want "cup", got null
+- rx2c-1942	"a third cup warm water"	status: want ready, got needs_review; name: want "warm water" (or water), got "a third cup warm water"; quantity: want "1/3", got null; unit: want "cup", got null
+- rx2c-1943	"one-third cup dark brown sugar"	status: want ready, got needs_review; name: want "dark brown sugar", got "one-third cup dark brown sugar"; quantity: want "1/3", got null; unit: want "cup", got null
+- rx2c-1944	"two-thirds cup evaporated milk"	status: want ready, got needs_review; name: want "evaporated milk", got "two-thirds cup evaporated milk"; quantity: want "2/3", got null; unit: want "cup", got null
+- rx2c-1945	"three-quarters cup bread flour"	status: want ready, got needs_review; name: want "bread flour", got "three-quarters cup bread flour"; quantity: want "3/4", got null; unit: want "cup", got null
+- rx2c-1946	"three quarter cup heavy cream"	status: want ready, got needs_review; name: want "heavy cream", got "three quarter cup heavy cream"; quantity: want "3/4", got null; unit: want "cup", got null
+- rx2c-1947	"one-half teaspoon fine salt"	status: want ready, got needs_review; name: want "fine salt", got "one-half teaspoon fine salt"; quantity: want "1/2", got null; unit: want "tsp", got null
+- rx2c-1948	"one-quarter teaspoon ground allspice"	status: want ready, got needs_review; name: want "ground allspice", got "one-quarter teaspoon ground allspice"; quantity: want "1/4", got null; unit: want "tsp", got null
+- rx2c-1949	"a half-teaspoon vanilla bean paste"	status: want ready, got needs_review; name: want "vanilla bean paste", got "a half-teaspoon vanilla bean paste"; quantity: want "1/2", got null; unit: want "tsp", got null
+- rx2c-1950	"half teaspoon cream of tartar"	status: want ready, got needs_review; name: want "cream of tartar", got "half teaspoon cream of tartar"; quantity: want "1/2", got null; unit: want "tsp", got null
+- rx2c-1951	"a half tablespoon ghee"	status: want ready, got needs_review; name: want "ghee", got "a half tablespoon ghee"; quantity: want "1/2", got null; unit: want "tbsp", got null
+- rx2c-1952	"1 half-pound ground lamb"	name: want "ground lamb", got "half-pound ground lamb"; quantity: want "1/2", got "1"; unit: want "lb", got "each"
+- rx2c-1953	"a half-pound ground veal"	status: want ready, got needs_review; name: want "ground veal", got "a half-pound ground veal"; quantity: want "1/2", got null; unit: want "lb", got null
+- rx2c-1954	"a quarter-pound unsalted butter"	status: want ready, got needs_review; name: want "unsalted butter", got "a quarter-pound unsalted butter"; quantity: want "1/4", got null; unit: want "lb", got null
+- rx2c-1955	"2 half-cups heavy cream"	name: want "heavy cream", got "half-cups heavy cream"; quantity: want "1", got "2"; unit: want "cup", got "each"
+- rx2c-1956	"3 quarter-cups rolled oats"	name: want "rolled oats", got "quarter-cups rolled oats"; quantity: want "3/4", got "3"; unit: want "cup", got "each"
+- rx2c-1957	"4 quarter-pound burger patties"	name: want "burger patties", got "quarter-pound burger patties"
+- rx2c-1958	"a half-gallon container orange juice"	status: want ready, got needs_review; name: want "orange juice", got "a half-gallon container orange juice"; quantity: want "1", got null; unit: want "container", got null; packageSize: want "1/2 gallon", got null
+- rx2c-1959	"one half-gallon bottle apple cider"	status: want ready, got needs_review; name: want "apple cider", got "one half-gallon bottle apple cider"; quantity: want "1", got null; unit: want "bottle", got null; packageSize: want "1/2 gallon", got null
+- rx2c-1960	"half-dozen large eggs"	status: want ready, got needs_review; name: want "eggs", got "half-dozen large eggs"; quantity: want "6", got null; unit: want "each", got null
+- rx2c-1961	"a half dozen bagels"	status: want ready, got needs_review; name: want "bagels", got "a half dozen bagels"; quantity: want "6", got null; unit: want "each", got null
+- rx2c-1962	"half a dozen dinner rolls"	status: want ready, got needs_review; name: want "dinner rolls", got "half a dozen dinner rolls"; quantity: want "6", got null; unit: want "each", got null
+- rx2c-1963	"Half-and-half, 1 cup"	status: want ready, got needs_review; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-1965	"half a cup coconut cream"	status: want ready, got needs_review; name: want "coconut cream", got "half a cup coconut cream"; quantity: want "1/2", got null; unit: want "cup", got null
+- rx2c-1966	"Half cup diced red onion"	status: want ready, got needs_review; name: want "diced red onion" (or red onion), got "Half cup diced red onion"; quantity: want "1/2", got null; unit: want "cup", got null
+- rx2c-1967	"Three-quarter cup buttermilk"	status: want ready, got needs_review; name: want "buttermilk", got "Three-quarter cup buttermilk"; quantity: want "3/4", got null; unit: want "cup", got null
+- rx2c-1968	"2 half-inch slices brioche"	name: want "brioche", got "half-inch slices brioche"; unit: want "slice", got "each"
+- rx2c-1970	"1 (15 oz) can pear halves in juice"	status: want ready, got needs_review; name: want "pear halves in juice" (or pear halves), got "1 (15 oz) can pear halves in juice"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "15 oz", got null
+- rx2c-1973	"a quarter pound of pancetta"	status: want ready, got needs_review; name: want "pancetta", got "a quarter pound of pancetta"; quantity: want "1/4", got null; unit: want "lb", got null
+- rx2c-1974	"half pound of shiitake mushrooms"	status: want ready, got needs_review; name: want "shiitake mushrooms", got "half pound of shiitake mushrooms"; quantity: want "1/2", got null; unit: want "lb", got null
+- rx2c-1976	"a half-cup (1 stick) salted butter"	status: want ready, got needs_review; name: want "salted butter", got "a half-cup (1 stick) salted butter"; quantity: want "1/2", got null; unit: want "cup", got null
+- rx2c-1977	"a quarter-cup (60 ml) fresh lemon juice"	status: want ready, got needs_review; name: want "fresh lemon juice" (or lemon juice), got "a quarter-cup (60 ml) fresh lemon juice"; quantity: want "1/4", got null; unit: want "cup", got null
+- rx2c-1979	"2x cups chicken stock"	status: want ready, got needs_review; name: want "chicken stock", got "2x cups chicken stock"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-1980	"1x tbsp honey"	status: want ready, got needs_review; name: want "honey", got "1x tbsp honey"; quantity: want "1", got null; unit: want "tbsp", got null
+- rx2c-1981	"2 x lemons"	name: want "lemons", got "x lemons"
+- rx2c-1982	"4 x garlic cloves"	name: want "garlic", got "x garlic cloves"; unit: want "clove", got "each"
+- rx2c-1983	"1 x 400g tin chopped tomatoes"	status: want ready, got needs_review; name: want "chopped tomatoes", got "1 x 400g tin chopped tomatoes"; quantity: want "1", got null; unit: want "tin", got null; packageSize: want "400 g", got null
+- rx2c-1984	"2 x 225 g packets halloumi"	status: want ready, got needs_review; name: want "halloumi", got "2 x 225 g packets halloumi"; quantity: want "2", got null; unit: want "packet", got null; packageSize: want "225 g", got null
+- rx2c-1986	"2 x 1 kg bags plain flour"	status: want ready, got needs_review; name: want "plain flour", got "2 x 1 kg bags plain flour"; quantity: want "2", got null; unit: want "bag", got null; packageSize: want "1 kg", got null
+- rx2c-1987	"onions x 2"	status: want ready, got needs_review; name: want "onions", got "onions x 2"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-1988	"carrots x3"	status: want ready, got needs_review; name: want "carrots", got "carrots x3"; quantity: want "3", got null; unit: want "each", got null
+- rx2c-1989	"limes (x4)"	status: want ready, got needs_review; name: want "limes", got "limes (x4)"; quantity: want "4", got null; unit: want "each", got null
+- rx2c-1990	"egg yolks × 2"	status: want ready, got needs_review; name: want "egg yolks", got "egg yolks × 2"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-1991	"bay leaves x 2"	status: want ready, got needs_review; name: want "bay leaves", got "bay leaves x 2"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-1992	"garlic cloves x 6"	status: want ready, got needs_review; name: want "garlic", got "garlic cloves x 6"; quantity: want "6", got null; unit: want "clove", got null
+- rx2c-1993	"chicken thighs (x 8)"	status: want ready, got needs_review; name: want "chicken thighs", got "chicken thighs (x 8)"; quantity: want "8", got null; unit: want "each", got null
+- rx2c-1994	"1 x tin coconut milk"	name: want "coconut milk", got "x tin coconut milk"; unit: want "tin", got "each"
+- rx2c-1995	"2x tins black beans"	status: want ready, got needs_review; name: want "black beans", got "2x tins black beans"; quantity: want "2", got null; unit: want "tin", got null
+- rx2c-1996	"3x 400ml cans coconut milk"	status: want ready, got needs_review; name: want "coconut milk", got "3x 400ml cans coconut milk"; quantity: want "3", got null; unit: want "can", got null; packageSize: want "400 ml", got null
+- rx2c-1997	"1 cup 4X sugar"	status: want ready, got needs_review; name: want "4X sugar", got "1 cup 4X sugar"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-1998	"2 cups 6x powdered sugar"	status: want ready, got needs_review; name: want "6x powdered sugar", got "2 cups 6x powdered sugar"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-1999	"2 x 12-inch flour tortillas"	status: want ready, got needs_review; name: want "flour tortillas", got "2 x 12-inch flour tortillas"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-2000	"4 x 6-inch sub rolls"	status: want ready, got needs_review; name: want "sub rolls", got "4 x 6-inch sub rolls"; quantity: want "4", got null; unit: want "each", got null
+- rx2c-2001	"Lemons ×2"	status: want ready, got needs_review; name: want "Lemons", got "Lemons ×2"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-2008	"1 lb 8 oz chuck roast"	status: want ready, got needs_review; name: want "chuck roast", got "1 lb 8 oz chuck roast"; quantity: want "24", got null; unit: want "oz", got null
+- rx2c-2009	"2 lbs 4 oz pork belly"	status: want ready, got needs_review; name: want "pork belly", got "2 lbs 4 oz pork belly"; quantity: want "36", got null; unit: want "oz", got null
+- rx2c-2010	"1 kg 250 g new potatoes"	status: want ready, got needs_review; name: want "new potatoes", got "1 kg 250 g new potatoes"; quantity: want "1250", got null; unit: want "g", got null
+- rx2c-2011	"1 cup plus 3 tablespoons whole milk"	status: want ready, got needs_review; name: want "whole milk", got "1 cup plus 3 tablespoons whole milk"; quantity: want "19", got null; unit: want "tbsp", got null
+- rx2c-2012	"1/2 cup plus 1 tablespoon granulated sugar"	status: want ready, got needs_review; name: want "granulated sugar", got "1/2 cup plus 1 tablespoon granulated sugar"; quantity: want "9", got null; unit: want "tbsp", got null
+- rx2c-2013	"2 tablespoons plus 2 teaspoons avocado oil"	status: want ready, got needs_review; name: want "avocado oil", got "2 tablespoons plus 2 teaspoons avocado oil"; quantity: want "8", got null; unit: want "tsp", got null
+- rx2c-2014	"1 cup + 3 tbsp heavy cream"	status: want ready, got needs_review; name: want "heavy cream", got "1 cup + 3 tbsp heavy cream"; quantity: want "19", got null; unit: want "tbsp", got null
+- rx2c-2015	"3 tbsp + 1 tsp fresh lemon juice"	status: want ready, got needs_review; name: want "fresh lemon juice" (or lemon juice), got "3 tbsp + 1 tsp fresh lemon juice"; quantity: want "10", got null; unit: want "tsp", got null
+- rx2c-2016	"1 cup minus 1 tablespoon buttermilk"	status: want ready, got needs_review; name: want "buttermilk", got "1 cup minus 1 tablespoon buttermilk"; quantity: want "15", got null; unit: want "tbsp", got null
+- rx2c-2017	"2 cups less 3 tablespoons cake flour"	status: want ready, got needs_review; name: want "cake flour", got "2 cups less 3 tablespoons cake flour"; quantity: want "29", got null; unit: want "tbsp", got null
+- rx2c-2018	"1 pint plus 1/2 cup heavy cream"	status: want ready, got needs_review; name: want "heavy cream", got "pint plus 1/2 cup heavy cream"; quantity: want "5/2", got "1"; unit: want "cup", got null
+- rx2c-2019	"1 quart plus 2 cups beef stock"	status: want ready, got needs_review; name: want "beef stock", got "quart plus 2 cups beef stock"; quantity: want "6", got "1"; unit: want "cup", got null
+- rx2c-2020	"1 tbsp plus 1/2 tsp kosher salt"	status: want ready, got needs_review; name: want "kosher salt", got "1 tbsp plus 1/2 tsp kosher salt"; quantity: want "7/2", got null; unit: want "tsp", got null
+- rx2c-2021	"1/4 cup plus 2 teaspoons maple syrup"	status: want ready, got needs_review; name: want "maple syrup", got "1/4 cup plus 2 teaspoons maple syrup"; quantity: want "14", got null; unit: want "tsp", got null
+- rx2c-2022	"1 lb plus 2 oz ground pork"	status: want ready, got needs_review; name: want "ground pork", got "1 lb plus 2 oz ground pork"; quantity: want "18", got null; unit: want "oz", got null
+- rx2c-2023	"1 cup bread flour plus 2 tablespoons"	status: want ready, got needs_review; name: want "bread flour", got "1 cup bread flour plus 2 tablespoons"; quantity: want "18", got null; unit: want "tbsp", got null
+- rx2c-2024	"1 cup sugar, plus 2 tbsp for sprinkling"	status: want ready, got needs_review; name: want "sugar", got "1 cup sugar"; quantity: want "18", got null; unit: want "tbsp", got null
+- rx2c-2029	"2 tsp + 1 tbsp brown sugar"	status: want ready, got needs_review; name: want "brown sugar", got "2 tsp + 1 tbsp brown sugar"; quantity: want "5", got null; unit: want "tsp", got null
+- rx2c-2030	"1 lb. 4 oz. (567 g) beef chuck"	status: want ready, got needs_review; name: want "beef chuck", got "1 lb. 4 oz. (567 g) beef chuck"; quantity: want "20", got null; unit: want "oz", got null
+- rx2c-2031	"1 cup + 2 tbsp (270 ml) whole milk"	status: want ready, got needs_review; name: want "whole milk", got "1 cup + 2 tbsp (270 ml) whole milk"; quantity: want "18", got null; unit: want "tbsp", got null
+- rx2c-2032	"2 cups minus 2 tablespoons (450 ml) water"	status: want ready, got needs_review; name: want "water", got "2 cups minus 2 tablespoons (450 ml) water"; quantity: want "30", got null; unit: want "tbsp", got null
+- rx2c-2033	"1 1/2 lb plus 4 oz chicken thighs"	status: want ready, got needs_review; name: want "chicken thighs", got "1 1/2 lb plus 4 oz chicken thighs"; quantity: want "28", got null; unit: want "oz", got null
+- rx2c-2035	"1 cup less 1 tsp vegetable oil"	status: want ready, got needs_review; name: want "vegetable oil", got "1 cup less 1 tsp vegetable oil"; quantity: want "47", got null; unit: want "tsp", got null
+- rx2c-2039	"1 cup 3-cheese blend"	status: want ready, got needs_review; name: want "3-cheese blend", got "1 cup 3-cheese blend"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2041	"4 slices 12-grain bread"	status: want ready, got needs_review; name: want "12-grain bread", got "slices 12-grain bread"; unit: want "slice", got null
+- rx2c-2043	"1 loaf seven-grain bread"	status: want ready, got needs_review; name: want "seven-grain bread", got "loaf seven-grain bread"; unit: want "loaf", got null
+- rx2c-2045	"1 can 3-bean chili"	status: want ready, got needs_review; name: want "3-bean chili", got "can 3-bean chili"; unit: want "can", got null
+- rx2c-2049	"Ten cherry tomatoes, halved"	status: want ready, got needs_review; name: want "cherry tomatoes", got "Ten cherry tomatoes"; quantity: want "10", got null; unit: want "each", got null
+- rx2c-2050	"2 cups 2 percent milk"	status: want ready, got needs_review; name: want "2 percent milk", got "2 cups 2 percent milk"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-2051	"1 lb 90/10 ground sirloin"	status: want ready, got needs_review; name: want "90/10 ground sirloin", got "1 lb 90/10 ground sirloin"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-2052	"2 lbs 80/20 ground chuck"	status: want ready, got needs_review; name: want "80/20 ground chuck", got "2 lbs 80/20 ground chuck"; quantity: want "2", got null; unit: want "lb", got null
+- rx2c-2053	"1 lb ground beef (90/10)"	status: want ready, got needs_review; name: want "ground beef", got "1 lb ground beef (90/10)"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-2054	"2 cups type 00 flour"	status: want ready, got needs_review; name: want "type 00 flour", got "2 cups type 00 flour"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-2055	"2 tbsp A.1. steak sauce"	status: want ready, got needs_review; name: want "A.1. steak sauce", got "2 tbsp A.1. steak sauce"; quantity: want "2", got null; unit: want "tbsp", got null
+- rx2c-2056	"1 cup V8 juice"	status: want ready, got needs_review; name: want "V8 juice", got "1 cup V8 juice"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2057	"1 (16 oz) bag 15 bean soup mix"	status: want ready, got needs_review; name: want "15 bean soup mix", got "1 (16 oz) bag 15 bean soup mix"; quantity: want "1", got null; unit: want "bag", got null; packageSize: want "16 oz", got null
+- rx2c-2058	"1 cup 100% cranberry juice"	status: want ready, got needs_review; name: want "100% cranberry juice", got "1 cup 100% cranberry juice"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2059	"1 lb 93% lean ground beef"	status: want ready, got needs_review; name: want "93% lean ground beef", got "1 lb 93% lean ground beef"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-2060	"2 cups 7 grain pilaf"	status: want ready, got needs_review; name: want "7 grain pilaf", got "2 cups 7 grain pilaf"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-2062	"1 cup (235 ml) chicken broth"	status: want ready, got needs_review; name: want "chicken broth", got "1 cup (235 ml) chicken broth"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2063	"1 cup (250 ml) oat milk"	status: want ready, got needs_review; name: want "oat milk", got "1 cup (250 ml) oat milk"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2064	"1 cup (253 ml) water"	status: want ready, got needs_review; name: want "water", got "1 cup (253 ml) water"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2065	"1 cup (254 ml) water"	name: want "water", got "1 cup (254 ml) water"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2066	"1 cup (221 ml) vegetable stock"	status: want ready, got needs_review; name: want "vegetable stock", got "1 cup (221 ml) vegetable stock"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2067	"1 cup (220 ml) vegetable stock"	name: want "vegetable stock", got "1 cup (220 ml) vegetable stock"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2068	"2 cups (473 ml) half-and-half"	status: want ready, got needs_review; name: want "half-and-half", got "2 cups (473 ml) half-and-half"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-2069	"1/2 cup (125 ml) olive oil"	status: want ready, got needs_review; name: want "olive oil", got "1/2 cup (125 ml) olive oil"; quantity: want "1/2", got null; unit: want "cup", got null
+- rx2c-2070	"1/4 cup (65 ml) soy sauce"	name: want "soy sauce", got "1/4 cup (65 ml) soy sauce"; quantity: want "1/4", got null; unit: want "cup", got null
+- rx2c-2071	"1 tbsp (15 g) salted butter"	status: want ready, got needs_review; name: want "salted butter", got "1 tbsp (15 g) salted butter"; quantity: want "1", got null; unit: want "tbsp", got null
+- rx2c-2072	"1 tbsp (16 ml) sherry vinegar"	name: want "sherry vinegar", got "1 tbsp (16 ml) sherry vinegar"; quantity: want "1", got null; unit: want "tbsp", got null
+- rx2c-2073	"1 tbsp (14 ml) sherry vinegar"	status: want ready, got needs_review; name: want "sherry vinegar", got "1 tbsp (14 ml) sherry vinegar"; quantity: want "1", got null; unit: want "tbsp", got null
+- rx2c-2074	"2 tsp (10 ml) vanilla extract"	status: want ready, got needs_review; name: want "vanilla extract", got "2 tsp (10 ml) vanilla extract"; quantity: want "2", got null; unit: want "tsp", got null
+- rx2c-2075	"1/2 tsp (3 ml) fine salt"	name: want "fine salt", got "1/2 tsp (3 ml) fine salt"; quantity: want "1/2", got null; unit: want "tsp", got null
+- rx2c-2076	"1/8 tsp (1 ml) cayenne"	status: want ready, got needs_review; name: want "cayenne", got "1/8 tsp (1 ml) cayenne"; quantity: want "1/8", got null; unit: want "tsp", got null
+- rx2c-2077	"3 tbsp (45 ml) heavy cream"	status: want ready, got needs_review; name: want "heavy cream", got "3 tbsp (45 ml) heavy cream"; quantity: want "3", got null; unit: want "tbsp", got null
+- rx2c-2078	"1 oz (28 g) unsweetened chocolate"	status: want ready, got needs_review; name: want "unsweetened chocolate", got "1 oz (28 g) unsweetened chocolate"; quantity: want "1", got null; unit: want "oz", got null
+- rx2c-2079	"2 oz (60 g) diced pancetta"	status: want ready, got needs_review; name: want "diced pancetta" (or pancetta), got "2 oz (60 g) diced pancetta"; quantity: want "2", got null; unit: want "oz", got null
+- rx2c-2080	"3 oz (85 g) soft goat cheese"	status: want ready, got needs_review; name: want "soft goat cheese" (or goat cheese), got "3 oz (85 g) soft goat cheese"; quantity: want "3", got null; unit: want "oz", got null
+- rx2c-2081	"6 oz (175 g) baby spinach"	status: want ready, got needs_review; name: want "baby spinach", got "6 oz (175 g) baby spinach"; quantity: want "6", got null; unit: want "oz", got null
+- rx2c-2082	"10 oz (300 g) frozen peas"	status: want ready, got needs_review; name: want "frozen peas", got "10 oz (300 g) frozen peas"; quantity: want "10", got null; unit: want "oz", got null
+- rx2c-2083	"12 oz (350 g) linguine"	status: want ready, got needs_review; name: want "linguine", got "12 oz (350 g) linguine"; quantity: want "12", got null; unit: want "oz", got null
+- rx2c-2084	"1 lb (500 g) parsnips"	name: want "parsnips", got "1 lb (500 g) parsnips"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-2085	"8 oz (250 g) button mushrooms"	name: want "button mushrooms", got "8 oz (250 g) button mushrooms"; quantity: want "8", got null; unit: want "oz", got null
+- rx2c-2086	"4 oz (100 g) walnut halves"	name: want "walnut halves", got "4 oz (100 g) walnut halves"; quantity: want "4", got null; unit: want "oz", got null
+- rx2c-2087	"1 1/2 lb (700 g) beef stew meat"	status: want ready, got needs_review; name: want "beef stew meat", got "1 1/2 lb (700 g) beef stew meat"; quantity: want "3/2", got null; unit: want "lb", got null
+- rx2c-2088	"2 lb (900 g) waxy potatoes"	status: want ready, got needs_review; name: want "waxy potatoes", got "2 lb (900 g) waxy potatoes"; quantity: want "2", got null; unit: want "lb", got null
+- rx2c-2089	"2 lbs (1 kg) chicken wings"	name: want "chicken wings", got "2 lbs (1 kg) chicken wings"; quantity: want "2", got null; unit: want "lb", got null
+- rx2c-2090	"3 lb (1.5 kg) pork shoulder"	name: want "pork shoulder", got "3 lb (1.5 kg) pork shoulder"; quantity: want "3", got null; unit: want "lb", got null
+- rx2c-2091	"200 g (7 oz) feta"	status: want ready, got needs_review; name: want "feta", got "200 g (7 oz) feta"; quantity: want "200", got null; unit: want "g", got null
+- rx2c-2092	"250 g (8 oz) cream cheese"	name: want "cream cheese", got "250 g (8 oz) cream cheese"; quantity: want "250", got null; unit: want "g", got null
+- rx2c-2093	"100 g (4 oz) butter"	name: want "butter", got "100 g (4 oz) butter"; quantity: want "100", got null; unit: want "g", got null
+- rx2c-2094	"500 g (1 lb) beef mince"	name: want "beef mince", got "500 g (1 lb) beef mince"; quantity: want "500", got null; unit: want "g", got null
+- rx2c-2095	"1 kg (2 lb) brown onions"	status: want ready, got needs_review; name: want "brown onions", got "1 kg (2 lb) brown onions"; quantity: want "1", got null; unit: want "kg", got null
+- rx2c-2096	"1 (400 g / 14 oz) tin chickpeas"	status: want ready, got needs_review; name: want "chickpeas", got "1 (400 g / 14 oz) tin chickpeas"; quantity: want "1", got null; unit: want "tin", got null; packageSize: want "400 g", got null
+- rx2c-2097	"1 (14-ounce/397 g) can sweetened condensed milk"	status: want ready, got needs_review; name: want "sweetened condensed milk", got "1 (14-ounce/397 g) can sweetened condensed milk"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "14 oz", got null
+- rx2c-2098	"2 (15 oz / 425 g) cans pinto beans"	status: want ready, got needs_review; name: want "pinto beans", got "2 (15 oz / 425 g) cans pinto beans"; quantity: want "2", got null; unit: want "can", got null; packageSize: want "15 oz", got null
+- rx2c-2099	"1 (12 oz / 340 g) bag fresh cranberries"	status: want ready, got needs_review; name: want "fresh cranberries" (or cranberries), got "1 (12 oz / 340 g) bag fresh cranberries"; quantity: want "1", got null; unit: want "bag", got null; packageSize: want "12 oz", got null
+- rx2c-2100	"1 (15 oz / 500 g) can black beans"	name: want "black beans", got "1 (15 oz / 500 g) can black beans"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "15 oz", got null
+- rx2c-2101	"1 (10 oz) package (283 g) frozen chopped spinach"	status: want ready, got needs_review; name: want "frozen chopped spinach", got "1 (10 oz) package (283 g) frozen chopped spinach"; quantity: want "1", got null; unit: want "package", got null; packageSize: want "10 oz", got null
+- rx2c-2102	"1 (28 oz) can (794 g) whole peeled tomatoes"	status: want ready, got needs_review; name: want "whole peeled tomatoes", got "1 (28 oz) can (794 g) whole peeled tomatoes"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "28 oz", got null
+- rx2c-2103	"1 (6 oz) can (200 g) tomato paste"	name: want "tomato paste", got "1 (6 oz) can (200 g) tomato paste"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "6 oz", got null
+- rx2c-2104	"1/4 cup (1/2 stick) butter, melted"	status: want ready, got needs_review; name: want "butter", got "1/4 cup (1/2 stick) butter"; quantity: want "1/4", got null; unit: want "cup", got null
+- rx2c-2105	"2 cups (16 fl oz) whole milk"	status: want ready, got needs_review; name: want "whole milk", got "2 cups (16 fl oz) whole milk"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-2106	"1 1/2 cups (12 fl oz) lager"	status: want ready, got needs_review; name: want "lager", got "1 1/2 cups (12 fl oz) lager"; quantity: want "3/2", got null; unit: want "cup", got null
+- rx2c-2107	"1 cup (7 fl oz) water"	name: want "water", got "1 cup (7 fl oz) water"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2108	"1 cup (240 ml / 8 fl oz) buttermilk"	status: want ready, got needs_review; name: want "buttermilk", got "1 cup (240 ml / 8 fl oz) buttermilk"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2109	"1 cup (250 ml / 9 fl oz) buttermilk"	name: want "buttermilk", got "1 cup (250 ml / 9 fl oz) buttermilk"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2110	"1/3 cup (75 ml) canola oil"	status: want ready, got needs_review; name: want "canola oil", got "1/3 cup (75 ml) canola oil"; quantity: want "1/3", got null; unit: want "cup", got null
+- rx2c-2111	"16 oz (1 lb) whole-milk ricotta"	status: want ready, got needs_review; name: want "whole-milk ricotta", got "16 oz (1 lb) whole-milk ricotta"; quantity: want "16", got null; unit: want "oz", got null
+- rx2c-2112	"2 cups (1 pint) heavy cream"	status: want ready, got needs_review; name: want "heavy cream", got "2 cups (1 pint) heavy cream"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-2113	"4 cups (1 quart) chicken stock"	status: want ready, got needs_review; name: want "chicken stock", got "4 cups (1 quart) chicken stock"; quantity: want "4", got null; unit: want "cup", got null
+- rx2c-2114	"1 liter (4 cups) water"	status: want ready, got needs_review; name: want "water", got "1 liter (4 cups) water"; quantity: want "1", got null; unit: want "l", got null
+- rx2c-2115	"1 cup (about 240 ml) cold water"	status: want ready, got needs_review; name: want "cold water" (or water), got "1 cup (about 240 ml) cold water"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2116	"about 1 cup (300 ml) water"	name: want "water", got "about 1 cup (300 ml) water"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2117	"2 cups cooked brown rice (from 2/3 cup uncooked)"	name: want "brown rice", got "2 cups cooked brown rice (from 2/3 cup uncooked)"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-2118	"3 cups cooked quinoa (about 1 cup dry)"	name: want "quinoa", got "3 cups cooked quinoa (about 1 cup dry)"; quantity: want "3", got null; unit: want "cup", got null
+- rx2c-2119	"1/3 cup fresh orange juice (from 1 orange)"	name: want "fresh orange juice" (or orange juice), got "1/3 cup fresh orange juice (from 1 orange)"; quantity: want "1/3", got null; unit: want "cup", got null
+- rx2c-2121	"1 cup basmati rice (makes 3 cups cooked)"	name: want "basmati rice", got "1 cup basmati rice (makes 3 cups cooked)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2122	"1 lb dried chickpeas (yields about 6 cups cooked)"	name: want "dried chickpeas", got "1 lb dried chickpeas (yields about 6 cups cooked)"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-2123	"2 cups shredded Monterey Jack (8 oz)"	status: want ready, got needs_review; name: want "shredded Monterey Jack", got "2 cups shredded Monterey Jack (8 oz)"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-2124	"1 cup chopped pecans (4 oz)"	status: want ready, got needs_review; name: want "chopped pecans" (or pecans), got "1 cup chopped pecans (4 oz)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2125	"1 lb ground beef (about 2 cups cooked)"	name: want "ground beef", got "1 lb ground beef (about 2 cups cooked)"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-2128	"1 cup broth (8 oz)"	status: want ready, got needs_review; name: want "broth", got "1 cup broth (8 oz)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2129	"4 chicken breasts (about 2 lbs total)"	status: want ready, got needs_review; name: want "chicken breasts", got "4 chicken breasts (about 2 lbs total)"; quantity: want "4", got null; unit: want "each", got null
+- rx2c-2131	"1 cup cooked farro (from 1/2 cup raw)"	name: want "farro", got "1 cup cooked farro (from 1/2 cup raw)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2132	"2 m chorizo"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2133	"1 UK pint stout"	status: want needs_review, got ready
+- rx2c-2134	"2 imperial cups self-raising flour"	status: want needs_review, got ready
+- rx2c-2136	"1 Australian tablespoon honey"	status: want needs_review, got ready
+- rx2c-2137	"2 cups (metric) whole milk"	status: want needs_review, got ready
+- rx2c-2138	"1 metric cup rolled oats"	status: want needs_review, got ready
+- rx2c-2139	"3 dessertspoons caster sugar"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2140	"1 sachet fast-action yeast"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2141	"4 rashers back bacon"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2144	"1 glass dry sherry"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2145	"1 shot espresso"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2146	"3 cL gin"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2147	"1 bushel apples"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2149	"1 knob unsalted butter"	status: want ready, got needs_review; name: want "unsalted butter", got "knob unsalted butter"; unit: want "knob", got null
+- rx2c-2150	"2 handfuls rocket"	status: want ready, got needs_review; name: want "rocket", got "handfuls rocket"; unit: want "handful", got null
+- rx2c-2153	"4 oz dark or milk chocolate, chopped"	name: want null, got "4 oz dark or milk chocolate"; quantity: want "4", got null; unit: want "oz", got null; alternatives: want ["dark chocolate","milk chocolate"], got []
+- rx2c-2154	"2 cups red or green cabbage, shredded"	name: want null, got "2 cups red or green cabbage"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["red cabbage","green cabbage"], got []
+- rx2c-2155	"1/2 cup sunflower or pumpkin seeds"	name: want null, got "1/2 cup sunflower or pumpkin seeds"; quantity: want "1/2", got null; unit: want "cup", got null; alternatives: want ["sunflower seeds","pumpkin seeds"], got []
+- rx2c-2156	"1 tbsp white or black sesame seeds"	name: want null, got "1 tbsp white or black sesame seeds"; quantity: want "1", got null; unit: want "tbsp", got null; alternatives: want ["white sesame seeds","black sesame seeds"], got []
+- rx2c-2157	"1 tsp almond or vanilla extract"	name: want null, got "1 tsp almond or vanilla extract"; quantity: want "1", got null; unit: want "tsp", got null; alternatives: want ["almond extract","vanilla extract"], got []
+- rx2c-2158	"1 cup corn or vegetable oil"	name: want null, got "1 cup corn or vegetable oil"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["corn oil","vegetable oil"], got []
+- rx2c-2159	"1/2 cup oat or soy milk"	name: want null, got "1/2 cup oat or soy milk"; quantity: want "1/2", got null; unit: want "cup", got null; alternatives: want ["oat milk","soy milk"], got []
+- rx2c-2160	"1 cup Greek or regular yogurt"	name: want null, got "1 cup Greek or regular yogurt"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["Greek yogurt","regular yogurt"], got []
+- rx2c-2161	"4 pork or lamb chops"	name: want null, got "4 pork or lamb chops"; quantity: want "4", got null; unit: want "each", got null; alternatives: want ["pork chops","lamb chops"], got []
+- rx2c-2162	"1 cup jasmine or basmati rice"	name: want null, got "1 cup jasmine or basmati rice"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["jasmine rice","basmati rice"], got []
+- rx2c-2163	"1 can kidney or pinto beans"	name: want null, got "can kidney or pinto beans"; quantity: want "1", got null; unit: want "can", got null; alternatives: want ["kidney beans","pinto beans"], got []
+- rx2c-2164	"1 tbsp chili or curry powder"	name: want null, got "1 tbsp chili or curry powder"; quantity: want "1", got null; unit: want "tbsp", got null; alternatives: want ["chili powder","curry powder"], got []
+- rx2c-2165	"2 tbsp red or green curry paste"	name: want null, got "2 tbsp red or green curry paste"; quantity: want "2", got null; unit: want "tbsp", got null; alternatives: want ["red curry paste","green curry paste"], got []
+- rx2c-2166	"6 hot dog or sausage buns"	name: want null, got "6 hot dog or sausage buns"; quantity: want "6", got null; unit: want "each", got null; alternatives: want ["hot dog buns","sausage buns"], got []
+- rx2c-2167	"1 tbsp lemon or orange zest"	name: want null, got "1 tbsp lemon or orange zest"; quantity: want "1", got null; unit: want "tbsp", got null; alternatives: want ["lemon zest","orange zest"], got []
+- rx2c-2168	"1 cup grape or cranberry juice"	name: want null, got "1 cup grape or cranberry juice"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["grape juice","cranberry juice"], got []
+- rx2c-2169	"1 lb sweet or spicy Italian sausage"	name: want null, got "1 lb sweet or spicy Italian sausage"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["sweet Italian sausage","spicy Italian sausage"], got []
+- rx2c-2170	"1 tsp black or white pepper"	name: want null, got "1 tsp black or white pepper"; quantity: want "1", got null; unit: want "tsp", got null; alternatives: want ["black pepper","white pepper"], got []
+- rx2c-2171	"2 cups red or yellow lentils"	name: want null, got "2 cups red or yellow lentils"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["red lentils","yellow lentils"], got []
+- rx2c-2172	"1 cup quick or old-fashioned oats"	name: want null, got "1 cup quick or old-fashioned oats"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["quick oats","old-fashioned oats"], got []
+- rx2c-2173	"1 cup Swiss or Gruyère cheese"	name: want null, got "1 cup Swiss or Gruyère cheese"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["Swiss","Gruyère cheese"], got []
+- rx2c-2174	"1/4 cup mint or basil leaves"	name: want null, got "1/4 cup mint or basil leaves"; quantity: want "1/4", got null; unit: want "cup", got null; alternatives: want ["mint","basil leaves"], got []
+- rx2c-2175	"1/2 cup golden or regular raisins"	name: want null, got "1/2 cup golden or regular raisins"; quantity: want "1/2", got null; unit: want "cup", got null; alternatives: want ["golden raisins","regular raisins"], got []
+- rx2c-2176	"2 cups spinach or arugula"	name: want null, got "2 cups spinach or arugula"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["spinach","arugula"], got []
+- rx2c-2177	"1 cup pecans or walnuts, toasted"	name: want null, got "1 cup pecans or walnuts"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["pecans","walnuts"], got []
+- rx2c-2178	"2 tbsp butter or ghee"	name: want null, got "2 tbsp butter or ghee"; quantity: want "2", got null; unit: want "tbsp", got null; alternatives: want ["butter","ghee"], got []
+- rx2c-2179	"1/2 cup raisins or dried cranberries"	name: want null, got "1/2 cup raisins or dried cranberries"; quantity: want "1/2", got null; unit: want "cup", got null; alternatives: want ["raisins","dried cranberries"], got []
+- rx2c-2180	"1 tbsp sriracha or sambal oelek"	name: want null, got "1 tbsp sriracha or sambal oelek"; quantity: want "1", got null; unit: want "tbsp", got null; alternatives: want ["sriracha","sambal oelek"], got []
+- rx2c-2181	"2 tbsp parsley or chives, chopped"	name: want null, got "2 tbsp parsley or chives"; quantity: want "2", got null; unit: want "tbsp", got null; alternatives: want ["parsley","chives"], got []
+- rx2c-2182	"1 cup cream or half-and-half"	name: want null, got "1 cup cream or half-and-half"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["cream","half-and-half"], got []
+- rx2c-2183	"1 cup sour cream or crème fraîche"	name: want null, got "1 cup sour cream or crème fraîche"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["sour cream","crème fraîche"], got []
+- rx2c-2184	"3 tbsp brandy or cognac"	name: want null, got "3 tbsp brandy or cognac"; quantity: want "3", got null; unit: want "tbsp", got null; alternatives: want ["brandy","cognac"], got []
+- rx2c-2186	"1/2 cup honey or agave nectar"	name: want null, got "1/2 cup honey or agave nectar"; quantity: want "1/2", got null; unit: want "cup", got null; alternatives: want ["honey","agave nectar"], got []
+- rx2c-2187	"1 cup frozen peas or corn"	name: want null, got "1 cup frozen peas or corn"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["frozen peas","frozen corn"], got []
+- rx2c-2188	"1/2 cup toasted almonds or hazelnuts"	name: want null, got "1/2 cup toasted almonds or hazelnuts"; quantity: want "1/2", got null; unit: want "cup", got null; alternatives: want ["toasted almonds","toasted hazelnuts"], got []
+- rx2c-2189	"2 tbsp minced shallot or onion"	name: want null, got "2 tbsp minced shallot or onion"; quantity: want "2", got null; unit: want "tbsp", got null; alternatives: want ["minced shallot","minced onion"], got []
+- rx2c-2190	"1 lb ground lamb or beef"	name: want null, got "1 lb ground lamb or beef"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["ground lamb","ground beef"], got []
+- rx2c-2191	"8 oz sliced mushrooms or zucchini"	name: want null, got "8 oz sliced mushrooms or zucchini"; quantity: want "8", got null; unit: want "oz", got null; alternatives: want ["sliced mushrooms","sliced zucchini"], got []
+- rx2c-2192	"1/4 cup dried cherries or cranberries"	name: want null, got "1/4 cup dried cherries or cranberries"; quantity: want "1/4", got null; unit: want "cup", got null; alternatives: want ["dried cherries","dried cranberries"], got []
+- rx2c-2193	"2 cups fresh spinach or kale"	name: want null, got "2 cups fresh spinach or kale"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["fresh spinach","fresh kale"], got []
+- rx2c-2194	"1 cup grated Pecorino or Parmesan"	name: want null, got "1 cup grated Pecorino or Parmesan"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["grated Pecorino","grated Parmesan"], got []
+- rx2c-2195	"1 lb ground chicken or smoked sausage"	name: want null, got "1 lb ground chicken or smoked sausage"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["ground chicken","smoked sausage"], got []
+- rx2c-2196	"2 cups shredded chicken or pork"	name: want null, got "2 cups shredded chicken or pork"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["shredded chicken","shredded pork"], got []
+- rx2c-2197	"1 lb fresh or frozen shrimp"	name: want null, got "1 lb fresh or frozen shrimp"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["fresh shrimp","frozen shrimp"], got []
+- rx2c-2198	"2 cups canned or fresh tomatoes"	name: want null, got "2 cups canned or fresh tomatoes"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["canned tomatoes","fresh tomatoes"], got []
+- rx2c-2199	"1/2 cup salted or unsalted pistachios"	name: want null, got "1/2 cup salted or unsalted pistachios"; quantity: want "1/2", got null; unit: want "cup", got null; alternatives: want ["salted pistachios","unsalted pistachios"], got []
+- rx2c-2200	"1 cup heavy cream or light"	name: want null, got "1 cup heavy cream or light"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["heavy cream","light cream"], got []
+- rx2c-2201	"1 cup 2% milk or skim"	name: want null, got "1 cup 2% milk or skim"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["2% milk","skim milk"], got []
+- rx2c-2202	"1/2 cup salted butter or unsalted"	name: want null, got "1/2 cup salted butter or unsalted"; quantity: want "1/2", got null; unit: want "cup", got null; alternatives: want ["salted butter","unsalted butter"], got []
+- rx2c-2203	"1 cup brown rice or white"	name: want null, got "1 cup brown rice or white"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["brown rice","white rice"], got []
+- rx2c-2204	"1 can light coconut milk or regular"	name: want null, got "can light coconut milk or regular"; quantity: want "1", got null; unit: want "can", got null; alternatives: want ["light coconut milk","regular coconut milk"], got []
+- rx2c-2205	"1 cup cashews, almonds, or peanuts"	name: want null, got "1 cup cashews"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["cashews","almonds","peanuts"], got []
+- rx2c-2206	"1 cup cheddar, Colby, or pepper jack cheese"	name: want null, got "1 cup cheddar"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["cheddar","Colby","pepper jack cheese"], got []
+- rx2c-2207	"4 cups beef, chicken, or mushroom broth"	name: want null, got "4 cups beef"; quantity: want "4", got null; unit: want "cup", got null; alternatives: want ["beef broth","chicken broth","mushroom broth"], got []
+- rx2c-2208	"1/2 cup pecans, walnuts or hazelnuts"	name: want null, got "1/2 cup pecans"; quantity: want "1/2", got null; unit: want "cup", got null; alternatives: want ["pecans","walnuts","hazelnuts"], got []
+- rx2c-2209	"1 cup lemon, lime, or orange juice"	name: want null, got "1 cup lemon"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["lemon juice","lime juice","orange juice"], got []
+- rx2c-2210	"2 cups milk or cream or half-and-half"	name: want null, got "2 cups milk or cream or half-and-half"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["milk","cream","half-and-half"], got []
+- rx2c-2211	"1 cup rice/quinoa"	status: want needs_review, got ready; name: want null, got "rice/quinoa"; alternatives: want ["rice","quinoa"], got []
+- rx2c-2212	"1/2 cup chopped cilantro and/or parsley"	name: want null, got "1/2 cup chopped cilantro and/or parsley"; quantity: want "1/2", got null; unit: want "cup", got null; alternatives: want ["chopped cilantro","chopped parsley"], got []
+- rx2c-2213	"1 tsp oregano/basil"	status: want needs_review, got ready; name: want null, got "oregano/basil"; alternatives: want ["oregano","basil"], got []
+- rx2c-2214	"2 tbsp butter/oil"	status: want needs_review, got ready; name: want null, got "butter/oil"; alternatives: want ["butter","oil"], got []
+- rx2c-2215	"1 cup sugar or honey or maple syrup"	name: want null, got "1 cup sugar or honey or maple syrup"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["sugar","honey","maple syrup"], got []
+- rx2c-2216	"2 tbsp parsley, cilantro, or dill"	name: want null, got "2 tbsp parsley"; quantity: want "2", got null; unit: want "tbsp", got null; alternatives: want ["parsley","cilantro","dill"], got []
+- rx2c-2217	"1 cup stock, beef or chicken"	name: want null, got "1 cup stock"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["beef stock","chicken stock"], got []
+- rx2c-2218	"2 cups rice, jasmine or basmati"	name: want null, got "2 cups rice"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["jasmine rice","basmati rice"], got []
+- rx2c-2219	"1 cup cheese, Gruyère or Comté"	name: want null, got "1 cup cheese"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["Gruyère","Comté"], got []
+- rx2c-2220	"1/2 cup nuts, almonds or cashews"	name: want null, got "1/2 cup nuts"; quantity: want "1/2", got null; unit: want "cup", got null; alternatives: want ["almonds","cashews"], got []
+- rx2c-2221	"1 can beans, black or pinto"	name: want null, got "can beans"; quantity: want "1", got null; unit: want "can", got null; alternatives: want ["black beans","pinto beans"], got []
+- rx2c-2222	"2 cups greens, collard or mustard"	name: want null, got "2 cups greens"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["collard greens","mustard greens"], got []
+- rx2c-2223	"1 cup vinegar, apple cider or white"	name: want null, got "1 cup vinegar"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["apple cider vinegar","white vinegar"], got []
+- rx2c-2224	"1 onion, yellow or white"	name: want null, got "1 onion"; quantity: want "1", got null; unit: want "each", got null; alternatives: want ["yellow onion","white onion"], got []
+- rx2c-2225	"1 cup yogurt, plain or vanilla"	name: want null, got "1 cup yogurt"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["plain yogurt","vanilla yogurt"], got []
+- rx2c-2226	"1 lb fish, cod or halibut"	name: want null, got "1 lb fish"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["cod","halibut"], got []
+- rx2c-2227	"1 cup berries, raspberries or blackberries"	name: want null, got "1 cup berries"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["raspberries","blackberries"], got []
+- rx2c-2228	"2 cups milk, dairy or oat"	name: want null, got "2 cups milk"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["dairy milk","oat milk"], got []
+- rx2c-2229	"1 tbsp oil, olive or avocado"	name: want null, got "1 tbsp oil"; quantity: want "1", got null; unit: want "tbsp", got null; alternatives: want ["olive oil","avocado oil"], got []
+- rx2c-2230	"1 lb squash, butternut or acorn"	name: want null, got "1 lb squash"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["butternut squash","acorn squash"], got []
+- rx2c-2231	"2 cups cheese (cheddar or Swiss)"	name: want null, got "2 cups cheese"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["cheddar","Swiss"], got []
+- rx2c-2232	"1 tbsp vinegar (red wine or sherry)"	name: want null, got "1 tbsp vinegar"; quantity: want "1", got null; unit: want "tbsp", got null; alternatives: want ["red wine vinegar","sherry vinegar"], got []
+- rx2c-2233	"1 lb potatoes (russet or Yukon Gold)"	name: want null, got "1 lb potatoes"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["russet potatoes","Yukon Gold potatoes"], got []
+- rx2c-2234	"1 cup chocolate chips (semisweet or dark)"	name: want null, got "1 cup chocolate chips"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["semisweet chocolate chips","dark chocolate chips"], got []
+- rx2c-2235	"1 cup cane sugar (or coconut sugar)"	name: want null, got "1 cup cane sugar"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["cane sugar","coconut sugar"], got []
+- rx2c-2236	"2 tbsp butter (or olive oil)"	name: want null, got "2 tbsp butter"; quantity: want "2", got null; unit: want "tbsp", got null; alternatives: want ["butter","olive oil"], got []
+- rx2c-2237	"1/2 cup breadcrumbs (plain or seasoned)"	name: want null, got "1/2 cup breadcrumbs"; quantity: want "1/2", got null; unit: want "cup", got null; alternatives: want ["plain breadcrumbs","seasoned breadcrumbs"], got []
+- rx2c-2241	"1 cup marinara sauce (homemade or jarred)"	status: want ready, got needs_review; name: want "marinara sauce", got "1 cup marinara sauce"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2242	"2 cups vegetable broth, homemade or store-bought"	status: want ready, got needs_review; name: want "vegetable broth", got "2 cups vegetable broth"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-2243	"1 lb medium shrimp, fresh or frozen"	status: want ready, got needs_review; name: want "shrimp", got "1 lb medium shrimp"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-2244	"1 cup corn kernels (fresh, frozen, or canned)"	status: want ready, got needs_review; name: want "corn kernels", got "1 cup corn kernels"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2245	"1 cup pesto, homemade or jarred"	status: want ready, got needs_review; name: want "pesto", got "1 cup pesto"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2246	"1 lb pizza dough, store-bought or homemade"	status: want ready, got needs_review; name: want "pizza dough", got "1 lb pizza dough"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-2247	"2 cups mixed berries (fresh or frozen)"	status: want ready, got needs_review; name: want "mixed berries", got "2 cups mixed berries"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-2248	"4 cups spinach (fresh or frozen)"	status: want ready, got needs_review; name: want "spinach", got "4 cups spinach"; quantity: want "4", got null; unit: want "cup", got null
+- rx2c-2249	"1 cup cooked black beans (canned or homemade)"	status: want ready, got needs_review; name: want "black beans", got "1 cup cooked black beans"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2250	"2 cups chicken stock (or water)"	name: want null, got "2 cups chicken stock"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["chicken stock","water"], got []
+- rx2c-2251	"1/2 cup each raisins and walnuts"	status: want needs_review, got ready
+- rx2c-2252	"1 tsp each cumin and coriander"	status: want needs_review, got ready
+- rx2c-2256	"1 bag salt and vinegar chips"	status: want ready, got needs_review; name: want "salt and vinegar chips", got "bag salt and vinegar chips"; unit: want "bag", got null
+- rx2c-2258	"1 can cream of celery soup"	status: want ready, got needs_review; name: want "cream of celery soup", got "can cream of celery soup"; unit: want "can", got null
+- rx2c-2261	"2 rosemary sprigs, leaves stripped"	name: want "rosemary", got "rosemary sprigs"; unit: want "sprig", got "each"
+- rx2c-2262	"3 celery stalks, diced"	name: want "celery", got "celery stalks"; unit: want "stalk", got "each"
+- rx2c-2263	"2 lemongrass stalks, bruised"	name: want "lemongrass", got "lemongrass stalks"; unit: want "stalk", got "each"
+- rx2c-2264	"2 fennel bulbs, cored"	name: want "fennel", got "fennel bulbs"; unit: want "bulb", got "each"
+- rx2c-2265	"3 lettuce leaves"	name: want "lettuce", got "lettuce leaves"; unit: want "leaf", got "each"
+- rx2c-2266	"8 sage leaves"	name: want "sage", got "sage leaves"; unit: want "leaf", got "each"
+- rx2c-2267	"12 basil leaves, torn"	name: want "basil", got "basil leaves"; unit: want "leaf", got "each"
+- rx2c-2268	"4 kale leaves"	name: want "kale", got "kale leaves"; unit: want "leaf", got "each"
+- rx2c-2269	"2 tilapia fillets"	name: want "tilapia", got "tilapia fillets"; unit: want "fillet", got "each"
+- rx2c-2270	"2 fish fillets"	name: want "fish", got "fish fillets"; unit: want "fillet", got "each"
+- rx2c-2271	"6 chicken sausage links"	name: want "chicken sausage", got "chicken sausage links"; unit: want "link", got "each"
+- rx2c-2272	"4 breakfast sausage links"	name: want "breakfast sausage", got "breakfast sausage links"; unit: want "link", got "each"
+- rx2c-2273	"3 bacon slices"	name: want "bacon", got "bacon slices"; unit: want "slice", got "each"
+- rx2c-2274	"8 salami slices"	name: want "salami", got "salami slices"; unit: want "slice", got "each"
+- rx2c-2275	"4 Swiss cheese slices"	name: want "Swiss cheese", got "Swiss cheese slices"; unit: want "slice", got "each"
+- rx2c-2276	"6 orange wedges"	name: want "orange", got "orange wedges"; unit: want "wedge", got "each"
+- rx2c-2277	"3 celery ribs, sliced"	name: want "celery", got "celery ribs"; unit: want "rib", got "each"
+- rx2c-2278	"2 bok choy heads"	name: want "bok choy", got "bok choy heads"; unit: want "head", got "each"
+- rx2c-2279	"1 broccoli head, cut into florets"	name: want "broccoli", got "broccoli head"; unit: want "head", got "each"
+- rx2c-2280	"4 nori sheets"	name: want "nori", got "nori sheets"; unit: want "sheet", got "each"
+- rx2c-2281	"6 phyllo sheets"	name: want "phyllo", got "phyllo sheets"; unit: want "sheet", got "each"
+- rx2c-2282	"8 rice paper sheets"	name: want "rice paper", got "rice paper sheets"; unit: want "sheet", got "each"
+- rx2c-2283	"3 gelatin sheets"	name: want "gelatin", got "gelatin sheets"; unit: want "sheet", got "each"
+- rx2c-2284	"2 puff pastry sheets, thawed"	name: want "puff pastry", got "puff pastry sheets"; unit: want "sheet", got "each"
+- rx2c-2285	"2 vanilla pods, split"	name: want "vanilla", got "vanilla pods"; unit: want "pod", got "each"
+- rx2c-2286	"4 okra pods"	name: want "okra", got "okra pods"; unit: want "pod", got "each"
+- rx2c-2287	"6 dill sprigs"	name: want "dill", got "dill sprigs"; unit: want "sprig", got "each"
+- rx2c-2288	"1 parsley bunch"	name: want "parsley", got "parsley bunch"; unit: want "bunch", got "each"
+- rx2c-2289	"2 scallion bunches"	name: want "scallion", got "scallion bunches"; unit: want "bunch", got "each"
+- rx2c-2290	"2 smashed garlic cloves"	name: want "smashed garlic" (or garlic), got "smashed garlic cloves"; unit: want "clove", got "each"
+- rx2c-2291	"3 large garlic cloves"	name: want "garlic", got "garlic cloves"; unit: want "clove", got "each"
+- rx2c-2292	"2 fresh thyme sprigs"	name: want "fresh thyme" (or thyme), got "fresh thyme sprigs"; unit: want "sprig", got "each"
+- rx2c-2293	"a garlic clove, grated"	status: want ready, got needs_review; name: want "garlic", got "a garlic clove"; quantity: want "1", got null; unit: want "clove", got null
+- rx2c-2294	"one celery stalk"	status: want ready, got needs_review; name: want "celery", got "one celery stalk"; quantity: want "1", got null; unit: want "stalk", got null
+- rx2c-2295	"2 salmon pieces (6 oz each)"	status: want ready, got needs_review; name: want "salmon", got "2 salmon pieces (6 oz each)"; quantity: want "2", got null; unit: want "piece", got null
+- rx2c-2314	"10 cloves"	status: want ready, got needs_review; unit: want "each", got null
+- rx2c-2320	"1 head leaf lettuce"	status: want ready, got needs_review; name: want "leaf lettuce", got "head leaf lettuce"; unit: want "head", got null
+- rx2c-2323	"4 (6 oz) cups lemon yogurt"	status: want ready, got needs_review; name: want "lemon yogurt", got "4 (6 oz) cups lemon yogurt"; quantity: want "4", got null; unit: want "container", got null; packageSize: want "6 oz", got null
+- rx2c-2324	"2 cups (4 oz each) unsweetened applesauce"	status: want ready, got needs_review; name: want "unsweetened applesauce", got "2 cups (4 oz each) unsweetened applesauce"; quantity: want "2", got null; unit: want "container", got null; packageSize: want "4 oz", got null
+- rx2c-2325	"6 4-oz cups chocolate pudding"	status: want ready, got needs_review; name: want "chocolate pudding", got "6 4-oz cups chocolate pudding"; quantity: want "6", got null; unit: want "container", got null; packageSize: want "4 oz", got null
+- rx2c-2326	"8 oz cup sour cream"	name: want "sour cream", got "cup sour cream"; quantity: want "1", got "8"; unit: want "container", got "oz"; packageSize: want "8 oz", got null
+- rx2c-2327	"1 (5.3-ounce) cup Greek yogurt"	status: want ready, got needs_review; name: want "Greek yogurt", got "1 (5.3-ounce) cup Greek yogurt"; quantity: want "1", got null; unit: want "container", got null; packageSize: want "5.3 oz", got null
+- rx2c-2328	"1 cup (8 oz) plain yogurt"	status: want ready, got needs_review; name: want "plain yogurt", got "1 cup (8 oz) plain yogurt"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2329	"2 cups (16 oz) small curd cottage cheese"	status: want ready, got needs_review; name: want "small curd cottage cheese", got "2 cups (16 oz) small curd cottage cheese"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-2330	"3 cups (12 oz) shredded mozzarella"	status: want ready, got needs_review; name: want "shredded mozzarella", got "3 cups (12 oz) shredded mozzarella"; quantity: want "3", got null; unit: want "cup", got null
+- rx2c-2331	"1 1/2 cups (6 oz) frozen blueberries"	status: want ready, got needs_review; name: want "frozen blueberries", got "1 1/2 cups (6 oz) frozen blueberries"; quantity: want "3/2", got null; unit: want "cup", got null
+- rx2c-2332	"2 (8 oz) cups sour cream"	status: want ready, got needs_review; name: want "sour cream", got "2 (8 oz) cups sour cream"; quantity: want "2", got null; unit: want "container", got null; packageSize: want "8 oz", got null
+- rx2c-2333	"4 cups (6 ounces each) vanilla yogurt"	status: want ready, got needs_review; name: want "vanilla yogurt", got "4 cups (6 ounces each) vanilla yogurt"; quantity: want "4", got null; unit: want "container", got null; packageSize: want "6 oz", got null
+- rx2c-2334	"2 6-ounce cups key lime yogurt"	status: want ready, got needs_review; name: want "key lime yogurt", got "2 6-ounce cups key lime yogurt"; quantity: want "2", got null; unit: want "container", got null; packageSize: want "6 oz", got null
+- rx2c-2335	"12 oz bag frozen broccoli florets"	name: want "frozen broccoli florets", got "bag frozen broccoli florets"; quantity: want "1", got "12"; unit: want "bag", got "oz"; packageSize: want "12 oz", got null
+- rx2c-2336	"16-ounce jar salsa verde"	status: want ready, got needs_review; name: want "salsa verde", got "16-ounce jar salsa verde"; quantity: want "1", got null; unit: want "jar", got null; packageSize: want "16 oz", got null
+- rx2c-2337	"10 oz box frozen chopped spinach"	name: want "frozen chopped spinach", got "box frozen chopped spinach"; quantity: want "1", got "10"; unit: want "box", got "oz"; packageSize: want "10 oz", got null
+- rx2c-2338	"1 lb box thin spaghetti"	name: want "thin spaghetti", got "box thin spaghetti"; unit: want "box", got "lb"; packageSize: want "1 lb", got null
+- rx2c-2339	"32 oz carton vegetable broth"	name: want "vegetable broth", got "carton vegetable broth"; quantity: want "1", got "32"; unit: want "carton", got "oz"; packageSize: want "32 oz", got null
+- rx2c-2340	"8 oz tub whipped topping"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2341	"250 g block halloumi"	name: want "halloumi", got "block halloumi"; quantity: want "1", got "250"; unit: want "block", got "g"; packageSize: want "250 g", got null
+- rx2c-2342	"1 kg bag basmati rice"	name: want "basmati rice", got "bag basmati rice"; unit: want "bag", got "kg"; packageSize: want "1 kg", got null
+- rx2c-2343	"750 ml bottle red wine"	name: want "red wine", got "bottle red wine"; quantity: want "1", got "750"; unit: want "bottle", got "ml"; packageSize: want "750 ml", got null
+- rx2c-2344	"1 lb loaf French bread"	name: want "French bread", got "loaf French bread"; unit: want "loaf", got "lb"; packageSize: want "1 lb", got null
+- rx2c-2345	"8 oz ball fresh mozzarella"	name: want "fresh mozzarella", got "ball fresh mozzarella"; quantity: want "1", got "8"; unit: want "ball", got "oz"; packageSize: want "8 oz", got null
+- rx2c-2346	"1-oz envelope ranch seasoning mix"	status: want ready, got needs_review; name: want "ranch seasoning mix", got "1-oz envelope ranch seasoning mix"; quantity: want "1", got null; unit: want "envelope", got null; packageSize: want "1 oz", got null
+- rx2c-2347	"4.5 oz tube tomato paste"	name: want "tomato paste", got "tube tomato paste"; quantity: want "1", got "4.5"; unit: want "tube", got "oz"; packageSize: want "4.5 oz", got null
+- rx2c-2348	"14 oz cans coconut milk"	status: want needs_review, got ready
+- rx2c-2355	"3 (10 oz) bags baby spinach"	status: want ready, got needs_review; name: want "baby spinach", got "3 (10 oz) bags baby spinach"; quantity: want "3", got null; unit: want "bag", got null; packageSize: want "10 oz", got null
+- rx2c-2356	"2 (1 lb) loaves sourdough"	status: want ready, got needs_review; name: want "sourdough", got "2 (1 lb) loaves sourdough"; quantity: want "2", got null; unit: want "loaf", got null; packageSize: want "1 lb", got null
+- rx2c-2357	"1 (750 ml) bottle dry white wine"	status: want ready, got needs_review; name: want "dry white wine", got "1 (750 ml) bottle dry white wine"; quantity: want "1", got null; unit: want "bottle", got null; packageSize: want "750 ml", got null
+- rx2c-2358	"2 (16-ounce) boxes ziti"	status: want ready, got needs_review; name: want "ziti", got "2 (16-ounce) boxes ziti"; quantity: want "2", got null; unit: want "box", got null; packageSize: want "16 oz", got null
+- rx2c-2359	"1 (1.25 oz) packet taco seasoning"	status: want ready, got needs_review; name: want "taco seasoning", got "1 (1.25 oz) packet taco seasoning"; quantity: want "1", got null; unit: want "packet", got null; packageSize: want "5/4 oz", got null
+- rx2c-2360	"4 (8 oz) jars pesto"	status: want ready, got needs_review; name: want "pesto", got "4 (8 oz) jars pesto"; quantity: want "4", got null; unit: want "jar", got null; packageSize: want "8 oz", got null
+- rx2c-2361	"1 (5 lb) bag bread flour"	status: want ready, got needs_review; name: want "bread flour", got "1 (5 lb) bag bread flour"; quantity: want "1", got null; unit: want "bag", got null; packageSize: want "5 lb", got null
+- rx2c-2362	"1 (2 lb) block processed cheese"	status: want ready, got needs_review; name: want "processed cheese", got "1 (2 lb) block processed cheese"; quantity: want "1", got null; unit: want "block", got null; packageSize: want "2 lb", got null
+- rx2c-2363	"2 (11 oz) tubes refrigerated breadstick dough"	status: want ready, got needs_review; name: want "refrigerated breadstick dough", got "2 (11 oz) tubes refrigerated breadstick dough"; quantity: want "2", got null; unit: want "tube", got null; packageSize: want "11 oz", got null
+- rx2c-2364	"1 (32-ounce) container plain yogurt"	status: want ready, got needs_review; name: want "plain yogurt", got "1 (32-ounce) container plain yogurt"; quantity: want "1", got null; unit: want "container", got null; packageSize: want "32 oz", got null
+- rx2c-2365	"1 2-pound bag carrots"	status: want ready, got needs_review; name: want "carrots", got "1 2-pound bag carrots"; quantity: want "1", got null; unit: want "bag", got null; packageSize: want "2 lb", got null
+- rx2c-2366	"2 1-lb bags frozen shrimp"	status: want ready, got needs_review; name: want "frozen shrimp", got "2 1-lb bags frozen shrimp"; quantity: want "2", got null; unit: want "bag", got null; packageSize: want "1 lb", got null
+- rx2c-2367	"1 (14 oz) block extra-firm tofu"	status: want ready, got needs_review; name: want "extra-firm tofu", got "1 (14 oz) block extra-firm tofu"; quantity: want "1", got null; unit: want "block", got null; packageSize: want "14 oz", got null
+- rx2c-2368	"2 (7 oz) blocks firm tofu"	status: want ready, got needs_review; name: want "firm tofu", got "2 (7 oz) blocks firm tofu"; quantity: want "2", got null; unit: want "block", got null; packageSize: want "7 oz", got null
+- rx2c-2369	"1 small can tomato sauce"	name: want "tomato sauce", got "can tomato sauce"; unit: want "can", got "each"
+- rx2c-2370	"1 large can crushed tomatoes"	name: want "crushed tomatoes", got "can crushed tomatoes"; unit: want "can", got "each"
+- rx2c-2371	"2 (8 oz) ribeye steaks"	status: want ready, got needs_review; name: want "ribeye steaks", got "2 (8 oz) ribeye steaks"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-2372	"4 (6 ounce) boneless chicken breasts"	status: want ready, got needs_review; name: want "boneless chicken breasts", got "4 (6 ounce) boneless chicken breasts"; quantity: want "4", got null; unit: want "each", got null
+- rx2c-2373	"6 (4-oz) tilapia fillets"	status: want ready, got needs_review; name: want "tilapia", got "6 (4-oz) tilapia fillets"; quantity: want "6", got null; unit: want "fillet", got null
+- rx2c-2374	"2 (10-ounce) bone-in pork chops"	status: want ready, got needs_review; name: want "bone-in pork chops", got "2 (10-ounce) bone-in pork chops"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-2375	"1 (3 lb) whole chicken"	status: want ready, got needs_review; name: want "whole chicken", got "1 (3 lb) whole chicken"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-2376	"a 4-pound pork shoulder"	status: want ready, got needs_review; name: want "pork shoulder", got "a 4-pound pork shoulder"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-2377	"1 (2-lb) flank steak"	status: want ready, got needs_review; name: want "flank steak", got "1 (2-lb) flank steak"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-2378	"2 (3-pound) chickens"	status: want ready, got needs_review; name: want "chickens", got "2 (3-pound) chickens"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-2379	"4 salmon fillets (5 oz each)"	status: want ready, got needs_review; name: want "salmon", got "4 salmon fillets (5 oz each)"; quantity: want "4", got null; unit: want "fillet", got null
+- rx2c-2380	"6 lamb chops (about 4 oz each)"	status: want ready, got needs_review; name: want "lamb chops", got "6 lamb chops (about 4 oz each)"; quantity: want "6", got null; unit: want "each", got null
+- rx2c-2381	"3 (1 lb) eggplants"	status: want ready, got needs_review; name: want "eggplants", got "3 (1 lb) eggplants"; quantity: want "3", got null; unit: want "each", got null
+- rx2c-2382	"1 (1 lb) pork tenderloin"	status: want ready, got needs_review; name: want "pork tenderloin", got "1 (1 lb) pork tenderloin"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-2383	"1 4-lb chicken"	status: want ready, got needs_review; name: want "chicken", got "1 4-lb chicken"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-2384	"4 6-oz salmon fillets"	status: want ready, got needs_review; name: want "salmon", got "4 6-oz salmon fillets"; quantity: want "4", got null; unit: want "fillet", got null
+- rx2c-2385	"2 8-ounce sirloin steaks"	status: want ready, got needs_review; name: want "sirloin steaks", got "2 8-ounce sirloin steaks"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-2386	"4 (5-oz) halibut fillets"	status: want ready, got needs_review; name: want "halibut", got "4 (5-oz) halibut fillets"; quantity: want "4", got null; unit: want "fillet", got null
+- rx2c-2387	"2 cod fillets (6 oz each)"	status: want ready, got needs_review; name: want "cod", got "2 cod fillets (6 oz each)"; quantity: want "2", got null; unit: want "fillet", got null
+- rx2c-2391	"2 jumbo eggs"	name: want "eggs", got "jumbo eggs"
+- rx2c-2392	"1 big yellow onion"	name: want "yellow onion", got "big yellow onion"
+- rx2c-2394	"1 jar mild salsa"	status: want ready, got needs_review; name: want "mild salsa", got "jar mild salsa"; unit: want "jar", got null
+- rx2c-2395	"1 jar medium chunky salsa"	status: want ready, got needs_review; name: want "medium chunky salsa", got "jar medium chunky salsa"; unit: want "jar", got null
+- rx2c-2396	"1 box jumbo pasta shells"	status: want ready, got needs_review; name: want "jumbo pasta shells", got "box jumbo pasta shells"; unit: want "box", got null
+- rx2c-2399	"1 can petite diced tomatoes"	status: want ready, got needs_review; name: want "petite diced tomatoes", got "can petite diced tomatoes"; unit: want "can", got null
+- rx2c-2405	"1 lg. sweet onion"	name: want "sweet onion", got "lg. sweet onion"
+- rx2c-2406	"2 med zucchini"	name: want "zucchini", got "med zucchini"
+- rx2c-2407	"3 sm. shallots"	name: want "shallots", got "sm. shallots"
+- rx2c-2408	"1 large bunch cilantro"	name: want "cilantro", got "bunch cilantro"; unit: want "bunch", got "each"
+- rx2c-2409	"2 medium heads broccoli"	name: want "broccoli", got "heads broccoli"; unit: want "head", got "each"
+- rx2c-2411	"1 small pinch saffron"	name: want "saffron", got "pinch saffron"; unit: want "pinch", got "each"
+- rx2c-2412	"Large pinch of flaky salt"	status: want ready, got needs_review; name: want "flaky salt", got "pinch of flaky salt"; quantity: want "1", got null; unit: want "pinch", got null
+- rx2c-2413	"Splash of red wine vinegar"	status: want ready, got needs_review; name: want "red wine vinegar", got "Splash of red wine vinegar"; quantity: want "1", got null; unit: want "splash", got null
+- rx2c-2414	"Handful of fresh basil"	status: want ready, got needs_review; name: want "fresh basil" (or basil), got "Handful of fresh basil"; quantity: want "1", got null; unit: want "handful", got null
+- rx2c-2443	"250 calories per serving"	status: want unsupported, got ready; name: want null, got "calories per serving"; quantity: want null, got "250"; unit: want null, got "each"
+- rx2c-2450	"Sugar: 3/4 cup"	status: want ready, got needs_review; name: want "Sugar", got "Sugar: 3/4 cup"; quantity: want "3/4", got null; unit: want "cup", got null
+- rx2c-2459	"4.5 stars"	status: want unsupported, got ready; name: want null, got "stars"; quantity: want null, got "4.5"; unit: want null, got "each"
+- rx2c-2527	"1 half sheet pan"	status: want unsupported, got ready; name: want null, got "half sheet pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2528	"1 sheet parchment paper"	status: want unsupported, got needs_review; name: want null, got "sheet parchment paper"; quantity: want null, got "1"
+- rx2c-2530	"8 wooden skewers, soaked"	status: want unsupported, got ready; name: want null, got "wooden skewers"; quantity: want null, got "8"; unit: want null, got "each"
+- rx2c-2531	"1 fine-mesh strainer"	status: want unsupported, got ready; name: want null, got "fine-mesh strainer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2532	"1 muffin tin"	status: want unsupported, got ready; name: want null, got "muffin tin"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2533	"1 loaf tin"	status: want unsupported, got needs_review; name: want null, got "loaf tin"; quantity: want null, got "1"
+- rx2c-2535	"2 cooling racks"	status: want unsupported, got ready; name: want null, got "cooling racks"; quantity: want null, got "2"; unit: want null, got "each"
+- rx2c-2537	"1 pie dish"	status: want unsupported, got ready; name: want null, got "pie dish"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2538	"1 roasting tin"	status: want unsupported, got ready; name: want null, got "roasting tin"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2610	"1 scoop vanilla protein powder"	status: want ready, got needs_review; name: want "vanilla protein powder", got "scoop vanilla protein powder"; unit: want "scoop", got null
+- rx2c-2616	"1 can energy drink"	status: want ready, got needs_review; name: want "energy drink", got "can energy drink"; unit: want "can", got null
+- rx2c-2623	"1 (9-inch) graham cracker crust"	status: want ready, got needs_review; name: want "graham cracker crust", got "1 (9-inch) graham cracker crust"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-2626	"1 tub vanilla frosting"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2627	"1 can cream cheese frosting"	status: want ready, got needs_review; name: want "cream cheese frosting", got "can cream cheese frosting"; unit: want "can", got null
+- rx2c-2629	"1 sheet frozen puff pastry"	status: want ready, got needs_review; name: want "frozen puff pastry", got "sheet frozen puff pastry"; unit: want "sheet", got null
+- rx2c-2630	"1 box fudge brownie mix"	status: want ready, got needs_review; name: want "fudge brownie mix", got "box fudge brownie mix"; unit: want "box", got null
+- rx2c-2634	"1 bag frozen potstickers"	status: want ready, got needs_review; name: want "frozen potstickers", got "bag frozen potstickers"; unit: want "bag", got null
+- rx2c-2643	"1 jar Thai red curry paste"	status: want ready, got needs_review; name: want "Thai red curry paste", got "jar Thai red curry paste"; unit: want "jar", got null
+- rx2c-2645	"1 bottle cooking spray"	status: want ready, got needs_review; name: want "cooking spray", got "bottle cooking spray"; unit: want "bottle", got null
+- rx2c-2646	"2 cups cooked egg noodles"	name: want "egg noodles", got "cooked egg noodles"
+- rx2c-2647	"1 pair of tongs"	status: want unsupported, got ready; name: want null, got "pair of tongs"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2648	"1 pastry cutter"	status: want unsupported, got ready; name: want null, got "pastry cutter"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2649	"2 large mixing bowls"	status: want unsupported, got ready; name: want null, got "mixing bowls"; quantity: want null, got "2"; unit: want null, got "each"
+- rx2c-2650	"1 nonstick skillet"	status: want unsupported, got ready; name: want null, got "nonstick skillet"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2651	"4 small glass jars"	status: want unsupported, got ready; name: want null, got "glass jars"; quantity: want null, got "4"; unit: want null, got "each"
+- rx2c-2653	"6 stick pretzels"	status: want ready, got needs_review; unit: want "each", got null
+- rx2c-2659	"2 slice cheesecake"	status: want ready, got needs_review; name: want "cheesecake", got "slice cheesecake"; unit: want "slice", got null
+- rx2c-2661	"4 link sausages"	status: want ready, got needs_review; unit: want "each", got null
+- rx2c-2662	"2 ear corn"	status: want ready, got needs_review; name: want "corn", got "ear corn"; unit: want "ear", got null
+- rx2c-2667	"2 sprinklings of cinnamon"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2668	"1 ramekin of sugar"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2669	"1 wedge brie"	name: want "brie", got "wedge brie"; unit: want "wedge", got "each"
+- rx2c-2670	"1 nub butter"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2672	"1 cup whole milk or skim"	name: want null, got "1 cup whole milk or skim"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["whole milk","skim milk"], got []
+- rx2c-2675	"1 jar salt and pepper seasoning"	status: want ready, got needs_review; name: want "salt and pepper seasoning", got "jar salt and pepper seasoning"; unit: want "jar", got null
+- rx2c-2678	"1/4 cup lemon juice (from about 2 lemons)"	name: want "lemon juice", got "1/4 cup lemon juice (from about 2 lemons)"; quantity: want "1/4", got null; unit: want "cup", got null
+- rx2c-2679	"1 tbsp minced garlic (3 cloves)"	status: want ready, got needs_review; name: want "minced garlic" (or garlic), got "1 tbsp minced garlic (3 cloves)"; quantity: want "1", got null; unit: want "tbsp", got null
+- rx2c-2680	"2 tsp lemon zest (from 1 lemon)"	name: want "lemon zest", got "2 tsp lemon zest (from 1 lemon)"; quantity: want "2", got null; unit: want "tsp", got null
+- rx2c-2681	"1 cup flour (about 130 g)"	status: want ready, got needs_review; name: want "flour", got "1 cup flour (about 130 g)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2699	"4 cups bread flour, plus more as needed"	status: want ready, got needs_review; name: want "bread flour", got "4 cups bread flour"; quantity: want "4", got null; unit: want "cup", got null
+- rx2c-2702	"1 1/2 cups cooked brown rice"	name: want "brown rice", got "cooked brown rice"
+- rx2c-2703	"1 (15-ounce) can great northern beans, drained"	status: want ready, got needs_review; name: want "great northern beans", got "1 (15-ounce) can great northern beans"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "15 oz", got null
+- rx2c-2708	"8 slices center-cut bacon"	status: want ready, got needs_review; name: want "center-cut bacon", got "slices center-cut bacon"; unit: want "slice", got null
+- rx2c-2713	"1 bunch Swiss chard, chopped"	status: want ready, got needs_review; name: want "Swiss chard", got "bunch Swiss chard"; unit: want "bunch", got null
+- rx2c-2720	"1/3 cup finely grated Parmigiano-Reggiano"	status: want ready, got needs_review; name: want "finely grated Parmigiano-Reggiano" (or grated Parmigiano-Reggiano | Parmigiano-Reggiano), got "1/3 cup finely grated Parmigiano-Reggiano"; quantity: want "1/3", got null; unit: want "cup", got null
+- rx2c-2732	"1 (19-ounce) can chickpeas"	status: want ready, got needs_review; name: want "chickpeas", got "1 (19-ounce) can chickpeas"; quantity: want "1", got null; unit: want "can", got null; packageSize: want "19 oz", got null
+- rx2c-2736	"1/3 cup roughly chopped hazelnuts"	status: want ready, got needs_review; name: want "roughly chopped hazelnuts" (or chopped hazelnuts | hazelnuts), got "1/3 cup roughly chopped hazelnuts"; quantity: want "1/3", got null; unit: want "cup", got null
+- rx2c-2744	"3 sprigs fresh oregano"	status: want ready, got needs_review; name: want "fresh oregano" (or oregano), got "sprigs fresh oregano"; unit: want "sprig", got null
+- rx2c-2767	"3 cups cooked shredded pork"	name: want "shredded pork" (or pork), got "cooked shredded pork"
+- rx2c-2783	"1 quart fresh strawberries, hulled"	status: want ready, got needs_review; name: want "fresh strawberries" (or strawberries), got "quart fresh strawberries"; unit: want "quart", got null
+- rx2c-2791	"4 pieces stem ginger, finely chopped"	status: want ready, got needs_review; name: want "stem ginger", got "pieces stem ginger"; unit: want "piece", got null
+- rx2c-2792	"1 head napa cabbage"	status: want ready, got needs_review; name: want "napa cabbage", got "head napa cabbage"; unit: want "head", got null
+- rx2c-2793	"3 ears corn, kernels cut off"	status: want ready, got needs_review; name: want "corn", got "ears corn"; unit: want "ear", got null
+- rx2c-2794	"2 stalks celery, thinly sliced"	status: want ready, got needs_review; name: want "celery", got "stalks celery"; unit: want "stalk", got null
+- rx2c-2795	"Shaved Parmesan, for serving"	status: want ready, got needs_review
+- rx2c-2796	"Chopped peanuts, for garnish"	status: want ready, got needs_review
+- rx2c-2798	"Melted butter, for brushing"	status: want ready, got needs_review
+- rx2c-2799	"Sesame oil, to drizzle"	status: want ready, got needs_review
+- rx2c-2800	"Ground cinnamon, for dusting"	status: want ready, got needs_review
+- rx2c-2803	"1/2 cup warm milk (about 110°F)"	status: want ready, got needs_review; name: want "warm milk" (or milk), got "1/2 cup warm milk (about 110°F)"; quantity: want "1/2", got null; unit: want "cup", got null
+- rx2c-2807	"2 cups shredded carrots (about 3 carrots)"	status: want ready, got needs_review; name: want "shredded carrots" (or carrots), got "2 cups shredded carrots (about 3 carrots)"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-2817	"2 tubes (8 oz each) crescent roll dough"	status: want ready, got needs_review; name: want "crescent roll dough", got "2 tubes (8 oz each) crescent roll dough"; quantity: want "2", got null; unit: want "tube", got null; packageSize: want "8 oz", got null
+- rx2c-2818	"1 bag (10 oz) frozen raspberries"	status: want ready, got needs_review; name: want "frozen raspberries", got "bag (10 oz) frozen raspberries"; quantity: want "1", got null; unit: want "bag", got null; packageSize: want "10 oz", got null
+- rx2c-2819	"1 pastry blender"	status: want unsupported, got ready; name: want null, got "pastry blender"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2820	"1 flour sack towel"	status: want unsupported, got ready; name: want null, got "flour sack towel"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2821	"1 madeleine pan"	status: want unsupported, got ready; name: want null, got "madeleine pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2822	"1 food mill"	status: want unsupported, got ready; name: want null, got "food mill"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2823	"1 lemon squeezer"	status: want unsupported, got ready; name: want null, got "lemon squeezer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2824	"1 apple corer"	status: want unsupported, got ready; name: want null, got "apple corer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2825	"1 melon baller"	status: want unsupported, got ready; name: want null, got "melon baller"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2826	"1 slotted spoon"	status: want unsupported, got ready; name: want null, got "slotted spoon"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2827	"1 fish spatula"	status: want unsupported, got ready; name: want null, got "fish spatula"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2828	"1 tortilla press"	status: want unsupported, got ready; name: want null, got "tortilla press"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2829	"1 rice cooker"	status: want unsupported, got ready; name: want null, got "rice cooker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2830	"1 herb stripper"	status: want unsupported, got ready; name: want null, got "herb stripper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2831	"1 citrus press"	status: want unsupported, got ready; name: want null, got "citrus press"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2832	"2 pie plates"	status: want unsupported, got ready; name: want null, got "pie plates"; quantity: want null, got "2"; unit: want null, got "each"
+- rx2c-2833	"1 enamel roasting pan"	status: want unsupported, got ready; name: want null, got "enamel roasting pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2834	"1 stovetop smoker"	status: want unsupported, got ready; name: want null, got "stovetop smoker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2835	"1 pair kitchen shears"	status: want unsupported, got ready; name: want null, got "pair kitchen shears"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2836	"1 large cutting board"	status: want unsupported, got ready; name: want null, got "cutting board"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2839	"1 sheet of baking parchment"	status: want unsupported, got needs_review; name: want null, got "sheet of baking parchment"; quantity: want null, got "1"
+- rx2c-2840	"2 lengths of butcher's twine"	status: want unsupported, got ready; name: want null, got "lengths of butcher's twine"; quantity: want null, got "2"; unit: want null, got "each"
+- rx2c-2841	"1 small offset spatula"	status: want unsupported, got ready; name: want null, got "offset spatula"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2842	"1 spider strainer"	status: want unsupported, got ready; name: want null, got "spider strainer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2843	"4 jam jars with lids"	status: want unsupported, got ready; name: want null, got "jam jars with lids"; quantity: want null, got "4"; unit: want null, got "each"
+- rx2c-2844	"1 deep-fat thermometer"	status: want unsupported, got ready; name: want null, got "deep-fat thermometer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2845	"1 trivet"	status: want unsupported, got ready; name: want null, got "trivet"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2848	"1 bag kettle corn"	status: want ready, got needs_review; name: want "kettle corn", got "bag kettle corn"; unit: want "bag", got null
+- rx2c-2849	"1 jar freezer jam"	status: want ready, got needs_review; name: want "freezer jam", got "jar freezer jam"; unit: want "jar", got null
+- rx2c-2851	"1 box ice cream cones"	status: want ready, got needs_review; name: want "ice cream cones", got "box ice cream cones"; unit: want "box", got null
+- rx2c-2852	"1 bag pretzel rods"	status: want ready, got needs_review; name: want "pretzel rods", got "bag pretzel rods"; unit: want "bag", got null
+- rx2c-2855	"1 bag cotton candy"	status: want ready, got needs_review; name: want "cotton candy", got "bag cotton candy"; unit: want "bag", got null
+- rx2c-2856	"1 ladleful hot stock"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2857	"1 jugful cold water"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2858	"1 thimbleful gin"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2859	"2 tumblerfuls water"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2860	"1 coffee mug oats"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2861	"3 metric tablespoons oil"	status: want needs_review, got ready
+- rx2c-2862	"2 US tablespoons honey (UK)"	status: want needs_review, got ready
+- rx2c-2863	"1 large spoon of yogurt"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2864	"1 cereal bowl oats"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2865	"1 mugful milk"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2866	"1 quarter-pint cream"	name: want "cream", got "quarter-pint cream"; quantity: want "1/4", got "1"; unit: want "pint", got "each"
+- rx2c-2872	"1 log goat cheese"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2873	"1 wheel Camembert"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2876	"1 jar bouillon base"	status: want ready, got needs_review; name: want "bouillon base", got "jar bouillon base"; unit: want "jar", got null
+- rx2c-2877	"1/2 cup orange juice (from 2 navel oranges)"	name: want "orange juice", got "1/2 cup orange juice (from 2 navel oranges)"; quantity: want "1/2", got null; unit: want "cup", got null
+- rx2c-2878	"1 tbsp grated lemon zest (1 large lemon)"	name: want "grated lemon zest" (or lemon zest), got "1 tbsp grated lemon zest (1 large lemon)"; quantity: want "1", got null; unit: want "tbsp", got null
+- rx2c-2879	"1/4 cup lime juice (about 3 limes)"	name: want "lime juice", got "1/4 cup lime juice (about 3 limes)"; quantity: want "1/4", got null; unit: want "cup", got null
+- rx2c-2880	"2 tbsp grapefruit juice (1/2 grapefruit)"	name: want "grapefruit juice", got "2 tbsp grapefruit juice (1/2 grapefruit)"; quantity: want "2", got null; unit: want "tbsp", got null
+- rx2c-2881	"1 cup pomegranate seeds (from 1 pomegranate)"	name: want "pomegranate seeds", got "1 cup pomegranate seeds (from 1 pomegranate)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2882	"1 tsp orange peel (1 orange)"	name: want "orange peel", got "1 tsp orange peel (1 orange)"; quantity: want "1", got null; unit: want "tsp", got null
+- rx2c-2883	"1/3 cup passion fruit pulp (from 4 passion fruit)"	name: want "passion fruit pulp", got "1/3 cup passion fruit pulp (from 4 passion fruit)"; quantity: want "1/3", got null; unit: want "cup", got null
+- rx2c-2884	"2 tbsp lemon juice (1/2 lemon)"	name: want "lemon juice", got "2 tbsp lemon juice (1/2 lemon)"; quantity: want "2", got null; unit: want "tbsp", got null
+- rx2c-2886	"2 cups fresh tomato juice (from 3 lb tomatoes)"	name: want "fresh tomato juice" (or tomato juice), got "2 cups fresh tomato juice (from 3 lb tomatoes)"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-2887	"1/2 cup lemon juice (4-5 lemons)"	name: want "lemon juice", got "1/2 cup lemon juice (4-5 lemons)"; quantity: want "1/2", got null; unit: want "cup", got null
+- rx2c-2888	"3 tbsp ginger juice (from a 3-inch piece)"	name: want "ginger juice", got "3 tbsp ginger juice (from a 3-inch piece)"; quantity: want "3", got null; unit: want "tbsp", got null
+- rx2c-2889	"2 tsp lime zest (2 limes), plus wedges to serve"	name: want "lime zest", got "2 tsp lime zest (2 limes)"; quantity: want "2", got null; unit: want "tsp", got null
+- rx2c-2890	"2 cups sliced mushrooms (8 oz)"	status: want ready, got needs_review; name: want "sliced mushrooms" (or mushrooms), got "2 cups sliced mushrooms (8 oz)"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-2891	"1 cup diced red bell pepper (1 large)"	status: want ready, got needs_review; name: want "diced red bell pepper" (or red bell pepper), got "1 cup diced red bell pepper (1 large)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2892	"3 cups shredded cabbage (1/2 small head)"	status: want ready, got needs_review; name: want "shredded cabbage" (or cabbage), got "3 cups shredded cabbage (1/2 small head)"; quantity: want "3", got null; unit: want "cup", got null
+- rx2c-2893	"2 cups mashed sweet potato (2 medium)"	status: want ready, got needs_review; name: want "mashed sweet potato" (or sweet potato), got "2 cups mashed sweet potato (2 medium)"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-2894	"1 cup sliced strawberries (6 oz)"	status: want ready, got needs_review; name: want "sliced strawberries" (or strawberries), got "1 cup sliced strawberries (6 oz)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2895	"1 1/2 cups chopped celery (3 ribs)"	status: want ready, got needs_review; name: want "chopped celery" (or celery), got "1 1/2 cups chopped celery (3 ribs)"; quantity: want "3/2", got null; unit: want "cup", got null
+- rx2c-2896	"1/4 cup minced shallot (1 large)"	status: want ready, got needs_review; name: want "minced shallot" (or shallot), got "1/4 cup minced shallot (1 large)"; quantity: want "1/4", got null; unit: want "cup", got null
+- rx2c-2897	"2 cups cubed butternut squash (from 1 small squash)"	status: want ready, got needs_review; name: want "cubed butternut squash" (or butternut squash), got "2 cups cubed butternut squash (from 1 small squash)"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-2898	"3 cups chopped broccoli (1 large head)"	status: want ready, got needs_review; name: want "chopped broccoli" (or broccoli), got "3 cups chopped broccoli (1 large head)"; quantity: want "3", got null; unit: want "cup", got null
+- rx2c-2899	"2 medium zucchini (about 1 lb)"	status: want ready, got needs_review; name: want "zucchini", got "2 medium zucchini (about 1 lb)"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-2900	"1 cup diced pineapple (about 1/4 pineapple)"	status: want ready, got needs_review; name: want "diced pineapple" (or pineapple), got "1 cup diced pineapple (about 1/4 pineapple)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2902	"1 cup chopped cilantro (1 bunch)"	status: want ready, got needs_review; name: want "chopped cilantro" (or cilantro), got "1 cup chopped cilantro (1 bunch)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2903	"2 cups cooked chickpeas (3/4 cup dried)"	name: want "chickpeas", got "2 cups cooked chickpeas (3/4 cup dried)"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-2904	"1 cup rehydrated porcini (1 oz dried)"	name: want "rehydrated porcini" (or porcini), got "1 cup rehydrated porcini (1 oz dried)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2905	"3 cups cooked farro (1 cup uncooked)"	name: want "farro", got "3 cups cooked farro (1 cup uncooked)"; quantity: want "3", got null; unit: want "cup", got null
+- rx2c-2906	"1/2 cup soaked cashews (1/3 cup raw)"	name: want "soaked cashews" (or cashews), got "1/2 cup soaked cashews (1/3 cup raw)"; quantity: want "1/2", got null; unit: want "cup", got null
+- rx2c-2907	"2 cups cooked lentils (from 3/4 cup dry)"	name: want "lentils", got "2 cups cooked lentils (from 3/4 cup dry)"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-2909	"1 cup cooked quinoa (about 1/3 cup dry)"	name: want "quinoa", got "1 cup cooked quinoa (about 1/3 cup dry)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-2910	"4 chicken thighs (about 1 1/2 lb, skin on)"	status: want ready, got needs_review; name: want "chicken thighs", got "4 chicken thighs (about 1 1/2 lb, skin on)"; quantity: want "4", got null; unit: want "each", got null
+- rx2c-2911	"2 cups chopped kale (1 small bunch, stems removed)"	status: want ready, got needs_review; name: want "chopped kale" (or kale), got "2 cups chopped kale (1 small bunch, stems removed)"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-2912	"1 lb potatoes (about 3 large, Yukon Gold preferred)"	status: want ready, got needs_review; name: want "potatoes", got "1 lb potatoes (about 3 large, Yukon Gold preferred)"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-2913	"3 cups flour (about 13 1/2 oz, spooned and leveled)"	status: want ready, got needs_review; name: want "flour", got "3 cups flour (about 13 1/2 oz, spooned and leveled)"; quantity: want "3", got null; unit: want "cup", got null
+- rx2c-2915	"1 lb mussels (about 25), scrubbed"	status: want ready, got needs_review; name: want "mussels", got "1 lb mussels (about 25)"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-2916	"1 baguette (about 10 oz), cubed"	status: want ready, got needs_review; name: want "baguette", got "1 baguette (about 10 oz)"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-2918	"1 lb dried black beans (about 2 1/2 cups)"	status: want ready, got needs_review; name: want "dried black beans", got "1 lb dried black beans (about 2 1/2 cups)"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-2919	"1 cup carrots and celery"	status: want needs_review, got ready
+- rx2c-2920	"1/2 cup cranberries and pecans"	status: want needs_review, got ready
+- rx2c-2921	"2 cups zucchini and yellow squash"	status: want needs_review, got ready
+- rx2c-2922	"1 lb chicken and sausage"	status: want needs_review, got ready
+- rx2c-2923	"4 cups kale and chard"	status: want needs_review, got ready
+- rx2c-2924	"1 cup apples and pears, diced"	status: want needs_review, got ready
+- rx2c-2925	"2 tbsp salt and sugar"	status: want needs_review, got ready
+- rx2c-2926	"1 cup mayonnaise and mustard"	status: want needs_review, got ready
+- rx2c-2927	"1/2 cup raisins and dates"	status: want needs_review, got ready
+- rx2c-2928	"3 cups cabbage and carrots"	status: want needs_review, got ready
+- rx2c-2929	"1 cup chopped tomatoes and cucumbers"	status: want needs_review, got ready
+- rx2c-2930	"1 lb clams and mussels"	status: want needs_review, got ready
+- rx2c-2931	"1/4 cup parsley and basil"	status: want needs_review, got ready
+- rx2c-2932	"2 cups rice and quinoa"	status: want needs_review, got ready
+- rx2c-2933	"1 tsp cumin and paprika"	status: want needs_review, got ready
+- rx2c-2939	"1 can cream of chicken and mushroom soup"	status: want ready, got needs_review; name: want "cream of chicken and mushroom soup", got "can cream of chicken and mushroom soup"; unit: want "can", got null
+- rx2c-2940	"1 bottle honey and mustard dressing"	status: want ready, got needs_review; name: want "honey and mustard dressing", got "bottle honey and mustard dressing"; unit: want "bottle", got null
+- rx2c-2941	"1 tub garlic and herb cheese spread"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2943	"1 jar tomato and basil pasta sauce"	status: want ready, got needs_review; name: want "tomato and basil pasta sauce", got "jar tomato and basil pasta sauce"; unit: want "jar", got null
+- rx2c-2947	"1 box chicken and wild rice soup mix"	status: want ready, got needs_review; name: want "chicken and wild rice soup mix", got "box chicken and wild rice soup mix"; unit: want "box", got null
+- rx2c-2948	"1 bag fruit and nut trail mix"	status: want ready, got needs_review; name: want "fruit and nut trail mix", got "bag fruit and nut trail mix"; unit: want "bag", got null
+- rx2c-2954	"2 cups acorn or butternut squash, cubed"	name: want null, got "2 cups acorn or butternut squash"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["acorn squash","butternut squash"], got []
+- rx2c-2955	"1 cup cookie or graham cracker crumbs"	name: want null, got "1 cup cookie or graham cracker crumbs"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["cookie crumbs","graham cracker crumbs"], got []
+- rx2c-2956	"1 cup bean or alfalfa sprouts"	name: want null, got "1 cup bean or alfalfa sprouts"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["bean sprouts","alfalfa sprouts"], got []
+- rx2c-2957	"2 cups mustard or turnip greens"	name: want null, got "2 cups mustard or turnip greens"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["mustard greens","turnip greens"], got []
+- rx2c-2958	"1 tbsp walnut or hazelnut oil"	name: want null, got "1 tbsp walnut or hazelnut oil"; quantity: want "1", got null; unit: want "tbsp", got null; alternatives: want ["walnut oil","hazelnut oil"], got []
+- rx2c-2959	"1 lb shiitake or oyster mushrooms"	name: want null, got "1 lb shiitake or oyster mushrooms"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["shiitake","oyster mushrooms"], got []
+- rx2c-2960	"2 tbsp peach or apricot jam"	name: want null, got "2 tbsp peach or apricot jam"; quantity: want "2", got null; unit: want "tbsp", got null; alternatives: want ["peach jam","apricot jam"], got []
+- rx2c-2961	"1 cup raspberry or blackberry preserves"	name: want null, got "1 cup raspberry or blackberry preserves"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["raspberry preserves","blackberry preserves"], got []
+- rx2c-2962	"1 cup pistachio or almond flour"	name: want null, got "1 cup pistachio or almond flour"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["pistachio flour","almond flour"], got []
+- rx2c-2963	"4 brioche or potato buns"	name: want null, got "4 brioche or potato buns"; quantity: want "4", got null; unit: want "each", got null; alternatives: want ["brioche","potato buns"], got []
+- rx2c-2964	"1 cup cherry or grape juice"	name: want null, got "1 cup cherry or grape juice"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["cherry juice","grape juice"], got []
+- rx2c-2965	"1 cup lemon or orange curd"	name: want null, got "1 cup lemon or orange curd"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["lemon curd","orange curd"], got []
+- rx2c-2966	"1/2 cup strawberry or raspberry jelly"	name: want null, got "1/2 cup strawberry or raspberry jelly"; quantity: want "1/2", got null; unit: want "cup", got null; alternatives: want ["strawberry jelly","raspberry jelly"], got []
+- rx2c-2967	"6 corn or wheat tortillas"	name: want null, got "6 corn or wheat tortillas"; quantity: want "6", got null; unit: want "each", got null; alternatives: want ["corn tortillas","wheat tortillas"], got []
+- rx2c-2968	"1 cup shelled edamame or peas"	name: want null, got "1 cup shelled edamame or peas"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["shelled edamame","shelled peas"], got []
+- rx2c-2969	"2 cups smoked turkey or ham, diced"	name: want null, got "2 cups smoked turkey or ham"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["smoked turkey","smoked ham"], got []
+- rx2c-2970	"2 tbsp sherry or Marsala"	name: want null, got "2 tbsp sherry or Marsala"; quantity: want "2", got null; unit: want "tbsp", got null; alternatives: want ["sherry","Marsala"], got []
+- rx2c-2971	"1 lb ground pork, veal, or beef"	name: want null, got "1 lb ground pork"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["ground pork","ground veal","ground beef"], got []
+- rx2c-2972	"1 cup blueberries, blackberries or raspberries"	name: want null, got "1 cup blueberries"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["blueberries","blackberries","raspberries"], got []
+- rx2c-2973	"2 tbsp tarragon or chervil, chopped"	name: want null, got "2 tbsp tarragon or chervil"; quantity: want "2", got null; unit: want "tbsp", got null; alternatives: want ["tarragon","chervil"], got []
+- rx2c-2974	"1 cup salsa, mild or hot"	name: want null, got "1 cup salsa"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["mild salsa","hot salsa"], got []
+- rx2c-2975	"1 lb sausage (sweet or hot)"	name: want null, got "1 lb sausage"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["sweet sausage","hot sausage"], got []
+- rx2c-2976	"1 cup oats (rolled or steel-cut)"	name: want null, got "1 cup oats"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["rolled oats","steel-cut oats"], got []
+- rx2c-2977	"1 cup pasta water or broth"	name: want null, got "1 cup pasta water or broth"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["pasta water","broth"], got []
+- rx2c-2978	"2 rib roasts"	status: want ready, got needs_review; unit: want "each", got null
+- rx2c-2979	"4 rib chops"	status: want ready, got needs_review; unit: want "each", got null
+- rx2c-2980	"3 sprig thyme"	status: want ready, got needs_review; name: want "thyme", got "sprig thyme"; unit: want "sprig", got null
+- rx2c-2981	"4 slice bread"	status: want ready, got needs_review; name: want "bread", got "slice bread"; unit: want "slice", got null
+- rx2c-2982	"2 bulb fennel"	status: want ready, got needs_review; name: want "fennel", got "bulb fennel"; unit: want "bulb", got null
+- rx2c-2983	"2 strip bacon"	status: want ready, got needs_review; name: want "bacon", got "strip bacon"; unit: want "strip", got null
+- rx2c-2984	"2 sheet nori"	status: want ready, got needs_review; name: want "nori", got "sheet nori"; unit: want "sheet", got null
+- rx2c-2985	"3 head garlic"	status: want ready, got needs_review; name: want "garlic", got "head garlic"; unit: want "head", got null
+- rx2c-2986	"2 1/2 stick butter"	status: want ready, got needs_review; name: want "butter", got "stick butter"; unit: want "stick", got null
+- rx2c-2991	"3 link sausage"	status: want ready, got needs_review; name: want "sausage", got "link sausage"; unit: want "link", got null
+- rx2c-2992	"1 head lettuce, leaves separated"	status: want ready, got needs_review; name: want "lettuce", got "head lettuce"; unit: want "head", got null
+- rx2c-2993	"1 sheet puff pastry, thawed"	status: want ready, got needs_review; name: want "puff pastry", got "sheet puff pastry"; unit: want "sheet", got null
+- rx2c-2994	"1 small head red cabbage"	name: want "red cabbage", got "head red cabbage"; unit: want "head", got "each"
+- rx2c-2995	"2 large heads cauliflower"	name: want "cauliflower", got "heads cauliflower"; unit: want "head", got "each"
+- rx2c-3000	"Clove of garlic, minced"	status: want ready, got needs_review; name: want "garlic", got "Clove of garlic"; quantity: want "1", got null; unit: want "clove", got null
+- rx2c-3001	"Sprig of rosemary"	status: want ready, got needs_review; name: want "rosemary", got "Sprig of rosemary"; quantity: want "1", got null; unit: want "sprig", got null
+- rx2c-3002	"Stick of butter, softened"	status: want ready, got needs_review; name: want "butter", got "Stick of butter"; quantity: want "1", got null; unit: want "stick", got null
+- rx2c-3003	"Head of lettuce"	status: want ready, got needs_review; name: want "lettuce", got "Head of lettuce"; quantity: want "1", got null; unit: want "head", got null
+- rx2c-3004	"Slice of bread"	status: want ready, got needs_review; name: want "bread", got "Slice of bread"; quantity: want "1", got null; unit: want "slice", got null
+- rx2c-3005	"Can of chickpeas, drained"	status: want ready, got needs_review; name: want "chickpeas", got "Can of chickpeas"; quantity: want "1", got null; unit: want "can", got null
+- rx2c-3006	"Handful of spinach"	status: want ready, got needs_review; name: want "spinach", got "Handful of spinach"; quantity: want "1", got null; unit: want "handful", got null
+- rx2c-3007	"Dash of Worcestershire sauce"	status: want ready, got needs_review; name: want "Worcestershire sauce", got "Dash of Worcestershire sauce"; quantity: want "1", got null; unit: want "dash", got null
+- rx2c-3008	"Drop of food coloring"	status: want ready, got needs_review; name: want "food coloring", got "Drop of food coloring"; quantity: want "1", got null; unit: want "drop", got null
+- rx2c-3009	"Splash of lemon juice"	status: want ready, got needs_review; name: want "lemon juice", got "Splash of lemon juice"; quantity: want "1", got null; unit: want "splash", got null
+- rx2c-3010	"Sprinkle of paprika"	status: want ready, got needs_review; name: want "paprika", got "Sprinkle of paprika"; quantity: want "1", got null; unit: want "sprinkle", got null
+- rx2c-3011	"Tablespoon of olive oil"	name: want "olive oil", got "Tablespoon of olive oil"; unit: want "tbsp", got null
+- rx2c-3012	"Teaspoon vanilla extract"	name: want "vanilla extract", got "Teaspoon vanilla extract"; unit: want "tsp", got null
+- rx2c-3013	"Pound of ground beef"	name: want "ground beef", got "Pound of ground beef"; unit: want "lb", got null
+- rx2c-3014	"Ounce of gin"	name: want "gin", got "Ounce of gin"; unit: want "oz", got null
+- rx2c-3015	"A clove of garlic"	status: want ready, got needs_review; name: want "garlic", got "A clove of garlic"; quantity: want "1", got null; unit: want "clove", got null
+- rx2c-3016	"A cup of milk"	status: want ready, got needs_review; name: want "milk", got "A cup of milk"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-3017	"Generous pinch of salt"	status: want ready, got needs_review; name: want "salt", got "Generous pinch of salt"; quantity: want "1", got null; unit: want "pinch", got null
+- rx2c-3018	"Small handful of parsley"	status: want ready, got needs_review; name: want "parsley", got "handful of parsley"; quantity: want "1", got null; unit: want "handful", got null
+- rx2c-3019	"Level teaspoon baking soda"	name: want "baking soda", got "Level teaspoon baking soda"; unit: want "tsp", got null
+- rx2c-3020	"Wedge of lemon"	status: want ready, got needs_review; name: want "lemon", got "Wedge of lemon"; quantity: want "1", got null; unit: want "wedge", got null
+- rx2c-3021	"Ear of corn"	status: want ready, got needs_review; name: want "corn", got "Ear of corn"; quantity: want "1", got null; unit: want "ear", got null
+- rx2c-3061	"Sugar 1 cup"	status: want ready, got needs_review; name: want "Sugar", got "Sugar 1 cup"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-3062	"Salt 2 tsp"	status: want ready, got needs_review; name: want "Salt", got "Salt 2 tsp"; quantity: want "2", got null; unit: want "tsp", got null
+- rx2c-3063	"Glucose syrup 50 g"	status: want ready, got needs_review; name: want "Glucose syrup", got "Glucose syrup 50 g"; quantity: want "50", got null; unit: want "g", got null
+- rx2c-3066	"1 bottle zero-sugar ginger ale"	status: want ready, got needs_review; name: want "zero-sugar ginger ale", got "bottle zero-sugar ginger ale"; unit: want "bottle", got null
+- rx2c-3070	"1 No. 10 can whole tomatoes"	status: want ready, got needs_review; name: want "whole tomatoes", got "1 No. 10 can whole tomatoes"; quantity: want "1", got null; unit: want "can", got null
+- rx2c-3071	"2 #2 cans sliced peaches"	status: want ready, got needs_review; name: want "sliced peaches", got "2 #2 cans sliced peaches"; quantity: want "2", got null; unit: want "can", got null
+- rx2c-3072	"3 No. 300 cans pork and beans"	status: want ready, got needs_review; name: want "pork and beans", got "3 No. 300 cans pork and beans"; quantity: want "3", got null; unit: want "can", got null
+- rx2c-3073	"1 #5 can tomato juice"	status: want ready, got needs_review; name: want "tomato juice", got "1 #5 can tomato juice"; quantity: want "1", got null; unit: want "can", got null
+- rx2c-3074	"1 can (No. 2) sauerkraut"	status: want ready, got needs_review; name: want "sauerkraut", got "can (No. 2) sauerkraut"; quantity: want "1", got null; unit: want "can", got null
+- rx2c-3075	"1 #303 can creamed corn"	status: want ready, got needs_review; name: want "creamed corn", got "1 #303 can creamed corn"; quantity: want "1", got null; unit: want "can", got null
+- rx2c-3076	"1 (No. 303) can lima beans"	status: want ready, got needs_review; name: want "lima beans", got "1 (No. 303) can lima beans"; quantity: want "1", got null; unit: want "can", got null
+- rx2c-3078	"2 #10 cans peeled tomatoes, drained"	status: want ready, got needs_review; name: want "peeled tomatoes", got "2 #10 cans peeled tomatoes"; quantity: want "2", got null; unit: want "can", got null
+- rx2c-3118	"1/3 cup (6 tbsp) honey"	name: want "honey", got "1/3 cup (6 tbsp) honey"; quantity: want "1/3", got null; unit: want "cup", got null
+- rx2c-3119	"1/4 cup (5 tbsp) cocoa powder"	name: want "cocoa powder", got "1/4 cup (5 tbsp) cocoa powder"; quantity: want "1/4", got null; unit: want "cup", got null
+- rx2c-3120	"2 tbsp (1/8 cup) olive oil"	status: want ready, got needs_review; name: want "olive oil", got "2 tbsp (1/8 cup) olive oil"; quantity: want "2", got null; unit: want "tbsp", got null
+- rx2c-3121	"1/3 tsp (2 ml) almond extract"	status: want ready, got needs_review; name: want "almond extract", got "1/3 tsp (2 ml) almond extract"; quantity: want "1/3", got null; unit: want "tsp", got null
+- rx2c-3122	"1/8 tsp (0.5 ml) cayenne pepper"	name: want "cayenne pepper", got "1/8 tsp (0.5 ml) cayenne pepper"; quantity: want "1/8", got null; unit: want "tsp", got null
+- rx2c-3123	"2 kg (4 lb) potatoes"	status: want ready, got needs_review; name: want "potatoes", got "2 kg (4 lb) potatoes"; quantity: want "2", got null; unit: want "kg", got null
+- rx2c-3124	"1.5 kg (3 lb) pork belly"	status: want ready, got needs_review; name: want "pork belly", got "1.5 kg (3 lb) pork belly"; quantity: want "3/2", got null; unit: want "kg", got null
+- rx2c-3125	"500 g (18 oz) ricotta"	status: want ready, got needs_review; name: want "ricotta", got "500 g (18 oz) ricotta"; quantity: want "500", got null; unit: want "g", got null
+- rx2c-3126	"300 g (10 oz) frozen spinach"	status: want ready, got needs_review; name: want "frozen spinach", got "300 g (10 oz) frozen spinach"; quantity: want "300", got null; unit: want "g", got null
+- rx2c-3127	"125 g (4 oz) unsalted butter"	name: want "unsalted butter", got "125 g (4 oz) unsalted butter"; quantity: want "125", got null; unit: want "g", got null
+- rx2c-3128	"1 litre (34 fl oz) milk"	status: want ready, got needs_review; name: want "milk", got "1 litre (34 fl oz) milk"; quantity: want "1", got null; unit: want "l", got null
+- rx2c-3129	"500 ml (2 cups) stock"	status: want ready, got needs_review; name: want "stock", got "500 ml (2 cups) stock"; quantity: want "500", got null; unit: want "ml", got null
+- rx2c-3130	"200 ml (1 cup) cream"	name: want "cream", got "200 ml (1 cup) cream"; quantity: want "200", got null; unit: want "ml", got null
+- rx2c-3131	"100 ml (1/2 cup) olive oil"	name: want "olive oil", got "100 ml (1/2 cup) olive oil"; quantity: want "100", got null; unit: want "ml", got null
+- rx2c-3132	"1 pint (500 ml) whole milk"	status: want ready, got needs_review; name: want "whole milk", got "pint (500 ml) whole milk"; quantity: want "1", got null; unit: want "pint", got null
+- rx2c-3133	"1/2 lb (250 g) bacon"	name: want "bacon", got "1/2 lb (250 g) bacon"; quantity: want "1/2", got null; unit: want "lb", got null
+- rx2c-3134	"9 oz (250 g) mascarpone"	status: want ready, got needs_review; name: want "mascarpone", got "9 oz (250 g) mascarpone"; quantity: want "9", got null; unit: want "oz", got null
+- rx2c-3135	"3.5 oz (100 g) dark chocolate"	status: want ready, got needs_review; name: want "dark chocolate", got "3.5 oz (100 g) dark chocolate"; quantity: want "7/2", got null; unit: want "oz", got null
+- rx2c-3136	"2 oz (50 g) pine nuts"	name: want "pine nuts", got "2 oz (50 g) pine nuts"; quantity: want "2", got null; unit: want "oz", got null
+- rx2c-3137	"5 oz (150 g) baby spinach"	status: want ready, got needs_review; name: want "baby spinach", got "5 oz (150 g) baby spinach"; quantity: want "5", got null; unit: want "oz", got null
+- rx2c-3138	"125 g / 4 oz caster sugar"	name: want "caster sugar", got "125 g / 4 oz caster sugar"; quantity: want "125", got null; unit: want "g", got null
+- rx2c-3139	"2 cups/500 ml vegetable stock"	status: want ready, got needs_review; name: want "vegetable stock", got "2 cups/500 ml vegetable stock"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-3140	"1 lb./454 g ground lamb"	status: want ready, got needs_review; name: want "ground lamb", got "1 lb./454 g ground lamb"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-3141	"3/4 cup (175 ml) buttermilk"	status: want ready, got needs_review; name: want "buttermilk", got "3/4 cup (175 ml) buttermilk"; quantity: want "3/4", got null; unit: want "cup", got null
+- rx2c-3142	"2 tablespoons (28 g) butter"	status: want ready, got needs_review; name: want "butter", got "2 tablespoons (28 g) butter"; quantity: want "2", got null; unit: want "tbsp", got null
+- rx2c-3143	"2 400 g cans chopped tomatoes"	status: want ready, got needs_review; name: want "chopped tomatoes", got "2 400 g cans chopped tomatoes"; quantity: want "2", got null; unit: want "can", got null; packageSize: want "400 g", got null
+- rx2c-3144	"1 000 g potatoes"	name: want "potatoes", got "1 000 g potatoes"; unit: want "g", got null
+- rx2c-3146	"three-quarter pound ground turkey"	status: want ready, got needs_review; name: want "ground turkey", got "three-quarter pound ground turkey"; quantity: want "3/4", got null; unit: want "lb", got null
+- rx2c-3147	"1 half-pint blueberries"	name: want "blueberries", got "half-pint blueberries"; quantity: want "1/2", got "1"; unit: want "pint", got "each"
+- rx2c-3148	"4 x 125 g balls mozzarella"	status: want ready, got needs_review; name: want "mozzarella", got "4 x 125 g balls mozzarella"; quantity: want "4", got null; unit: want "ball", got null; packageSize: want "125 g", got null
+- rx2c-3149	"tomatoes x 6"	status: want ready, got needs_review; name: want "tomatoes", got "tomatoes x 6"; quantity: want "6", got null; unit: want "each", got null
+- rx2c-3150	"2 x 200 ml cartons coconut cream"	status: want ready, got needs_review; name: want "coconut cream", got "2 x 200 ml cartons coconut cream"; quantity: want "2", got null; unit: want "carton", got null; packageSize: want "200 ml", got null
+- rx2c-3151	"1 1/2 to 2 cups stock"	name: want "stock", got "1 1/2 to 2 cups stock"; quantity: want "3/2..2", got null; unit: want "cup", got null
+- rx2c-3152	"3 or 4 cloves garlic, sliced"	name: want "garlic", got "3 or 4 cloves garlic"; quantity: want "3..4", got null; unit: want "clove", got null
+- rx2c-3153	"1 cup plus 1 tablespoon cake flour"	status: want ready, got needs_review; name: want "cake flour", got "1 cup plus 1 tablespoon cake flour"; quantity: want "17", got null; unit: want "tbsp", got null
+- rx2c-3154	"2 lb 2 oz pork shoulder"	status: want ready, got needs_review; name: want "pork shoulder", got "2 lb 2 oz pork shoulder"; quantity: want "34", got null; unit: want "oz", got null
+- rx2c-3155	"1/2 cup minus 1 tsp sugar"	status: want ready, got needs_review; name: want "sugar", got "1/2 cup minus 1 tsp sugar"; quantity: want "23", got null; unit: want "tsp", got null
+- rx2c-3156	"about 1/4 cup fresh lime juice"	status: want ready, got needs_review; name: want "fresh lime juice" (or lime juice), got "about 1/4 cup fresh lime juice"; quantity: want "1/4", got null; unit: want "cup", got null
+- rx2c-3157	"~2 tbsp honey"	status: want ready, got needs_review; name: want "honey", got "~2 tbsp honey"; quantity: want "2", got null; unit: want "tbsp", got null
+- rx2c-3166	"2 bunches broccoli rabe"	status: want ready, got needs_review; name: want "broccoli rabe", got "bunches broccoli rabe"; unit: want "bunch", got null
+- rx2c-3167	"3 heads Little Gem lettuce"	status: want ready, got needs_review; name: want "Little Gem lettuce", got "heads Little Gem lettuce"; unit: want "head", got null
+- rx2c-3168	"2 heads frisée"	status: want ready, got needs_review; name: want "frisée", got "heads frisée"; unit: want "head", got null
+- rx2c-3169	"2 bunches Tuscan kale"	status: want ready, got needs_review; name: want "Tuscan kale", got "bunches Tuscan kale"; unit: want "bunch", got null
+- rx2c-3170	"4 sprigs lovage"	status: want ready, got needs_review; name: want "lovage", got "sprigs lovage"; unit: want "sprig", got null
+- rx2c-3171	"6 sprigs summer savory"	status: want ready, got needs_review; name: want "summer savory", got "sprigs summer savory"; unit: want "sprig", got null
+- rx2c-3173	"3 stalks lemongrass, bruised"	status: want ready, got needs_review; name: want "lemongrass", got "stalks lemongrass"; unit: want "stalk", got null
+- rx2c-3189	"1 package dried shiitake mushrooms"	status: want ready, got needs_review; name: want "dried shiitake mushrooms", got "package dried shiitake mushrooms"; unit: want "package", got null
+- rx2c-3190	"1 block paneer"	status: want ready, got needs_review; name: want "paneer", got "block paneer"; unit: want "block", got null
+- rx2c-3191	"2 links andouille sausage"	status: want ready, got needs_review; name: want "andouille sausage", got "links andouille sausage"; unit: want "link", got null
+- rx2c-3192	"4 links merguez"	status: want ready, got needs_review; name: want "merguez", got "links merguez"; unit: want "link", got null
+- rx2c-3196	"1 rabbit, cut into 8 pieces"	status: want ready, got needs_review; name: want "rabbit", got "1 rabbit"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-3197	"4 pieces oxtail"	status: want ready, got needs_review; name: want "oxtail", got "pieces oxtail"; unit: want "piece", got null
+- rx2c-3203	"4 mackerel fillets"	name: want "mackerel", got "mackerel fillets"; unit: want "fillet", got "each"
+- rx2c-3207	"2 tins smoked oysters"	status: want ready, got needs_review; name: want "smoked oysters", got "tins smoked oysters"; unit: want "tin", got null
+- rx2c-3208	"1 tin anchovies in oil"	status: want ready, got needs_review; name: want "anchovies in oil" (or anchovies), got "tin anchovies in oil"; unit: want "tin", got null
+- rx2c-3209	"1 jar preserved lemons"	status: want ready, got needs_review; name: want "preserved lemons", got "jar preserved lemons"; unit: want "jar", got null
+- rx2c-3210	"2 cans hearts of palm"	status: want ready, got needs_review; name: want "hearts of palm", got "cans hearts of palm"; unit: want "can", got null
+- rx2c-3211	"1 can young jackfruit in brine"	status: want ready, got needs_review; name: want "young jackfruit in brine" (or young jackfruit), got "can young jackfruit in brine"; unit: want "can", got null
+- rx2c-3212	"1 packet saffron threads"	status: want ready, got needs_review; name: want "saffron threads", got "packet saffron threads"; unit: want "packet", got null
+- rx2c-3213	"1 envelope Sazón"	status: want ready, got needs_review; name: want "Sazón", got "envelope Sazón"; unit: want "envelope", got null
+- rx2c-3214	"1 tube anchovy paste"	name: want "anchovy paste", got "tube anchovy paste"; unit: want "tube", got "each"
+- rx2c-3215	"1 tube harissa"	name: want "harissa", got "tube harissa"; unit: want "tube", got "each"
+- rx2c-3216	"2 sticks European butter"	status: want ready, got needs_review; name: want "European butter", got "sticks European butter"; unit: want "stick", got null
+- rx2c-3217	"6 slices Muenster"	status: want ready, got needs_review; name: want "Muenster", got "slices Muenster"; unit: want "slice", got null
+- rx2c-3218	"3 slices pumpernickel"	status: want ready, got needs_review; name: want "pumpernickel", got "slices pumpernickel"; unit: want "slice", got null
+- rx2c-3219	"1 bulb black garlic"	status: want ready, got needs_review; name: want "black garlic", got "bulb black garlic"; unit: want "bulb", got null
+- rx2c-3220	"2 pods tamarind"	name: want "tamarind", got "pods tamarind"; unit: want "pod", got "each"
+- rx2c-3221	"3 pieces kombu"	status: want ready, got needs_review; name: want "kombu", got "pieces kombu"; unit: want "piece", got null
+- rx2c-3222	"2 pieces dried mango"	status: want ready, got needs_review; name: want "dried mango", got "pieces dried mango"; unit: want "piece", got null
+- rx2c-3223	"1 wedge Manchego"	name: want "Manchego", got "wedge Manchego"; unit: want "wedge", got "each"
+- rx2c-3224	"1 bag frozen pierogi"	status: want ready, got needs_review; name: want "frozen pierogi", got "bag frozen pierogi"; unit: want "bag", got null
+- rx2c-3228	"1 box lemon Jell-O"	status: want ready, got needs_review; name: want "lemon Jell-O", got "box lemon Jell-O"; unit: want "box", got null
+- rx2c-3229	"1 can chipotles in adobo"	status: want ready, got needs_review; name: want "chipotles in adobo", got "can chipotles in adobo"; unit: want "can", got null
+- rx2c-3230	"2 cans Rotel"	status: want ready, got needs_review; name: want "Rotel", got "cans Rotel"; unit: want "can", got null
+- rx2c-3231	"1 bottle Cholula"	status: want ready, got needs_review; name: want "Cholula", got "bottle Cholula"; unit: want "bottle", got null
+- rx2c-3232	"1 jar Better Than Bouillon"	status: want ready, got needs_review; name: want "Better Than Bouillon", got "jar Better Than Bouillon"; unit: want "jar", got null
+- rx2c-3236	"2 baby fennel bulbs"	name: want "baby fennel", got "baby fennel bulbs"; unit: want "bulb", got "each"
+- rx2c-3239	"1 head romanesco"	status: want ready, got needs_review; name: want "romanesco", got "head romanesco"; unit: want "head", got null
+- rx2c-3240	"3 heads treviso"	status: want ready, got needs_review; name: want "treviso", got "heads treviso"; unit: want "head", got null
+- rx2c-3241	"4 green garlic stalks"	name: want "green garlic", got "green garlic stalks"; unit: want "stalk", got "each"
+- rx2c-3254	"2 sheets yuba"	status: want ready, got needs_review; name: want "yuba", got "sheets yuba"; unit: want "sheet", got null
+- rx2c-3255	"2 bundles somen noodles"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3307	"1/3 cup Biscoff spread"	status: want ready, got needs_review; name: want "Biscoff spread", got "1/3 cup Biscoff spread"; quantity: want "1/3", got null; unit: want "cup", got null
+- rx2c-3326	"1 package Savoiardi ladyfingers"	status: want ready, got needs_review; name: want "Savoiardi ladyfingers", got "package Savoiardi ladyfingers"; unit: want "package", got null
+- rx2c-3344	"1 can pineapple rings"	status: want ready, got needs_review; name: want "pineapple rings", got "can pineapple rings"; unit: want "can", got null
+- rx2c-3347	"1 piece honeycomb"	status: want ready, got needs_review; name: want "honeycomb", got "piece honeycomb"; unit: want "piece", got null
+- rx2c-3348	"4 sprinkle cookies"	status: want ready, got needs_review; unit: want "each", got null
+- rx2c-3349	"6 drop scones"	status: want ready, got needs_review; unit: want "each", got null
+- rx2c-3361	"1 bottle simple syrup"	status: want ready, got needs_review; name: want "simple syrup", got "bottle simple syrup"; unit: want "bottle", got null
+- rx2c-3364	"2 cans club soda"	status: want ready, got needs_review; name: want "club soda", got "cans club soda"; unit: want "can", got null
+- rx2c-3365	"1 bottle margarita mix"	status: want ready, got needs_review; name: want "margarita mix", got "bottle margarita mix"; unit: want "bottle", got null
+- rx2c-3366	"2 bottles hard cider"	status: want ready, got needs_review; name: want "hard cider", got "bottles hard cider"; unit: want "bottle", got null
+- rx2c-3388	"1 tin Danish butter cookies"	status: want ready, got needs_review; name: want "Danish butter cookies", got "tin Danish butter cookies"; unit: want "tin", got null
+- rx2c-3389	"1 jar cookie butter"	status: want ready, got needs_review; name: want "cookie butter", got "jar cookie butter"; unit: want "jar", got null
+- rx2c-3394	"1 Vitamix"	status: want unsupported, got ready; name: want null, got "Vitamix"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3395	"1 Vitamix blender"	status: want unsupported, got ready; name: want null, got "Vitamix blender"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3396	"1 Blendtec"	status: want unsupported, got ready; name: want null, got "Blendtec"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3397	"1 NutriBullet"	status: want unsupported, got ready; name: want null, got "NutriBullet"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3398	"1 Cuisinart"	status: want unsupported, got ready; name: want null, got "Cuisinart"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3399	"1 Cuisinart food processor"	status: want unsupported, got ready; name: want null, got "Cuisinart food processor"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3400	"1 Magimix"	status: want unsupported, got ready; name: want null, got "Magimix"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3401	"1 Thermomix"	status: want unsupported, got ready; name: want null, got "Thermomix"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3402	"1 Instant Pot Duo"	status: want unsupported, got ready; name: want null, got "Instant Pot Duo"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3403	"1 Crock-Pot"	status: want unsupported, got ready; name: want null, got "Crock-Pot"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3404	"1 Ninja Foodi"	status: want unsupported, got ready; name: want null, got "Ninja Foodi"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3405	"1 Ninja air fryer"	status: want unsupported, got ready; name: want null, got "Ninja air fryer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3406	"1 Philips air fryer"	status: want unsupported, got ready; name: want null, got "Philips air fryer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3407	"1 Breville Smart Oven"	status: want unsupported, got ready; name: want null, got "Breville Smart Oven"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3408	"1 Le Creuset Dutch oven"	status: want unsupported, got ready; name: want null, got "Le Creuset Dutch oven"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3409	"1 Lodge cast iron skillet"	status: want unsupported, got ready; name: want null, got "Lodge cast iron skillet"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3410	"1 All-Clad saucepan"	status: want unsupported, got ready; name: want null, got "All-Clad saucepan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3411	"1 Weber kettle grill"	status: want unsupported, got ready; name: want null, got "Weber kettle grill"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3412	"1 Traeger"	status: want unsupported, got ready; name: want null, got "Traeger"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3413	"1 Traeger pellet grill"	status: want unsupported, got ready; name: want null, got "Traeger pellet grill"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3414	"1 Anova Precision Cooker"	status: want unsupported, got ready; name: want null, got "Anova Precision Cooker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3415	"1 Joule sous vide"	status: want unsupported, got ready; name: want null, got "Joule sous vide"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3416	"1 Chemex"	status: want unsupported, got ready; name: want null, got "Chemex"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3417	"1 AeroPress"	status: want unsupported, got ready; name: want null, got "AeroPress"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3418	"1 Bialetti moka pot"	status: want unsupported, got ready; name: want null, got "Bialetti moka pot"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3419	"1 Nespresso machine"	status: want unsupported, got ready; name: want null, got "Nespresso machine"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3420	"1 SodaStream"	status: want unsupported, got ready; name: want null, got "SodaStream"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3421	"1 Microplane grater"	status: want unsupported, got ready; name: want null, got "Microplane grater"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3422	"1 OXO peeler"	status: want unsupported, got ready; name: want null, got "OXO peeler"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3423	"1 Pyrex baking dish"	status: want unsupported, got ready; name: want null, got "Pyrex baking dish"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3424	"1 Silpat"	status: want unsupported, got ready; name: want null, got "Silpat"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3425	"1 Zojirushi rice cooker"	status: want unsupported, got ready; name: want null, got "Zojirushi rice cooker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3426	"1 Excalibur dehydrator"	status: want unsupported, got ready; name: want null, got "Excalibur dehydrator"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3427	"1 Cuisinart ice cream maker"	status: want unsupported, got ready; name: want null, got "Cuisinart ice cream maker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3428	"1 George Foreman grill"	status: want unsupported, got ready; name: want null, got "George Foreman grill"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3429	"1 Waring blender"	status: want unsupported, got ready; name: want null, got "Waring blender"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3430	"1 Dualit toaster"	status: want unsupported, got ready; name: want null, got "Dualit toaster"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3431	"1 Breville juicer"	status: want unsupported, got ready; name: want null, got "Breville juicer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3432	"1 Ooni pizza oven"	status: want unsupported, got ready; name: want null, got "Ooni pizza oven"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3433	"1 egg ring"	status: want unsupported, got ready; name: want null, got "egg ring"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3434	"1 pastry ring"	status: want unsupported, got ready; name: want null, got "pastry ring"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3435	"1 mousse ring"	status: want unsupported, got ready; name: want null, got "mousse ring"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3436	"1 rib rack"	status: want unsupported, got needs_review; name: want null, got "rib rack"; quantity: want null, got "1"
+- rx2c-3437	"1 butter bell"	status: want unsupported, got ready; name: want null, got "butter bell"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3438	"1 cookie jar"	status: want unsupported, got ready; name: want null, got "cookie jar"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3439	"1 bread box"	status: want unsupported, got ready; name: want null, got "bread box"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3440	"1 butter dish"	status: want unsupported, got ready; name: want null, got "butter dish"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3441	"1 cheese dome"	status: want unsupported, got ready; name: want null, got "cheese dome"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3442	"1 sugar bowl"	status: want unsupported, got ready; name: want null, got "sugar bowl"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3443	"1 salt cellar"	status: want unsupported, got ready; name: want null, got "salt cellar"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3444	"1 pie bird"	status: want unsupported, got ready; name: want null, got "pie bird"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3445	"1 panini press"	status: want unsupported, got ready; name: want null, got "panini press"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3446	"1 raclette grill"	status: want unsupported, got ready; name: want null, got "raclette grill"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3447	"1 fondue pot"	status: want unsupported, got ready; name: want null, got "fondue pot"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3448	"1 paella pan"	status: want unsupported, got ready; name: want null, got "paella pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3449	"1 terrine mould"	status: want unsupported, got ready; name: want null, got "terrine mould"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3450	"1 soufflé dish"	status: want unsupported, got ready; name: want null, got "soufflé dish"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3451	"24 cake pop sticks"	status: want unsupported, got ready; name: want null, got "cake pop sticks"; quantity: want null, got "24"; unit: want null, got "each"
+- rx2c-3452	"1 kitchen sponge"	status: want unsupported, got ready; name: want null, got "kitchen sponge"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3453	"1 egg coddler"	status: want unsupported, got ready; name: want null, got "egg coddler"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3454	"1 cupcake carrier"	status: want unsupported, got ready; name: want null, got "cupcake carrier"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3455	"6 cupcake toppers"	status: want unsupported, got ready; name: want null, got "cupcake toppers"; quantity: want null, got "6"; unit: want null, got "each"
+- rx2c-3456	"1 Spider Skimmer"	status: want unsupported, got ready; name: want null, got "Spider Skimmer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3457	"1 Mandoline Slicer"	status: want unsupported, got ready; name: want null, got "Mandoline Slicer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3458	"1 Bench Knife"	status: want unsupported, got ready; name: want null, got "Bench Knife"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3459	"1 Cake Stand"	status: want unsupported, got ready; name: want null, got "Cake Stand"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3460	"1 Lemon Zester"	status: want unsupported, got ready; name: want null, got "Lemon Zester"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3461	"1 Gravy Separator"	status: want unsupported, got ready; name: want null, got "Gravy Separator"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3462	"1 Fat Separator"	status: want unsupported, got ready; name: want null, got "Fat Separator"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3463	"1 jam funnel"	status: want unsupported, got ready; name: want null, got "jam funnel"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3464	"1 piping nozzle"	status: want unsupported, got ready; name: want null, got "piping nozzle"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3465	"1 icing smoother"	status: want unsupported, got ready; name: want null, got "icing smoother"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3466	"1 cake scraper"	status: want unsupported, got ready; name: want null, got "cake scraper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3467	"1 dough scraper"	status: want unsupported, got ready; name: want null, got "dough scraper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3468	"1 pastry mat"	status: want unsupported, got ready; name: want null, got "pastry mat"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3469	"1 sushi rolling mat"	status: want unsupported, got ready; name: want null, got "sushi rolling mat"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3470	"1 bamboo steamer"	status: want unsupported, got ready; name: want null, got "bamboo steamer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3471	"1 splatter screen"	status: want unsupported, got ready; name: want null, got "splatter screen"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3472	"1 oven glove"	status: want unsupported, got ready; name: want null, got "oven glove"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3473	"1 pot holder"	status: want unsupported, got ready; name: want null, got "pot holder"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3474	"1 dish rack"	status: want unsupported, got ready; name: want null, got "dish rack"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3475	"1 scrub brush"	status: want unsupported, got ready; name: want null, got "scrub brush"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3476	"1 bottle brush"	status: want unsupported, got needs_review; name: want null, got "bottle brush"; quantity: want null, got "1"
+- rx2c-3477	"1 nutcracker"	status: want unsupported, got ready; name: want null, got "nutcracker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3478	"1 crab mallet"	status: want unsupported, got ready; name: want null, got "crab mallet"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3479	"1 clam knife"	status: want unsupported, got ready; name: want null, got "clam knife"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3480	"1 fish scaler"	status: want unsupported, got ready; name: want null, got "fish scaler"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3481	"1 pair poultry shears"	status: want unsupported, got ready; name: want null, got "pair poultry shears"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3482	"1 meat tenderizer"	status: want unsupported, got ready; name: want null, got "meat tenderizer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3483	"1 meat grinder"	status: want unsupported, got ready; name: want null, got "meat grinder"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3484	"1 sausage stuffer"	status: want unsupported, got ready; name: want null, got "sausage stuffer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3485	"1 jerky gun"	status: want unsupported, got ready; name: want null, got "jerky gun"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3486	"1 bag lump charcoal"	status: want unsupported, got needs_review; name: want null, got "bag lump charcoal"; quantity: want null, got "1"
+- rx2c-3487	"2 cedar planks"	status: want unsupported, got ready; name: want null, got "cedar planks"; quantity: want null, got "2"; unit: want null, got "each"
+- rx2c-3488	"1 chimney starter"	status: want unsupported, got ready; name: want null, got "chimney starter"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3489	"1 grill brush"	status: want unsupported, got ready; name: want null, got "grill brush"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3490	"1 basting brush"	status: want unsupported, got ready; name: want null, got "basting brush"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3491	"1 tomato knife"	status: want unsupported, got ready; name: want null, got "tomato knife"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3492	"1 cheese plane"	status: want unsupported, got ready; name: want null, got "cheese plane"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3493	"1 egg topper"	status: want unsupported, got ready; name: want null, got "egg topper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3494	"1 butter curler"	status: want unsupported, got ready; name: want null, got "butter curler"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3495	"1 garlic roaster"	status: want unsupported, got ready; name: want null, got "garlic roaster"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3496	"8 corn holders"	status: want unsupported, got ready; name: want null, got "corn holders"; quantity: want null, got "8"; unit: want null, got "each"
+- rx2c-3497	"1 herb keeper"	status: want unsupported, got ready; name: want null, got "herb keeper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3498	"1 popcorn bowl"	status: want unsupported, got ready; name: want null, got "popcorn bowl"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3499	"1 cake carrier"	status: want unsupported, got ready; name: want null, got "cake carrier"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3500	"100 cocktail picks"	status: want unsupported, got ready; name: want null, got "cocktail picks"; quantity: want null, got "100"; unit: want null, got "each"
+- rx2c-3501	"50 frilled toothpicks"	status: want unsupported, got ready; name: want null, got "frilled toothpicks"; quantity: want null, got "50"; unit: want null, got "each"
+- rx2c-3502	"1 sprouting jar"	status: want unsupported, got ready; name: want null, got "sprouting jar"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3503	"1 fermentation crock"	status: want unsupported, got ready; name: want null, got "fermentation crock"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3504	"1 vacuum sealer"	status: want unsupported, got ready; name: want null, got "vacuum sealer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3505	"1 food scale"	status: want unsupported, got ready; name: want null, got "food scale"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3506	"1 blowtorch"	status: want unsupported, got ready; name: want null, got "blowtorch"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3507	"1 pressure canner"	status: want unsupported, got ready; name: want null, got "pressure canner"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3508	"1 water bath canner"	status: want unsupported, got ready; name: want null, got "water bath canner"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3509	"1 jar lifter"	status: want unsupported, got needs_review; name: want null, got "jar lifter"; quantity: want null, got "1"
+- rx2c-3510	"1 canning funnel"	status: want unsupported, got ready; name: want null, got "canning funnel"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3511	"1 serving cooked rice"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3512	"1 coating fine breadcrumbs"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3513	"1 gulp orange juice"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3514	"2 sips brandy"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3515	"1 trickle honey"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3516	"1 dribble olive oil"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3517	"1 splodge ketchup"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3518	"2 wisps cotton candy"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3519	"1 curl butter"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3520	"1 ribbon lemon zest"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3521	"1 swallow cream"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3522	"1 draught bitter ale"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3523	"1 gob peanut butter"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3524	"1 plop sour cream"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3525	"1 squidge mayonnaise"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3526	"1 armful rhubarb"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3527	"1 bagful apples"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3528	"1 boxful raisins"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3529	"1 panful roasted vegetables"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3530	"1 potful vegetable soup"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3531	"1 bowlful cherries"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3532	"1 basketful blackberries"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3533	"1 trayful cookies"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3534	"1 pocketful almonds"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3535	"1 capful vanilla extract"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3536	"1 lidful rice vinegar"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3537	"1 pipette food coloring"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3538	"1 saltspoon salt"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3539	"1 coffeespoon sugar"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3540	"1 dessertspoonful honey"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3541	"1 soupspoonful olive oil"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3542	"1 teacupful milk"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3543	"1 breakfastcup flour"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3544	"1 Glassful Milk"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3545	"1 Mouthful Red Wine"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3546	"1 Trickle Maple Syrup"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3547	"1 pan brownies"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3548	"1 platter nachos"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3549	"1 basket fries"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3552	"1 jar salsa (16 oz, medium)"	status: want ready, got needs_review; name: want "salsa", got "jar salsa (16 oz, medium)"; quantity: want "1", got null; unit: want "jar", got null; packageSize: want "16 oz", got null
+- rx2c-3553	"2 cans coconut milk (13.5 oz each, full-fat)"	status: want ready, got needs_review; name: want "coconut milk", got "cans coconut milk (13.5 oz each, full-fat)"; quantity: want "2", got null; unit: want "can", got null; packageSize: want "13.5 oz", got null
+- rx2c-3554	"1 bag spinach (10 oz, prewashed)"	status: want ready, got needs_review; name: want "spinach", got "bag spinach (10 oz, prewashed)"; quantity: want "1", got null; unit: want "bag", got null; packageSize: want "10 oz", got null
+- rx2c-3555	"1 box pasta (1 lb, any shape)"	status: want ready, got needs_review; name: want "pasta", got "box pasta (1 lb, any shape)"; quantity: want "1", got null; unit: want "box", got null; packageSize: want "1 lb", got null
+- rx2c-3556	"1 carton broth (32 oz, low sodium)"	status: want ready, got needs_review; name: want "broth", got "carton broth (32 oz, low sodium)"; quantity: want "1", got null; unit: want "carton", got null; packageSize: want "32 oz", got null
+- rx2c-3557	"1 package cream cheese (8 oz, softened)"	status: want ready, got needs_review; name: want "cream cheese", got "package cream cheese (8 oz, softened)"; quantity: want "1", got null; unit: want "package", got null; packageSize: want "8 oz", got null
+- rx2c-3558	"1 bottle wine (750 ml, dry white)"	status: want ready, got needs_review; name: want "wine", got "bottle wine (750 ml, dry white)"; quantity: want "1", got null; unit: want "bottle", got null; packageSize: want "750 ml", got null
+- rx2c-3559	"2 tins sardines (4 oz each, in olive oil)"	status: want ready, got needs_review; name: want "sardines", got "tins sardines (4 oz each, in olive oil)"; quantity: want "2", got null; unit: want "tin", got null; packageSize: want "4 oz", got null
+- rx2c-3560	"1 tube tomato paste (4.5 oz, double concentrated)"	status: want ready, got needs_review; name: want "tomato paste", got "1 tube tomato paste (4.5 oz, double concentrated)"; quantity: want "1", got null; unit: want "tube", got null; packageSize: want "4.5 oz", got null
+- rx2c-3561	"1 container ricotta (15 oz, whole milk)"	status: want ready, got needs_review; name: want "ricotta", got "container ricotta (15 oz, whole milk)"; quantity: want "1", got null; unit: want "container", got null; packageSize: want "15 oz", got null
+- rx2c-3562	"12 drop sugar cookies"	status: want ready, got needs_review; unit: want "each", got null
+- rx2c-3563	"2 pinches saffron"	status: want ready, got needs_review; name: want "saffron", got "pinches saffron"; unit: want "pinch", got null
+- rx2c-3564	"3 dashes Angostura bitters"	status: want ready, got needs_review; name: want "Angostura bitters", got "dashes Angostura bitters"; unit: want "dash", got null
+- rx2c-3565	"2 splashes soda water"	status: want ready, got needs_review; name: want "soda water", got "splashes soda water"; unit: want "splash", got null
+- rx2c-3566	"2 handfuls baby spinach"	status: want ready, got needs_review; name: want "baby spinach", got "handfuls baby spinach"; unit: want "handful", got null
+- rx2c-3567	"2 pinch red pepper flakes"	status: want ready, got needs_review; name: want "red pepper flakes", got "pinch red pepper flakes"; unit: want "pinch", got null
+- rx2c-3568	"1 cup oolong or jasmine tea"	name: want null, got "1 cup oolong or jasmine tea"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["oolong","jasmine tea"], got []
+- rx2c-3569	"2 cups sweet or sour cherries"	name: want null, got "2 cups sweet or sour cherries"; quantity: want "2", got null; unit: want "cup", got null; alternatives: want ["sweet cherries","sour cherries"], got []
+- rx2c-3570	"1 lb haddock or pollock fillets"	name: want null, got "1 lb haddock or pollock fillets"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["haddock fillets","pollock fillets"], got []
+- rx2c-3571	"1 cup pecan or walnut pieces"	name: want null, got "1 cup pecan or walnut pieces"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["pecan pieces","walnut pieces"], got []
+- rx2c-3572	"1 tbsp maple or brown sugar"	name: want null, got "1 tbsp maple or brown sugar"; quantity: want "1", got null; unit: want "tbsp", got null; alternatives: want ["maple sugar","brown sugar"], got []
+- rx2c-3573	"1 lb Italian or Polish sausage"	name: want null, got "1 lb Italian or Polish sausage"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["Italian sausage","Polish sausage"], got []
+- rx2c-3574	"4 cups beef or bone broth"	name: want null, got "4 cups beef or bone broth"; quantity: want "4", got null; unit: want "cup", got null; alternatives: want ["beef broth","bone broth"], got []
+- rx2c-3575	"1 cup buttermilk or kefir"	name: want null, got "1 cup buttermilk or kefir"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["buttermilk","kefir"], got []
+- rx2c-3576	"1 cup pinto or kidney beans"	name: want null, got "1 cup pinto or kidney beans"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["pinto beans","kidney beans"], got []
+- rx2c-3577	"1 lb bucatini or spaghetti"	name: want null, got "1 lb bucatini or spaghetti"; quantity: want "1", got null; unit: want "lb", got null; alternatives: want ["bucatini","spaghetti"], got []
+- rx2c-3578	"1 cup tangerine or blood orange juice"	name: want null, got "1 cup tangerine or blood orange juice"; quantity: want "1", got null; unit: want "cup", got null; alternatives: want ["tangerine juice","blood orange juice"], got []
+- rx2c-3579	"1 cup peaches and plums, sliced"	status: want needs_review, got ready
+- rx2c-3580	"2 cups beets and carrots"	status: want needs_review, got ready
+- rx2c-3581	"1/2 cup walnuts and pecans"	status: want needs_review, got ready
+- rx2c-3582	"2 tbsp mustard and honey"	status: want needs_review, got ready
+- rx2c-3583	"1 cup cucumber and radish, sliced"	status: want needs_review, got ready
+- rx2c-3584	"3 cups spinach and arugula"	status: want needs_review, got ready
+- rx2c-3585	"1/4 cup mint and cilantro"	status: want needs_review, got ready
+- rx2c-3588	"1 bag chocolate and peanut butter chips"	status: want ready, got needs_review; name: want "chocolate and peanut butter chips", got "bag chocolate and peanut butter chips"; unit: want "bag", got null
+- rx2c-3589	"1 jar salt and pepper rub"	status: want ready, got needs_review; name: want "salt and pepper rub", got "jar salt and pepper rub"; unit: want "jar", got null
+- rx2c-3590	"1 box macaroni and cheese dinner"	status: want ready, got needs_review; name: want "macaroni and cheese dinner", got "box macaroni and cheese dinner"; unit: want "box", got null
+- rx2c-3591	"1 cup lime juice (8 limes)"	name: want "lime juice", got "1 cup lime juice (8 limes)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-3592	"2 tbsp orange zest (from 2 oranges)"	name: want "orange zest", got "2 tbsp orange zest (from 2 oranges)"; quantity: want "2", got null; unit: want "tbsp", got null
+- rx2c-3593	"1 cup cooked couscous (1/3 cup dry)"	name: want "couscous", got "1 cup cooked couscous (1/3 cup dry)"; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-3594	"2 cups sliced leeks (2 leeks)"	status: want ready, got needs_review; name: want "sliced leeks" (or leeks), got "2 cups sliced leeks (2 leeks)"; quantity: want "2", got null; unit: want "cup", got null
+- rx2c-3611	"1 #300 can tomato sauce"	status: want ready, got needs_review; name: want "tomato sauce", got "1 #300 can tomato sauce"; quantity: want "1", got null; unit: want "can", got null
+- rx2c-3612	"2 No. 2 cans hominy"	status: want ready, got needs_review; name: want "hominy", got "2 No. 2 cans hominy"; quantity: want "2", got null; unit: want "can", got null
+- rx2c-3613	"1 1/2 dozen eggs"	name: want "eggs", got "dozen eggs"; quantity: want "18", got "1 1/2"
+- rx2c-3614	"2 dozen dinner rolls"	name: want "dinner rolls", got "dozen dinner rolls"; quantity: want "24", got "2"
+- rx2c-3615	"1 tumblerful iced tea"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3616	"1 bucketful mussels"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3617	"1 sackful potatoes"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3618	"1 crateful peaches"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3619	"1 wheelbarrow pumpkins"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3620	"1 jarful pickles"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3621	"1 ladle-full chicken broth"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3622	"1 pinchbowl sea salt"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3623	"1 cocktail-glass cream"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3624	"1 fingerbowl water"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3632	"4 brie wedges"	name: want "brie", got "brie wedges"; unit: want "wedge", got "each"
+
+## semantic-v1: 1192 failing firm cases
+
+- rx2c-0001	"1 tbsp tamarind paste, dissolved in 3 tbsp hot water"	status: want needs_review, got ready
+- rx2c-0002	"1 tbsp cornstarch mixed with 2 tbsp cold water"	name: want "cornstarch", got "cornstarch mixed"
+- rx2c-0003	"2 tsp instant yeast, dissolved in 1/4 cup warm water"	status: want needs_review, got ready
+- rx2c-0004	"1/2 cup raisins, soaked in 1/4 cup dark rum"	status: want needs_review, got ready
+- rx2c-0005	"1 pinch saffron, steeped in 2 tbsp hot milk"	status: want needs_review, got ready
+- rx2c-0006	"2 tbsp white miso, whisked into 1 cup warm water"	status: want needs_review, got ready
+- rx2c-0007	"1 envelope unflavored gelatin, bloomed in 1/4 cup cold water"	status: want needs_review, got ready
+- rx2c-0008	"3 tbsp cocoa powder mixed with 3 tbsp boiling water"	name: want "cocoa powder", got "cocoa powder mixed"
+- rx2c-0009	"1 tsp baking soda, dissolved in 1 tbsp vinegar"	status: want needs_review, got ready
+- rx2c-0010	"2 tbsp chia seeds (soaked in 6 tbsp water)"	status: want needs_review, got ready
+- rx2c-0013	"1 cup all-purpose flour, plus 2 tbsp for dusting"	status: want ready, got needs_review; quantity: want "18", got "1"; unit: want "tbsp", got "cup"
+- rx2c-0019	"1 cup fresh peas and fava beans"	status: want needs_review, got ready; name: want null, got "fresh peas and fava beans"
+- rx2c-0020	"2 cups broccoli florets and cauliflower florets"	status: want needs_review, got ready; name: want null, got "broccoli florets and cauliflower florets"
+- rx2c-0021	"1/2 cup dried cranberries and toasted walnuts"	status: want needs_review, got ready; name: want null, got "dried cranberries and toasted walnuts"
+- rx2c-0022	"1 lb ground pork and ground veal"	status: want needs_review, got ready; name: want null, got "ground pork and ground veal"
+- rx2c-0023	"2 cups cherry tomatoes and diced cucumber"	status: want needs_review, got ready; name: want null, got "cherry tomatoes and diced cucumber"
+- rx2c-0024	"1 cup shredded carrots & red cabbage"	status: want needs_review, got ready; name: want null, got "shredded carrots & red cabbage"
+- rx2c-0025	"3/4 cup golden raisins and chopped dates"	status: want needs_review, got ready; name: want null, got "golden raisins and chopped dates"
+- rx2c-0026	"1/4 cup pine nuts and pumpkin seeds, toasted"	status: want needs_review, got ready; name: want null, got "pine nuts and pumpkin seeds"
+- rx2c-0033	"1 head lettuce, romaine or green leaf"	name: want null, got "lettuce"; alternatives: want ["romaine lettuce","green leaf lettuce"], got []
+- rx2c-0035	"2 cups cheese, cheddar or monterey jack"	name: want null, got "cheese"; alternatives: want ["cheddar cheese","monterey jack cheese"], got []
+- rx2c-0038	"1 saucepan water"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0039	"1 stockpot water"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0040	"1 saucepan milk"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0041	"1 wok oil"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0042	"1 colander pasta"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0043	"1 sieve flour"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0044	"2 saucepans water"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0045	"1 kettle water"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0046	"1 skillet cornbread batter"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0049	"6 fish slices, patted dry"	name: want "fish slices", got "fish"; unit: want "each", got "slice"
+- rx2c-0053	"1 salt pig"	status: want unsupported, got ready; name: want null, got "salt pig"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0054	"1 pepper mill"	status: want unsupported, got ready; name: want null, got "pepper mill"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0055	"1 Staub cocotte"	status: want unsupported, got ready; name: want null, got "Staub cocotte"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0056	"1 cast-iron Dutch oven"	status: want unsupported, got ready; name: want null, got "cast-iron Dutch oven"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0057	"1 bag hickory wood chunks"	status: want unsupported, got ready; name: want null, got "hickory wood chunks"; quantity: want null, got "1"; unit: want null, got "bag"
+- rx2c-0058	"1 box dishwasher pods"	status: want unsupported, got ready; name: want null, got "dishwasher pods"; quantity: want null, got "1"; unit: want null, got "box"
+- rx2c-0059	"1 small tub creme fraiche"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0060	"1 small tub crème fraîche"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0061	"2 tubs Greek yogurt"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0062	"1 tub sour cream"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0063	"1 bar dark chocolate"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0064	"2 bars cream cheese"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0065	"4 125 g pots yogurt"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled; noAmount: a package was pre-filled
+- rx2c-0072	"1/2 tsp 5-spice powder"	status: want ready, got needs_review; name: want "5-spice powder", got null
+- rx2c-0073	"500 g 00 flour"	status: want ready, got needs_review; name: want "00 flour", got null
+- rx2c-0074	"eight cardamom pods"	name: want "cardamom", got "cardamom pods"; unit: want "pod", got "each"
+- rx2c-0075	"Pinch of salt"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-0076	"2 celery ribs, diced"	name: want "celery", got "celery ribs"; unit: want "rib", got "each"
+- rx2c-0077	"2 star anise pods"	name: want "star anise", got "star anise pods"; unit: want "pod", got "each"
+- rx2c-0078	"3 (5.3 oz) cups vanilla Greek yogurt"	status: want ready, got needs_review; unit: want "container", got "cup"; packageSize: want "5 3/10 oz", got null
+- rx2c-0079	"2 tsp + ½ tsp sea salt"	status: want ready, got needs_review; name: want "sea salt", got null; quantity: want "2 1/2", got "2"
+- rx2c-0080	"1 cup plus 1/3 cup sugar"	status: want ready, got needs_review; name: want "sugar", got null; quantity: want "1 1/3", got "1"
+- rx2c-0081	"3 cups (750 ml) / 25 fl oz chicken stock"	status: want ready, got needs_review
+- rx2c-0082	"93/7 ground turkey, 1 lb"	status: want ready, got needs_review; name: want "93/7 ground turkey", got "ground turkey"; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-0083	"1 lb large raw shrimp, peeled, tails on"	name: want "shrimp", got "large shrimp"
+- rx2c-0084	"1 cup cooked quinoa (from 1/3 cup dry)"	status: want needs_review, got ready
+- rx2c-0085	"Juice of 2 limes"	status: want ready, got needs_review
+- rx2c-0086	"Zest of ½ orange"	status: want ready, got needs_review
+- rx2c-0087	"4 cups kale or Swiss chard (stems removed)"	alternatives: want ["kale","Swiss chard"], got ["kale chard","Swiss chard"]
+- rx2c-0088	"1 tbsp maple syrup, honey, or agave"	name: want null, got "maple syrup"; alternatives: want ["maple syrup","honey","agave"], got []
+- rx2c-0089	"1 (15 oz) can chickpeas or white beans, drained"	alternatives: want ["chickpeas","white beans"], got ["chickpeas beans","white beans"]
+- rx2c-0090	"⅔ cup hummus (store-bought (or see recipe))"	status: want ready, got needs_review; name: want "hummus", got null; alternatives: want [], got ["hummus","see recipe"]
+- rx2c-0091	"2 medium zucchini, cut into half-moons"	status: want ready, got needs_review
+- rx2c-0092	"eggs x 3"	status: want ready, got needs_review; name: want "eggs", got "eggs x"; quantity: want "3", got null; unit: want "each", got null
+- rx2c-0093	"between 2 and 3 cups water"	name: want "water", got "between"; quantity: want "2..3", got null; unit: want "cup", got null
+- rx2c-0097	"1 cup rice (1 cup dry makes 3 cooked)"	status: want needs_review, got ready
+- rx2c-0098	"1 1/3 cups chicken stock (homemade (or low-sodium boxed))"	status: want ready, got needs_review; name: want "chicken stock", got null; alternatives: want [], got ["chicken stock","low-sodium boxed"]
+- rx2c-0099	"1 cup buttermilk or plain yogurt"	alternatives: want ["buttermilk","plain yogurt"], got ["buttermilk yogurt","plain yogurt"]
+- rx2c-0100	"a half-cup milk"	name: want "milk", got "half-cup milk"; quantity: want "1/2", got "1"; unit: want "cup", got "each"
+- rx2c-0101	"a quarter-cup sugar"	name: want "sugar", got "quarter-cup sugar"; quantity: want "1/4", got "1"; unit: want "cup", got "each"
+- rx2c-0102	"a quarter-pound beef"	name: want "beef", got "quarter-pound beef"; quantity: want "1/4", got "1"; unit: want "lb", got "each"
+- rx2c-0103	"a half-pound ground beef"	name: want "ground beef", got "half-pound ground beef"; quantity: want "1/2", got "1"; unit: want "lb", got "each"
+- rx2c-0105	"a half-cup of milk"	status: want ready, got needs_review; quantity: want "1/2", got null; unit: want "cup", got null
+- rx2c-0106	"400g (14oz) can chopped tomatoes"	status: want ready, got needs_review; quantity: want "1", got "400"; unit: want "can", got "g"; packageSize: want "400 g", got null
+- rx2c-0107	"400 g (14 oz) can tomatoes"	status: want ready, got needs_review; quantity: want "1", got "400"; unit: want "can", got "g"; packageSize: want "400 g", got null
+- rx2c-0108	"400g/14oz can chopped tomatoes"	status: want ready, got needs_review; quantity: want "1", got "400"; unit: want "can", got "g"; packageSize: want "400 g", got null
+- rx2c-0109	"400 g / 14 oz can tomatoes"	status: want ready, got needs_review; quantity: want "1", got "400"; unit: want "can", got "g"; packageSize: want "400 g", got null
+- rx2c-0110	"14 oz (400 g) can tomatoes"	status: want ready, got needs_review; quantity: want "1", got "14"; unit: want "can", got "oz"; packageSize: want "14 oz", got null
+- rx2c-0111	"15 oz (425 g) can black beans"	status: want ready, got needs_review; quantity: want "1", got "15"; unit: want "can", got "oz"; packageSize: want "15 oz", got null
+- rx2c-0112	"400ml (14fl oz) can coconut milk"	status: want ready, got needs_review; quantity: want "1", got "400"; unit: want "can", got "ml"; packageSize: want "400 ml", got null
+- rx2c-0113	"28 oz (794 g) can whole tomatoes"	status: want ready, got needs_review; quantity: want "1", got "28"; unit: want "can", got "oz"; packageSize: want "28 oz", got null
+- rx2c-0114	"8 oz (225 g) package cream cheese"	status: want ready, got needs_review; quantity: want "1", got "8"; unit: want "package", got "oz"; packageSize: want "8 oz", got null
+- rx2c-0115	"8-oz (225 g) package cream cheese"	status: want ready, got needs_review; quantity: want "1", got "8"; unit: want "package", got "oz"; packageSize: want "8 oz", got null
+- rx2c-0116	"16 oz (1 lb) bag frozen peas"	status: want ready, got needs_review; quantity: want "1", got "16"; unit: want "bag", got "oz"; packageSize: want "16 oz", got null
+- rx2c-0117	"400ml can coconut milk"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-0119	"400 g can (14 oz) tomatoes"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-0120	"Protein: 20 grams"	status: want unsupported, got ready; name: want null, got "Protein"; quantity: want null, got "20"; unit: want null, got "g"
+- rx2c-0121	"Fat: 10 grams"	status: want unsupported, got ready; name: want null, got "Fat"; quantity: want null, got "10"; unit: want null, got "g"
+- rx2c-0122	"Sodium: 300 milligrams"	status: want unsupported, got ready; name: want null, got "Sodium"; quantity: want null, got "300"; unit: want null, got "mg"
+- rx2c-0123	"Carbohydrates: 30 grams"	status: want unsupported, got ready; name: want null, got "Carbohydrates"; quantity: want null, got "30"; unit: want null, got "g"
+- rx2c-0124	"Serving size: 1 cup (240 ml)"	status: want unsupported, got ready; name: want null, got "Serving size"; quantity: want null, got "1"; unit: want null, got "cup"
+- rx2c-0125	"Points: 5"	status: want unsupported, got ready; name: want null, got "Points"; quantity: want null, got "5"; unit: want null, got "each"
+- rx2c-0126	"Weight Watchers points: 5"	status: want unsupported, got ready; name: want null, got "Weight Watchers points"; quantity: want null, got "5"; unit: want null, got "each"
+- rx2c-0131	"Five spice powder"	name: want "Five spice powder", got "spice powder"; quantity: want null, got "5"; unit: want null, got "each"
+- rx2c-0132	"Seven spice blend"	name: want "Seven spice blend", got "spice blend"; quantity: want null, got "7"; unit: want null, got "each"
+- rx2c-0133	"Three cheese blend"	name: want "Three cheese blend", got "cheese blend"; quantity: want null, got "3"; unit: want null, got "each"
+- rx2c-0134	"Four cheese pizza"	name: want "Four cheese pizza", got "cheese pizza"; quantity: want null, got "4"; unit: want null, got "each"
+- rx2c-0135	"You will need: 2 baking sheets"	status: want unsupported, got needs_review; name: want null, got "baking sheets"; quantity: want null, got "2"; unit: want null, got "each"
+- rx2c-0136	"You'll need: 1 piping bag"	status: want unsupported, got needs_review; name: want null, got "piping bag"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0137	"1 lb ham or smoked turkey"	alternatives: want ["ham","smoked turkey"], got ["ham turkey","smoked turkey"]
+- rx2c-0138	"1 lb sausage or ground beef"	alternatives: want ["sausage","ground beef"], got ["sausage beef","ground beef"]
+- rx2c-0139	"1 cup tea or apple juice"	alternatives: want ["tea","apple juice"], got ["tea juice","apple juice"]
+- rx2c-0140	"2 cups lettuce or mixed greens"	alternatives: want ["lettuce","mixed greens"], got ["lettuce greens","mixed greens"]
+- rx2c-0141	"1/2 cup Parmesan or Pecorino Romano"	alternatives: want ["Parmesan","Pecorino Romano"], got ["Parmesan Romano","Pecorino Romano"]
+- rx2c-0142	"1 lb chicken or firm tofu"	alternatives: want ["chicken","firm tofu"], got ["chicken tofu","firm tofu"]
+- rx2c-0143	"1/4 cup rum or orange juice"	alternatives: want ["rum","orange juice"], got ["rum juice","orange juice"]
+- rx2c-0144	"1 lb pasta or zucchini noodles"	alternatives: want ["pasta","zucchini noodles"], got ["pasta noodles","zucchini noodles"]
+- rx2c-0145	"4 slices bacon or smoked ham"	alternatives: want ["bacon","smoked ham"], got ["bacon ham","smoked ham"]
+- rx2c-0146	"1 cup kale or Swiss chard"	alternatives: want ["kale","Swiss chard"], got ["kale chard","Swiss chard"]
+- rx2c-0147	"1 shallot or red onion"	alternatives: want ["shallot","red onion"], got ["shallot onion","red onion"]
+- rx2c-0148	"1 leek or yellow onion"	alternatives: want ["leek","yellow onion"], got ["leek onion","yellow onion"]
+- rx2c-0149	"1 cup peas or green beans"	alternatives: want ["peas","green beans"], got ["peas beans","green beans"]
+- rx2c-0150	"2 tbsp brandy or dry sherry"	alternatives: want ["brandy","dry sherry"], got ["brandy sherry","dry sherry"]
+- rx2c-0151	"1 cup apples or ripe pears"	alternatives: want ["apples","ripe pears"], got ["apples pears","ripe pears"]
+- rx2c-0153	"1 cup spinach or baby kale"	alternatives: want ["spinach","baby kale"], got ["spinach kale","baby kale"]
+- rx2c-0154	"2 tbsp tahini or peanut butter"	alternatives: want ["tahini","peanut butter"], got ["tahini butter","peanut butter"]
+- rx2c-0156	"1 tbsp sriracha or hot sauce"	alternatives: want ["sriracha","hot sauce"], got ["sriracha sauce","hot sauce"]
+- rx2c-0157	"1 cup raisins or dried cranberries"	alternatives: want ["raisins","dried cranberries"], got ["raisins cranberries","dried cranberries"]
+- rx2c-0159	"1 lb shrimp or sea scallops"	alternatives: want ["shrimp","sea scallops"], got ["shrimp scallops","sea scallops"]
+- rx2c-0160	"1 tsp oregano or Italian seasoning"	alternatives: want ["oregano","Italian seasoning"], got ["oregano seasoning","Italian seasoning"]
+- rx2c-0161	"1 cup quinoa or brown rice"	alternatives: want ["quinoa","brown rice"], got ["quinoa rice","brown rice"]
+- rx2c-0162	"1 tbsp capers or green olives"	alternatives: want ["capers","green olives"], got ["capers olives","green olives"]
+- rx2c-0163	"2 tbsp parsley or fresh cilantro"	alternatives: want ["parsley","fresh cilantro"], got ["parsley cilantro","fresh cilantro"]
+- rx2c-0165	"1 tbsp Dijon or whole grain mustard"	alternatives: want ["Dijon","whole grain mustard"], got ["Dijon grain mustard","whole grain mustard"]
+- rx2c-0166	"1 cup broth, chicken or vegetable"	name: want null, got "broth"; alternatives: want ["chicken broth","vegetable broth"], got []
+- rx2c-0167	"1 cup flour, all-purpose or bread"	name: want null, got "flour"; alternatives: want ["all-purpose flour","bread flour"], got []
+- rx2c-0168	"1 cup stock, chicken or vegetable"	name: want null, got "stock"; alternatives: want ["chicken stock","vegetable stock"], got []
+- rx2c-0169	"1/3 cup (5 tbsp) butter"	status: want ready, got needs_review
+- rx2c-0170	"2/3 cup (10 tbsp) sugar"	status: want ready, got needs_review
+- rx2c-0171	"2 cups (500 ml / 17 fl oz) stock"	status: want ready, got needs_review
+- rx2c-0172	"1 cup (250 ml) (8.5 fl oz) milk"	status: want ready, got needs_review
+- rx2c-0175	"1 pint milk (UK)"	status: want needs_review, got ready
+- rx2c-0176	"1 m sausage"	status: want needs_review, got ready
+- rx2c-0177	"1x cup milk"	name: want "milk", got "x cup milk"; unit: want "cup", got "each"
+- rx2c-0178	"1x can chickpeas"	name: want "chickpeas", got "x can chickpeas"; unit: want "can", got "each"
+- rx2c-0179	"2x cans chickpeas"	name: want "chickpeas", got "x cans chickpeas"; unit: want "can", got "each"
+- rx2c-0180	"1 x can chickpeas"	name: want "chickpeas", got "x can chickpeas"; unit: want "can", got "each"
+- rx2c-0184	"Vitamin C: 15 mg"	status: want unsupported, got ready; name: want null, got "Vitamin C"; quantity: want null, got "15"; unit: want null, got "mg"
+- rx2c-0185	"Magnesium: 40 mg"	status: want unsupported, got ready; name: want null, got "Magnesium"; quantity: want null, got "40"; unit: want null, got "mg"
+- rx2c-0186	"Zinc 1 mg"	status: want unsupported, got ready; name: want null, got "Zinc"; quantity: want null, got "1"; unit: want null, got "mg"
+- rx2c-0187	"Caffeine: 95 mg"	status: want unsupported, got ready; name: want null, got "Caffeine"; quantity: want null, got "95"; unit: want null, got "mg"
+- rx2c-0188	"4.8 stars (120 reviews)"	status: want unsupported, got ready; name: want null, got "stars"; quantity: want null, got "4.8"; unit: want null, got "each"
+- rx2c-0189	"Vitamin D: 2 mcg"	status: want unsupported, got needs_review; name: want null, got "mcg"; quantity: want null, got "2"; unit: want null, got "each"
+- rx2c-0190	"Serving size: 2 cookies"	status: want unsupported, got needs_review; name: want null, got "cookies"; quantity: want null, got "2"; unit: want null, got "each"
+- rx2c-0191	"5 from 3 votes"	status: want unsupported, got needs_review; name: want null, got "from"; quantity: want null, got "5"; unit: want null, got "each"
+- rx2c-0199	"2 cups spinach, kale, or chard"	name: want null, got "spinach"; alternatives: want ["spinach","kale","chard"], got []
+- rx2c-0200	"1 tsp thyme, rosemary, or oregano"	name: want null, got "thyme"; alternatives: want ["thyme","rosemary","oregano"], got []
+- rx2c-0201	"2 tbsp butter, ghee, or oil"	name: want null, got "butter"; alternatives: want ["butter","ghee","oil"], got []
+- rx2c-0202	"1 lb chicken, pork, or tofu"	name: want null, got "chicken"; alternatives: want ["chicken","pork","tofu"], got []
+- rx2c-0203	"1 cup milk, cream, or half-and-half"	name: want null, got "milk"; alternatives: want ["milk","cream","half-and-half"], got []
+- rx2c-0204	"1 cup pecans, walnuts, or almonds"	alternatives: want ["pecans","walnuts","almonds"], got ["walnuts","almonds"]
+- rx2c-0205	"1/2 cup raisins, cranberries or cherries"	alternatives: want ["raisins","cranberries","cherries"], got ["cranberries","cherries"]
+- rx2c-0207	"4 lemon wedges"	name: want "lemon", got "lemon wedges"; unit: want "wedge", got "each"
+- rx2c-0208	"2 cinnamon sticks"	name: want "cinnamon", got "cinnamon sticks"; unit: want "stick", got "each"
+- rx2c-0209	"2 bacon strips"	name: want "bacon", got "bacon strips"; unit: want "strip", got "each"
+- rx2c-0210	"2 lettuce heads"	name: want "lettuce", got "lettuce heads"; unit: want "head", got "each"
+- rx2c-0221	"2 cups red, yellow or orange peppers"	alternatives: want ["red peppers","yellow peppers","orange peppers"], got ["yellow red","orange peppers red"]
+- rx2c-0222	"1 (No. 2) can corn"	status: want ready, got needs_review; unit: want "can", got "each"
+- rx2c-0224	"2 half-pound strip steaks"	name: want "strip steaks", got "half-pound strip steaks"
+- rx2c-0225	"3 tablespoons lemon juice (about 1 lemon)"	status: want needs_review, got ready
+- rx2c-0228	"1 gill single cream"	status: want needs_review, got ready
+- rx2c-0229	"2 drams vanilla essence"	status: want needs_review, got ready
+- rx2c-0230	"1 tumbler orange juice"	status: want needs_review, got ready
+- rx2c-0231	"2 ladles chicken stock"	status: want needs_review, got ready
+- rx2c-0232	"1 teacup caster sugar"	status: want needs_review, got ready
+- rx2c-0233	"1 dessert spoon cocoa powder"	status: want needs_review, got ready
+- rx2c-0234	"1 thumb fresh ginger"	status: want needs_review, got ready
+- rx2c-0235	"2 tbsp fresh oregano or dried"	status: want needs_review, got ready; name: want null, got "fresh oregano"; alternatives: want ["fresh oregano","dried oregano"], got []
+- rx2c-0236	"2 cups chopped celery and carrots"	status: want needs_review, got ready
+- rx2c-0237	"1 cup onion and bell pepper, diced"	status: want needs_review, got ready
+- rx2c-0238	"1/4 cup chopped parsley and mint"	status: want needs_review, got ready
+- rx2c-0239	"2 cups strawberries and blueberries"	status: want needs_review, got ready
+- rx2c-0240	"2 strip steaks"	name: want "strip steaks", got "steaks"; unit: want "each", got "strip"
+- rx2c-0241	"4 cube steaks"	name: want "cube steaks", got "steaks"; unit: want "each", got "cube"
+- rx2c-0242	"2 sheet cakes"	name: want "sheet cakes", got "cakes"; unit: want "each", got "sheet"
+- rx2c-0243	"Serving size 2 cookies (40 g)"	status: want unsupported, got needs_review; name: want null, got "Serving size"; quantity: want null, got "40"; unit: want null, got "g"
+- rx2c-0244	"Calories: 412kcal | Carbohydrates: 52g | Protein: 18g"	status: want unsupported, got needs_review; name: want null, got "Carbohydrates"; quantity: want null, got "412"; unit: want null, got "each"
+- rx2c-0245	"Sat. fat: 3 g"	status: want unsupported, got ready; name: want null, got "Sat. fat"; quantity: want null, got "3"; unit: want null, got "g"
+- rx2c-0246	"★★★★★ (212)"	status: want unsupported, got needs_review; quantity: want null, got "212"; unit: want null, got "each"
+- rx2c-0247	"1 rolling pin"	status: want unsupported, got ready; name: want null, got "rolling pin"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0248	"1 (9-inch) pie plate"	status: want unsupported, got ready; name: want null, got "pie plate"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0249	"1 large Dutch oven"	status: want unsupported, got ready; name: want null, got "Dutch oven"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0250	"1 12-cup Bundt pan"	status: want unsupported, got needs_review; name: want null, got "Bundt pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0251	"1 4-quart slow cooker"	status: want unsupported, got needs_review; name: want null, got "slow cooker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0252	"1 2-quart baking dish"	status: want unsupported, got needs_review; name: want null, got "baking dish"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0253	"6 popsicle sticks"	status: want unsupported, got ready; name: want null, got "popsicle sticks"; quantity: want null, got "6"; unit: want null, got "each"
+- rx2c-0254	"1 roll kitchen twine"	status: want unsupported, got ready; name: want null, got "roll kitchen twine"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0255	"1 box toothpicks"	status: want unsupported, got ready; name: want null, got "toothpicks"; quantity: want null, got "1"; unit: want null, got "box"
+- rx2c-0256	"12 paper baking cups"	status: want unsupported, got ready; name: want null, got "paper baking cups"; quantity: want null, got "12"; unit: want null, got "each"
+- rx2c-0257	"24 mini cupcake liners"	status: want unsupported, got ready; name: want null, got "mini cupcake liners"; quantity: want null, got "24"; unit: want null, got "each"
+- rx2c-0258	"2 sheets aluminum foil"	status: want unsupported, got ready; name: want null, got "aluminum foil"; quantity: want null, got "2"; unit: want null, got "sheet"
+- rx2c-0259	"1 gallon-size zip-top bag"	status: want unsupported, got ready; name: want null, got "gallon-size zip-top bag"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0260	"1 kitchen scale"	status: want unsupported, got ready; name: want null, got "kitchen scale"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0261	"1 pastry brush"	status: want unsupported, got ready; name: want null, got "pastry brush"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0262	"1 instant-read thermometer"	status: want unsupported, got ready; name: want null, got "instant-read thermometer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0263	"1 pizza stone"	status: want unsupported, got ready; name: want null, got "pizza stone"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0264	"1 piping bag fitted with a star tip"	status: want unsupported, got ready; name: want null, got "piping bag fitted with a star tip"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0265	"1 spice grinder"	status: want unsupported, got ready; name: want null, got "spice grinder"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0266	"2 mason jars"	status: want unsupported, got ready; name: want null, got "mason jars"; quantity: want null, got "2"; unit: want null, got "each"
+- rx2c-0267	"1 cocktail shaker"	status: want unsupported, got ready; name: want null, got "cocktail shaker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0268	"1 cast iron skillet"	status: want unsupported, got ready; name: want null, got "cast iron skillet"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0269	"1 wok"	status: want unsupported, got ready; name: want null, got "wok"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0270	"1 candy thermometer"	status: want unsupported, got ready; name: want null, got "candy thermometer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0271	"6 lollipop sticks"	status: want unsupported, got ready; name: want null, got "lollipop sticks"; quantity: want null, got "6"; unit: want null, got "each"
+- rx2c-0272	"1 egg slicer"	status: want unsupported, got ready; name: want null, got "egg slicer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0273	"1 package wooden skewers"	status: want unsupported, got ready; name: want null, got "wooden skewers"; quantity: want null, got "1"; unit: want null, got "package"
+- rx2c-0274	"1 baking stone"	status: want unsupported, got ready; name: want null, got "baking stone"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0275	"1 stockpot"	status: want unsupported, got ready; name: want null, got "stockpot"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0276	"1 large saucepan"	status: want unsupported, got ready; name: want null, got "saucepan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0277	"1 ice cream maker"	status: want unsupported, got ready; name: want null, got "ice cream maker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0278	"1 waffle iron"	status: want unsupported, got ready; name: want null, got "waffle iron"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0279	"1 immersion blender"	status: want unsupported, got ready; name: want null, got "immersion blender"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0280	"1 box grater"	status: want unsupported, got ready; name: want null, got "grater"; quantity: want null, got "1"; unit: want null, got "box"
+- rx2c-0281	"1 grill pan"	status: want unsupported, got ready; name: want null, got "grill pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0282	"1 meat mallet"	status: want unsupported, got ready; name: want null, got "meat mallet"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0283	"1 mortar and pestle"	status: want unsupported, got ready; name: want null, got "mortar and pestle"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0284	"1 microplane"	status: want unsupported, got ready; name: want null, got "microplane"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0285	"1 salad spinner"	status: want unsupported, got ready; name: want null, got "salad spinner"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0286	"1 bench scraper"	status: want unsupported, got ready; name: want null, got "bench scraper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0287	"1 kitchen torch"	status: want unsupported, got ready; name: want null, got "kitchen torch"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0288	"6 canning jars with lids"	status: want unsupported, got ready; name: want null, got "canning jars with lids"; quantity: want null, got "6"; unit: want null, got "each"
+- rx2c-0289	"1 heavy-bottomed pot"	status: want unsupported, got ready; name: want null, got "heavy-bottomed pot"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0290	"1 sheet of wax paper"	status: want unsupported, got ready; name: want null, got "wax paper"; quantity: want null, got "1"; unit: want null, got "sheet"
+- rx2c-0291	"1 roll plastic wrap"	status: want unsupported, got ready; name: want null, got "roll plastic wrap"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0292	"2 pieces kitchen string"	status: want unsupported, got ready; name: want null, got "kitchen string"; quantity: want null, got "2"; unit: want null, got "piece"
+- rx2c-0293	"12 cupcake wrappers"	status: want unsupported, got ready; name: want null, got "cupcake wrappers"; quantity: want null, got "12"; unit: want null, got "each"
+- rx2c-0294	"1 package paper towels"	status: want unsupported, got ready; name: want null, got "paper towels"; quantity: want null, got "1"; unit: want null, got "package"
+- rx2c-0295	"1 bag ice pop molds"	status: want unsupported, got ready; name: want null, got "ice pop molds"; quantity: want null, got "1"; unit: want null, got "bag"
+- rx2c-0296	"1 tart ring"	status: want unsupported, got ready; name: want null, got "tart ring"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0297	"1 baking steel"	status: want unsupported, got ready; name: want null, got "baking steel"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0298	"1 rubber spatula"	status: want unsupported, got ready; name: want null, got "rubber spatula"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0299	"1 offset spatula"	status: want unsupported, got ready; name: want null, got "offset spatula"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0300	"1 vegetable peeler"	status: want unsupported, got ready; name: want null, got "vegetable peeler"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0301	"1 garlic press"	status: want unsupported, got ready; name: want null, got "garlic press"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0302	"1 citrus juicer"	status: want unsupported, got ready; name: want null, got "citrus juicer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0303	"1 deep-fry thermometer"	status: want unsupported, got ready; name: want null, got "deep-fry thermometer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0304	"1 trussing needle"	status: want unsupported, got ready; name: want null, got "trussing needle"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0305	"2 oven mitts"	status: want unsupported, got ready; name: want null, got "oven mitts"; quantity: want null, got "2"; unit: want null, got "each"
+- rx2c-0306	"1 kitchen timer"	status: want unsupported, got ready; name: want null, got "kitchen timer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0307	"1 sushi mat"	status: want unsupported, got ready; name: want null, got "sushi mat"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0308	"1 potato masher"	status: want unsupported, got ready; name: want null, got "potato masher"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0309	"4 rib eye steaks"	name: want "rib eye steaks", got "eye steaks"; unit: want "each", got "rib"
+- rx2c-0310	"4 strip loin steaks"	name: want "strip loin steaks", got "loin steaks"; unit: want "each", got "strip"
+- rx2c-0311	"2 wedge salads"	name: want "wedge salads", got "salads"; unit: want "each", got "wedge"
+- rx2c-0312	"1 coffee cup plain flour"	status: want needs_review, got ready
+- rx2c-0313	"1 wine glass red wine"	status: want needs_review, got ready
+- rx2c-0314	"2 soup spoons sugar"	status: want needs_review, got ready
+- rx2c-0315	"1 bowl cooked rice"	status: want needs_review, got ready
+- rx2c-0316	"2 fistfuls spinach"	status: want needs_review, got ready
+- rx2c-0317	"1 pottle cream"	status: want needs_review, got ready
+- rx2c-0318	"1 hunk Parmesan"	status: want needs_review, got ready
+- rx2c-0319	"1 chunk fresh ginger"	status: want needs_review, got ready
+- rx2c-0320	"1 slab tofu"	status: want needs_review, got ready
+- rx2c-0321	"1 tub-full yogurt"	status: want needs_review, got ready
+- rx2c-0322	"1 can-ful water"	status: want needs_review, got ready
+- rx2c-0323	"1 stone potatoes"	status: want needs_review, got ready
+- rx2c-0324	"1 crate oranges"	status: want needs_review, got ready
+- rx2c-0325	"1 carafe white wine"	status: want needs_review, got ready
+- rx2c-0326	"1 bucket ice"	status: want needs_review, got ready
+- rx2c-0327	"1 saucer milk"	status: want needs_review, got ready
+- rx2c-0328	"2 tsp fresh rosemary or dried"	status: want needs_review, got ready; name: want null, got "fresh rosemary"; alternatives: want ["fresh rosemary","dried rosemary"], got []
+- rx2c-0329	"1/4 cup fresh basil or dried"	status: want needs_review, got ready; name: want null, got "fresh basil"; alternatives: want ["fresh basil","dried basil"], got []
+- rx2c-0330	"1 tbsp fresh sage or dried"	status: want needs_review, got ready; name: want null, got "fresh sage"; alternatives: want ["fresh sage","dried sage"], got []
+- rx2c-0331	"2 cups fresh cherries or frozen"	status: want needs_review, got ready; name: want null, got "fresh cherries"; alternatives: want ["fresh cherries","frozen cherries"], got []
+- rx2c-0332	"1 lb fresh green beans or frozen"	status: want needs_review, got ready; name: want null, got "fresh green beans"; alternatives: want ["fresh green beans","frozen green beans"], got []
+- rx2c-0333	"1 tbsp dried dill or fresh"	status: want needs_review, got ready; name: want null, got "dried dill"; alternatives: want ["dried dill","fresh dill"], got []
+- rx2c-0334	"1/2 cup raisins and cranberries"	status: want needs_review, got ready
+- rx2c-0335	"1 cup diced onion and celery"	status: want needs_review, got ready
+- rx2c-0336	"2 tbsp butter and oil"	status: want needs_review, got ready
+- rx2c-0337	"1 cup chopped carrots and parsnips"	status: want needs_review, got ready
+- rx2c-0338	"4 cups broccoli and cauliflower florets"	status: want needs_review, got ready
+- rx2c-0339	"1 lb shrimp and scallops"	status: want needs_review, got ready
+- rx2c-0340	"2 cups spinach and kale"	status: want needs_review, got ready
+- rx2c-0341	"1/4 cup sesame and flax seeds"	status: want needs_review, got ready
+- rx2c-0342	"1 cup sliced peppers and onions"	status: want needs_review, got ready
+- rx2c-0343	"2 tbsp lime juice (juice of 1 lime)"	status: want needs_review, got ready
+- rx2c-0344	"3 tbsp orange juice (1 orange)"	status: want needs_review, got ready
+- rx2c-0349	"Carb 30g"	status: want unsupported, got ready; name: want null, got "Carb"; quantity: want null, got "30"; unit: want null, got "g"
+- rx2c-0350	"Prot 20 g"	status: want unsupported, got ready; name: want null, got "Prot"; quantity: want null, got "20"; unit: want null, got "g"
+- rx2c-0351	"Sat Fat 2g"	status: want unsupported, got ready; name: want null, got "Sat Fat"; quantity: want null, got "2"; unit: want null, got "g"
+- rx2c-0352	"Sugar alcohols 4 g"	status: want unsupported, got ready; name: want null, got "Sugar alcohols"; quantity: want null, got "4"; unit: want null, got "g"
+- rx2c-0365	"1 cup white or whole wheat flour"	alternatives: want ["white flour","whole wheat flour"], got ["white wheat flour","whole wheat flour"]
+- rx2c-0367	"1 cup flour (all-purpose or whole wheat)"	alternatives: want ["all-purpose flour","whole wheat flour"], got ["all-purpose","whole wheat"]
+- rx2c-0369	"1 lb Yukon Gold potatoes or red"	alternatives: want ["Yukon Gold potatoes","red potatoes"], got ["Yukon Gold potatoes","red"]
+- rx2c-0370	"1 #10 can diced tomatoes"	status: want ready, got needs_review; name: want "diced tomatoes", got null; unit: want "can", got "each"
+- rx2c-0371	"2 No. 303 cans cut green beans"	status: want ready, got needs_review; name: want "cut green beans" (or green beans), got "No"; unit: want "can", got "each"
+- rx2c-0372	"2 cups minus 1/4 cup sugar"	status: want ready, got needs_review; name: want "sugar", got "minus"; quantity: want "7/4", got "2"
+- rx2c-0373	"2 three cheese pizzas"	status: want ready, got needs_review; name: want "three cheese pizzas", got "cheese pizzas"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-0374	"1 tbsp Heinz 57 sauce"	status: want ready, got needs_review; name: want "Heinz 57 sauce", got "Heinz"
+- rx2c-0375	"a half-inch piece fresh ginger"	name: want "fresh ginger" (or ginger), got "half-inch piece fresh ginger"; unit: want "piece", got "each"
+- rx2c-0376	"1 splatter guard"	status: want unsupported, got ready; name: want null, got "splatter guard"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0377	"1 dough hook"	status: want unsupported, got ready; name: want null, got "dough hook"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0378	"1 popover tin"	status: want unsupported, got ready; name: want null, got "popover tin"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0379	"1 pizza wheel"	status: want unsupported, got ready; name: want null, got "pizza wheel"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0380	"1 cooling grid"	status: want unsupported, got ready; name: want null, got "cooling grid"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0381	"1 double boiler"	status: want unsupported, got ready; name: want null, got "double boiler"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0382	"1 bain-marie"	status: want unsupported, got ready; name: want null, got "bain-marie"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0383	"1 comal"	status: want unsupported, got ready; name: want null, got "comal"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0384	"1 molcajete"	status: want unsupported, got ready; name: want null, got "molcajete"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0385	"1 chinois"	status: want unsupported, got ready; name: want null, got "chinois"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0386	"1 proofing basket"	status: want unsupported, got ready; name: want null, got "proofing basket"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0387	"1 banneton"	status: want unsupported, got ready; name: want null, got "banneton"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0388	"1 cake dome"	status: want unsupported, got ready; name: want null, got "cake dome"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0389	"1 bag pie weights"	status: want unsupported, got ready; name: want null, got "pie weights"; quantity: want null, got "1"; unit: want null, got "bag"
+- rx2c-0390	"1 box cling film"	status: want unsupported, got ready; name: want null, got "cling film"; quantity: want null, got "1"; unit: want null, got "box"
+- rx2c-0391	"1 decorating comb"	status: want unsupported, got ready; name: want null, got "decorating comb"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0392	"1 cake leveler"	status: want unsupported, got ready; name: want null, got "cake leveler"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0393	"1 turntable"	status: want unsupported, got ready; name: want null, got "turntable"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0394	"6 cocktail umbrellas"	status: want unsupported, got ready; name: want null, got "cocktail umbrellas"; quantity: want null, got "6"; unit: want null, got "each"
+- rx2c-0395	"12 paper straws"	status: want unsupported, got ready; name: want null, got "paper straws"; quantity: want null, got "12"; unit: want null, got "each"
+- rx2c-0396	"1 nut milk bag"	status: want unsupported, got ready; name: want null, got "nut milk bag"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0397	"1 muslin cloth"	status: want unsupported, got ready; name: want null, got "muslin cloth"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0398	"1 apron"	status: want unsupported, got ready; name: want null, got "apron"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0399	"1 popcorn popper"	status: want unsupported, got ready; name: want null, got "popcorn popper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0400	"1 corkscrew"	status: want unsupported, got ready; name: want null, got "corkscrew"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0401	"1 dough docker"	status: want unsupported, got ready; name: want null, got "dough docker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0402	"1 fondue set"	status: want unsupported, got ready; name: want null, got "fondue set"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0403	"1 pastry wheel"	status: want unsupported, got ready; name: want null, got "pastry wheel"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0404	"1 3-quart saucier"	status: want unsupported, got needs_review; name: want null, got "saucier"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0405	"1 oil mister"	status: want unsupported, got ready; name: want null, got "oil mister"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0406	"1 bread lame"	status: want unsupported, got ready; name: want null, got "bread lame"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0407	"1 swirl heavy cream"	status: want needs_review, got ready
+- rx2c-0408	"2 squirts lemon juice"	status: want needs_review, got ready
+- rx2c-0409	"1 tot dark rum"	status: want needs_review, got ready
+- rx2c-0410	"1 bundle asparagus"	status: want needs_review, got ready
+- rx2c-0411	"1 hand bananas"	status: want needs_review, got ready
+- rx2c-0412	"1 twig rosemary"	status: want needs_review, got ready
+- rx2c-0413	"1 nip whisky"	status: want needs_review, got ready
+- rx2c-0414	"1 snifter cognac"	status: want needs_review, got ready
+- rx2c-0415	"1 flask brandy"	status: want needs_review, got ready
+- rx2c-0416	"1 eggcup rice"	status: want needs_review, got ready
+- rx2c-0417	"1 cake fresh yeast"	status: want needs_review, got ready
+- rx2c-0418	"1 shake paprika"	status: want needs_review, got ready
+- rx2c-0419	"1 smear Marmite"	status: want needs_review, got ready
+- rx2c-0420	"1 knuckle ginger"	status: want needs_review, got ready
+- rx2c-0421	"2 clusters grapes"	status: want needs_review, got ready
+- rx2c-0422	"1 tub-load ice"	status: want needs_review, got ready
+- rx2c-0423	"1 can tomatoes (14.5 oz, undrained)"	packageSize: want "14.5 oz", got null
+- rx2c-0424	"6 drop biscuits"	name: want "drop biscuits", got "biscuits"; unit: want "each", got "drop"
+- rx2c-0425	"12 drop cookies"	name: want "drop cookies", got "cookies"; unit: want "each", got "drop"
+- rx2c-0426	"4 sprinkle donuts"	name: want "sprinkle donuts", got "donuts"; unit: want "each", got "sprinkle"
+- rx2c-0427	"Vit. C 12 mg"	status: want unsupported, got ready; name: want null, got "Vit. C"; quantity: want null, got "12"; unit: want null, got "mg"
+- rx2c-0433	"1 leg of lamb (about 5 lb)"	status: want ready, got needs_review; name: want "leg of lamb", got "lamb"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-0434	"1 rack of lamb, frenched"	status: want ready, got needs_review; name: want "rack of lamb", got "lamb"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-0435	"2 racks of lamb"	status: want ready, got needs_review; name: want "racks of lamb", got "lamb"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-0446	"1 lb large shrimp (21-25 count)"	name: want "shrimp", got "large shrimp"
+- rx2c-0462	"1 #2½ can pumpkin purée"	status: want ready, got needs_review; name: want "pumpkin purée", got null; unit: want "can", got "each"
+- rx2c-0463	"2 No. 2 1/2 cans apricots"	status: want ready, got needs_review; name: want "apricots", got "No"; unit: want "can", got "each"
+- rx2c-0464	"1 large (#2) can crushed pineapple"	status: want ready, got needs_review; unit: want "can", got "each"
+- rx2c-0465	"Scant cup sugar"	name: want "sugar", got "Scant cup sugar"; unit: want "cup", got null
+- rx2c-0466	"1 Sunbeam mixer"	status: want unsupported, got ready; name: want null, got "Sunbeam mixer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0467	"1 Kenwood Chef mixer"	status: want unsupported, got ready; name: want null, got "Kenwood Chef mixer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0468	"1 Bosch mixer"	status: want unsupported, got ready; name: want null, got "Bosch mixer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0469	"1 Hamilton Beach mixer"	status: want unsupported, got ready; name: want null, got "Hamilton Beach mixer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0470	"1 Big Green Egg"	status: want unsupported, got ready; name: want null, got "Green Egg"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0471	"1 Kamado Joe"	status: want unsupported, got ready; name: want null, got "Kamado Joe"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0472	"1 crumpet ring"	status: want unsupported, got ready; name: want null, got "crumpet ring"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0473	"1 bacon rack"	status: want unsupported, got ready; name: want null, got "bacon rack"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0474	"1 fish slice"	status: want unsupported, got ready; name: want null, got "fish"; quantity: want null, got "1"; unit: want null, got "slice"
+- rx2c-0475	"1 tea ball"	status: want unsupported, got ready; name: want null, got "tea ball"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0476	"1 egg cup"	status: want unsupported, got ready; name: want null, got "egg cup"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0477	"1 lobster cracker"	status: want unsupported, got ready; name: want null, got "lobster cracker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0478	"2 crab crackers"	status: want unsupported, got ready; name: want null, got "crab crackers"; quantity: want null, got "2"; unit: want null, got "each"
+- rx2c-0479	"1 bag hickory wood chips"	status: want unsupported, got ready; name: want null, got "hickory wood chips"; quantity: want null, got "1"; unit: want null, got "bag"
+- rx2c-0480	"1 bag mesquite chips"	status: want unsupported, got ready; name: want null, got "mesquite chips"; quantity: want null, got "1"; unit: want null, got "bag"
+- rx2c-0481	"1 banana hanger"	status: want unsupported, got ready; name: want null, got "banana hanger"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0482	"1 helping mashed potatoes"	status: want needs_review, got ready
+- rx2c-0483	"1 dusting cocoa powder"	status: want needs_review, got ready
+- rx2c-0484	"1 sprinkling brown sugar"	status: want needs_review, got ready
+- rx2c-0485	"1 smattering chopped chives"	status: want needs_review, got ready
+- rx2c-0486	"1 scattering sesame seeds"	status: want needs_review, got ready
+- rx2c-0487	"1 slathering softened butter"	status: want needs_review, got ready
+- rx2c-0488	"1 drizzling warm honey"	status: want needs_review, got ready
+- rx2c-0489	"1 dousing hot sauce"	status: want needs_review, got ready
+- rx2c-0490	"1 square baking chocolate"	status: want needs_review, got ready
+- rx2c-0491	"1 bouquet flat-leaf parsley"	status: want needs_review, got ready
+- rx2c-0492	"1 spritz lime juice"	status: want needs_review, got ready
+- rx2c-0493	"2 Sips Dark Rum"	status: want needs_review, got ready
+- rx2c-0494	"1 Gulp Lemonade"	status: want needs_review, got ready
+- rx2c-0495	"1 pot chili"	status: want needs_review, got ready
+- rx2c-0496	"1 casserole dish baked ziti"	status: want needs_review, got ready
+- rx2c-0497	"1 large pot salted water"	status: want needs_review, got ready
+- rx2c-0498	"1 kettle boiling water"	status: want needs_review, got ready
+- rx2c-0510	"3 passion fruit"	status: want ready, got needs_review
+- rx2c-0511	"2 dragon fruit"	status: want ready, got needs_review
+- rx2c-0512	"2 star fruit"	status: want ready, got needs_review
+- rx2c-0515	"2 mug cakes"	status: want ready, got needs_review; name: want "mug cakes", got "cakes"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-0517	"2 pan bagnat"	status: want ready, got needs_review
+- rx2c-0519	"2 cups butter or iceberg lettuce"	alternatives: want ["butter lettuce","iceberg lettuce"], got ["butter","iceberg lettuce"]
+- rx2c-0520	"4 pint jars"	status: want unsupported, got needs_review; unit: want null, got "jar"; packageSize: want null, got {"quantity":{"kind":"exact","numerator":"4","denominator":"1","display":"4"},"unit":{"canonical":"pint","dimension":"volume","source":"pint"}}
+- rx2c-0521	"1 box 5-minute rice"	status: want ready, got needs_review; name: want "5-minute rice", got null
+- rx2c-0522	"1 pack 2-minute noodles"	status: want ready, got needs_review; name: want "2-minute noodles", got null
+- rx2c-0617	"2 cups arugula or baby spinach"	alternatives: want ["arugula","baby spinach"], got ["arugula spinach","baby spinach"]
+- rx2c-0639	"4 (6-oz) salmon fillets"	packageSize: want null, got {"quantity":{"kind":"exact","numerator":"6","denominator":"1","display":"6"},"unit":{"canonical":"oz","dimension":"mass","source":"oz"}}
+- rx2c-0655	"1 large (28 oz) can tomatoes"	status: want ready, got needs_review; unit: want "can", got "each"; packageSize: want "28 oz", got null
+- rx2c-0740	"7-Up soda, 1 can"	status: want ready, got needs_review; name: want "7-Up soda", got "Up soda"; quantity: want "1", got "7"; unit: want "can", got "each"
+- rx2c-0781	"1 lb small red potatoes"	name: want "red potatoes", got "small red potatoes"
+- rx2c-0806	"1 cup 7-Up"	status: want ready, got needs_review; name: want "7-Up", got null
+- rx2c-0808	"1 tsp Chinese 5 spice"	status: want ready, got needs_review; name: want "Chinese 5 spice", got "Chinese"
+- rx2c-0860	"1 lb. each ground beef and ground pork"	name: want null, got "ground beef and ground pork"
+- rx2c-0861	"2 eggs + 1 yolk"	name: want null, got "eggs"
+- rx2c-0880	"1 inch ginger, grated"	status: want ready, got needs_review; quantity: want "1", got null; unit: want "inch", got null
+- rx2c-0890	"2 tsp kosher salt (such as Diamond Crystal; use half for table salt)"	status: want needs_review, got ready
+- rx2c-0901	"1/2 tsp each salt and pepper"	name: want null, got "salt and pepper"
+- rx2c-0902	"1 tbsp each chopped parsley and dill"	name: want null, got "chopped parsley and dill"
+- rx2c-0906	"2 (6 oz) boneless skinless chicken breasts"	status: want ready, got needs_review
+- rx2c-0914	"1 cup flour, plus 2 tablespoons for dusting"	status: want ready, got needs_review; quantity: want "18", got "1"; unit: want "tbsp", got "cup"
+- rx2c-0938	"1/2 of a lemon"	status: want ready, got needs_review
+- rx2c-0944	"1 cup 2 percent milk"	status: want ready, got needs_review; name: want "2 percent milk", got null
+- rx2c-0949	"2 tbsp A1 sauce"	status: want ready, got needs_review; name: want "A1 sauce", got null
+- rx2c-0950	"1/2 cup 10X sugar"	status: want ready, got needs_review; name: want "10X sugar", got null
+- rx2c-0951	"1 cup 7 grain cereal"	status: want ready, got needs_review; name: want "7 grain cereal", got null
+- rx2c-0952	"1 cup 00 pizza flour"	status: want ready, got needs_review; name: want "00 pizza flour", got null
+- rx2c-0969	"1 lg. can (28 oz.) tomatoes"	status: want ready, got needs_review; unit: want "can", got "each"; packageSize: want "28 oz", got null
+- rx2c-0989	"4 hamburger or hot dog buns"	alternatives: want ["hamburger buns","hot dog buns"], got ["hamburger dog buns","hot dog buns"]
+- rx2c-1000	"1 cup cilantro or flat-leaf parsley"	alternatives: want ["cilantro","flat-leaf parsley"], got ["cilantro parsley","flat-leaf parsley"]
+- rx2c-1001	"1 cup ricotta or cottage cheese"	alternatives: want ["ricotta","cottage cheese"], got ["ricotta cheese","cottage cheese"]
+- rx2c-1004	"1 lb tilapia or other mild fish"	alternatives: want ["tilapia","other mild fish"], got ["tilapia mild fish","other mild fish"]
+- rx2c-1015	"Net carbs: 5 grams"	status: want unsupported, got ready; name: want null, got "Net carbs"; quantity: want null, got "5"; unit: want null, got "g"
+- rx2c-1025	"WW Points: 4"	status: want unsupported, got ready; name: want null, got "WW Points"; quantity: want null, got "4"; unit: want null, got "each"
+- rx2c-1026	"SmartPoints: 7"	status: want unsupported, got ready; name: want null, got "SmartPoints"; quantity: want null, got "7"; unit: want null, got "each"
+- rx2c-1030	"Sugar 10g"	status: want needs_review, got ready
+- rx2c-1031	"Total Carbohydrate 22 grams"	status: want unsupported, got ready; name: want null, got "Total Carbohydrate"; quantity: want null, got "22"; unit: want null, got "g"
+- rx2c-1032	"Potassium: 400 milligrams"	status: want unsupported, got ready; name: want null, got "Potassium"; quantity: want null, got "400"; unit: want null, got "mg"
+- rx2c-1037	"3 small zucchini"	status: want ready, got needs_review
+- rx2c-1038	"2 lbs medium potatoes"	name: want "potatoes", got "medium potatoes"
+- rx2c-1078	"a half-gallon milk"	name: want "milk", got "half-gallon milk"; quantity: want "1/2", got "1"; unit: want "gallon", got "each"
+- rx2c-1079	"a quarter-teaspoon salt"	name: want "salt", got "quarter-teaspoon salt"; quantity: want "1/4", got "1"; unit: want "tsp", got "each"
+- rx2c-1082	"a 3-pound whole chicken"	status: want ready, got needs_review
+- rx2c-1083	"Juice of 1 lemon"	status: want ready, got needs_review
+- rx2c-1096	"3 eggs plus 1 egg yolk"	name: want null, got "eggs"
+- rx2c-1099	"2 jalapeños"	status: want ready, got needs_review
+- rx2c-1112	"Salt: 1.2 g"	status: want needs_review, got ready
+- rx2c-1125	"1 lb. 2 oz. (510 g) flour"	status: want ready, got needs_review
+- rx2c-1136	"1 Tbsp + 1 tsp (20 ml) lemon juice"	status: want ready, got needs_review
+- rx2c-1214	"▢ 1 cup sugar"	status: want ready, got needs_review; name: want "sugar", got null; quantity: want "1", got null; unit: want "cup", got null
+- rx2c-1215	"☐ 2 tbsp butter"	status: want ready, got needs_review; name: want "butter", got null; quantity: want "2", got null; unit: want "tbsp", got null
+- rx2c-1239	"1 lb large shrimp"	name: want "shrimp", got "large shrimp"
+- rx2c-1240	"1 lb jumbo sea scallops"	name: want "sea scallops", got "jumbo sea scallops"
+- rx2c-1241	"between 1 and 2 tbsp sugar"	name: want "sugar", got "between"; quantity: want "1..2", got null; unit: want "tbsp", got null
+- rx2c-1246	"4 sudachi"	status: want ready, got needs_review
+- rx2c-1254	"4 pattypan squash"	status: want ready, got needs_review
+- rx2c-1255	"6 sunburst squash"	status: want ready, got needs_review
+- rx2c-1325	"6 pączki"	status: want ready, got needs_review
+- rx2c-1326	"2 khachapuri"	status: want ready, got needs_review
+- rx2c-1328	"6 simit"	status: want ready, got needs_review
+- rx2c-1329	"2 lahmacun"	status: want ready, got needs_review
+- rx2c-1330	"4 manakish"	status: want ready, got needs_review
+- rx2c-1331	"6 fatayer"	status: want ready, got needs_review
+- rx2c-1332	"8 kibbeh"	status: want ready, got needs_review
+- rx2c-1339	"2 roti canai"	status: want ready, got needs_review
+- rx2c-1346	"8 gulab jamun"	status: want ready, got needs_review
+- rx2c-1348	"4 dorayaki"	status: want ready, got needs_review
+- rx2c-1349	"2 taiyaki"	status: want ready, got needs_review
+- rx2c-1350	"4 onigiri"	status: want ready, got needs_review
+- rx2c-1351	"6 siopao"	status: want ready, got needs_review
+- rx2c-1352	"12 lumpia"	status: want ready, got needs_review
+- rx2c-1354	"20 pelmeni"	status: want ready, got needs_review
+- rx2c-1355	"12 vareniki"	status: want ready, got needs_review
+- rx2c-1489	"2 mug muffins"	status: want ready, got needs_review; name: want "mug muffins", got "muffins"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-1500	"4 pots de crème"	name: want "pots de crème", got "de crème"; unit: want "each", got "container"
+- rx2c-1501	"6 pan de bono"	status: want ready, got needs_review
+- rx2c-1520	"8 drop donuts"	name: want "drop donuts", got "donuts"; unit: want "each", got "drop"
+- rx2c-1558	"1 bucket fried chicken"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1559	"1 Ninja Creami"	status: want unsupported, got ready; name: want null, got "Ninja Creami"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1560	"1 Instant Vortex air fryer"	status: want unsupported, got ready; name: want null, got "Instant Vortex air fryer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1561	"1 Cosori air fryer"	status: want unsupported, got ready; name: want null, got "Cosori air fryer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1562	"1 Blendtec blender"	status: want unsupported, got ready; name: want null, got "Blendtec blender"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1563	"1 Lodge cast-iron skillet"	status: want unsupported, got ready; name: want null, got "Lodge cast-iron skillet"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1564	"1 Staub braiser"	status: want unsupported, got ready; name: want null, got "Staub braiser"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1565	"1 Le Creuset tagine"	status: want unsupported, got ready; name: want null, got "Le Creuset tagine"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1566	"1 Emile Henry tagine"	status: want unsupported, got ready; name: want null, got "Emile Henry tagine"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1567	"1 Emile Henry pie dish"	status: want unsupported, got ready; name: want null, got "Emile Henry pie dish"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1568	"1 Nordic Ware Bundt pan"	status: want unsupported, got ready; name: want null, got "Nordic Ware Bundt pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1569	"1 Hamilton Beach toaster"	status: want unsupported, got ready; name: want null, got "Hamilton Beach toaster"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1570	"1 Smeg kettle"	status: want unsupported, got ready; name: want null, got "Smeg kettle"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1571	"1 Bodum French press"	status: want unsupported, got ready; name: want null, got "Bodum French press"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1572	"1 Hario V60"	status: want unsupported, got ready; name: want null, got "Hario V60"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1573	"1 Keurig"	status: want unsupported, got ready; name: want null, got "Keurig"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1574	"1 Traeger grill"	status: want unsupported, got ready; name: want null, got "Traeger grill"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1575	"1 Weber Smokey Mountain"	status: want unsupported, got ready; name: want null, got "Weber Smokey Mountain"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1576	"1 Blackstone griddle"	status: want unsupported, got ready; name: want null, got "Blackstone griddle"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1577	"1 Masterbuilt turkey fryer"	status: want unsupported, got ready; name: want null, got "Masterbuilt turkey fryer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1578	"1 Presto FryDaddy"	status: want unsupported, got ready; name: want null, got "Presto FryDaddy"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1579	"1 Whirley Pop popcorn popper"	status: want unsupported, got ready; name: want null, got "Whirley Pop popcorn popper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1580	"1 Pyrex casserole"	status: want unsupported, got ready; name: want null, got "Pyrex casserole"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1581	"1 Corningware casserole dish"	status: want unsupported, got ready; name: want null, got "Corningware casserole dish"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1582	"1 Anova sous vide"	status: want unsupported, got ready; name: want null, got "Anova sous vide"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1583	"1 Joule sous vide circulator"	status: want unsupported, got ready; name: want null, got "Joule sous vide circulator"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1584	"1 OXO salad spinner"	status: want unsupported, got ready; name: want null, got "OXO salad spinner"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1585	"1 Zyliss garlic press"	status: want unsupported, got ready; name: want null, got "Zyliss garlic press"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1586	"1 Microplane zester"	status: want unsupported, got ready; name: want null, got "Microplane zester"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1587	"1 Silpat baking mat"	status: want unsupported, got ready; name: want null, got "Silpat baking mat"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1588	"1 Mauviel copper saucepan"	status: want unsupported, got ready; name: want null, got "Mauviel copper saucepan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1589	"1 Wüsthof paring knife"	status: want unsupported, got ready; name: want null, got "Wüsthof paring knife"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1590	"1 Benriner mandoline"	status: want unsupported, got ready; name: want null, got "Benriner mandoline"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1591	"1 Thermapen thermometer"	status: want unsupported, got ready; name: want null, got "Thermapen thermometer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1592	"1 Cuisinart hand mixer"	status: want unsupported, got ready; name: want null, got "Cuisinart hand mixer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1593	"1 Hamilton Beach Hot Pot"	status: want unsupported, got ready; name: want null, got "Hamilton Beach Hot Pot"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1594	"1 Chefman egg cooker"	status: want unsupported, got ready; name: want null, got "Chefman egg cooker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1595	"1 Yeti tumbler"	status: want unsupported, got ready; name: want null, got "Yeti tumbler"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1596	"1 Brita pitcher"	status: want unsupported, got ready; name: want null, got "Brita pitcher"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1597	"1 Igloo cooler"	status: want unsupported, got ready; name: want null, got "Igloo cooler"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1598	"1 Yeti cooler"	status: want unsupported, got ready; name: want null, got "Yeti cooler"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1599	"1 Le Creuset pâté terrine"	status: want unsupported, got ready; name: want null, got "Le Creuset pâté terrine"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1600	"1 cow creamer"	status: want unsupported, got ready; name: want null, got "cow creamer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1601	"1 ceramic pie bird"	status: want unsupported, got ready; name: want null, got "ceramic pie bird"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1602	"1 honey dipper"	status: want unsupported, got ready; name: want null, got "honey dipper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1603	"1 turkey fryer"	status: want unsupported, got ready; name: want null, got "turkey fryer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1604	"1 vertical chicken roaster"	status: want unsupported, got ready; name: want null, got "vertical chicken roaster"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1605	"1 pig roaster"	status: want unsupported, got ready; name: want null, got "pig roaster"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1606	"1 tamale steamer"	status: want unsupported, got ready; name: want null, got "tamale steamer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1607	"1 bag cherry wood chunks"	status: want unsupported, got ready; name: want null, got "cherry wood chunks"; quantity: want null, got "1"; unit: want null, got "bag"
+- rx2c-1608	"1 bag apple wood chunks"	status: want unsupported, got ready; name: want null, got "apple wood chunks"; quantity: want null, got "1"; unit: want null, got "bag"
+- rx2c-1609	"1 bag charcoal briquettes"	status: want unsupported, got ready; name: want null, got "charcoal briquettes"; quantity: want null, got "1"; unit: want null, got "bag"
+- rx2c-1610	"1 bag hardwood pellets"	status: want unsupported, got ready; name: want null, got "hardwood pellets"; quantity: want null, got "1"; unit: want null, got "bag"
+- rx2c-1611	"1 cedar plank"	status: want unsupported, got ready; name: want null, got "cedar plank"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1612	"2 alder planks"	status: want unsupported, got ready; name: want null, got "alder planks"; quantity: want null, got "2"; unit: want null, got "each"
+- rx2c-1613	"1 bag oak wood chips"	status: want unsupported, got ready; name: want null, got "oak wood chips"; quantity: want null, got "1"; unit: want null, got "bag"
+- rx2c-1614	"1 bag maple wood chips"	status: want unsupported, got ready; name: want null, got "maple wood chips"; quantity: want null, got "1"; unit: want null, got "bag"
+- rx2c-1615	"1 butter churn"	status: want unsupported, got ready; name: want null, got "butter churn"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1616	"1 egg poacher"	status: want unsupported, got ready; name: want null, got "egg poacher"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1617	"1 pie crust shield"	status: want unsupported, got ready; name: want null, got "pie crust shield"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1618	"1 pie server"	status: want unsupported, got ready; name: want null, got "pie server"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1619	"1 cookie stamp"	status: want unsupported, got ready; name: want null, got "cookie stamp"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1620	"1 doughnut pan"	status: want unsupported, got ready; name: want null, got "doughnut pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1621	"1 popover pan"	status: want unsupported, got ready; name: want null, got "popover pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1622	"1 muffin top pan"	status: want unsupported, got ready; name: want null, got "muffin top pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1623	"1 taco holder"	status: want unsupported, got ready; name: want null, got "taco holder"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1624	"1 corn stripper"	status: want unsupported, got ready; name: want null, got "corn stripper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1625	"1 garlic keeper"	status: want unsupported, got ready; name: want null, got "garlic keeper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1626	"1 bread bin"	status: want unsupported, got ready; name: want null, got "bread bin"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1627	"1 dough whisk"	status: want unsupported, got ready; name: want null, got "dough whisk"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1628	"1 ravioli stamp"	status: want unsupported, got ready; name: want null, got "ravioli stamp"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1629	"1 gnocchi board"	status: want unsupported, got ready; name: want null, got "gnocchi board"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1630	"1 onigiri mold"	status: want unsupported, got ready; name: want null, got "onigiri mold"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1631	"1 rice paddle"	status: want unsupported, got ready; name: want null, got "rice paddle"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1632	"1 tamagoyaki pan"	status: want unsupported, got ready; name: want null, got "tamagoyaki pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1633	"1 takoyaki pan"	status: want unsupported, got ready; name: want null, got "takoyaki pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1634	"1 tortilla warmer"	status: want unsupported, got ready; name: want null, got "tortilla warmer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1635	"1 bean pot"	status: want unsupported, got ready; name: want null, got "bean pot"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1636	"1 crepe spreader"	status: want unsupported, got ready; name: want null, got "crepe spreader"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1637	"1 churro maker"	status: want unsupported, got ready; name: want null, got "churro maker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1638	"1 snow cone machine"	status: want unsupported, got ready; name: want null, got "snow cone machine"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1639	"1 cream whipper"	status: want unsupported, got ready; name: want null, got "cream whipper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1640	"1 soda siphon"	status: want unsupported, got ready; name: want null, got "soda siphon"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1641	"1 milk frother"	status: want unsupported, got ready; name: want null, got "milk frother"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1642	"1 tea cozy"	status: want unsupported, got ready; name: want null, got "tea cozy"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1643	"1 burr grinder"	status: want unsupported, got ready; name: want null, got "burr grinder"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1644	"1 gooseneck kettle"	status: want unsupported, got ready; name: want null, got "gooseneck kettle"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1645	"1 espresso tamper"	status: want unsupported, got ready; name: want null, got "espresso tamper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1646	"1 knock box"	status: want unsupported, got ready; name: want null, got "knock box"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1647	"1 bar spoon"	status: want unsupported, got ready; name: want null, got "bar spoon"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1648	"1 muddler"	status: want unsupported, got ready; name: want null, got "muddler"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1649	"1 wine key"	status: want unsupported, got ready; name: want null, got "wine key"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1650	"1 jar opener"	status: want unsupported, got ready; name: want null, got "opener"; quantity: want null, got "1"; unit: want null, got "jar"
+- rx2c-1651	"1 lid lifter"	status: want unsupported, got ready; name: want null, got "lid lifter"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1652	"1 spoon rest"	status: want unsupported, got ready; name: want null, got "spoon rest"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1653	"4 kitchen sponges"	status: want unsupported, got ready; name: want null, got "kitchen sponges"; quantity: want null, got "4"; unit: want null, got "each"
+- rx2c-1654	"1 roll Bounty paper towels"	status: want unsupported, got ready; name: want null, got "roll Bounty paper towels"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1655	"1 box Hefty slider bags"	status: want unsupported, got ready; name: want null, got "Hefty slider bags"; quantity: want null, got "1"; unit: want null, got "box"
+- rx2c-1656	"1 roll Reynolds parchment paper"	status: want unsupported, got ready; name: want null, got "roll Reynolds parchment paper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1657	"1 box Glad ForceFlex trash bags"	status: want unsupported, got ready; name: want null, got "Glad ForceFlex trash bags"; quantity: want null, got "1"; unit: want null, got "box"
+- rx2c-1658	"1 package Solo cups"	status: want unsupported, got ready; name: want null, got "Solo cups"; quantity: want null, got "1"; unit: want null, got "package"
+- rx2c-1659	"1 pack Dixie cups"	status: want unsupported, got ready; name: want null, got "Dixie cups"; quantity: want null, got "1"; unit: want null, got "package"
+- rx2c-1660	"1 box birthday candles"	status: want unsupported, got ready; name: want null, got "birthday candles"; quantity: want null, got "1"; unit: want null, got "box"
+- rx2c-1661	"1 package cupcake toppers"	status: want unsupported, got ready; name: want null, got "cupcake toppers"; quantity: want null, got "1"; unit: want null, got "package"
+- rx2c-1662	"1 box bamboo skewers"	status: want unsupported, got ready; name: want null, got "bamboo skewers"; quantity: want null, got "1"; unit: want null, got "box"
+- rx2c-1663	"1 box Ziploc freezer bags"	status: want unsupported, got ready; name: want null, got "Ziploc freezer bags"; quantity: want null, got "1"; unit: want null, got "box"
+- rx2c-1664	"1 package coffee filters"	status: want unsupported, got ready; name: want null, got "coffee filters"; quantity: want null, got "1"; unit: want null, got "package"
+- rx2c-1665	"1 package cheesecloth"	status: want unsupported, got ready; name: want null, got "cheesecloth"; quantity: want null, got "1"; unit: want null, got "package"
+- rx2c-1666	"1 pack chopsticks"	status: want unsupported, got ready; name: want null, got "chopsticks"; quantity: want null, got "1"; unit: want null, got "package"
+- rx2c-1667	"1 box Cascade pods"	status: want unsupported, got ready; name: want null, got "Cascade pods"; quantity: want null, got "1"; unit: want null, got "box"
+- rx2c-1668	"1 bag Tide pods"	status: want unsupported, got ready; name: want null, got "Tide pods"; quantity: want null, got "1"; unit: want null, got "bag"
+- rx2c-1669	"1 bottle dish soap"	status: want unsupported, got ready; name: want null, got "dish soap"; quantity: want null, got "1"; unit: want null, got "bottle"
+- rx2c-1670	"1 bottle hand soap"	status: want unsupported, got ready; name: want null, got "hand soap"; quantity: want null, got "1"; unit: want null, got "bottle"
+- rx2c-1671	"1 roll butcher paper"	status: want unsupported, got ready; name: want null, got "roll butcher paper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1672	"1 Large Mixing Bowl"	status: want unsupported, got ready; name: want null, got "Mixing Bowl"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1673	"2 Pastry Brushes"	status: want unsupported, got ready; name: want null, got "Pastry Brushes"; quantity: want null, got "2"; unit: want null, got "each"
+- rx2c-1674	"1 split prosecco"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1675	"2 splits cava"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1676	"1 cone piloncillo"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1677	"2 cones piloncillo"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1678	"1 cone jaggery"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1679	"2 discs Mexican chocolate"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1680	"1 disk Ibarra chocolate"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1681	"3 stems lemongrass"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1682	"4 stems mint"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1683	"2 fronds dill"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1684	"1 frond fennel"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1685	"2 cobs sweetcorn"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1686	"1 cob corn"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1687	"20 threads saffron"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1688	"2 strands saffron"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1689	"1 lobe foie gras"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1690	"1 heel sourdough"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1691	"2 pumps vanilla syrup"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1692	"3 pumps caramel sauce"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1693	"1 spray avocado oil"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1694	"2 sprays cooking oil"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1695	"1 dropper vanilla extract"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1696	"1 eyedropper lemon extract"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1697	"2 K-cups hazelnut coffee"	status: want needs_review, got ready
+- rx2c-1698	"1 capsule espresso"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1699	"1 tallboy lager"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1700	"1 crowler IPA"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1701	"1 schooner lager"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1702	"1 tankard ale"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1703	"1 stein Oktoberfest beer"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1704	"1 goblet red wine"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1705	"1 coupe champagne"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1706	"1 thermos coffee"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1707	"1 urn coffee"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1708	"1 vial rosewater"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1709	"1 jeroboam champagne"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1710	"1 magnum rosé"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1711	"1 order fries"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1712	"1 basket onion rings"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1713	"1 side coleslaw"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1714	"1 plate nachos"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1715	"1 skosh cinnamon"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1716	"1 smidgeon nutmeg"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1717	"1 hint orange zest"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1718	"1 touch cayenne"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1719	"1 whiff smoked paprika"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1720	"1 swoosh balsamic glaze"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1721	"1 squiggle mayo"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1722	"1 zigzag sriracha mayo"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1723	"1 ribbon caramel"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1724	"1 film olive oil"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1725	"1 veil powdered sugar"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1726	"1 blanket shredded cheese"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1727	"1 mound mashed potatoes"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1728	"1 heap rice"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1729	"1 pile fries"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1730	"1 stack pancakes"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1731	"1 bite dark chocolate"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1732	"1 blade mace"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1733	"2 blades mace"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1734	"1 scraping nutmeg"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1735	"1 grating lemon zest"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1736	"1 spattering hot sauce"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1737	"1 Pump Vanilla Syrup"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1738	"1 Solo cup beer"	status: want needs_review, got ready
+- rx2c-1740	"1 juice glass orange juice"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1741	"1 demitasse espresso"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1742	"1 hamper apples"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1743	"1 tetra pak coconut water"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1744	"1 tray lasagna"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1745	"chicken drumsticks x 6"	status: want ready, got needs_review; name: want "chicken drumsticks", got "chicken drumsticks x"; quantity: want "6", got null; unit: want "each", got null
+- rx2c-1746	"avocados x 2"	status: want ready, got needs_review; name: want "avocados", got "avocados x"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-1747	"shallots x3"	status: want ready, got needs_review; name: want "shallots", got "shallots x3"; quantity: want "3", got null; unit: want "each", got null
+- rx2c-1748	"corn tortillas ×8"	status: want ready, got needs_review; quantity: want "8", got null; unit: want "each", got null
+- rx2c-1749	"4x chicken breasts"	name: want "chicken breasts", got "x chicken breasts"
+- rx2c-1750	"2x red onions"	name: want "red onions", got "x red onions"
+- rx2c-1751	"1x bunch coriander"	name: want "coriander", got "x bunch coriander"; unit: want "bunch", got "each"
+- rx2c-1754	"limes x 4, juiced"	status: want ready, got needs_review; name: want "limes", got "limes x"; quantity: want "4", got null; unit: want "each", got null
+- rx2c-1757	"6 sprinkle cupcakes"	name: want "sprinkle cupcakes", got "cupcakes"; unit: want "each", got "sprinkle"
+- rx2c-1758	"10 drop sugar biscuits"	name: want "drop sugar biscuits", got "sugar biscuits"; unit: want "each", got "drop"
+- rx2c-1759	"1 can coconut milk (13.5 oz, unsweetened)"	packageSize: want "13.5 oz", got null
+- rx2c-1760	"1 jar roasted red peppers (12 oz, drained)"	packageSize: want "12 oz", got null
+- rx2c-1762	"2 cans black beans (15 oz each, rinsed)"	packageSize: want "15 oz", got null
+- rx2c-1765	"1 bottle rosé (750 ml, chilled)"	packageSize: want "750 ml", got null
+- rx2c-1766	"1 tin anchovies (2 oz, oil reserved)"	packageSize: want "2 oz", got null
+- rx2c-1767	"1 package goat cheese (4 oz, crumbled)"	packageSize: want "4 oz", got null
+- rx2c-1776	"1 can cannellini or great northern beans"	alternatives: want ["cannellini beans","great northern beans"], got ["cannellini northern beans","great northern beans"]
+- rx2c-1780	"2 cups cherries and apricots"	status: want needs_review, got ready
+- rx2c-1781	"1 lb squid and shrimp"	status: want needs_review, got ready
+- rx2c-1782	"3 tbsp ghee and oil"	status: want needs_review, got ready
+- rx2c-1783	"1 cup raisins and currants"	status: want needs_review, got ready
+- rx2c-1784	"1 cup chopped dill and parsley"	status: want needs_review, got ready
+- rx2c-1793	"3 tbsp orange juice (from 1 orange)"	status: want needs_review, got ready
+- rx2c-1794	"1 tsp lime zest (1 lime)"	status: want needs_review, got ready
+- rx2c-1795	"2 cups cooked quinoa (2/3 cup dry)"	status: want needs_review, got ready
+- rx2c-1796	"1/4 cup lemon juice (about 2 lemons)"	status: want needs_review, got ready
+- rx2c-1940	"a quarter-cup olive oil"	name: want "olive oil", got "quarter-cup olive oil"; quantity: want "1/4", got "1"; unit: want "cup", got "each"
+- rx2c-1949	"a half-teaspoon vanilla bean paste"	name: want "vanilla bean paste", got "half-teaspoon vanilla bean paste"; quantity: want "1/2", got "1"; unit: want "tsp", got "each"
+- rx2c-1952	"1 half-pound ground lamb"	name: want "ground lamb", got "half-pound ground lamb"; quantity: want "1/2", got "1"; unit: want "lb", got "each"
+- rx2c-1953	"a half-pound ground veal"	name: want "ground veal", got "half-pound ground veal"; quantity: want "1/2", got "1"; unit: want "lb", got "each"
+- rx2c-1954	"a quarter-pound unsalted butter"	name: want "unsalted butter", got "quarter-pound unsalted butter"; quantity: want "1/4", got "1"; unit: want "lb", got "each"
+- rx2c-1955	"2 half-cups heavy cream"	name: want "heavy cream", got "half-cups heavy cream"; quantity: want "1", got "2"; unit: want "cup", got "each"
+- rx2c-1956	"3 quarter-cups rolled oats"	name: want "rolled oats", got "quarter-cups rolled oats"; quantity: want "3/4", got "3"; unit: want "cup", got "each"
+- rx2c-1957	"4 quarter-pound burger patties"	name: want "burger patties", got "quarter-pound burger patties"
+- rx2c-1958	"a half-gallon container orange juice"	name: want "orange juice", got "half-gallon container orange juice"; unit: want "container", got "each"; packageSize: want "1/2 gallon", got null
+- rx2c-1959	"one half-gallon bottle apple cider"	name: want "apple cider", got "half-gallon bottle apple cider"; unit: want "bottle", got "each"; packageSize: want "1/2 gallon", got null
+- rx2c-1968	"2 half-inch slices brioche"	name: want "brioche", got "half-inch slices brioche"; unit: want "slice", got "each"
+- rx2c-1976	"a half-cup (1 stick) salted butter"	name: want "salted butter", got "half-cup salted butter"; quantity: want "1/2", got "1"; unit: want "cup", got "each"
+- rx2c-1977	"a quarter-cup (60 ml) fresh lemon juice"	name: want "fresh lemon juice" (or lemon juice), got "quarter-cup fresh lemon juice"; quantity: want "1/4", got "1"; unit: want "cup", got "each"
+- rx2c-1979	"2x cups chicken stock"	name: want "chicken stock", got "x cups chicken stock"; unit: want "cup", got "each"
+- rx2c-1980	"1x tbsp honey"	name: want "honey", got "x tbsp honey"; unit: want "tbsp", got "each"
+- rx2c-1981	"2 x lemons"	name: want "lemons", got "x lemons"
+- rx2c-1982	"4 x garlic cloves"	name: want "garlic", got "x garlic"
+- rx2c-1987	"onions x 2"	status: want ready, got needs_review; name: want "onions", got "onions x"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-1988	"carrots x3"	status: want ready, got needs_review; name: want "carrots", got "carrots x3"; quantity: want "3", got null; unit: want "each", got null
+- rx2c-1989	"limes (x4)"	status: want ready, got needs_review; quantity: want "4", got null; unit: want "each", got null
+- rx2c-1990	"egg yolks × 2"	status: want ready, got needs_review; quantity: want "2", got null; unit: want "each", got null
+- rx2c-1991	"bay leaves x 2"	status: want ready, got needs_review; name: want "bay leaves", got "bay leaves x"; quantity: want "2", got null; unit: want "each", got null
+- rx2c-1992	"garlic cloves x 6"	status: want ready, got needs_review; name: want "garlic", got "garlic cloves x"; quantity: want "6", got null; unit: want "clove", got null
+- rx2c-1993	"chicken thighs (x 8)"	status: want ready, got needs_review; quantity: want "8", got null; unit: want "each", got null
+- rx2c-1994	"1 x tin coconut milk"	name: want "coconut milk", got "x tin coconut milk"; unit: want "tin", got "each"
+- rx2c-1995	"2x tins black beans"	name: want "black beans", got "x tins black beans"; unit: want "tin", got "each"
+- rx2c-1997	"1 cup 4X sugar"	status: want ready, got needs_review; name: want "4X sugar", got null
+- rx2c-1998	"2 cups 6x powdered sugar"	status: want ready, got needs_review; name: want "6x powdered sugar", got null
+- rx2c-1999	"2 x 12-inch flour tortillas"	status: want ready, got needs_review; quantity: want "2", got null; unit: want "each", got null
+- rx2c-2000	"4 x 6-inch sub rolls"	status: want ready, got needs_review; quantity: want "4", got null; unit: want "each", got null
+- rx2c-2001	"Lemons ×2"	status: want ready, got needs_review; quantity: want "2", got null; unit: want "each", got null
+- rx2c-2007	"0.5x 1x 2x"	status: want unsupported, got needs_review; name: want null, got "x"; quantity: want null, got "0.5"; unit: want null, got "each"
+- rx2c-2016	"1 cup minus 1 tablespoon buttermilk"	status: want ready, got needs_review; name: want "buttermilk", got "minus"; quantity: want "15", got "1"; unit: want "tbsp", got "cup"
+- rx2c-2017	"2 cups less 3 tablespoons cake flour"	status: want ready, got needs_review; name: want "cake flour", got "less"; quantity: want "29", got "2"; unit: want "tbsp", got "cup"
+- rx2c-2024	"1 cup sugar, plus 2 tbsp for sprinkling"	status: want ready, got needs_review; quantity: want "18", got "1"; unit: want "tbsp", got "cup"
+- rx2c-2030	"1 lb. 4 oz. (567 g) beef chuck"	status: want ready, got needs_review
+- rx2c-2031	"1 cup + 2 tbsp (270 ml) whole milk"	status: want ready, got needs_review
+- rx2c-2032	"2 cups minus 2 tablespoons (450 ml) water"	status: want ready, got needs_review; name: want "water", got "minus"; quantity: want "30", got "2"; unit: want "tbsp", got "cup"
+- rx2c-2035	"1 cup less 1 tsp vegetable oil"	status: want ready, got needs_review; name: want "vegetable oil", got "less"; quantity: want "47", got "1"; unit: want "tsp", got "cup"
+- rx2c-2039	"1 cup 3-cheese blend"	status: want ready, got needs_review; name: want "3-cheese blend", got null
+- rx2c-2041	"4 slices 12-grain bread"	status: want ready, got needs_review; name: want "12-grain bread", got null
+- rx2c-2045	"1 can 3-bean chili"	status: want ready, got needs_review; name: want "3-bean chili", got null
+- rx2c-2050	"2 cups 2 percent milk"	status: want ready, got needs_review; name: want "2 percent milk", got null
+- rx2c-2054	"2 cups type 00 flour"	status: want ready, got needs_review; name: want "type 00 flour", got "type"
+- rx2c-2055	"2 tbsp A.1. steak sauce"	status: want ready, got needs_review; name: want "A.1. steak sauce", got null
+- rx2c-2057	"1 (16 oz) bag 15 bean soup mix"	status: want ready, got needs_review; name: want "15 bean soup mix", got null
+- rx2c-2060	"2 cups 7 grain pilaf"	status: want ready, got needs_review; name: want "7 grain pilaf", got null
+- rx2c-2065	"1 cup (254 ml) water"	status: want needs_review, got ready
+- rx2c-2067	"1 cup (220 ml) vegetable stock"	status: want needs_review, got ready
+- rx2c-2070	"1/4 cup (65 ml) soy sauce"	status: want needs_review, got ready
+- rx2c-2072	"1 tbsp (16 ml) sherry vinegar"	status: want needs_review, got ready
+- rx2c-2076	"1/8 tsp (1 ml) cayenne"	status: want ready, got needs_review
+- rx2c-2084	"1 lb (500 g) parsnips"	status: want needs_review, got ready
+- rx2c-2085	"8 oz (250 g) button mushrooms"	status: want needs_review, got ready
+- rx2c-2086	"4 oz (100 g) walnut halves"	status: want needs_review, got ready
+- rx2c-2089	"2 lbs (1 kg) chicken wings"	status: want needs_review, got ready
+- rx2c-2090	"3 lb (1.5 kg) pork shoulder"	status: want needs_review, got ready
+- rx2c-2092	"250 g (8 oz) cream cheese"	status: want needs_review, got ready
+- rx2c-2093	"100 g (4 oz) butter"	status: want needs_review, got ready
+- rx2c-2094	"500 g (1 lb) beef mince"	status: want needs_review, got ready
+- rx2c-2096	"1 (400 g / 14 oz) tin chickpeas"	status: want ready, got needs_review; unit: want "tin", got "each"; packageSize: want "400 g", got null
+- rx2c-2097	"1 (14-ounce/397 g) can sweetened condensed milk"	status: want ready, got needs_review; unit: want "can", got "each"; packageSize: want "14 oz", got null
+- rx2c-2098	"2 (15 oz / 425 g) cans pinto beans"	status: want ready, got needs_review; unit: want "can", got "each"; packageSize: want "15 oz", got null
+- rx2c-2099	"1 (12 oz / 340 g) bag fresh cranberries"	status: want ready, got needs_review; unit: want "bag", got "each"; packageSize: want "12 oz", got null
+- rx2c-2100	"1 (15 oz / 500 g) can black beans"	unit: want "can", got "each"; packageSize: want "15 oz", got null
+- rx2c-2117	"2 cups cooked brown rice (from 2/3 cup uncooked)"	status: want needs_review, got ready
+- rx2c-2118	"3 cups cooked quinoa (about 1 cup dry)"	status: want needs_review, got ready
+- rx2c-2119	"1/3 cup fresh orange juice (from 1 orange)"	status: want needs_review, got ready
+- rx2c-2121	"1 cup basmati rice (makes 3 cups cooked)"	status: want needs_review, got ready
+- rx2c-2122	"1 lb dried chickpeas (yields about 6 cups cooked)"	status: want needs_review, got ready
+- rx2c-2125	"1 lb ground beef (about 2 cups cooked)"	status: want needs_review, got ready
+- rx2c-2126	"1 tsp salt (use 1/2 tsp if using table salt)"	status: want needs_review, got ready
+- rx2c-2131	"1 cup cooked farro (from 1/2 cup raw)"	status: want needs_review, got ready
+- rx2c-2132	"2 m chorizo"	noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2166	"6 hot dog or sausage buns"	alternatives: want ["hot dog buns","sausage buns"], got ["hot dog","sausage buns"]
+- rx2c-2179	"1/2 cup raisins or dried cranberries"	alternatives: want ["raisins","dried cranberries"], got ["raisins cranberries","dried cranberries"]
+- rx2c-2180	"1 tbsp sriracha or sambal oelek"	alternatives: want ["sriracha","sambal oelek"], got ["sriracha oelek","sambal oelek"]
+- rx2c-2200	"1 cup heavy cream or light"	alternatives: want ["heavy cream","light cream"], got ["heavy cream","light"]
+- rx2c-2201	"1 cup 2% milk or skim"	alternatives: want ["2% milk","skim milk"], got ["2% milk","skim"]
+- rx2c-2202	"1/2 cup salted butter or unsalted"	alternatives: want ["salted butter","unsalted butter"], got ["salted butter","unsalted"]
+- rx2c-2203	"1 cup brown rice or white"	alternatives: want ["brown rice","white rice"], got ["brown rice","white"]
+- rx2c-2204	"1 can light coconut milk or regular"	alternatives: want ["light coconut milk","regular coconut milk"], got ["light coconut milk","regular"]
+- rx2c-2205	"1 cup cashews, almonds, or peanuts"	alternatives: want ["cashews","almonds","peanuts"], got ["almonds","peanuts"]
+- rx2c-2206	"1 cup cheddar, Colby, or pepper jack cheese"	alternatives: want ["cheddar","Colby","pepper jack cheese"], got ["cheddar jack cheese","Colby jack cheese","pepper jack cheese"]
+- rx2c-2208	"1/2 cup pecans, walnuts or hazelnuts"	alternatives: want ["pecans","walnuts","hazelnuts"], got ["walnuts","hazelnuts"]
+- rx2c-2216	"2 tbsp parsley, cilantro, or dill"	name: want null, got "parsley"; alternatives: want ["parsley","cilantro","dill"], got []
+- rx2c-2217	"1 cup stock, beef or chicken"	name: want null, got "stock"; alternatives: want ["beef stock","chicken stock"], got []
+- rx2c-2218	"2 cups rice, jasmine or basmati"	name: want null, got "rice"; alternatives: want ["jasmine rice","basmati rice"], got []
+- rx2c-2219	"1 cup cheese, Gruyère or Comté"	name: want null, got "cheese"; alternatives: want ["Gruyère","Comté"], got []
+- rx2c-2222	"2 cups greens, collard or mustard"	alternatives: want ["collard greens","mustard greens"], got ["collard","mustard"]
+- rx2c-2226	"1 lb fish, cod or halibut"	name: want null, got "fish"; alternatives: want ["cod","halibut"], got []
+- rx2c-2228	"2 cups milk, dairy or oat"	name: want null, got "milk"; alternatives: want ["dairy milk","oat milk"], got []
+- rx2c-2229	"1 tbsp oil, olive or avocado"	name: want null, got "oil"; alternatives: want ["olive oil","avocado oil"], got []
+- rx2c-2230	"1 lb squash, butternut or acorn"	name: want null, got "squash"; alternatives: want ["butternut squash","acorn squash"], got []
+- rx2c-2232	"1 tbsp vinegar (red wine or sherry)"	alternatives: want ["red wine vinegar","sherry vinegar"], got ["red wine","sherry"]
+- rx2c-2233	"1 lb potatoes (russet or Yukon Gold)"	alternatives: want ["russet potatoes","Yukon Gold potatoes"], got ["russet","Yukon Gold"]
+- rx2c-2243	"1 lb medium shrimp, fresh or frozen"	name: want "shrimp", got "medium shrimp"
+- rx2c-2265	"3 lettuce leaves"	name: want "lettuce", got "lettuce leaves"; unit: want "leaf", got "each"
+- rx2c-2266	"8 sage leaves"	name: want "sage", got "sage leaves"; unit: want "leaf", got "each"
+- rx2c-2267	"12 basil leaves, torn"	name: want "basil", got "basil leaves"; unit: want "leaf", got "each"
+- rx2c-2268	"4 kale leaves"	name: want "kale", got "kale leaves"; unit: want "leaf", got "each"
+- rx2c-2276	"6 orange wedges"	name: want "orange", got "orange wedges"; unit: want "wedge", got "each"
+- rx2c-2277	"3 celery ribs, sliced"	name: want "celery", got "celery ribs"; unit: want "rib", got "each"
+- rx2c-2278	"2 bok choy heads"	name: want "bok choy", got "bok choy heads"; unit: want "head", got "each"
+- rx2c-2279	"1 broccoli head, cut into florets"	name: want "broccoli", got "broccoli head"; unit: want "head", got "each"
+- rx2c-2280	"4 nori sheets"	name: want "nori", got "nori sheets"; unit: want "sheet", got "each"
+- rx2c-2281	"6 phyllo sheets"	name: want "phyllo", got "phyllo sheets"; unit: want "sheet", got "each"
+- rx2c-2282	"8 rice paper sheets"	name: want "rice paper", got "rice paper sheets"; unit: want "sheet", got "each"
+- rx2c-2283	"3 gelatin sheets"	name: want "gelatin", got "gelatin sheets"; unit: want "sheet", got "each"
+- rx2c-2284	"2 puff pastry sheets, thawed"	name: want "puff pastry", got "puff pastry sheets"; unit: want "sheet", got "each"
+- rx2c-2285	"2 vanilla pods, split"	name: want "vanilla", got "vanilla pods"; unit: want "pod", got "each"
+- rx2c-2286	"4 okra pods"	name: want "okra", got "okra pods"; unit: want "pod", got "each"
+- rx2c-2288	"1 parsley bunch"	name: want "parsley", got "parsley bunch"; unit: want "bunch", got "each"
+- rx2c-2289	"2 scallion bunches"	name: want "scallion", got "scallion bunches"; unit: want "bunch", got "each"
+- rx2c-2295	"2 salmon pieces (6 oz each)"	name: want "salmon", got "salmon pieces"; unit: want "piece", got "each"; packageSize: want null, got {"quantity":{"kind":"exact","numerator":"6","denominator":"1","display":"6"},"unit":{"canonical":"oz","dimension":"mass","source":"oz"}}
+- rx2c-2313	"3 whole cloves"	name: want "whole cloves", got "whole"; unit: want "each", got "clove"
+- rx2c-2314	"10 cloves"	status: want ready, got needs_review; name: want "cloves", got null; unit: want "each", got "clove"
+- rx2c-2323	"4 (6 oz) cups lemon yogurt"	status: want ready, got needs_review; unit: want "container", got "cup"; packageSize: want "6 oz", got null
+- rx2c-2324	"2 cups (4 oz each) unsweetened applesauce"	unit: want "container", got "cup"; packageSize: want "4 oz", got null
+- rx2c-2325	"6 4-oz cups chocolate pudding"	status: want ready, got needs_review; unit: want "container", got "cup"; packageSize: want "4 oz", got null
+- rx2c-2326	"8 oz cup sour cream"	name: want "sour cream", got "cup sour cream"; quantity: want "1", got "8"; unit: want "container", got "oz"; packageSize: want "8 oz", got null
+- rx2c-2327	"1 (5.3-ounce) cup Greek yogurt"	status: want ready, got needs_review; unit: want "container", got "cup"; packageSize: want "5.3 oz", got null
+- rx2c-2332	"2 (8 oz) cups sour cream"	status: want ready, got needs_review; unit: want "container", got "cup"; packageSize: want "8 oz", got null
+- rx2c-2333	"4 cups (6 ounces each) vanilla yogurt"	unit: want "container", got "cup"; packageSize: want "6 oz", got null
+- rx2c-2334	"2 6-ounce cups key lime yogurt"	status: want ready, got needs_review; unit: want "container", got "cup"; packageSize: want "6 oz", got null
+- rx2c-2335	"12 oz bag frozen broccoli florets"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-2336	"16-ounce jar salsa verde"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-2337	"10 oz box frozen chopped spinach"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-2338	"1 lb box thin spaghetti"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-2339	"32 oz carton vegetable broth"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-2340	"8 oz tub whipped topping"	noAmount: a unit was pre-filled; noAmount: a package was pre-filled
+- rx2c-2341	"250 g block halloumi"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-2342	"1 kg bag basmati rice"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-2343	"750 ml bottle red wine"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-2344	"1 lb loaf French bread"	name: want "French bread", got "loaf French bread"; unit: want "loaf", got "lb"; packageSize: want "1 lb", got null
+- rx2c-2345	"8 oz ball fresh mozzarella"	name: want "fresh mozzarella", got "ball fresh mozzarella"; quantity: want "1", got "8"; unit: want "ball", got "oz"; packageSize: want "8 oz", got null
+- rx2c-2346	"1-oz envelope ranch seasoning mix"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-2347	"4.5 oz tube tomato paste"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-2371	"2 (8 oz) ribeye steaks"	status: want ready, got needs_review
+- rx2c-2372	"4 (6 ounce) boneless chicken breasts"	status: want ready, got needs_review
+- rx2c-2373	"6 (4-oz) tilapia fillets"	packageSize: want null, got {"quantity":{"kind":"exact","numerator":"4","denominator":"1","display":"4"},"unit":{"canonical":"oz","dimension":"mass","source":"oz"}}
+- rx2c-2374	"2 (10-ounce) bone-in pork chops"	status: want ready, got needs_review
+- rx2c-2375	"1 (3 lb) whole chicken"	status: want ready, got needs_review
+- rx2c-2376	"a 4-pound pork shoulder"	status: want ready, got needs_review
+- rx2c-2377	"1 (2-lb) flank steak"	status: want ready, got needs_review
+- rx2c-2378	"2 (3-pound) chickens"	status: want ready, got needs_review
+- rx2c-2379	"4 salmon fillets (5 oz each)"	packageSize: want null, got {"quantity":{"kind":"exact","numerator":"5","denominator":"1","display":"5"},"unit":{"canonical":"oz","dimension":"mass","source":"oz"}}
+- rx2c-2380	"6 lamb chops (about 4 oz each)"	packageSize: want null, got {"quantity":{"kind":"exact","numerator":"4","denominator":"1","display":"4"},"unit":{"canonical":"oz","dimension":"mass","source":"oz"}}
+- rx2c-2381	"3 (1 lb) eggplants"	status: want ready, got needs_review
+- rx2c-2382	"1 (1 lb) pork tenderloin"	status: want ready, got needs_review
+- rx2c-2383	"1 4-lb chicken"	status: want ready, got needs_review
+- rx2c-2384	"4 6-oz salmon fillets"	packageSize: want null, got {"quantity":{"kind":"exact","numerator":"6","denominator":"1","display":"6"},"unit":{"canonical":"oz","dimension":"mass","source":"oz"}}
+- rx2c-2385	"2 8-ounce sirloin steaks"	status: want ready, got needs_review
+- rx2c-2386	"4 (5-oz) halibut fillets"	packageSize: want null, got {"quantity":{"kind":"exact","numerator":"5","denominator":"1","display":"5"},"unit":{"canonical":"oz","dimension":"mass","source":"oz"}}
+- rx2c-2387	"2 cod fillets (6 oz each)"	packageSize: want null, got {"quantity":{"kind":"exact","numerator":"6","denominator":"1","display":"6"},"unit":{"canonical":"oz","dimension":"mass","source":"oz"}}
+- rx2c-2388	"2 lbs large shrimp, peeled and deveined"	name: want "shrimp", got "large shrimp"
+- rx2c-2389	"1 lb small new potatoes"	name: want "new potatoes", got "small new potatoes"
+- rx2c-2403	"1 lb medium shrimp"	name: want "shrimp", got "medium shrimp"
+- rx2c-2406	"2 med zucchini"	status: want ready, got needs_review
+- rx2c-2412	"Large pinch of flaky salt"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-2413	"Splash of red wine vinegar"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-2414	"Handful of fresh basil"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-2432	"Vitamin D: 1.2 mcg"	status: want unsupported, got needs_review; name: want null, got "mcg"; quantity: want null, got "1.2"; unit: want null, got "each"
+- rx2c-2434	"Magnesium: 55 mg"	status: want unsupported, got ready; name: want null, got "Magnesium"; quantity: want null, got "55"; unit: want null, got "mg"
+- rx2c-2435	"Zinc 3 mg"	status: want unsupported, got ready; name: want null, got "Zinc"; quantity: want null, got "3"; unit: want null, got "mg"
+- rx2c-2436	"Caffeine: 60 mg"	status: want unsupported, got ready; name: want null, got "Caffeine"; quantity: want null, got "60"; unit: want null, got "mg"
+- rx2c-2439	"Fat: 9g (14% DV)"	status: want unsupported, got ready; name: want null, got "Fat"; quantity: want null, got "9"; unit: want null, got "g"
+- rx2c-2448	"Sugar 22g"	status: want needs_review, got ready
+- rx2c-2449	"Salt: 0.9 g"	status: want needs_review, got ready
+- rx2c-2453	"WW SmartPoints: 5"	status: want unsupported, got ready; name: want null, got "WW SmartPoints"; quantity: want null, got "5"; unit: want null, got "each"
+- rx2c-2455	"Points: 7"	status: want unsupported, got ready; name: want null, got "Points"; quantity: want null, got "7"; unit: want null, got "each"
+- rx2c-2457	"4.7 from 89 votes"	status: want unsupported, got needs_review; name: want null, got "from"; quantity: want null, got "4.7"; unit: want null, got "each"
+- rx2c-2459	"4.5 stars"	status: want unsupported, got ready; name: want null, got "stars"; quantity: want null, got "4.5"; unit: want null, got "each"
+- rx2c-2462	"4.6 (1,024 reviews)"	status: want unsupported, got needs_review; quantity: want null, got "4.6"; unit: want null, got "each"
+- rx2c-2466	"4.9 stars from 1,532 reviews"	status: want unsupported, got needs_review; name: want null, got "stars from"; quantity: want null, got "4.9"; unit: want null, got "each"
+- rx2c-2523	"Tap or click steps to mark as complete"	status: want unsupported, got needs_review; alternatives: want [], got ["Tap steps to mark as complete","click steps to mark as complete"]
+- rx2c-2528	"1 sheet parchment paper"	status: want unsupported, got ready; name: want null, got "parchment paper"; quantity: want null, got "1"; unit: want null, got "sheet"
+- rx2c-2529	"4 (8 oz) ramekins"	status: want unsupported, got needs_review; name: want null, got "ramekins"; quantity: want null, got "4"; unit: want null, got "each"
+- rx2c-2530	"8 wooden skewers, soaked"	status: want unsupported, got ready; name: want null, got "wooden skewers"; quantity: want null, got "8"; unit: want null, got "each"
+- rx2c-2531	"1 fine-mesh strainer"	status: want unsupported, got ready; name: want null, got "fine-mesh strainer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2532	"1 muffin tin"	status: want unsupported, got ready; name: want null, got "muffin tin"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2533	"1 loaf tin"	status: want unsupported, got ready; name: want null, got "tin"; quantity: want null, got "1"; unit: want null, got "loaf"
+- rx2c-2534	"1 cake tin (20 cm)"	status: want unsupported, got ready; name: want null, got "cake tin"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2535	"2 cooling racks"	status: want unsupported, got ready; name: want null, got "cooling racks"; quantity: want null, got "2"; unit: want null, got "each"
+- rx2c-2536	"1 springform pan (10-inch)"	status: want unsupported, got ready; name: want null, got "springform pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2537	"1 pie dish"	status: want unsupported, got ready; name: want null, got "pie dish"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2538	"1 roasting tin"	status: want unsupported, got ready; name: want null, got "roasting tin"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2626	"1 tub vanilla frosting"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2648	"1 pastry cutter"	status: want unsupported, got ready; name: want null, got "pastry cutter"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2649	"2 large mixing bowls"	status: want unsupported, got ready; name: want null, got "mixing bowls"; quantity: want null, got "2"; unit: want null, got "each"
+- rx2c-2650	"1 nonstick skillet"	status: want unsupported, got ready; name: want null, got "nonstick skillet"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2653	"6 stick pretzels"	name: want "stick pretzels", got "pretzels"; unit: want "each", got "stick"
+- rx2c-2658	"3 cube rolls"	name: want "cube rolls", got "rolls"; unit: want "each", got "cube"
+- rx2c-2661	"4 link sausages"	name: want "link sausages", got "sausages"; unit: want "each", got "link"
+- rx2c-2672	"1 cup whole milk or skim"	alternatives: want ["whole milk","skim milk"], got ["whole milk","skim"]
+- rx2c-2678	"1/4 cup lemon juice (from about 2 lemons)"	status: want needs_review, got ready
+- rx2c-2680	"2 tsp lemon zest (from 1 lemon)"	status: want needs_review, got ready
+- rx2c-2689	"Sodium: 410mg (18%)"	status: want unsupported, got ready; name: want null, got "Sodium"; quantity: want null, got "410"; unit: want null, got "mg"
+- rx2c-2819	"1 pastry blender"	status: want unsupported, got ready; name: want null, got "pastry blender"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2820	"1 flour sack towel"	status: want unsupported, got ready; name: want null, got "flour sack towel"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2821	"1 madeleine pan"	status: want unsupported, got ready; name: want null, got "madeleine pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2822	"1 food mill"	status: want unsupported, got ready; name: want null, got "food mill"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2823	"1 lemon squeezer"	status: want unsupported, got ready; name: want null, got "lemon squeezer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2824	"1 apple corer"	status: want unsupported, got ready; name: want null, got "apple corer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2825	"1 melon baller"	status: want unsupported, got ready; name: want null, got "melon baller"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2826	"1 slotted spoon"	status: want unsupported, got ready; name: want null, got "slotted spoon"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2827	"1 fish spatula"	status: want unsupported, got ready; name: want null, got "fish spatula"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2828	"1 tortilla press"	status: want unsupported, got ready; name: want null, got "tortilla press"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2829	"1 rice cooker"	status: want unsupported, got ready; name: want null, got "rice cooker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2830	"1 herb stripper"	status: want unsupported, got ready; name: want null, got "herb stripper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2831	"1 citrus press"	status: want unsupported, got ready; name: want null, got "citrus press"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2832	"2 pie plates"	status: want unsupported, got ready; name: want null, got "pie plates"; quantity: want null, got "2"; unit: want null, got "each"
+- rx2c-2833	"1 enamel roasting pan"	status: want unsupported, got ready; name: want null, got "enamel roasting pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2834	"1 stovetop smoker"	status: want unsupported, got ready; name: want null, got "stovetop smoker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2835	"1 pair kitchen shears"	status: want unsupported, got ready; name: want null, got "pair kitchen shears"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2836	"1 large cutting board"	status: want unsupported, got ready; name: want null, got "cutting board"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2837	"1 12-inch nonstick frying pan"	status: want unsupported, got ready; name: want null, got "nonstick frying pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2838	"1 6-quart Instant Pot"	status: want unsupported, got needs_review; name: want null, got "Instant Pot"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2839	"1 sheet of baking parchment"	status: want unsupported, got ready; name: want null, got "baking parchment"; quantity: want null, got "1"; unit: want null, got "sheet"
+- rx2c-2841	"1 small offset spatula"	status: want unsupported, got ready; name: want null, got "offset spatula"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2842	"1 spider strainer"	status: want unsupported, got ready; name: want null, got "spider strainer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2843	"4 jam jars with lids"	status: want unsupported, got ready; name: want null, got "jam jars with lids"; quantity: want null, got "4"; unit: want null, got "each"
+- rx2c-2844	"1 deep-fat thermometer"	status: want unsupported, got ready; name: want null, got "deep-fat thermometer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2845	"1 trivet"	status: want unsupported, got ready; name: want null, got "trivet"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-2856	"1 ladleful hot stock"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2857	"1 jugful cold water"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2858	"1 thimbleful gin"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2859	"2 tumblerfuls water"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2860	"1 coffee mug oats"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2862	"2 US tablespoons honey (UK)"	status: want needs_review, got ready
+- rx2c-2863	"1 large spoon of yogurt"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2864	"1 cereal bowl oats"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2865	"1 mugful milk"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2866	"1 quarter-pint cream"	name: want "cream", got "quarter-pint cream"; quantity: want "1/4", got "1"; unit: want "pint", got "each"
+- rx2c-2872	"1 log goat cheese"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2873	"1 wheel Camembert"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2877	"1/2 cup orange juice (from 2 navel oranges)"	status: want needs_review, got ready
+- rx2c-2878	"1 tbsp grated lemon zest (1 large lemon)"	status: want needs_review, got ready
+- rx2c-2879	"1/4 cup lime juice (about 3 limes)"	status: want needs_review, got ready
+- rx2c-2880	"2 tbsp grapefruit juice (1/2 grapefruit)"	status: want needs_review, got ready
+- rx2c-2881	"1 cup pomegranate seeds (from 1 pomegranate)"	status: want needs_review, got ready
+- rx2c-2882	"1 tsp orange peel (1 orange)"	status: want needs_review, got ready
+- rx2c-2883	"1/3 cup passion fruit pulp (from 4 passion fruit)"	status: want needs_review, got ready
+- rx2c-2884	"2 tbsp lemon juice (1/2 lemon)"	status: want needs_review, got ready
+- rx2c-2886	"2 cups fresh tomato juice (from 3 lb tomatoes)"	status: want needs_review, got ready
+- rx2c-2887	"1/2 cup lemon juice (4-5 lemons)"	status: want needs_review, got ready
+- rx2c-2888	"3 tbsp ginger juice (from a 3-inch piece)"	status: want needs_review, got ready
+- rx2c-2889	"2 tsp lime zest (2 limes), plus wedges to serve"	status: want needs_review, got ready
+- rx2c-2899	"2 medium zucchini (about 1 lb)"	status: want ready, got needs_review
+- rx2c-2903	"2 cups cooked chickpeas (3/4 cup dried)"	status: want needs_review, got ready
+- rx2c-2904	"1 cup rehydrated porcini (1 oz dried)"	status: want needs_review, got ready
+- rx2c-2905	"3 cups cooked farro (1 cup uncooked)"	status: want needs_review, got ready
+- rx2c-2906	"1/2 cup soaked cashews (1/3 cup raw)"	status: want needs_review, got ready
+- rx2c-2907	"2 cups cooked lentils (from 3/4 cup dry)"	status: want needs_review, got ready
+- rx2c-2909	"1 cup cooked quinoa (about 1/3 cup dry)"	status: want needs_review, got ready
+- rx2c-2919	"1 cup carrots and celery"	status: want needs_review, got ready
+- rx2c-2920	"1/2 cup cranberries and pecans"	status: want needs_review, got ready
+- rx2c-2921	"2 cups zucchini and yellow squash"	status: want needs_review, got ready
+- rx2c-2922	"1 lb chicken and sausage"	status: want needs_review, got ready
+- rx2c-2923	"4 cups kale and chard"	status: want needs_review, got ready
+- rx2c-2924	"1 cup apples and pears, diced"	status: want needs_review, got ready
+- rx2c-2925	"2 tbsp salt and sugar"	status: want needs_review, got ready
+- rx2c-2926	"1 cup mayonnaise and mustard"	status: want needs_review, got ready
+- rx2c-2927	"1/2 cup raisins and dates"	status: want needs_review, got ready
+- rx2c-2928	"3 cups cabbage and carrots"	status: want needs_review, got ready
+- rx2c-2929	"1 cup chopped tomatoes and cucumbers"	status: want needs_review, got ready
+- rx2c-2930	"1 lb clams and mussels"	status: want needs_review, got ready
+- rx2c-2931	"1/4 cup parsley and basil"	status: want needs_review, got ready
+- rx2c-2932	"2 cups rice and quinoa"	status: want needs_review, got ready
+- rx2c-2933	"1 tsp cumin and paprika"	status: want needs_review, got ready
+- rx2c-2941	"1 tub garlic and herb cheese spread"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2955	"1 cup cookie or graham cracker crumbs"	alternatives: want ["cookie crumbs","graham cracker crumbs"], got ["cookie cracker crumbs","graham cracker crumbs"]
+- rx2c-2971	"1 lb ground pork, veal, or beef"	name: want null, got "ground pork"; alternatives: want ["ground pork","ground veal","ground beef"], got []
+- rx2c-2972	"1 cup blueberries, blackberries or raspberries"	alternatives: want ["blueberries","blackberries","raspberries"], got ["blackberries","raspberries"]
+- rx2c-2978	"2 rib roasts"	name: want "rib roasts", got "roasts"; unit: want "each", got "rib"
+- rx2c-2979	"4 rib chops"	name: want "rib chops", got "chops"; unit: want "each", got "rib"
+- rx2c-2988	"4 wedge fries"	name: want "wedge fries", got "fries"; unit: want "each", got "wedge"
+- rx2c-3000	"Clove of garlic, minced"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-3001	"Sprig of rosemary"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-3002	"Stick of butter, softened"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-3003	"Head of lettuce"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-3004	"Slice of bread"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-3005	"Can of chickpeas, drained"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-3006	"Handful of spinach"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-3007	"Dash of Worcestershire sauce"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-3008	"Drop of food coloring"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-3009	"Splash of lemon juice"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-3010	"Sprinkle of paprika"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-3017	"Generous pinch of salt"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-3018	"Small handful of parsley"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-3020	"Wedge of lemon"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-3021	"Ear of corn"	status: want ready, got needs_review; quantity: want "1", got null
+- rx2c-3024	"of which saturates 2.1 g"	status: want unsupported, got ready; name: want null, got "which saturates"; quantity: want null, got "2.1"; unit: want null, got "g"
+- rx2c-3025	"of which sugars 5.2g"	status: want unsupported, got ready; name: want null, got "which sugars"; quantity: want null, got "5.2"; unit: want null, got "g"
+- rx2c-3031	"Vitamin E 2 mg"	status: want unsupported, got ready; name: want null, got "Vitamin E"; quantity: want null, got "2"; unit: want null, got "mg"
+- rx2c-3046	"Serving size 2/3 cup (55g)"	status: want unsupported, got needs_review; name: want null, got "Serving size"; quantity: want null, got "55"; unit: want null, got "g"
+- rx2c-3048	"Riboflavin 0.3 mg"	status: want unsupported, got ready; name: want null, got "Riboflavin"; quantity: want null, got "0.3"; unit: want null, got "mg"
+- rx2c-3054	"Salt 0.8g"	status: want needs_review, got ready
+- rx2c-3055	"Sugar 12 g"	status: want needs_review, got ready
+- rx2c-3070	"1 No. 10 can whole tomatoes"	status: want ready, got needs_review; name: want "whole tomatoes", got "No"; unit: want "can", got "each"
+- rx2c-3071	"2 #2 cans sliced peaches"	status: want ready, got needs_review; name: want "sliced peaches", got null; unit: want "can", got "each"
+- rx2c-3072	"3 No. 300 cans pork and beans"	status: want ready, got needs_review; name: want "pork and beans", got "No"; unit: want "can", got "each"
+- rx2c-3073	"1 #5 can tomato juice"	status: want ready, got needs_review; name: want "tomato juice", got null; unit: want "can", got "each"
+- rx2c-3075	"1 #303 can creamed corn"	status: want ready, got needs_review; name: want "creamed corn", got null; unit: want "can", got "each"
+- rx2c-3076	"1 (No. 303) can lima beans"	status: want ready, got needs_review; unit: want "can", got "each"
+- rx2c-3078	"2 #10 cans peeled tomatoes, drained"	status: want ready, got needs_review; name: want "peeled tomatoes", got null; unit: want "can", got "each"
+- rx2c-3102	"Broil until golden, 2 to 3 minutes."	status: want unsupported, got needs_review; name: want null, got "Broil until golden"; quantity: want null, got "2 to 3"; unit: want null, got "each"
+- rx2c-3121	"1/3 tsp (2 ml) almond extract"	status: want ready, got needs_review
+- rx2c-3127	"125 g (4 oz) unsalted butter"	status: want needs_review, got ready
+- rx2c-3133	"1/2 lb (250 g) bacon"	status: want needs_review, got ready
+- rx2c-3136	"2 oz (50 g) pine nuts"	status: want needs_review, got ready
+- rx2c-3138	"125 g / 4 oz caster sugar"	status: want needs_review, got ready
+- rx2c-3147	"1 half-pint blueberries"	name: want "blueberries", got "half-pint blueberries"; quantity: want "1/2", got "1"; unit: want "pint", got "each"
+- rx2c-3149	"tomatoes x 6"	status: want ready, got needs_review; name: want "tomatoes", got "tomatoes x"; quantity: want "6", got null; unit: want "each", got null
+- rx2c-3155	"1/2 cup minus 1 tsp sugar"	status: want ready, got needs_review; name: want "sugar", got "minus"; quantity: want "23", got "1/2"; unit: want "tsp", got "cup"
+- rx2c-3158	"2 kohlrabi, peeled and julienned"	status: want ready, got needs_review
+- rx2c-3181	"4 garlic naan"	status: want ready, got needs_review
+- rx2c-3201	"2 whole branzino"	status: want ready, got needs_review
+- rx2c-3255	"2 bundles somen noodles"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3330	"1 rack of pork"	status: want ready, got needs_review; name: want "rack of pork", got "pork"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-3348	"4 sprinkle cookies"	name: want "sprinkle cookies", got "cookies"; unit: want "each", got "sprinkle"
+- rx2c-3349	"6 drop scones"	name: want "drop scones", got "scones"; unit: want "each", got "drop"
+- rx2c-3394	"1 Vitamix"	status: want unsupported, got ready; name: want null, got "Vitamix"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3395	"1 Vitamix blender"	status: want unsupported, got ready; name: want null, got "Vitamix blender"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3396	"1 Blendtec"	status: want unsupported, got ready; name: want null, got "Blendtec"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3397	"1 NutriBullet"	status: want unsupported, got ready; name: want null, got "NutriBullet"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3398	"1 Cuisinart"	status: want unsupported, got ready; name: want null, got "Cuisinart"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3399	"1 Cuisinart food processor"	status: want unsupported, got ready; name: want null, got "Cuisinart food processor"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3400	"1 Magimix"	status: want unsupported, got ready; name: want null, got "Magimix"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3401	"1 Thermomix"	status: want unsupported, got ready; name: want null, got "Thermomix"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3402	"1 Instant Pot Duo"	status: want unsupported, got ready; name: want null, got "Instant Pot Duo"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3403	"1 Crock-Pot"	status: want unsupported, got ready; name: want null, got "Crock-Pot"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3404	"1 Ninja Foodi"	status: want unsupported, got ready; name: want null, got "Ninja Foodi"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3405	"1 Ninja air fryer"	status: want unsupported, got ready; name: want null, got "Ninja air fryer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3406	"1 Philips air fryer"	status: want unsupported, got ready; name: want null, got "Philips air fryer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3407	"1 Breville Smart Oven"	status: want unsupported, got ready; name: want null, got "Breville Smart Oven"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3408	"1 Le Creuset Dutch oven"	status: want unsupported, got ready; name: want null, got "Le Creuset Dutch oven"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3409	"1 Lodge cast iron skillet"	status: want unsupported, got ready; name: want null, got "Lodge cast iron skillet"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3410	"1 All-Clad saucepan"	status: want unsupported, got ready; name: want null, got "All-Clad saucepan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3411	"1 Weber kettle grill"	status: want unsupported, got ready; name: want null, got "Weber kettle grill"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3412	"1 Traeger"	status: want unsupported, got ready; name: want null, got "Traeger"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3413	"1 Traeger pellet grill"	status: want unsupported, got ready; name: want null, got "Traeger pellet grill"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3414	"1 Anova Precision Cooker"	status: want unsupported, got ready; name: want null, got "Anova Precision Cooker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3415	"1 Joule sous vide"	status: want unsupported, got ready; name: want null, got "Joule sous vide"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3416	"1 Chemex"	status: want unsupported, got ready; name: want null, got "Chemex"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3417	"1 AeroPress"	status: want unsupported, got ready; name: want null, got "AeroPress"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3418	"1 Bialetti moka pot"	status: want unsupported, got ready; name: want null, got "Bialetti moka pot"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3419	"1 Nespresso machine"	status: want unsupported, got ready; name: want null, got "Nespresso machine"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3420	"1 SodaStream"	status: want unsupported, got ready; name: want null, got "SodaStream"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3421	"1 Microplane grater"	status: want unsupported, got ready; name: want null, got "Microplane grater"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3422	"1 OXO peeler"	status: want unsupported, got ready; name: want null, got "OXO peeler"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3423	"1 Pyrex baking dish"	status: want unsupported, got ready; name: want null, got "Pyrex baking dish"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3424	"1 Silpat"	status: want unsupported, got ready; name: want null, got "Silpat"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3425	"1 Zojirushi rice cooker"	status: want unsupported, got ready; name: want null, got "Zojirushi rice cooker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3426	"1 Excalibur dehydrator"	status: want unsupported, got ready; name: want null, got "Excalibur dehydrator"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3427	"1 Cuisinart ice cream maker"	status: want unsupported, got ready; name: want null, got "Cuisinart ice cream maker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3428	"1 George Foreman grill"	status: want unsupported, got ready; name: want null, got "George Foreman grill"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3429	"1 Waring blender"	status: want unsupported, got ready; name: want null, got "Waring blender"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3430	"1 Dualit toaster"	status: want unsupported, got ready; name: want null, got "Dualit toaster"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3431	"1 Breville juicer"	status: want unsupported, got ready; name: want null, got "Breville juicer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3432	"1 Ooni pizza oven"	status: want unsupported, got ready; name: want null, got "Ooni pizza oven"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3433	"1 egg ring"	status: want unsupported, got ready; name: want null, got "egg ring"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3434	"1 pastry ring"	status: want unsupported, got ready; name: want null, got "pastry ring"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3435	"1 mousse ring"	status: want unsupported, got ready; name: want null, got "mousse ring"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3436	"1 rib rack"	status: want unsupported, got ready; name: want null, got "rack"; quantity: want null, got "1"; unit: want null, got "rib"
+- rx2c-3437	"1 butter bell"	status: want unsupported, got ready; name: want null, got "butter bell"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3438	"1 cookie jar"	status: want unsupported, got ready; name: want null, got "cookie jar"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3439	"1 bread box"	status: want unsupported, got ready; name: want null, got "bread box"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3440	"1 butter dish"	status: want unsupported, got ready; name: want null, got "butter dish"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3441	"1 cheese dome"	status: want unsupported, got ready; name: want null, got "cheese dome"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3442	"1 sugar bowl"	status: want unsupported, got ready; name: want null, got "sugar bowl"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3443	"1 salt cellar"	status: want unsupported, got ready; name: want null, got "salt cellar"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3444	"1 pie bird"	status: want unsupported, got ready; name: want null, got "pie bird"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3445	"1 panini press"	status: want unsupported, got ready; name: want null, got "panini press"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3446	"1 raclette grill"	status: want unsupported, got ready; name: want null, got "raclette grill"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3447	"1 fondue pot"	status: want unsupported, got ready; name: want null, got "fondue pot"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3448	"1 paella pan"	status: want unsupported, got ready; name: want null, got "paella pan"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3449	"1 terrine mould"	status: want unsupported, got ready; name: want null, got "terrine mould"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3450	"1 soufflé dish"	status: want unsupported, got ready; name: want null, got "soufflé dish"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3451	"24 cake pop sticks"	status: want unsupported, got ready; name: want null, got "cake pop sticks"; quantity: want null, got "24"; unit: want null, got "each"
+- rx2c-3452	"1 kitchen sponge"	status: want unsupported, got ready; name: want null, got "kitchen sponge"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3453	"1 egg coddler"	status: want unsupported, got ready; name: want null, got "egg coddler"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3454	"1 cupcake carrier"	status: want unsupported, got ready; name: want null, got "cupcake carrier"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3455	"6 cupcake toppers"	status: want unsupported, got ready; name: want null, got "cupcake toppers"; quantity: want null, got "6"; unit: want null, got "each"
+- rx2c-3456	"1 Spider Skimmer"	status: want unsupported, got ready; name: want null, got "Spider Skimmer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3457	"1 Mandoline Slicer"	status: want unsupported, got ready; name: want null, got "Mandoline Slicer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3458	"1 Bench Knife"	status: want unsupported, got ready; name: want null, got "Bench Knife"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3459	"1 Cake Stand"	status: want unsupported, got ready; name: want null, got "Cake Stand"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3460	"1 Lemon Zester"	status: want unsupported, got ready; name: want null, got "Lemon Zester"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3461	"1 Gravy Separator"	status: want unsupported, got ready; name: want null, got "Gravy Separator"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3462	"1 Fat Separator"	status: want unsupported, got ready; name: want null, got "Fat Separator"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3463	"1 jam funnel"	status: want unsupported, got ready; name: want null, got "jam funnel"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3464	"1 piping nozzle"	status: want unsupported, got ready; name: want null, got "piping nozzle"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3465	"1 icing smoother"	status: want unsupported, got ready; name: want null, got "icing smoother"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3466	"1 cake scraper"	status: want unsupported, got ready; name: want null, got "cake scraper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3467	"1 dough scraper"	status: want unsupported, got ready; name: want null, got "dough scraper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3468	"1 pastry mat"	status: want unsupported, got ready; name: want null, got "pastry mat"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3469	"1 sushi rolling mat"	status: want unsupported, got ready; name: want null, got "sushi rolling mat"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3470	"1 bamboo steamer"	status: want unsupported, got ready; name: want null, got "bamboo steamer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3471	"1 splatter screen"	status: want unsupported, got ready; name: want null, got "splatter screen"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3472	"1 oven glove"	status: want unsupported, got ready; name: want null, got "oven glove"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3473	"1 pot holder"	status: want unsupported, got ready; name: want null, got "pot holder"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3474	"1 dish rack"	status: want unsupported, got ready; name: want null, got "dish rack"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3475	"1 scrub brush"	status: want unsupported, got ready; name: want null, got "scrub brush"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3476	"1 bottle brush"	status: want unsupported, got ready; name: want null, got "brush"; quantity: want null, got "1"; unit: want null, got "bottle"
+- rx2c-3477	"1 nutcracker"	status: want unsupported, got ready; name: want null, got "nutcracker"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3478	"1 crab mallet"	status: want unsupported, got ready; name: want null, got "crab mallet"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3479	"1 clam knife"	status: want unsupported, got ready; name: want null, got "clam knife"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3480	"1 fish scaler"	status: want unsupported, got ready; name: want null, got "fish scaler"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3481	"1 pair poultry shears"	status: want unsupported, got ready; name: want null, got "pair poultry shears"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3482	"1 meat tenderizer"	status: want unsupported, got ready; name: want null, got "meat tenderizer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3483	"1 meat grinder"	status: want unsupported, got ready; name: want null, got "meat grinder"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3484	"1 sausage stuffer"	status: want unsupported, got ready; name: want null, got "sausage stuffer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3485	"1 jerky gun"	status: want unsupported, got ready; name: want null, got "jerky gun"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3486	"1 bag lump charcoal"	status: want unsupported, got ready; name: want null, got "lump charcoal"; quantity: want null, got "1"; unit: want null, got "bag"
+- rx2c-3487	"2 cedar planks"	status: want unsupported, got ready; name: want null, got "cedar planks"; quantity: want null, got "2"; unit: want null, got "each"
+- rx2c-3488	"1 chimney starter"	status: want unsupported, got ready; name: want null, got "chimney starter"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3489	"1 grill brush"	status: want unsupported, got ready; name: want null, got "grill brush"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3490	"1 basting brush"	status: want unsupported, got ready; name: want null, got "basting brush"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3491	"1 tomato knife"	status: want unsupported, got ready; name: want null, got "tomato knife"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3492	"1 cheese plane"	status: want unsupported, got ready; name: want null, got "cheese plane"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3493	"1 egg topper"	status: want unsupported, got ready; name: want null, got "egg topper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3494	"1 butter curler"	status: want unsupported, got ready; name: want null, got "butter curler"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3495	"1 garlic roaster"	status: want unsupported, got ready; name: want null, got "garlic roaster"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3496	"8 corn holders"	status: want unsupported, got ready; name: want null, got "corn holders"; quantity: want null, got "8"; unit: want null, got "each"
+- rx2c-3497	"1 herb keeper"	status: want unsupported, got ready; name: want null, got "herb keeper"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3498	"1 popcorn bowl"	status: want unsupported, got ready; name: want null, got "popcorn bowl"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3499	"1 cake carrier"	status: want unsupported, got ready; name: want null, got "cake carrier"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3500	"100 cocktail picks"	status: want unsupported, got ready; name: want null, got "cocktail picks"; quantity: want null, got "100"; unit: want null, got "each"
+- rx2c-3501	"50 frilled toothpicks"	status: want unsupported, got ready; name: want null, got "frilled toothpicks"; quantity: want null, got "50"; unit: want null, got "each"
+- rx2c-3502	"1 sprouting jar"	status: want unsupported, got ready; name: want null, got "sprouting jar"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3503	"1 fermentation crock"	status: want unsupported, got ready; name: want null, got "fermentation crock"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3504	"1 vacuum sealer"	status: want unsupported, got ready; name: want null, got "vacuum sealer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3505	"1 food scale"	status: want unsupported, got ready; name: want null, got "food scale"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3506	"1 blowtorch"	status: want unsupported, got ready; name: want null, got "blowtorch"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3507	"1 pressure canner"	status: want unsupported, got ready; name: want null, got "pressure canner"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3508	"1 water bath canner"	status: want unsupported, got ready; name: want null, got "water bath canner"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3509	"1 jar lifter"	status: want unsupported, got ready; name: want null, got "lifter"; quantity: want null, got "1"; unit: want null, got "jar"
+- rx2c-3510	"1 canning funnel"	status: want unsupported, got ready; name: want null, got "canning funnel"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-3511	"1 serving cooked rice"	noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3512	"1 coating fine breadcrumbs"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3513	"1 gulp orange juice"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3514	"2 sips brandy"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3515	"1 trickle honey"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3516	"1 dribble olive oil"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3517	"1 splodge ketchup"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3518	"2 wisps cotton candy"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3519	"1 curl butter"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3520	"1 ribbon lemon zest"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3521	"1 swallow cream"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3522	"1 draught bitter ale"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3523	"1 gob peanut butter"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3524	"1 plop sour cream"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3525	"1 squidge mayonnaise"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3526	"1 armful rhubarb"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3527	"1 bagful apples"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3528	"1 boxful raisins"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3529	"1 panful roasted vegetables"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3530	"1 potful vegetable soup"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3531	"1 bowlful cherries"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3532	"1 basketful blackberries"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3533	"1 trayful cookies"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3534	"1 pocketful almonds"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3535	"1 capful vanilla extract"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3536	"1 lidful rice vinegar"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3537	"1 pipette food coloring"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3538	"1 saltspoon salt"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3539	"1 coffeespoon sugar"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3540	"1 dessertspoonful honey"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3541	"1 soupspoonful olive oil"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3542	"1 teacupful milk"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3543	"1 breakfastcup flour"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3544	"1 Glassful Milk"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3545	"1 Mouthful Red Wine"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3546	"1 Trickle Maple Syrup"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3547	"1 pan brownies"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3548	"1 platter nachos"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3549	"1 basket fries"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3550	"1 sheet pan roasted potatoes"	status: want needs_review, got ready
+- rx2c-3552	"1 jar salsa (16 oz, medium)"	packageSize: want "16 oz", got null
+- rx2c-3553	"2 cans coconut milk (13.5 oz each, full-fat)"	packageSize: want "13.5 oz", got null
+- rx2c-3554	"1 bag spinach (10 oz, prewashed)"	packageSize: want "10 oz", got null
+- rx2c-3555	"1 box pasta (1 lb, any shape)"	packageSize: want "1 lb", got null
+- rx2c-3556	"1 carton broth (32 oz, low sodium)"	packageSize: want "32 oz", got null
+- rx2c-3557	"1 package cream cheese (8 oz, softened)"	packageSize: want "8 oz", got null
+- rx2c-3558	"1 bottle wine (750 ml, dry white)"	packageSize: want "750 ml", got null
+- rx2c-3559	"2 tins sardines (4 oz each, in olive oil)"	packageSize: want "4 oz", got null
+- rx2c-3560	"1 tube tomato paste (4.5 oz, double concentrated)"	packageSize: want "4.5 oz", got null
+- rx2c-3561	"1 container ricotta (15 oz, whole milk)"	packageSize: want "15 oz", got null
+- rx2c-3562	"12 drop sugar cookies"	name: want "drop sugar cookies", got "sugar cookies"; unit: want "each", got "drop"
+- rx2c-3578	"1 cup tangerine or blood orange juice"	alternatives: want ["tangerine juice","blood orange juice"], got ["tangerine orange juice","blood orange juice"]
+- rx2c-3579	"1 cup peaches and plums, sliced"	status: want needs_review, got ready
+- rx2c-3580	"2 cups beets and carrots"	status: want needs_review, got ready
+- rx2c-3581	"1/2 cup walnuts and pecans"	status: want needs_review, got ready
+- rx2c-3582	"2 tbsp mustard and honey"	status: want needs_review, got ready
+- rx2c-3583	"1 cup cucumber and radish, sliced"	status: want needs_review, got ready
+- rx2c-3584	"3 cups spinach and arugula"	status: want needs_review, got ready
+- rx2c-3585	"1/4 cup mint and cilantro"	status: want needs_review, got ready
+- rx2c-3591	"1 cup lime juice (8 limes)"	status: want needs_review, got ready
+- rx2c-3592	"2 tbsp orange zest (from 2 oranges)"	status: want needs_review, got ready
+- rx2c-3593	"1 cup cooked couscous (1/3 cup dry)"	status: want needs_review, got ready
+- rx2c-3596	"Phosphorus 120 mg"	status: want unsupported, got ready; name: want null, got "Phosphorus"; quantity: want null, got "120"; unit: want null, got "mg"
+- rx2c-3601	"Total Carbohydrates 22 grams"	status: want unsupported, got ready; name: want null, got "Total Carbohydrates"; quantity: want null, got "22"; unit: want null, got "g"
+- rx2c-3611	"1 #300 can tomato sauce"	status: want ready, got needs_review; name: want "tomato sauce", got null; unit: want "can", got "each"
+- rx2c-3612	"2 No. 2 cans hominy"	status: want ready, got needs_review; name: want "hominy", got "No"; unit: want "can", got "each"
+- rx2c-3615	"1 tumblerful iced tea"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3616	"1 bucketful mussels"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3617	"1 sackful potatoes"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3618	"1 crateful peaches"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3619	"1 wheelbarrow pumpkins"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3620	"1 jarful pickles"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3621	"1 ladle-full chicken broth"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3622	"1 pinchbowl sea salt"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3623	"1 cocktail-glass cream"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3624	"1 fingerbowl water"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3632	"4 brie wedges"	name: want "brie", got "brie wedges"; unit: want "wedge", got "each"
+
+## semantic-v2: 126 failing firm cases
+
+- rx2c-0001	"1 tbsp tamarind paste, dissolved in 3 tbsp hot water"	status: want needs_review, got ready
+- rx2c-0002	"1 tbsp cornstarch mixed with 2 tbsp cold water"	name: want "cornstarch", got "cornstarch mixed"
+- rx2c-0003	"2 tsp instant yeast, dissolved in 1/4 cup warm water"	status: want needs_review, got ready
+- rx2c-0004	"1/2 cup raisins, soaked in 1/4 cup dark rum"	status: want needs_review, got ready
+- rx2c-0005	"1 pinch saffron, steeped in 2 tbsp hot milk"	status: want needs_review, got ready
+- rx2c-0006	"2 tbsp white miso, whisked into 1 cup warm water"	status: want needs_review, got ready
+- rx2c-0007	"1 envelope unflavored gelatin, bloomed in 1/4 cup cold water"	status: want needs_review, got ready
+- rx2c-0008	"3 tbsp cocoa powder mixed with 3 tbsp boiling water"	name: want "cocoa powder", got "cocoa powder mixed"
+- rx2c-0009	"1 tsp baking soda, dissolved in 1 tbsp vinegar"	status: want needs_review, got ready
+- rx2c-0010	"2 tbsp chia seeds (soaked in 6 tbsp water)"	status: want needs_review, got ready
+- rx2c-0019	"1 cup fresh peas and fava beans"	status: want needs_review, got ready; name: want null, got "fresh peas and fava beans"
+- rx2c-0033	"1 head lettuce, romaine or green leaf"	alternatives: want ["romaine lettuce","green leaf lettuce"], got ["romaine leaf","green leaf"]
+- rx2c-0035	"2 cups cheese, cheddar or monterey jack"	alternatives: want ["cheddar cheese","monterey jack cheese"], got ["cheddar","monterey jack"]
+- rx2c-0036	"1 lb cremini or shiitake mushrooms"	alternatives: want ["cremini mushrooms","shiitake mushrooms"], got ["cremini","shiitake mushrooms"]
+- rx2c-0038	"1 saucepan water"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0039	"1 stockpot water"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0040	"1 saucepan milk"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0041	"1 wok oil"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0042	"1 colander pasta"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0043	"1 sieve flour"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0044	"2 saucepans water"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0046	"1 skillet cornbread batter"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0047	"300 g fish slices"	status: want ready, got unsupported; name: want "fish slices", got null; quantity: want "300", got null; unit: want "g", got null
+- rx2c-0048	"1 lb fish slices"	status: want ready, got unsupported; name: want "fish slices", got null; quantity: want "1", got null; unit: want "lb", got null
+- rx2c-0049	"6 fish slices, patted dry"	status: want ready, got unsupported; name: want "fish slices", got null; quantity: want "6", got null; unit: want "each", got null
+- rx2c-0050	"2 lb pork rib racks"	status: want ready, got unsupported; name: want "pork rib racks", got null; quantity: want "2", got null; unit: want "lb", got null
+- rx2c-0051	"1 lamb rib rack"	status: want ready, got unsupported; name: want "lamb rib rack", got null; quantity: want "1", got null; unit: want "each", got null
+- rx2c-0052	"1 bag walnut crackers"	status: want ready, got unsupported; name: want "walnut crackers", got null; quantity: want "1", got null; unit: want "bag", got null
+- rx2c-0053	"1 salt pig"	status: want unsupported, got ready; name: want null, got "salt pig"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-0059	"1 small tub creme fraiche"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0060	"1 small tub crème fraîche"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0061	"2 tubs Greek yogurt"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0062	"1 tub sour cream"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0064	"2 bars cream cheese"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-0065	"4 125 g pots yogurt"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled; noAmount: a package was pre-filled
+- rx2c-1246	"4 sudachi"	status: want ready, got needs_review
+- rx2c-1253	"1 red kuri squash"	status: want ready, got needs_review; quantity: want "1", got null; unit: want "each", got null
+- rx2c-1255	"6 sunburst squash"	status: want ready, got needs_review; quantity: want "6", got null; unit: want "each", got null
+- rx2c-1256	"2 bitter melons"	status: want ready, got needs_review; quantity: want "2", got null; unit: want "each", got null
+- rx2c-1257	"1 winter melon"	status: want ready, got needs_review; quantity: want "1", got null; unit: want "each", got null
+- rx2c-1269	"6 eddoes"	status: want ready, got needs_review; quantity: want "6", got null; unit: want "each", got null
+- rx2c-1270	"2 boniatos"	status: want ready, got needs_review; quantity: want "2", got null; unit: want "each", got null
+- rx2c-1279	"6 caperberries"	status: want ready, got needs_review; quantity: want "6", got null; unit: want "each", got null
+- rx2c-1292	"4 sand dabs"	status: want ready, got needs_review; quantity: want "4", got null; unit: want "each", got null
+- rx2c-1315	"1 suckling pig"	status: want ready, got needs_review; name: want "suckling pig", got "pig"; quantity: want "1", got null; unit: want "each", got null
+- rx2c-1325	"6 pączki"	status: want ready, got needs_review
+- rx2c-1326	"2 khachapuri"	status: want ready, got needs_review
+- rx2c-1328	"6 simit"	status: want ready, got needs_review
+- rx2c-1329	"2 lahmacun"	status: want ready, got needs_review
+- rx2c-1330	"4 manakish"	status: want ready, got needs_review
+- rx2c-1331	"6 fatayer"	status: want ready, got needs_review; quantity: want "6", got null; unit: want "each", got null
+- rx2c-1332	"8 kibbeh"	status: want ready, got needs_review
+- rx2c-1346	"8 gulab jamun"	status: want ready, got needs_review
+- rx2c-1348	"4 dorayaki"	status: want ready, got needs_review
+- rx2c-1349	"2 taiyaki"	status: want ready, got needs_review
+- rx2c-1350	"4 onigiri"	status: want ready, got needs_review
+- rx2c-1351	"6 siopao"	status: want ready, got needs_review; quantity: want "6", got null; unit: want "each", got null
+- rx2c-1352	"12 lumpia"	status: want ready, got needs_review
+- rx2c-1354	"20 pelmeni"	status: want ready, got needs_review
+- rx2c-1355	"12 vareniki"	status: want ready, got needs_review
+- rx2c-1356	"6 spanakopita triangles"	status: want ready, got needs_review; quantity: want "6", got null; unit: want "each", got null
+- rx2c-1365	"6 farm-fresh eggs"	status: want ready, got needs_review; quantity: want "6", got null; unit: want "each", got null
+- rx2c-1370	"2 supermarket rotisserie chickens"	status: want ready, got needs_review; quantity: want "2", got null; unit: want "each", got null
+- rx2c-1372	"3 locally grown peaches"	status: want ready, got needs_review; quantity: want "3", got null; unit: want "each", got null
+- rx2c-1373	"2 extremely ripe avocados"	status: want ready, got needs_review; quantity: want "2", got null; unit: want "each", got null
+- rx2c-1415	"1 bottle barrel-aged stout"	status: want ready, got needs_review; name: want "barrel-aged stout", got "bottle barrel-aged stout"; quantity: want "1", got null; unit: want "bottle", got null
+- rx2c-1416	"1 bottle cask-strength bourbon"	status: want ready, got needs_review; name: want "cask-strength bourbon", got "bottle cask-strength bourbon"; quantity: want "1", got null; unit: want "bottle", got null
+- rx2c-1418	"6 oven-roasted chicken thighs"	status: want ready, got needs_review; quantity: want "6", got null; unit: want "each", got null
+- rx2c-1420	"4 griddle-baked flatbreads"	status: want ready, got needs_review; quantity: want "4", got null; unit: want "each", got null
+- rx2c-1423	"6 pan-seared scallops"	status: want ready, got needs_review; quantity: want "6", got null; unit: want "each", got null
+- rx2c-1491	"6 muffin-tin quiches"	status: want ready, got needs_review; quantity: want "6", got null; unit: want "each", got null
+- rx2c-1498	"1 sheet brick pastry"	status: want ready, got needs_review; name: want "brick pastry", got "sheet brick pastry"; quantity: want "1", got null; unit: want "sheet", got null
+- rx2c-1500	"4 pots de crème"	name: want "pots de crème", got "de crème"; unit: want "each", got "container"
+- rx2c-1501	"6 pan de bono"	status: want ready, got needs_review; name: want "pan de bono", got "de bono"; quantity: want "6", got null; unit: want "each", got null
+- rx2c-1502	"4 eggs en cocotte"	status: want ready, got needs_review; quantity: want "4", got null; unit: want "each", got null
+- rx2c-1511	"1 brisket point"	status: want ready, got needs_review; quantity: want "1", got null; unit: want "each", got null
+- rx2c-1517	"4 cowboy steaks"	status: want ready, got needs_review; quantity: want "4", got null; unit: want "each", got null
+- rx2c-1524	"6 sous-vide egg bites"	status: want ready, got needs_review; quantity: want "6", got null; unit: want "each", got null
+- rx2c-1527	"1 jar fridge pickles"	status: want ready, got needs_review; name: want "fridge pickles", got "jar fridge pickles"; quantity: want "1", got null; unit: want "jar", got null
+- rx2c-1528	"1 jar refrigerator pickles"	status: want ready, got needs_review; name: want "refrigerator pickles", got "jar refrigerator pickles"; quantity: want "1", got null; unit: want "jar", got null
+- rx2c-1529	"12 icebox cookies"	status: want ready, got needs_review; quantity: want "12", got null; unit: want "each", got null
+- rx2c-1530	"1 icebox cake"	status: want ready, got needs_review; quantity: want "1", got null; unit: want "each", got null
+- rx2c-1544	"1 jar pot-set yogurt"	status: want ready, got needs_review; name: want "pot-set yogurt", got "jar pot-set yogurt"; quantity: want "1", got null; unit: want "jar", got null
+- rx2c-1545	"4 shot-glass desserts"	status: want ready, got needs_review; name: want "shot-glass desserts", got "desserts"; quantity: want "4", got null; unit: want "each", got null
+- rx2c-1547	"1 hot pot soup base"	status: want ready, got needs_review; quantity: want "1", got null; unit: want "each", got null
+- rx2c-1548	"1 packet hot pot seasoning"	status: want ready, got needs_review; name: want "hot pot seasoning", got "packet hot pot seasoning"; quantity: want "1", got null; unit: want "packet", got null
+- rx2c-1549	"2 platter-size pizzas"	status: want ready, got needs_review; quantity: want "2", got null; unit: want "each", got null
+- rx2c-1550	"6 tin-roof brownies"	status: want ready, got needs_review; quantity: want "6", got null; unit: want "each", got null
+- rx2c-1565	"1 Le Creuset tagine"	status: want unsupported, got ready; name: want null, got "Le Creuset tagine"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1566	"1 Emile Henry tagine"	status: want unsupported, got ready; name: want null, got "Emile Henry tagine"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1580	"1 Pyrex casserole"	status: want unsupported, got ready; name: want null, got "Pyrex casserole"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1599	"1 Le Creuset pâté terrine"	status: want unsupported, got ready; name: want null, got "Le Creuset pâté terrine"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1600	"1 cow creamer"	status: want unsupported, got ready; name: want null, got "cow creamer"; quantity: want null, got "1"; unit: want null, got "each"
+- rx2c-1607	"1 bag cherry wood chunks"	status: want unsupported, got ready; name: want null, got "cherry wood chunks"; quantity: want null, got "1"; unit: want null, got "bag"
+- rx2c-1608	"1 bag apple wood chunks"	status: want unsupported, got ready; name: want null, got "apple wood chunks"; quantity: want null, got "1"; unit: want null, got "bag"
+- rx2c-1667	"1 box Cascade pods"	status: want unsupported, got ready; name: want null, got "Cascade pods"; quantity: want null, got "1"; unit: want null, got "box"
+- rx2c-1668	"1 bag Tide pods"	status: want unsupported, got ready; name: want null, got "Tide pods"; quantity: want null, got "1"; unit: want null, got "bag"
+- rx2c-1674	"1 split prosecco"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1675	"2 splits cava"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1676	"1 cone piloncillo"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1677	"2 cones piloncillo"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1678	"1 cone jaggery"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1679	"2 discs Mexican chocolate"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1680	"1 disk Ibarra chocolate"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1681	"3 stems lemongrass"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1682	"4 stems mint"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1683	"2 fronds dill"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1684	"1 frond fennel"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1686	"1 cob corn"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1687	"20 threads saffron"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1688	"2 strands saffron"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1690	"1 heel sourdough"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1693	"1 spray avocado oil"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1694	"2 sprays cooking oil"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1732	"1 blade mace"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1733	"2 blades mace"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-1809	"4 vol-au-vent cases"	status: want ready, got needs_review; quantity: want "4", got null; unit: want "each", got null
+- rx2c-1810	"12 tartlet cases"	status: want ready, got needs_review; quantity: want "12", got null; unit: want "each", got null
+- rx2c-1811	"1 jar barrel pickles"	status: want ready, got needs_review; name: want "barrel pickles", got "jar barrel pickles"; quantity: want "1", got null; unit: want "jar", got null
+- rx2c-1816	"6 cloverleaf rolls"	status: want ready, got needs_review; quantity: want "6", got null; unit: want "each", got null
+- rx2c-1818	"6 accordion potatoes"	status: want ready, got needs_review; quantity: want "6", got null; unit: want "each", got null
+- rx2c-1819	"4 foil-packet dinners"	status: want ready, got needs_review; quantity: want "4", got null; unit: want "each", got null
+- rx2c-2340	"8 oz tub whipped topping"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled; noAmount: a package was pre-filled
+- rx2c-2626	"1 tub vanilla frosting"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-2941	"1 tub garlic and herb cheese spread"	status: want needs_review, got ready; noAmount: ready; noAmount: a quantity was pre-filled; noAmount: a unit was pre-filled
+- rx2c-3627	"4 chocolate cups"	status: want ready, got needs_review; quantity: want "4", got null; unit: want "each", got null

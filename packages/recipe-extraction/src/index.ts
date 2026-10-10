@@ -17,6 +17,7 @@ export {
 } from "./rational";
 
 export { dimensionOf, isUnitCode, tryUnitV1, UNIT_CODES, unitV1 } from "./units";
+export { CASED_UNIT_ALIASES, FLUID_OUNCE_WORDS, NOT_ALIASES, UNIT_ALIASES, unitOfAlias } from "./unit-aliases";
 export { isHttpUrl, validateParsedIngredientV1, validateRecipeExtractionV1 } from "./validate";
 export { DEFAULT_ENGINE_ID, ENGINES, getEngine } from "./ingredient/engines";
 export { LEGACY_ENGINE_ID, LEGACY_SUGGESTION_ENGINE_ID } from "./ingredient/legacy";

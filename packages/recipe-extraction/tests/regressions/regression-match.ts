@@ -29,13 +29,17 @@ export interface RegressionCase {
   id: string;
   input: string;
   origin: { kind: string; ref: string; group?: string; severityOnSemanticV1?: string[] };
-  family: "A" | "B" | "C" | "D" | "-";
+  family: "A" | "B" | "C" | "D" | "plain" | "-";
   firm: boolean;
   expect: RegressionExpect;
   alsoIn: unknown[];
+  /** Phase 2C (owner requirement 2, CONTRACT §13.2): the reading must not be ready and must carry no quantity, unit or package. */
+  noAmount?: boolean;
 }
 
 export const CORPUS_FILE = path.join(import.meta.dirname, "exposed-regressions-2b.jsonl");
+/** The Phase 2C corpus (PHASE-2C-PLAN §2; built by docs/table/evidence/2026-10-10-recipe-extraction-phase2c/regressions/build_corpus_2c.py). */
+export const CORPUS_FILE_2C = path.join(import.meta.dirname, "exposed-regressions-2c.jsonl");
 
 export function loadRegressions(file = CORPUS_FILE): RegressionCase[] {
   return readFileSync(file, "utf8").split("\n").filter((l) => l.trim() !== "").map((l) => JSON.parse(l) as RegressionCase);
@@ -123,5 +127,16 @@ export function mismatches(c: RegressionCase, got: ParsedIngredientV1): string[]
     const ok = [e.alternatives, ...e.acceptAlternatives].some((s) => altSet(s) === gotSet);
     if (!ok) out.push(`alternatives: want ${show(e.alternatives)}, got ${show(got.alternatives)}`);
   }
+  return out;
+}
+
+/** Phase 2C `noAmount` rule: [] when the reading is not ready and carries no quantity, unit or package (owner requirement 2). */
+export function noAmountViolations(c: RegressionCase, got: ParsedIngredientV1): string[] {
+  if (!c.noAmount) return [];
+  const out: string[] = [];
+  if (got.status === "ready") out.push("noAmount: ready");
+  if ((got.quantity ?? null) !== null) out.push("noAmount: a quantity was pre-filled");
+  if ((got.unit ?? null) !== null) out.push("noAmount: a unit was pre-filled");
+  if ((got.packageSize ?? null) !== null) out.push("noAmount: a package was pre-filled");
   return out;
 }
