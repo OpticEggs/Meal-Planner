@@ -1253,7 +1253,7 @@ Ingredient readings on extracted candidates: 31 (ready 28, needs_review 3, unsup
 
 ## Outcomes (outcomes v3, EVALUATION-PLAN-v3)
 
-Scorer: `outcomes` v3 for EVALUATION-PLAN-v3 · source `bench/outcomes.ts` SHA-256 `f339477410bd9dc161811823700ec1a25173cf16b32c480e3324d8bca2407313`.
+Scorer: `outcomes` v3 for EVALUATION-PLAN-v3 · source `bench/outcomes.ts` SHA-256 `7821e8532eb123e9694291c6d0deac6bdac40f96715d06a4d2aa2161fc3a3892`.
 
 One outcome class per line (EVALUATION-PLAN-v3, carrying EVALUATION-PLAN-v2 §3–§7 except SCORE-01/02); sets are reported separately and never pooled. Every rate shows n/N and a Wilson 95% interval (z = 1.959964); for a zero count the upper bound is the claim. Accepted matching (a case's `accept` values count) is the acceptance basis; strict figures are listed too. R / A / U = lines labelled ready / needs_review / unsupported; N = all lines. Every line is parsed twice: validity, engine error and nondeterminism are separate dimensions, and any of them makes the line CE (no class, no S code).
 
@@ -1261,16 +1261,19 @@ Holdout-v2 freeze: FREEZE-v2.json (2026-10-09), SHA-256 `793507a4b7360fb7…` �
 
 Scorer readings where the plan is silent:
 
-- CE (SCORE-02): a line is CE when the engine threw on either of its two parses, when the complete first output fails validateParsedIngredientV1 (src/validate.ts) — not merely when its status is outside the contract — or when the two parses differ (canonical JSON of the outputs, or the thrown messages). A CE line stays in every denominator (so it is never C1), gets no C1–C8 class, no C3/C5 sub-class, no false-certainty severity and no S code, counts as not accurate for A2 field accuracy, and fails A6. An invalid output is never repaired or coerced to make it scoreable. Validity, engine error and nondeterminism are reported as separate dimensions; the semantic classification below applies only to valid, deterministic, non-error outputs.
+- CE (SCORE-02): a line is CE when the engine threw on either of its two parses, when either complete output fails validateParsedIngredientV1 (src/validate.ts) — not merely when its status is outside the contract (plan v3 change log 2(a)) — or when the two parses differ: canonical JSON of the whole outputs, unscored fields (evidence, reasons, unit source) included, or the thrown messages, so two different errors are also nondeterministic (change log 2(c)). A CE line stays in every denominator (so it is never C1), gets no C1–C8 class, no C3/C5 sub-class, no false-certainty severity and no S code, counts as not accurate for A2 field accuracy, and fails A6. An invalid output is never repaired or coerced to make it scoreable. Validity, engine error and nondeterminism are reported as separate dimensions; the semantic classification below applies only to valid, deterministic, non-error outputs.
 - C3/C5 sub-classes are decided in the order b, c, a, x over the engine's name, quantity, unit and package size (accepted values count; a non-empty alternatives list is also compared): b = a non-null field contradicts the label; c = name, quantity and unit are all null and no alternatives were read; a = no contradiction and the food was named (name non-null, or, on a choice-of-ingredients label, the options matched); x = no contradiction but the food was not named while an amount or unit was read — a case the plan does not define, reported separately and still counted in C3/C5.
 - C2 severity: high when the line has any of S2–S8 or a wrong unit or package size; medium when only the name is wrong (not S7). The one remaining C2 case — a fabricated quantity (S1) on a ready label whose unit also matches (both null) — is not covered by the plan's rule and is reported as high (a valid ready output with a quantity always has a unit, so under SCORE-02 this case can only arise as CE).
 - S5 compares the engine name (§9 normalization) with the label's alternatives and any accepted alternative lists; it applies to any engine status when the engine reports no alternatives.
 - S7 uses the accepted name match and §9-normalized word sets: the engine's (non-null) name words form a proper subset of the label name's words.
+- S6 fires when the label has a packageSize, the engine has none and the engine unit is mass or volume, whether or not the engine states a quantity (plan v3 change log 2(b)).
 - S3 is the CONTRACT-v1 §9 cross-dimension check: the engine unit's dimension differs from the label unit's, or the engine package size's from the label package size's, both present.
 - A2 field accuracy counts a field as accurate when it matches the label, whatever the engine status (a CE line counts as not accurate). A1/A2 'met with confidence' uses the unrounded Wilson lower bound (z = 1.959964).
 - A6 in the scorer: CE = 0 — no engine error, every output valid, every line read identically twice. The rest of A6 (legacy engines, frozen-baseline snapshot and parity tests unchanged and passing; reports byte-deterministic) and A7 are recorded outside the scorer.
 - Sensitivity 3(b) (SCORE-01): the needs_review labels with no amount are those whose label quantity and unit are null and whose alternatives are empty, whatever their category tags.
-- Review-only pre-fills (informational, not plan classes): an invented option is an engine alternatives list that is not an accepted match and offers an option the label (or an accepted list) does not; a dropped option is such a list whose options are all the label's (or an accepted list's) but which leaves out an option of a choice-of-ingredients label. The two never overlap; both stay visible next to C3b/C5b.
+- Sensitivity (a) on holdout-v3 leaves out the cases marked debatable: true in holdout-v3.jsonl; on holdout-v2 the pre-registered list (ing-h2-0087). Sensitivity (c), holdout-v3 only: A1–A5 without the cases marked reliesOnNewReading: true (the result under CONTRACT-v1 §7 alone). Sensitivity (d), holdout-v3 only and only when fixtures/EXPOSURE-AUDIT-v3.json exists: A1–A5 without its matchedCaseIds. All three come from frozen data files, never from scorer constants, and are informational.
+- holdout-v3 breakdowns: per repair family (the case's family), per CONTRACT-v1 §12 item exercised (a case counts in every item it lists; 'none' = no item) and per construction (the case's construction string; compact: lines, classes, S codes).
+- Review-only pre-fills (informational, not plan classes; plan v3 change log 2): an invented option is an engine option that matches no label option (nor an accepted one); a dropped option is a label option missing from an engine list that invents none. Both are judged only on an engine alternatives list that matches neither the label's options nor an accepted list, so they never overlap; both stay visible next to C3b/C5b.
 
 ### Outcomes — engine `legacy-table-import-2`
 
@@ -1321,8 +1324,8 @@ Scorer readings where the plan is silent:
 | **S7 dropped material qualifier** (of N) | 0/182 | 0.0% | ≤ 2.1% |  |
 | **S8 ready on a non-ingredient** (of N) | 0/182 | 0.0% | ≤ 2.1% |  |
 | Any severe error (of N) | 0/182 | 0.0% | ≤ 2.1% |  |
-| Invented option — review-only pre-fill, informational (of N) | 0/182 | 0.0% | ≤ 2.1% |  |
-| Dropped option — review-only pre-fill, informational (of N) | 0/182 | 0.0% | ≤ 2.1% |  |
+| Invented option — an engine option matching no label (or accepted) option; review-only, informational (of N) | 0/182 | 0.0% | ≤ 2.1% |  |
+| Dropped option — a label option missing from an engine list that invents none; review-only, informational (of N) | 0/182 | 0.0% | ≤ 2.1% |  |
 
 Strict matching: C1 54/152 (35.5%, 28.4%–43.4%) · C1+ 54/152 (35.5%, 28.4%–43.4%) · C2 6/182 (3.3%, 1.5%–7.0%). Lines whose class differs under strict matching: none.
 
@@ -1334,41 +1337,41 @@ Strict matching: C1 54/152 (35.5%, 28.4%–43.4%) · C1+ 54/152 (35.5%, 28.4%–
 
 ##### By category — dev (development; diagnostics only)
 
-| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 high/medium | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| integer_decimal | 9 | 8/1/0 | 8/8 | 8/8 | 0/0 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| fraction | 10 | 9/1/0 | 5/9 | 5/9 | 0/0 | 0/4/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| fraction_third | 9 | 9/0/0 | 0/9 | 0/9 | 0/0 | 0/9/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| mixed_vulgar | 8 | 8/0/0 | 5/8 | 5/8 | 0/0 | 0/3/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| nested_parens | 4 | 4/0/0 | 0/4 | 0/4 | 0/1 | 0/3/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| prep_note | 29 | 28/1/0 | 14/28 | 14/28 | 1/2 | 0/11/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| source_choice | 6 | 5/1/0 | 0/5 | 0/5 | 0/0 | 0/5/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| ingredient_alternatives | 7 | 0/7/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 7/7 | 0 | 0/0 | 0 | 0 | 0 |
-| range | 6 | 0/6/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 6/6 | 0 | 0/0 | 0 | 0 | 0 |
-| optional | 4 | 4/0/0 | 0/4 | 0/4 | 0/0 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| unstated_amount | 14 | 14/0/0 | 1/14 | 1/14 | 0/0 | 9/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| quantity_missing | 5 | 0/5/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 5/5 | 0 | 0/0 | 0 | 0 | 0 |
-| count_unit | 20 | 19/1/0 | 0/19 | 0/19 | 1/0 | 0/18/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| package_size | 11 | 11/0/0 | 0/11 | 0/11 | 0/0 | 0/11/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| oz_vs_floz | 9 | 9/0/0 | 7/9 | 7/9 | 0/0 | 0/2/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| compound_quantity | 5 | 5/0/0 | 0/5 | 0/5 | 0/0 | 0/5/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| equivalent_quantity | 7 | 7/0/0 | 0/7 | 0/7 | 0/0 | 0/7/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| percentage | 4 | 4/0/0 | 0/4 | 0/4 | 0/0 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| price_annotation | 8 | 8/0/0 | 4/8 | 4/8 | 0/0 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| form_cooked_raw | 4 | 4/0/0 | 0/4 | 0/4 | 0/4 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| number_word | 9 | 9/0/0 | 0/9 | 0/9 | 0/0 | 0/9/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| approximate | 4 | 4/0/0 | 0/4 | 0/4 | 0/0 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| imprecise_unit | 5 | 5/0/0 | 0/5 | 0/5 | 0/0 | 0/5/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| heading_non_ingredient | 5 | 0/0/5 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/5 | 5 | 0 | 0 |
-| empty | 3 | 0/0/3 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 3/3 | 0 | 0 | 0 |
-| unicode_text | 7 | 4/2/1 | 4/4 | 4/4 | 0/0 | 0/0/0/0 | 0 | 2/2 | 0 | 1/1 | 0 | 0 | 0 |
-| ambiguous_number_format | 3 | 0/3/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | 0 |
-| size_word | 6 | 6/0/0 | 4/6 | 4/6 | 0/0 | 1/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| seasoning_lookalike | 11 | 10/1/0 | 9/10 | 9/10 | 0/0 | 0/1/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| seasoning_ordinary | 11 | 10/1/0 | 4/10 | 4/10 | 0/0 | 2/4/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| quart_pint_gallon | 4 | 4/0/0 | 0/4 | 0/4 | 0/0 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| long_line | 3 | 3/0/0 | 2/3 | 2/3 | 0/0 | 0/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| quantity_after_name | 4 | 4/0/0 | 0/4 | 0/4 | 0/0 | 2/2/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 (high/medium) | C3 + C4 (of R) | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| integer_decimal | 9 | 8/1/0 | 8/8 | 8/8 | 0 (0/0) | 0/8 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| fraction | 10 | 9/1/0 | 5/9 | 5/9 | 0 (0/0) | 4/9 | 0/4/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| fraction_third | 9 | 9/0/0 | 0/9 | 0/9 | 0 (0/0) | 9/9 | 0/9/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| mixed_vulgar | 8 | 8/0/0 | 5/8 | 5/8 | 0 (0/0) | 3/8 | 0/3/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| nested_parens | 4 | 4/0/0 | 0/4 | 0/4 | 1 (0/1) | 3/4 | 0/3/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| prep_note | 29 | 28/1/0 | 14/28 | 14/28 | 3 (1/2) | 11/28 | 0/11/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| source_choice | 6 | 5/1/0 | 0/5 | 0/5 | 0 (0/0) | 5/5 | 0/5/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| ingredient_alternatives | 7 | 0/7/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 7/7 | 0 | 0/0 | 0 | 0 | 0 |
+| range | 6 | 0/6/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 6/6 | 0 | 0/0 | 0 | 0 | 0 |
+| optional | 4 | 4/0/0 | 0/4 | 0/4 | 0 (0/0) | 4/4 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| unstated_amount | 14 | 14/0/0 | 1/14 | 1/14 | 0 (0/0) | 13/14 | 9/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| quantity_missing | 5 | 0/5/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 5/5 | 0 | 0/0 | 0 | 0 | 0 |
+| count_unit | 20 | 19/1/0 | 0/19 | 0/19 | 1 (1/0) | 18/19 | 0/18/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| package_size | 11 | 11/0/0 | 0/11 | 0/11 | 0 (0/0) | 11/11 | 0/11/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| oz_vs_floz | 9 | 9/0/0 | 7/9 | 7/9 | 0 (0/0) | 2/9 | 0/2/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| compound_quantity | 5 | 5/0/0 | 0/5 | 0/5 | 0 (0/0) | 5/5 | 0/5/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| equivalent_quantity | 7 | 7/0/0 | 0/7 | 0/7 | 0 (0/0) | 7/7 | 0/7/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| percentage | 4 | 4/0/0 | 0/4 | 0/4 | 0 (0/0) | 4/4 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| price_annotation | 8 | 8/0/0 | 4/8 | 4/8 | 0 (0/0) | 4/8 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| form_cooked_raw | 4 | 4/0/0 | 0/4 | 0/4 | 4 (0/4) | 0/4 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| number_word | 9 | 9/0/0 | 0/9 | 0/9 | 0 (0/0) | 9/9 | 0/9/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| approximate | 4 | 4/0/0 | 0/4 | 0/4 | 0 (0/0) | 4/4 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| imprecise_unit | 5 | 5/0/0 | 0/5 | 0/5 | 0 (0/0) | 5/5 | 0/5/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| heading_non_ingredient | 5 | 0/0/5 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/5 | 5 | 0 | 0 |
+| empty | 3 | 0/0/3 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 3/3 | 0 | 0 | 0 |
+| unicode_text | 7 | 4/2/1 | 4/4 | 4/4 | 0 (0/0) | 0/4 | 0/0/0/0 | 0 | 2/2 | 0 | 1/1 | 0 | 0 | 0 |
+| ambiguous_number_format | 3 | 0/3/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | 0 |
+| size_word | 6 | 6/0/0 | 4/6 | 4/6 | 0 (0/0) | 2/6 | 1/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| seasoning_lookalike | 11 | 10/1/0 | 9/10 | 9/10 | 0 (0/0) | 1/10 | 0/1/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| seasoning_ordinary | 11 | 10/1/0 | 4/10 | 4/10 | 0 (0/0) | 6/10 | 2/4/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| quart_pint_gallon | 4 | 4/0/0 | 0/4 | 0/4 | 0 (0/0) | 4/4 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| long_line | 3 | 3/0/0 | 2/3 | 2/3 | 0 (0/0) | 1/3 | 0/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| quantity_after_name | 4 | 4/0/0 | 0/4 | 0/4 | 0 (0/0) | 4/4 | 2/2/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
 
 ##### Sensitivity — dev (development; diagnostics only) (informational, not the acceptance basis)
 
@@ -1415,8 +1418,8 @@ needs_review labels with no amount: label quantity and unit null and alternative
 | **S7 dropped material qualifier** (of N) | 0/128 | 0.0% | ≤ 2.9% |  |
 | **S8 ready on a non-ingredient** (of N) | 0/128 | 0.0% | ≤ 2.9% |  |
 | Any severe error (of N) | 0/128 | 0.0% | ≤ 2.9% |  |
-| Invented option — review-only pre-fill, informational (of N) | 0/128 | 0.0% | ≤ 2.9% |  |
-| Dropped option — review-only pre-fill, informational (of N) | 0/128 | 0.0% | ≤ 2.9% |  |
+| Invented option — an engine option matching no label (or accepted) option; review-only, informational (of N) | 0/128 | 0.0% | ≤ 2.9% |  |
+| Dropped option — a label option missing from an engine list that invents none; review-only, informational (of N) | 0/128 | 0.0% | ≤ 2.9% |  |
 
 Strict matching: C1 37/104 (35.6%, 27.0%–45.1%) · C1+ 37/104 (35.6%, 27.0%–45.1%) · C2 4/128 (3.1%, 1.2%–7.8%). Lines whose class differs under strict matching: none.
 
@@ -1428,41 +1431,41 @@ Strict matching: C1 37/104 (35.6%, 27.0%–45.1%) · C1+ 37/104 (35.6%, 27.0%–
 
 ##### By category — holdout-v1 (previously exposed)
 
-| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 high/medium | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| integer_decimal | 6 | 5/1/0 | 5/5 | 5/5 | 0/0 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| fraction | 3 | 3/0/0 | 3/3 | 3/3 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| fraction_third | 11 | 11/0/0 | 0/11 | 0/11 | 0/0 | 0/11/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| mixed_vulgar | 7 | 7/0/0 | 3/7 | 3/7 | 0/0 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| nested_parens | 5 | 5/0/0 | 0/5 | 0/5 | 0/1 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| prep_note | 20 | 18/2/0 | 11/18 | 11/18 | 0/1 | 1/5/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
-| source_choice | 7 | 7/0/0 | 0/7 | 0/7 | 0/0 | 0/7/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| ingredient_alternatives | 4 | 0/4/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 4/4 | 0 | 0/0 | 0 | 0 | 0 |
-| range | 5 | 0/5/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 5/5 | 0 | 0/0 | 0 | 0 | 0 |
-| optional | 3 | 3/0/0 | 0/3 | 0/3 | 0/0 | 0/3/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| unstated_amount | 8 | 8/0/0 | 0/8 | 0/8 | 0/0 | 8/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| quantity_missing | 5 | 0/5/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 5/5 | 0 | 0/0 | 0 | 0 | 0 |
-| count_unit | 9 | 9/0/0 | 0/9 | 0/9 | 0/0 | 0/9/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| package_size | 6 | 6/0/0 | 0/6 | 0/6 | 0/0 | 0/6/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| oz_vs_floz | 5 | 5/0/0 | 5/5 | 5/5 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| compound_quantity | 4 | 4/0/0 | 0/4 | 0/4 | 0/0 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| equivalent_quantity | 4 | 4/0/0 | 0/4 | 0/4 | 0/0 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| percentage | 2 | 2/0/0 | 0/2 | 0/2 | 0/0 | 0/2/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| price_annotation | 3 | 3/0/0 | 3/3 | 3/3 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| form_cooked_raw | 3 | 3/0/0 | 0/3 | 0/3 | 0/3 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| number_word | 5 | 5/0/0 | 0/5 | 0/5 | 0/0 | 0/5/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| approximate | 3 | 3/0/0 | 0/3 | 0/3 | 0/0 | 0/3/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| imprecise_unit | 4 | 4/0/0 | 0/4 | 0/4 | 0/0 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| heading_non_ingredient | 4 | 0/0/4 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/4 | 4 | 0 | 0 |
-| empty | 2 | 0/0/2 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 2/2 | 0 | 0 | 0 |
-| unicode_text | 5 | 3/1/1 | 3/3 | 3/3 | 0/0 | 0/0/0/0 | 0 | 1/1 | 0 | 1/1 | 0 | 0 | 0 |
-| ambiguous_number_format | 3 | 0/3/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | 0 |
-| size_word | 4 | 3/1/0 | 3/3 | 3/3 | 0/0 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| seasoning_lookalike | 7 | 7/0/0 | 5/7 | 5/7 | 0/0 | 0/2/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| seasoning_ordinary | 6 | 4/2/0 | 2/4 | 2/4 | 0/0 | 2/0/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
-| quart_pint_gallon | 4 | 4/0/0 | 0/4 | 0/4 | 0/0 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| long_line | 2 | 2/0/0 | 1/2 | 1/2 | 0/0 | 0/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| quantity_after_name | 3 | 3/0/0 | 0/3 | 0/3 | 0/0 | 1/2/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 (high/medium) | C3 + C4 (of R) | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| integer_decimal | 6 | 5/1/0 | 5/5 | 5/5 | 0 (0/0) | 0/5 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| fraction | 3 | 3/0/0 | 3/3 | 3/3 | 0 (0/0) | 0/3 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| fraction_third | 11 | 11/0/0 | 0/11 | 0/11 | 0 (0/0) | 11/11 | 0/11/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| mixed_vulgar | 7 | 7/0/0 | 3/7 | 3/7 | 0 (0/0) | 4/7 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| nested_parens | 5 | 5/0/0 | 0/5 | 0/5 | 1 (0/1) | 4/5 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| prep_note | 20 | 18/2/0 | 11/18 | 11/18 | 1 (0/1) | 6/18 | 1/5/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
+| source_choice | 7 | 7/0/0 | 0/7 | 0/7 | 0 (0/0) | 7/7 | 0/7/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| ingredient_alternatives | 4 | 0/4/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 4/4 | 0 | 0/0 | 0 | 0 | 0 |
+| range | 5 | 0/5/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 5/5 | 0 | 0/0 | 0 | 0 | 0 |
+| optional | 3 | 3/0/0 | 0/3 | 0/3 | 0 (0/0) | 3/3 | 0/3/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| unstated_amount | 8 | 8/0/0 | 0/8 | 0/8 | 0 (0/0) | 8/8 | 8/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| quantity_missing | 5 | 0/5/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 5/5 | 0 | 0/0 | 0 | 0 | 0 |
+| count_unit | 9 | 9/0/0 | 0/9 | 0/9 | 0 (0/0) | 9/9 | 0/9/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| package_size | 6 | 6/0/0 | 0/6 | 0/6 | 0 (0/0) | 6/6 | 0/6/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| oz_vs_floz | 5 | 5/0/0 | 5/5 | 5/5 | 0 (0/0) | 0/5 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| compound_quantity | 4 | 4/0/0 | 0/4 | 0/4 | 0 (0/0) | 4/4 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| equivalent_quantity | 4 | 4/0/0 | 0/4 | 0/4 | 0 (0/0) | 4/4 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| percentage | 2 | 2/0/0 | 0/2 | 0/2 | 0 (0/0) | 2/2 | 0/2/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| price_annotation | 3 | 3/0/0 | 3/3 | 3/3 | 0 (0/0) | 0/3 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| form_cooked_raw | 3 | 3/0/0 | 0/3 | 0/3 | 3 (0/3) | 0/3 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| number_word | 5 | 5/0/0 | 0/5 | 0/5 | 0 (0/0) | 5/5 | 0/5/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| approximate | 3 | 3/0/0 | 0/3 | 0/3 | 0 (0/0) | 3/3 | 0/3/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| imprecise_unit | 4 | 4/0/0 | 0/4 | 0/4 | 0 (0/0) | 4/4 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| heading_non_ingredient | 4 | 0/0/4 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/4 | 4 | 0 | 0 |
+| empty | 2 | 0/0/2 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 2/2 | 0 | 0 | 0 |
+| unicode_text | 5 | 3/1/1 | 3/3 | 3/3 | 0 (0/0) | 0/3 | 0/0/0/0 | 0 | 1/1 | 0 | 1/1 | 0 | 0 | 0 |
+| ambiguous_number_format | 3 | 0/3/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | 0 |
+| size_word | 4 | 3/1/0 | 3/3 | 3/3 | 0 (0/0) | 0/3 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| seasoning_lookalike | 7 | 7/0/0 | 5/7 | 5/7 | 0 (0/0) | 2/7 | 0/2/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| seasoning_ordinary | 6 | 4/2/0 | 2/4 | 2/4 | 0 (0/0) | 2/4 | 2/0/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
+| quart_pint_gallon | 4 | 4/0/0 | 0/4 | 0/4 | 0 (0/0) | 4/4 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| long_line | 2 | 2/0/0 | 1/2 | 1/2 | 0 (0/0) | 1/2 | 0/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| quantity_after_name | 3 | 3/0/0 | 0/3 | 0/3 | 0 (0/0) | 3/3 | 1/2/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
 
 ##### Sensitivity — holdout-v1 (previously exposed) (informational, not the acceptance basis)
 
@@ -1509,8 +1512,8 @@ needs_review labels with no amount: label quantity and unit null and alternative
 | **S7 dropped material qualifier** (of N) | 0/359 | 0.0% | ≤ 1.1% |  |
 | **S8 ready on a non-ingredient** (of N) | 0/359 | 0.0% | ≤ 1.1% |  |
 | Any severe error (of N) | 5/359 | 1.4% | 0.6%–3.2% |  |
-| Invented option — review-only pre-fill, informational (of N) | 0/359 | 0.0% | ≤ 1.1% |  |
-| Dropped option — review-only pre-fill, informational (of N) | 0/359 | 0.0% | ≤ 1.1% |  |
+| Invented option — an engine option matching no label (or accepted) option; review-only, informational (of N) | 0/359 | 0.0% | ≤ 1.1% |  |
+| Dropped option — a label option missing from an engine list that invents none; review-only, informational (of N) | 0/359 | 0.0% | ≤ 1.1% |  |
 
 Strict matching: C1 73/271 (26.9%, 22.0%–32.5%) · C1+ 70/271 (25.8%, 21.0%–31.4%) · C2 21/359 (5.9%, 3.9%–8.8%). Lines whose class differs under strict matching: ing-h2-0162.
 
@@ -1522,48 +1525,48 @@ Strict matching: C1 73/271 (26.9%, 22.0%–32.5%) · C1+ 70/271 (25.8%, 21.0%–
 
 ##### By category — holdout-v2 (exposed; historical acceptance set)
 
-| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 high/medium | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| integer_decimal | 23 | 20/3/0 | 18/20 | 18/20 | 0/0 | 0/2/0/0 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | 0 |
-| fraction | 19 | 17/2/0 | 12/17 | 12/17 | 0/0 | 0/5/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
-| fraction_third | 17 | 15/2/0 | 0/15 | 0/15 | 0/0 | 0/15/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
-| mixed_vulgar | 31 | 29/2/0 | 9/29 | 9/29 | 0/0 | 2/18/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
-| nested_parens | 9 | 8/1/0 | 1/8 | 1/8 | 0/3 | 0/4/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| prep_note | 91 | 85/6/0 | 27/85 | 26/85 | 3/6 | 3/46/0/0 | 0 | 6/6 | 0 | 0/0 | 0 | 0 | S3×1 |
-| source_choice | 7 | 5/2/0 | 0/5 | 0/5 | 0/0 | 0/5/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
-| ingredient_alternatives | 17 | 0/17/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 17/17 | 0 | 0/0 | 0 | 0 | 0 |
-| range | 13 | 0/13/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 13/13 | 0 | 0/0 | 0 | 0 | 0 |
-| optional | 6 | 5/1/0 | 0/5 | 0/5 | 0/0 | 1/4/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| unstated_amount | 23 | 21/2/0 | 2/21 | 2/21 | 0/0 | 13/6/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
-| quantity_missing | 31 | 0/31/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 31/31 | 0 | 0/0 | 0 | 0 | 0 |
-| count_unit | 57 | 53/4/0 | 0/53 | 0/53 | 6/0 | 3/44/0/0 | 0 | 4/4 | 0 | 0/0 | 0 | 0 | 0 |
-| package_size | 33 | 30/3/0 | 0/30 | 0/30 | 0/0 | 1/29/0/0 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | 0 |
-| oz_vs_floz | 25 | 25/0/0 | 7/25 | 7/25 | 1/1 | 2/14/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | S3×1 |
-| compound_quantity | 11 | 11/0/0 | 0/11 | 0/11 | 0/0 | 0/11/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| equivalent_quantity | 23 | 23/0/0 | 0/23 | 0/23 | 0/0 | 0/23/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| percentage | 8 | 8/0/0 | 0/8 | 0/8 | 0/0 | 1/7/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| price_annotation | 7 | 6/1/0 | 4/6 | 4/6 | 1/0 | 0/1/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| form_cooked_raw | 8 | 6/2/0 | 1/6 | 1/6 | 0/5 | 0/0/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
-| number_word | 23 | 23/0/0 | 0/23 | 0/23 | 0/0 | 1/22/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| approximate | 9 | 9/0/0 | 1/9 | 0/9 | 0/0 | 0/8/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| imprecise_unit | 14 | 13/1/0 | 0/13 | 0/13 | 3/0 | 1/9/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | S3×3 |
-| heading_non_ingredient | 16 | 0/0/16 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/16 | 16 | 0 | 0 |
-| empty | 3 | 0/0/3 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 2/3 | 1 | 0 | 0 |
-| unicode_text | 27 | 17/6/4 | 6/17 | 6/17 | 0/0 | 1/10/0/0 | 0 | 6/6 | 0 | 1/4 | 3 | 0 | 0 |
-| ambiguous_number_format | 4 | 0/4/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 4/4 | 0 | 0/0 | 0 | 0 | 0 |
-| size_word | 19 | 17/2/0 | 5/17 | 5/17 | 5/2 | 1/4/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | S3×3 |
-| seasoning_lookalike | 38 | 25/13/0 | 13/25 | 13/25 | 0/0 | 4/8/0/0 | 0 | 13/13 | 0 | 0/0 | 0 | 0 | 0 |
-| seasoning_ordinary | 20 | 9/11/0 | 4/9 | 4/9 | 0/0 | 2/3/0/0 | 0 | 11/11 | 0 | 0/0 | 0 | 0 | 0 |
-| quart_pint_gallon | 8 | 8/0/0 | 0/8 | 0/8 | 1/0 | 1/6/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | S3×1 |
-| long_line | 3 | 3/0/0 | 3/3 | 2/3 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| quantity_after_name | 26 | 25/1/0 | 0/25 | 0/25 | 0/0 | 11/14/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 (high/medium) | C3 + C4 (of R) | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| integer_decimal | 23 | 20/3/0 | 18/20 | 18/20 | 0 (0/0) | 2/20 | 0/2/0/0 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | 0 |
+| fraction | 19 | 17/2/0 | 12/17 | 12/17 | 0 (0/0) | 5/17 | 0/5/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
+| fraction_third | 17 | 15/2/0 | 0/15 | 0/15 | 0 (0/0) | 15/15 | 0/15/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
+| mixed_vulgar | 31 | 29/2/0 | 9/29 | 9/29 | 0 (0/0) | 20/29 | 2/18/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
+| nested_parens | 9 | 8/1/0 | 1/8 | 1/8 | 3 (0/3) | 4/8 | 0/4/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| prep_note | 91 | 85/6/0 | 27/85 | 26/85 | 9 (3/6) | 49/85 | 3/46/0/0 | 0 | 6/6 | 0 | 0/0 | 0 | 0 | S3×1 |
+| source_choice | 7 | 5/2/0 | 0/5 | 0/5 | 0 (0/0) | 5/5 | 0/5/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
+| ingredient_alternatives | 17 | 0/17/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 17/17 | 0 | 0/0 | 0 | 0 | 0 |
+| range | 13 | 0/13/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 13/13 | 0 | 0/0 | 0 | 0 | 0 |
+| optional | 6 | 5/1/0 | 0/5 | 0/5 | 0 (0/0) | 5/5 | 1/4/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| unstated_amount | 23 | 21/2/0 | 2/21 | 2/21 | 0 (0/0) | 19/21 | 13/6/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
+| quantity_missing | 31 | 0/31/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 31/31 | 0 | 0/0 | 0 | 0 | 0 |
+| count_unit | 57 | 53/4/0 | 0/53 | 0/53 | 6 (6/0) | 47/53 | 3/44/0/0 | 0 | 4/4 | 0 | 0/0 | 0 | 0 | 0 |
+| package_size | 33 | 30/3/0 | 0/30 | 0/30 | 0 (0/0) | 30/30 | 1/29/0/0 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | 0 |
+| oz_vs_floz | 25 | 25/0/0 | 7/25 | 7/25 | 2 (1/1) | 16/25 | 2/14/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | S3×1 |
+| compound_quantity | 11 | 11/0/0 | 0/11 | 0/11 | 0 (0/0) | 11/11 | 0/11/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| equivalent_quantity | 23 | 23/0/0 | 0/23 | 0/23 | 0 (0/0) | 23/23 | 0/23/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| percentage | 8 | 8/0/0 | 0/8 | 0/8 | 0 (0/0) | 8/8 | 1/7/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| price_annotation | 7 | 6/1/0 | 4/6 | 4/6 | 1 (1/0) | 1/6 | 0/1/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| form_cooked_raw | 8 | 6/2/0 | 1/6 | 1/6 | 5 (0/5) | 0/6 | 0/0/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
+| number_word | 23 | 23/0/0 | 0/23 | 0/23 | 0 (0/0) | 23/23 | 1/22/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| approximate | 9 | 9/0/0 | 1/9 | 0/9 | 0 (0/0) | 8/9 | 0/8/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| imprecise_unit | 14 | 13/1/0 | 0/13 | 0/13 | 3 (3/0) | 10/13 | 1/9/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | S3×3 |
+| heading_non_ingredient | 16 | 0/0/16 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/16 | 16 | 0 | 0 |
+| empty | 3 | 0/0/3 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 2/3 | 1 | 0 | 0 |
+| unicode_text | 27 | 17/6/4 | 6/17 | 6/17 | 0 (0/0) | 11/17 | 1/10/0/0 | 0 | 6/6 | 0 | 1/4 | 3 | 0 | 0 |
+| ambiguous_number_format | 4 | 0/4/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 4/4 | 0 | 0/0 | 0 | 0 | 0 |
+| size_word | 19 | 17/2/0 | 5/17 | 5/17 | 7 (5/2) | 5/17 | 1/4/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | S3×3 |
+| seasoning_lookalike | 38 | 25/13/0 | 13/25 | 13/25 | 0 (0/0) | 12/25 | 4/8/0/0 | 0 | 13/13 | 0 | 0/0 | 0 | 0 | 0 |
+| seasoning_ordinary | 20 | 9/11/0 | 4/9 | 4/9 | 0 (0/0) | 5/9 | 2/3/0/0 | 0 | 11/11 | 0 | 0/0 | 0 | 0 | 0 |
+| quart_pint_gallon | 8 | 8/0/0 | 0/8 | 0/8 | 1 (1/0) | 7/8 | 1/6/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | S3×1 |
+| long_line | 3 | 3/0/0 | 3/3 | 2/3 | 0 (0/0) | 0/3 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| quantity_after_name | 26 | 25/1/0 | 0/25 | 0/25 | 0 (0/0) | 25/25 | 11/14/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
 
 ##### By source — holdout-v2 (exposed; historical acceptance set)
 
-| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 high/medium | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| synthetic_pattern | 305 | 240/46/19 | 57/240 | 55/240 | 11/9 | 21/142/0/0 | 0 | 46/46 | 0 | 2/19 | 17 | 0 | S3×5 |
-| repo_test_input | 54 | 31/23/0 | 16/31 | 16/31 | 0/1 | 3/11/0/0 | 0 | 23/23 | 0 | 0/0 | 0 | 0 | 0 |
+| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 (high/medium) | C3 + C4 (of R) | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| synthetic_pattern | 305 | 240/46/19 | 57/240 | 55/240 | 20 (11/9) | 163/240 | 21/142/0/0 | 0 | 46/46 | 0 | 2/19 | 17 | 0 | S3×5 |
+| repo_test_input | 54 | 31/23/0 | 16/31 | 16/31 | 1 (0/1) | 14/31 | 3/11/0/0 | 0 | 23/23 | 0 | 0/0 | 0 | 0 | 0 |
 
 ##### Acceptance — Gate G2 on holdout-v2 (exposed; historical acceptance set), engine `legacy-table-import-2`
 
@@ -1583,7 +1586,7 @@ A1 (point) and A2–A5 all met: **no**. A6 in the scorer (CE = 0): **met** (the 
 
 ##### Sensitivity — holdout-v2 (exposed; historical acceptance set) (informational, not the acceptance basis)
 
-A1–A5 recomputed without the pre-registered debatable case(s) ing-h2-0087 (358 lines). The acceptance table above uses every case.
+A1–A5 (a) without the cases pre-registered as debatable at holdout-v2 adjudication (EVALUATION-PLAN-v2 change log 3(a)): 1 excluded (ing-h2-0087), 358 lines kept. The acceptance table above uses every case.
 
 | # | Evidence | Status (informational) |
 |---|---|---|
@@ -1644,8 +1647,8 @@ needs_review labels with no amount: label quantity and unit null and alternative
 | **S7 dropped material qualifier** (of N) | 0/182 | 0.0% | ≤ 2.1% |  |
 | **S8 ready on a non-ingredient** (of N) | 0/182 | 0.0% | ≤ 2.1% |  |
 | Any severe error (of N) | 13/182 | 7.1% | 4.2%–11.8% |  |
-| Invented option — review-only pre-fill, informational (of N) | 0/182 | 0.0% | ≤ 2.1% |  |
-| Dropped option — review-only pre-fill, informational (of N) | 0/182 | 0.0% | ≤ 2.1% |  |
+| Invented option — an engine option matching no label (or accepted) option; review-only, informational (of N) | 0/182 | 0.0% | ≤ 2.1% |  |
+| Dropped option — a label option missing from an engine list that invents none; review-only, informational (of N) | 0/182 | 0.0% | ≤ 2.1% |  |
 
 Strict matching: C1 54/152 (35.5%, 28.4%–43.4%) · C1+ 54/152 (35.5%, 28.4%–43.4%) · C2 6/182 (3.3%, 1.5%–7.0%). Lines whose class differs under strict matching: none.
 
@@ -1657,41 +1660,41 @@ Strict matching: C1 54/152 (35.5%, 28.4%–43.4%) · C1+ 54/152 (35.5%, 28.4%–
 
 ##### By category — dev (development; diagnostics only)
 
-| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 high/medium | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| integer_decimal | 9 | 8/1/0 | 8/8 | 8/8 | 0/0 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| fraction | 10 | 9/1/0 | 5/9 | 5/9 | 0/0 | 0/4/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| fraction_third | 9 | 9/0/0 | 0/9 | 0/9 | 0/0 | 0/9/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| mixed_vulgar | 8 | 8/0/0 | 5/8 | 5/8 | 0/0 | 0/3/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| nested_parens | 4 | 4/0/0 | 0/4 | 0/4 | 0/1 | 0/3/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| prep_note | 29 | 28/1/0 | 14/28 | 14/28 | 1/2 | 5/6/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | S3×1 S6×1 |
-| source_choice | 6 | 5/1/0 | 0/5 | 0/5 | 0/0 | 3/2/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| ingredient_alternatives | 7 | 0/7/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 7/7 | 0 | 0/0 | 0 | 0 | S5×3 |
-| range | 6 | 0/6/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 6/6 | 0 | 0/0 | 0 | 0 | 0 |
-| optional | 4 | 4/0/0 | 0/4 | 0/4 | 0/0 | 3/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| unstated_amount | 14 | 14/0/0 | 1/14 | 1/14 | 0/0 | 10/3/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| quantity_missing | 5 | 0/5/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 5/5 | 0 | 0/0 | 0 | 0 | 0 |
-| count_unit | 20 | 19/1/0 | 0/19 | 0/19 | 1/0 | 1/17/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | S3×6 S6×6 |
-| package_size | 11 | 11/0/0 | 0/11 | 0/11 | 0/0 | 0/11/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | S3×10 S6×10 |
-| oz_vs_floz | 9 | 9/0/0 | 7/9 | 7/9 | 0/0 | 1/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | S3×1 S6×1 |
-| compound_quantity | 5 | 5/0/0 | 0/5 | 0/5 | 0/0 | 0/5/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| equivalent_quantity | 7 | 7/0/0 | 0/7 | 0/7 | 0/0 | 6/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| percentage | 4 | 4/0/0 | 0/4 | 0/4 | 0/0 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| price_annotation | 8 | 8/0/0 | 4/8 | 4/8 | 0/0 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | S3×2 S6×2 |
-| form_cooked_raw | 4 | 4/0/0 | 0/4 | 0/4 | 0/4 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| number_word | 9 | 9/0/0 | 0/9 | 0/9 | 0/0 | 0/9/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| approximate | 4 | 4/0/0 | 0/4 | 0/4 | 0/0 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| imprecise_unit | 5 | 5/0/0 | 0/5 | 0/5 | 0/0 | 0/5/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| heading_non_ingredient | 5 | 0/0/5 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/5 | 5 | 0 | 0 |
-| empty | 3 | 0/0/3 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 3/3 | 0 | 0 | 0 |
-| unicode_text | 7 | 4/2/1 | 4/4 | 4/4 | 0/0 | 0/0/0/0 | 0 | 2/2 | 0 | 1/1 | 0 | 0 | 0 |
-| ambiguous_number_format | 3 | 0/3/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | 0 |
-| size_word | 6 | 6/0/0 | 4/6 | 4/6 | 0/0 | 2/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| seasoning_lookalike | 11 | 10/1/0 | 9/10 | 9/10 | 0/0 | 0/1/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| seasoning_ordinary | 11 | 10/1/0 | 4/10 | 4/10 | 0/0 | 3/3/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| quart_pint_gallon | 4 | 4/0/0 | 0/4 | 0/4 | 0/0 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| long_line | 3 | 3/0/0 | 2/3 | 2/3 | 0/0 | 1/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| quantity_after_name | 4 | 4/0/0 | 0/4 | 0/4 | 0/0 | 2/2/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 (high/medium) | C3 + C4 (of R) | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| integer_decimal | 9 | 8/1/0 | 8/8 | 8/8 | 0 (0/0) | 0/8 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| fraction | 10 | 9/1/0 | 5/9 | 5/9 | 0 (0/0) | 4/9 | 0/4/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| fraction_third | 9 | 9/0/0 | 0/9 | 0/9 | 0 (0/0) | 9/9 | 0/9/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| mixed_vulgar | 8 | 8/0/0 | 5/8 | 5/8 | 0 (0/0) | 3/8 | 0/3/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| nested_parens | 4 | 4/0/0 | 0/4 | 0/4 | 1 (0/1) | 3/4 | 0/3/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| prep_note | 29 | 28/1/0 | 14/28 | 14/28 | 3 (1/2) | 11/28 | 5/6/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | S3×1 S6×1 |
+| source_choice | 6 | 5/1/0 | 0/5 | 0/5 | 0 (0/0) | 5/5 | 3/2/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| ingredient_alternatives | 7 | 0/7/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 7/7 | 0 | 0/0 | 0 | 0 | S5×3 |
+| range | 6 | 0/6/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 6/6 | 0 | 0/0 | 0 | 0 | 0 |
+| optional | 4 | 4/0/0 | 0/4 | 0/4 | 0 (0/0) | 4/4 | 3/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| unstated_amount | 14 | 14/0/0 | 1/14 | 1/14 | 0 (0/0) | 13/14 | 10/3/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| quantity_missing | 5 | 0/5/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 5/5 | 0 | 0/0 | 0 | 0 | 0 |
+| count_unit | 20 | 19/1/0 | 0/19 | 0/19 | 1 (1/0) | 18/19 | 1/17/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | S3×6 S6×6 |
+| package_size | 11 | 11/0/0 | 0/11 | 0/11 | 0 (0/0) | 11/11 | 0/11/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | S3×10 S6×10 |
+| oz_vs_floz | 9 | 9/0/0 | 7/9 | 7/9 | 0 (0/0) | 2/9 | 1/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | S3×1 S6×1 |
+| compound_quantity | 5 | 5/0/0 | 0/5 | 0/5 | 0 (0/0) | 5/5 | 0/5/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| equivalent_quantity | 7 | 7/0/0 | 0/7 | 0/7 | 0 (0/0) | 7/7 | 6/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| percentage | 4 | 4/0/0 | 0/4 | 0/4 | 0 (0/0) | 4/4 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| price_annotation | 8 | 8/0/0 | 4/8 | 4/8 | 0 (0/0) | 4/8 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | S3×2 S6×2 |
+| form_cooked_raw | 4 | 4/0/0 | 0/4 | 0/4 | 4 (0/4) | 0/4 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| number_word | 9 | 9/0/0 | 0/9 | 0/9 | 0 (0/0) | 9/9 | 0/9/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| approximate | 4 | 4/0/0 | 0/4 | 0/4 | 0 (0/0) | 4/4 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| imprecise_unit | 5 | 5/0/0 | 0/5 | 0/5 | 0 (0/0) | 5/5 | 0/5/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| heading_non_ingredient | 5 | 0/0/5 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/5 | 5 | 0 | 0 |
+| empty | 3 | 0/0/3 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 3/3 | 0 | 0 | 0 |
+| unicode_text | 7 | 4/2/1 | 4/4 | 4/4 | 0 (0/0) | 0/4 | 0/0/0/0 | 0 | 2/2 | 0 | 1/1 | 0 | 0 | 0 |
+| ambiguous_number_format | 3 | 0/3/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | 0 |
+| size_word | 6 | 6/0/0 | 4/6 | 4/6 | 0 (0/0) | 2/6 | 2/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| seasoning_lookalike | 11 | 10/1/0 | 9/10 | 9/10 | 0 (0/0) | 1/10 | 0/1/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| seasoning_ordinary | 11 | 10/1/0 | 4/10 | 4/10 | 0 (0/0) | 6/10 | 3/3/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| quart_pint_gallon | 4 | 4/0/0 | 0/4 | 0/4 | 0 (0/0) | 4/4 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| long_line | 3 | 3/0/0 | 2/3 | 2/3 | 0 (0/0) | 1/3 | 1/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| quantity_after_name | 4 | 4/0/0 | 0/4 | 0/4 | 0 (0/0) | 4/4 | 2/2/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
 
 ##### Sensitivity — dev (development; diagnostics only) (informational, not the acceptance basis)
 
@@ -1738,8 +1741,8 @@ needs_review labels with no amount: label quantity and unit null and alternative
 | **S7 dropped material qualifier** (of N) | 0/128 | 0.0% | ≤ 2.9% |  |
 | **S8 ready on a non-ingredient** (of N) | 0/128 | 0.0% | ≤ 2.9% |  |
 | Any severe error (of N) | 7/128 | 5.5% | 2.7%–10.9% |  |
-| Invented option — review-only pre-fill, informational (of N) | 0/128 | 0.0% | ≤ 2.9% |  |
-| Dropped option — review-only pre-fill, informational (of N) | 0/128 | 0.0% | ≤ 2.9% |  |
+| Invented option — an engine option matching no label (or accepted) option; review-only, informational (of N) | 0/128 | 0.0% | ≤ 2.9% |  |
+| Dropped option — a label option missing from an engine list that invents none; review-only, informational (of N) | 0/128 | 0.0% | ≤ 2.9% |  |
 
 Strict matching: C1 37/104 (35.6%, 27.0%–45.1%) · C1+ 37/104 (35.6%, 27.0%–45.1%) · C2 4/128 (3.1%, 1.2%–7.8%). Lines whose class differs under strict matching: none.
 
@@ -1751,41 +1754,41 @@ Strict matching: C1 37/104 (35.6%, 27.0%–45.1%) · C1+ 37/104 (35.6%, 27.0%–
 
 ##### By category — holdout-v1 (previously exposed)
 
-| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 high/medium | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| integer_decimal | 6 | 5/1/0 | 5/5 | 5/5 | 0/0 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| fraction | 3 | 3/0/0 | 3/3 | 3/3 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| fraction_third | 11 | 11/0/0 | 0/11 | 0/11 | 0/0 | 0/11/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| mixed_vulgar | 7 | 7/0/0 | 3/7 | 3/7 | 0/0 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| nested_parens | 5 | 5/0/0 | 0/5 | 0/5 | 0/1 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| prep_note | 20 | 18/2/0 | 11/18 | 11/18 | 0/1 | 3/3/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | S5×1 |
-| source_choice | 7 | 7/0/0 | 0/7 | 0/7 | 0/0 | 3/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| ingredient_alternatives | 4 | 0/4/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 4/4 | 0 | 0/0 | 0 | 0 | S5×2 |
-| range | 5 | 0/5/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 5/5 | 0 | 0/0 | 0 | 0 | 0 |
-| optional | 3 | 3/0/0 | 0/3 | 0/3 | 0/0 | 2/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| unstated_amount | 8 | 8/0/0 | 0/8 | 0/8 | 0/0 | 8/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| quantity_missing | 5 | 0/5/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 5/5 | 0 | 0/0 | 0 | 0 | 0 |
-| count_unit | 9 | 9/0/0 | 0/9 | 0/9 | 0/0 | 0/9/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | S3×2 S6×2 |
-| package_size | 6 | 6/0/0 | 0/6 | 0/6 | 0/0 | 0/6/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | S3×5 S6×5 |
-| oz_vs_floz | 5 | 5/0/0 | 5/5 | 5/5 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| compound_quantity | 4 | 4/0/0 | 0/4 | 0/4 | 0/0 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| equivalent_quantity | 4 | 4/0/0 | 0/4 | 0/4 | 0/0 | 3/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| percentage | 2 | 2/0/0 | 0/2 | 0/2 | 0/0 | 0/2/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| price_annotation | 3 | 3/0/0 | 3/3 | 3/3 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| form_cooked_raw | 3 | 3/0/0 | 0/3 | 0/3 | 0/3 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| number_word | 5 | 5/0/0 | 0/5 | 0/5 | 0/0 | 0/5/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| approximate | 3 | 3/0/0 | 0/3 | 0/3 | 0/0 | 0/3/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| imprecise_unit | 4 | 4/0/0 | 0/4 | 0/4 | 0/0 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| heading_non_ingredient | 4 | 0/0/4 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/4 | 4 | 0 | 0 |
-| empty | 2 | 0/0/2 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 2/2 | 0 | 0 | 0 |
-| unicode_text | 5 | 3/1/1 | 3/3 | 3/3 | 0/0 | 0/0/0/0 | 0 | 1/1 | 0 | 1/1 | 0 | 0 | 0 |
-| ambiguous_number_format | 3 | 0/3/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | 0 |
-| size_word | 4 | 3/1/0 | 3/3 | 3/3 | 0/0 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| seasoning_lookalike | 7 | 7/0/0 | 5/7 | 5/7 | 0/0 | 0/2/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| seasoning_ordinary | 6 | 4/2/0 | 2/4 | 2/4 | 0/0 | 2/0/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
-| quart_pint_gallon | 4 | 4/0/0 | 0/4 | 0/4 | 0/0 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| long_line | 2 | 2/0/0 | 1/2 | 1/2 | 0/0 | 0/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| quantity_after_name | 3 | 3/0/0 | 0/3 | 0/3 | 0/0 | 1/2/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 (high/medium) | C3 + C4 (of R) | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| integer_decimal | 6 | 5/1/0 | 5/5 | 5/5 | 0 (0/0) | 0/5 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| fraction | 3 | 3/0/0 | 3/3 | 3/3 | 0 (0/0) | 0/3 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| fraction_third | 11 | 11/0/0 | 0/11 | 0/11 | 0 (0/0) | 11/11 | 0/11/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| mixed_vulgar | 7 | 7/0/0 | 3/7 | 3/7 | 0 (0/0) | 4/7 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| nested_parens | 5 | 5/0/0 | 0/5 | 0/5 | 1 (0/1) | 4/5 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| prep_note | 20 | 18/2/0 | 11/18 | 11/18 | 1 (0/1) | 6/18 | 3/3/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | S5×1 |
+| source_choice | 7 | 7/0/0 | 0/7 | 0/7 | 0 (0/0) | 7/7 | 3/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| ingredient_alternatives | 4 | 0/4/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 4/4 | 0 | 0/0 | 0 | 0 | S5×2 |
+| range | 5 | 0/5/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 5/5 | 0 | 0/0 | 0 | 0 | 0 |
+| optional | 3 | 3/0/0 | 0/3 | 0/3 | 0 (0/0) | 3/3 | 2/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| unstated_amount | 8 | 8/0/0 | 0/8 | 0/8 | 0 (0/0) | 8/8 | 8/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| quantity_missing | 5 | 0/5/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 5/5 | 0 | 0/0 | 0 | 0 | 0 |
+| count_unit | 9 | 9/0/0 | 0/9 | 0/9 | 0 (0/0) | 9/9 | 0/9/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | S3×2 S6×2 |
+| package_size | 6 | 6/0/0 | 0/6 | 0/6 | 0 (0/0) | 6/6 | 0/6/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | S3×5 S6×5 |
+| oz_vs_floz | 5 | 5/0/0 | 5/5 | 5/5 | 0 (0/0) | 0/5 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| compound_quantity | 4 | 4/0/0 | 0/4 | 0/4 | 0 (0/0) | 4/4 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| equivalent_quantity | 4 | 4/0/0 | 0/4 | 0/4 | 0 (0/0) | 4/4 | 3/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| percentage | 2 | 2/0/0 | 0/2 | 0/2 | 0 (0/0) | 2/2 | 0/2/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| price_annotation | 3 | 3/0/0 | 3/3 | 3/3 | 0 (0/0) | 0/3 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| form_cooked_raw | 3 | 3/0/0 | 0/3 | 0/3 | 3 (0/3) | 0/3 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| number_word | 5 | 5/0/0 | 0/5 | 0/5 | 0 (0/0) | 5/5 | 0/5/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| approximate | 3 | 3/0/0 | 0/3 | 0/3 | 0 (0/0) | 3/3 | 0/3/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| imprecise_unit | 4 | 4/0/0 | 0/4 | 0/4 | 0 (0/0) | 4/4 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| heading_non_ingredient | 4 | 0/0/4 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/4 | 4 | 0 | 0 |
+| empty | 2 | 0/0/2 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 2/2 | 0 | 0 | 0 |
+| unicode_text | 5 | 3/1/1 | 3/3 | 3/3 | 0 (0/0) | 0/3 | 0/0/0/0 | 0 | 1/1 | 0 | 1/1 | 0 | 0 | 0 |
+| ambiguous_number_format | 3 | 0/3/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | 0 |
+| size_word | 4 | 3/1/0 | 3/3 | 3/3 | 0 (0/0) | 0/3 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| seasoning_lookalike | 7 | 7/0/0 | 5/7 | 5/7 | 0 (0/0) | 2/7 | 0/2/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| seasoning_ordinary | 6 | 4/2/0 | 2/4 | 2/4 | 0 (0/0) | 2/4 | 2/0/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
+| quart_pint_gallon | 4 | 4/0/0 | 0/4 | 0/4 | 0 (0/0) | 4/4 | 0/4/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| long_line | 2 | 2/0/0 | 1/2 | 1/2 | 0 (0/0) | 1/2 | 0/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| quantity_after_name | 3 | 3/0/0 | 0/3 | 0/3 | 0 (0/0) | 3/3 | 1/2/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
 
 ##### Sensitivity — holdout-v1 (previously exposed) (informational, not the acceptance basis)
 
@@ -1832,8 +1835,8 @@ needs_review labels with no amount: label quantity and unit null and alternative
 | **S7 dropped material qualifier** (of N) | 0/359 | 0.0% | ≤ 1.1% |  |
 | **S8 ready on a non-ingredient** (of N) | 0/359 | 0.0% | ≤ 1.1% |  |
 | Any severe error (of N) | 37/359 | 10.3% | 7.6%–13.9% |  |
-| Invented option — review-only pre-fill, informational (of N) | 0/359 | 0.0% | ≤ 1.1% |  |
-| Dropped option — review-only pre-fill, informational (of N) | 0/359 | 0.0% | ≤ 1.1% |  |
+| Invented option — an engine option matching no label (or accepted) option; review-only, informational (of N) | 0/359 | 0.0% | ≤ 1.1% |  |
+| Dropped option — a label option missing from an engine list that invents none; review-only, informational (of N) | 0/359 | 0.0% | ≤ 1.1% |  |
 
 Strict matching: C1 73/271 (26.9%, 22.0%–32.5%) · C1+ 70/271 (25.8%, 21.0%–31.4%) · C2 21/359 (5.9%, 3.9%–8.8%). Lines whose class differs under strict matching: ing-h2-0162.
 
@@ -1845,48 +1848,48 @@ Strict matching: C1 73/271 (26.9%, 22.0%–32.5%) · C1+ 70/271 (25.8%, 21.0%–
 
 ##### By category — holdout-v2 (exposed; historical acceptance set)
 
-| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 high/medium | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| integer_decimal | 23 | 20/3/0 | 18/20 | 18/20 | 0/0 | 0/2/0/0 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | 0 |
-| fraction | 19 | 17/2/0 | 12/17 | 12/17 | 0/0 | 2/3/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | S5×1 |
-| fraction_third | 17 | 15/2/0 | 0/15 | 0/15 | 0/0 | 0/15/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | S3×1 S5×1 S6×1 |
-| mixed_vulgar | 31 | 29/2/0 | 9/29 | 9/29 | 0/0 | 4/16/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | S3×2 S6×2 |
-| nested_parens | 9 | 8/1/0 | 1/8 | 1/8 | 0/3 | 0/4/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | S5×1 |
-| prep_note | 91 | 85/6/0 | 27/85 | 26/85 | 3/6 | 14/35/0/0 | 0 | 6/6 | 0 | 0/0 | 0 | 0 | S3×10 S5×1 S6×9 |
-| source_choice | 7 | 5/2/0 | 0/5 | 0/5 | 0/0 | 3/2/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
-| ingredient_alternatives | 17 | 0/17/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 17/17 | 0 | 0/0 | 0 | 0 | S5×9 |
-| range | 13 | 0/13/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 13/13 | 0 | 0/0 | 0 | 0 | S3×2 S6×2 |
-| optional | 6 | 5/1/0 | 0/5 | 0/5 | 0/0 | 3/2/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| unstated_amount | 23 | 21/2/0 | 2/21 | 2/21 | 0/0 | 15/4/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
-| quantity_missing | 31 | 0/31/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 31/31 | 0 | 0/0 | 0 | 0 | 0 |
-| count_unit | 57 | 53/4/0 | 0/53 | 0/53 | 6/0 | 5/42/0/0 | 0 | 4/4 | 0 | 0/0 | 0 | 0 | S3×21 S6×21 |
-| package_size | 33 | 30/3/0 | 0/30 | 0/30 | 0/0 | 1/29/0/0 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | S3×23 S6×23 |
-| oz_vs_floz | 25 | 25/0/0 | 7/25 | 7/25 | 1/1 | 7/9/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | S3×6 S6×5 |
-| compound_quantity | 11 | 11/0/0 | 0/11 | 0/11 | 0/0 | 0/11/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| equivalent_quantity | 23 | 23/0/0 | 0/23 | 0/23 | 0/0 | 15/8/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| percentage | 8 | 8/0/0 | 0/8 | 0/8 | 0/0 | 3/5/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| price_annotation | 7 | 6/1/0 | 4/6 | 4/6 | 1/0 | 0/1/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | S3×1 S6×1 |
-| form_cooked_raw | 8 | 6/2/0 | 1/6 | 1/6 | 0/5 | 0/0/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
-| number_word | 23 | 23/0/0 | 0/23 | 0/23 | 0/0 | 1/22/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| approximate | 9 | 9/0/0 | 1/9 | 0/9 | 0/0 | 0/8/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| imprecise_unit | 14 | 13/1/0 | 0/13 | 0/13 | 3/0 | 1/9/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | S3×3 |
-| heading_non_ingredient | 16 | 0/0/16 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/16 | 16 | 0 | 0 |
-| empty | 3 | 0/0/3 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 2/3 | 1 | 0 | 0 |
-| unicode_text | 27 | 17/6/4 | 6/17 | 6/17 | 0/0 | 2/9/0/0 | 0 | 6/6 | 0 | 1/4 | 3 | 0 | S3×2 S5×2 S6×2 |
-| ambiguous_number_format | 4 | 0/4/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 4/4 | 0 | 0/0 | 0 | 0 | 0 |
-| size_word | 19 | 17/2/0 | 5/17 | 5/17 | 5/2 | 2/3/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | S3×3 |
-| seasoning_lookalike | 38 | 25/13/0 | 13/25 | 13/25 | 0/0 | 7/5/0/0 | 0 | 13/13 | 0 | 0/0 | 0 | 0 | 0 |
-| seasoning_ordinary | 20 | 9/11/0 | 4/9 | 4/9 | 0/0 | 2/3/0/0 | 0 | 11/11 | 0 | 0/0 | 0 | 0 | 0 |
-| quart_pint_gallon | 8 | 8/0/0 | 0/8 | 0/8 | 1/0 | 1/6/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | S3×1 |
-| long_line | 3 | 3/0/0 | 3/3 | 2/3 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| quantity_after_name | 26 | 25/1/0 | 0/25 | 0/25 | 0/0 | 11/14/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 (high/medium) | C3 + C4 (of R) | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| integer_decimal | 23 | 20/3/0 | 18/20 | 18/20 | 0 (0/0) | 2/20 | 0/2/0/0 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | 0 |
+| fraction | 19 | 17/2/0 | 12/17 | 12/17 | 0 (0/0) | 5/17 | 2/3/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | S5×1 |
+| fraction_third | 17 | 15/2/0 | 0/15 | 0/15 | 0 (0/0) | 15/15 | 0/15/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | S3×1 S5×1 S6×1 |
+| mixed_vulgar | 31 | 29/2/0 | 9/29 | 9/29 | 0 (0/0) | 20/29 | 4/16/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | S3×2 S6×2 |
+| nested_parens | 9 | 8/1/0 | 1/8 | 1/8 | 3 (0/3) | 4/8 | 0/4/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | S5×1 |
+| prep_note | 91 | 85/6/0 | 27/85 | 26/85 | 9 (3/6) | 49/85 | 14/35/0/0 | 0 | 6/6 | 0 | 0/0 | 0 | 0 | S3×10 S5×1 S6×9 |
+| source_choice | 7 | 5/2/0 | 0/5 | 0/5 | 0 (0/0) | 5/5 | 3/2/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
+| ingredient_alternatives | 17 | 0/17/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 17/17 | 0 | 0/0 | 0 | 0 | S5×9 |
+| range | 13 | 0/13/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 13/13 | 0 | 0/0 | 0 | 0 | S3×2 S6×2 |
+| optional | 6 | 5/1/0 | 0/5 | 0/5 | 0 (0/0) | 5/5 | 3/2/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| unstated_amount | 23 | 21/2/0 | 2/21 | 2/21 | 0 (0/0) | 19/21 | 15/4/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
+| quantity_missing | 31 | 0/31/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 31/31 | 0 | 0/0 | 0 | 0 | 0 |
+| count_unit | 57 | 53/4/0 | 0/53 | 0/53 | 6 (6/0) | 47/53 | 5/42/0/0 | 0 | 4/4 | 0 | 0/0 | 0 | 0 | S3×21 S6×21 |
+| package_size | 33 | 30/3/0 | 0/30 | 0/30 | 0 (0/0) | 30/30 | 1/29/0/0 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | S3×23 S6×23 |
+| oz_vs_floz | 25 | 25/0/0 | 7/25 | 7/25 | 2 (1/1) | 16/25 | 7/9/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | S3×6 S6×5 |
+| compound_quantity | 11 | 11/0/0 | 0/11 | 0/11 | 0 (0/0) | 11/11 | 0/11/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| equivalent_quantity | 23 | 23/0/0 | 0/23 | 0/23 | 0 (0/0) | 23/23 | 15/8/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| percentage | 8 | 8/0/0 | 0/8 | 0/8 | 0 (0/0) | 8/8 | 3/5/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| price_annotation | 7 | 6/1/0 | 4/6 | 4/6 | 1 (1/0) | 1/6 | 0/1/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | S3×1 S6×1 |
+| form_cooked_raw | 8 | 6/2/0 | 1/6 | 1/6 | 5 (0/5) | 0/6 | 0/0/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
+| number_word | 23 | 23/0/0 | 0/23 | 0/23 | 0 (0/0) | 23/23 | 1/22/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| approximate | 9 | 9/0/0 | 1/9 | 0/9 | 0 (0/0) | 8/9 | 0/8/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| imprecise_unit | 14 | 13/1/0 | 0/13 | 0/13 | 3 (3/0) | 10/13 | 1/9/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | S3×3 |
+| heading_non_ingredient | 16 | 0/0/16 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/16 | 16 | 0 | 0 |
+| empty | 3 | 0/0/3 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 2/3 | 1 | 0 | 0 |
+| unicode_text | 27 | 17/6/4 | 6/17 | 6/17 | 0 (0/0) | 11/17 | 2/9/0/0 | 0 | 6/6 | 0 | 1/4 | 3 | 0 | S3×2 S5×2 S6×2 |
+| ambiguous_number_format | 4 | 0/4/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 4/4 | 0 | 0/0 | 0 | 0 | 0 |
+| size_word | 19 | 17/2/0 | 5/17 | 5/17 | 7 (5/2) | 5/17 | 2/3/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | S3×3 |
+| seasoning_lookalike | 38 | 25/13/0 | 13/25 | 13/25 | 0 (0/0) | 12/25 | 7/5/0/0 | 0 | 13/13 | 0 | 0/0 | 0 | 0 | 0 |
+| seasoning_ordinary | 20 | 9/11/0 | 4/9 | 4/9 | 0 (0/0) | 5/9 | 2/3/0/0 | 0 | 11/11 | 0 | 0/0 | 0 | 0 | 0 |
+| quart_pint_gallon | 8 | 8/0/0 | 0/8 | 0/8 | 1 (1/0) | 7/8 | 1/6/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | S3×1 |
+| long_line | 3 | 3/0/0 | 3/3 | 2/3 | 0 (0/0) | 0/3 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| quantity_after_name | 26 | 25/1/0 | 0/25 | 0/25 | 0 (0/0) | 25/25 | 11/14/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
 
 ##### By source — holdout-v2 (exposed; historical acceptance set)
 
-| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 high/medium | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| synthetic_pattern | 305 | 240/46/19 | 57/240 | 55/240 | 11/9 | 45/118/0/0 | 0 | 46/46 | 0 | 2/19 | 17 | 0 | S3×25 S5×9 S6×20 |
-| repo_test_input | 54 | 31/23/0 | 16/31 | 16/31 | 0/1 | 4/10/0/0 | 0 | 23/23 | 0 | 0/0 | 0 | 0 | S3×3 S6×3 |
+| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 (high/medium) | C3 + C4 (of R) | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| synthetic_pattern | 305 | 240/46/19 | 57/240 | 55/240 | 20 (11/9) | 163/240 | 45/118/0/0 | 0 | 46/46 | 0 | 2/19 | 17 | 0 | S3×25 S5×9 S6×20 |
+| repo_test_input | 54 | 31/23/0 | 16/31 | 16/31 | 1 (0/1) | 14/31 | 4/10/0/0 | 0 | 23/23 | 0 | 0/0 | 0 | 0 | S3×3 S6×3 |
 
 ##### Acceptance — Gate G2 on holdout-v2 (exposed; historical acceptance set), engine `legacy-table-import-2+suggestion`
 
@@ -1906,7 +1909,7 @@ A1 (point) and A2–A5 all met: **no**. A6 in the scorer (CE = 0): **met** (the 
 
 ##### Sensitivity — holdout-v2 (exposed; historical acceptance set) (informational, not the acceptance basis)
 
-A1–A5 recomputed without the pre-registered debatable case(s) ing-h2-0087 (358 lines). The acceptance table above uses every case.
+A1–A5 (a) without the cases pre-registered as debatable at holdout-v2 adjudication (EVALUATION-PLAN-v2 change log 3(a)): 1 excluded (ing-h2-0087), 358 lines kept. The acceptance table above uses every case.
 
 | # | Evidence | Status (informational) |
 |---|---|---|
@@ -1967,8 +1970,8 @@ needs_review labels with no amount: label quantity and unit null and alternative
 | **S7 dropped material qualifier** (of N) | 0/182 | 0.0% | ≤ 2.1% |  |
 | **S8 ready on a non-ingredient** (of N) | 0/182 | 0.0% | ≤ 2.1% |  |
 | Any severe error (of N) | 0/182 | 0.0% | ≤ 2.1% |  |
-| Invented option — review-only pre-fill, informational (of N) | 0/182 | 0.0% | ≤ 2.1% |  |
-| Dropped option — review-only pre-fill, informational (of N) | 0/182 | 0.0% | ≤ 2.1% |  |
+| Invented option — an engine option matching no label (or accepted) option; review-only, informational (of N) | 0/182 | 0.0% | ≤ 2.1% |  |
+| Dropped option — a label option missing from an engine list that invents none; review-only, informational (of N) | 0/182 | 0.0% | ≤ 2.1% |  |
 
 Strict matching: C1 152/152 (100.0%, 97.5%–100.0%) · C1+ 152/152 (100.0%, 97.5%–100.0%) · C2 0/182 (0.0%, ≤ 2.1%). Lines whose class differs under strict matching: none.
 
@@ -1980,41 +1983,41 @@ Strict matching: C1 152/152 (100.0%, 97.5%–100.0%) · C1+ 152/152 (100.0%, 97.
 
 ##### By category — dev (development; diagnostics only)
 
-| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 high/medium | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| integer_decimal | 9 | 8/1/0 | 8/8 | 8/8 | 0/0 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| fraction | 10 | 9/1/0 | 9/9 | 9/9 | 0/0 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| fraction_third | 9 | 9/0/0 | 9/9 | 9/9 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| mixed_vulgar | 8 | 8/0/0 | 8/8 | 8/8 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| nested_parens | 4 | 4/0/0 | 4/4 | 4/4 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| prep_note | 29 | 28/1/0 | 28/28 | 28/28 | 0/0 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| source_choice | 6 | 5/1/0 | 5/5 | 5/5 | 0/0 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| ingredient_alternatives | 7 | 0/7/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 7/7 | 0 | 0/0 | 0 | 0 | 0 |
-| range | 6 | 0/6/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 6/6 | 0 | 0/0 | 0 | 0 | 0 |
-| optional | 4 | 4/0/0 | 4/4 | 4/4 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| unstated_amount | 14 | 14/0/0 | 14/14 | 14/14 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| quantity_missing | 5 | 0/5/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 5/5 | 0 | 0/0 | 0 | 0 | 0 |
-| count_unit | 20 | 19/1/0 | 19/19 | 19/19 | 0/0 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| package_size | 11 | 11/0/0 | 11/11 | 11/11 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| oz_vs_floz | 9 | 9/0/0 | 9/9 | 9/9 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| compound_quantity | 5 | 5/0/0 | 5/5 | 5/5 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| equivalent_quantity | 7 | 7/0/0 | 7/7 | 7/7 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| percentage | 4 | 4/0/0 | 4/4 | 4/4 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| price_annotation | 8 | 8/0/0 | 8/8 | 8/8 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| form_cooked_raw | 4 | 4/0/0 | 4/4 | 4/4 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| number_word | 9 | 9/0/0 | 9/9 | 9/9 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| approximate | 4 | 4/0/0 | 4/4 | 4/4 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| imprecise_unit | 5 | 5/0/0 | 5/5 | 5/5 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| heading_non_ingredient | 5 | 0/0/5 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 5/5 | 0 | 0 | 0 |
-| empty | 3 | 0/0/3 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 3/3 | 0 | 0 | 0 |
-| unicode_text | 7 | 4/2/1 | 4/4 | 4/4 | 0/0 | 0/0/0/0 | 0 | 2/2 | 0 | 1/1 | 0 | 0 | 0 |
-| ambiguous_number_format | 3 | 0/3/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | 0 |
-| size_word | 6 | 6/0/0 | 6/6 | 6/6 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| seasoning_lookalike | 11 | 10/1/0 | 10/10 | 10/10 | 0/0 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| seasoning_ordinary | 11 | 10/1/0 | 10/10 | 10/10 | 0/0 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| quart_pint_gallon | 4 | 4/0/0 | 4/4 | 4/4 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| long_line | 3 | 3/0/0 | 3/3 | 3/3 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| quantity_after_name | 4 | 4/0/0 | 4/4 | 4/4 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 (high/medium) | C3 + C4 (of R) | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| integer_decimal | 9 | 8/1/0 | 8/8 | 8/8 | 0 (0/0) | 0/8 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| fraction | 10 | 9/1/0 | 9/9 | 9/9 | 0 (0/0) | 0/9 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| fraction_third | 9 | 9/0/0 | 9/9 | 9/9 | 0 (0/0) | 0/9 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| mixed_vulgar | 8 | 8/0/0 | 8/8 | 8/8 | 0 (0/0) | 0/8 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| nested_parens | 4 | 4/0/0 | 4/4 | 4/4 | 0 (0/0) | 0/4 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| prep_note | 29 | 28/1/0 | 28/28 | 28/28 | 0 (0/0) | 0/28 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| source_choice | 6 | 5/1/0 | 5/5 | 5/5 | 0 (0/0) | 0/5 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| ingredient_alternatives | 7 | 0/7/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 7/7 | 0 | 0/0 | 0 | 0 | 0 |
+| range | 6 | 0/6/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 6/6 | 0 | 0/0 | 0 | 0 | 0 |
+| optional | 4 | 4/0/0 | 4/4 | 4/4 | 0 (0/0) | 0/4 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| unstated_amount | 14 | 14/0/0 | 14/14 | 14/14 | 0 (0/0) | 0/14 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| quantity_missing | 5 | 0/5/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 5/5 | 0 | 0/0 | 0 | 0 | 0 |
+| count_unit | 20 | 19/1/0 | 19/19 | 19/19 | 0 (0/0) | 0/19 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| package_size | 11 | 11/0/0 | 11/11 | 11/11 | 0 (0/0) | 0/11 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| oz_vs_floz | 9 | 9/0/0 | 9/9 | 9/9 | 0 (0/0) | 0/9 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| compound_quantity | 5 | 5/0/0 | 5/5 | 5/5 | 0 (0/0) | 0/5 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| equivalent_quantity | 7 | 7/0/0 | 7/7 | 7/7 | 0 (0/0) | 0/7 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| percentage | 4 | 4/0/0 | 4/4 | 4/4 | 0 (0/0) | 0/4 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| price_annotation | 8 | 8/0/0 | 8/8 | 8/8 | 0 (0/0) | 0/8 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| form_cooked_raw | 4 | 4/0/0 | 4/4 | 4/4 | 0 (0/0) | 0/4 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| number_word | 9 | 9/0/0 | 9/9 | 9/9 | 0 (0/0) | 0/9 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| approximate | 4 | 4/0/0 | 4/4 | 4/4 | 0 (0/0) | 0/4 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| imprecise_unit | 5 | 5/0/0 | 5/5 | 5/5 | 0 (0/0) | 0/5 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| heading_non_ingredient | 5 | 0/0/5 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 5/5 | 0 | 0 | 0 |
+| empty | 3 | 0/0/3 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 3/3 | 0 | 0 | 0 |
+| unicode_text | 7 | 4/2/1 | 4/4 | 4/4 | 0 (0/0) | 0/4 | 0/0/0/0 | 0 | 2/2 | 0 | 1/1 | 0 | 0 | 0 |
+| ambiguous_number_format | 3 | 0/3/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | 0 |
+| size_word | 6 | 6/0/0 | 6/6 | 6/6 | 0 (0/0) | 0/6 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| seasoning_lookalike | 11 | 10/1/0 | 10/10 | 10/10 | 0 (0/0) | 0/10 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| seasoning_ordinary | 11 | 10/1/0 | 10/10 | 10/10 | 0 (0/0) | 0/10 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| quart_pint_gallon | 4 | 4/0/0 | 4/4 | 4/4 | 0 (0/0) | 0/4 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| long_line | 3 | 3/0/0 | 3/3 | 3/3 | 0 (0/0) | 0/3 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| quantity_after_name | 4 | 4/0/0 | 4/4 | 4/4 | 0 (0/0) | 0/4 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
 
 ##### Sensitivity — dev (development; diagnostics only) (informational, not the acceptance basis)
 
@@ -2061,8 +2064,8 @@ needs_review labels with no amount: label quantity and unit null and alternative
 | **S7 dropped material qualifier** (of N) | 0/128 | 0.0% | ≤ 2.9% |  |
 | **S8 ready on a non-ingredient** (of N) | 0/128 | 0.0% | ≤ 2.9% |  |
 | Any severe error (of N) | 0/128 | 0.0% | ≤ 2.9% |  |
-| Invented option — review-only pre-fill, informational (of N) | 2/128 | 1.6% | 0.4%–5.5% | ing-hold-0021, ing-hold-0031 |
-| Dropped option — review-only pre-fill, informational (of N) | 0/128 | 0.0% | ≤ 2.9% |  |
+| Invented option — an engine option matching no label (or accepted) option; review-only, informational (of N) | 2/128 | 1.6% | 0.4%–5.5% | ing-hold-0021, ing-hold-0031 |
+| Dropped option — a label option missing from an engine list that invents none; review-only, informational (of N) | 0/128 | 0.0% | ≤ 2.9% |  |
 
 Strict matching: C1 103/104 (99.0%, 94.8%–99.8%) · C1+ 103/104 (99.0%, 94.8%–99.8%) · C2 0/128 (0.0%, ≤ 2.9%). Lines whose class differs under strict matching: none.
 
@@ -2074,41 +2077,41 @@ Strict matching: C1 103/104 (99.0%, 94.8%–99.8%) · C1+ 103/104 (99.0%, 94.8%�
 
 ##### By category — holdout-v1 (previously exposed)
 
-| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 high/medium | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| integer_decimal | 6 | 5/1/0 | 5/5 | 5/5 | 0/0 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| fraction | 3 | 3/0/0 | 3/3 | 3/3 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| fraction_third | 11 | 11/0/0 | 10/11 | 10/11 | 0/0 | 0/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| mixed_vulgar | 7 | 7/0/0 | 7/7 | 7/7 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| nested_parens | 5 | 5/0/0 | 4/5 | 4/5 | 0/0 | 0/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| prep_note | 20 | 18/2/0 | 18/18 | 18/18 | 0/0 | 0/0/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
-| source_choice | 7 | 7/0/0 | 6/7 | 6/7 | 0/0 | 0/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| ingredient_alternatives | 4 | 0/4/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 4/4 | 0 | 0/0 | 0 | 0 | 0 |
-| range | 5 | 0/5/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 5/5 | 0 | 0/0 | 0 | 0 | 0 |
-| optional | 3 | 3/0/0 | 3/3 | 3/3 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| unstated_amount | 8 | 8/0/0 | 8/8 | 8/8 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| quantity_missing | 5 | 0/5/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 5/5 | 0 | 0/0 | 0 | 0 | 0 |
-| count_unit | 9 | 9/0/0 | 9/9 | 9/9 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| package_size | 6 | 6/0/0 | 6/6 | 6/6 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| oz_vs_floz | 5 | 5/0/0 | 5/5 | 5/5 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| compound_quantity | 4 | 4/0/0 | 4/4 | 4/4 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| equivalent_quantity | 4 | 4/0/0 | 4/4 | 4/4 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| percentage | 2 | 2/0/0 | 2/2 | 2/2 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| price_annotation | 3 | 3/0/0 | 3/3 | 3/3 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| form_cooked_raw | 3 | 3/0/0 | 3/3 | 3/3 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| number_word | 5 | 5/0/0 | 5/5 | 5/5 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| approximate | 3 | 3/0/0 | 3/3 | 3/3 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| imprecise_unit | 4 | 4/0/0 | 4/4 | 4/4 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| heading_non_ingredient | 4 | 0/0/4 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 4/4 | 0 | 0 | 0 |
-| empty | 2 | 0/0/2 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 2/2 | 0 | 0 | 0 |
-| unicode_text | 5 | 3/1/1 | 3/3 | 3/3 | 0/0 | 0/0/0/0 | 0 | 1/1 | 0 | 1/1 | 0 | 0 | 0 |
-| ambiguous_number_format | 3 | 0/3/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | 0 |
-| size_word | 4 | 3/1/0 | 3/3 | 3/3 | 0/0 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| seasoning_lookalike | 7 | 7/0/0 | 7/7 | 7/7 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| seasoning_ordinary | 6 | 4/2/0 | 4/4 | 4/4 | 0/0 | 0/0/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
-| quart_pint_gallon | 4 | 4/0/0 | 4/4 | 4/4 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| long_line | 2 | 2/0/0 | 2/2 | 2/2 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| quantity_after_name | 3 | 3/0/0 | 3/3 | 3/3 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 (high/medium) | C3 + C4 (of R) | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| integer_decimal | 6 | 5/1/0 | 5/5 | 5/5 | 0 (0/0) | 0/5 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| fraction | 3 | 3/0/0 | 3/3 | 3/3 | 0 (0/0) | 0/3 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| fraction_third | 11 | 11/0/0 | 10/11 | 10/11 | 0 (0/0) | 1/11 | 0/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| mixed_vulgar | 7 | 7/0/0 | 7/7 | 7/7 | 0 (0/0) | 0/7 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| nested_parens | 5 | 5/0/0 | 4/5 | 4/5 | 0 (0/0) | 1/5 | 0/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| prep_note | 20 | 18/2/0 | 18/18 | 18/18 | 0 (0/0) | 0/18 | 0/0/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
+| source_choice | 7 | 7/0/0 | 6/7 | 6/7 | 0 (0/0) | 1/7 | 0/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| ingredient_alternatives | 4 | 0/4/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 4/4 | 0 | 0/0 | 0 | 0 | 0 |
+| range | 5 | 0/5/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 5/5 | 0 | 0/0 | 0 | 0 | 0 |
+| optional | 3 | 3/0/0 | 3/3 | 3/3 | 0 (0/0) | 0/3 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| unstated_amount | 8 | 8/0/0 | 8/8 | 8/8 | 0 (0/0) | 0/8 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| quantity_missing | 5 | 0/5/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 5/5 | 0 | 0/0 | 0 | 0 | 0 |
+| count_unit | 9 | 9/0/0 | 9/9 | 9/9 | 0 (0/0) | 0/9 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| package_size | 6 | 6/0/0 | 6/6 | 6/6 | 0 (0/0) | 0/6 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| oz_vs_floz | 5 | 5/0/0 | 5/5 | 5/5 | 0 (0/0) | 0/5 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| compound_quantity | 4 | 4/0/0 | 4/4 | 4/4 | 0 (0/0) | 0/4 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| equivalent_quantity | 4 | 4/0/0 | 4/4 | 4/4 | 0 (0/0) | 0/4 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| percentage | 2 | 2/0/0 | 2/2 | 2/2 | 0 (0/0) | 0/2 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| price_annotation | 3 | 3/0/0 | 3/3 | 3/3 | 0 (0/0) | 0/3 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| form_cooked_raw | 3 | 3/0/0 | 3/3 | 3/3 | 0 (0/0) | 0/3 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| number_word | 5 | 5/0/0 | 5/5 | 5/5 | 0 (0/0) | 0/5 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| approximate | 3 | 3/0/0 | 3/3 | 3/3 | 0 (0/0) | 0/3 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| imprecise_unit | 4 | 4/0/0 | 4/4 | 4/4 | 0 (0/0) | 0/4 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| heading_non_ingredient | 4 | 0/0/4 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 4/4 | 0 | 0 | 0 |
+| empty | 2 | 0/0/2 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 2/2 | 0 | 0 | 0 |
+| unicode_text | 5 | 3/1/1 | 3/3 | 3/3 | 0 (0/0) | 0/3 | 0/0/0/0 | 0 | 1/1 | 0 | 1/1 | 0 | 0 | 0 |
+| ambiguous_number_format | 3 | 0/3/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | 0 |
+| size_word | 4 | 3/1/0 | 3/3 | 3/3 | 0 (0/0) | 0/3 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| seasoning_lookalike | 7 | 7/0/0 | 7/7 | 7/7 | 0 (0/0) | 0/7 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| seasoning_ordinary | 6 | 4/2/0 | 4/4 | 4/4 | 0 (0/0) | 0/4 | 0/0/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
+| quart_pint_gallon | 4 | 4/0/0 | 4/4 | 4/4 | 0 (0/0) | 0/4 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| long_line | 2 | 2/0/0 | 2/2 | 2/2 | 0 (0/0) | 0/2 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| quantity_after_name | 3 | 3/0/0 | 3/3 | 3/3 | 0 (0/0) | 0/3 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
 
 ##### Sensitivity — holdout-v1 (previously exposed) (informational, not the acceptance basis)
 
@@ -2155,8 +2158,8 @@ needs_review labels with no amount: label quantity and unit null and alternative
 | **S7 dropped material qualifier** (of N) | 0/359 | 0.0% | ≤ 1.1% |  |
 | **S8 ready on a non-ingredient** (of N) | 0/359 | 0.0% | ≤ 1.1% |  |
 | Any severe error (of N) | 4/359 | 1.1% | 0.4%–2.8% |  |
-| Invented option — review-only pre-fill, informational (of N) | 3/359 | 0.8% | 0.3%–2.4% | ing-h2-0218, ing-h2-0220, ing-h2-0232 |
-| Dropped option — review-only pre-fill, informational (of N) | 0/359 | 0.0% | ≤ 1.1% |  |
+| Invented option — an engine option matching no label (or accepted) option; review-only, informational (of N) | 3/359 | 0.8% | 0.3%–2.4% | ing-h2-0218, ing-h2-0220, ing-h2-0232 |
+| Dropped option — a label option missing from an engine list that invents none; review-only, informational (of N) | 0/359 | 0.0% | ≤ 1.1% |  |
 
 Strict matching: C1 252/271 (93.0%, 89.3%–95.5%) · C1+ 252/271 (93.0%, 89.3%–95.5%) · C2 8/359 (2.2%, 1.1%–4.3%). Lines whose class differs under strict matching: ing-h2-0265, ing-h2-0267.
 
@@ -2168,48 +2171,48 @@ Strict matching: C1 252/271 (93.0%, 89.3%–95.5%) · C1+ 252/271 (93.0%, 89.3%�
 
 ##### By category — holdout-v2 (exposed; historical acceptance set)
 
-| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 high/medium | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| integer_decimal | 23 | 20/3/0 | 19/20 | 19/20 | 0/0 | 0/0/0/1 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | 0 |
-| fraction | 19 | 17/2/0 | 16/17 | 16/17 | 0/0 | 0/0/0/1 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
-| fraction_third | 17 | 15/2/0 | 13/15 | 13/15 | 1/0 | 0/2/0/0 | 0 | 1/2 | 0 | 0/0 | 0 | 0 | S4×1 |
-| mixed_vulgar | 31 | 29/2/0 | 26/29 | 26/29 | 0/0 | 1/2/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
-| nested_parens | 9 | 8/1/0 | 7/8 | 7/8 | 0/0 | 0/1/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| prep_note | 91 | 85/6/0 | 82/85 | 82/85 | 2/1 | 1/0/0/0 | 0 | 5/6 | 0 | 0/0 | 0 | 0 | S4×1 |
-| source_choice | 7 | 5/2/0 | 4/5 | 4/5 | 0/0 | 0/1/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
-| ingredient_alternatives | 17 | 0/17/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 17/17 | 0 | 0/0 | 0 | 0 | S5×1 |
-| range | 13 | 0/13/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 13/13 | 0 | 0/0 | 0 | 0 | 0 |
-| optional | 6 | 5/1/0 | 5/5 | 5/5 | 0/0 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| unstated_amount | 23 | 21/2/0 | 21/21 | 21/21 | 0/0 | 0/0/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
-| quantity_missing | 31 | 0/31/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 31/31 | 0 | 0/0 | 0 | 0 | 0 |
-| count_unit | 57 | 53/4/0 | 49/53 | 49/53 | 3/0 | 0/1/0/0 | 0 | 4/4 | 0 | 0/0 | 0 | 0 | S3×1 S6×1 |
-| package_size | 33 | 30/3/0 | 29/30 | 29/30 | 0/0 | 0/1/0/0 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | S3×1 S6×1 |
-| oz_vs_floz | 25 | 25/0/0 | 24/25 | 24/25 | 0/0 | 1/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| compound_quantity | 11 | 11/0/0 | 9/11 | 9/11 | 0/0 | 0/2/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| equivalent_quantity | 23 | 23/0/0 | 22/23 | 22/23 | 0/0 | 1/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| percentage | 8 | 8/0/0 | 7/8 | 7/8 | 0/0 | 0/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| price_annotation | 7 | 6/1/0 | 6/6 | 6/6 | 0/0 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| form_cooked_raw | 8 | 6/2/0 | 5/6 | 5/6 | 2/1 | 0/0/0/0 | 0 | 0/2 | 0 | 0/0 | 0 | 0 | S4×2 |
-| number_word | 23 | 23/0/0 | 22/23 | 22/23 | 1/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| approximate | 9 | 9/0/0 | 9/9 | 9/9 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| imprecise_unit | 14 | 13/1/0 | 12/13 | 12/13 | 0/0 | 1/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
-| heading_non_ingredient | 16 | 0/0/16 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 13/16 | 3 | 0 | 0 |
-| empty | 3 | 0/0/3 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 3/3 | 0 | 0 | 0 |
-| unicode_text | 27 | 17/6/4 | 17/17 | 17/17 | 0/0 | 0/0/0/0 | 0 | 6/6 | 0 | 4/4 | 0 | 0 | 0 |
-| ambiguous_number_format | 4 | 0/4/0 | 0/0 | 0/0 | 0/0 | 0/0/0/0 | 0 | 4/4 | 0 | 0/0 | 0 | 0 | 0 |
-| size_word | 19 | 17/2/0 | 15/17 | 15/17 | 0/1 | 1/0/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
-| seasoning_lookalike | 38 | 25/13/0 | 25/25 | 25/25 | 0/0 | 0/0/0/0 | 0 | 13/13 | 0 | 0/0 | 0 | 0 | 0 |
-| seasoning_ordinary | 20 | 9/11/0 | 7/9 | 7/9 | 0/0 | 1/1/0/0 | 0 | 11/11 | 0 | 0/0 | 0 | 0 | 0 |
-| quart_pint_gallon | 8 | 8/0/0 | 8/8 | 8/8 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| long_line | 3 | 3/0/0 | 3/3 | 3/3 | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
-| quantity_after_name | 26 | 25/1/0 | 21/25 | 21/25 | 0/0 | 2/2/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 (high/medium) | C3 + C4 (of R) | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| integer_decimal | 23 | 20/3/0 | 19/20 | 19/20 | 0 (0/0) | 1/20 | 0/0/0/1 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | 0 |
+| fraction | 19 | 17/2/0 | 16/17 | 16/17 | 0 (0/0) | 1/17 | 0/0/0/1 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
+| fraction_third | 17 | 15/2/0 | 13/15 | 13/15 | 1 (1/0) | 2/15 | 0/2/0/0 | 0 | 1/2 | 0 | 0/0 | 0 | 0 | S4×1 |
+| mixed_vulgar | 31 | 29/2/0 | 26/29 | 26/29 | 0 (0/0) | 3/29 | 1/2/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
+| nested_parens | 9 | 8/1/0 | 7/8 | 7/8 | 0 (0/0) | 1/8 | 0/1/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| prep_note | 91 | 85/6/0 | 82/85 | 82/85 | 3 (2/1) | 1/85 | 1/0/0/0 | 0 | 5/6 | 0 | 0/0 | 0 | 0 | S4×1 |
+| source_choice | 7 | 5/2/0 | 4/5 | 4/5 | 0 (0/0) | 1/5 | 0/1/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
+| ingredient_alternatives | 17 | 0/17/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 17/17 | 0 | 0/0 | 0 | 0 | S5×1 |
+| range | 13 | 0/13/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 13/13 | 0 | 0/0 | 0 | 0 | 0 |
+| optional | 6 | 5/1/0 | 5/5 | 5/5 | 0 (0/0) | 0/5 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| unstated_amount | 23 | 21/2/0 | 21/21 | 21/21 | 0 (0/0) | 0/21 | 0/0/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
+| quantity_missing | 31 | 0/31/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 31/31 | 0 | 0/0 | 0 | 0 | 0 |
+| count_unit | 57 | 53/4/0 | 49/53 | 49/53 | 3 (3/0) | 1/53 | 0/1/0/0 | 0 | 4/4 | 0 | 0/0 | 0 | 0 | S3×1 S6×1 |
+| package_size | 33 | 30/3/0 | 29/30 | 29/30 | 0 (0/0) | 1/30 | 0/1/0/0 | 0 | 3/3 | 0 | 0/0 | 0 | 0 | S3×1 S6×1 |
+| oz_vs_floz | 25 | 25/0/0 | 24/25 | 24/25 | 0 (0/0) | 1/25 | 1/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| compound_quantity | 11 | 11/0/0 | 9/11 | 9/11 | 0 (0/0) | 2/11 | 0/2/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| equivalent_quantity | 23 | 23/0/0 | 22/23 | 22/23 | 0 (0/0) | 1/23 | 1/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| percentage | 8 | 8/0/0 | 7/8 | 7/8 | 0 (0/0) | 1/8 | 0/1/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| price_annotation | 7 | 6/1/0 | 6/6 | 6/6 | 0 (0/0) | 0/6 | 0/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| form_cooked_raw | 8 | 6/2/0 | 5/6 | 5/6 | 3 (2/1) | 0/6 | 0/0/0/0 | 0 | 0/2 | 0 | 0/0 | 0 | 0 | S4×2 |
+| number_word | 23 | 23/0/0 | 22/23 | 22/23 | 1 (1/0) | 0/23 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| approximate | 9 | 9/0/0 | 9/9 | 9/9 | 0 (0/0) | 0/9 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| imprecise_unit | 14 | 13/1/0 | 12/13 | 12/13 | 0 (0/0) | 1/13 | 1/0/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
+| heading_non_ingredient | 16 | 0/0/16 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 13/16 | 3 | 0 | 0 |
+| empty | 3 | 0/0/3 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 0/0 | 0 | 3/3 | 0 | 0 | 0 |
+| unicode_text | 27 | 17/6/4 | 17/17 | 17/17 | 0 (0/0) | 0/17 | 0/0/0/0 | 0 | 6/6 | 0 | 4/4 | 0 | 0 | 0 |
+| ambiguous_number_format | 4 | 0/4/0 | 0/0 | 0/0 | 0 (0/0) | 0/0 | 0/0/0/0 | 0 | 4/4 | 0 | 0/0 | 0 | 0 | 0 |
+| size_word | 19 | 17/2/0 | 15/17 | 15/17 | 1 (0/1) | 1/17 | 1/0/0/0 | 0 | 2/2 | 0 | 0/0 | 0 | 0 | 0 |
+| seasoning_lookalike | 38 | 25/13/0 | 25/25 | 25/25 | 0 (0/0) | 0/25 | 0/0/0/0 | 0 | 13/13 | 0 | 0/0 | 0 | 0 | 0 |
+| seasoning_ordinary | 20 | 9/11/0 | 7/9 | 7/9 | 0 (0/0) | 2/9 | 1/1/0/0 | 0 | 11/11 | 0 | 0/0 | 0 | 0 | 0 |
+| quart_pint_gallon | 8 | 8/0/0 | 8/8 | 8/8 | 0 (0/0) | 0/8 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| long_line | 3 | 3/0/0 | 3/3 | 3/3 | 0 (0/0) | 0/3 | 0/0/0/0 | 0 | 0/0 | 0 | 0/0 | 0 | 0 | 0 |
+| quantity_after_name | 26 | 25/1/0 | 21/25 | 21/25 | 0 (0/0) | 4/25 | 2/2/0/0 | 0 | 1/1 | 0 | 0/0 | 0 | 0 | 0 |
 
 ##### By source — holdout-v2 (exposed; historical acceptance set)
 
-| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 high/medium | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| synthetic_pattern | 305 | 240/46/19 | 223/240 | 223/240 | 4/1 | 5/6/0/2 | 0 | 45/46 | 0 | 16/19 | 3 | 0 | S3×1 S4×1 S5×1 S6×1 |
-| repo_test_input | 54 | 31/23/0 | 31/31 | 31/31 | 1/0 | 0/0/0/0 | 0 | 22/23 | 0 | 0/0 | 0 | 0 | S4×1 |
+| Group | N | R/A/U | C1 (of R) | C1+ (of R) | C2 (high/medium) | C3 + C4 (of R) | C3 a/b/c/x | C4 | C5 (of A) | C6 | C7 (of U) | C8 | CE | Severe |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| synthetic_pattern | 305 | 240/46/19 | 223/240 | 223/240 | 5 (4/1) | 13/240 | 5/6/0/2 | 0 | 45/46 | 0 | 16/19 | 3 | 0 | S3×1 S4×1 S5×1 S6×1 |
+| repo_test_input | 54 | 31/23/0 | 31/31 | 31/31 | 1 (1/0) | 0/31 | 0/0/0/0 | 0 | 22/23 | 0 | 0/0 | 0 | 0 | S4×1 |
 
 ##### Acceptance — Gate G2 on holdout-v2 (exposed; historical acceptance set), engine `semantic-v1`
 
@@ -2229,7 +2232,7 @@ A1 (point) and A2–A5 all met: **no**. A6 in the scorer (CE = 0): **met** (the 
 
 ##### Sensitivity — holdout-v2 (exposed; historical acceptance set) (informational, not the acceptance basis)
 
-A1–A5 recomputed without the pre-registered debatable case(s) ing-h2-0087 (358 lines). The acceptance table above uses every case.
+A1–A5 (a) without the cases pre-registered as debatable at holdout-v2 adjudication (EVALUATION-PLAN-v2 change log 3(a)): 1 excluded (ing-h2-0087), 358 lines kept. The acceptance table above uses every case.
 
 | # | Evidence | Status (informational) |
 |---|---|---|
@@ -2245,7 +2248,7 @@ needs_review labels with no amount: label quantity and unit null and alternative
 
 | Run | Items | Total ms | ms per item |
 |---|---|---|---|
-| ingredients · legacy-table-import-2 | 669 | 124.4 | 0.186 |
-| ingredients · legacy-table-import-2+suggestion | 669 | 111.2 | 0.166 |
-| ingredients · semantic-v1 | 669 | 182.1 | 0.272 |
-| pages · default | 15 | 22.3 | 1.485 |
+| ingredients · legacy-table-import-2 | 669 | 114.7 | 0.171 |
+| ingredients · legacy-table-import-2+suggestion | 669 | 94.4 | 0.141 |
+| ingredients · semantic-v1 | 669 | 164.9 | 0.247 |
+| pages · default | 15 | 22.2 | 1.483 |

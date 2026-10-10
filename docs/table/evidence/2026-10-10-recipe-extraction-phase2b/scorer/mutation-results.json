@@ -3,8 +3,8 @@
     {
       "counts": {
         "failed": 0,
-        "passed": 89,
-        "total": 89
+        "passed": 106,
+        "total": 106
       },
       "ok": true,
       "testNamePattern": null,
@@ -12,13 +12,13 @@
         "bench/__tests__/oracles-v3.test.ts",
         "bench/__tests__/scorer-v3.test.ts"
       ],
-      "why": "all 89 tests passed"
+      "why": "all 106 tests passed"
     },
     {
       "counts": {
         "failed": 0,
         "passed": 0,
-        "total": 89
+        "total": 106
       },
       "ok": false,
       "testNamePattern": "no test has this name",
@@ -31,8 +31,8 @@
     {
       "counts": {
         "failed": 0,
-        "passed": 145,
-        "total": 145
+        "passed": 167,
+        "total": 167
       },
       "ok": true,
       "testNamePattern": null,
@@ -42,7 +42,24 @@
         "bench/__tests__/outcome-controls.test.ts",
         "bench/__tests__/outcomes.test.ts"
       ],
-      "why": "all 145 tests passed"
+      "why": "all 167 tests passed"
+    },
+    {
+      "counts": {
+        "failed": 0,
+        "passed": 185,
+        "total": 185
+      },
+      "ok": true,
+      "testNamePattern": null,
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts",
+        "bench/__tests__/outcome-controls.test.ts",
+        "bench/__tests__/outcomes.test.ts",
+        "bench/__tests__/holdout3.test.ts"
+      ],
+      "why": "all 185 tests passed"
     }
   ],
   "format": "recipe-extraction-mutation-results/v1",
@@ -60,10 +77,10 @@
       "spec": "tools/mutation/specs/selftest.json",
       "tests": {
         "failed": 0,
-        "passed": 89,
-        "total": 89
+        "passed": 106,
+        "total": 106
       },
-      "why": "all 89 tests passed"
+      "why": "all 106 tests passed"
     },
     {
       "asExpected": true,
@@ -114,7 +131,7 @@
         "passed": 0,
         "total": 0
       },
-      "why": "replacement not applied: anchor occurs 21 times (give \"occurrence\")"
+      "why": "replacement not applied: anchor occurs 24 times (give \"occurrence\")"
     },
     {
       "asExpected": true,
@@ -162,8 +179,8 @@
       "spec": "tools/mutation/specs/selftest.json",
       "tests": {
         "failed": 8,
-        "passed": 81,
-        "total": 89
+        "passed": 98,
+        "total": 106
       },
       "why": "killedBy test(s) not in this run: no such describe > no such test"
     },
@@ -197,11 +214,11 @@
           "test": "outcomes v3 hand-calculated oracles > O69 CE invalid output, reading 1 fabricated amount with null units"
         },
         {
-          "message": "AssertionError: expected { id: 'ing-h2-0158', …(16) } to match object { outcome: 'CE', …(2) }",
+          "message": "AssertionError: expected { id: 'ing-h2-0158', …(18) } to match object { outcome: 'CE', …(2) }",
           "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction (SF-6): v2 gives a CE line with a status outside the contract an S code; v3 gives none"
         },
         {
-          "message": "AssertionError: expected { id: 'ing-h2-0181', …(16) } to match object { outcome: 'CE', severe: [], …(1) }",
+          "message": "AssertionError: expected { id: 'ing-h2-0181', …(18) } to match object { outcome: 'CE', severe: [], …(1) }",
           "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction (N-2): v2 judges validity by the status string, so an invalid output with a contract status is scored; v3 runs the validator"
         }
       ],
@@ -212,8 +229,8 @@
       "spec": "tools/mutation/specs/selftest.json",
       "tests": {
         "failed": 8,
-        "passed": 81,
-        "total": 89
+        "passed": 98,
+        "total": 106
       },
       "why": "only other tests failed (8)"
     },
@@ -247,11 +264,11 @@
           "test": "outcomes v3 hand-calculated oracles > O69 CE invalid output, reading 1 fabricated amount with null units"
         },
         {
-          "message": "AssertionError: expected { id: 'ing-h2-0158', …(16) } to match object { outcome: 'CE', …(2) }",
+          "message": "AssertionError: expected { id: 'ing-h2-0158', …(18) } to match object { outcome: 'CE', …(2) }",
           "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction (SF-6): v2 gives a CE line with a status outside the contract an S code; v3 gives none"
         },
         {
-          "message": "AssertionError: expected { id: 'ing-h2-0181', …(16) } to match object { outcome: 'CE', severe: [], …(1) }",
+          "message": "AssertionError: expected { id: 'ing-h2-0181', …(18) } to match object { outcome: 'CE', severe: [], …(1) }",
           "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction (N-2): v2 judges validity by the status string, so an invalid output with a contract status is scored; v3 runs the validator"
         }
       ],
@@ -262,8 +279,8 @@
       "spec": "tools/mutation/specs/selftest.json",
       "tests": {
         "failed": 8,
-        "passed": 81,
-        "total": 89
+        "passed": 98,
+        "total": 106
       },
       "why": "intended test(s) failed, but not by an assertion matching the intended reason: outcomes v3 hand-calculated oracles > O52 CE invalid output, SF-6: AssertionError: severe: expected [ 'S1' ] to deeply equal []"
     },
@@ -297,11 +314,11 @@
           "test": "outcomes v3 hand-calculated oracles > O69 CE invalid output, reading 1 fabricated amount with null units"
         },
         {
-          "message": "AssertionError: expected { id: 'ing-h2-0158', …(16) } to match object { outcome: 'CE', …(2) }",
+          "message": "AssertionError: expected { id: 'ing-h2-0158', …(18) } to match object { outcome: 'CE', …(2) }",
           "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction (SF-6): v2 gives a CE line with a status outside the contract an S code; v3 gives none"
         },
         {
-          "message": "AssertionError: expected { id: 'ing-h2-0181', …(16) } to match object { outcome: 'CE', severe: [], …(1) }",
+          "message": "AssertionError: expected { id: 'ing-h2-0181', …(18) } to match object { outcome: 'CE', severe: [], …(1) }",
           "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction (N-2): v2 judges validity by the status string, so an invalid output with a contract status is scored; v3 runs the validator"
         }
       ],
@@ -314,8 +331,8 @@
       "spec": "tools/mutation/specs/selftest.json",
       "tests": {
         "failed": 8,
-        "passed": 81,
-        "total": 89
+        "passed": 98,
+        "total": 106
       },
       "why": "1 of 1 intended test(s) failed by assertion for the intended reason"
     },
@@ -357,8 +374,8 @@
       "spec": "tools/mutation/specs/scorer.json",
       "tests": {
         "failed": 5,
-        "passed": 140,
-        "total": 145
+        "passed": 162,
+        "total": 167
       },
       "why": "4 of 4 intended test(s) failed by assertion for the intended reason"
     },
@@ -396,19 +413,19 @@
           "test": "saboteurs trip their class or code on exactly the lines they touch > CE: an invalid output (ready, no amount, no amountUnstated) is CE with no S code on exactly those lines; A6 not met"
         },
         {
-          "message": "AssertionError: expected { id: 'ing-h2-0005', …(16) } to match object { outcome: 'CE', …(2) }",
+          "message": "AssertionError: expected { id: 'ing-h2-0005', …(18) } to match object { outcome: 'CE', …(2) }",
           "test": "outcome classes (§4) > a fabricated amount on a ready reading is C2 high with S1; with a null unit the reading is invalid, so CE (documented reading)"
         },
         {
-          "message": "AssertionError: expected { id: 'ing-h2-0005', …(16) } to match object { outcome: 'CE', …(2) }",
+          "message": "AssertionError: expected { id: 'ing-h2-0005', …(18) } to match object { outcome: 'CE', …(2) }",
           "test": "outcome classes (§4) > CE: an engine error, an output that fails the contract validator, or two different parses (never C1, no S code)"
         },
         {
-          "message": "AssertionError: expected { id: 'ing-h2-0158', …(16) } to match object { outcome: 'CE', …(2) }",
+          "message": "AssertionError: expected { id: 'ing-h2-0158', …(18) } to match object { outcome: 'CE', …(2) }",
           "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction (SF-6): v2 gives a CE line with a status outside the contract an S code; v3 gives none"
         },
         {
-          "message": "AssertionError: expected { id: 'ing-h2-0181', …(16) } to match object { outcome: 'CE', severe: [], …(1) }",
+          "message": "AssertionError: expected { id: 'ing-h2-0181', …(18) } to match object { outcome: 'CE', severe: [], …(1) }",
           "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction (N-2): v2 judges validity by the status string, so an invalid output with a contract status is scored; v3 runs the validator"
         }
       ],
@@ -425,8 +442,8 @@
       "spec": "tools/mutation/specs/scorer.json",
       "tests": {
         "failed": 11,
-        "passed": 134,
-        "total": 145
+        "passed": 156,
+        "total": 167
       },
       "why": "5 of 5 intended test(s) failed by assertion for the intended reason"
     },
@@ -464,19 +481,39 @@
           "test": "outcomes v3 hand-calculated oracles > O69 CE invalid output, reading 1 fabricated amount with null units"
         },
         {
+          "message": "AssertionError: ce.invalid: expected false to be true // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > P04 CE invalid output, CE nondeterministic, second parse, CL2(a)"
+        },
+        {
+          "message": "AssertionError: outcome: expected 'C1' to be 'CE' // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > P11 CE invalid output, unit dimension field"
+        },
+        {
+          "message": "AssertionError: outcome: expected 'C7' to be 'CE' // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > P12 CE invalid output, unsupported input"
+        },
+        {
+          "message": "AssertionError: ce.invalid: expected false to be true // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > O74 CE invalid output, CE nondeterministic, second parse, CL2(a)"
+        },
+        {
           "message": "AssertionError: expected [] to deeply equal [ 'ing-dev-0001', …(490) ]",
           "test": "saboteurs trip their class or code on exactly the lines they touch > CE: an invalid output (ready, no amount, no amountUnstated) is CE with no S code on exactly those lines; A6 not met"
         },
         {
-          "message": "AssertionError: expected { id: 'ing-h2-0005', …(16) } to match object { outcome: 'CE', …(2) }",
+          "message": "AssertionError: expected { id: 'ing-h2-0005', …(18) } to match object { outcome: 'CE', …(2) }",
           "test": "outcome classes (§4) > a fabricated amount on a ready reading is C2 high with S1; with a null unit the reading is invalid, so CE (documented reading)"
         },
         {
-          "message": "AssertionError: expected { id: 'ing-h2-0006', …(16) } to match object { outcome: 'CE', …(4) }",
+          "message": "AssertionError: expected { id: 'ing-h2-0006', …(18) } to match object { outcome: 'CE', …(4) }",
           "test": "outcome classes (§4) > CE: an engine error, an output that fails the contract validator, or two different parses (never C1, no S code)"
         },
         {
-          "message": "AssertionError: expected { id: 'ing-h2-0181', …(16) } to match object { outcome: 'CE', severe: [], …(1) }",
+          "message": "AssertionError: expected [] to deeply equal [ Array(1) ]",
+          "test": "plan v3 change log 2: both parses validated, S6 without a quantity, different throws > (a) lists the second parse's problems only when they differ from the first's"
+        },
+        {
+          "message": "AssertionError: expected { id: 'ing-h2-0181', …(18) } to match object { outcome: 'CE', severe: [], …(1) }",
           "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction (N-2): v2 judges validity by the status string, so an invalid output with a contract status is scored; v3 runs the validator"
         },
         {
@@ -500,9 +537,9 @@
       "result": "KILLED",
       "spec": "tools/mutation/specs/scorer.json",
       "tests": {
-        "failed": 13,
-        "passed": 132,
-        "total": 145
+        "failed": 18,
+        "passed": 149,
+        "total": 167
       },
       "why": "5 of 5 intended test(s) failed by assertion for the intended reason"
     },
@@ -520,6 +557,22 @@
           "test": "outcomes v3 hand-calculated oracles > O60 CE nondeterministic, CE engine error"
         },
         {
+          "message": "AssertionError: outcome: expected 'C1' to be 'CE' // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > P03 CE nondeterministic, unscored fields"
+        },
+        {
+          "message": "AssertionError: ce.nondeterministic: expected false to be true // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > P04 CE invalid output, CE nondeterministic, second parse, CL2(a)"
+        },
+        {
+          "message": "AssertionError: ce.nondeterministic: expected false to be true // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > O73 CE engine error, CE nondeterministic, CL2(c)"
+        },
+        {
+          "message": "AssertionError: ce.nondeterministic: expected false to be true // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > O74 CE invalid output, CE nondeterministic, second parse, CL2(a)"
+        },
+        {
           "message": "AssertionError: expected [] to deeply equal [ 'ing-dev-0001', …(526) ]",
           "test": "saboteurs trip their class or code on exactly the lines they touch > CE: a nondeterministic engine (the second parse differs) is CE (nondeterministic dimension) on exactly those lines; A6 not met"
         },
@@ -528,8 +581,16 @@
           "test": "saboteurs trip their class or code on exactly the lines they touch > every saboteur is distinguishable from the oracle on holdout-v2"
         },
         {
-          "message": "AssertionError: expected { id: 'ing-h2-0001', …(16) } to match object { outcome: 'CE', severe: [], …(1) }",
+          "message": "AssertionError: expected { id: 'ing-h2-0001', …(18) } to match object { outcome: 'CE', severe: [], …(1) }",
           "test": "outcome classes (§4) > CE: an engine error, an output that fails the contract validator, or two different parses (never C1, no S code)"
+        },
+        {
+          "message": "AssertionError: expected { engineError: null, …(2) } to deeply equal { engineError: null, …(2) }",
+          "test": "plan v3 change log 2: both parses validated, S6 without a quantity, different throws > (a) lists the second parse's problems only when they differ from the first's"
+        },
+        {
+          "message": "AssertionError: expected { id: 'ing-h2-0001', …(18) } to match object { outcome: 'CE', severe: [], …(1) }",
+          "test": "plan v3 change log 2: both parses validated, S6 without a quantity, different throws > (b) S6 when the engine drops the package and states a mass unit with no quantity; (c) different thrown messages are nondeterministic"
         },
         {
           "message": "AssertionError: expected [] to deeply equal [ 'ing-h2-0001' ]",
@@ -550,9 +611,9 @@
       "result": "KILLED",
       "spec": "tools/mutation/specs/scorer.json",
       "tests": {
-        "failed": 7,
-        "passed": 138,
-        "total": 145
+        "failed": 13,
+        "passed": 154,
+        "total": 167
       },
       "why": "3 of 3 intended test(s) failed by assertion for the intended reason"
     },
@@ -597,8 +658,8 @@
       "spec": "tools/mutation/specs/scorer.json",
       "tests": {
         "failed": 6,
-        "passed": 139,
-        "total": 145
+        "passed": 161,
+        "total": 167
       },
       "why": "3 of 3 intended test(s) failed by assertion for the intended reason"
     },
@@ -621,8 +682,163 @@
       "spec": "tools/mutation/specs/scorer.json",
       "tests": {
         "failed": 1,
-        "passed": 144,
-        "total": 145
+        "passed": 166,
+        "total": 167
+      },
+      "why": "1 of 1 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "Sensitivity (c) reads the wrong frozen flag: it leaves out the debatable cases instead of the cases that rely on a §12 new reading.",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected [ 'ing-h3-0003' ] to deeply equal [ 'ing-h3-0006' ]",
+          "test": "holdout-v3 present (temporary synthetic file) > --split holdout3 scores holdout-v3 only, with A1–A7 as the Gate G2 acceptance set; unfrozen, the report says so"
+        },
+        {
+          "message": "AssertionError: expected [ [ 'ing-h3-0003' ], 5 ] to deeply equal [ [ 'ing-h3-0006' ], 5 ]",
+          "test": "holdout-v3 case metadata and the data-driven sensitivity figures > hand-calculated: (a) drops the debatable case, (c) the new-reading case, (d) is absent without an audit file"
+        },
+        {
+          "message": "AssertionError: (c): expected [ [ 'ing-h3-0001' ], 3 ] to deeply equal [ [ 'ing-h3-0002' ], 3 ]",
+          "test": "holdout-v3 sensitivity figures from frozen case data: (a) debatable, (c) new readings, (d) exposure audit > hand-calculated on four lines (R = r1, r2, r3; r2 is C2 high with S7)"
+        }
+      ],
+      "file": "bench/outcomes.ts",
+      "id": "SENS-c-uses-debatable-flag",
+      "killedByIntended": [
+        "holdout-v3 sensitivity figures from frozen case data: (a) debatable, (c) new readings, (d) exposure audit > hand-calculated on four lines (R = r1, r2, r3; r2 is C2 high with S7)",
+        "holdout-v3 case metadata and the data-driven sensitivity figures > hand-calculated: (a) drops the debatable case, (c) the new-reading case, (d) is absent without an audit file"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/scorer.json",
+      "tests": {
+        "failed": 3,
+        "passed": 182,
+        "total": 185
+      },
+      "why": "2 of 2 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "Sensitivity (d) ignores the exposure audit's matched ids (excludes nothing).",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected [ [], 6, 2, …(2) ] to deeply equal [ …(5) ]",
+          "test": "holdout-v3 case metadata and the data-driven sensitivity figures > hand-calculated: (d) drops exactly the audit's matched ids; the figure names the audit"
+        },
+        {
+          "message": "AssertionError: (d): expected [ [], 4, 2, 'exact', '2026-10-11' ] to deeply equal [ [ 'ing-h3-0003' ], 3, 2, …(2) ]",
+          "test": "holdout-v3 sensitivity figures from frozen case data: (a) debatable, (c) new readings, (d) exposure audit > hand-calculated on four lines (R = r1, r2, r3; r2 is C2 high with S7)"
+        }
+      ],
+      "file": "bench/outcomes.ts",
+      "id": "SENS-d-ignores-audit-ids",
+      "killedByIntended": [
+        "holdout-v3 sensitivity figures from frozen case data: (a) debatable, (c) new readings, (d) exposure audit > hand-calculated on four lines (R = r1, r2, r3; r2 is C2 high with S7)",
+        "holdout-v3 case metadata and the data-driven sensitivity figures > hand-calculated: (d) drops exactly the audit's matched ids; the figure names the audit"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/scorer.json",
+      "tests": {
+        "failed": 2,
+        "passed": 183,
+        "total": 185
+      },
+      "why": "2 of 2 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "Plan v3 change log 2(a) reverted: only the first parse is validated, so an invalid second output does not make the line invalid.",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: ce.invalid: expected false to be true // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > P04 CE invalid output, CE nondeterministic, second parse, CL2(a)"
+        },
+        {
+          "message": "AssertionError: ce.invalid: expected false to be true // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > O74 CE invalid output, CE nondeterministic, second parse, CL2(a)"
+        },
+        {
+          "message": "AssertionError: expected { engineError: null, …(2) } to deeply equal { engineError: null, …(2) }",
+          "test": "plan v3 change log 2: both parses validated, S6 without a quantity, different throws > (a) lists the second parse's problems only when they differ from the first's"
+        }
+      ],
+      "file": "bench/outcomes.ts",
+      "id": "CL2a-revert-first-parse-only",
+      "killedByIntended": [
+        "outcomes v3 hand-calculated oracles > P04 CE invalid output, CE nondeterministic, second parse, CL2(a)",
+        "outcomes v3 hand-calculated oracles > O74 CE invalid output, CE nondeterministic, second parse, CL2(a)"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/scorer.json",
+      "tests": {
+        "failed": 3,
+        "passed": 164,
+        "total": 167
+      },
+      "why": "2 of 2 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "Plan v3 change log 2(b) reverted: S6 fires only when the engine also states a quantity.",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: severe: expected [ 'S3' ] to deeply equal [ 'S3', 'S6' ]",
+          "test": "outcomes v3 hand-calculated oracles > O72 S3, S6, C5b, CL2(b), package representation, overlap"
+        },
+        {
+          "message": "AssertionError: expected [ 'S3' ] to deeply equal [ 'S3', 'S6' ]",
+          "test": "plan v3 change log 2: both parses validated, S6 without a quantity, different throws > (b) S6 when the engine drops the package and states a mass unit with no quantity; (c) different thrown messages are nondeterministic"
+        }
+      ],
+      "file": "bench/outcomes.ts",
+      "id": "CL2b-revert-s6-needs-quantity",
+      "killedByIntended": [
+        "outcomes v3 hand-calculated oracles > O72 S3, S6, C5b, CL2(b), package representation, overlap"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/scorer.json",
+      "tests": {
+        "failed": 2,
+        "passed": 165,
+        "total": 167
+      },
+      "why": "1 of 1 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "Plan v3 change log 2(c) reverted: two thrown errors compare equal whatever their messages, so different messages are not nondeterministic.",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: ce.nondeterministic: expected false to be true // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > O73 CE engine error, CE nondeterministic, CL2(c)"
+        },
+        {
+          "message": "AssertionError: expected 'throw' not to be 'throw' // Object.is equality",
+          "test": "engine plumbing > serializeParse compares canonical JSON (key order does not matter) or the thrown message"
+        },
+        {
+          "message": "AssertionError: expected { id: 'ing-h2-0001', …(18) } to match object { outcome: 'CE', severe: [], …(1) }",
+          "test": "plan v3 change log 2: both parses validated, S6 without a quantity, different throws > (b) S6 when the engine drops the package and states a mass unit with no quantity; (c) different thrown messages are nondeterministic"
+        }
+      ],
+      "file": "bench/outcomes.ts",
+      "id": "CL2c-revert-throws-compare-equal",
+      "killedByIntended": [
+        "outcomes v3 hand-calculated oracles > O73 CE engine error, CE nondeterministic, CL2(c)"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/scorer.json",
+      "tests": {
+        "failed": 3,
+        "passed": 164,
+        "total": 167
       },
       "why": "1 of 1 intended test(s) failed by assertion for the intended reason"
     }
@@ -638,15 +854,15 @@
       "description": "Scorer mutations for outcomes v3 (bench/outcomes.ts): each reverts one part of SCORE-01 or SCORE-02 to the outcomes v2 behaviour and must be KILLED by the named oracle or regression tests, by an assertion, for the stated reason.",
       "file": "tools/mutation/specs/scorer.json",
       "owner": "scorer worker (Phase 2B, Worker B)",
-      "sha256": "9a891a816ae835db9413b04842dd3f389b1502b1e01d6d9033e0b4924349e065"
+      "sha256": "5111d8e412f709c9e28a5ca5825cc81b35be05eb74579f1baaceb3ae98f39adc"
     }
   ],
   "summary": {
     "ERROR": 6,
-    "KILLED": 7,
+    "KILLED": 12,
     "KILLED-UNEXPECTED": 2,
     "SURVIVED": 1,
-    "asExpected": 16,
-    "total": 16
+    "asExpected": 21,
+    "total": 21
   }
 }

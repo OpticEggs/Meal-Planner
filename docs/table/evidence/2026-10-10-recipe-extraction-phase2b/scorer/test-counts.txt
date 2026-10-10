@@ -1,9 +1,10 @@
-Package suite: cd packages/recipe-extraction && npx vitest run --config vitest.config.ts   (commit 48c499c)
+Package suite: cd packages/recipe-extraction && npx vitest run --config vitest.config.ts   (commit 2e05aa1)
 Before (base 8131fe0): Test Files 46 passed | 1 skipped (47); Tests 1917 passed | 11 skipped (1928)
-After: Test Files 52 passed | 1 skipped (53); Tests 2036 passed | 11 skipped | 0 failed (2047)
+At the first merge (2130dc3, with the coordinator's regression corpus): Tests 2040 passed | 11 skipped
+After: Test Files 53 passed | 1 skipped (54); Tests 2069 passed | 11 skipped | 0 failed (2080)
 success: True
 
-New test files in this branch: bench/__tests__/{archive-v2,scorer-v3,holdout3,oracles-v3,mutation-runner,delta}.test.ts
+Test files added by the scorer worker: bench/__tests__/{archive-v2,scorer-v3,holdout3,oracles-v3,mutation-runner,delta}.test.ts
 
 file | passed | skipped | failed
 bench/__tests__/archive-v2.test.ts | 3 | 0 | 0
@@ -11,14 +12,14 @@ bench/__tests__/compare.test.ts | 12 | 0 | 0
 bench/__tests__/delta.test.ts | 2 | 0 | 0
 bench/__tests__/freeze.test.ts | 10 | 0 | 0
 bench/__tests__/holdout2.test.ts | 35 | 0 | 0
-bench/__tests__/holdout3.test.ts | 11 | 0 | 0
+bench/__tests__/holdout3.test.ts | 18 | 0 | 0
 bench/__tests__/invariants.test.ts | 20 | 0 | 0
 bench/__tests__/labels.test.ts | 66 | 0 | 0
 bench/__tests__/mutation-controls.test.ts | 22 | 0 | 0
 bench/__tests__/mutation-runner.test.ts | 9 | 0 | 0
-bench/__tests__/oracles-v3.test.ts | 75 | 0 | 0
+bench/__tests__/oracles-v3.test.ts | 92 | 0 | 0
 bench/__tests__/outcome-controls.test.ts | 23 | 0 | 0
-bench/__tests__/outcomes.test.ts | 33 | 0 | 0
+bench/__tests__/outcomes.test.ts | 38 | 0 | 0
 bench/__tests__/report-cli.test.ts | 15 | 0 | 0
 bench/__tests__/scorer-v3.test.ts | 14 | 0 | 0
 bench/__tests__/stats.test.ts | 5 | 0 | 0
@@ -40,6 +41,7 @@ tests/parity/ingredient-line.test.ts | 0 | 9 | 0
 tests/parity/pages.test.ts | 7 | 0 | 0
 tests/parity/provenance.test.ts | 14 | 0 | 0
 tests/purity/purity.test.ts | 60 | 0 | 0
+tests/regressions/regression-match.test.ts | 4 | 0 | 0
 tests/semantic/alternatives.test.ts | 34 | 0 | 0
 tests/semantic/caution.test.ts | 25 | 0 | 0
 tests/semantic/dev-safety.test.ts | 2 | 0 | 0
