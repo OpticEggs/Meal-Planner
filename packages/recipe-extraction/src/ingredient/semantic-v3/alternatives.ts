@@ -261,6 +261,9 @@ export function andJoinsTwoFoods(name: string): boolean {
   // (semantic-v3, CONTRACT §12.A A4, §13.4) a first conjunct that is itself a complete food — a product named after its
   // source ("lime juice", "maple syrup") — is never a modifier shared before the second food's head: "lime juice and fish
   // sauce", "maple syrup and Dijon mustard" list two foods
+  // (the same on the right: "honey and apple cider vinegar" — two products, "honey" and "apple cider", before a product
+  // head are not two flavours of one product; "garlic and herb cream cheese", "chocolate and peanut butter chips" are)
+  if (right.length >= 3 && productHeadWord(right[right.length - 2]) && !describing(right[right.length - 2]) && recognisedFoodHead(right.slice(0, -1).join(" "), { slotResolved: true, countAgrees: true }) && productHeadWord(left[left.length - 1]) && !left.every(describing) && !FLAVOUR_HEADS.has(lower(right[right.length - 1]))) return true;
   if (left.length >= 2 && productHeadWord(left[left.length - 1]) && !describing(left[left.length - 1]) && recognisedFoodHead(left.join(" "), { slotResolved: true, countAgrees: true }) && right.some((w) => !describing(w))) return true;
   // ("kosher salt and black pepper": the seasoning pair, however each is described)
   if (lower(left[left.length - 1]) === "salt" && /^pepper(?:corns)?$/.test(lower(right[right.length - 1]))) return false;

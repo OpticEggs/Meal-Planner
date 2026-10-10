@@ -56,7 +56,7 @@ import { APPROX_WORDS, BULLETS, CONTAINER_UNITS, FRUIT_PART_WORDS, NUTRIENT_FOOD
 import { numberInProductName, readNameRegion, type NameReading } from "./name";
 import { normalizeLine } from "./normalize";
 import { classifyPiece, COMBINING_PREPOSITIONS, remarkCombinesAnother, remarkMeasuresAnother, remarkRestatement, remarkSecondAmount, splitOr, splitTopLevel, textOf, trimEdges, unstatedAt } from "./remarks";
-import { compoundFoodEnding, foodWord, homographHeadAfterCapital, massClassWord, massFoodWord, meatOrFishWord, plainWord, recognisedFoodHead } from "./foods";
+import { compoundFoodEnding, foodWord, homographHeadAfterCapital, massClassWord, massFoodWord, meatOrFishWord, plainWord, productHeadWord, recognisedFoodHead } from "./foods";
 import { andJoinsTwoFoods, categoryNoun, foodHead, isRemarkOption, shareOptions, uniqueOptions, varietiesOf, withKind } from "./alternatives";
 import { emptyEffects, mergeEffects, type AmountReading } from "./types";
 import { readUnit, type UnitRead } from "./unit";
@@ -158,6 +158,14 @@ function namesSeveral(name: string, trailingUnit: UnitRead | null, text: string)
  * or volume (`massFoodWord`: "2 milk", "3 flour", "Two egg"), or when the name has no food word at all. A counted food
  * written without a plural ending is counted as written (invariant and borrowed plurals: "4 onigiri", "20 pelmeni").
  */
+/** (round 1) The name's head is a product bought only by volume or weight — a sauce, oil, vinegar, juice, drink (`productHeadWord` and `massFoodWord`). */
+function liquidProductName(name: string): boolean {
+  const ws = name.toLowerCase().split(/[^\p{L}'-]+/u).filter((w) => w.length > 0);
+  if (ws.length === 0 || ws.some((w, k) => k > 0 && ROMANCE_JOINERS.has(plainWord(w)))) return false;
+  const head = ws[ws.length - 1];
+  return productHeadWord(head) && massFoodWord(head);
+}
+
 function singularCountUnclear(name: string): boolean {
   const ws = name.toLowerCase().split(/[^\p{L}'-]+/u).filter((w) => w.length > 0);
   if (ws.length === 0) return true;
@@ -577,6 +585,10 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
       // "Two egg": a count, but of what?); a counted food written without a plural is still counted ("4 onigiri", "8 kibbeh",
       // "2 khachapuri", "6 pan de bono" — invariant and borrowed plurals)
       if (singularCountUnclear(nr.name)) push(fx.reasons, "unclassified");
+    } else if (cmp(value, rational(BigInt(1), BigInt(1))) === 0 && nr.trailingUnit === null && liquidProductName(nr.name)) {
+      // (round 1, CONTRACT §13.2) "1 olive oil", "1 lemon juice": one of a liquid product counts an unstated measure (a
+      // bottle? a cup?) — the count is kept and a person checks
+      push(fx.reasons, "unclassified");
     }
   }
   // (semantic-v3, CONTRACT §13.7) a role label may carry "(optional)": "Garnish (optional): microgreens"

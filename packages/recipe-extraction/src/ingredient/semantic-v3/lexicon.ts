@@ -789,7 +789,7 @@ export const PART_NOUNS = setOf(
   // plant parts
   "stem stems stalklet stalklets frond fronds cob cobs husk husks shuck shucks blade blades needle needles spear spears floret florets tip tips " +
     "crown crowns heart hearts core cores kernel kernels hull hulls rind rinds peel peels skin skins tendril tendrils shoot shoots runner runners " +
-    "pad pads " +
+    "pad pads quill quills feather feathers " +
     // cut-off pieces and ends
     "heel heels end ends butt butts nub crust crusts shard shards sliver slivers shaving shavings shred shreds flake flakes crumb crumbs " +
     "segment segments morsel morsels bit bits lobe lobes " +

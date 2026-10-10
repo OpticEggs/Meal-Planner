@@ -72,10 +72,12 @@ describe("same-dimension additions and subtractions (§7.5, §12.12)", () => {
   });
 
   it("negative controls: different foods or dimensions are never summed and no food is privileged", () => {
-    for (const line of ["2 eggs + 1 yolk", "3 eggs plus 1 egg yolk", "1 cup flour, plus 2 tbsp sugar"]) {
+    for (const line of ["2 eggs + 1 yolk", "3 eggs plus 1 egg yolk"]) {
       const r = read(line);
       expect(r, line).toMatchObject({ status: "needs_review", name: null });
     }
+    // semantic-v3 (CONTRACT §13.3): another food measured in its own unit is a remark — the line's food keeps its name
+    expect(read("1 cup flour, plus 2 tbsp sugar")).toMatchObject({ status: "needs_review", name: "flour", quantity: { numerator: "1" } });
     expect(read("1 (8 oz) package cream cheese, plus 2 oz").status).toBe("needs_review");
     expect(read("2 tbsp minus 1 cup sugar").status).toBe("needs_review"); // never a negative amount
     expect(read("2 cups flour, plus more for dusting")).toMatchObject({ status: "ready", quantity: { numerator: "2" }, note: "plus more for dusting" });

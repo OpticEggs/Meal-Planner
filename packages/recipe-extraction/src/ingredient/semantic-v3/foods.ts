@@ -11,7 +11,7 @@
  * Words are lower case, without diacritics, mostly singular: `foodWord` also accepts the regular plurals ("cherries",
  * "tomatoes", "loaves", "radishes") and hyphenated words whose parts are recognised ("sun-dried", "jalapeno-cheddar").
  */
-import { APPLIANCE_WORDS, EQUIPMENT_MATERIAL_WORDS, EQUIPMENT_TOOL_HEADS, EQUIPMENT_VESSEL_HEADS, KITCHEN_ACTION_VERBS, PART_NOUNS, ROMANCE_JOINERS, UNKNOWN_MEASURES, unitOfWord } from "./lexicon";
+import { APPLIANCE_WORDS, CUT_PART_WORDS, EQUIPMENT_MATERIAL_WORDS, EQUIPMENT_TOOL_HEADS, EQUIPMENT_VESSEL_HEADS, KITCHEN_ACTION_VERBS, PART_NOUNS, ROMANCE_JOINERS, UNKNOWN_MEASURES, unitOfWord } from "./lexicon";
 import {
   BAKED_MORE, CONDIMENTS_MORE, DAIRY_MORE, DISHES_MORE, DRINKS_MORE, FRUITS_MORE, HERBS_MORE, MEATS_MORE, MORE_MODIFIERS, MUSHROOMS_MORE,
   NUTS_GRAINS_MORE, PANTRY_MORE, SEAFOOD_MORE, SPICES_MORE, SWEETS_MORE, VEGETABLES_MORE,
@@ -883,6 +883,9 @@ function foodNameReading(name: string, portions: boolean, ctx: FoodNameContext):
   // for its meat, milk or body parts ("pig ears", "cow's milk", "ox cheek"), never a product named after it ("1 cow creamer")
   if (head === raw.length - 1 && ANIMAL_NOUNS.has(lower[head]) && lower.slice(0, head).some((w) => foodWord(w) && !MODIFIER_WORDS.has(w))) return false;
   if (lower.slice(0, head).some((w) => ANIMAL_NOUNS.has(w.replace(/'s$/, ""))) && !inSet(ANIMAL_PRODUCT_HEADS, lower[raw.length - 1])) return false;
+  // (round 1) after a meat animal a part head is one of its body parts, portions or cuts ("duck legs", "chicken fingers");
+  // any other part ("1 goose quill") names a thing made from the animal, not food
+  if (head === raw.length - 1 && head > 0 && PART_NOUNS.has(lower[head]) && MEAT_ANIMAL_NAMES.has(lower[head - 1]) && !inSet(ANIMAL_PRODUCT_HEADS, lower[head]) && !inSet(PORTION_HEADS, lower[head]) && !CUT_PART_WORDS.has(lower[head])) return false;
   // the head is a food itself, not a portion of one ("griddle cakes" may take a tool word before it; "egg cup" may not)
   const foodHead = head < raw.length - 1 || foodWord(raw[head]);
   let brandOnly = false;
@@ -930,6 +933,8 @@ function foodNameReading(name: string, portions: boolean, ctx: FoodNameContext):
 const ROMANCE_FOOD_HEADS = setOf("pan pain pane pao pão pommes pomme arroz riz riso huevos huevo oeufs oeuf uova pollo poulet frango carne viande sopa soupe zuppa gateau gâteau torta tarte tarta pasta");
 /** (semantic-v3) Live-animal nouns that are not meat names (the meat is "pork", "beef", "mutton"): see `foodNameReading`. */
 const ANIMAL_NOUNS = setOf("pig pigs hog hogs piglet piglets cow cows ox oxen bull bulls steer steers sheep ewe ewes sow sows");
+/** (round 1) Meats named by their animal. */
+const MEAT_ANIMAL_NAMES = setOf("beef pork lamb veal mutton goat venison bison boar elk rabbit chicken turkey duck goose quail pheasant hen");
 /** What an animal noun may stand before: its milk and milk products, meat, fat and body parts. */
 const ANIMAL_PRODUCT_HEADS = setOf(
   "milk cheese butter cream yogurt yoghurt kefir curd ghee fat lard meat ear ears foot feet trotter trotters cheek cheeks tongue tongues tail tails " +

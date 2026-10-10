@@ -760,12 +760,16 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
     // (after any measure adjectives: "2 heaping spoonfuls sugar")
     // (semantic-v3) a noun that heads a Romance dish name is the food, not a measure ("4 pots de crème", "6 pan de bono")
     const romanceHead = isWord(toks[a]) && isWord(toks[a + 1]) && ROMANCE_JOINERS.has(plainWord((toks[a + 1] as { lower: string }).lower)) && isWord(toks[a + 2]);
-    let m = countWordBeforePluralFoodName(toks, a, n1.value) || romanceHead ? a : unknownMeasureAt(toks, a);
+    // (round 1) "1 thin crust pizza", "1 deep dish pizza": a size word and the noun after it written as one modifier
+    // ("thin-crust", "deep-dish") describe the food — the noun is no measure
+    const prevSize = a > k && isWord(toks[a - 1]) && isWord(toks[a]) && describingWord(`${(toks[a - 1] as { lower: string }).lower}-${(toks[a] as { lower: string }).lower}`)
+      || (isWord(toks[a]) && isWord(toks[a + 1]) && describingWord(`${(toks[a] as { lower: string }).lower}-${(toks[a + 1] as { lower: string }).lower}`));
+    let m = countWordBeforePluralFoodName(toks, a, n1.value) || romanceHead || prevSize ? a : unknownMeasureAt(toks, a);
     // (semantic-v3) a singular measure word before a plural food the count agrees with describes the items
     if (m === a + 1 && countAgreesPastMeasure(toks, a, n1.value)) m = a;
     // (semantic-v3, CONTRACT §13.2) the measure slot accounted for structurally: an undeclared noun that names what is
     // counted — a NOT_ALIASES noun, a plural that agrees with the count, a part noun, a holding utensil, a bottle size
-    if (m === a && !romanceHead && !countWordBeforePluralFoodName(toks, a, n1.value)) m = unresolvedMeasureAt(toks, a, n1.value);
+    if (m === a && !romanceHead && !prevSize && !countWordBeforePluralFoodName(toks, a, n1.value)) m = unresolvedMeasureAt(toks, a, n1.value);
     // (round 3) one of something before a plural food: the word is a collective or a container ("1 braid onions", "1
     // coating breadcrumbs"), not part of the food's name
     if (m === a && oneBeforePluralFood(toks, a, n1.value)) m = a + 1;
