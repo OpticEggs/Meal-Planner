@@ -23,7 +23,7 @@ import {
 import { andFraction, fractionUnitWord, readNumber, type NumberRead } from "./quantity";
 import { compoundFood, compoundFoodExactly, describingWord, foodWord, measureGerund, plainWord, recognisedFoodHead, twoWordFood } from "./foods";
 import { emptyEffects, type AmountReading, type Effects } from "./types";
-import { countAgreesPastMeasure, unresolvedMeasureAt } from "./measure-slot";
+import { countAgreesPastMeasure, sizedContainerWord, unresolvedMeasureAt } from "./measure-slot";
 import { NOT_ALIASES } from "../../unit-aliases";
 import { readUnit, type UnitRead } from "./unit";
 import { unitV1 } from "../../units";
@@ -730,7 +730,7 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
     const c0 = isWord(toks[k], "of") ? k + 1 : k;
     const w = toks[c0];
     const after = toks[c0 + 1];
-    if (isWord(w) && isWord(after) && !FUNCTION_WORDS.has(after.lower) && !twoWordFood(w.lower, after.lower) && (Object.prototype.hasOwnProperty.call(NOT_ALIASES, plainWord(w.lower)) || PACKAGING_NOUNS.has(plainWord(w.lower)))) {
+    if (isWord(w) && isWord(after) && !FUNCTION_WORDS.has(after.lower) && !twoWordFood(w.lower, after.lower) && sizedContainerWord(toks, c0)) {
       fx.notes.push({ s: n1.s, text: text.slice(n1.s, w.e) });
       fx.reasons.push("unit_unknown");
       return {
@@ -1295,7 +1295,11 @@ export function unknownMeasureAt(toks: readonly Tok[], a: number): number {
  */
 function countWordBeforePluralFoodName(toks: readonly Tok[], a: number, count: Rational): boolean {
   const w = toks[a];
-  return isWord(w) && cmp(count, rational(BigInt(1))) > 0 && !/s$/.test(w.lower) && isWord(toks[a + 1]) && pluralFoodAhead(toks, a + 1);
+  if (!(isWord(w) && cmp(count, rational(BigInt(1))) > 0 && !/s$/.test(w.lower) && isWord(toks[a + 1]) && pluralFoodAhead(toks, a + 1))) return false;
+  // (semantic-v3) "2 fondue pots of cheese": a plural vessel or measure noun before "of" is what is counted
+  let k = a + 1;
+  while (isWord(toks[k + 1]) && !FUNCTION_WORDS.has((toks[k + 1] as { lower: string }).lower)) k++;
+  return !(isWord(toks[k + 1], "of") && (VESSEL_MEASURES.has((toks[k] as { lower: string }).lower) || UNKNOWN_MEASURES.has((toks[k] as { lower: string }).lower)));
 }
 
 /**

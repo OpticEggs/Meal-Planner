@@ -634,7 +634,10 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
     if (amountStartsAt(text, body, 0)) {
       const other = readAmountPhrase(text, body, 0);
       const rest = other === null ? [] : body.slice(isWord(body[other.next], "of") ? other.next + 1 : other.next);
-      if (rest.length > 0 && namesAFood(rest) && !isWord(rest[0], "for", "to", "more", "extra")) severalFoods = true;
+      // (semantic-v3, CONTRACT §13.3) "plus 2 tbsp sour cream": another food measured in its own unit is a remark of a second
+      // amount — the line's food keeps its name; a count of another food ("2 eggs + 1 yolk", §12.12) shares the line
+      const ownUnit = other !== null && other.unitSpan !== null && other.unit !== null && other.unit.dimension !== "count";
+      if (rest.length > 0 && namesAFood(rest) && !isWord(rest[0], "for", "to", "more", "extra") && !ownUnit) severalFoods = true;
     }
     mergeEffects(fx, pfx);
   };

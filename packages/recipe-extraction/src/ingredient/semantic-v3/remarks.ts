@@ -14,10 +14,11 @@
  */
 import { REASONS, UNIT_REGISTRY, type AmountUnstated } from "../../contract";
 import { allWords, hasNumber, isGroup, isSym, isWord, wordsAt, type GroupTok, type Tok } from "./lexer";
-import { ADJECTIVE_WORDS, APPLICATION_GERUNDS, APPROX_WORDS, CARDINALS, EXTRACTED_PART_WORDS, LEADING_JUNK, PART_HEADS, PREP_ADVERBS, REMARK_SOURCE_WORDS, REMARK_STATE_WORDS, TIME_WORDS, TRAILING_PREP_WORDS, unitOfWord, FORM_WORDS, FUNCTION_WORDS, IF_DESIRED, REMARK_WORDS, SIZE_WORDS, UNSTATED_PHRASES } from "./lexicon";
+import { ADJECTIVE_WORDS, APPLICATION_GERUNDS, CONTAINER_UNITS, APPROX_WORDS, CARDINALS, EXTRACTED_PART_WORDS, LEADING_JUNK, PART_HEADS, PREP_ADVERBS, REMARK_SOURCE_WORDS, REMARK_STATE_WORDS, TIME_WORDS, TRAILING_PREP_WORDS, unitOfWord, FORM_WORDS, FUNCTION_WORDS, IF_DESIRED, REMARK_WORDS, SIZE_WORDS, UNSTATED_PHRASES } from "./lexicon";
 import { amountStartsAt, isPriceGroup, readAmountPhrase } from "./amount";
 import { readUnit } from "./unit";
 import { emptyEffects, mergeEffects, type AmountReading, type Effects } from "./types";
+import { foodWord } from "./foods";
 
 // --- Text -------------------------------------------------------------------------------------------
 
@@ -260,7 +261,10 @@ function classifyBare(text: string, toks: readonly Tok[], fx: Effects): void {
     const complete = opts.every((o) => o.length > 0);
     // (semantic-v2, §12.7 f) "(or see recipe)", "(or low-sodium boxed)": an option that opens like a remark, or a choice
     // of sourcing (homemade, boxed, jarred…) described only by version words, is a note, not another ingredient
-    const isRemark = complete && opts.every((o) => (remarkOnly(o) || REMARK_OPENER.test(textOf(text, o)) || sourcingRemark(o)) && !hasNumber(o));
+    // (semantic-v3) a package named alone beside a sourcing word ("homemade or packet", "fresh or canned", "jarred or
+    // bottled") says how the food is sourced, not which food: a remark
+    const packageOnly = (o: readonly Tok[]) => allWords(o).length === 1 && (() => { const c = unitOfWord(allWords(o)[0]); return c !== null && CONTAINER_UNITS.has(c); })();
+    const isRemark = complete && opts.every((o) => (remarkOnly(o) || REMARK_OPENER.test(textOf(text, o)) || sourcingRemark(o) || packageOnly(o)) && !hasNumber(o)) && !opts.every(packageOnly);
     const short = opts.every((o) => o.filter((t) => t.kind === "word").length <= 3 && !o.some(isGroup));
     // an option that is a phrase or starts with a conjunction ("container/to taste") is not a food
     const junk = opts.some((o) => {
@@ -507,7 +511,7 @@ export function remarkCombinesAnother(toks: readonly Tok[], name: string | null,
       if (["for", "to", "until", "or"].includes(t.lower)) break;
       after.push(t.lower);
     }
-    if (after.length > 0 && otherFoodIn(after, nameWs)) return true;
+    if (after.length > 0 && otherFoodIn(after, nameWs) && after.some((w) => foodWord(w))) return true;
   }
   return false;
 }

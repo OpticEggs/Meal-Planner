@@ -15,7 +15,7 @@
 import { ADJECTIVE_WORDS, AND_COMPOUNDS, CATEGORY_NOUNS, COMPOUND_MODIFIERS, FLAVOUR_HEADS, FORM_CHOICE_WORDS, FUNCTION_WORDS, LEADING_SHARE_WORDS, PART_HEADS, PREP_ADVERBS, REMARK_WORDS, SHARED_HEAD_MODIFIERS, SIZE_WORDS } from "./lexicon";
 
 const LEADING_JUNK_WORDS = FUNCTION_WORDS;
-import { describingWord, foodWord, massFoodWord, sameKindAs, varietyWord } from "./foods";
+import { describingWord, foodWord, massFoodWord, productHeadWord, recognisedFoodHead, sameKindAs, varietyWord } from "./foods";
 
 const wordsOf = (s: string) => s.split(" ").filter((w) => w.length > 0);
 const lower = (s: string) => s.toLowerCase();
@@ -258,6 +258,10 @@ export function andJoinsTwoFoods(name: string): boolean {
   const right = ws.slice(at + 1);
   const describing = (w: string) => versionWord(w) || SIZE_WORDS.has(lower(w)) || PREP_ADVERBS.has(lower(w));
   if (left.every(describing)) return false; // modifiers of one head
+  // (semantic-v3, CONTRACT §12.A A4, §13.4) a first conjunct that is itself a complete food — a product named after its
+  // source ("lime juice", "maple syrup") — is never a modifier shared before the second food's head: "lime juice and fish
+  // sauce", "maple syrup and Dijon mustard" list two foods
+  if (left.length >= 2 && productHeadWord(left[left.length - 1]) && !describing(left[left.length - 1]) && recognisedFoodHead(left.join(" "), { slotResolved: true, countAgrees: true }) && right.some((w) => !describing(w))) return true;
   // ("kosher salt and black pepper": the seasoning pair, however each is described)
   if (lower(left[left.length - 1]) === "salt" && /^pepper(?:corns)?$/.test(lower(right[right.length - 1]))) return false;
   if (right.length >= 2 && FLAVOUR_HEADS.has(lower(right[right.length - 1]))) return false; // a flavour of one product
