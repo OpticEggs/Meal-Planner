@@ -1,0 +1,101 @@
+
+Running 3 tests using 1 worker
+
+  ✓  1 [chromium] › tests/e2e/rio-pending-edit.spec.ts:125:1 › RIO-03e: Save review for later is held too; once applied it is kept, survives a reload, and the reopened review saves it (4.1s)
+  ✘  2 [chromium] › tests/e2e/rio-pending-edit.spec.ts:150:1 › RIO-03f: rows regrouping around an unapplied change keep it; after Use or Cancel the focus stays on that row (12.0s)
+  ✘  3 [chromium] › tests/e2e/rio-pending-edit.spec.ts:188:1 › RIO-03g: the other member saves the review meanwhile — nothing stale is saved, and the unapplied change is still held after loading theirs (1.0m)
+
+
+  1) [chromium] › tests/e2e/rio-pending-edit.spec.ts:150:1 › RIO-03f: rows regrouping around an unapplied change keep it; after Use or Cancel the focus stays on that row 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeFocused[2m([22m[2m)[22m failed
+
+    Locator:  getByRole('dialog', { name: 'Review the import' }).getByTestId('draft-lines').locator('[data-raw="2-3 cloves garlic, minced"]').locator('.row-main')
+    Expected: focused
+    Received: inactive
+    Timeout:  10000ms
+
+    Call log:
+    [2m  - Expect "toBeFocused" with timeout 10000ms[22m
+    [2m  - waiting for getByRole('dialog', { name: 'Review the import' }).getByTestId('draft-lines').locator('[data-raw="2-3 cloves garlic, minced"]').locator('.row-main')[22m
+    [2m    14 × locator resolved to <button type="button" class="row-main" aria-expanded="false" aria-controls="_r_d_-ed">…</button>[22m
+    [2m       - unexpected value "inactive"[22m
+
+
+      164 |   await garlic.getByRole("button", { name: /^Use line 5/ }).click();
+      165 |   const moved = review.getByTestId("draft-lines").locator(`[data-raw="${GARLIC}"]`);
+    > 166 |   await expect(moved.locator(".row-main")).toBeFocused();
+          |                                            ^
+      167 |   // Basil is left out and moves to "Not added to groceries"; focus follows it too.
+      168 |   await row(review, BASIL).locator(".row-main").focus();
+      169 |   await row(review, BASIL).getByRole("button", { name: /^Leave out line 12/ }).click();
+        at /home/user/table/tests/e2e/rio-pending-edit.spec.ts:166:44
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/rio-pending-edit-RIO-03f-r-898e1-the-focus-stays-on-that-row-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/rio-pending-edit-RIO-03f-r-898e1-the-focus-stays-on-that-row-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/rio-pending-edit-RIO-03f-r-898e1-the-focus-stays-on-that-row-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/rio-pending-edit-RIO-03f-r-898e1-the-focus-stays-on-that-row-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › tests/e2e/rio-pending-edit.spec.ts:188:1 › RIO-03g: the other member saves the review meanwhile — nothing stale is saved, and the unapplied change is still held after loading theirs 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test ended.
+    Call log:
+    [2m  - waiting for getByRole('dialog', { name: 'Review the import' }).getByTestId('import-confirm')[22m
+    [2m    - locator resolved to <button disabled type="button" class="btn primary big" data-testid="import-confirm">Save recipe</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is not enabled[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is not enabled[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    110 × waiting for element to be visible, enabled and stable[22m
+    [2m        - element is not enabled[22m
+    [2m      - retrying click action[22m
+    [2m        - waiting 500ms[22m
+
+
+      207 |   await expect(row(review, PEAS).locator(".row-main")).toContainText("2 cups frozen peas");
+      208 |   // His typed pesto change was not applied, so it is still held — not dropped, not silently saved.
+    > 209 |   await review.getByTestId("import-confirm").click();
+          |                                              ^
+      210 |   await expect(review.getByTestId("draft-problems")).toContainText("Line 2 (pesto) has a change you haven't applied");
+      211 |   expect(await saved()).toEqual([]);
+      212 |   await pesto.getByRole("button", { name: /^Use line 2/ }).click();
+        at /home/user/table/tests/e2e/rio-pending-edit.spec.ts:209:46
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/rio-pending-edit-RIO-03g-t-87d8f-l-held-after-loading-theirs-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/rio-pending-edit-RIO-03g-t-87d8f-l-held-after-loading-theirs-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/rio-pending-edit-RIO-03g-t-87d8f-l-held-after-loading-theirs-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/rio-pending-edit-RIO-03g-t-87d8f-l-held-after-loading-theirs-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/rio-pending-edit-RIO-03g-t-87d8f-l-held-after-loading-theirs-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [chromium] › tests/e2e/rio-pending-edit.spec.ts:150:1 › RIO-03f: rows regrouping around an unapplied change keep it; after Use or Cancel the focus stays on that row 
+    [chromium] › tests/e2e/rio-pending-edit.spec.ts:188:1 › RIO-03g: the other member saves the review meanwhile — nothing stale is saved, and the unapplied change is still held after loading theirs 
+  1 passed (1.4m)

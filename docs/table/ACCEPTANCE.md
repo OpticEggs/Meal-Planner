@@ -593,7 +593,7 @@ seasoning modules did not exist. The "Have enough" rounding test fails on the pr
 | ID | What | Tests | Status |
 |---|---|---|---|
 | IO-01 | The reported line → pesto, 1/3 cup, note "homemade (or store-bought)"; clean lines start as Use; only the range and the no-amount line wait; salt and pepper left out | integration IO-01; unit parser table (67 parsed, 22 review cases); e2e IO-E1 | PASS |
-| IO-02 | Confirming gives exact per-serving amounts (1/3 cup ÷ 4 = 0.083333333333; 1 1/2 cups ÷ 4 = 0.375), source link kept, no salt/pepper in the recipe | integration IO-02 | PASS |
+| IO-02 | Confirming gives per-serving amounts from the exact whole-recipe amount: exact when the division ends (1 1/2 cups ÷ 4 = 0.375), otherwise a 12-place approximation (1/3 cup ÷ 4 = 0.083333333333 — not exact; corrected wording 2026-10-09, D122), source link kept, no salt/pepper in the recipe | integration IO-02 | PASS |
 | IO-03 | A typed fraction is accepted ("2 1/2"); nonsense is refused naming the line | integration IO-03 | PASS |
 | IO-04 | No suggestion workflow stored or shown | integration IO-04; e2e IO-E1, U2C-E1 | PASS |
 | IO-05 | Household-private mode keeps the method, not the photo; a per-site photo grant keeps it | integration IO-05; unit CP-02; integration R1-06 | PASS |
@@ -622,6 +622,10 @@ now a visible button opens the picker).
 `CLAUDE-NEXT-PROMPT.txt`) was not present in this session's uploads, the repository or any branch. RIO-01..03 below
 are **reconstructed** from the three problems the owner named (package rounding, seasoning classification, pending
 row edits); their wording and acceptance must be reconciled with the package when it is available.
+
+_Reconciled 2026-10-09: the package arrived with the independent recheck of `8c9fd8c`. The reconstructed RIO-02 (a
+bare "pepper" by the piece) was **not** the original RIO-02 (descriptors in parentheses); see "Original RIO
+correction package" below for the finding-by-finding disposition. The rows here stay as the record of `bca110e`._
 
 Starting `12434c0`; corrections `bca110e`; verified at `bca110e` — `docs/table/evidence/2026-10-09-verify-bca110e/summary.md`: vitest 1091/1091, Playwright 145/145, mutation self-test PASS, 102 killed / 0 survived / 0 error.
 Red on `12434c0` in the real harness: `evidence/2026-10-09-verify-bca110e/dev/` (integration RIO-01/02 against PostgreSQL
@@ -654,3 +658,32 @@ seven commits ending in its holdout-v2 freeze (`dee4ed0` → `46a6547`), so it w
 11 skipped after it; `46a6547` alone passes. The commit is kept as
 `evidence/2026-10-09-verify-bca110e/lab-reconciliation/` for the lab session or the owner to apply; it touches only
 `src/legacy/PROVENANCE.json` and that document, not the frozen holdout-v2 labels. These app corrections do not complete or replace the extraction engine; its Phase 3 is unauthorized.
+
+## Original RIO correction package — finding-by-finding (recheck of `8c9fd8c`) — added 2026-10-09
+
+The package (`ORIGINAL-CORRECTION-PACKAGE.zip`, inside `Table-RIO-Delivery-Recheck-8c9fd8c`) arrived after `bca110e`.
+Starting `8c9fd8c` (code `bca110e`); corrections `9f7836f` (RIO-02), `a9fd9de` (RIO-01 tests only), `43cd1ce` (RIO-03);
+verified at `43cd1ce` — `docs/table/evidence/2026-10-09-verify-43cd1ce/summary.md`: vitest 1142/1142, Playwright 150/150, mutation self-test PASS, 104 killed / 0 survived / 0 error.
+Red evidence: `evidence/2026-10-09-verify-43cd1ce/dev/` — the exact original RIO-02 cases on unchanged `bca110e` source
+(19 failing assertions: parser, classifier, import draft, saved-recipe projection), and the RIO-03 focus defect on the
+unchanged review screen.
+
+| Original finding | Original requirement | Disposition | Tests | Status |
+|---|---|---|---|---|
+| RIO-02 | `1 tsp salt (smoked)`, `1 tsp pepper (white)`, `1 tsp salt (garlic)` were omitted; descriptors must survive classification; ordinary salt/black pepper still omitted; bell/chili peppers, specialty seasonings and explicit requests kept | **Fixed.** The classifier now reads the name's parentheses, its comma tail and the line's descriptors; only words describing ordinary salt or black pepper, an amount or a purpose are ignored, and any other word keeps the ingredient (D121). The import folds the descriptor into the name ("smoked salt", so it shares the adjective-first identity). Saved recipes whose ingredient name carries the descriptor ("salt (smoked)") are bought. The pepper-by-the-piece rule (D119) is kept. | unit seasonings + ingredient-line (original cases, nested, comma tail, ordinary phrasings); integration RIO-02a (import → draft → recipe → groceries), RIO-02b (recipe saved earlier), RIO-02c (explicit request); mutations RIO02_descriptors_discarded, RIO02_classifier_ignores_descriptors | PASS |
+| RIO-01 | Keep exact source quantities/divisors far enough to avoid buying an extra package; no broad epsilon; test both rounding directions, combined meals, genuine overages, approvals/partial handoffs, provenance; label approximations honestly | **Partly delivered, precisely bounded.** Storage stays a 12-place approximation rounded toward zero (`bca110e`); `packagesFor` is unchanged and no epsilon was added. Proven: a count is never above the exact source count for recipes saved since `bca110e` (D122). Measured: over 295,472 cases (single recipes; 200,000 pairs of recipes sharing an ingredient; count/volume/mass with conversions; 7,571 exactly on a package boundary) the count equals the exact count in every case. Not proven: exactness — a count could be one low only if the exact week demand passes a boundary by less than 10⁻¹² of the unit per plate. Exact provenance needs an additive schema change; proposed, not built (D122). | unit rio01-boundaries (matrix + control that catches half-up), quantity; integration RIO-01, RIO-01b (exact boundary through approval, partial transfer and retailer request), RIO-01c (genuine overage), RIO-01d (below the boundary); mutation RIO01_per_serving_rounded_half_up | PASS for the stated guarantees |
+| RIO-01 legacy | Old 4-place recipes have the same mechanism | **Not changed** (needs authorized data change). Measured on the same matrix: 4-place half-up storage over-counts 1,242 and under-counts 115 of 295,472 cases (e.g. 3 lb for 9 servings plus a ⅔ g line: 3 packages instead of 4). | evidence `rio01-measurement.json` | OPEN — owner gate |
+| RIO-03 | Save and Save-for-later must not ignore visible row edits; test keystrokes, saved amounts, multiple rows, name/unit, invalid entries, closing/reopening, other-member conflicts, focus | **Kept, completed.** `bca110e`'s guard held in every new case. One defect found and fixed: after Use, Leave out or Cancel focus fell to the page (and a row that moved group lost it); it now returns to that row (D123). | e2e RIO-03a–g (two dirty rows with name/unit/amount; invalid pending amount; Save-for-later + reload + reopen; regrouping; the other member saving meanwhile; focus), each asserting database rows | PASS |
+| — | Keep the pesto import, compact review, member photos, source rights, pepper-by-piece fix, conversions and immutable history | Unchanged; no visual redesign | e2e IO-E1, screens-overhaul, ui-screens, journeys; integration IO-01..05; full suites | PASS |
+
+**Known limitations (not fixed, recorded):** (1) recipes saved before `8e6bd6e` keep 4-place per-serving amounts (above);
+(2) a recipe saved before this fix where a member pressed "Use" on an omitted `salt (smoked)` line stored the name
+`salt` and is still treated as table salt — the descriptor survives only in that line's `From:` note; changing such
+records needs the same authorized data change; (3) an import confirmed before this fix that left `salt (smoked)` out
+lists it in the recipe summary ("Not counted in groceries: …") but has no ingredient row for it.
+
+**Recipe Extraction Lab (separate workstream).** Not touched by this pass. Its owner has already applied the earlier
+reconciliation (`034f2c3` on `claude/quirky-gauss-depmd8`, recording `bca110e`); the patch kept in
+`evidence/2026-10-09-verify-bca110e/lab-reconciliation/` is historical and must not be applied again. This pass changes
+Table's live `ingredient-line.ts` once more; the read-only notice for the lab owner is
+`docs/table/LAB-SOURCE-DELTA-2026-10-09.md`. Nothing here adopts the extraction engine or completes its Phase 3.

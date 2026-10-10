@@ -1,6 +1,6 @@
 # Table — Implementation status
 
-_Last updated 2026-10-09 (UTC), after the import-overhaul corrections RIO-01..03 (reconstructed; the owner's package did not arrive), which followed the import overhaul and mobile redesign (B28), which followed the bounded pass B10 partial handoff + continuous URL-to-cart journey + phone upgrade rehearsal, which followed the recheck corrections RUC-01/RUC-02 (pilot on Render Free + Neon), which followed the URL-to-cart reprioritization (B25), which followed the multi-source handoff (recipe links, reviewed import, Budget Bytes lane, where to shop, Instacart list link — fixture-only), which followed B21/B22 (database cook-record invariant, stale cooking events) and the free-hosting research, which followed the visual update (B20) and the cook-record idempotency fix
+_Last updated 2026-10-09 (UTC), after the recheck correction against the original RIO package (RIO-02 descriptors fixed, RIO-01 bounded, RIO-03 completed), which followed the import-overhaul corrections RIO-01..03 (reconstructed; the owner's package had not arrived), which followed the import overhaul and mobile redesign (B28), which followed the bounded pass B10 partial handoff + continuous URL-to-cart journey + phone upgrade rehearsal, which followed the recheck corrections RUC-01/RUC-02 (pilot on Render Free + Neon), which followed the URL-to-cart reprioritization (B25), which followed the multi-source handoff (recipe links, reviewed import, Budget Bytes lane, where to shop, Instacart list link — fixture-only), which followed B21/B22 (database cook-record invariant, stale cooking events) and the free-hosting research, which followed the visual update (B20) and the cook-record idempotency fix
 (B19, delivery review of fb4d771, gate 2), which followed the integration-preparation pass (B9 deployment candidate, B7 nutrition, B5
 Kroger adapter, B8 checklist)._
 
@@ -8,6 +8,7 @@ Kroger adapter, B8 checklist)._
 
 | What | Identity |
 |---|---|
+| RIO recheck correction (original package) | starting `8c9fd8c` · `9f7836f` descriptor-aware seasonings (original RIO-02) · `a9fd9de` RIO-01 boundary evidence (tests only) · `43cd1ce` RIO-03 coverage + focus — verified at `43cd1ce`. Lab branch untouched; read-only notice `docs/table/LAB-SOURCE-DELTA-2026-10-09.md` |
 | Import-overhaul corrections RIO-01..03 | starting `12434c0` · `bca110e` per-serving rounding toward zero, unit-aware pepper, held pending row edits — verified at `bca110e`. The Recipe Extraction Lab (branch `claude/quirky-gauss-depmd8`) stays a separate, unintegrated workstream; its provenance reconciliation with `bca110e` is prepared but not pushed (the lab branch moved to `46a6547` meanwhile; patch in the evidence) |
 | Import overhaul + redesign (B28) | starting `cb7b56e` · `dfb34cc` member photo backend (worker) · `8e6bd6e` parser, review, seasonings, photo policy, design — verified at `8e6bd6e` |
 | B10 partial handoff, URL-to-cart journey, Kroger callback same-origin redirect, migration lock | starting `3ac64f6` · `3378e01` migration advisory lock (worker) · `7c79eb6` B10 + journey + callback fix — verified at `7c79eb6` |
@@ -24,7 +25,11 @@ Kroger adapter, B8 checklist)._
 | Restore | `git clone --branch main <bundle> table` or `git clone <bundle> table` |
 | Migrations | `001`–`014` (`014_member_recipe_photo.sql`: a member's own photo on the recipe; `013_partial_handoff.sql`: batch scope and omission summary; `012_recipe_content.sql`: kept-content permission, recipe photos, attribution): `006_nutrition_sources.sql` (B7), `007_kroger.sql` (B5), `008_cook_record_corrections.sql` (B19), `009_cook_record_chain.sql` (B21), `010_recipe_sources.sql`, `011_shopping_destinations.sql` (multi-source); upgrades from a populated 005 database (to 007) a populated 007 database holding duplicate cook records (to 008), a populated 008 database with planted cross-generation violations (to 009), and a populated 009 database (to 011, only `schema_migrations` differs over existing columns) checked |
 
-## Verification (measured on bca110e)
+## Verification (measured on 43cd1ce)
+
+`scripts/verify-all.sh` → `docs/table/evidence/2026-10-09-verify-43cd1ce/summary.md`: vitest 1142/1142, Playwright 150/150, mutation self-test PASS, 104 killed / 0 survived / 0 error.
+
+### Previous run (bca110e, reconstructed RIO corrections)
 
 `scripts/verify-all.sh` → `docs/table/evidence/2026-10-09-verify-bca110e/summary.md`: vitest 1091/1091, Playwright 145/145, mutation self-test PASS, 102 killed / 0 survived / 0 error.
 

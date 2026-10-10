@@ -1,0 +1,171 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/table
+
+ ❯ tests/integration/rio-corrections.test.ts (5 tests | 2 failed) 3234ms
+   ❯ RIO-02 (original): a descriptor that changes what salt or pepper is survives into groceries (3)
+     × RIO-02a: a new import keeps the three specialty lines as ingredients and still leaves ordinary salt and pepper out 577ms
+     × RIO-02b: a recipe saved earlier with the descriptor in its ingredient name is bought; its ordinary salt and black pepper are not 707ms
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts (140 tests | 6 failed) 54ms
+   ❯ descriptors in parentheses or after a comma decide what salt or pepper is (RIO-02, original cases) (16)
+     × "1 tsp salt (smoked)" → kept as "smoked salt" 6ms
+     × "1 tsp pepper (white)" → kept as "white pepper" 1ms
+     × "1 tsp salt (garlic)" → kept as "garlic salt" 1ms
+     × "1 tsp salt (smoked (hickory))" → kept as "smoked hickory salt" 0ms
+     × "1/2 tsp kosher salt (smoked), divided" → kept as "smoked kosher salt" 1ms
+     × "1 tsp salt, smoked" → kept as "smoked salt" 1ms
+ ❯ tests/unit/seasonings.test.ts (84 tests | 11 failed) 42ms
+   ❯ descriptors are part of the identity (RIO-02, original cases) (26)
+     × "salt (smoked)" → not a household seasoning 9ms
+     × "pepper (white)" → not a household seasoning 1ms
+     × "salt (garlic)" → not a household seasoning 1ms
+     × "kosher salt (smoked)" → not a household seasoning 1ms
+     × "salt (pink Himalayan)" → not a household seasoning 1ms
+     × "salt" with descriptors "smoked" → not a household seasoning 1ms
+     × "pepper" with descriptors "white" → not a household seasoning 0ms
+     × "salt" with descriptors "garlic" → not a household seasoning 1ms
+     × "salt" with descriptors "smoked (hickory)" → not a household seasoning 2ms
+     × "kosher salt" with descriptors "smoked; divided" → not a household seasoning 1ms
+     × "salt, divided" → still a household seasoning 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 19 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/rio-corrections.test.ts > RIO-02 (original): a descriptor that changes what salt or pepper is survives into groceries > RIO-02a: a new import keeps the three specialty lines as ingredients and still leaves ordinary salt and pepper out
+AssertionError: expected { form: null, name: 'salt', …(7) } to match object { status: 'parsed', …(3) }
+(5 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "name": "smoked salt",
++   "name": "salt",
+    "quantity": "1",
+-   "status": "parsed",
++   "status": "omitted",
+    "unit": "tsp",
+  }
+
+ ❯ tests/integration/rio-corrections.test.ts:100:49
+     98|     const d = await pasted(jon, "Smoky rub", 4, [...ORIGINAL, ...ORDIN…
+     99|     const byRaw = Object.fromEntries(d.lines.map((l) => [l.raw, l]));
+    100|     expect(byRaw["1 tsp salt (smoked)"].parsed).toMatchObject({ status…
+       |                                                 ^
+    101|     expect(byRaw["1 tsp pepper (white)"].parsed).toMatchObject({ statu…
+    102|     expect(byRaw["1 tsp salt (garlic)"].parsed).toMatchObject({ status…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/19]⎯
+
+ FAIL  tests/integration/rio-corrections.test.ts > RIO-02 (original): a descriptor that changes what salt or pepper is survives into groceries > RIO-02b: a recipe saved earlier with the descriptor in its ingredient name is bought; its ordinary salt and black pepper are not
+AssertionError: salt_smoked: expected undefined to be truthy
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ tests/integration/rio-corrections.test.ts:134:143
+    132|     expect(s.status, JSON.stringify(s)).toBe("accepted");
+    133|     await onFriday(fx, jon, s.result.versionId);
+    134|     for (const k of ["salt_smoked", "pepper_white", "salt_garlic_granu…
+       |                                                                                                                                               ^
+    135|     const [cyc] = await q<any>("SELECT projection_summary FROM grocery…
+    136|     expect((cyc.projection_summary.householdSeasonings ?? []).map((x: …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/19]⎯
+
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > descriptors in parentheses or after a comma decide what salt or pepper is (RIO-02, original cases) > "1 tsp salt (smoked)" → kept as "smoked salt"
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > descriptors in parentheses or after a comma decide what salt or pepper is (RIO-02, original cases) > "1 tsp pepper (white)" → kept as "white pepper"
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > descriptors in parentheses or after a comma decide what salt or pepper is (RIO-02, original cases) > "1 tsp salt (garlic)" → kept as "garlic salt"
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > descriptors in parentheses or after a comma decide what salt or pepper is (RIO-02, original cases) > "1 tsp salt (smoked (hickory))" → kept as "smoked hickory salt"
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > descriptors in parentheses or after a comma decide what salt or pepper is (RIO-02, original cases) > "1/2 tsp kosher salt (smoked), divided" → kept as "smoked kosher salt"
+ FAIL  tests/unit/recipe-import-ingredient-line.test.ts > descriptors in parentheses or after a comma decide what salt or pepper is (RIO-02, original cases) > "1 tsp salt, smoked" → kept as "smoked salt"
+AssertionError: expected 'omitted' to be 'parsed' // Object.is equality
+
+Expected: "parsed"
+Received: "omitted"
+
+ ❯ tests/unit/recipe-import-ingredient-line.test.ts:181:22
+    179|   ])("%j → kept as %j", (raw, name) => {
+    180|     const r = parseIngredientLine(raw);
+    181|     expect(r.status).toBe("parsed");
+       |                      ^
+    182|     expect(r.name).toBe(name);
+    183|     expect(r.unit).toBe("tsp");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/19]⎯
+
+ FAIL  tests/unit/seasonings.test.ts > descriptors are part of the identity (RIO-02, original cases) > "salt (smoked)" → not a household seasoning
+ FAIL  tests/unit/seasonings.test.ts > descriptors are part of the identity (RIO-02, original cases) > "pepper (white)" → not a household seasoning
+ FAIL  tests/unit/seasonings.test.ts > descriptors are part of the identity (RIO-02, original cases) > "salt (garlic)" → not a household seasoning
+ FAIL  tests/unit/seasonings.test.ts > descriptors are part of the identity (RIO-02, original cases) > "kosher salt (smoked)" → not a household seasoning
+ FAIL  tests/unit/seasonings.test.ts > descriptors are part of the identity (RIO-02, original cases) > "salt (pink Himalayan)" → not a household seasoning
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/unit/seasonings.test.ts:30:40
+     28|     "salt (smoked)", "pepper (white)", "salt (garlic)", "salt (smoked …
+     29|   ])("%j → not a household seasoning", (name) => {
+     30|     expect(isHouseholdSeasoning(name)).toBe(false);
+       |                                        ^
+     31|     expect(isHouseholdSeasoning(name, "tsp")).toBe(false);
+     32|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/19]⎯
+
+ FAIL  tests/unit/seasonings.test.ts > descriptors are part of the identity (RIO-02, original cases) > "salt" with descriptors "smoked" → not a household seasoning
+ FAIL  tests/unit/seasonings.test.ts > descriptors are part of the identity (RIO-02, original cases) > "pepper" with descriptors "white" → not a household seasoning
+ FAIL  tests/unit/seasonings.test.ts > descriptors are part of the identity (RIO-02, original cases) > "salt" with descriptors "garlic" → not a household seasoning
+ FAIL  tests/unit/seasonings.test.ts > descriptors are part of the identity (RIO-02, original cases) > "salt" with descriptors "smoked (hickory)" → not a household seasoning
+ FAIL  tests/unit/seasonings.test.ts > descriptors are part of the identity (RIO-02, original cases) > "kosher salt" with descriptors "smoked; divided" → not a household seasoning
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/unit/seasonings.test.ts:35:138
+     33|   it.each([
+     34|     ["salt", "smoked"], ["pepper", "white"], ["salt", "garlic"], ["sal…
+     35|   ])("%j with descriptors %j → not a household seasoning", (name, desc…
+       |                                                                                                                                          ^
+     36|   it.each([
+     37|     "salt (to taste)", "salt (optional)", "kosher salt (plus more for …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/19]⎯
+
+ FAIL  tests/unit/seasonings.test.ts > descriptors are part of the identity (RIO-02, original cases) > "salt, divided" → still a household seasoning
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/unit/seasonings.test.ts:39:94
+     37|     "salt (to taste)", "salt (optional)", "kosher salt (plus more for …
+     38|     "salt, divided", "kosher salt (Diamond Crystal)", "salt (or to tas…
+     39|   ])("%j → still a household seasoning", (name) => expect(isHouseholdS…
+       |                                                                                              ^
+     40|   it.each([
+     41|     ["salt", "to taste"], ["kosher salt", "divided"], ["black pepper",…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/19]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  19 failed | 210 passed (229)
+   Start at  23:11:18
+   Duration  4.91s (tests 75%, transform 15%, import 9%)
+
