@@ -18,7 +18,7 @@ import { add, cmp, div, fromDecimalString, fromExactQuantity, mul, rational, toE
 import { adjacent, isGroup, isSym, isWord, type GroupTok, type Tok } from "./lexer";
 import {
   APPROX_SYMBOLS, APPROX_WORDS, BOUND_PHRASES, CARDINALS, CONTAINER_UNITS, FORM_WORDS, FRACTION_WORDS, FUNCTION_WORDS, LENGTH_MEASURED_FOODS, LENGTH_WORDS, MEASURE_ADJECTIVES,
-  RANGE_DASHES, REMARK_WORDS, SIZE_WORDS, TIME_WORDS, UNKNOWN_MEASURES, unitOfWord,
+  INVARIANT_PLURALS, RANGE_DASHES, REMARK_WORDS, SIZE_WORDS, TIME_WORDS, UNKNOWN_MEASURES, unitOfWord,
 } from "./lexicon";
 import { andFraction, fractionUnitWord, readNumber, type NumberRead } from "./quantity";
 import { emptyEffects, type AmountReading, type Effects } from "./types";
@@ -411,6 +411,22 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
     betweenRange = true;
     j++;
   }
+  // "#10 can tomatoes", "No. 2 can corn": a can-size designation before a singular container with no count is one
+  // container (as "28 oz can tomatoes" is, §12.3); before a plural container the count is missing
+  const designated = canSizeDesignationAt(toks, j);
+  if (designated > j && bound === null && !betweenRange) {
+    const u = readUnit(text, toks, designated);
+    if (u !== null) {
+      const plural = /s$/i.test(text.slice(u.s, u.e));
+      const t0 = toks[j];
+      fx.notes.push({ s: t0.s, text: isGroup(t0) ? text.slice(t0.innerS, t0.innerE).trim() : text.slice(t0.s, toks[designated - 1].e) });
+      if (plural) fx.reasons.push("quantity_missing");
+      return {
+        quantity: plural ? null : toExactQuantity(rational(BigInt(1))), quantitySpan: null, amountWritten: true, unit: u.unit, unitSpan: [u.s, u.e], packageSize: null,
+        packageSpan: null, packageProvisional: null, equivalents: [], approximate, fromWord: false, effects: fx, next: u.next,
+      };
+    }
+  }
   const article = isWord(toks[j], "a", "an");
   // FRACTION-UNIT COMPOUND (§12.1): "a half-cup milk", "1 half-cup butter", "2 half-cups milk", "a quarter-pound beef"
   const compound = fractionUnitAt(text, toks, j);
@@ -450,6 +466,14 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   // Package sizes, size descriptors and remarks written before the unit.
   for (let guard = 0; guard < 6 && compound === null; guard++) {
     const t = toks[k];
+    // CAN-SIZE DESIGNATION (§12.9): "1 #10 can", "2 No. 303 cans", "1 (No. 2) can" — the designation is a note
+    const des = canSizeDesignationAt(toks, k);
+    if (des > k && n1.ok && max === null) {
+      const inner = isGroup(t) ? text.slice(t.innerS, t.innerE).trim() : text.slice(t.s, toks[des - 1].e);
+      fx.notes.push({ s: t.s, text: inner });
+      k = des;
+      continue;
+    }
     // "2 quarter-pound beef patties": a fraction-unit after a count of two or more sizes what is counted (§12.1)
     const fw = fractionUnitWord(t);
     if (fw !== null && isWord(t) && !fw.plural && n1.ok && max === null && between.length === 0) {
@@ -461,9 +485,11 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
         k++;
         continue;
       }
-      // (only after a whole count of two or more: "1/2 half-cup milk" is not clear)
+      // (only after a whole count of two or more: "1/2 half-cup milk" is not clear — a length always sizes the counted
+      // item: "a half-inch piece fresh ginger" → 1 piece, note half-inch)
       fx.notes.push({ s: t.s, text: t.text });
-      if (!(n1.value.d === BigInt(1) && n1.value.n >= BigInt(2))) {
+      const length = unitOfWord(fw.unitWord) === "inch";
+      if (!length && !(n1.value.d === BigInt(1) && n1.value.n >= BigInt(2))) {
         fx.unassigned++;
         irregular = true;
       }
@@ -630,12 +656,18 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
       a = k + 2;
     }
   }
+  // COUNT WORD BEGINNING THE NAME (§12.A A1): "2 strip steaks", "4 rib eye steaks", "2 sheet cakes" — the count word is food
+  if (unitRead && n1.ok && max === null && compound === null && countWordBeginsName(text, toks, unitRead, n1.value)) {
+    unitRead = null;
+    a = k;
+  }
   if (unitRead && a > k && !isWord(toks[k], "of")) {
     fx.notes.push({ s: toks[k].s, text: text.slice(toks[k].s, toks[a - 1].e) });
   }
   // CONTAINER-CUP RULE (CONTRACT §12.5): "3 (5.3 oz) cups vanilla Greek yogurt" — a package size between the count and
   // "cup(s)" makes the cup a container (a measuring cup never carries a package size)
   if (unitRead && n1.ok && n1.value.d === BigInt(1) && max === null && containerCup(unitRead, between)) unitRead = { ...unitRead, unit: unitV1("container", unitRead.unit.source) };
+
   if (unitRead) k = unitRead.next;
   // "1 pint (UK) milk": the system written right after the unit
   const afterUnit = toks[k];
@@ -749,7 +781,8 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
         // the same unit again is summed only after an explicit "plus"/"+" ("2 tsp + ½ tsp", "1 cup plus 1/3 cup")
         if (u2.unit.canonical === last.canonical && !connector) break;
         if (!connector && cmp(base(u2.unit), base(last)) >= 0) break;
-        if (minus && cmp(base(u2.unit), base(last)) >= 0) break;
+        // (a subtraction in the same unit is exact too: "2 cups minus 1/4 cup" → 7/4 cup)
+        if (minus && cmp(base(u2.unit), base(last)) > 0) break;
         parts.push({ value: n2.value, decimal: n2.decimal, unit: u2, minus });
         qEnd = u2.e;
         k = u2.next;
@@ -940,6 +973,8 @@ function fractionUnitAt(text: string, toks: readonly Tok[], j: number): { n1: Nu
   if (leadCount !== null && leadCount > BigInt(1) && !fw.plural) return null;
   const after = readUnit(text, toks, c + 1);
   if (after !== null && PACKAGE_UNITS.has(after.unit.canonical)) return null;
+  // ("a half-inch piece fresh ginger": a length before a counted unit sizes the piece; the article is the count, §12.1)
+  if (after !== null && after.unit.dimension === "count" && unitOfWord(fw.unitWord) === "inch") return null;
   const value = leadCount !== null && leadCount > BigInt(1) ? mul(fw.value, rational(leadCount)) : fw.value;
   const unitS = t.s + fw.unitOffset;
   const unit: UnitRead = { unit: unitV1(unitOfWord(fw.unitWord)!, fw.unitWord), s: unitS, e: t.e, next: c + 1 };
@@ -1082,6 +1117,63 @@ function sizeOnly(text: string, toks: readonly Tok[], fx: Effects, s: number, k:
 export function isTemperatureOrTime(toks: readonly Tok[], k: number): boolean {
   const t = toks[k];
   return isSym(t, "°", "℉", "℃") || (isWord(t) && TIME_WORDS.has(t.lower));
+}
+
+/**
+ * CAN-SIZE DESIGNATION (semantic-v2, CONTRACT §12.9): "#10", "No. 303", "No 2", "number 2" — or the same in brackets —
+ * right before a container unit names the container's size class; it is not an amount. Returns the index after it, or `k`.
+ */
+export function canSizeDesignationAt(toks: readonly Tok[], k: number): number {
+  const designation = (list: readonly Tok[], i: number): number => {
+    if (isSym(list[i], "#") && list[i + 1]?.kind === "num" && adjacent(list[i], list[i + 1])) return i + 2;
+    if (isWord(list[i], "no", "number", "nr")) {
+      let j = i + 1;
+      if (isSym(list[j], ".") && adjacent(list[i], list[j])) j++;
+      if (list[j]?.kind === "num") return j + 1;
+    }
+    return i;
+  };
+  const t = toks[k];
+  let end = k;
+  if (isGroup(t)) end = designation(t.children, 0) === t.children.length && t.children.length > 0 ? k + 1 : k;
+  else end = designation(toks, k);
+  if (end === k) return k;
+  const u = toks[end];
+  const unit = isWord(u) ? unitOfWord(u.text) : null;
+  return unit !== null && CONTAINER_UNITS.has(unit) ? end : k;
+}
+
+/**
+ * COUNT WORD BEGINNING THE NAME (semantic-v2, CONTRACT §12.A A1 as refined): a SINGULAR, non-container count unit right
+ * after a count above one, followed by a PLURAL countable food, begins the food's name — "2 strip steaks", "4 rib eye
+ * steaks", "4 cube steaks", "2 sheet cakes", "2 wedge salads" → `each`, the whole name kept. Before an uncounted food it
+ * is a sloppy plural and stays the unit ("2 clove garlic", "1 1/2 stick butter"); containers are always the unit ("2 can
+ * tomatoes"); a count of one or below keeps the unit ("1 bunch scallions", "1/2 stick butter"); a plural count word agrees
+ * ("2 strips bacon").
+ */
+export function countWordBeginsName(text: string, toks: readonly Tok[], unitRead: UnitRead, value: Rational): boolean {
+  return cmp(value, rational(BigInt(1))) > 0 && countWordBeforePluralFood(text, toks, unitRead);
+}
+
+/** The count-word half of `countWordBeginsName`: a singular non-container count word followed by a plural countable food. */
+export function countWordBeforePluralFood(text: string, toks: readonly Tok[], unitRead: UnitRead): boolean {
+  const u = unitRead.unit;
+  if (u.dimension !== "count" || u.canonical === "each" || PACKAGE_UNITS.has(u.canonical)) return false;
+  const written = text.slice(unitRead.s, unitRead.e).toLowerCase().replace(/\.$/, "");
+  if (written.endsWith("s")) return false;
+  // the food after it, up to a comma, a bracket or a joining word: its last word must be a plural noun
+  let k = unitRead.next;
+  let last: string | null = null;
+  while (isWord(toks[k]) && !FUNCTION_WORDS.has((toks[k] as { lower: string }).lower)) {
+    last = (toks[k] as { lower: string }).lower;
+    k++;
+  }
+  return last !== null && pluralNoun(last);
+}
+
+/** A plural noun by its form ("steaks", "cakes", "salads"; not "asparagus", "hummus", "swiss"), or a zero plural. */
+function pluralNoun(w: string): boolean {
+  return (w.length > 2 && w.endsWith("s") && !/(?:ss|us|is)$/.test(w)) || INVARIANT_PLURALS.has(w);
 }
 
 /**

@@ -20,7 +20,7 @@ import {
   TIME_LABEL_WORDS, TIME_WORDS, WEAK_INSTRUCTION_VERBS, YIELD_WORDS, unitOfWord,
 } from "./lexicon";
 import { findUnstated, unstatedAt } from "./remarks";
-import { isTemperatureOrTime } from "./amount";
+import { canSizeDesignationAt, isTemperatureOrTime } from "./amount";
 
 /** True when the line opens with a numeral, a vulgar fraction or a cardinal/fraction word (after "about", "~"). */
 export function numericLead(toks: readonly Tok[]): boolean {
@@ -105,7 +105,7 @@ export function nonIngredientReason(toks: readonly Tok[]): ReasonCode | null {
   if (methodStep(toks) || creditLine(toks) || pageFurniture(toks) || equipmentPhrase(toks) || scalingControls(toks)) return "not_an_ingredient";
   // headings
   if (isSym(last, ":")) return "section_heading"; // "For the sauce:", "Marinade:"
-  if (isSym(toks[0], "#")) return "section_heading";
+  if (isSym(toks[0], "#") && canSizeDesignationAt(toks, 0) === 0) return "section_heading"; // ("#10 can tomatoes" is a can size)
   if (first && HEADING_WORDS.has(first.lower) && !hasNumber(toks)) return "section_heading";
   const lastWord = ws[ws.length - 1];
   if (lastWord && HEADING_WORDS.has(lastWord.lower) && ws.length <= 4 && !hasNumber(toks) && !toks.some(isGroup)) return "section_heading"; // "Dry ingredients"

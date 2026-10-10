@@ -91,3 +91,36 @@ describe("size words (§12.10)", () => {
     },
   );
 });
+
+// --- fix round 1 (R1 H6, M4; CONTRACT §12.A A1 as refined, §12.9) --------------------------------------------------------
+
+describe("a singular count word after a count above one, before a plural food, begins the name (§12.A A1)", () => {
+  it.each([
+    ["2 strip steaks", "strip steaks"], ["4 cube steaks", "cube steaks"], ["2 sheet cakes", "sheet cakes"], ["4 rib eye steaks", "rib eye steaks"],
+    ["4 strip loin steaks", "strip loin steaks"], ["2 wedge salads", "wedge salads"], ["2 half-pound strip steaks", "strip steaks"], ["2 large strip steaks", "strip steaks"],
+  ])("%s → each, %s", (line, name) => {
+    expect(read(line)).toMatchObject({ status: "ready", name, unit: { canonical: "each" } });
+  });
+
+  it.each([
+    ["2 clove garlic", "clove", "garlic"], ["1 1/2 stick butter", "stick", "butter"], ["2 can tomatoes", "can", "tomatoes"], ["1 bunch scallions", "bunch", "scallions"],
+    ["1/2 stick butter", "stick", "butter"], ["1 small head garlic", "head", "garlic"], ["2 strips bacon", "strip", "bacon"], ["3 head lettuce", "head", "lettuce"],
+    ["2 stalk asparagus", "stalk", "asparagus"],
+  ])("negative control, the count word stays the unit: %s", (line, unit, name) => {
+    expect(read(line)).toMatchObject({ status: "ready", name, unit: { canonical: unit } });
+  });
+});
+
+describe("can-size designations (§12.9, R1 M4)", () => {
+  it.each([
+    ["1 #10 can diced tomatoes", "1", "can", "#10", "diced tomatoes"], ["2 No. 303 cans cut green beans", "2", "can", "No. 303", "cut green beans"],
+    ["1 (No. 2) can corn", "1", "can", "No. 2", "corn"], ["#10 can diced tomatoes", "1", "can", "#10", "diced tomatoes"],
+  ])("%s → %s %s, note %s", (line, q, unit, note, name) => {
+    expect(read(line)).toMatchObject({ status: "ready", name, quantity: { numerator: q }, unit: { canonical: unit }, note });
+  });
+
+  it("negative control: a hash heading and a number with no container", () => {
+    expect(read("# Sauce").status).toBe("unsupported");
+    expect(read("1 #2 pencil").status).not.toBe("ready");
+  });
+});

@@ -28,14 +28,14 @@
 import { REASONS, type AmountUnstated, type IngredientEngine, type ParsedIngredientV1, type ReasonCode, type SpanField, type UnitV1 } from "../../contract";
 import { cmp, fromExactQuantity, rational, toExactQuantity } from "../../rational";
 import { validateParsedIngredientV1 } from "../../validate";
-import { amountStartsAt, foreignSystemRemark, groupAmount, isPriceGroup, PACKAGE_UNITS, readAmountPhrase, readStatedAmount, placeSecondary, sumInSmallest, type AmountSlots } from "./amount";
+import { amountStartsAt, foreignSystemRemark, groupAmount, isPriceGroup, PACKAGE_UNITS, readAmountPhrase, readStatedAmount, placeSecondary, sameAmount, sumInSmallest, type AmountSlots } from "./amount";
 import { equipmentShape, nonIngredientReason, numericLead } from "./classify";
 import { adjacent, isGroup, isNumberish, isSym, isWord, lex, type Tok } from "./lexer";
-import { BULLETS, CONTAINER_UNITS, FRUIT_PART_WORDS, SERVING_LABEL_WORDS, UNIT_WORDS_IN_FOOD_NAMES, FUNCTION_WORDS, INVARIANT_PLURALS, MEASURE_ADJECTIVES, PREP_ADVERBS, REMARK_WORDS, SIZE_WORDS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
+import { APPROX_WORDS, BULLETS, CONTAINER_UNITS, FRUIT_PART_WORDS, SERVING_LABEL_WORDS, UNIT_WORDS_IN_FOOD_NAMES, FUNCTION_WORDS, INVARIANT_PLURALS, MEASURE_ADJECTIVES, PREP_ADVERBS, REMARK_WORDS, SIZE_WORDS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
 import { numberInProductName, readNameRegion, type NameReading } from "./name";
 import { normalizeLine } from "./normalize";
-import { classifyPiece, splitOr, splitTopLevel, textOf, trimEdges, unstatedAt } from "./remarks";
-import { categoryNoun, foodHead, isRemarkOption, shareOptions, uniqueOptions, varietiesOf, withKind } from "./alternatives";
+import { classifyPiece, remarkMeasuresAnother, remarkRestatement, remarkSecondAmount, splitOr, splitTopLevel, textOf, trimEdges, unstatedAt } from "./remarks";
+import { andJoinsTwoFoods, categoryNoun, foodHead, isRemarkOption, shareOptions, uniqueOptions, varietiesOf, withKind } from "./alternatives";
 import { emptyEffects, mergeEffects, type AmountReading } from "./types";
 import { readUnit, type UnitRead } from "./unit";
 
@@ -594,6 +594,12 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
       push(fx.reasons, "unclassified");
       severalFoods = true; // §12.7 (g): different foods sharing one amount — no name is privileged
     }
+    // (semantic-v2, §12.A A4) "2 cups strawberries and blueberries", "2 tbsp butter and oil": two foods joined by "and" in
+    // the name, with no comma, share the amount too (a fixed compound or modifiers of one head stay one food)
+    if (!severalFoods && nr.name !== null && nr.options === null && listOptions.length === 0 && amt.amountWritten && andJoinsTwoFoods(nr.name)) {
+      push(fx.reasons, "unclassified");
+      severalFoods = true;
+    }
   }
   tails.forEach((seg, idx) => {
     if (idx === usedTail || seg.length === 0) return;
@@ -628,12 +634,49 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
     if (plain) {
       noteRun.push(pfx.notes[0]);
       for (const r of pfx.reasons) push(fx.reasons, r);
+      fx.amountRemarks.push(...pfx.amountRemarks);
       return;
     }
     flushRun();
     mergeEffects(fx, pfx);
   });
   flushRun();
+
+  // (semantic-v2, CONTRACT §12.11, §12.A A3) remarks that state an amount: a second amount (another product, a substitute,
+  // another state, the whole an extracted part comes from, another food) is placed by nobody → review; a restatement of
+  // the same food, whole or prepared ("1 cup chopped onion (1 medium onion)", "1 large onion (about 2 cups chopped)") is an
+  // equivalent, and the note keeps only its describing words
+  for (const r of fx.amountRemarks) {
+    if (remarkSecondAmount(r.toks) || remarkMeasuresAnother(r.toks, nr.name, text)) {
+      fx.unassigned++;
+      continue;
+    }
+    // (only a line with its own amount has an amount to restate)
+    const re = quantity === null ? null : remarkRestatement(text, r.toks);
+    if (re === null || re.amount.quantity?.kind !== "exact") continue;
+    const rq = re.amount.quantity;
+    const ru: UnitV1 = re.amount.unit ?? { canonical: "each", dimension: "count", source: "" };
+    if (ru.dimension === "imprecise") continue; // ("(a pinch)": no amount to restate with)
+    if (unit !== null && quantity?.kind === "exact" && ru.dimension === unit.dimension && (ru.dimension === "mass" || ru.dimension === "volume") && sameAmount(quantity, unit, rq, ru) === false) {
+      fx.unassigned++;
+      continue;
+    }
+    if ((unit !== null && ru.canonical === unit.canonical) || slots.equivalents.some((x) => x.unit.canonical === ru.canonical)) continue;
+    slots.equivalents.push({ quantity: rq, unit: ru });
+    push(fx.reasons, "equivalent_quantity_stated");
+    const nameWords = new Set((nr.name ?? "").toLowerCase().split(/\s+/));
+    const describing = r.toks.filter((t) => isWord(t) && !nameWords.has(t.lower) && !APPROX_WORDS.has(t.lower) && (SIZE_WORDS.has(t.lower) || TRAILING_PREP_WORDS.has(t.lower) || PREP_ADVERBS.has(t.lower) || (REMARK_WORDS.has(t.lower) && !["more", "less", "so", "extra"].includes(t.lower)) || ["ripe"].includes(t.lower)));
+    // (the remark may share its note piece with plain remarks after it: "about 1 medium, divided")
+    const remarkText = textOf(text, r.toks);
+    const at = fx.notes.findIndex((n) => n.s === r.s && n.text.startsWith(remarkText));
+    if (at >= 0) {
+      const rest = fx.notes[at].text.slice(remarkText.length).replace(/^\s*,\s*/, "");
+      const kept = describing.map((t) => (t as { text: string }).text).join(" ");
+      const joined = [kept, rest].filter((x) => x.length > 0).join(", ");
+      if (joined.length > 0) fx.notes[at] = { s: fx.notes[at].s, text: joined };
+      else fx.notes.splice(at, 1);
+    }
+  }
 
   // Alternatives (CONTRACT §7.8): every option, in order; the name is then null. Options are completed only
   // where the grammar says so (alternatives.ts); a word is never invented and an option never dropped.

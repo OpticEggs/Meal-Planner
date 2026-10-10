@@ -16,7 +16,7 @@ import { nonIngredientReason } from "../../src/ingredient/semantic-v2/classify";
 import { lex } from "../../src/ingredient/semantic-v2/lexer";
 import { nameLeftoverGuard, numberInProductName, postFoodCountUnit } from "../../src/ingredient/semantic-v2/name";
 import { fractionUnitWord } from "../../src/ingredient/semantic-v2/quantity";
-import { remarkSecondAmount } from "../../src/ingredient/semantic-v2/remarks";
+import { remarkMeasuresAnother, remarkSecondAmount } from "../../src/ingredient/semantic-v2/remarks";
 import { read } from "./helpers";
 
 const toks = (s: string) => lex(s).tokens;
@@ -168,6 +168,27 @@ describe("product numbers, fraction units, remark amounts, foreign units", () =>
     expect(remarkSecondAmount(toks("use half for table salt"))).toBe(true);
     expect(remarkSecondAmount(toks("about 3 medium"))).toBe(false);
     expect(remarkSecondAmount(toks("from a jar"))).toBe(false);
+    // (§12.A A3) "from" alone decides nothing; "juice of" names the source of an extracted part
+    expect(remarkSecondAmount(toks("from 1 large onion"))).toBe(false);
+    expect(remarkSecondAmount(toks("juice of 1 lime"))).toBe(true);
+  });
+  // CONTRACT §12.A A3: an extracted part's whole, another state or another food, beside the name
+  it("remarkMeasuresAnother: an amount remark measuring something other than the named food as prepared", () => {
+    const another = (remark: string, name: string) => remarkMeasuresAnother(toks(remark), name, remark);
+    expect(another("1 lime", "lime juice")).toBe(true); // no marker word
+    expect(another("about 1 lemon", "lemon juice")).toBe(true);
+    expect(another("from 2 oranges", "zest")).toBe(true);
+    expect(another("from 2 slices bread", "breadcrumbs")).toBe(true); // another food
+    expect(another("about 1 cup soaked", "chickpeas")).toBe(true); // another state
+    // restatements of the same food, whole or prepared, with or without "from"
+    expect(another("1 medium onion", "chopped onion")).toBe(false);
+    expect(another("about 2 cups chopped", "onion")).toBe(false);
+    expect(another("from 1 large onion", "chopped onion")).toBe(false);
+    expect(another("from 3 ears", "corn kernels")).toBe(false);
+    expect(another("2 ripe bananas", "mashed banana")).toBe(false);
+    // a describing remark with a number
+    expect(another("cut into 6 pieces", "butter")).toBe(false);
+    expect(another("rinsed about 3 times", "rice")).toBe(false);
   });
   it("foreignSystemRemark: a non-US system named for a US volume", () => {
     expect(foreignSystemRemark(toks("1 pint milk (UK)"), unitV1("pint", "pint"))).toBe(true);

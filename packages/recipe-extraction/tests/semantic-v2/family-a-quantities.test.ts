@@ -219,3 +219,51 @@ describe("implied one and fruit parts", () => {
     expect(read("Leaves of 2 sprigs thyme").status).toBe("needs_review");
   });
 });
+
+// --- fix round 1 (R1 H3, M5; CONTRACT §12.A A3, §12.1, §12.9, §12.12) -------------------------------------------------------
+
+describe("remark amounts: extracted parts vs prepared food (§12.A A3, R1 H3)", () => {
+  it.each([
+    "2 tbsp lime juice (1 lime)", "3 tablespoons lemon juice (about 1 lemon)", "2 tbsp lime juice (juice of 1 lime)", "3 tbsp orange juice (1 orange)",
+    "1 tbsp zest (from 2 oranges)", "2 tsp grated lemon zest (1 lemon)", "1/2 cup egg whites (from 4 eggs)", "1 cup breadcrumbs (from 2 slices bread)",
+    "3 cups cooked rice (1 cup uncooked)", "2 tbsp lime juice, from 1 lime",
+  ])("the source, another state or another food: %s → needs review, remark kept", (line) => {
+    const r = read(line);
+    expect(r.status).toBe("needs_review");
+    expect(r.reasons).toContain("quantity_unassigned");
+    expect(r.note).not.toBeNull();
+  });
+
+  it.each([
+    ["1 cup chopped onion (1 medium onion)", "1 each", "medium"], ["1 cup grated carrot (2 medium carrots)", "2 each", "medium"],
+    ["2 cups diced tomatoes (about 3 tomatoes)", "3 each", null], ["1 large onion (about 2 cups chopped)", "2 cup", "large; chopped"],
+    ["1 cup mashed banana (2 ripe bananas)", "2 each", "ripe"], ["1 cup chopped onion (from 1 large onion)", "1 each", "large"],
+    ["2 cups corn kernels (from 3 ears)", "3 ear", null], ["1 cup basil leaves (from 1 bunch)", "1 bunch", null], ["1 lb carrots (about 6 medium)", "6 each", "medium"],
+  ])("the same food, whole or prepared: %s → ready, equivalent %s, note %s", (line, eq, note) => {
+    const r = read(line);
+    expect(r).toMatchObject({ status: "ready", note });
+    expect(r.equivalents.map(amountText)).toEqual([eq]);
+  });
+
+  it.each(["6 tbsp butter, cut into 6 pieces", "1 lb chicken, 2 cm cubes", "1 cup water (110°F)", "1 lb ground beef (80/20)", "1 cup rice, rinsed until water runs clear (about 3 times)"])(
+    "negative control, a describing remark with a number: %s → ready, no equivalent",
+    (line) => {
+      const r = read(line);
+      expect(r.status).toBe("ready");
+      expect(r.equivalents).toEqual([]);
+    },
+  );
+});
+
+describe("unnecessary reviews removed (R1 M5)", () => {
+  it.each([
+    ["2 cups minus 1/4 cup sugar", "sugar", "1 3/4", "cup"], ["2 three cheese pizzas", "three cheese pizzas", "2", "each"],
+    ["1 tbsp Heinz 57 sauce", "Heinz 57 sauce", "1", "tbsp"], ["a half-inch piece fresh ginger", "fresh ginger", "1", "piece"],
+  ])("%s → %s", (line, name, q, unit) => {
+    expect(core(read(line))).toEqual({ status: "ready", name, quantity: q, unit });
+  });
+
+  it.each(["1 cup minus 1 cup sugar", "1 cup Flour 2 eggs", "1 cup Parmesan 1 egg"])("negative control: %s → needs review", (line) => {
+    expect(read(line).status).toBe("needs_review");
+  });
+});

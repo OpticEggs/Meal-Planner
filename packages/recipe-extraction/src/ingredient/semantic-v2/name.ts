@@ -13,10 +13,10 @@
  */
 import { adjacent, isGroup, isNumberish, isSym, isWord, type Tok } from "./lexer";
 import {
-  APPROX_WORDS, BULLETS, CARDINALS, CONTAINER_UNITS, COUNTED_COMPONENT_NOUNS, FUNCTION_WORDS, META_NOUNS, PRODUCT_IDENTITY_NOUNS, REMARK_WORDS, SIZE_GRADED_NOUNS, UNIT_WORDS_IN_FOOD_NAMES, FORM_WORDS, LEADING_JUNK, PREP_ADVERBS,
+  APPROX_WORDS, BULLETS, CARDINALS, CONTAINER_UNITS, COUNTED_COMPONENT_NOUNS, FORM_CHOICE_WORDS, FUNCTION_WORDS, META_NOUNS, PRODUCT_IDENTITY_NOUNS, REMARK_WORDS, SIZE_GRADED_NOUNS, UNIT_WORDS_IN_FOOD_NAMES, FORM_WORDS, LEADING_JUNK, PREP_ADVERBS,
   INVARIANT_PLURALS, SIZE_WORDS, TRAILING_COUNT_UNITS, TRAILING_PREP_WORDS, unitOfWord,
 } from "./lexicon";
-import { amountStartsAt, groupAmounts, isPriceGroup, placeSecondary, readAmountPhrase, readStatedAmount, type AmountSlots } from "./amount";
+import { amountStartsAt, countWordBeforePluralFood, groupAmounts, isPriceGroup, placeSecondary, readAmountPhrase, readStatedAmount, type AmountSlots } from "./amount";
 import { classifyGroup, classifyPiece, dropBarePrices, remarkOnly, splitOr, textOf, trimEdges, unstatedAt } from "./remarks";
 import { fractionUnitWord, readNumber } from "./quantity";
 import type { Effects } from "./types";
@@ -148,12 +148,16 @@ function stopAtNumber(text: string, toks: readonly Tok[], fx: Effects): Tok[] {
  * singular component noun whose phrase ends in a singular or mass head ("7 grain cereal", "Chinese 5 spice", "three
  * cheese blend") — a plural head makes the number a count ("3 eggs", "2 cheese pizzas").
  */
-export function numberInProductName(toks: readonly Tok[], i: number): number {
+export function numberInProductName(toks: readonly Tok[], i: number, counted = false): number {
   const t = toks[i];
   if (t?.kind !== "num" && !isWord(t)) return 0;
   const next = toks[i + 1];
   if (t.kind === "num") {
     if (t.form !== "int" || t.script) return 0;
+    // a model number after a brand name ("Heinz 57 sauce"): capitalised word, a number of two digits or more, then a
+    // singular word that is no unit (one digit is more likely a count of another food: "1 cup Parmesan 1 egg")
+    const prev = toks[i - 1];
+    if (t.text.length >= 2 && isWord(prev) && /^\p{Lu}/u.test(prev.text) && unitOfWord(prev.text) === null && isWord(next) && unitOfWord(next.text) === null && !SIZE_WORDS.has(next.lower) && !pluralWord(next.lower) && !isNumberish(toks[i + 2]) && !FUNCTION_WORDS.has(next.lower)) return 1;
     if (isSym(next, "-", "‐", "‑") && adjacent(t, next) && isWord(toks[i + 2]) && adjacent(next, toks[i + 2]) && unitOfWord((toks[i + 2] as { text: string }).text) === null) return 3;
     if (isWord(next) && adjacent(t, next) && unitOfWord(next.text) === null) return 2; // "10X", "7Up"
     if (/^00+$/.test(t.text) && isWord(next) && unitOfWord(next.text) === null) return 1; // "00 flour" (a grade, not a count)
@@ -166,7 +170,8 @@ export function numberInProductName(toks: readonly Tok[], i: number): number {
   const rest: string[] = [];
   for (let k = i + 1; k < toks.length && isWord(toks[k]); k++) rest.push((toks[k] as { lower: string }).lower);
   const head = rest[rest.length - 1];
-  if (head === undefined || pluralWord(head) || TRAILING_COUNT_UNITS.has(unitOfWord(head) ?? "each")) return 0;
+  // (after a count of its own the number names the product whatever the head: "2 three cheese pizzas")
+  if (head === undefined || (pluralWord(head) && !counted) || TRAILING_COUNT_UNITS.has(unitOfWord(head) ?? "each")) return 0;
   // the component must lead to a head ("5 spice powder"), or be the head after another name word ("Chinese 5 spice")
   if (rest.length === 1 && !(i > 0 && isWord(toks[i - 1]))) return 0;
   return 1;
@@ -246,7 +251,8 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
     }
     if (!ctx.verbatim && ctx.amountRead && !ctx.unitWritten && a + 1 < toks.length) {
       const stray = strayAmountAt(text, toks, a);
-      if (stray > a) {
+      // (a number naming the product after the line's count is part of the name: "2 three cheese pizzas", §12.9)
+      if (stray > a && !(ctx.hasQuantity && numberInProductName(toks, a, true) > 0)) {
         // "1 half cup milk", "1 cup 3 eggs": a number after the amount — the amount is not clear
         amountUnclear = true;
         fx.unassigned++;
@@ -262,7 +268,7 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
     if (isWord(t) && a + 1 < toks.length) {
       // (with no amount read before the name, only a weight or volume word: "ounces (1 lb) water")
       const u = readUnit(text, toks, a);
-      if (u && u.next < toks.length && strayUnitWord(text, u, ctx.unitWritten || !ctx.amountRead) && (ctx.amountRead || u.unit.dimension === "mass" || u.unit.dimension === "volume")) {
+      if (u && u.next < toks.length && strayUnitWord(text, toks, u, ctx.unitWritten || !ctx.amountRead, countAboveOne(ctx)) && (ctx.amountRead || u.unit.dimension === "mass" || u.unit.dimension === "volume")) {
         // "2 (1 stick) cups butter", "2-15 oz cans black beans": a unit the amount phrase did not take
         flag();
         fx.notes.push({ s: u.s, text: text.slice(u.s, u.e) });
@@ -359,7 +365,9 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
     const optionalWord = isWord(t, "optional") && i === toks.length - 1;
     const plus = isWord(t, "plus") || (isSym(t, "+") && i > 0);
     const purpose = isWord(t, "for") && i + 1 < toks.length; // "powdered sugar for icing": a purpose is a note
-    const remarkOr = isWord(t, "or") && i + 1 < toks.length && unstatedAt(toks, i + 1) === null && remarkOnly(toks.slice(i + 1)) && !toks.slice(i + 1).some(isNumberish); // "cheese or more"
+    // "cheese or more", "garlic minced or pressed": a remark after "or" — but "fresh oregano or dried" is a choice of forms
+    // (§12.7 d, R1 H4): a form word opening the name and a form word after "or" offer the food in two forms
+    const remarkOr = isWord(t, "or") && i + 1 < toks.length && unstatedAt(toks, i + 1) === null && remarkOnly(toks.slice(i + 1)) && !toks.slice(i + 1).some(isNumberish) && !formChoice(toks, i);
     if (!phrase && !optionalWord && !plus && !purpose && !remarkOr) continue;
     // "salt or to taste", "flour or as needed": the conjunction joins the phrase to the food and is dropped
     let from = i;
@@ -583,11 +591,30 @@ function massOrVolumeWord(text: string, o: readonly Tok[], lead: Tok | undefined
  * unit, only weights, volumes and containers ("2-15 oz cans") — counted portions ("leaf lettuce", "strip
  * steak") may begin a food's name.
  */
-function strayUnitWord(text: string, u: UnitRead, unitWritten: boolean): boolean {
+/**
+ * A CHOICE OF FORMS with no comma or bracket (CONTRACT §12.7 d, R1 H4): a form word modifies the food before "or" (at
+ * `orAt`) and the words after "or" include one — "fresh oregano or dried", "dried dill or fresh", "fresh cherries or
+ * frozen", "chopped fresh parsley or dried".
+ */
+function formChoice(toks: readonly Tok[], orAt: number): boolean {
+  const form = (t: Tok | undefined) => isWord(t) && FORM_CHOICE_WORDS.has(t.lower);
+  // (a form word among the modifiers before the food — not the last word before "or": "chopped fresh parsley or dried";
+  // "salsa homemade or store-bought" is a sourcing remark)
+  return toks.slice(0, Math.max(0, orAt - 1)).some(form) && toks.slice(orAt + 1).some(form);
+}
+
+/** The line's count is above one ("2 strip steaks"; not "1/3 (1 stick) sprig …"). */
+function countAboveOne(ctx: NameContext): boolean {
+  const q = ctx.slots?.quantity;
+  return q?.kind === "exact" && BigInt(q.numerator) > BigInt(q.denominator);
+}
+
+function strayUnitWord(text: string, toks: readonly Tok[], u: UnitRead, unitWritten: boolean, aboveOne: boolean): boolean {
   // "1 slice pound cake", "1 cup cup noodles", "1 package gram crackers": after a written unit, a unit word that
   // begins a food name is food. With no unit written yet ("2 (1 stick) cup rolled oats") it is the stray unit.
   const written = text.slice(u.s, u.e).toLowerCase().replace(/\.$/, "");
   if (unitWritten && UNIT_WORDS_IN_FOOD_NAMES.has(written)) return false;
-  if (!unitWritten) return u.unit.canonical !== "each";
+  // ("2 strip steaks": a singular count word before a plural food begins the name, CONTRACT §12.A A1)
+  if (!unitWritten) return u.unit.canonical !== "each" && !(aboveOne && countWordBeforePluralFood(text, toks, u));
   return u.unit.dimension === "mass" || u.unit.dimension === "volume" || CONTAINER_UNITS.has(u.unit.canonical);
 }
