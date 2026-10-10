@@ -1,6 +1,6 @@
 # Table — Implementation status
 
-_Last updated 2026-10-10 (UTC). Lab branch `claude/quirky-gauss-depmd8` (separate workstream, not merged to `main`): Recipe Extraction Lab Phase 2 (candidate engine `semantic-v1`, registered but not the default — Gate G2 not met; package only, branch `claude/quirky-gauss-depmd8`, merged with `main` `8c9fd8c`; the app is unchanged by it). On `main`: after the EQR correction (row lineage, exact "Have enough" binding and review identity, migration 016), which followed exact quantities for new recipe versions (migration 015, read-only legacy audit, upgrade rehearsal), which followed the recheck correction against the original RIO package (RIO-02 descriptors fixed, RIO-01 bounded, RIO-03 completed), which followed the import-overhaul corrections RIO-01..03 (reconstructed; the owner's package had not arrived), which followed the import overhaul and mobile redesign (B28), which followed the bounded pass B10 partial handoff + continuous URL-to-cart journey + phone upgrade rehearsal, which followed the recheck corrections RUC-01/RUC-02 (pilot on Render Free + Neon), which followed the URL-to-cart reprioritization (B25), which followed the multi-source handoff (recipe links, reviewed import, Budget Bytes lane, where to shop, Instacart list link — fixture-only), which followed B21/B22 (database cook-record invariant, stale cooking events) and the free-hosting research, which followed the visual update (B20) and the cook-record idempotency fix
+_Last updated 2026-10-10 (UTC). Lab branch `claude/quirky-gauss-depmd8` (separate workstream, not merged to `main`): Recipe Extraction Lab Phase 2B (repaired scorer, candidate engine `semantic-v2`, registered but not the default — **Gate G2 not met** on its single fresh holdout-v3 run; package only; merged with `main` `1261cd8`; the app is unchanged by it), after Phase 2 (`semantic-v1`, G2 not met). On `main`: after the EQR correction (row lineage, exact "Have enough" binding and review identity, migration 016), which followed exact quantities for new recipe versions (migration 015, read-only legacy audit, upgrade rehearsal), which followed the recheck correction against the original RIO package (RIO-02 descriptors fixed, RIO-01 bounded, RIO-03 completed), which followed the import-overhaul corrections RIO-01..03 (reconstructed; the owner's package had not arrived), which followed the import overhaul and mobile redesign (B28), which followed the bounded pass B10 partial handoff + continuous URL-to-cart journey + phone upgrade rehearsal, which followed the recheck corrections RUC-01/RUC-02 (pilot on Render Free + Neon), which followed the URL-to-cart reprioritization (B25), which followed the multi-source handoff (recipe links, reviewed import, Budget Bytes lane, where to shop, Instacart list link — fixture-only), which followed B21/B22 (database cook-record invariant, stale cooking events) and the free-hosting research, which followed the visual update (B20) and the cook-record idempotency fix
 (B19, delivery review of fb4d771, gate 2), which followed the integration-preparation pass (B9 deployment candidate, B7 nutrition, B5
 Kroger adapter, B8 checklist)._
 
@@ -14,6 +14,7 @@ Kroger adapter, B8 checklist)._
 | Import-overhaul corrections RIO-01..03 | starting `12434c0` · `bca110e` per-serving rounding toward zero, unit-aware pepper, held pending row edits — verified at `bca110e`. The Recipe Extraction Lab (branch `claude/quirky-gauss-depmd8`) stays a separate, unintegrated workstream; its provenance reconciliation with `bca110e` was prepared here as a patch (the lab branch had moved to `46a6547`) and applied on the lab branch as `034f2c3` after the lab merged `main` `8c9fd8c` |
 | Import overhaul + redesign (B28) | starting `cb7b56e` · `dfb34cc` member photo backend (worker) · `8e6bd6e` parser, review, seasonings, photo policy, design — verified at `8e6bd6e` |
 | Recipe Extraction Lab, Phases 0–1 (package only — **the app is unchanged**; branch `claude/quirky-gauss-depmd8`, not merged to `main`) | `0306af8` contract v1 · `1079db4`, `d928aea` frozen legacy engines, validators, CLI (worker A) · `2b55fda`, `47ebce6` (holdout freeze), `adc1e06` corpus + scorer (worker B) · `3ca998a` integration — package suite and targeted app checks at `3ca998a` (`evidence/2026-10-09-recipe-extraction-lab/verify-3ca998a/`); verify-all not run (no app code changed) |
+| Recipe Extraction Lab, Phase 2B (package only — **the app is unchanged**; same branch, not merged) | scorer outcomes v3 (`bench/outcomes.ts` `7821e853…`; SCORE-01/02) · candidate `semantic-v2` frozen at `f379e06` (engine = reviewed `fc37ce7`, digest `8fef38e0…`) · holdout-v3 frozen `4aa0ad2` (`fd4a989f…`) · exposure audit `f6cc0c6` · single scoring run `fdbcfd1` (G2 not met) · test-setup fix `7312648` · merge of `main` `1261cd8` `d916c14` · live-Table provenance `a535dc9` — verified at `90292c1` |
 | Recipe Extraction Lab, Phase 2 (package only — **the app is unchanged**; same branch, not merged) | `09d574c`, `ee0442f` predeclared evaluation plan · `c106df2`, `363cf6e`, `46a6547` holdout-v2 (blind labels, independent check, freeze; evaluation worker) · `3c19167`…`82ebc0d`, `65912e9`, `56eafe4` engine `semantic-v1` (isolated implementation worker; three independent review rounds) · `16d7995` single holdout-v2 evaluation of `56eafe4` — package suite, deterministic bench, CLI, root typecheck, root vitest 1078/1078 and `next build` at `16d7995` (`evidence/2026-10-09-recipe-extraction-phase2/verify-16d7995/`); Playwright, mutation and verify-all not run (no app code changed) |
 | B10 partial handoff, URL-to-cart journey, Kroger callback same-origin redirect, migration lock | starting `3ac64f6` · `3378e01` migration advisory lock (worker) · `7c79eb6` B10 + journey + callback fix — verified at `7c79eb6` |
 | Recheck corrections RUC-01/RUC-02 + Kroger UI tests | `c9a95b6` — verified at `c9a95b6` |
@@ -92,6 +93,33 @@ checks 57 killed / 0 survived / 0 error, sources restored. The first full run, o
 browser test (T09) — root-caused to a client race and fixed in `c19bd5a` (D77); that run is kept in
 `verify-4d0e822-FAIL/`. Red-before-green, the local production-mode check and the upgrade check are in
 the same folder (see ACCEPTANCE "Integration preparation").
+
+## Recipe Extraction Lab — Phase 2B (2026-10-10; not wired into the app)
+
+**Scorer.** The scorer was repaired first, as outcomes v3: SCORE-01 makes sensitivity (b) label-based; SCORE-02 parses every line twice, runs the full validator on both parses, and gives CE lines no S codes. Outcomes v2 is archived and still reproduces the historical report byte for byte. The repair was oracle-checked independently and mutation-tested.
+
+**Candidate.** A new candidate, `semantic-v2`, repaired families A–D. It passes all 1 114 exposed regression cases: 1 076 exact and 38 safe abstentions. After four review rounds, the engine, the recognised-food vocabulary, CONTRACT §12/§12.A and the scorer were frozen.
+
+**Holdout-v3.** A new holdout-v3 (369 lines) was written blind in a private workspace and label-checked blind (45/46). Disputed labels were adjudicated from the contract, and the set was frozen before scoring.
+
+**Single scoring run (`fdbcfd1`).**
+- C1 **286/292 = 97.95 %** (Wilson 95.6–99.1 %): A1 not met.
+- **4** high-severity false certainties (0075 `tub`, 0113 another-food remark, 0140 `peas and fava beans`, 0297 the debatable `strip steak`): A3 not met.
+- S4 = 3: A4 not met.
+- A2, A5, A6 and A7 met.
+
+The reviewer R1 recomputed the run independently and found it identical. The FAIL holds without any disputed or debatable case.
+
+On exposed material the candidate is perfect (dev, holdout-v1 and holdout-v2 all 100 %). The gap to fresh data is the finding. **Gate G2 not met**: the default stays `legacy-table-import-2`, no adapter exists, and work stops at this result; holdout-v3 is now exposed.
+
+Docs: `recipe-extraction/BENCHMARK-v3.md`, `PHASE-2B-DISPOSITIONS.md`, `PHASE-2B-PLAN.md`, `EVALUATION-PLAN-v3.md`; DECISIONS D126. Checks at `90292c1`:
+- package typecheck;
+- package tests 5099 passed, 11 skipped (ledger unchanged);
+- mutations 45/45 as expected;
+- root typecheck;
+- root vitest 1177/1177;
+- `next build`;
+- app code identical to `main` `1261cd8`.
 
 ## Recipe Extraction Lab — Phase 2 (2026-10-09; not wired into the app)
 

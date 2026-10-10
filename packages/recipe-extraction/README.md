@@ -29,12 +29,27 @@ The CLI reads local files only and refuses URLs.
 |---|---|
 | `src/contract.ts`, `src/rational.ts` | v1 types, unit registry, reason/diagnostic codes; exact BigInt rationals |
 | `src/legacy/` | **Frozen copies** of Table import 2's parsers at `cb7b56e` (+ `PROVENANCE.json`); parity with the live Table modules is checked while a live file still equals the baseline; for the ingredient line, which `main` rewrote, `tests/parity/baseline-snapshot.json` (hashes of the frozen outputs) is the guard |
-| `src/ingredient/`, `src/page/` | Engines (`legacy-table-import-2` — the default, `legacy-table-import-2+suggestion`, Phase 2 candidate `semantic-v1` in `src/ingredient/semantic/`) and `extractRecipePage` |
+| `src/ingredient/`, `src/page/` | Engines (`legacy-table-import-2` — the default, `legacy-table-import-2+suggestion`, Phase 2 candidate `semantic-v1` in `src/ingredient/semantic/` (frozen), Phase 2B candidate `semantic-v2` in `src/ingredient/semantic-v2/`; neither is the default) and `extractRecipePage` |
 | `src/validate.ts` | Runtime validators for every contract rule |
 | `bin/recipe-lab.ts` | Fixture-only CLI |
 | `fixtures/` | Benchmark corpus (dev, frozen holdout-v1 — exposed — and frozen holdout-v2), pages, `MANIFEST.json`, `FREEZE.json`, `FREEZE-v2.json`, `LABEL-CHANGES.md` |
 | `bench/` | Label loader/validator, comparison, Wilson intervals, scorer, outcome classes and acceptance (`outcomes.ts`, EVALUATION-PLAN-v2), report, invariants, mutation controls |
 | `tests/` | Package tests (`@/` resolves to Table's `src` only for parity tests) |
+
+## Status (2026-10-10)
+
+Phase 2B repaired the scorer (outcomes v3) and built a second candidate, `semantic-v2` (`src/ingredient/semantic-v2/`). It
+fixes every reported failure: 1 114 exposed regression cases pass, with 1 076 exact readings and 38 safe abstentions. A
+counted line is `ready` only with a recognised food; an unknown food goes to `needs_review` with its text kept and no
+amount invented.
+
+On its single scoring run on the fresh holdout-v3, `semantic-v2` read 286/292 clear lines (97.95 %) and produced 4
+high-severity false certainties (S4 = 3). **Gate G2 was not met**, so `DEFAULT_ENGINE_ID` stays `legacy-table-import-2`.
+
+Results: `docs/table/recipe-extraction/BENCHMARK-v3.md`. Dispositions: `PHASE-2B-DISPOSITIONS.md`. The required
+regression harness is `tests/regressions/`; the mutation runner is `tools/mutation/`.
+
+The Table app still does not import this package.
 
 ## Status (2026-10-09)
 

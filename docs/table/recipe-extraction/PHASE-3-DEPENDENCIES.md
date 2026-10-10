@@ -16,7 +16,7 @@ _2026-10-09, coordinator, read-only. Supersedes the "replace Table's parser" pre
 
 ## 2. Remaining Phase 3 questions (to decide before any adapter code)
 
-**Engine readiness first.** Phase 2's candidate `semantic-v1` did **not** meet Gate G2 on the fresh holdout-v2
+**Engine readiness first — still not met (2026-10-10).** Phase 2B's candidate `semantic-v2` did **not** meet Gate G2 on the fresh holdout-v3 either (`BENCHMARK-v3.md`: C1 97.95 %, 4 high-severity false certainties, S4 3), so option (b) still has no engine to delegate to, and holdout-v3 is now exposed. The Phase 2 record follows. Phase 2's candidate `semantic-v1` did **not** meet Gate G2 on the fresh holdout-v2
 (`BENCHMARK-v2.md` §2: C1 93.7 %, 5 high-severity false certainties, S3/S4/S5/S6 non-zero), and the reviewer's
 known defects K1–K4 are open. Option (b) below should not start until a repaired engine meets G2 on a **new** fresh
 holdout (holdout-v2 is now exposed). Option (a), a shadow comparison only, does not need G2 but must not tune the
@@ -71,3 +71,22 @@ hashes, the baseline commit `cb7b56e` and `tests/parity/baseline-snapshot.json` 
 _Applied by the lab session as `034f2c3` after merging `main` `8c9fd8c` (`54c5629`), on top of the Phase 2 work; the
 lab suite there reads 1917 passed, 11 skipped (the pesto case is now a passing regression, so there is no expected
 failure). The 920 above is the count measured on the earlier lab head `dee4ed0`._
+
+## 5. Reconciliation with `main` `1261cd8` (RIO recheck, exact quantities) — 2026-10-10
+
+_Lab session, when it merged `main` `1261cd8` (`d916c14`). Read-only notices from the Table session:
+`docs/table/LAB-SOURCE-DELTA-2026-10-09.md`, `LAB-QUANTITY-INTERFACE-2026-10-10.md`, `LAB-QUANTITY-INTERFACE-EQR-2026-10-10.md`.
+No engine, contract, label or plan changed._
+
+| Area | Change on `main` | Effect on §2–§3 |
+|---|---|---|
+| Seasonings (`9f7836f`, D130) | `isHouseholdSeasoning(name, unit?, descriptors?)`; a descriptor that changes which salt or pepper it is (`salt (smoked)`, `pepper (white)`) is folded into the name before the decision | §1's "decided on the name" and §4's "and the amount's unit" now read "on the name, its descriptors and the amount's unit". The §2.2 mapping must pass the v1 `note` as descriptors. The engine keeps reporting `salt (smoked)` as stated; the policy stays Table's |
+| Exact quantities (`dbc105d`, `7332b06`; D133, D136–D138; migrations 015–016) | new recipe versions keep the exact whole-recipe amount and its serving basis next to the stored decimal; purchasing uses exact fractions (`src/domain/exact.ts`) | §3's limitation now applies only to legacy rows. A confirmed import hands Table the whole-recipe amount and the servings as the server-internal `exactAmount`/`exactServings` (the v1 `{numerator, denominator}` maps one-to-one onto `exact_amount`). Table divides once and keeps both, and checks the decimal against them. An adapter must never pre-round. An import needs no row lineage (`sourceRowId`), because it creates a new recipe |
+| `src/domain/units.ts` (`dbc105d`) | new `unitFactor` helper | none for the frozen copies (the excerpted and replaced parts are unchanged) |
+
+**Provenance.** `src/legacy/PROVENANCE.json` `liveTableObserved` now records `main` `1261cd8`:
+- `ingredient-line.ts` `bf85fd11…`;
+- `units.ts` `9ea07345…`.
+
+The previous record is kept in its note (`a535dc9`). The frozen copies, `baseline-snapshot.json` and every label are
+unchanged.

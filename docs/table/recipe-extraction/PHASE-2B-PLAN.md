@@ -110,3 +110,39 @@ reproducible; the repairs go into a copy under a new id.
    vocabulary, contract and scorer are frozen whatever it finds, and any residual HIGH rates are recorded as known risk
    before the single holdout-v3 evaluation. There will be no further repair round before the evaluation.
 
+
+## 7. Outcome (2026-10-10)
+
+Steps 1–10 were carried out as planned.
+
+**Gate G2: FAIL** (`BENCHMARK-v3.md`). On the single holdout-v3 run, `semantic-v2` scored:
+- C1 286/292 = 97.95 % (A1 not met);
+- 4 high-severity false certainties (A3 not met);
+- S4 = 3 (A4 not met);
+- A2, A5, A6 and A7 met.
+
+R1's independent recomputation is identical. The FAIL holds without any disputed or debatable case.
+
+**The work stops here, as §4 step 10 and the brief require:**
+- no repair on this run;
+- no automatic new holdout;
+- no integration and no default switch;
+- holdout-v3 is now exposed.
+
+Finding-by-finding dispositions: `PHASE-2B-DISPOSITIONS.md`.
+
+**After the run:**
+- a test-setup fault in `holdout3.test.ts` was fixed (`7312648`; the scorer is unchanged);
+- `main` `1261cd8` was merged (`d916c14`);
+- the live-Table provenance record was updated (`a535dc9`).
+
+The final verification ran at `90292c1` (`evidence/…/verify-final/`).
+
+| Commit | Role |
+|---|---|
+| `8c9fd8c` | `main` at the start (PR base); `8131fe0` = Phase 2 delivered head |
+| `f379e06` | candidate freeze (engine = reviewed `fc37ce7`); freeze record `f847f3a`; mutations at freeze `14d9438` |
+| `4aa0ad2` | holdout-v3 freeze |
+| `f6cc0c6` | exposure audit; the scoring run's commit |
+| `fdbcfd1` | scoring report committed |
+| `90292c1` | tested commit (`main` `1261cd8` merged) |
