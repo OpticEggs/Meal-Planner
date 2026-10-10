@@ -4,8 +4,9 @@
 All sources are previously published, EXPOSED development material (never fresh evidence):
   1. the Phase 2B corpus `tests/regressions/exposed-regressions-2b.jsonl` (1 173 entries; its labels as reviewed in 2B);
   2. coordinator-labels-2c.tsv: the PHASE-2C-PLAN finding-ledger rows and their controls (CONTRACT-v1 §12, §13);
-  3. reviewer R1's published probe files with R1's own labels: round 4 new probes (`probes-r4-new.tsv`) and every
-     earlier round (`probes-prior-round4.tsv`, which carries rounds 1, 1-supplement, 2 and 3).
+  3. reviewer R1's published probe files with R1's own labels: round 4 new probes (`probes-r4-new.tsv`), every
+     earlier round (`probes-prior-round4.tsv`, which carries rounds 1, 1-supplement, 2 and 3), and the Phase 2C review
+     rounds (`review-r1-round1/probes-r6-new.tsv`; labels written from §7/§12/§13 before any engine run).
 Deduplicated by normalized input. Priority: coordinator 2C > Phase 2B corpus > R1 round 4 new > R1 earlier rounds.
 
 Prospective relabels (CONTRACT-v1 §13.1, applied mechanically and logged to relabels-13-1.tsv): a label whose unit is
@@ -99,8 +100,10 @@ for line in open(os.path.join(pkg, "tests/regressions/exposed-regressions-2b.jso
     add(c)
 
 # 3. R1 probes: round 4 new, then the earlier rounds
-for fname, kind in (("probes-r4-new.tsv", "candidate-review-r1-round4"), ("probes-prior-round4.tsv", "candidate-review-r1-earlier")):
-    for n, line in enumerate(open(os.path.join(probes, fname), encoding="utf-8"), start=1):
+r1c = os.path.join(root, "docs/table/evidence/2026-10-10-recipe-extraction-phase2c")
+for fdir, fname, kind in ((probes, "probes-r4-new.tsv", "candidate-review-r1-round4"), (probes, "probes-prior-round4.tsv", "candidate-review-r1-earlier"),
+                          (os.path.join(r1c, "review-r1-round1"), "probes-r6-new.tsv", "phase2c-review-r1-round1")):
+    for n, line in enumerate(open(os.path.join(fdir, fname), encoding="utf-8"), start=1):
         if line.startswith("#") or not line.strip(): continue
         cols = line.rstrip("\n").split("\t")
         inp, exp, flags = parse_row(cols)
@@ -109,6 +112,9 @@ for fname, kind in (("probes-r4-new.tsv", "candidate-review-r1-round4"), ("probe
                  "family": family_of_group(group), "firm": "D" not in flags, "expect": exp}
         writes_declared = any(t.lower() in DECLARED_WORDS for t in re.findall(r"[A-Za-z]+", inp))
         if group in UNKNOWN_MEASURE_GROUPS and exp["status"] == "needs_review" and "S" in flags and not writes_declared:
+            entry["noAmount"] = True
+        # Phase 2C round 1 (R1 labels follow §13.1/§13.2: name = the food, quantity/unit/package null)
+        if group in ("C-measure6", "D-alias6") and exp["status"] == "needs_review" and exp["quantity"] is None and exp["unit"] is None:
             entry["noAmount"] = True
         relabel_13_1(entry)
         add(entry)
