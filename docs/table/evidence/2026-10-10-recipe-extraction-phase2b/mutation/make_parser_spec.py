@@ -107,9 +107,10 @@ M.append({"id": "P-food-head-off", "description": "recognised-food requirement d
           "killedBy": [safe(RF, "a capitalised word is accepted as a proper name or brand before a food head, a lower-case unknown word is not"),
                        safe(RU, "never unsupported, never dropped: an unrecognised head is not a non-ingredient shape")],
           "expect": "KILLED"})
+MG = "R1 round 3, item 1: the word right after a count"
 M.append({"id": "P-measure-gerund-off", "description": "gerund measures accepted as modifiers again ('1 helping mashed potatoes' read with a count)",
           "file": S + "foods.ts", **early_return("export function measureGerund(word: string): boolean {", "false"),
-          "tests": [HARNESS], "killedBy": [reg("1 helping mashed potatoes"), reg("1 dusting cocoa powder"), reg("1 drizzling warm honey")], "expect": "KILLED"})
+          "tests": [HARNESS, "tests/semantic-v2/recognised-food.test.ts"], "killedBy": [safe(MG, "measureGerund: a measure noun in -ing, not a culinary-purpose word or a food"), reg("1 helping mashed potatoes"), reg("1 dusting cocoa powder")], "expect": "KILLED"})
 M.append({"id": "P-homograph-off", "description": "a food homograph after a capitalised brand read as food again ('1 Big Green Egg' ready)",
           "file": S + "foods.ts", **early_return("export function homographHeadAfterCapital(name: string): boolean {", "false"),
           "tests": [HARNESS], "killedBy": [reg("1 Big Green Egg"), reg("1 Kamado Joe")], "expect": "KILLED"})

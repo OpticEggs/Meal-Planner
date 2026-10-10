@@ -579,19 +579,20 @@
    "find": "export function measureGerund(word: string): boolean {",
    "replace": "export function measureGerund(word: string): boolean {\n  if (Number.isFinite(0)) return false;",
    "tests": [
-    "tests/regressions/semantic-v2-regressions.test.ts"
+    "tests/regressions/semantic-v2-regressions.test.ts",
+    "tests/semantic-v2/recognised-food.test.ts"
    ],
    "killedBy": [
+    {
+     "test": "R1 round 3, item 1: the word right after a count > measureGerund: a measure noun in -ing, not a culinary-purpose word or a food",
+     "reason": "^AssertionError"
+    },
     {
      "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0411 [A] candidate-review-r1-round3:R1R3-NEW:HIGH lines, firm \"1 helping mashed potatoes\"",
      "reason": "^AssertionError"
     },
     {
      "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0412 [A] candidate-review-r1-round3:R1R3-NEW:HIGH lines, firm \"1 dusting cocoa powder\"",
-     "reason": "^AssertionError"
-    },
-    {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0417 [A] candidate-review-r1-round3:R1R3-NEW:HIGH lines, firm \"1 drizzling warm honey\"",
      "reason": "^AssertionError"
     }
    ],

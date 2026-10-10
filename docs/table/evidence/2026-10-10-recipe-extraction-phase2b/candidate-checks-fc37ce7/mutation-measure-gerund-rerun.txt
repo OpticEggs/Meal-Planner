@@ -1,0 +1,8 @@
+baseline tests/regressions/semantic-v2-regressions.test.ts tests/semantic-v2/recognised-food.test.ts: ok (1386/1386)
+ok   P-measure-gerund-off: KILLED (expected KILLED) — 1 of 3 intended test(s) failed by assertion for the intended reason
+
+| Spec | Mutation | File | Expected | Result | As expected | Intended killers failed | Tests failed / run | Why |
+|---|---|---|---|---|---|---|---|---|
+| tools/mutation/specs/parser.json | P-measure-gerund-off | src/ingredient/semantic-v2/foods.ts | KILLED | **KILLED** | yes | 1 | 7/1386 | 1 of 3 intended test(s) failed by assertion for the intended reason |
+
+1 mutation(s): KILLED 1, KILLED-UNEXPECTED 0, SURVIVED 0, ERROR 0; as expected 1/1.
