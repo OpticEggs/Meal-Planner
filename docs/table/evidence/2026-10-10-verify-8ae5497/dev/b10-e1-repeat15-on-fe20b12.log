@@ -1,0 +1,198 @@
+
+Running 15 tests using 1 worker
+
+  ✓   1 [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer (6.5s)
+  ✓   2 [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer (6.0s)
+  ✓   3 [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer (6.0s)
+  ✘   4 [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer (14.2s)
+  ✓   5 [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer (5.4s)
+  ✓   6 [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer (5.8s)
+  ✘   7 [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer (13.8s)
+  ✘   8 [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer (13.7s)
+  ✓   9 [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer (5.7s)
+  ✓  10 [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer (6.1s)
+  ✘  11 [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer (13.7s)
+  ✓  12 [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer (5.7s)
+  ✓  13 [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer (6.2s)
+  ✓  14 [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer (6.4s)
+  ✓  15 [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer (6.0s)
+
+
+  1) [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoContainText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByTestId('line-broccoli')
+    Expected substring: [32m"Approve[7md[27m ×2"[39m
+    Received string:    [31m"[7mBroccoliNeeds reviewDinners: 24.7 oz (700 g) — Sheet-pan chicken and rice (10-14), Tofu veggie stir-fry (10-12)Broccoli crowns 1 lb · 2 pkg needed · $2.49 each (fixture, fixture)To send: 2 package(s)Have enoughHave someNeedchange product…[27mApprove ×2"[39m
+    Timeout: 10000ms
+
+    Call log:
+    [2m  - Expect "toContainText" with timeout 10000ms[22m
+    [2m  - waiting for getByTestId('line-broccoli')[22m
+    [2m    14 × locator resolved to <li data-to-send="2" data-status="needs_review" data-testid="line-broccoli" class="line st-needs_review">…</li>[22m
+    [2m       - unexpected value "BroccoliNeeds reviewDinners: 24.7 oz (700 g) — Sheet-pan chicken and rice (10-14), Tofu veggie stir-fry (10-12)Broccoli crowns 1 lb · 2 pkg needed · $2.49 each (fixture, fixture)To send: 2 package(s)Have enoughHave someNeedchange product…Approve ×2"[22m
+
+
+      25 |   await p.getByRole("button", { name: "Approve 2 packages of Broccoli" }).click();
+      26 |   await expect(p.getByTestId("line-rice")).toContainText("Approved ×1");
+    > 27 |   await expect(p.getByTestId("line-broccoli")).toContainText("Approved ×2");
+         |                                                ^
+      28 |   await expect(p.getByTestId("send")).toBeDisabled(); // the whole-list Send is unchanged: not everything is ready
+      29 |   await p.getByTestId("prepare-partial").click();
+      30 |   const d = p.getByRole("dialog", { name: "Send only the ready items" });
+        at /home/user/table/tests/e2e/b10-partial.spec.ts:27:48
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b10-partial-B10-E1-send-on-4b915-rs-see-the-partial-transfer-chromium-repeat3/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b10-partial-B10-E1-send-on-4b915-rs-see-the-partial-transfer-chromium-repeat3/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b10-partial-B10-E1-send-on-4b915-rs-see-the-partial-transfer-chromium-repeat3/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b10-partial-B10-E1-send-on-4b915-rs-see-the-partial-transfer-chromium-repeat3/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b10-partial-B10-E1-send-on-4b915-rs-see-the-partial-transfer-chromium-repeat3/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoContainText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByTestId('line-broccoli')
+    Expected substring: [32m"Approve[7md[27m ×2"[39m
+    Received string:    [31m"[7mBroccoliNeeds reviewDinners: 24.7 oz (700 g) — Sheet-pan chicken and rice (10-14), Tofu veggie stir-fry (10-12)Broccoli crowns 1 lb · 2 pkg needed · $2.49 each (fixture, fixture)To send: 2 package(s)Have enoughHave someNeedchange product…[27mApprove ×2"[39m
+    Timeout: 10000ms
+
+    Call log:
+    [2m  - Expect "toContainText" with timeout 10000ms[22m
+    [2m  - waiting for getByTestId('line-broccoli')[22m
+    [2m    14 × locator resolved to <li data-to-send="2" data-status="needs_review" data-testid="line-broccoli" class="line st-needs_review">…</li>[22m
+    [2m       - unexpected value "BroccoliNeeds reviewDinners: 24.7 oz (700 g) — Sheet-pan chicken and rice (10-14), Tofu veggie stir-fry (10-12)Broccoli crowns 1 lb · 2 pkg needed · $2.49 each (fixture, fixture)To send: 2 package(s)Have enoughHave someNeedchange product…Approve ×2"[22m
+
+
+      25 |   await p.getByRole("button", { name: "Approve 2 packages of Broccoli" }).click();
+      26 |   await expect(p.getByTestId("line-rice")).toContainText("Approved ×1");
+    > 27 |   await expect(p.getByTestId("line-broccoli")).toContainText("Approved ×2");
+         |                                                ^
+      28 |   await expect(p.getByTestId("send")).toBeDisabled(); // the whole-list Send is unchanged: not everything is ready
+      29 |   await p.getByTestId("prepare-partial").click();
+      30 |   const d = p.getByRole("dialog", { name: "Send only the ready items" });
+        at /home/user/table/tests/e2e/b10-partial.spec.ts:27:48
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b10-partial-B10-E1-send-on-4b915-rs-see-the-partial-transfer-chromium-repeat6/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b10-partial-B10-E1-send-on-4b915-rs-see-the-partial-transfer-chromium-repeat6/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b10-partial-B10-E1-send-on-4b915-rs-see-the-partial-transfer-chromium-repeat6/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b10-partial-B10-E1-send-on-4b915-rs-see-the-partial-transfer-chromium-repeat6/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b10-partial-B10-E1-send-on-4b915-rs-see-the-partial-transfer-chromium-repeat6/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoContainText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByTestId('line-broccoli')
+    Expected substring: [32m"Approve[7md[27m ×2"[39m
+    Received string:    [31m"[7mBroccoliNeeds reviewDinners: 24.7 oz (700 g) — Tofu veggie stir-fry (10-12), Sheet-pan chicken and rice (10-14)Broccoli crowns 1 lb · 2 pkg needed · $2.49 each (fixture, fixture)To send: 2 package(s)Have enoughHave someNeedchange product…[27mApprove ×2"[39m
+    Timeout: 10000ms
+
+    Call log:
+    [2m  - Expect "toContainText" with timeout 10000ms[22m
+    [2m  - waiting for getByTestId('line-broccoli')[22m
+    [2m    14 × locator resolved to <li data-to-send="2" data-status="needs_review" data-testid="line-broccoli" class="line st-needs_review">…</li>[22m
+    [2m       - unexpected value "BroccoliNeeds reviewDinners: 24.7 oz (700 g) — Tofu veggie stir-fry (10-12), Sheet-pan chicken and rice (10-14)Broccoli crowns 1 lb · 2 pkg needed · $2.49 each (fixture, fixture)To send: 2 package(s)Have enoughHave someNeedchange product…Approve ×2"[22m
+
+
+      25 |   await p.getByRole("button", { name: "Approve 2 packages of Broccoli" }).click();
+      26 |   await expect(p.getByTestId("line-rice")).toContainText("Approved ×1");
+    > 27 |   await expect(p.getByTestId("line-broccoli")).toContainText("Approved ×2");
+         |                                                ^
+      28 |   await expect(p.getByTestId("send")).toBeDisabled(); // the whole-list Send is unchanged: not everything is ready
+      29 |   await p.getByTestId("prepare-partial").click();
+      30 |   const d = p.getByRole("dialog", { name: "Send only the ready items" });
+        at /home/user/table/tests/e2e/b10-partial.spec.ts:27:48
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b10-partial-B10-E1-send-on-4b915-rs-see-the-partial-transfer-chromium-repeat7/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b10-partial-B10-E1-send-on-4b915-rs-see-the-partial-transfer-chromium-repeat7/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b10-partial-B10-E1-send-on-4b915-rs-see-the-partial-transfer-chromium-repeat7/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b10-partial-B10-E1-send-on-4b915-rs-see-the-partial-transfer-chromium-repeat7/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b10-partial-B10-E1-send-on-4b915-rs-see-the-partial-transfer-chromium-repeat7/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoContainText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByTestId('line-broccoli')
+    Expected substring: [32m"Approve[7md[27m ×2"[39m
+    Received string:    [31m"[7mBroccoliNeeds reviewDinners: 24.7 oz (700 g) — Sheet-pan chicken and rice (10-14), Tofu veggie stir-fry (10-12)Broccoli crowns 1 lb · 2 pkg needed · $2.49 each (fixture, fixture)To send: 2 package(s)Have enoughHave someNeedchange product…[27mApprove ×2"[39m
+    Timeout: 10000ms
+
+    Call log:
+    [2m  - Expect "toContainText" with timeout 10000ms[22m
+    [2m  - waiting for getByTestId('line-broccoli')[22m
+    [2m    14 × locator resolved to <li data-to-send="2" data-status="needs_review" data-testid="line-broccoli" class="line st-needs_review">…</li>[22m
+    [2m       - unexpected value "BroccoliNeeds reviewDinners: 24.7 oz (700 g) — Sheet-pan chicken and rice (10-14), Tofu veggie stir-fry (10-12)Broccoli crowns 1 lb · 2 pkg needed · $2.49 each (fixture, fixture)To send: 2 package(s)Have enoughHave someNeedchange product…Approve ×2"[22m
+
+
+      25 |   await p.getByRole("button", { name: "Approve 2 packages of Broccoli" }).click();
+      26 |   await expect(p.getByTestId("line-rice")).toContainText("Approved ×1");
+    > 27 |   await expect(p.getByTestId("line-broccoli")).toContainText("Approved ×2");
+         |                                                ^
+      28 |   await expect(p.getByTestId("send")).toBeDisabled(); // the whole-list Send is unchanged: not everything is ready
+      29 |   await p.getByTestId("prepare-partial").click();
+      30 |   const d = p.getByRole("dialog", { name: "Send only the ready items" });
+        at /home/user/table/tests/e2e/b10-partial.spec.ts:27:48
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b10-partial-B10-E1-send-on-4b915-rs-see-the-partial-transfer-chromium-repeat10/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b10-partial-B10-E1-send-on-4b915-rs-see-the-partial-transfer-chromium-repeat10/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b10-partial-B10-E1-send-on-4b915-rs-see-the-partial-transfer-chromium-repeat10/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b10-partial-B10-E1-send-on-4b915-rs-see-the-partial-transfer-chromium-repeat10/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b10-partial-B10-E1-send-on-4b915-rs-see-the-partial-transfer-chromium-repeat10/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer 
+    [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer 
+    [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer 
+    [chromium] › tests/e2e/b10-partial.spec.ts:19:1 › B10-E1: send only the ready items — exact subset sent, the rest named and copyable, both members see the partial transfer 
+  11 passed (2.7m)

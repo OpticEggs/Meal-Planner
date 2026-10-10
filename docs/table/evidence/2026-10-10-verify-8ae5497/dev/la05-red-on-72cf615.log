@@ -1,0 +1,49 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/table
+
+ ❯ tests/integration/legacy-audit.test.ts (5 tests | 1 failed) 9522ms
+   ❯ legacy quantity audit (read-only) (5)
+     × LA-05: source evidence stops where a member changed the amount — a later legacy copy is not 'recoverable' to the superseded import (AUD-01) 2125ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/legacy-audit.test.ts > legacy quantity audit (read-only) > LA-05: source evidence stops where a member changed the amount — a later legacy copy is not 'recoverable' to the superseded import (AUD-01)
+AssertionError: expected { …(17) } to match object { recoverable: true, …(1) }
+(15 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "evidence": {
+-     "amount": "1/2",
++     "amount": "2",
+      "kind": "earlier_version",
+-     "servings": 1,
+-     "versionNo": 2,
++     "servings": 3,
++     "versionNo": 1,
+      "via": "same_row",
+    },
+    "recoverable": true,
+  }
+
+ ❯ tests/integration/legacy-audit.test.ts:200:42
+    198|     const at = (versionId: string, key: string) => report.rows.find((r…
+    199|     // The member's deliberate 1/2 a serving is what a legacy copy of …
+    200|     expect(at(v3.versionId, "cucumber")).toMatchObject({ recoverable: …
+       |                                          ^
+    201|     expect(at(v4.versionId, "cucumber")).toMatchObject({ recoverable: …
+    202|     // Genuine unchanged recovery is kept: the onion was never changed…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  13:34:29
+   Duration  11.33s (tests 85%, transform 9%, import 5%)
+

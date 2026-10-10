@@ -1,6 +1,6 @@
 # Table — Implementation status
 
-_Last updated 2026-10-10 (UTC), after the EQR correction (row lineage, exact "Have enough" binding and review identity, migration 016), which followed exact quantities for new recipe versions (migration 015, read-only legacy audit, upgrade rehearsal), which followed the recheck correction against the original RIO package (RIO-02 descriptors fixed, RIO-01 bounded, RIO-03 completed), which followed the import-overhaul corrections RIO-01..03 (reconstructed; the owner's package had not arrived), which followed the import overhaul and mobile redesign (B28), which followed the bounded pass B10 partial handoff + continuous URL-to-cart journey + phone upgrade rehearsal, which followed the recheck corrections RUC-01/RUC-02 (pilot on Render Free + Neon), which followed the URL-to-cart reprioritization (B25), which followed the multi-source handoff (recipe links, reviewed import, Budget Bytes lane, where to shop, Instacart list link — fixture-only), which followed B21/B22 (database cook-record invariant, stale cooking events) and the free-hosting research, which followed the visual update (B20) and the cook-record idempotency fix
+_Last updated 2026-10-10 (UTC), after the audit-only correction AUD-01 (legacy audit evidence across an amount change), which followed the EQR correction (row lineage, exact "Have enough" binding and review identity, migration 016), which followed exact quantities for new recipe versions (migration 015, read-only legacy audit, upgrade rehearsal), which followed the recheck correction against the original RIO package (RIO-02 descriptors fixed, RIO-01 bounded, RIO-03 completed), which followed the import-overhaul corrections RIO-01..03 (reconstructed; the owner's package had not arrived), which followed the import overhaul and mobile redesign (B28), which followed the bounded pass B10 partial handoff + continuous URL-to-cart journey + phone upgrade rehearsal, which followed the recheck corrections RUC-01/RUC-02 (pilot on Render Free + Neon), which followed the URL-to-cart reprioritization (B25), which followed the multi-source handoff (recipe links, reviewed import, Budget Bytes lane, where to shop, Instacart list link — fixture-only), which followed B21/B22 (database cook-record invariant, stale cooking events) and the free-hosting research, which followed the visual update (B20) and the cook-record idempotency fix
 (B19, delivery review of fb4d771, gate 2), which followed the integration-preparation pass (B9 deployment candidate, B7 nutrition, B5
 Kroger adapter, B8 checklist)._
 
@@ -8,6 +8,7 @@ Kroger adapter, B8 checklist)._
 
 | What | Identity |
 |---|---|
+| Audit correction AUD-01 (recheck of `72cf615`) | starting `1261cd8` · `fe20b12` legacy-audit evidence stops at a changed amount; exact rows are their own evidence · `8ae5497` B10-E1 test sequencing — verified at `8ae5497` (app, migrations and UI unchanged); the run on `fe20b12` failed once and is kept |
 | EQR correction (review of `dbc105d`) | starting `5aeecc4` · `7332b06` correction (row lineage, exact Have-enough certification, exact review identity, audit ambiguity), `72cf615` rehearsal data — verified at `72cf615`; rehearsals from `43cd1ce` and `dbc105d` PASS |
 | Exact quantities for new recipe versions (EQ) | starting `5e19991` · `dbc105d` migration 015, exact purchasing arithmetic, server-decided basis, read-only legacy audit, upgrade rehearsal — verified at `dbc105d`; rehearsal from `43cd1ce` PASS. Identifiers: main mints D130+/B40+ (`docs/table/IDENTIFIERS.md`) |
 | RIO recheck correction (original package) | starting `8c9fd8c` · `9f7836f` descriptor-aware seasonings (original RIO-02) · `a9fd9de` RIO-01 boundary evidence (tests only) · `43cd1ce` RIO-03 coverage + focus — verified at `43cd1ce`. Lab branch untouched; read-only notice `docs/table/LAB-SOURCE-DELTA-2026-10-09.md` |
@@ -27,7 +28,11 @@ Kroger adapter, B8 checklist)._
 | Restore | `git clone --branch main <bundle> table` or `git clone <bundle> table` |
 | Migrations | `001`–`014` (`014_member_recipe_photo.sql`: a member's own photo on the recipe; `013_partial_handoff.sql`: batch scope and omission summary; `012_recipe_content.sql`: kept-content permission, recipe photos, attribution): `006_nutrition_sources.sql` (B7), `007_kroger.sql` (B5), `008_cook_record_corrections.sql` (B19), `009_cook_record_chain.sql` (B21), `010_recipe_sources.sql`, `011_shopping_destinations.sql` (multi-source); upgrades from a populated 005 database (to 007) a populated 007 database holding duplicate cook records (to 008), a populated 008 database with planted cross-generation violations (to 009), and a populated 009 database (to 011, only `schema_migrations` differs over existing columns) checked |
 
-## Verification (measured on 72cf615)
+## Verification (measured on 8ae5497)
+
+`scripts/verify-all.sh` → `docs/table/evidence/2026-10-10-verify-8ae5497/summary.md`: vitest 1178/1178, Playwright 153/153 (Chromium), mutation self-test PASS, 123 mutations killed / 0 survived / 0 error.
+
+### Previous run (72cf615, EQR correction)
 
 `scripts/verify-all.sh` → `docs/table/evidence/2026-10-10-verify-72cf615/summary.md`: vitest 1177/1177, Playwright 153/153 (Chromium), mutation self-test PASS, 121 mutations killed / 0 survived / 0 error. Upgrade rehearsals from `43cd1ce` and from `dbc105d`: PASS (`docs/table/evidence/2026-10-10-verify-72cf615/rehearsal-*/summary.txt`).
 

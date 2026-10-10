@@ -1,0 +1,265 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/table
+
+ ❯ tests/integration/zz-la05-diagnostic.test.ts (1 test | 1 failed) 1248ms
+   ❯ diagnostic (1)
+     × LA-05-diagnostic: source evidence stops where a member changed the amount — a later legacy copy is not 'recoverable' to the superseded import (AUD-01) 1247ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/zz-la05-diagnostic.test.ts > diagnostic > LA-05-diagnostic: source evidence stops where a member changed the amount — a later legacy copy is not 'recoverable' to the superseded import (AUD-01)
+AssertionError: expected { …(17) } to match object { recoverable: true, …(1) }
+(15 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "evidence": {
+-     "amount": "1/2",
++     "amount": "2",
+      "kind": "earlier_version",
+-     "servings": 1,
+-     "versionNo": 2,
++     "servings": 3,
++     "versionNo": 1,
+      "via": "same_row",
+    },
+    "recoverable": true,
+  }
+
+ ❯ tests/integration/zz-la05-diagnostic.test.ts:131:47
+    129|     const at = (versionId: string, key: string) => report.rows.find((r…
+    130|     // The member's deliberate 1/2 a serving is what a legacy copy of …
+    131|     expect.soft(at(v3.versionId, "cucumber")).toMatchObject({ recovera…
+       |                                               ^
+    132|     expect.soft(at(v4.versionId, "cucumber")).toMatchObject({ recovera…
+    133|     // Genuine unchanged recovery is kept: the onion was never changed…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/integration/zz-la05-diagnostic.test.ts > diagnostic > LA-05-diagnostic: source evidence stops where a member changed the amount — a later legacy copy is not 'recoverable' to the superseded import (AUD-01)
+AssertionError: expected { …(17) } to match object { recoverable: true, …(1) }
+(15 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "evidence": {
+-     "amount": "1/2",
++     "amount": "2",
+      "kind": "earlier_version",
+-     "servings": 1,
+-     "versionNo": 2,
++     "servings": 3,
++     "versionNo": 1,
+      "via": "lineage",
+    },
+    "recoverable": true,
+  }
+
+ ❯ tests/integration/zz-la05-diagnostic.test.ts:132:47
+    130|     // The member's deliberate 1/2 a serving is what a legacy copy of …
+    131|     expect.soft(at(v3.versionId, "cucumber")).toMatchObject({ recovera…
+    132|     expect.soft(at(v4.versionId, "cucumber")).toMatchObject({ recovera…
+       |                                               ^
+    133|     // Genuine unchanged recovery is kept: the onion was never changed…
+    134|     expect.soft(at(v3.versionId, "onion")).toMatchObject({ recoverable…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/integration/zz-la05-diagnostic.test.ts > diagnostic > LA-05-diagnostic: source evidence stops where a member changed the amount — a later legacy copy is not 'recoverable' to the superseded import (AUD-01)
+AssertionError: expected { …(17) } to match object { recoverable: false, …(2) }
+(18 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "evidence": {
+-     "kind": "conflicting",
++     "kind": "earlier_version",
+    },
+    "proposal": null,
+-   "recoverable": false,
++   "recoverable": true,
+  }
+
+ ❯ tests/integration/zz-la05-diagnostic.test.ts:138:50
+    136|     //    is passed on to the later copy.
+    137|     expect.soft(at(b1.versionId, "black_beans")).toMatchObject({ recov…
+    138|     expect.soft(at(b2.versionId, "black_beans")).toMatchObject({ recov…
+       |                                                  ^
+    139|     expect.soft((at(b2.versionId, "black_beans").evidence as any).deta…
+    140|     expect.soft(at(b3.versionId, "black_beans")).toMatchObject({ recov…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/integration/zz-la05-diagnostic.test.ts > diagnostic > LA-05-diagnostic: source evidence stops where a member changed the amount — a later legacy copy is not 'recoverable' to the superseded import (AUD-01)
+TypeError: .toMatch() expects to receive a string, but got undefined
+ ❯ tests/integration/zz-la05-diagnostic.test.ts:139:75
+    137|     expect.soft(at(b1.versionId, "black_beans")).toMatchObject({ recov…
+    138|     expect.soft(at(b2.versionId, "black_beans")).toMatchObject({ recov…
+    139|     expect.soft((at(b2.versionId, "black_beans").evidence as any).deta…
+       |                                                                           ^
+    140|     expect.soft(at(b3.versionId, "black_beans")).toMatchObject({ recov…
+    141|     // No reported row anywhere names the superseded 2/3 for a stored …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/integration/zz-la05-diagnostic.test.ts > diagnostic > LA-05-diagnostic: source evidence stops where a member changed the amount — a later legacy copy is not 'recoverable' to the superseded import (AUD-01)
+AssertionError: expected { …(17) } to match object { recoverable: false, …(1) }
+(19 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "evidence": {
+-     "kind": "conflicting",
++     "kind": "earlier_version",
+    },
+-   "recoverable": false,
++   "recoverable": true,
+  }
+
+ ❯ tests/integration/zz-la05-diagnostic.test.ts:140:50
+    138|     expect.soft(at(b2.versionId, "black_beans")).toMatchObject({ recov…
+    139|     expect.soft((at(b2.versionId, "black_beans").evidence as any).deta…
+    140|     expect.soft(at(b3.versionId, "black_beans")).toMatchObject({ recov…
+       |                                                  ^
+    141|     // No reported row anywhere names the superseded 2/3 for a stored …
+    142|     expect.soft(report.rows.filter((r) => r.quantity === "0.5" && r.re…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  tests/integration/zz-la05-diagnostic.test.ts > diagnostic > LA-05-diagnostic: source evidence stops where a member changed the amount — a later legacy copy is not 'recoverable' to the superseded import (AUD-01)
+AssertionError: expected [ { …(17) }, { …(17) }, …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "componentKey": "main",
++     "current": false,
++     "evidence": {
++       "amount": "2",
++       "kind": "earlier_version",
++       "servings": 3,
++       "versionNo": 1,
++       "via": "lineage",
++     },
++     "householdId": "01680505-c80c-404c-9d62-d0ea066a59f8",
++     "ingredientKey": "black_beans",
++     "pattern": null,
++     "proposal": null,
++     "provenance": "manual",
++     "quantity": "0.5",
++     "recipeId": "05724fc6-c7f4-4ddc-8c58-2252b4ab9c68",
++     "recoverable": true,
++     "risk": "short_decimal",
++     "scheduledDinners": [],
++     "title": "Beans (less)",
++     "unit": "cup",
++     "versionId": "ce25b175-be7f-431b-a398-e1d0c9515b81",
++     "versionNo": 2,
++   },
++   {
++     "componentKey": "main",
++     "current": true,
++     "evidence": {
++       "amount": "2",
++       "kind": "earlier_version",
++       "servings": 3,
++       "versionNo": 1,
++       "via": "same_row",
++     },
++     "householdId": "01680505-c80c-404c-9d62-d0ea066a59f8",
++     "ingredientKey": "black_beans",
++     "pattern": null,
++     "proposal": null,
++     "provenance": "manual",
++     "quantity": "0.5",
++     "recipeId": "05724fc6-c7f4-4ddc-8c58-2252b4ab9c68",
++     "recoverable": true,
++     "risk": "short_decimal",
++     "scheduledDinners": [],
++     "title": "Beans (old app)",
++     "unit": "cup",
++     "versionId": "eadf186d-29dd-4657-a1f2-dedbfff24b20",
++     "versionNo": 3,
++   },
++   {
++     "componentKey": "main",
++     "current": false,
++     "evidence": {
++       "amount": "2",
++       "kind": "earlier_version",
++       "servings": 3,
++       "versionNo": 1,
++       "via": "same_row",
++     },
++     "householdId": "01680505-c80c-404c-9d62-d0ea066a59f8",
++     "ingredientKey": "cucumber",
++     "pattern": null,
++     "proposal": null,
++     "provenance": "manual",
++     "quantity": "0.5",
++     "recipeId": "52bfa45d-ac32-4b46-82ba-f38f5989c17a",
++     "recoverable": true,
++     "risk": "short_decimal",
++     "scheduledDinners": [],
++     "title": "Cucumber change (old app)",
++     "unit": "each",
++     "versionId": "b075184c-bd13-4b7d-8799-0cfe5dd524d3",
++     "versionNo": 3,
++   },
++   {
++     "componentKey": "main",
++     "current": true,
++     "evidence": {
++       "amount": "2",
++       "kind": "earlier_version",
++       "servings": 3,
++       "versionNo": 1,
++       "via": "lineage",
++     },
++     "householdId": "01680505-c80c-404c-9d62-d0ea066a59f8",
++     "ingredientKey": "cucumber",
++     "pattern": null,
++     "proposal": null,
++     "provenance": "manual",
++     "quantity": "0.5",
++     "recipeId": "52bfa45d-ac32-4b46-82ba-f38f5989c17a",
++     "recoverable": true,
++     "risk": "short_decimal",
++     "scheduledDinners": [],
++     "title": "Cucumber change (lineage)",
++     "unit": "each",
++     "versionId": "7be651cc-d4c1-456a-93df-36acdce25ec4",
++     "versionNo": 4,
++   },
++ ]
+
+ ❯ tests/integration/zz-la05-diagnostic.test.ts:142:121
+    140|     expect.soft(at(b3.versionId, "black_beans")).toMatchObject({ recov…
+    141|     // No reported row anywhere names the superseded 2/3 for a stored …
+    142|     expect.soft(report.rows.filter((r) => r.quantity === "0.5" && r.re…
+       |                                                                                                                         ^
+    143|   });
+    144|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  13:34:51
+   Duration  3.19s (tests 43%, transform 37%, import 20%)
+

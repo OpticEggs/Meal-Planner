@@ -793,3 +793,43 @@ were corrected (mutation and test) and are KILLED. No assertion was weakened.
    and must be given again. Rehearsed: amounts, packages and to-send unchanged on every line; the open soy-sauce
    approval (exact rows) became stale and stays stale under `dbc105d` after going back; the open black-beans approval
    (all legacy) stayed valid. From `43cd1ce` no identity changed.
+
+## Audit correction AUD-01 (recheck of `72cf615`) — added 2026-10-10
+
+Recheck package `Table-EQR-Recheck-72cf615` (REVIEW.md, AUDIT-ONLY-FOLLOWUP.txt). EQR-01 and EQR-02 app corrections are
+unchanged. Starting `1261cd8` (code `72cf615`); correction `fe20b12` (audit only: `src/server/audit/legacy-quantities.ts`,
+its tests and two mutations), then `8ae5497` (browser-test sequencing, below); verified at `8ae5497` — `docs/table/evidence/2026-10-10-verify-8ae5497/summary.md`: vitest 1178/1178, Playwright 153/153 (Chromium), mutation self-test PASS, 123 mutations killed / 0 survived / 0 error.
+
+Reproduced first with the complete audit function on disposable PostgreSQL (`table_test`), through the real import and
+edit commands (`evidence/2026-10-10-verify-8ae5497/dev/`): 2 cucumbers for 3 servings imported (exact `2`/3); the member
+changes the cucumber to 0.5 a serving (saved exact `1/2`, lineage to the imported row); a later legacy copy of version
+2 as an older release saves it (no lineage). On `72cf615` the audit reported that copy as **recoverable to 2 for 3
+servings (version 1)** — reversing the member's change. Six of LA-05's eight checks failed (every one about the changed amount;
+the conflict-detail check because there was no conflict to describe); the two about unchanged recovery held
+(`la05-red-all-assertions-on-72cf615.log`, a temporary soft-assertion copy of LA-05, deleted after the run). A first run whose setup tried to UPDATE an immutable recipe row is kept as
+`INVALID-la05-setup-update-refused.log` — a test-setup error, not a result.
+
+| Finding | Disposition | Tests | Status |
+|---|---|---|---|
+| AUD-01 source evidence survives an explicit amount change (direct lineage path) | Evidence passes along lineage only while it still gives the stored decimal; otherwise conflicting (D139) | LA-05 (legacy row naming a 2-for-3 source but storing 0.5 → conflicting, and nothing recoverable passed to its copy); mutation LA_lineage_ignores_amount_change | FIXED |
+| AUD-01 via the same-identity map (indirect path) | An exact row records its own exact amount, so a legacy copy of the changed row recovers to `1/2` for 1 serving, never 2/3 | LA-05 (copy without lineage; copy with lineage); mutation LA_exact_row_inherits_source | FIXED |
+| Genuine unchanged-row recovery | Kept: the unchanged onion of the same recipe is still recoverable to 3 for 3; LA-01 and LA-04 unchanged | LA-01, LA-04, LA-05 | HELD |
+| Ambiguous-source conflict reporting | Kept | LA-04 (mutations LA_first_fitting_line, LA_inherit_more_rows_than_source) | HELD |
+| Verification of `fe20b12`: B10-E1 failed once (152/153) | Not caused by the audit (no app code changed). Its trace: the test tapped a second approval ~100 ms after the first; that command's refresh disables write buttons while the screen re-reads (by design), so the tap landed on a disabled button and nothing was sent. Reproduced 4/15 on `fe20b12` and 1/15 on a `72cf615` build. The test now waits for the first approval and "Up to date" before the second tap; 30/30 pass. The failed run is kept (`failed-run-fe20b12/`) | e2e B10-E1 | FIXED (test only) |
+
+**Tests:** `tests/integration/legacy-audit.test.ts` — LA-05 added (expected values are literals); the file's
+`oldVersion` helper can now insert a row's `source_row_id` at creation (rows are immutable). `tests/mutation/run.mjs` —
+2 mutations added. `tests/e2e/b10-partial.spec.ts` — B10-E1 waits before its second tap (`8ae5497`). No existing
+assertion changed.
+
+**Limitations:**
+1. The audit stays unused on household data; whether to run it, and only on a local restore, is the owner's decision
+   (B41). Nothing was backfilled or corrected.
+2. Evidence counts as still applying when the stored decimal is one of the roundings Table has used of the evidence's
+   amount and servings (exact, 4 places half up, 12 places half up or down). An amount written with more than 30
+   characters is not parsed and so is reported as conflicting rather than recoverable (the safe direction).
+3. A legacy row with lineage to an exact row is not written by the app (an unchanged number keeps the exact basis);
+   it is covered here only by constructed disposable data.
+4. The app is byte-for-byte the same as `72cf615` outside `src/server/audit/` (which the app does not load), so the
+   pilot-upgrade checklist in `DEPLOYMENT.md` §0 is unchanged; deploying `8ae5497` instead of `72cf615` changes
+   nothing a member sees. Nothing was deployed.

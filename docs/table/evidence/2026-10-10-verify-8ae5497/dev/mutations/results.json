@@ -1,0 +1,56 @@
+{
+  "when": "2026-10-10T13:36:40.678Z",
+  "head": "1261cd8f8bc82e9d93eca3472116b13deef10c4a",
+  "restored": true,
+  "pass": true,
+  "results": [
+    {
+      "name": "LA_audit_not_read_only",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: LA-02: it never writes — every statement is a read inside a READ ONLY transaction that is rolled back, and nothing changed"
+    },
+    {
+      "name": "LA_pattern_counted_as_evidence",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: LA-01: classifies legacy rows and separates recoverable evidence from patterns and missing information"
+    },
+    {
+      "name": "LA_first_fitting_line",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: LA-04: ambiguous sources are reported as conflicting, never as a recoverable amount (EQR)"
+    },
+    {
+      "name": "LA_inherit_more_rows_than_source",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: LA-04: ambiguous sources are reported as conflicting, never as a recoverable amount (EQR)"
+    },
+    {
+      "name": "LA_lineage_ignores_amount_change",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: LA-05: source evidence stops where a member changed the amount — a later legacy copy is not 'recoverable' to the superseded import (AUD-01)"
+    },
+    {
+      "name": "LA_exact_row_inherits_source",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: LA-05: source evidence stops where a member changed the amount — a later legacy copy is not 'recoverable' to the superseded import (AUD-01)"
+    }
+  ]
+}
