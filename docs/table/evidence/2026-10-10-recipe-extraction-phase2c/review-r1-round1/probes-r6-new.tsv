@@ -1,0 +1,597 @@
+# input	status	name(|accepted...)	qty	unit	pkg	alts(;)(||accepted set)	flags (D=debatable, S=status-only)	group
+2 tsp instant coffee granules, dissolved in 1 tbsp boiling water	needs_review	instant coffee granules	2	tsp	-	-	-	A-remark6
+1 tsp saffron threads, steeped in 2 tbsp hot milk	needs_review	saffron threads	1	tsp	-	-	-	A-remark6
+1/2 cup golden raisins, plumped in 1/4 cup dark rum	needs_review	golden raisins	1/2	cup	-	-	-	A-remark6
+1 cup dried porcini (soaked in 2 cups boiling water)	needs_review	dried porcini	1	cup	-	-	-	A-remark6
+2 tbsp arrowroot, slurried with 3 tbsp cold water	needs_review	arrowroot	2	tbsp	-	-	-	A-remark6
+1 tbsp honey thinned with 1 tsp lemon juice	needs_review	honey	1	tbsp	-	-	-	A-remark6
+1/4 cup tahini, loosened with 2 tbsp warm water	needs_review	tahini	1/4	cup	-	-	-	A-remark6
+1 cup Greek yogurt mixed with 1 tbsp harissa	needs_review	Greek yogurt	1	cup	-	-	-	A-remark6
+2 tbsp butter, melted with 1 tsp chili flakes	needs_review	butter	2	tbsp	-	-	-	A-remark6
+1/3 cup cocoa powder sifted with 1 cup flour	needs_review	cocoa powder	1/3	cup	-	-	-	A-remark6
+1 tsp baking soda dissolved in 1 tbsp white vinegar	needs_review	baking soda	1	tsp	-	-	-	A-remark6
+2 cups bulgur, soaked in 3 cups hot broth	needs_review	bulgur	2	cup	-	-	-	A-remark6
+1 lb chicken thighs, marinated in 1/2 cup buttermilk	needs_review	chicken thighs	1	lb	-	-	-	A-remark6
+1/2 cup panko combined with 2 tbsp grated Parmesan	needs_review	panko	1/2	cup	-	-	-	A-remark6
+1 tbsp cornflour, blended with 2 tbsp milk	needs_review	cornflour	1	tbsp	-	-	-	A-remark6
+3 tbsp gochujang (diluted with 1 tbsp rice vinegar)	needs_review	gochujang	3	tbsp	-	-	-	A-remark6
+1 cup heavy cream plus 2 tbsp sour cream	needs_review	heavy cream	1	cup	-	-	-	A-remark6
+2 cups chicken stock + 1 cup dry white wine	needs_review	chicken stock	2	cup	-	-	-	A-remark6
+1 egg yolk beaten with 1 tbsp water	needs_review	egg yolk	1	each	-	-	-	A-remark6
+4 dried shiitake, rehydrated in 1 cup hot water	needs_review	dried shiitake	4	each	-	-	-	A-remark6
+2 tbsp chia seeds stirred into 6 tbsp almond milk	needs_review	chia seeds	2	tbsp	-	-	-	A-remark6
+1/2 tsp xanthan gum whisked with 1 tbsp oil	needs_review	xanthan gum	1/2	tsp	-	-	-	A-remark6
+1 cup couscous, steamed with 1 1/4 cups vegetable stock	needs_review	couscous	1	cup	-	-	-	A-remark6
+1 tsp vanilla extract, plus 1/2 tsp almond extract	needs_review	vanilla extract	1	tsp	-	-	-	A-remark6
+1/4 cup brown sugar, dissolved in 2 tbsp hot coffee	needs_review	brown sugar	1/4	cup	-	-	-	A-remark6
+1 cup dried chickpeas, soaked overnight in water	ready	dried chickpeas	1	cup	-	-	-	A-control6
+1 lb sweet potatoes, cut into 1-inch cubes	ready	sweet potatoes	1	lb	-	-	-	A-control6
+1 can (13.5 oz) coconut milk, shaken well	ready	coconut milk	1	can	13.5 oz	-	-	A-control6
+2 cups diced mango (about 2 mangoes)	ready	diced mango|mango	2	cup	-	-	-	A-control6
+3 cups vegetable broth, heated to 180°F	ready	vegetable broth	3	cup	-	-	-	A-control6
+1/2 cup rolled oats, toasted for 5 minutes	ready	rolled oats	1/2	cup	-	-	-	A-control6
+200 g dark chocolate (70%), chopped	ready	dark chocolate	200	g	-	-	-	A-control6
+1 cup buttermilk, at room temperature	ready	buttermilk	1	cup	-	-	-	A-control6
+6 oz spaghetti, broken in half	ready	spaghetti	6	oz	-	-	-	A-control6
+1 lb large shrimp, peeled (about 24)	ready	shrimp	1	lb	-	-	-	A-control6
+1 cup frozen peas, thawed in warm water	ready	frozen peas	1	cup	-	-	-	A-control6
+2 oz prosciutto (about 4 thin slices)	ready	prosciutto	2	oz	-	-	-	A-control6
+1 1/2 cups milk, scalded and cooled to 110°F	ready	milk	3/2	cup	-	-	-	A-control6
+1 pound flank steak, sliced 1/4 inch thick	ready	flank steak	1	lb	-	-	-	A-control6
+2 cups basmati rice, rinsed until the water runs clear	ready	basmati rice	2	cup	-	-	-	A-control6
+1 cup walnut halves, toasted at 350°F for 8 minutes	ready	walnut halves	1	cup	-	-	-	A-control6
+1 cup diced celery and carrots	needs_review	-	1	cup	-	-	-	B-and6
+2 cups chopped kale & chard	needs_review	-	2	cup	-	-	-	B-and6
+1/2 cup golden raisins and dried cranberries	needs_review	-	1/2	cup	-	-	-	B-and6
+1 lb cremini mushrooms and shallots	needs_review	-	1	lb	-	-	-	B-and6
+3 tbsp toasted sesame seeds and nori flakes	needs_review	-	3	tbsp	-	-	-	B-and6
+1 cup crumbled feta and pitted olives	needs_review	-	1	cup	-	-	-	B-and6
+2 tbsp minced ginger & garlic	needs_review	-	2	tbsp	-	-	-	B-and6
+1 cup sliced radishes and cucumber	needs_review	-	1	cup	-	-	-	B-and6
+2 cups cubed butternut squash and parsnips	needs_review	-	2	cup	-	-	-	B-and6
+1 cup corn kernels and black beans	needs_review	-	1	cup	-	-	-	B-and6
+1/2 cup pistachios and dried apricots, chopped	needs_review	-	1/2	cup	-	-	-	B-and6
+1 lb Italian sausage and ground pork	needs_review	-	1	lb	-	-	-	B-and6
+1 cup shredded carrot and zucchini	needs_review	-	1	cup	-	-	-	B-and6
+2 tbsp lime juice and fish sauce	needs_review	-	2	tbsp	-	-	-	B-and6
+2 lb chicken wings & drumsticks	needs_review	-	2	lb	-	-	-	B-and6
+1 cup pomegranate seeds & mint leaves	needs_review	-	1	cup	-	-	-	B-and6
+1/3 cup maple syrup and Dijon mustard	needs_review	-	1/3	cup	-	-	-	B-and6
+1 bag sweet and salty trail mix	ready	sweet and salty trail mix	1	bag	-	-	-	B-compound6
+2 tbsp sweet & sour sauce	ready	sweet & sour sauce|sweet and sour sauce	2	tbsp	-	-	-	B-compound6
+1 box macaroni & cheese	ready	macaroni & cheese|macaroni and cheese	1	box	-	-	-	B-compound6
+2 green & yellow zucchini	ready	green & yellow zucchini|green and yellow zucchini	2	each	-	-	-	B-compound6
+1 jar oil and vinegar dressing	ready	oil and vinegar dressing	1	jar	-	-	-	B-compound6
+1 bag salt & vinegar crisps	ready	salt & vinegar crisps|salt and vinegar crisps	1	bag	-	-	-	B-compound6
+2 Gala or Fuji apples	needs_review	-	2	each	-	Gala apples;Fuji apples	-	B-choice6
+1 can tomatoes, crushed or diced	needs_review	-	1	can	-	crushed tomatoes;diced tomatoes	D	B-choice6
+1 cup beans, pinto or black	needs_review	-	1	cup	-	pinto beans;black beans	-	B-choice6
+4 Medjool or Deglet Noor dates	needs_review	-	4	each	-	Medjool dates;Deglet Noor dates	-	B-choice6
+2 lb bone-in or boneless pork chops	needs_review	-	2	lb	-	bone-in pork chops;boneless pork chops	-	B-choice6
+1 cup smooth or chunky peanut butter	needs_review	-	1	cup	-	smooth peanut butter;chunky peanut butter	-	B-choice6
+1 cup light or dark brown sugar	needs_review	-	1	cup	-	light brown sugar;dark brown sugar	-	B-choice6
+2 cups stock, beef or mushroom	needs_review	-	2	cup	-	beef stock;mushroom stock	-	B-choice6
+1 head cabbage, savoy or napa	needs_review	-	1	head	-	savoy cabbage;napa cabbage	-	B-choice6
+6 Roma or plum tomatoes	needs_review	-	6	each	-	Roma tomatoes;plum tomatoes	-	B-choice6
+1 wisp cotton candy	needs_review	cotton candy	-	-	-	-	-	C-measure6
+1 sheaf chives	needs_review	chives	-	-	-	-	-	C-measure6
+1 tuft dill	needs_review	dill	-	-	-	-	-	C-measure6
+1 posy edible flowers	needs_review	edible flowers	-	-	-	-	-	C-measure6
+1 lick honey	needs_review	honey	-	-	-	-	-	C-measure6
+1 schmear cream cheese	needs_review	cream cheese	-	-	-	-	-	C-measure6
+1 shower grated parmesan	needs_review	grated parmesan	-	-	-	-	-	C-measure6
+1 puck goat cheese	needs_review	goat cheese	-	-	-	-	-	C-measure6
+1 glob mayonnaise	needs_review	mayonnaise	-	-	-	-	-	C-measure6
+1 puddle olive oil	needs_review	olive oil	-	-	-	-	-	C-measure6
+1 mound whipped cream	needs_review	whipped cream	-	-	-	-	-	C-measure6
+1 tower onion rings	needs_review	onion rings	-	-	-	-	-	C-measure6
+1 rosette buttercream	needs_review	buttercream	-	-	-	-	-	C-measure6
+1 knot fresh ginger	needs_review	fresh ginger	-	-	-	-	-	C-measure6
+1 plait garlic	needs_review	garlic	-	-	-	-	-	C-measure6
+1 capsule fish oil	needs_review	fish oil	-	-	-	-	-	C-measure6
+1 flute champagne	needs_review	champagne	-	-	-	-	-	C-measure6
+2 steins cold beer	needs_review	cold beer	-	-	-	-	-	C-measure6
+1 goblet sangria	needs_review	sangria	-	-	-	-	-	C-measure6
+1 thermos hot cocoa	needs_review	hot cocoa	-	-	-	-	-	C-measure6
+1 tureen chicken soup	needs_review	chicken soup	-	-	-	-	-	C-measure6
+1 cauldron chili	needs_review	chili	-	-	-	-	-	C-measure6
+1 crock baked beans	needs_review	baked beans	-	-	-	-	-	C-measure6
+1 cruet balsamic vinegar	needs_review	balsamic vinegar	-	-	-	-	-	C-measure6
+1 cooler lemonade	needs_review	lemonade	-	-	-	-	-	C-measure6
+2 skewers grilled halloumi	needs_review	grilled halloumi	-	-	-	-	-	C-measure6
+1 spatula peanut butter	needs_review	peanut butter	-	-	-	-	-	C-measure6
+1 fan sliced avocado	needs_review	sliced avocado	-	-	-	-	-	C-measure6
+1 bead wasabi	needs_review	wasabi	-	-	-	-	-	C-measure6
+1 droplet sesame oil	needs_review	sesame oil	-	-	-	-	-	C-measure6
+3 tufts dill	needs_review	dill	-	-	-	-	-	C-measure6
+2 globs mayonnaise	needs_review	mayonnaise	-	-	-	-	-	C-measure6
+4 droplets sesame oil	needs_review	sesame oil	-	-	-	-	-	C-measure6
+2 flutes champagne	needs_review	champagne	-	-	-	-	-	C-measure6
+3 capsules fish oil	needs_review	fish oil	-	-	-	-	-	C-measure6
+2 knots fresh ginger	needs_review	fresh ginger	-	-	-	-	-	C-measure6
+1 caddy loose-leaf tea	needs_review	loose-leaf tea	-	-	-	-	-	C-measure6
+1 demijohn cider	needs_review	cider	-	-	-	-	-	C-measure6
+1 carboy apple juice	needs_review	apple juice	-	-	-	-	-	C-measure6
+1 jerrycan water	needs_review	water	-	-	-	-	-	C-measure6
+1 tote russet potatoes	needs_review	russet potatoes	-	-	-	-	-	C-measure6
+4 ramekins crème brûlée	needs_review	crème brûlée	-	-	-	-	-	C-measure6
+1 Wisp Cotton Candy	needs_review	Cotton Candy	-	-	-	-	-	C-measure6
+1 Tureen Chicken Soup	needs_review	Chicken Soup	-	-	-	-	-	C-measure6
+1 Flute Champagne	needs_review	Champagne	-	-	-	-	-	C-measure6
+2 Knots Fresh Ginger	needs_review	Fresh Ginger	-	-	-	-	-	C-measure6
+1 Schmear Cream Cheese	needs_review	Cream Cheese	-	-	-	-	-	C-measure6
+1 Puck Goat Cheese	needs_review	Goat Cheese	-	-	-	-	-	C-measure6
+1 wafer white chocolate	needs_review	white chocolate	-	-	-	-	-	C-measure6
+1 kiss whipped cream	needs_review	whipped cream	-	-	-	-	-	C-measure6
+1 bite cheesecake	needs_review	cheesecake	-	-	-	-	-	C-measure6
+1 tablet Abuelita chocolate	needs_review	Abuelita chocolate	-	-	-	-	-	C-measure6
+1 lozenge licorice	needs_review	licorice	-	-	-	-	-	C-measure6
+1 cup-and-a-bit flour	needs_review	flour	-	-	-	-	D	C-measure6
+1 Le Creuset soufflé dish	unsupported	-	-	-	-	-	-	C-equip6
+1 Emile Henry pizza stone	unsupported	-	-	-	-	-	-	C-equip6
+1 Mauviel crêpe pan	unsupported	-	-	-	-	-	-	C-equip6
+1 Nordic Ware bundt	unsupported	-	-	-	-	-	-	C-equip6
+1 Pyrex pie plate	unsupported	-	-	-	-	-	-	C-equip6
+1 Wilton cupcake corer	unsupported	-	-	-	-	-	-	C-equip6
+1 Fiesta gravy boat	unsupported	-	-	-	-	-	-	C-equip6
+1 Corelle soup bowl	unsupported	-	-	-	-	-	-	C-equip6
+1 Mikasa trifle bowl	unsupported	-	-	-	-	-	-	C-equip6
+1 Anchor Hocking punch bowl	unsupported	-	-	-	-	-	-	C-equip6
+1 Libbey parfait glass	unsupported	-	-	-	-	-	-	C-equip6
+1 Riedel wine glass	unsupported	-	-	-	-	-	-	C-equip6
+1 cheese cloche	unsupported	-	-	-	-	-	-	C-equip6
+2 cardboard cake rounds	unsupported	-	-	-	-	-	-	C-equip6
+6 cake dowels	unsupported	-	-	-	-	-	-	C-equip6
+1 chicken brick	unsupported	-	-	-	-	-	-	C-equip6
+1 rooster cookie jar	unsupported	-	-	-	-	-	-	C-equip6
+1 rooster pitcher	unsupported	-	-	-	-	-	-	C-equip6
+1 corn zipper	unsupported	-	-	-	-	-	-	C-equip6
+1 copper bowl	unsupported	-	-	-	-	-	-	C-equip6
+1 marble slab	unsupported	-	-	-	-	-	-	C-equip6
+1 bamboo steamer basket	unsupported	-	-	-	-	-	-	C-equip6
+1 slate cheese board	unsupported	-	-	-	-	-	-	C-equip6
+1 olive wood spoon	unsupported	-	-	-	-	-	-	C-equip6
+1 walnut cutting board	unsupported	-	-	-	-	-	-	C-equip6
+1 maple butcher block	unsupported	-	-	-	-	-	-	C-equip6
+1 bar soap	unsupported	-	-	-	-	-	-	C-equip6
+1 box matches	unsupported	-	-	-	-	-	-	C-equip6
+1 roll paper towels	unsupported	-	-	-	-	-	-	C-equip6
+1 bottle Dawn	unsupported	-	-	-	-	-	-	C-equip6
+1 jug bleach	unsupported	-	-	-	-	-	-	C-equip6
+1 bottle Windex	unsupported	-	-	-	-	-	-	C-equip6
+1 box Brillo pads	unsupported	-	-	-	-	-	-	C-equip6
+1 box tea lights	unsupported	-	-	-	-	-	-	C-equip6
+1 bag cotton balls	unsupported	-	-	-	-	-	-	C-equip6
+1 pack drinking straws	unsupported	-	-	-	-	-	-	C-equip6
+1 box wax paper	unsupported	-	-	-	-	-	-	C-equip6
+1 roll cling film	unsupported	-	-	-	-	-	-	C-equip6
+1 bottle dish detergent	unsupported	-	-	-	-	-	-	C-equip6
+1 package party napkins	unsupported	-	-	-	-	-	-	C-equip6
+1 box wooden skewers	unsupported	-	-	-	-	-	-	C-equip6
+1 Chicken Brick	unsupported	-	-	-	-	-	-	C-equip6
+1 Marble Slab	unsupported	-	-	-	-	-	-	C-equip6
+1 Cheese Cloche	unsupported	-	-	-	-	-	-	C-equip6
+1 butter crock	unsupported	-	-	-	-	-	-	C-equip6
+1 owl cookie jar	unsupported	-	-	-	-	-	-	C-equip6
+1 avocado tool	unsupported	-	-	-	-	-	-	C-equip6
+1 cast-iron trivet	unsupported	-	-	-	-	-	-	C-equip6
+1 enamel colander	unsupported	-	-	-	-	-	-	C-equip6
+1 Himalayan salt block	unsupported	-	-	-	-	-	D	C-equip6
+1 bag dog treats	unsupported	-	-	-	-	-	D	C-equip6
+2 lb beef round tips	ready	beef round tips	2	lb	-	-	-	C-purpose6
+1 broiler-fryer chicken, cut up	ready	broiler-fryer chicken	1	each	-	-	-	C-purpose6
+1 roaster chicken (about 5 lb)	ready	roaster chicken	1	each	-	-	-	C-purpose6
+1 package tea biscuits	ready	tea biscuits	1	package	-	-	-	C-purpose6
+1 lb pork butt, cubed	ready	pork butt	1	lb	-	-	-	C-purpose6
+1 can cooking spray	ready	cooking spray	1	can	-	-	-	C-purpose6
+4 buddha bowls	ready	buddha bowls	4	each	-	-	-	C-dish6
+2 jars overnight oats	ready	overnight oats	2	jar	-	-	-	C-dish6
+2 jacket potatoes	ready	jacket potatoes	2	each	-	-	-	C-dish6
+4 kettle-cooked chips bags	ready	kettle-cooked chips bags	4	each	-	-	D	C-dish6
+4 banh mi	ready	banh mi	4	each	-	-	-	C-plural6
+2 croque monsieur	ready	croque monsieur	2	each	-	-	-	C-plural6
+3 ramekin	unsupported	-	-	-	-	-	-	C-plural6
+2 spatula	unsupported	-	-	-	-	-	-	C-plural6
+4 napkin	unsupported	-	-	-	-	-	-	C-plural6
+2 skillet	unsupported	-	-	-	-	-	-	C-plural6
+4 dish towel	unsupported	-	-	-	-	-	-	C-plural6
+500 g pot natural yogurt	needs_review	natural yogurt	-	-	-	-	-	D-known6
+250 g tray chicken livers	needs_review	chicken livers	-	-	-	-	-	D-alias6
+12 oz pouch cooked rice	needs_review	cooked rice|rice	-	-	-	-	-	D-alias6
+1 kg sack basmati rice	needs_review	basmati rice	-	-	-	-	-	D-alias6
+2 L jug orange juice	needs_review	orange juice	-	-	-	-	-	D-alias6
+750 ml carafe white wine	needs_review	white wine	-	-	-	-	-	D-alias6
+400 g clamshell cherry tomatoes	needs_review	cherry tomatoes	-	-	-	-	-	D-alias6
+1 sack yellow onions	needs_review	yellow onions	-	-	-	-	-	D-alias6
+1 net Brussels sprouts	needs_review	Brussels sprouts	-	-	-	-	-	D-alias6
+2 btls sparkling water	ready	sparkling water	2	bottle	-	-	-	D-declared6
+1 ctn egg whites	ready	egg whites	1	carton	-	-	-	D-declared6
+3 pkgs ramen noodles	ready	ramen noodles	3	package	-	-	-	D-declared6
+1 env. active dry yeast	ready	active dry yeast	1	envelope	-	-	-	D-declared6
+2 pkts stevia	ready	stevia	2	packet	-	-	-	D-declared6
+4 pcs fried chicken	ready	fried chicken	4	piece	-	-	-	D-declared6
+2 T unsalted butter	ready	unsalted butter	2	tbsp	-	-	-	D-declared6
+1 t ground cumin	ready	ground cumin	1	tsp	-	-	-	D-declared6
+3 tblsp maple syrup	ready	maple syrup	3	tbsp	-	-	-	D-declared6
+250 gms lamb mince	ready	lamb mince	250	g	-	-	-	D-declared6
+1 ltr coconut water	ready	coconut water	1	l	-	-	-	D-declared6
+500 mls chicken stock	ready	chicken stock	500	ml	-	-	-	D-declared6
+2 qts chicken stock	ready	chicken stock	2	quart	-	-	-	D-declared6
+2 teaspoonfuls ground cinnamon	ready	ground cinnamon	2	tsp	-	-	-	D-declared6
+1 tspn vanilla	ready	vanilla	1	tsp	-	-	-	D-declared6
+2 kilos new potatoes	ready	new potatoes	2	kg	-	-	-	D-declared6
+100 milligrams saffron	ready	saffron	100	mg	-	-	-	D-declared6
+4 filets sole	ready	sole	4	fillet	-	-	-	D-declared6
+2 cups whole milk, warmed	ready	whole milk	2	cup	-	-	-	K-everyday6
+1 stick unsalted butter, cut into pieces	ready	unsalted butter	1	stick	-	-	-	K-everyday6
+1 tsp baking powder, preferably aluminum-free	ready	baking powder	1	tsp	-	-	-	K-everyday6
+2 tbsp extra-virgin olive oil, divided	ready	extra-virgin olive oil	2	tbsp	-	-	-	K-everyday6
+1 lb boneless skinless chicken breasts, trimmed	ready	boneless skinless chicken breasts	1	lb	-	-	-	K-everyday6
+1 (28-oz) can whole peeled tomatoes	ready	whole peeled tomatoes	1	can	28 oz	-	-	K-everyday6
+1 cup shredded sharp cheddar	ready	shredded sharp cheddar|sharp cheddar	1	cup	-	-	-	K-everyday6
+2 celery ribs, thinly sliced	ready	celery	2	rib	-	-	-	K-everyday6
+1 red bell pepper, seeded and cut into strips	ready	red bell pepper	1	each	-	-	-	K-everyday6
+1 tsp dried oregano, crumbled	ready	dried oregano	1	tsp	-	-	-	K-everyday6
+1 cup frozen corn kernels	ready	frozen corn kernels	1	cup	-	-	-	K-everyday6
+1 bunch cilantro, leaves picked	ready	cilantro	1	bunch	-	-	-	K-everyday6
+3 green onions, thinly sliced on the bias	ready	green onions	3	each	-	-	-	K-everyday6
+1 (15-oz) can black beans, rinsed and drained	ready	black beans	1	can	15 oz	-	-	K-everyday6
+2 ripe avocados, halved and pitted	ready	ripe avocados|avocados	2	each	-	-	-	K-everyday6
+8 small flour tortillas, warmed	ready	flour tortillas	8	each	-	-	-	K-everyday6
+1 head romaine lettuce, chopped	ready	romaine lettuce	1	head	-	-	-	K-everyday6
+1 English cucumber, sliced into half-moons	ready	English cucumber	1	each	-	-	-	K-everyday6
+1/4 cup red wine vinegar	ready	red wine vinegar	1/4	cup	-	-	-	K-everyday6
+2 russet potatoes, scrubbed	ready	russet potatoes	2	each	-	-	-	K-everyday6
+8 oz cream cheese, at room temperature	ready	cream cheese	8	oz	-	-	-	K-everyday6
+2 cups powdered sugar, sifted	ready	powdered sugar	2	cup	-	-	-	K-everyday6
+1/4 cup unsweetened cocoa powder	ready	unsweetened cocoa powder	1/4	cup	-	-	-	K-everyday6
+2 cups old-fashioned rolled oats	ready	old-fashioned rolled oats	2	cup	-	-	-	K-everyday6
+1 lb salmon fillet, skin on	ready	salmon fillet	1	lb	-	-	-	K-everyday6
+1 small zucchini, diced	ready	zucchini	1	each	-	-	-	K-everyday6
+2 tbsp capers, drained	ready	capers	2	tbsp	-	-	-	K-everyday6
+4 boneless pork chops, about 1 inch thick	ready	boneless pork chops	4	each	-	-	-	K-everyday6
+1 whole chicken (about 4 lb)	ready	whole chicken	1	each	-	-	-	K-everyday6
+1 head garlic, top trimmed	ready	garlic	1	head	-	-	-	K-everyday6
+1/2 cup fresh mint leaves	ready	fresh mint leaves|mint leaves|fresh mint|mint	1/2	cup	-	-	-	K-everyday6
+1 (14-oz) can diced tomatoes	ready	diced tomatoes	1	can	14 oz	-	-	K-everyday6
+1 cup dried green lentils	ready	dried green lentils	1	cup	-	-	-	K-everyday6
+1 (13.5-oz) can coconut milk	ready	coconut milk	1	can	13.5 oz	-	-	K-everyday6
+1 lb asparagus, woody ends snapped off	ready	asparagus	1	lb	-	-	-	K-everyday6
+1 (24-oz) jar marinara sauce	ready	marinara sauce	1	jar	24 oz	-	-	K-everyday6
+15 oz whole-milk ricotta	ready	whole-milk ricotta	15	oz	-	-	-	K-everyday6
+1 pie crust, store-bought or homemade	ready	pie crust	1	each	-	-	-	K-everyday6
+6 Granny Smith apples, peeled and sliced	ready	Granny Smith apples	6	each	-	-	-	K-everyday6
+1 tbsp fresh lemon juice	ready	fresh lemon juice|lemon juice	1	tbsp	-	-	-	K-everyday6
+1 egg, beaten, for egg wash	ready	egg	1	each	-	-	-	K-everyday6
+1 lb baby potatoes, halved	ready	baby potatoes	1	lb	-	-	-	K-everyday6
+1 beefsteak tomato, sliced	ready	beefsteak tomato	1	each	-	-	-	K-everyday6
+4 leaves green leaf lettuce	ready	green leaf lettuce	4	leaf	-	-	-	K-everyday6
+2 tbsp yellow mustard	ready	yellow mustard	2	tbsp	-	-	-	K-everyday6
+3 lb pork shoulder, trimmed	ready	pork shoulder	3	lb	-	-	-	K-everyday6
+2 cups coleslaw mix	ready	coleslaw mix	2	cup	-	-	-	K-everyday6
+1/2 cup dill pickle relish	ready	dill pickle relish	1/2	cup	-	-	-	K-everyday6
+1 cup elbow macaroni	ready	elbow macaroni	1	cup	-	-	-	K-everyday6
+2 cups shredded Monterey Jack	ready	shredded Monterey Jack|Monterey Jack	2	cup	-	-	-	K-everyday6
+1 frozen banana, sliced	ready	frozen banana	1	each	-	-	-	K-everyday6
+1 cup canned pumpkin puree	ready	canned pumpkin puree|pumpkin puree	1	cup	-	-	-	K-everyday6
+2 cups cubed cooked turkey	ready	cubed cooked turkey|cubed turkey|turkey|cooked turkey	2	cup	-	-	-	K-everyday6
+1 bag frozen hash browns	ready	frozen hash browns	1	bag	-	-	-	K-everyday6
+1 loaf French bread, sliced	ready	French bread	1	loaf	-	-	-	K-everyday6
+1 lb thinly sliced deli ham	ready	thinly sliced deli ham|deli ham	1	lb	-	-	-	K-everyday6
+1 ball pizza dough	ready	pizza dough	1	ball	-	-	-	K-everyday6
+3 oz sliced pepperoni	ready	sliced pepperoni|pepperoni	3	oz	-	-	-	K-everyday6
+1 cup sliced black olives	ready	sliced black olives|black olives	1	cup	-	-	-	K-everyday6
+1 lb flank steak, thinly sliced against the grain	ready	flank steak	1	lb	-	-	-	K-everyday6
+1 cup snow peas, trimmed	ready	snow peas	1	cup	-	-	-	K-everyday6
+1 package (14 oz) extra-firm tofu, pressed	ready	extra-firm tofu	1	package	14 oz	-	-	K-everyday6
+2 tbsp creamy peanut butter	ready	creamy peanut butter	2	tbsp	-	-	-	K-everyday6
+1/4 cup chopped roasted peanuts	ready	chopped roasted peanuts|roasted peanuts	1/4	cup	-	-	-	K-everyday6
+1 lb smoked sausage, sliced into coins	ready	smoked sausage	1	lb	-	-	-	K-everyday6
+1 cup salsa verde	ready	salsa verde	1	cup	-	-	-	K-everyday6
+2 1/4 tsp instant yeast	ready	instant yeast	9/4	tsp	-	-	-	K-everyday6
+1 1/4 cups warm water	ready	warm water|water	5/4	cup	-	-	-	K-everyday6
+1/4 cup light corn syrup	ready	light corn syrup	1/4	cup	-	-	-	K-everyday6
+1 cup sweetened shredded coconut	ready	sweetened shredded coconut	1	cup	-	-	-	K-everyday6
+6 tbsp melted butter	ready	melted butter|butter	6	tbsp	-	-	-	K-everyday6
+2 cups Rice Krispies cereal	ready	Rice Krispies cereal	2	cup	-	-	-	K-everyday6
+1/2 cup lemon curd	ready	lemon curd	1/2	cup	-	-	-	K-everyday6
+1 lb carrots, cut into sticks	ready	carrots	1	lb	-	-	-	K-everyday6
+1 tbsp fresh thyme leaves	ready	fresh thyme leaves|thyme leaves|fresh thyme|thyme	1	tbsp	-	-	-	K-everyday6
+1 butternut squash, peeled and cubed	ready	butternut squash	1	each	-	-	-	K-everyday6
+2 lb beef chuck roast, cubed	ready	beef chuck roast	2	lb	-	-	-	K-everyday6
+1 cup frozen pearl onions	ready	frozen pearl onions	1	cup	-	-	-	K-everyday6
+8 oz baby bella mushrooms, quartered	ready	baby bella mushrooms	8	oz	-	-	-	K-everyday6
+2 Asian pears, cored and sliced	ready	Asian pears	2	each	-	-	-	K-lesscommon6
+1 small celery root, peeled	ready	celery root	1	each	-	-	-	K-lesscommon6
+6 tomatillos, papery husks removed	ready	tomatillos	6	each	-	-	-	K-lesscommon6
+1 bunch rapini, ends trimmed	ready	rapini	1	bunch	-	-	-	K-lesscommon6
+2 heads endive, leaves separated	ready	endive	2	head	-	-	-	K-lesscommon6
+8 sunchokes, scrubbed and halved	ready	sunchokes	8	each	-	-	-	K-lesscommon6
+2 kohlrabi bulbs, peeled	ready	kohlrabi	2	bulb	-	-	D	K-lesscommon6
+12 okra pods, sliced	ready	okra	12	pod	-	-	D	K-lesscommon6
+1 lb fresh fava beans, shelled	ready	fresh fava beans	1	lb	-	-	-	K-lesscommon6
+2 bunches ramps, cleaned	ready	ramps	2	bunch	-	-	-	K-lesscommon6
+1 head radicchio, cut into wedges	ready	radicchio	1	head	-	-	-	K-lesscommon6
+3 ripe persimmons, sliced	ready	ripe persimmons|persimmons	3	each	-	-	-	K-lesscommon6
+2 blood oranges, segmented	ready	blood oranges	2	each	-	-	-	K-lesscommon6
+1 cup gooseberries, topped and tailed	ready	gooseberries	1	cup	-	-	-	K-lesscommon6
+6 fresh figs, halved	ready	fresh figs|figs	6	each	-	-	-	K-lesscommon6
+2 quinces, peeled and cored	ready	quinces	2	each	-	-	-	K-lesscommon6
+1 young coconut, opened	ready	young coconut	1	each	-	-	-	K-lesscommon6
+1 lb monkfish, cut into chunks	ready	monkfish	1	lb	-	-	-	K-lesscommon6
+2 whole mackerel, gutted	ready	whole mackerel	2	each	-	-	-	K-lesscommon6
+1 lb skate wing	ready	skate wing	1	lb	-	-	-	K-lesscommon6
+8 oz lump crabmeat, picked over	ready	lump crabmeat	8	oz	-	-	-	K-lesscommon6
+6 sea scallops, side muscle removed	ready	sea scallops	6	each	-	-	-	K-lesscommon6
+1 lb squid, cleaned and cut into rings	ready	squid	1	lb	-	-	-	K-lesscommon6
+1 tin sardines in olive oil	ready	sardines in olive oil|sardines	1	tin	-	-	-	K-lesscommon6
+1 lb veal scallopini	ready	veal scallopini	1	lb	-	-	-	K-lesscommon6
+2 lb beef short ribs	ready	beef short ribs	2	lb	-	-	-	K-lesscommon6
+1 lb chicken livers, trimmed	ready	chicken livers	1	lb	-	-	-	K-lesscommon6
+6 oz chorizo, casing removed	ready	chorizo	6	oz	-	-	-	K-lesscommon6
+2 quail, spatchcocked	ready	quail	2	each	-	-	-	K-lesscommon6
+1 rabbit, jointed	ready	rabbit	1	each	-	-	-	K-lesscommon6
+1 cup farro, rinsed	ready	farro	1	cup	-	-	-	K-lesscommon6
+1 cup coarse polenta	ready	coarse polenta	1	cup	-	-	-	K-lesscommon6
+1 cup Carolina Gold rice	ready	Carolina Gold rice	1	cup	-	-	-	K-lesscommon6
+2 tsp fish sauce	ready	fish sauce	2	tsp	-	-	-	K-lesscommon6
+4 green cardamom pods, cracked	ready	green cardamom	4	pod	-	-	-	K-lesscommon6
+4 oz Gruyère, grated	ready	Gruyère	4	oz	-	-	-	K-lesscommon6
+2 oz Pecorino Romano	ready	Pecorino Romano	2	oz	-	-	-	K-lesscommon6
+8 oz queso Oaxaca, shredded	ready	queso Oaxaca	8	oz	-	-	-	K-lesscommon6
+1/4 cup rendered duck fat	ready	rendered duck fat|duck fat	1/4	cup	-	-	-	K-lesscommon6
+2 tbsp preserved lemon, chopped	ready	preserved lemon	2	tbsp	-	-	-	K-lesscommon6
+1/4 cup harissa paste	ready	harissa paste	1/4	cup	-	-	-	K-lesscommon6
+1 cup kimchi, chopped	ready	kimchi	1	cup	-	-	-	K-lesscommon6
+1/2 cup sauerkraut, drained	ready	sauerkraut	1/2	cup	-	-	-	K-lesscommon6
+2 chipotle peppers in adobo, minced	ready	chipotle peppers in adobo|chipotle peppers	2	each	-	-	-	K-lesscommon6
+1 cup masa harina	ready	masa harina	1	cup	-	-	-	K-lesscommon6
+1 lb nopales, cleaned and diced	ready	nopales	1	lb	-	-	-	K-lesscommon6
+2 plantains, very ripe	ready	plantains	2	each	-	-	-	K-lesscommon6
+2 cups callaloo, chopped	ready	callaloo	2	cup	-	-	-	K-lesscommon6
+1 scotch bonnet pepper, pierced	ready	scotch bonnet pepper	1	each	-	-	-	K-lesscommon6
+1 cup bamboo shoots, sliced	ready	bamboo shoots	1	cup	-	-	-	K-lesscommon6
+8 oz water chestnuts, sliced	ready	water chestnuts	8	oz	-	-	-	K-lesscommon6
+1 cup enoki mushrooms	ready	enoki mushrooms	1	cup	-	-	-	K-lesscommon6
+6 dried wood ear mushrooms	ready	dried wood ear mushrooms	6	each	-	-	-	K-lesscommon6
+1 lb lotus root, sliced	ready	lotus root	1	lb	-	-	-	K-lesscommon6
+1 cup cooked black-eyed peas	ready	black-eyed peas|cooked black-eyed peas	1	cup	-	-	-	K-lesscommon6
+1 bunch collard greens, stemmed	ready	collard greens	1	bunch	-	-	-	K-lesscommon6
+1 lb andouille sausage, sliced	ready	andouille sausage	1	lb	-	-	-	K-lesscommon6
+2 tbsp filé powder	ready	filé powder	2	tbsp	-	-	-	K-lesscommon6
+1 lb kielbasa, sliced	ready	kielbasa	1	lb	-	-	-	K-lesscommon6
+2 bundles udon	needs_review	udon	-	-	-	-	-	D-alias6
+1 1/4 cups toasted pecans, roughly chopped, divided	ready	toasted pecans	5/4	cup	-	-	-	K-everyday6
+2 cups day-old cooked jasmine rice, cold	ready	jasmine rice|day-old jasmine rice|day-old cooked jasmine rice	2	cup	-	-	-	K-everyday6
+3 tbsp unsalted butter, browned and cooled slightly	ready	unsalted butter	3	tbsp	-	-	-	K-everyday6
+1 cup whole-milk ricotta, drained in a sieve for 1 hour	ready	whole-milk ricotta	1	cup	-	-	-	K-everyday6
+2 large sweet potatoes, scrubbed and pricked all over	ready	sweet potatoes	2	each	-	-	-	K-everyday6
+4 boneless skinless chicken thighs, pounded thin	ready	boneless skinless chicken thighs	4	each	-	-	-	K-everyday6
+1 cup canned chickpeas, patted very dry	ready	canned chickpeas|chickpeas	1	cup	-	-	-	K-everyday6
+2 tbsp low-sodium soy sauce, plus more to taste	ready	low-sodium soy sauce	2	tbsp	-	-	-	K-everyday6
+1 small head cauliflower, broken into bite-size florets	ready	cauliflower	1	head	-	-	-	K-everyday6
+3/4 cup whole-milk plain yogurt, stirred	ready	whole-milk plain yogurt	3/4	cup	-	-	-	K-everyday6
+1/2 cup dried cranberries, roughly chopped	ready	dried cranberries	1/2	cup	-	-	-	K-everyday6
+2 cups shredded rotisserie chicken, skin discarded	ready	shredded rotisserie chicken|rotisserie chicken	2	cup	-	-	-	K-everyday6
+1 cup frozen spinach, thawed and squeezed dry	ready	frozen spinach	1	cup	-	-	-	K-everyday6
+1 lb ground pork, preferably not lean	ready	ground pork	1	lb	-	-	-	K-everyday6
+6 oz baby arugula, washed and spun dry	ready	baby arugula	6	oz	-	-	-	K-everyday6
+1/2 cup oil-packed sun-dried tomatoes, slivered	ready	oil-packed sun-dried tomatoes|sun-dried tomatoes	1/2	cup	-	-	-	K-everyday6
+1 cup quick-cooking oats, not instant	ready	quick-cooking oats	1	cup	-	-	-	K-everyday6
+2 tbsp honey, warmed until runny	ready	honey	2	tbsp	-	-	-	K-everyday6
+1 tsp ground ginger, plus a pinch for the topping	ready	ground ginger	1	tsp	-	-	-	K-everyday6
+3 cups torn sourdough, crusts left on	ready	torn sourdough|sourdough	3	cup	-	-	-	K-everyday6
+1 lb cod fillets, cut into 4 portions	ready	cod fillets	1	lb	-	-	-	K-everyday6
+2 cups packed baby kale, ribs removed	ready	packed baby kale|baby kale	2	cup	-	-	-	K-everyday6
+1 large egg plus 1 yolk, whisked together	ready	egg	1	each	-	-	D	K-everyday6
+1/4 cup creamy almond butter, well stirred	ready	creamy almond butter	1/4	cup	-	-	-	K-everyday6
+1 tbsp toasted sesame seeds, for sprinkling	ready	toasted sesame seeds	1	tbsp	-	-	-	K-everyday6
+1 cup pineapple chunks, fresh or canned	ready	pineapple chunks	1	cup	-	-	-	K-everyday6
+1/2 cup golden raisins, soaked until plump	ready	golden raisins	1/2	cup	-	-	-	K-everyday6
+2 tbsp chopped fresh chives, for garnish	ready	chopped fresh chives|fresh chives	2	tbsp	-	-	-	K-everyday6
+1 medium red onion, cut into thin wedges through the root	ready	red onion	1	each	-	-	-	K-everyday6
+4 cups chopped romaine hearts	ready	chopped romaine hearts|romaine hearts	4	cup	-	-	-	K-everyday6
+1 cup cherry tomatoes, quartered lengthwise	ready	cherry tomatoes	1	cup	-	-	-	K-everyday6
+3 cloves garlic, grated on a microplane	ready	garlic	3	clove	-	-	-	K-everyday6
+1/2 lb thick-sliced pastrami, cut into ribbons	ready	thick-sliced pastrami	1/2	lb	-	-	-	K-everyday6
+1 cup sliced button mushrooms, wiped clean	ready	sliced button mushrooms|button mushrooms	1	cup	-	-	-	K-everyday6
+2 cups low-fat cottage cheese, drained	ready	low-fat cottage cheese	2	cup	-	-	-	K-everyday6
+1 cup fresh corn kernels, cut from the cob	ready	fresh corn kernels|corn kernels	1	cup	-	-	-	K-everyday6
+1 lb boneless beef sirloin, cut into strips	ready	boneless beef sirloin	1	lb	-	-	-	K-everyday6
+2 tbsp oyster sauce, or to taste	ready	oyster sauce	2	tbsp	-	-	-	K-everyday6
+1 cup chicken broth, warmed in the microwave	ready	chicken broth	1	cup	-	-	-	K-everyday6
+1/2 cup heavy cream, cold from the fridge	ready	heavy cream	1/2	cup	-	-	-	K-everyday6
+3 cups cubed seedless watermelon, chilled	ready	cubed seedless watermelon|seedless watermelon	3	cup	-	-	-	K-everyday6
+1 lb mixed baby potatoes, scrubbed	ready	mixed baby potatoes	1	lb	-	-	-	K-everyday6
+8 oz block sharp white cheddar, grated	ready	sharp white cheddar	1	block	8 oz	-	-	K-everyday6
+2 cups halved seedless red grapes	ready	halved seedless red grapes|seedless red grapes	2	cup	-	-	-	K-everyday6
+1 cup thinly sliced celery, leaves reserved	ready	thinly sliced celery|celery	1	cup	-	-	-	K-everyday6
+1/2 cup mayonnaise, preferably full-fat	ready	mayonnaise	1/2	cup	-	-	-	K-everyday6
+1 tsp dried dill weed	ready	dried dill weed	1	tsp	-	-	-	K-everyday6
+4 large flour tortillas, burrito size	ready	flour tortillas	4	each	-	-	-	K-everyday6
+1 1/2 cups cooked pinto beans, warm	ready	pinto beans|cooked pinto beans	3/2	cup	-	-	-	K-everyday6
+1 cup Mexican-style shredded cheese blend	ready	Mexican-style shredded cheese blend	1	cup	-	-	-	K-everyday6
+1/2 cup pickled jalapeño slices	ready	pickled jalapeño slices	1/2	cup	-	-	-	K-everyday6
+2 tbsp taco seasoning, homemade or packet	ready	taco seasoning	2	tbsp	-	-	-	K-everyday6
+1 cup chunky salsa, drained	ready	chunky salsa	1	cup	-	-	-	K-everyday6
+1 lb tilapia fillets, patted dry	ready	tilapia fillets	1	lb	-	-	-	K-everyday6
+2 tbsp cajun seasoning	ready	cajun seasoning	2	tbsp	-	-	-	K-everyday6
+1 cup tartar sauce, for dipping	ready	tartar sauce	1	cup	-	-	-	K-everyday6
+4 brioche buns, split and toasted	ready	brioche buns	4	each	-	-	-	K-everyday6
+1 cup dill pickle chips	ready	dill pickle chips	1	cup	-	-	-	K-everyday6
+1 cup buttermilk ranch dressing	ready	buttermilk ranch dressing	1	cup	-	-	-	K-everyday6
+1 tbsp smoked sea salt flakes	ready	smoked sea salt flakes	1	tbsp	-	-	-	K-everyday6
+2 cups vanilla Greek yogurt, divided	ready	vanilla Greek yogurt	2	cup	-	-	-	K-everyday6
+1 cup mixed berries, fresh or frozen	ready	mixed berries	1	cup	-	-	-	K-everyday6
+1/4 cup honey-roasted almonds, chopped	ready	honey-roasted almonds	1/4	cup	-	-	-	K-everyday6
+1 cup cold brew coffee concentrate	ready	cold brew coffee concentrate	1	cup	-	-	-	K-everyday6
+2 tbsp sweetened condensed milk, for drizzling	ready	sweetened condensed milk	2	tbsp	-	-	-	K-everyday6
+1 cup oat milk, barista style	ready	oat milk	1	cup	-	-	-	K-everyday6
+1/2 cup cold vegetable shortening, cubed	ready	cold vegetable shortening|vegetable shortening	1/2	cup	-	-	-	K-everyday6
+3/4 cup cold buttermilk, plus more as needed	ready	cold buttermilk|buttermilk	3/4	cup	-	-	-	K-everyday6
+2 tbsp melted honey butter	ready	melted honey butter|honey butter	2	tbsp	-	-	-	K-everyday6
+1 lb breakfast sausage, crumbled	ready	breakfast sausage	1	lb	-	-	-	K-everyday6
+2 cups whole milk for the gravy	ready	whole milk	2	cup	-	-	-	K-everyday6
+1/4 cup all-purpose flour for the roux	ready	all-purpose flour	1/4	cup	-	-	-	K-everyday6
+1/2 lb thinly shaved ribeye	ready	thinly shaved ribeye|ribeye	1/2	lb	-	-	-	K-everyday6
+1 large green bell pepper, cut into thin strips	ready	green bell pepper	1	each	-	-	-	K-everyday6
+4 hoagie rolls, split	ready	hoagie rolls	4	each	-	-	-	K-everyday6
+1 cup jarred roasted red peppers, sliced	ready	jarred roasted red peppers|roasted red peppers	1	cup	-	-	-	K-everyday6
+1/2 cup pitted kalamata olives, halved	ready	pitted kalamata olives|kalamata olives	1/2	cup	-	-	-	K-everyday6
+1 bunch asparagus, tough ends removed	ready	asparagus	1	bunch	-	-	-	K-everyday6
+1 lb wild-caught salmon, cut into 4 fillets	ready	wild-caught salmon	1	lb	-	-	-	K-everyday6
+1 cup halved Brussels sprouts	ready	halved Brussels sprouts|Brussels sprouts	1	cup	-	-	-	K-everyday6
+1/2 cup shaved Parmigiano-Reggiano	ready	shaved Parmigiano-Reggiano|Parmigiano-Reggiano	1/2	cup	-	-	-	K-everyday6
+2 tbsp balsamic glaze, for drizzling	ready	balsamic glaze	2	tbsp	-	-	-	K-everyday6
+1 lb sweet Italian sausage links	ready	sweet Italian sausage links|sweet Italian sausage	1	lb	-	-	-	K-everyday6
+2 large russet potatoes, cut into wedges	ready	russet potatoes	2	each	-	-	-	K-everyday6
+1 cup shredded red cabbage	ready	shredded red cabbage|red cabbage	1	cup	-	-	-	K-everyday6
+2 tbsp seasoned rice vinegar	ready	seasoned rice vinegar	2	tbsp	-	-	-	K-everyday6
+1 tsp toasted sesame seeds	ready	toasted sesame seeds	1	tsp	-	-	-	K-everyday6
+1 lb chicken drumsticks, skin on	ready	chicken drumsticks	1	lb	-	-	-	K-everyday6
+1/4 cup sweet chili sauce	ready	sweet chili sauce	1/4	cup	-	-	-	K-everyday6
+1 sheet frozen puff pastry, thawed	ready	frozen puff pastry|puff pastry	1	sheet	-	-	-	K-everyday6
+2 large leeks, white parts only, sliced	ready	leeks	2	each	-	-	-	K-everyday6
+1/2 cup mascarpone cheese, softened	ready	mascarpone cheese	1/2	cup	-	-	-	K-everyday6
+1 package ladyfingers (7 oz)	ready	ladyfingers	1	package	7 oz	-	-	K-everyday6
+1 cup strong brewed espresso, cooled	ready	strong brewed espresso|brewed espresso	1	cup	-	-	-	K-everyday6
+2 tbsp coffee liqueur	ready	coffee liqueur	2	tbsp	-	-	-	K-everyday6
+1 tbsp unsweetened cocoa, for dusting	ready	unsweetened cocoa	1	tbsp	-	-	-	K-everyday6
+1 cup fresh raspberries, divided	ready	fresh raspberries|raspberries	1	cup	-	-	-	K-everyday6
+1/2 cup seedless raspberry jam	ready	seedless raspberry jam	1/2	cup	-	-	-	K-everyday6
+1 cup almond flour, finely ground	ready	almond flour	1	cup	-	-	-	K-everyday6
+1 cup superfine sugar	ready	superfine sugar	1	cup	-	-	-	K-everyday6
+1 tsp lemon zest, finely grated	ready	lemon zest	1	tsp	-	-	-	K-everyday6
+2 cups hulled strawberries, halved	ready	hulled strawberries|strawberries	2	cup	-	-	-	K-everyday6
+1/2 cup old-fashioned oats for the crumble	ready	old-fashioned oats	1/2	cup	-	-	-	K-everyday6
+6 tbsp cold butter for the topping	ready	cold butter|butter	6	tbsp	-	-	-	K-everyday6
+1 cup vanilla ice cream, to serve	ready	vanilla ice cream	1	cup	-	-	-	K-everyday6
+4 cups fresh baby spinach, loosely packed	ready	fresh baby spinach|baby spinach	4	cup	-	-	-	K-everyday6
+1 ripe pear, thinly sliced	ready	ripe pear|pear	1	each	-	-	-	K-everyday6
+3 tbsp poppy seed dressing	ready	poppy seed dressing	3	tbsp	-	-	-	K-everyday6
+1 lb tri-color rotini	ready	tri-color rotini	1	lb	-	-	-	K-everyday6
+1 cup Italian dressing	ready	Italian dressing	1	cup	-	-	-	K-everyday6
+1 cup marinated artichoke hearts, chopped	ready	marinated artichoke hearts	1	cup	-	-	-	K-everyday6
+1 cup cubed fresh mozzarella	ready	cubed fresh mozzarella|fresh mozzarella	1	cup	-	-	-	K-everyday6
+1 lb skirt steak, trimmed of silver skin	ready	skirt steak	1	lb	-	-	-	K-everyday6
+1 bunch radishes, thinly sliced	ready	radishes	1	bunch	-	-	-	K-everyday6
+1 can refried beans, warmed	ready	refried beans	1	can	-	-	-	K-everyday6
+1 cup shredded iceberg lettuce	ready	shredded iceberg lettuce|iceberg lettuce	1	cup	-	-	-	K-everyday6
+2 roma tomatoes, seeded and diced	ready	roma tomatoes	2	each	-	-	-	K-everyday6
+1 red Fresno chile, sliced	ready	red Fresno chile	1	each	-	-	-	K-everyday6
+1 tbsp palm sugar, grated	ready	palm sugar	1	tbsp	-	-	-	K-everyday6
+1/2 cup unsweetened coconut flakes, toasted	ready	unsweetened coconut flakes	1/2	cup	-	-	-	K-everyday6
+2 tbsp coconut oil, melted	ready	coconut oil	2	tbsp	-	-	-	K-everyday6
+1 cup raw cashews, soaked overnight	ready	cashews|raw cashews	1	cup	-	-	-	K-everyday6
+1/4 cup nutritional yeast flakes	ready	nutritional yeast flakes	1/4	cup	-	-	-	K-everyday6
+1 cup unsweetened applesauce	ready	unsweetened applesauce	1	cup	-	-	-	K-everyday6
+1 cup chopped pitted dates	ready	chopped pitted dates|pitted dates	1	cup	-	-	-	K-everyday6
+1 cup creamy natural peanut butter	ready	creamy natural peanut butter	1	cup	-	-	-	K-everyday6
+2 cups puffed rice cereal	ready	puffed rice cereal	2	cup	-	-	-	K-everyday6
+1 cup salted pretzel twists, broken	ready	salted pretzel twists|pretzel twists	1	cup	-	-	-	K-everyday6
+1 lb celeriac, peeled and cut into matchsticks	ready	celeriac	1	lb	-	-	-	K-lesscommon6
+2 bunches watercress, thick stems removed	ready	watercress	2	bunch	-	-	-	K-lesscommon6
+1 cup cooked wheat berries	ready	wheat berries|cooked wheat berries	1	cup	-	-	-	K-lesscommon6
+1 cup black forbidden rice	ready	black forbidden rice	1	cup	-	-	-	K-lesscommon6
+1 lb fresh chestnuts, scored	ready	fresh chestnuts|chestnuts	1	lb	-	-	-	K-lesscommon6
+6 medlars, bletted	ready	medlars	6	each	-	-	-	K-lesscommon6
+2 cups sea buckthorn berries	ready	sea buckthorn berries	2	cup	-	-	-	K-lesscommon6
+1 lb cardoons, strings removed	ready	cardoons	1	lb	-	-	-	K-lesscommon6
+4 small artichokes, trimmed to the hearts	ready	artichokes	4	each	-	-	-	K-lesscommon6
+1 cup samphire, rinsed	ready	samphire	1	cup	-	-	-	K-lesscommon6
+1 lb hen-of-the-woods mushrooms, torn	ready	hen-of-the-woods mushrooms	1	lb	-	-	-	K-lesscommon6
+8 oz chanterelles, brushed clean	ready	chanterelles	8	oz	-	-	-	K-lesscommon6
+1 oz dried morels, rinsed	ready	dried morels	1	oz	-	-	-	K-lesscommon6
+1 jar Calabrian chili paste	ready	Calabrian chili paste	1	jar	-	-	-	K-lesscommon6
+4 oz 'nduja, crumbled	ready	'nduja|nduja	4	oz	-	-	-	K-lesscommon6
+2 oz bottarga, finely grated	ready	bottarga	2	oz	-	-	-	K-lesscommon6
+1/4 cup colatura	ready	colatura	1/4	cup	-	-	-	K-lesscommon6
+1 lb octopus tentacles, cooked	ready	octopus tentacles	1	lb	-	-	-	K-lesscommon6
+12 littleneck clams, purged	ready	littleneck clams	12	each	-	-	-	K-lesscommon6
+1 lb bay scallops, patted dry	ready	bay scallops	1	lb	-	-	-	K-lesscommon6
+4 oz salt cod, soaked for 24 hours	ready	salt cod	4	oz	-	-	-	K-lesscommon6
+2 whole branzino, scaled	ready	whole branzino	2	each	-	-	-	K-lesscommon6
+1 lb venison stew meat	ready	venison stew meat	1	lb	-	-	-	K-lesscommon6
+2 lb goat shoulder, bone in	ready	goat shoulder	2	lb	-	-	-	K-lesscommon6
+1 lb lamb merguez, casings removed	ready	lamb merguez	1	lb	-	-	-	K-lesscommon6
+4 oz lardo, thinly sliced	ready	lardo	4	oz	-	-	-	K-lesscommon6
+1 lb beef tongue, simmered and peeled	ready	beef tongue	1	lb	-	-	-	K-lesscommon6
+1/2 cup toor dal, rinsed	ready	toor dal	1/2	cup	-	-	-	K-lesscommon6
+1 cup urad dal	ready	urad dal	1	cup	-	-	-	K-lesscommon6
+2 tbsp chana dal	ready	chana dal	2	tbsp	-	-	-	K-lesscommon6
+1 tsp black mustard seeds	ready	black mustard seeds	1	tsp	-	-	-	K-lesscommon6
+1 tsp kasuri methi	ready	kasuri methi	1	tsp	-	-	-	K-lesscommon6
+2 tbsp jaggery, grated	ready	jaggery	2	tbsp	-	-	-	K-lesscommon6
+1 cup fresh paneer, cubed	ready	fresh paneer	1	cup	-	-	-	K-lesscommon6
+1/2 cup grated fresh coconut	ready	grated fresh coconut|fresh coconut	1/2	cup	-	-	-	K-lesscommon6
+1/4 cup shio koji	ready	shio koji	1/4	cup	-	-	-	K-lesscommon6
+4 umeboshi plums, pitted	ready	umeboshi plums	4	each	-	-	-	K-lesscommon6
+1 lb Korean rice cakes	ready	Korean rice cakes	1	lb	-	-	-	K-lesscommon6
+1 cup perilla leaves, shredded	ready	perilla leaves	1	cup	-	-	-	K-lesscommon6
+1 package glass noodles (7 oz)	ready	glass noodles	1	package	7 oz	-	-	K-lesscommon6
+2 tbsp Chinese sesame paste	ready	Chinese sesame paste	2	tbsp	-	-	-	K-lesscommon6
+4 dried red chiles, snipped	ready	dried red chiles	4	each	-	-	-	K-lesscommon6
+1 tbsp Sichuan peppercorns, toasted and ground	ready	Sichuan peppercorns	1	tbsp	-	-	-	K-lesscommon6
+1/2 cup preserved mustard greens	ready	preserved mustard greens	1/2	cup	-	-	-	K-lesscommon6
+1 cup nuoc cham	ready	nuoc cham	1	cup	-	-	-	K-lesscommon6
+1 bunch rau ram	ready	rau ram	1	bunch	-	-	-	K-lesscommon6
+4 makrut lime leaves, torn	ready	makrut lime leaves	4	each	-	-	-	K-lesscommon6
+1 thumb-sized piece galangal, sliced	ready	galangal	1	piece	-	-	-	K-lesscommon6
+1 cup achiote paste	ready	achiote paste	1	cup	-	-	D	K-lesscommon6
+3 guajillo chiles, toasted	ready	guajillo chiles	3	each	-	-	-	K-lesscommon6
+1 cup hoja santa leaves	ready	hoja santa leaves|hoja santa	1	cup	-	-	-	K-lesscommon6
+1 lb chayote squash, diced	ready	chayote squash	1	lb	-	-	-	K-lesscommon6
+1 cup Mexican oregano leaves	ready	Mexican oregano leaves|Mexican oregano	1	cup	-	-	-	K-lesscommon6
+1 lb yuca, peeled and cut into batons	ready	yuca	1	lb	-	-	-	K-lesscommon6
+2 cups ackee, drained	ready	ackee	2	cup	-	-	-	K-lesscommon6
+1 lb salt pork, rinsed	ready	salt pork	1	lb	-	-	-	K-lesscommon6
+2 tbsp berbere spice	ready	berbere spice	2	tbsp	-	-	-	K-lesscommon6
+1/4 cup niter kibbeh	ready	niter kibbeh	1/4	cup	-	-	-	K-lesscommon6
+1 tbsp ras el hanout blend	ready	ras el hanout blend|ras el hanout	1	tbsp	-	-	-	K-lesscommon6
+1 cup freekeh, rinsed	ready	freekeh	1	cup	-	-	-	K-lesscommon6
+1 lb kataifi dough, thawed	ready	kataifi dough	1	lb	-	-	-	K-lesscommon6
+1 cup orange blossom water	ready	orange blossom water	1	cup	-	-	-	K-lesscommon6
+1/4 cup mahleb, ground	ready	mahleb	1/4	cup	-	-	-	K-lesscommon6
+4 oz cloudberry jam	ready	cloudberry jam	4	oz	-	-	-	K-lesscommon6
+1 lb pickled herring, drained	ready	pickled herring	1	lb	-	-	-	K-lesscommon6
+2 tbsp poppy seeds, ground	ready	poppy seeds	2	tbsp	-	-	-	K-lesscommon6
+1 lb sauerkraut, rinsed	ready	sauerkraut	1	lb	-	-	-	K-lesscommon6
+4 cast-iron skillet cornbreads	ready	cast-iron skillet cornbreads	4	each	-	-	D	C-dish6
+2 clay-pot chickens	ready	clay-pot chickens	2	each	-	-	-	C-dish6
+6 crock-pot meatballs	ready	crock-pot meatballs	6	each	-	-	-	C-dish6
+4 waffle-iron hash browns	ready	waffle-iron hash browns	4	each	-	-	-	C-dish6
+2 paella-pan dinners	ready	paella-pan dinners	2	each	-	-	D	C-dish6
+6 jar-baked brownies	ready	jar-baked brownies	6	each	-	-	-	C-dish6
+4 tin-can breads	ready	tin-can breads	4	each	-	-	D	C-dish6
+3 casserole-dish lasagnas	ready	casserole-dish lasagnas	3	each	-	-	D	C-dish6
+2 sheet cakes, frosted	ready	sheet cakes	2	each	-	-	-	C-dish6
+6 tray-baked flapjacks	ready	tray-baked flapjacks	6	each	-	-	-	C-dish6
+4 pot-roasted pheasants	ready	pot-roasted pheasants	4	each	-	-	-	C-dish6
+2 fondue pots of cheese	needs_review	cheese	-	-	-	-	-	C-measure6
+1 lb pork belly ribs	ready	pork belly ribs	1	lb	-	-	-	C-purpose6
+1 bag waffle crisps	ready	waffle crisps	1	bag	-	-	-	C-purpose6
+2 cups oven chips	ready	oven chips	2	cup	-	-	-	C-purpose6
+1 bag freezer-aisle dumplings	ready	freezer-aisle dumplings	1	bag	-	-	D	C-purpose6
+1 lb egg noodles, cooked	ready	egg noodles	1	lb	-	-	-	C-purpose6
+2 cups tea-smoked tofu, cubed	ready	tea-smoked tofu	2	cup	-	-	-	C-purpose6
+1 lb pizza-cut pepperoni	ready	pizza-cut pepperoni	1	lb	-	-	D	C-purpose6
+3 sieve	unsupported	-	-	-	-	-	-	C-plural6
+4 skewer	unsupported	-	-	-	-	-	-	C-plural6
+2 Ramekin	unsupported	-	-	-	-	-	-	C-plural6
+3 coaster	unsupported	-	-	-	-	-	-	C-plural6
+4 placemat	unsupported	-	-	-	-	-	-	C-plural6
+2 tea towel	unsupported	-	-	-	-	-	-	C-plural6
+1 cup apricots & prunes, chopped	needs_review	-	1	cup	-	-	-	B-and6
+2 tbsp tamari and mirin	needs_review	-	2	tbsp	-	-	-	B-and6
+1 lb clams and mussels, scrubbed	needs_review	-	1	lb	-	-	-	B-and6
+1/2 cup currants and capers	needs_review	-	1/2	cup	-	-	-	B-and6
+3 cups bok choy and snap peas	needs_review	-	3	cup	-	-	-	B-and6
+1 cup feta & kalamata olives	needs_review	-	1	cup	-	-	-	B-and6
+1 bag sour cream & onion chips	ready	sour cream & onion chips|sour cream and onion chips	1	bag	-	-	-	B-compound6
+1 jar bread-and-butter pickles	ready	bread-and-butter pickles	1	jar	-	-	-	B-compound6
+2 cups black and white sesame seeds	ready	black and white sesame seeds	2	cup	-	-	-	B-compound6
+1 lb red & green grapes	ready	red & green grapes|red and green grapes	1	lb	-	-	-	B-compound6
+1 cup cheese, gouda or havarti	needs_review	-	1	cup	-	gouda;havarti||gouda cheese;havarti cheese	-	B-choice6
+2 cups lettuce, butter or bibb	needs_review	-	2	cup	-	butter lettuce;bibb lettuce	-	B-choice6
+1 lb pasta, rigatoni or ziti	needs_review	-	1	lb	-	rigatoni;ziti||rigatoni pasta;ziti pasta	-	B-choice6
+4 Honeycrisp or Pink Lady apples	needs_review	-	4	each	-	Honeycrisp apples;Pink Lady apples	-	B-choice6

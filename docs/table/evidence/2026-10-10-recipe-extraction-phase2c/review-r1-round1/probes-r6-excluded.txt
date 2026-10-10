@@ -1,0 +1,394 @@
+EXPOSED	A-remark6	1 envelope unflavored gelatin, bloomed in 1/4 cup cold water
+EXPOSED	A-control6	2 tbsp butter, plus 1 tbsp for the pan
+EXPOSED	A-control6	1 cup sugar, plus 2 tbsp for sprinkling
+EXPOSED	B-compound6	1 cup half and half
+EXPOSED	B-compound6	1 can pork and beans
+EXPOSED	B-compound6	1 tsp salt and pepper
+EXPOSED	B-choice6	1 lb Yukon Gold or red potatoes
+EXPOSED	B-choice6	1 cup nuts, almonds or cashews
+EXPOSED	B-choice6	1 cup basmati or jasmine rice
+EXPOSED	C-measure6	1 splodge ketchup
+EXPOSED	C-equip6	1 sugar bowl
+EXPOSED	C-equip6	1 waffle cone maker
+EXPOSED	C-equip6	1 bag pie weights
+EXPOSED	C-equip6	1 fish kettle
+EXPOSED	C-equip6	1 Pastry Blender
+EXPOSED	C-equip6	1 egg piercer
+EXPOSED	C-equip6	1 pineapple corer
+EXPOSED	C-equip6	1 strawberry huller
+EXPOSED	C-equip6	1 lemon zester
+EXPOSED	C-purpose6	1 bag oyster crackers
+EXPOSED	C-purpose6	1 jar cocktail onions
+EXPOSED	C-purpose6	1 jar cocktail cherries
+EXPOSED	C-purpose6	1 bag pretzel rods
+EXPOSED	C-purpose6	6 tart shells
+EXPOSED	C-purpose6	1 bag ice
+EXPOSED	C-purpose6	1 box baking soda
+EXPOSED	C-dish6	4 dinner rolls
+EXPOSED	C-dish6	6 pizza rolls
+EXPOSED	C-dish6	2 cheese sticks
+EXPOSED	C-dish6	2 deep-dish pan pizzas
+EXPOSED	C-plural6	2 tomato
+EXPOSED	D-known6	1 punnet raspberries
+EXPOSED	D-known6	2 bars dark chocolate
+EXPOSED	D-known6	3 rashers back bacon
+EXPOSED	D-declared6	1 pt heavy cream
+EXPOSED	D-declared6	1 gal whole milk
+EXPOSED	K-everyday6	1 medium yellow onion, finely chopped
+EXPOSED	K-everyday6	2 cups low-sodium chicken broth
+EXPOSED	K-everyday6	1/4 cup chopped fresh parsley
+EXPOSED	K-everyday6	2 medium carrots, peeled and diced
+EXPOSED	K-everyday6	12 oz penne pasta
+EXPOSED	K-everyday6	1 lb lean ground beef
+EXPOSED	K-everyday6	1 tbsp tomato paste
+EXPOSED	K-everyday6	1 lemon, zested and juiced
+EXPOSED	K-everyday6	2 limes, cut into wedges
+EXPOSED	K-everyday6	1 cup long-grain white rice
+EXPOSED	K-everyday6	2 tsp ground cumin
+EXPOSED	K-everyday6	1 tsp smoked paprika
+EXPOSED	K-everyday6	1/2 cup mayonnaise
+EXPOSED	K-everyday6	1 tbsp Dijon mustard
+EXPOSED	K-everyday6	2 tbsp apple cider vinegar
+EXPOSED	K-everyday6	1 pint cherry tomatoes, halved
+EXPOSED	K-everyday6	1/2 small red onion, very thinly sliced
+EXPOSED	K-everyday6	4 slices thick-cut bacon, chopped
+EXPOSED	K-everyday6	1 cup heavy whipping cream
+EXPOSED	K-everyday6	1 cup semisweet chocolate chips
+EXPOSED	K-everyday6	1 tsp baking soda
+EXPOSED	K-everyday6	1 tsp ground cinnamon
+EXPOSED	K-everyday6	1/4 tsp ground nutmeg
+EXPOSED	K-everyday6	3 ripe bananas, mashed
+EXPOSED	K-everyday6	1/3 cup vegetable oil
+EXPOSED	K-everyday6	1 cup chopped walnuts
+EXPOSED	K-everyday6	2 tbsp soy sauce
+EXPOSED	K-everyday6	1 tbsp grated fresh ginger
+EXPOSED	K-everyday6	2 tbsp rice vinegar
+EXPOSED	K-everyday6	1 tbsp cornstarch
+EXPOSED	K-everyday6	8 oz cremini mushrooms, sliced
+EXPOSED	K-everyday6	2 cups baby spinach
+EXPOSED	K-everyday6	1/2 cup dry white wine
+EXPOSED	K-everyday6	1 tsp kosher salt
+EXPOSED	K-everyday6	1/2 tsp freshly ground black pepper
+EXPOSED	K-everyday6	2 sprigs fresh rosemary
+EXPOSED	K-everyday6	4 sprigs fresh thyme
+EXPOSED	K-everyday6	2 bay leaves
+EXPOSED	K-everyday6	1 cinnamon stick
+EXPOSED	K-everyday6	3 cups cubed day-old bread
+EXPOSED	K-everyday6	1 cup chicken stock
+EXPOSED	K-everyday6	1 lemon, halved
+EXPOSED	K-everyday6	1 cup plain Greek yogurt
+EXPOSED	K-everyday6	1 lb ground turkey
+EXPOSED	K-everyday6	1 tsp ground turmeric
+EXPOSED	K-everyday6	2 cups cooked brown rice
+EXPOSED	K-everyday6	2 tbsp butter
+EXPOSED	K-everyday6	1 large egg white
+EXPOSED	K-everyday6	1 cup buttermilk
+EXPOSED	K-everyday6	2 cups shredded mozzarella
+EXPOSED	K-everyday6	1 lb Italian sausage, casings removed
+EXPOSED	K-everyday6	2 tbsp all-purpose flour
+EXPOSED	K-everyday6	3/4 cup granulated sugar
+EXPOSED	K-everyday6	1 lb green beans, trimmed
+EXPOSED	K-everyday6	1/4 cup sliced almonds, toasted
+EXPOSED	K-everyday6	1 cup frozen mixed vegetables
+EXPOSED	K-everyday6	4 hamburger buns, toasted
+EXPOSED	K-everyday6	1/4 cup ketchup
+EXPOSED	K-everyday6	1 lb lean ground beef (90/10)
+EXPOSED	K-everyday6	8 hot dog buns
+EXPOSED	K-everyday6	2 cups milk
+EXPOSED	K-everyday6	1/4 tsp cayenne pepper
+EXPOSED	K-everyday6	1 tsp garlic powder
+EXPOSED	K-everyday6	1 tsp onion powder
+EXPOSED	K-everyday6	1 cup fresh blueberries
+EXPOSED	K-everyday6	1 tbsp chia seeds
+EXPOSED	K-everyday6	1 cup unsweetened almond milk
+EXPOSED	K-everyday6	1 tsp pumpkin pie spice
+EXPOSED	K-everyday6	1 can cream of mushroom soup
+EXPOSED	K-everyday6	1 dozen eggs
+EXPOSED	K-everyday6	1 cup pizza sauce
+EXPOSED	K-everyday6	1 tsp Italian seasoning
+EXPOSED	K-everyday6	1 green bell pepper, chopped
+EXPOSED	K-everyday6	8 oz rice noodles
+EXPOSED	K-everyday6	1 cup bean sprouts
+EXPOSED	K-everyday6	1 lb shrimp, peeled and deveined
+EXPOSED	K-everyday6	2 ears corn, husked
+EXPOSED	K-everyday6	1 cup cake flour
+EXPOSED	K-everyday6	1 cup whole-wheat flour
+EXPOSED	K-everyday6	1 tbsp sugar
+EXPOSED	K-everyday6	3 cups bread flour
+EXPOSED	K-everyday6	1 cup pecan halves
+EXPOSED	K-everyday6	1 can sweetened condensed milk
+EXPOSED	K-everyday6	1 package graham crackers
+EXPOSED	K-everyday6	1 cup mini marshmallows
+EXPOSED	K-everyday6	1 box instant vanilla pudding mix
+EXPOSED	K-everyday6	24 vanilla wafers
+EXPOSED	K-everyday6	4 cups beef broth
+EXPOSED	K-everyday6	2 cups egg noodles
+EXPOSED	K-everyday6	1/2 cup sour cream
+EXPOSED	D-known6	1 tub Cool Whip
+EXPOSED	K-lesscommon6	4 oz smoked salmon
+EXPOSED	K-lesscommon6	2 duck breasts, skin scored
+EXPOSED	K-lesscommon6	1 rack of lamb, frenched
+EXPOSED	K-lesscommon6	4 lamb loin chops
+EXPOSED	K-lesscommon6	1 lb ground bison
+EXPOSED	K-lesscommon6	2 tbsp white miso
+EXPOSED	K-lesscommon6	1 tsp sumac
+EXPOSED	K-lesscommon6	2 tsp za'atar
+EXPOSED	K-lesscommon6	6 curry leaves
+EXPOSED	K-lesscommon6	2 star anise pods
+EXPOSED	K-lesscommon6	1 cup labneh
+EXPOSED	K-lesscommon6	1/2 cup crème fraîche
+EXPOSED	K-lesscommon6	1 cup paneer cubes
+EXPOSED	K-lesscommon6	1/2 cup mascarpone
+EXPOSED	K-lesscommon6	2 tbsp ghee
+EXPOSED	K-lesscommon6	1 tbsp gochugaru
+EXPOSED	K-lesscommon6	1/2 cup Mexican crema
+EXPOSED	K-lesscommon6	4 baby bok choy, halved
+EXPOSED	K-lesscommon6	1 sheet kombu
+EXPOSED	K-lesscommon6	2 tbsp shaoxing wine
+EXPOSED	K-lesscommon6	1 tbsp oyster sauce
+EXPOSED	K-lesscommon6	1 tsp five-spice powder
+EXPOSED	K-lesscommon6	1 lb crawfish tails
+EXPOSED	K-lesscommon6	1 cup quark
+EXPOSED	K-everyday6	1 cup self-rising flour
+EXPOSED	K-everyday6	4 slices provolone
+EXPOSED	K-everyday6	1 cup frozen peas and carrots
+EXPOSED	K-everyday6	2 cups shredded green cabbage
+EXPOSED	K-everyday6	1 lb ground chicken
+EXPOSED	K-everyday6	1 cup Thai basil leaves
+EXPOSED	K-lesscommon6	2 cups mâche
+EXPOSED	K-lesscommon6	2 tbsp yuzu kosho
+EXPOSED	K-lesscommon6	1 tsp sansho pepper
+EXPOSED	K-lesscommon6	2 tbsp doenjang
+EXPOSED	A-remark6	1/4 cup fresh lime juice (from 2 limes)
+EXPOSED	B-choice6	1 cup cashew or almond milk
+NEAR	A-remark6	3 tbsp white miso whisked into 1/2 cup warm stock
+NEAR	A-remark6	1 cup cooked lentils (about 1/3 cup dry)
+NEAR	A-control6	1 tbsp olive oil, plus more for drizzling
+NEAR	A-control6	4 cups water, divided
+NEAR	B-and6	1/4 cup chopped dill and chives
+NEAR	B-compound6	1 cup sweet and spicy pecans
+NEAR	B-choice6	1/2 cup grated pecorino or parmesan
+NEAR	B-choice6	2 cups milk, whole or 2%
+NEAR	C-measure6	1 crescent honeydew
+NEAR	C-measure6	1 drum cooking oil
+NEAR	C-measure6	1 bowl pho
+NEAR	C-measure6	1 pearl tapioca
+NEAR	C-equip6	1 lobster pot
+NEAR	C-equip6	1 duck press
+NEAR	C-equip6	2 rolls aluminum foil
+NEAR	C-equip6	1 goose quill
+NEAR	C-equip6	1 honey pot
+NEAR	C-purpose6	1 bag cinnamon chips
+NEAR	C-purpose6	1 bag toffee chips
+NEAR	C-purpose6	1 cup butterscotch chips
+NEAR	C-purpose6	4 pastry shells
+NEAR	C-purpose6	2 lb lamb riblets
+NEAR	C-dish6	2 poke bowls
+NEAR	C-dish6	2 dutch oven breads
+NEAR	C-dish6	2 crockpot lasagnas
+NEAR	C-dish6	3 lobster rolls
+NEAR	C-dish6	4 lettuce wraps
+NEAR	C-dish6	2 bundt cakes
+NEAR	C-dish6	6 pinwheel cookies
+NEAR	C-dish6	4 bread puddings
+NEAR	C-dish6	2 bear claws
+NEAR	C-dish6	4 skillet cookies
+NEAR	C-dish6	1 hot pot
+NEAR	C-dish6	6 cup pies
+NEAR	C-plural6	3 shallot
+NEAR	C-plural6	4 egg
+NEAR	C-plural6	2 avocado, pitted
+NEAR	C-plural6	6 baby carrot
+NEAR	C-plural6	2 green onion, sliced
+NEAR	C-plural6	3 jalapeño, seeded
+NEAR	C-plural6	4 chicken breast
+NEAR	C-plural6	2 chorizo
+NEAR	C-plural6	4 corn tortilla
+NEAR	C-plural6	4 panini
+NEAR	C-plural6	6 biscotti
+NEAR	C-plural6	12 ravioli
+NEAR	C-plural6	4 cannoli
+NEAR	C-plural6	3 bao
+NEAR	C-plural6	6 mochi
+NEAR	C-plural6	8 gyoza
+NEAR	C-plural6	2 whisk
+NEAR	C-plural6	3 colander
+NEAR	C-plural6	2 Whisk
+NEAR	D-known6	1 tub Crisco
+NEAR	D-alias6	1 crate clementines
+NEAR	D-declared6	1 Tbs. honey
+NEAR	D-declared6	6 fl.oz espresso
+NEAR	D-declared6	1 dl single cream
+NEAR	D-declared6	1 pk bacon
+NEAR	K-everyday6	3 large eggs, lightly beaten
+NEAR	K-everyday6	1 1/2 cups all-purpose flour, spooned and leveled
+NEAR	K-everyday6	1/2 cup packed light brown sugar
+NEAR	K-everyday6	2 tsp pure vanilla extract
+NEAR	K-everyday6	1/2 tsp fine sea salt
+NEAR	K-everyday6	4 garlic cloves, smashed
+NEAR	K-everyday6	1/2 tsp red pepper flakes
+NEAR	K-everyday6	1 cup sour cream, for serving
+NEAR	K-everyday6	1 tbsp chili powder
+NEAR	K-everyday6	1/3 cup extra-virgin olive oil
+NEAR	K-everyday6	1 tsp honey
+NEAR	K-everyday6	1/2 cup grated Parmesan cheese
+NEAR	K-everyday6	1 cup granulated sugar
+NEAR	K-everyday6	1 tbsp toasted sesame oil
+NEAR	K-everyday6	1 head broccoli, cut into florets
+NEAR	K-everyday6	2 lb bone-in chicken thighs
+NEAR	K-everyday6	1 tbsp lemon juice
+NEAR	K-everyday6	6 cups vegetable stock
+NEAR	K-everyday6	2 shallots, minced
+NEAR	K-everyday6	1/2 cup panko breadcrumbs
+NEAR	K-everyday6	9 lasagna noodles
+NEAR	K-everyday6	1/4 cup chopped fresh basil
+NEAR	K-everyday6	2 cups chopped broccoli
+NEAR	K-everyday6	4 slices American cheese
+NEAR	K-everyday6	1 cup barbecue sauce
+NEAR	K-everyday6	4 cups cubed watermelon
+NEAR	K-everyday6	1 cup sliced strawberries
+NEAR	K-everyday6	2 kiwis, peeled and sliced
+NEAR	K-everyday6	1 cup vanilla yogurt
+NEAR	K-everyday6	1/2 cup granola
+NEAR	K-everyday6	1 tbsp peanut butter
+NEAR	K-everyday6	2 slices whole-wheat bread
+NEAR	K-everyday6	1/2 cup maple syrup
+NEAR	K-everyday6	1 cup crushed potato chips
+NEAR	K-everyday6	8 slices Swiss cheese
+NEAR	K-everyday6	2 tbsp honey mustard
+NEAR	K-everyday6	3 tbsp hoisin sauce
+NEAR	K-everyday6	2 tsp sriracha
+NEAR	K-everyday6	4 tbsp salted butter
+NEAR	K-everyday6	1/2 tsp Old Bay seasoning
+NEAR	K-everyday6	1 cup cotija cheese, crumbled
+NEAR	K-everyday6	1 jalapeño, finely chopped
+NEAR	K-everyday6	1/2 cup fresh orange juice
+NEAR	K-everyday6	2 tsp orange zest
+NEAR	K-everyday6	2 cups cold milk
+NEAR	K-everyday6	1 cup sliced bananas
+NEAR	K-everyday6	1 cup frozen raspberries
+NEAR	K-everyday6	2 tbsp brown sugar
+NEAR	K-everyday6	1 sweet onion, sliced
+NEAR	K-everyday6	3 tbsp Worcestershire sauce
+NEAR	K-lesscommon6	4 baby leeks
+NEAR	K-lesscommon6	1 large rutabaga, cubed
+NEAR	K-lesscommon6	1 lb salsify, peeled
+NEAR	K-lesscommon6	2 chayotes, peeled and julienned
+NEAR	K-lesscommon6	1 cup fresh huckleberries
+NEAR	K-lesscommon6	1 pomelo, segmented
+NEAR	K-lesscommon6	4 kumquats, thinly sliced
+NEAR	K-lesscommon6	12 mussels, scrubbed
+NEAR	K-lesscommon6	8 oz pancetta, diced
+NEAR	K-lesscommon6	4 oz guanciale, cut into lardons
+NEAR	K-lesscommon6	1 cup freekeh
+NEAR	K-lesscommon6	1/2 cup black lentils
+NEAR	K-lesscommon6	1 cup red quinoa
+NEAR	K-lesscommon6	1/2 cup pearl barley
+NEAR	K-lesscommon6	1/2 cup amaranth
+NEAR	K-lesscommon6	1 cup sorghum
+NEAR	K-lesscommon6	8 oz soba noodles
+NEAR	K-lesscommon6	12 oz bucatini
+NEAR	K-lesscommon6	1 lb fresh gnocchi
+NEAR	K-lesscommon6	8 oz orecchiette
+NEAR	K-lesscommon6	1/2 cup fregola
+NEAR	K-lesscommon6	1 tbsp doubanjiang
+NEAR	K-lesscommon6	1 tbsp black vinegar
+NEAR	K-lesscommon6	1/4 cup mirin
+NEAR	K-lesscommon6	1 tsp Aleppo pepper
+NEAR	K-lesscommon6	1/2 tsp ground fenugreek
+NEAR	K-lesscommon6	1 tsp nigella seeds
+NEAR	K-lesscommon6	1 tbsp tamarind concentrate
+NEAR	K-lesscommon6	1/4 cup coconut aminos
+NEAR	K-lesscommon6	4 oz burrata
+NEAR	K-lesscommon6	6 oz halloumi, sliced
+NEAR	K-lesscommon6	2 tbsp schmaltz
+NEAR	K-lesscommon6	1 cup tahini
+NEAR	K-lesscommon6	4 dried ancho chiles, stemmed
+NEAR	K-lesscommon6	1 cup epazote leaves
+NEAR	K-lesscommon6	1 lb cassava, peeled
+NEAR	K-lesscommon6	1 tsp ground allspice
+NEAR	K-lesscommon6	2 cups dashi
+NEAR	K-lesscommon6	1/4 cup bonito flakes
+NEAR	K-lesscommon6	1 smoked turkey wing
+NEAR	K-lesscommon6	1 cup okra, sliced
+NEAR	K-lesscommon6	1 cup grits
+NEAR	K-lesscommon6	1/2 cup pimento cheese
+NEAR	K-lesscommon6	12 pierogi
+NEAR	K-lesscommon6	1 cup farmer cheese
+NEAR	K-lesscommon6	1 jar lingonberry preserves
+NEAR	K-lesscommon6	4 oz gravlax, sliced
+NEAR	K-everyday6	1/2 cup frozen shelled edamame, thawed
+NEAR	K-everyday6	1 cup salted roasted cashews
+NEAR	K-everyday6	1 tbsp neutral oil such as canola
+NEAR	K-everyday6	2 cups crushed cornflakes
+NEAR	K-everyday6	1 lb chicken tenderloins
+NEAR	K-everyday6	3 tbsp hot honey
+NEAR	K-everyday6	1 tbsp flaxseed meal
+NEAR	K-everyday6	1 tsp espresso powder
+NEAR	K-everyday6	6 slices sourdough, toasted
+NEAR	K-everyday6	1 cup crumbled goat cheese
+NEAR	K-everyday6	2 tbsp whole-grain mustard
+NEAR	K-everyday6	1 tbsp pure maple syrup
+NEAR	K-everyday6	4 slices center-cut bacon
+NEAR	K-everyday6	1/3 cup dried cherries
+NEAR	K-everyday6	2 cups cooked short-grain rice
+NEAR	K-everyday6	1 cup grated Gruyère cheese
+NEAR	K-everyday6	1 tbsp fresh thyme, chopped
+NEAR	K-everyday6	1 cup dry vermouth
+NEAR	K-everyday6	1 lb pappardelle
+NEAR	K-everyday6	1 cup veal stock
+NEAR	K-everyday6	2 egg whites, at room temperature
+NEAR	K-everyday6	1/4 tsp cream of tartar
+NEAR	K-everyday6	1 lb rhubarb, cut into 1-inch pieces
+NEAR	K-everyday6	1/2 cup crumbled blue cheese
+NEAR	K-everyday6	1/4 cup candied walnuts
+NEAR	K-everyday6	1/2 cup diced salami
+NEAR	K-everyday6	1/2 cup sliced pepperoncini
+NEAR	K-everyday6	1 cup queso fresco, crumbled
+NEAR	K-everyday6	8 corn tostadas
+NEAR	K-everyday6	1 tbsp red curry paste
+NEAR	K-everyday6	2 cups cooked jasmine rice, for serving
+NEAR	K-everyday6	2 tsp apple pie spice
+NEAR	K-everyday6	1/2 cup mini chocolate chips
+NEAR	K-everyday6	1/2 cup raw honey
+NEAR	K-lesscommon6	1/2 cup kasha
+NEAR	K-lesscommon6	1 cup purslane leaves
+NEAR	K-lesscommon6	1 bunch sorrel, stems removed
+NEAR	K-lesscommon6	2 tbsp black truffle paste
+NEAR	K-lesscommon6	1 lb halibut cheeks
+NEAR	K-lesscommon6	8 oz sobrasada
+NEAR	K-lesscommon6	1 cup cooked adzuki beans
+NEAR	K-lesscommon6	1/2 cup dried mung beans
+NEAR	K-lesscommon6	1 cup cooked cranberry beans
+NEAR	K-lesscommon6	1/2 tsp asafoetida powder
+NEAR	K-lesscommon6	1 tbsp furikake
+NEAR	K-lesscommon6	1 cup Japanese mayonnaise
+NEAR	K-lesscommon6	1 tbsp chili crisp
+NEAR	K-lesscommon6	2 stalks lemongrass, bruised
+NEAR	K-lesscommon6	2 tbsp shrimp paste
+NEAR	K-lesscommon6	2 cups huitlacoche
+NEAR	K-lesscommon6	1 cup cooked hominy
+NEAR	K-lesscommon6	1 cup sofrito
+NEAR	K-lesscommon6	1 bunch culantro
+NEAR	K-lesscommon6	2 cups teff flour
+NEAR	K-lesscommon6	1/2 cup pomegranate molasses
+NEAR	K-lesscommon6	1 cup lingonberries
+NEAR	K-lesscommon6	1 cup quark cheese
+NEAR	C-dish6	4 teacup cakes
+NEAR	C-purpose6	6 lamb lollipop chops
+NEAR	C-purpose6	1 jar cocktail gherkins
+NEAR	C-purpose6	1 box ice-cream wafers
+NEAR	C-purpose6	12 pancake rolls
+NEAR	C-purpose6	4 coffee buns
+NEAR	C-plural6	3 brioche
+NEAR	C-plural6	2 baguette, sliced
+NEAR	C-plural6	4 crumpet
+NEAR	C-plural6	6 naan
+NEAR	C-plural6	4 tamale
+NEAR	C-plural6	8 pierogies
+NEAR	C-plural6	2 focaccia
+NEAR	C-plural6	6 samosa
+NEAR	C-plural6	4 calzone
+NEAR	C-plural6	3 peach, sliced
+NEAR	C-plural6	2 ladle
+NEAR	C-plural6	2 oven glove
