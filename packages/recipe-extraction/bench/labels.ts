@@ -1,7 +1,8 @@
 /**
  * Strict loading and validation of the benchmark label files (CONTRACT-v1 §8):
- * `fixtures/ingredients/{dev,holdout,holdout-v2}.jsonl` and `fixtures/pages/labels.json`.
- * holdout-v2 cases (split `holdout2`, EVALUATION-PLAN-v2 §9) also carry `source` and `construction`.
+ * `fixtures/ingredients/{dev,holdout,holdout-v2,holdout-v3}.jsonl` and `fixtures/pages/labels.json`.
+ * holdout-v2 and holdout-v3 cases (splits `holdout2`, `holdout3`) also carry `source` and `construction`.
+ * holdout-v3 may not exist yet: it is loaded only when asked for, and a missing file is a clear error.
  *
  * Validation is all-or-nothing: every problem is collected and reported with its case id, and any
  * problem is fatal (`LabelValidationError`). The validate/parse functions are pure; only the `load*`
@@ -54,10 +55,10 @@ function checkKeys(o: Obj, required: readonly string[], optional: readonly strin
 }
 
 const CASE_FIELDS = ["id", "split", "categories", "input", "expect", "severity", "seasoningClass", "provenance", "rationale"] as const;
-/** Optional everywhere, except that holdout2 requires `source` and `construction`. */
+/** Optional everywhere, except that holdout2 and holdout3 require `source` and `construction`. */
 const OPTIONAL_CASE_FIELDS = ["accept", "source", "construction"] as const;
-const SPLITS_REQUIRING_SOURCE: readonly Split[] = ["holdout2"];
-const SPLIT_PREFIX: Record<Split, string> = { dev: "ing-dev-", holdout: "ing-hold-", holdout2: "ing-h2-" };
+const SPLITS_REQUIRING_SOURCE: readonly Split[] = ["holdout2", "holdout3"];
+const SPLIT_PREFIX: Record<Split, string> = { dev: "ing-dev-", holdout: "ing-hold-", holdout2: "ing-h2-", holdout3: "ing-h3-" };
 export const MAX_CONSTRUCTION_CHARS = 120;
 
 function checkSource(v: unknown, provenanceKind: unknown, where: string, errors: string[]) {
@@ -242,19 +243,26 @@ export function checkCorpus(cases: IngredientCase[]): void {
   if (errors.length > 0) throw new LabelValidationError("ingredient corpus", errors);
 }
 
-export const INGREDIENT_FILES: Record<Split, string> = { dev: "ingredients/dev.jsonl", holdout: "ingredients/holdout.jsonl", holdout2: "ingredients/holdout-v2.jsonl" };
+export const INGREDIENT_FILES: Record<Split, string> = {
+  dev: "ingredients/dev.jsonl",
+  holdout: "ingredients/holdout.jsonl",
+  holdout2: "ingredients/holdout-v2.jsonl",
+  holdout3: "ingredients/holdout-v3.jsonl",
+};
 export const PAGE_LABELS_FILE = "pages/labels.json";
 
 /**
- * Read and validate the ingredient cases of the given splits (file order; dev, holdout, holdout2).
- * The default is the Phase 1 splits (dev + holdout), so existing callers are unchanged; pass `SPLITS`
- * (or `["holdout2"]`) for holdout-v2.
+ * Read and validate the ingredient cases of the given splits (file order; dev, holdout, holdout2,
+ * holdout3). The default is the Phase 1 splits (dev + holdout), so existing callers are unchanged; pass
+ * `EVERY_SPLITS` (or `["holdout2"]`) for holdout-v2 and `["holdout3"]` for holdout-v3. A requested split
+ * whose file does not exist is an error (holdout-v3 before it is written).
  */
 export function loadIngredientCases(fixturesDir: string, splits: readonly Split[] = V1_SPLITS): IngredientCase[] {
   const all: IngredientCase[] = [];
   for (const split of SPLITS) {
     if (!splits.includes(split)) continue;
     const rel = INGREDIENT_FILES[split];
+    if (!existsSync(path.join(fixturesDir, rel))) throw new LabelValidationError(rel, [`${rel} does not exist (split ${split}${split === "holdout3" ? ": holdout-v3 has not been written yet" : ""})`]);
     const text = readFileSync(path.join(fixturesDir, rel), "utf8");
     all.push(...parseIngredientJsonl(text, split, rel));
   }

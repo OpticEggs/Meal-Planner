@@ -12,7 +12,7 @@ import type { IngredientEngine } from "../src/contract";
 import { canonicalJsonPretty } from "./canonical";
 import { compareIngredient } from "./compare";
 import { pageExtractor, selectIngredientEngines, type PageExtractor } from "./engines";
-import { computeFreeze, computeFreezeV2, freezeV2Status, sha256Hex } from "./freeze";
+import { computeFreeze, computeFreezeV2, computeFreezeV3, freezeV2Status, freezeV3Status, sha256Hex } from "./freeze";
 import { checkInvariants } from "./invariants";
 import { INGREDIENT_FILES, PAGE_LABELS_FILE, loadIngredientCases, loadPageLabels } from "./labels";
 import {
@@ -41,7 +41,7 @@ import {
 import { buildReport, renderMarkdown, reportJson, type BenchReport, type CorpusFile, type PageRun, type TimingEntry } from "./report";
 import { scoreIngredients, scorePages, type IngredientScore } from "./score";
 import { fraction } from "./stats";
-import { PAGE_SPLITS, SPLITS, V1_SPLITS, type IngredientCase, type PageLabel, type Split } from "./types";
+import { EVERY_SPLITS, PAGE_SPLITS, SPLITS, V1_SPLITS, type IngredientCase, type PageLabel, type Split } from "./types";
 
 export const PACKAGE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const FIXTURES_DIR = path.join(PACKAGE_ROOT, "fixtures");
@@ -57,9 +57,10 @@ Usage: tsx bench/cli.ts [options]
                          outcome scorer (default outcomes-v3 = bench/outcomes.ts, EVALUATION-PLAN-v3;
                          outcomes-v2 = the archived bench/archive/ scorer, for reproducing the
                          historical holdout-v2 report)
-  --split dev|holdout|holdout2|all|every
+  --split dev|holdout|holdout2|holdout3|all|every
                          cases to score (default all = dev + holdout-v1, as in Phase 1; holdout-v2 is
                          opt-in only: holdout2 alone, or every = dev + holdout-v1 + holdout-v2;
+                         holdout-v3 is scored only by holdout3 alone, never by all or every;
                          per-split figures are always reported; outcomes are never pooled across sets)
   --pages                also score the synthetic recipe pages with extractRecipePage
   --case <id>            score one ingredient case or page and print its details
@@ -68,17 +69,22 @@ Usage: tsx bench/cli.ts [options]
   --print-freeze <date>  print the holdout freeze record computed from the files (writes nothing)
   --print-freeze-v2 <date>
                          print the holdout-v2 freeze record (FREEZE-v2.json) computed from the file
+  --print-freeze-v3 <date>
+                         print the holdout-v3 freeze record (FREEZE-v3.json) computed from the file
   --help                 this text`;
 
 export class UsageError extends Error {}
 
-/** `all` = the Phase 1 splits (dev + holdout); `every` adds holdout2. holdout2 is never scored by default. */
+/**
+ * `all` = the Phase 1 splits (dev + holdout); `every` adds holdout2. holdout2 is never scored by default;
+ * holdout3 only when selected by itself.
+ */
 export type SplitSelection = Split | "all" | "every";
 
 /** The splits a selection scores. */
 export function splitsFor(selection: SplitSelection): Split[] {
   if (selection === "all") return [...V1_SPLITS];
-  if (selection === "every") return [...SPLITS];
+  if (selection === "every") return [...EVERY_SPLITS];
   return [selection];
 }
 
@@ -96,6 +102,8 @@ export interface CliOptions {
   printFreeze: string | null;
   /** Set only by --print-freeze-v2 (absent otherwise). */
   printFreezeV2?: string;
+  /** Set only by --print-freeze-v3 (absent otherwise). */
+  printFreezeV3?: string;
   /** Set only by --scorer (absent = outcomes-v3). */
   scorer?: ScorerChoice;
   /** Set only by --engines: the registered engines to keep (absent = no restriction). */
@@ -130,7 +138,7 @@ export function parseArgs(argv: readonly string[]): CliOptions {
       }
       case "--split": {
         const v = value();
-        if (v !== "all" && v !== "every" && !(SPLITS as readonly string[]).includes(v)) throw new UsageError(`--split must be dev, holdout, holdout2, all or every (got ${v})`);
+        if (v !== "all" && v !== "every" && !(SPLITS as readonly string[]).includes(v)) throw new UsageError(`--split must be dev, holdout, holdout2, holdout3, all or every (got ${v})`);
         o.split = v as SplitSelection;
         break;
       }
@@ -158,6 +166,12 @@ export function parseArgs(argv: readonly string[]): CliOptions {
         o.printFreezeV2 = v;
         break;
       }
+      case "--print-freeze-v3": {
+        const v = value();
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) throw new UsageError("--print-freeze-v3 needs a date YYYY-MM-DD");
+        o.printFreezeV3 = v;
+        break;
+      }
       case "--help":
       case "-h":
         o.help = true;
@@ -167,6 +181,7 @@ export function parseArgs(argv: readonly string[]): CliOptions {
     }
   }
   if (o.onlyEngines && o.engines.length > 0) throw new UsageError("--engine and --engines cannot be combined");
+  if (o.scorer === "outcomes-v2" && o.split === "holdout3") throw new UsageError("--scorer outcomes-v2 predates holdout-v3 and cannot score it (use outcomes-v3)");
   return o;
 }
 
@@ -257,7 +272,7 @@ function acceptanceFreezes(fixturesDir: string, splits: readonly Split[]): Parti
   for (const s of ACCEPTANCE_SPLITS) if (splits.includes(s)) out[s] = HOLDOUT_FREEZE_STATUS[s](fixturesDir);
   return out;
 }
-const HOLDOUT_FREEZE_STATUS: Record<AcceptanceSplit, (fixturesDir: string) => HoldoutFreezeStatus> = { holdout2: freezeV2Status };
+const HOLDOUT_FREEZE_STATUS: Record<AcceptanceSplit, (fixturesDir: string) => HoldoutFreezeStatus> = { holdout2: freezeV2Status, holdout3: freezeV3Status };
 
 /** SHA-256 of a package file, or null when it cannot be read. */
 function packageFileSha256(packageRoot: string, rel: string): string | null {
@@ -287,6 +302,15 @@ export async function run(opts: CliOptions, deps: RunDeps): Promise<RunResult> {
   }
   if (opts.printFreezeV2) {
     deps.stdout(JSON.stringify(computeFreezeV2(deps.fixturesDir, opts.printFreezeV2), null, 2));
+    return noReport(0);
+  }
+  if (opts.printFreezeV3) {
+    try {
+      deps.stdout(JSON.stringify(computeFreezeV3(deps.fixturesDir, opts.printFreezeV3), null, 2));
+    } catch (err) {
+      deps.stderr(`holdout-v3 cannot be read (${(err as Error).message})`);
+      return noReport(1);
+    }
     return noReport(0);
   }
 

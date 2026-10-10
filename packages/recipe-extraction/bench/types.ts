@@ -6,11 +6,14 @@ import { UNIT_REGISTRY, type AmountUnstated, type DiagnosticCode, type Dimension
 import { cmp, parseRationalText, withinBounds, type Rational } from "../src/rational";
 
 /**
- * Every ingredient split, in report order. `holdout2` is the fresh holdout-v2 (EVALUATION-PLAN-v2 §9);
- * `dev` and `holdout` (holdout-v1, previously exposed) are the Phase 1 splits.
+ * Every ingredient split, in report order. `dev` and `holdout` (holdout-v1, previously exposed) are the
+ * Phase 1 splits; `holdout2` is holdout-v2 (EVALUATION-PLAN-v2 §9; exposed since its single run);
+ * `holdout3` is the future fresh holdout-v3 (EVALUATION-PLAN-v3) — its file may not exist yet.
  */
-export const SPLITS = ["dev", "holdout", "holdout2"] as const;
+export const SPLITS = ["dev", "holdout", "holdout2", "holdout3"] as const;
 export type Split = (typeof SPLITS)[number];
+/** What `--split every` scores: dev + holdout-v1 + holdout-v2 (its Phase 2 meaning; never holdout-v3). */
+export const EVERY_SPLITS = ["dev", "holdout", "holdout2"] as const satisfies readonly Split[];
 /** The Phase 1 ingredient splits: the default of `loadIngredientCases` (unchanged behaviour for its callers). */
 export const V1_SPLITS = ["dev", "holdout"] as const satisfies readonly Split[];
 /** Page labels exist for these splits only. */
@@ -121,7 +124,7 @@ export interface Provenance {
 }
 
 /**
- * Structured origin of a case (required for holdout2 cases, optional elsewhere): who wrote a synthetic
+ * Structured origin of a case (required for holdout2 and holdout3 cases, optional elsewhere): who wrote a synthetic
  * line, or the file, line and commit of a repository test input. `kind` equals `provenance.kind`.
  */
 export type CaseSource =
@@ -139,9 +142,9 @@ export interface IngredientCase {
   severity: Severity;
   seasoningClass: SeasoningClass | null;
   provenance: Provenance;
-  /** Required for holdout2 (EVALUATION-PLAN-v2 §9), optional elsewhere. */
+  /** Required for holdout2 and holdout3 (EVALUATION-PLAN-v2 §9), optional elsewhere. */
   source?: CaseSource;
-  /** A short template signature of the line's construction ("N unit food, prep"); required for holdout2. */
+  /** A short template signature of the line's construction ("N unit food, prep"); required for holdout2 and holdout3. */
   construction?: string;
   rationale: string;
 }

@@ -15,7 +15,7 @@ import { checkInvariants } from "../invariants";
 import { LabelValidationError, loadIngredientCases, parseIngredientJsonl } from "../labels";
 import { DEBATABLE_CASES, type OutcomesSection } from "../outcomes";
 import { renderMarkdown } from "../report";
-import { CATEGORIES, SPLITS, V1_SPLITS } from "../types";
+import { CATEGORIES, EVERY_SPLITS, V1_SPLITS } from "../types";
 import { copyFixtures, FIXTURES } from "./helpers";
 
 const v2 = loadIngredientCases(FIXTURES, ["holdout2"]);
@@ -69,7 +69,7 @@ describe("holdout-v2 composition (§9)", () => {
   });
 
   it("loading all splits checks uniqueness across dev, holdout-v1 and holdout-v2; the default stays dev + holdout", () => {
-    expect(loadIngredientCases(FIXTURES, SPLITS).length).toBe(loadIngredientCases(FIXTURES).length + v2.length);
+    expect(loadIngredientCases(FIXTURES, EVERY_SPLITS).length).toBe(loadIngredientCases(FIXTURES).length + v2.length);
     expect(new Set(loadIngredientCases(FIXTURES).map((c) => c.split))).toEqual(new Set(["dev", "holdout"]));
   });
 });
@@ -167,7 +167,7 @@ describe("pre-freeze adjudication (2026-10-09)", () => {
   });
 
   it("the pre-registered debatable cases exist in holdout-v2 and say so in their rationale", () => {
-    expect(DEBATABLE_CASES).toEqual({ holdout2: ["ing-h2-0087"] });
+    expect(DEBATABLE_CASES).toEqual({ holdout2: ["ing-h2-0087"], holdout3: [] });
     for (const id of DEBATABLE_CASES.holdout2) expect(byId(id).rationale).toMatch(/DEBATABLE — PRE-REGISTERED/);
   });
 });
@@ -262,7 +262,7 @@ describe("FREEZE-v2", () => {
 });
 
 describe("command line: --split holdout2, --print-freeze-v2 and the outcomes section", () => {
-  const all = loadIngredientCases(FIXTURES, SPLITS);
+  const all = loadIngredientCases(FIXTURES, EVERY_SPLITS);
   const ctl = outcomeControlEngines(all);
   const deps = (fixturesDir = FIXTURES) => {
     const out: string[] = [];
@@ -285,7 +285,7 @@ describe("command line: --split holdout2, --print-freeze-v2 and the outcomes sec
     expect(parseArgs(["--print-freeze-v2", "2026-10-10"]).printFreezeV2).toBe("2026-10-10");
     expect(parseArgs([]).printFreezeV2).toBeUndefined();
     expect(() => parseArgs(["--print-freeze-v2", "soon"])).toThrow(/YYYY-MM-DD/);
-    expect(() => parseArgs(["--split", "holdout3"])).toThrow(/dev, holdout, holdout2, all or every/);
+    expect(() => parseArgs(["--split", "holdout4"])).toThrow(/dev, holdout, holdout2, holdout3, all or every/);
     expect(parseArgs(["--split", "every"]).split).toBe("every");
   });
 

@@ -36,7 +36,7 @@ export interface BenchReport {
   schema: typeof REPORT_SCHEMA;
   package: { name: string; version: string };
   contract: string;
-  /** `all` = dev + holdout (Phase 1); `every` = dev + holdout + holdout2. */
+  /** `all` = dev + holdout (Phase 1); `every` = dev + holdout + holdout2; holdout3 only by itself. */
   selection: { split: Split | "all" | "every"; case: string | null; pages: boolean };
   corpus: { files: CorpusFile[]; ingredientCases: Partial<Record<Split, number>>; pages: Partial<Record<Split, number>> };
   freeze: { verified: boolean; problems: string[] };
@@ -324,6 +324,7 @@ function sensitivityMarkdown(s: OutcomeSetReport): string[] {
 /** Freeze record file and label file of each acceptance set. */
 const FREEZE_FILES: Record<AcceptanceSplit, { name: string; record: string; data: string }> = {
   holdout2: { name: "Holdout-v2", record: "FREEZE-v2.json", data: "holdout-v2.jsonl" },
+  holdout3: { name: "Holdout-v3", record: "FREEZE-v3.json", data: "holdout-v3.jsonl" },
 };
 
 /** The "Outcomes (outcomes v3, EVALUATION-PLAN-v3)" Markdown section. Deterministic. */

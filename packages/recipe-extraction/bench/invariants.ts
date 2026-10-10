@@ -8,13 +8,14 @@
  *   which are identifiers, not links to content. Anything else fails, including localhost and IPs.
  * - No fixture file is larger than 1 MiB; only text formats (.jsonl, .json, .md, .html); no symlinks.
  * - Every ingredient case and page label has provenance.
- * - FREEZE.json matches the holdout files; once FREEZE-v2.json exists it matches holdout-v2.jsonl.
- * - holdout-v2.jsonl and FREEZE-v2.json, like every file, must be listed in MANIFEST.json (split `holdout2`
- *   is a valid manifest split).
+ * - FREEZE.json matches the holdout files; once FREEZE-v2.json exists it matches holdout-v2.jsonl; once
+ *   FREEZE-v3.json exists it matches holdout-v3.jsonl (neither v3 file needs to exist).
+ * - holdout-v2.jsonl, holdout-v3.jsonl and their freeze records, like every file, must be listed in
+ *   MANIFEST.json (splits `holdout2` and `holdout3` are valid manifest splits).
  */
 import { lstatSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { verifyFreeze, verifyFreezeV2 } from "./freeze";
+import { verifyFreeze, verifyFreezeV2, verifyFreezeV3 } from "./freeze";
 import { PROVENANCE_KINDS, SPLITS } from "./types";
 
 export const MANIFEST_FILE = "MANIFEST.json";
@@ -157,5 +158,6 @@ export function checkInvariants(fixturesDir: string): InvariantResult {
   problems.push(...provenanceProblems(fixturesDir, files));
   problems.push(...verifyFreeze(fixturesDir));
   problems.push(...verifyFreezeV2(fixturesDir));
+  problems.push(...verifyFreezeV3(fixturesDir));
   return { ok: problems.length === 0, problems };
 }

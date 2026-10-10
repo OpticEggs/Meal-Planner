@@ -10,7 +10,7 @@ import { engineFromLabels, outcomeControlEngines } from "../controls";
 import { loadIngredientCases } from "../labels";
 import { DEBATABLE_CASES, engineOutcomes, isBareNoAmountLabel, type EngineOutcomes, type OutcomeSetReport, type SevereCode } from "../outcomes";
 import { normalizeText } from "../compare";
-import { SPLITS, parseLabelQuantity, type IngredientCase, type Split } from "../types";
+import { EVERY_SPLITS as SPLITS, parseLabelQuantity, type IngredientCase, type Split } from "../types";
 import { FIXTURES } from "./helpers";
 
 const cases = loadIngredientCases(FIXTURES, SPLITS);

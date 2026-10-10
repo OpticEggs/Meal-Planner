@@ -494,14 +494,15 @@ export function ceLines(lines: readonly LineOutcome[]): CELine[] {
 export type CriterionStatus = "met with confidence" | "met" | "not met" | "checked outside the scorer" | "scorer checks met; rest checked outside the scorer";
 export const ACCEPTANCE_THRESHOLD = { A1: 0.98, A2: 0.98, A5: 0.1 } as const;
 
-/** The sets on which A1–A7 are computed: holdout-v2 (historical, exposed). */
-export const ACCEPTANCE_SPLITS = ["holdout2"] as const satisfies readonly Split[];
+/** The sets on which A1–A7 are computed: holdout-v2 (historical, exposed) and holdout-v3 (Gate G2). */
+export const ACCEPTANCE_SPLITS = ["holdout2", "holdout3"] as const satisfies readonly Split[];
 export type AcceptanceSplit = (typeof ACCEPTANCE_SPLITS)[number];
 export const isAcceptanceSplit = (s: Split): s is AcceptanceSplit => (ACCEPTANCE_SPLITS as readonly Split[]).includes(s);
 
 /** What an acceptance table on each set may claim. */
 export const ACCEPTANCE_BASIS: Record<AcceptanceSplit, string> = {
   holdout2: "historical — holdout-v2 is exposed (EVALUATION-PLAN-v2 change log 8): reported for comparison, not acceptance evidence for a new candidate",
+  holdout3: "Gate G2 acceptance set (EVALUATION-PLAN-v3) — acceptance evidence only when FREEZE-v3.json exists and verifies holdout-v3 (see the freeze line)",
 };
 
 export interface AcceptanceCriterion {
@@ -571,6 +572,7 @@ export const SET_STATUS: Record<Split, string> = {
   dev: "dev (development; diagnostics only)",
   holdout: "holdout-v1 (previously exposed)",
   holdout2: "holdout-v2 (exposed; historical acceptance set)",
+  holdout3: "holdout-v3 (fresh; acceptance set)",
 };
 
 // --- Pre-registered sensitivity figures (informational, not the acceptance basis) -------------------
@@ -579,7 +581,7 @@ export const SET_STATUS: Record<Split, string> = {
  * Cases pre-registered as debatable before any candidate was evaluated on the set. The acceptance
  * decision stays on ALL cases; A1–A5 without these are reported as information only.
  */
-export const DEBATABLE_CASES: Readonly<Record<AcceptanceSplit, readonly string[]>> = { holdout2: ["ing-h2-0087"] };
+export const DEBATABLE_CASES: Readonly<Record<AcceptanceSplit, readonly string[]>> = { holdout2: ["ing-h2-0087"], holdout3: [] };
 export const SENSITIVITY_NOTE = "informational, not the acceptance basis" as const;
 export const BARE_NO_AMOUNT_DEFINITION =
   "needs_review labels with no amount: label quantity and unit null and alternatives empty (EVALUATION-PLAN-v2 change log 3(b); SCORE-01)" as const;
