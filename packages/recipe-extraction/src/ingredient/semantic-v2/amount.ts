@@ -1039,6 +1039,8 @@ function packageBeforeContainer(text: string, toks: readonly Tok[], k: number): 
     break;
   }
   let container = readUnit(text, toks, c);
+  // "8 oz bar chocolate": after a size, a bar is a block (alone, "bar" begins food names: "bar cookies")
+  if (container === null && isWord(toks[c], "bar") && isWord(toks[c + 1])) container = { unit: unitV1("block", (toks[c] as { text: string }).text), s: toks[c].s, e: toks[c].e, next: c + 1 };
   if (container === null) return null;
   const written = text.slice(container.s, container.e).toLowerCase().replace(/\.$/, "");
   // "6 oz cup yogurt": a size right before a singular "cup" makes it a container (§12.5)

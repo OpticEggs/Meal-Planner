@@ -357,7 +357,7 @@ export const LENGTH_MEASURED_FOODS = setOf("ginger turmeric galangal horseradish
 export const COUNTED_COMPONENT_NOUNS = setOf("spice grain cheese bean berry seed nut herb fruit vegetable veggie pepper mushroom citrus meat layer flavor flavour color colour");
 
 /** Parts of a fruit named before "of" ("Juice of 2 limes", "Zest of ½ orange"): the fruit is counted, the part is the note. */
-export const FRUIT_PART_WORDS = setOf("juice zest rind peel grated finely freshly squeezed");
+export const FRUIT_PART_WORDS = setOf("juice zest rind peel grated finely freshly squeezed and");
 
 /** Words that cannot start a food name; at the start of a name they are left-overs of a misread amount or a purpose ("or b", "for topping"). */
 export const LEADING_JUNK = setOf("or and nor with to plus but for");

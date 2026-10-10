@@ -75,8 +75,10 @@ describe("one line, several foods", () => {
     expect(read("2 cups spinach, packed")).toMatchObject({ status: "ready", note: "packed" });
   });
 
-  it("'juice of 1 lemon' / 'seeds from 1 vanilla bean': the food is read, a person confirms", () => {
-    expect(read("Zest and juice of 1 orange")).toMatchObject({ status: "needs_review", name: "orange", note: "Zest and juice" });
+  // semantic-v2: fruit parts follow the labelling convention ("Juice of 2 limes" → the fruit counted, the part noted;
+  // holdout-v2 ing-h2-0212/0213) — ready; semantic-v1 asked a person. Other parts ("seeds from") still go to a person.
+  it("'zest and juice of 1 orange' is ready; 'seeds from 1 vanilla bean': the food is read, a person confirms", () => {
+    expect(read("Zest and juice of 1 orange")).toMatchObject({ status: "ready", name: "orange", note: "Zest and juice" });
     expect(read("seeds from 1 vanilla bean")).toMatchObject({ status: "needs_review", name: "vanilla bean", note: "seeds" });
   });
 });

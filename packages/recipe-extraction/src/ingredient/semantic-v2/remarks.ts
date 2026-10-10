@@ -307,7 +307,12 @@ function classifyBare(text: string, toks: readonly Tok[], fx: Effects): void {
  */
 export function remarkSecondAmount(toks: readonly Tok[]): boolean {
   const ws = allWords(toks);
-  const counted = hasNumber(toks) || ws.some((w) => w === "half" || w === "one" || w === "two" || w === "three");
+  // (a percentage is not an amount: "(85% lean, from the butcher)")
+  const flatToks: Tok[] = [];
+  const walk = (list: readonly Tok[]) => list.forEach((t) => (isGroup(t) ? walk(t.children) : flatToks.push(t)));
+  walk(toks);
+  const amountNumber = flatToks.some((t, k) => (t.kind === "num" || t.kind === "vulgar") && !isSym(flatToks[k + 1], "%"));
+  const counted = amountNumber || ws.some((w) => w === "half" || w === "one" || w === "two" || w === "three");
   if (!counted) return false;
   return ws.some((w) => REMARK_SOURCE_WORDS.has(w) || REMARK_STATE_WORDS.has(w));
 }
