@@ -25,3 +25,15 @@ Regression labels: R2's two coordinator-label findings were applied (Dijon stric
 `feta or goat cheese` made firm; 16 probe-label corrections applied through `regressions/probe-label-overrides.tsv`
 (the reviewer's probe file stays unchanged evidence). The labelling guide sentence "a note never holds an amount"
 now reads "the line's amount". R2 found 0/60 disagreements in its stratified probe sample (Wilson 95 % CI 0–6 %).
+
+## Second review: §12.15 and §12.A A1–A4 (R2, after the candidate review)
+
+R2 verified §12.6 with A2 exactly (no contradiction: `2 lb (1 kg)`, `100 g (4 oz)`, `500 g (1 lb)` → needs_review;
+`1 kg (2 lb)`, `1/2 tsp (2 ml)` ready; no frozen label moves, largest frozen deviation 5.67 %) and raised: item 6 must
+carry A2 itself; rounding mode; coarse units slipping through the allowance; §12.15 plural/count/measuring units with
+no number; A1 sloppy plurals (`2 clove garlic`), counts ≤ 1, containers, size words (h2-0066/0074/0075); A3 vs `from`
+and borderline sources; A4 open compound list, modifier compounds (h2-0104, h2-0268); item 13 vs `2 400 g cans`;
+item 3 vs `cup`. **All adopted** (the coordinator chose to restrict the allowance to `ml`/`g`, plus `lb` restating
+`kg`, half up; borderline sources and product-or-list pairs are debatable, not firm labels). R2's "still open" probe
+corrections (Dijon, kaffir lime leaves, fresh or frozen cranberries) were already applied in `probe-label-overrides.tsv`;
+R2 could not see that file.

@@ -259,7 +259,7 @@ leaves open. Unit and container lists refer to `UNIT_REGISTRY` (`src/contract.ts
    scaling controls (`1x 2x 3x`) is page furniture (item 8). `x` never stays in `name`.
 3. *(new)* **Package size with no count; restated package sizes** — containers are the registry's packaging count
    units: `bag`, `bottle`, `box`, `can`, `carton`, `container`, `envelope`, `jar`, `package`, `packet`, `tin`, `tube`,
-   plus the sold-by-weight units `block`, `loaf`, `ball`. A size directly before a *singular* container
+   plus the sold-by-weight units `block`, `loaf`, `ball` (and `cup` only as item 5 decides). A size directly before a *singular* container
    (`28 oz can tomatoes`, `400 g can chickpeas`, `8-ounce package cream cheese`) is one container: quantity 1, unit =
    the container, packageSize = the size, `ready`. A plural container with no count (`15 oz cans beans`) →
    `needs_review` (`quantity_missing`). A size before any other noun is the line's amount, not a package (`6 oz
@@ -291,9 +291,11 @@ leaves open. Unit and container lists refer to `UNIT_REGISTRY` (`src/contract.ts
 6. *(new)* **Restatement test (§7.5)** — compare exactly in the `UNIT_REGISTRY` base values (cup 236.5882365 ml,
    tbsp 14.78676478125 ml, tsp 4.92892159375 ml, fl oz 29.5735295625 ml, US pint/quart/gallon; oz 28.349523125 g, lb
    453.59237 g). A same-dimension amount in brackets, after `/`, or in a remark restates the first-stated amount when
-   |restated − first| ≤ 7/100 × first (first-stated amount as the base, boundary inclusive), **or** when the restated
-   number equals the exact conversion rounded to a whole number of the restated unit (`1/4 tsp (1 ml)`, `1/2 tsp
-   (2 ml)`, `3/4 tsp (4 ml)`, `1 lb (454 g)`). Each restatement in a line is checked separately; one failure makes the
+   |restated − first| ≤ 7/100 × first (first-stated amount as the base, boundary inclusive), **or** (rounding
+   allowance, as amended by §12.A A2) when the restated unit is `ml` or `g` — or `lb` restating `kg` — and the restated
+   number equals the exact conversion rounded **half up** to a whole number of that unit (`1/4 tsp (1 ml)`, `1/2 tsp
+   (2 ml)`, `3/4 tsp (4 ml)`, `1 kg (2 lb)`). The allowance never applies to a larger restated unit (`2 lb (1 kg)`,
+   `100 g (4 oz)`) or to coarse units (`1/2 tbsp (2 tsp)`, `1/6 cup (3 tbsp)`, `1 1/2 tbsp (4 tsp)` → only the 7 % test). Each restatement in a line is checked separately; one failure makes the
    line `needs_review`. `about` does not widen the tolerance. A restated package size (item 3) is checked the same
    way. Count restatements (`1/2 cup (1 stick)`) and mass↔volume restatements are not checked. **Policy:** the
    rounded metric conventions outside both tests (`8 oz (250 g)`, `1 lb (500 g)`, `2 lb (1 kg)`, `4 oz (100 g)`)
@@ -372,15 +374,19 @@ leaves open. Unit and container lists refer to `UNIT_REGISTRY` (`src/contract.ts
     dev-0020, dev-0153). New: leading `▢`, `☐`, `◦`, `▪`, `–`, `✓`, `✔` and enumerators (`N.`, `N)`, `a)`, `a.`)
     followed by a space are decoration (`10. 1 tsp vanilla` → 1 `tsp`); a hyphen glued to a leading number
     (`-1 cup sugar`) is a negative amount → `needs_review` (§7.1); thin, narrow and tab spaces between amount and unit
-    are spaces, but any space between a 1–3-digit group and a 3-digit group (`1 000 g`) is a thousands separator →
-    ambiguous, `needs_review` (like `1,000`); names are recorded in NFC (`jalapeños`).
+    are spaces, but a space between a 1–3-digit group and a 3-digit group (`1 000 g flour`) is a thousands separator →
+    ambiguous, `needs_review` (like `1,000`) — except when a container follows the unit, which makes it the package
+    form `count size container` (`2 400 g cans` → 2 `can`, packageSize 400 `g`; README, §7.4); names are recorded in NFC (`jalapeños`).
 14. *(new)* **Unknown or foreign units** — an amount followed by a token that is neither a registry unit nor part of
     the food (`1 m sausage`) → `needs_review`. A unit qualified as non-US (`UK`, `imperial`, `metric cup`,
     `Australian tablespoon`) whose size differs from the registry's (`1 pint milk (UK)`, `1 UK pint milk`) →
     `needs_review`.
-15. *(restated)* **Imprecise unit with no number** — reads as one (`Pinch of salt` → 1 `pinch`, frozen h2-0061;
-    `Dash of hot sauce`, `a splash of milk`); a size word before it goes to `note` (`Small pinch of salt` → 1
-    `pinch`, note `small`). Added 2026-10-10, before holdout-v3, to document the frozen convention.
+15. *(restated + new)* **Unit with no number** — a *singular* imprecise unit reads as one (`Pinch of salt` → 1
+    `pinch`, frozen h2-0061; `Dash of hot sauce`, `a splash of milk`); so does a singular count unit (`Clove of garlic`
+    → 1 `clove`). A plural or vague one has no quantity (`Dashes of bitters`, `a few drops of vanilla` →
+    `needs_review`, `quantity_missing`). A measuring unit with no number (`Cup of flour`, `Tablespoon olive oil`) →
+    `needs_review` (the number may have been lost). Size and degree words before the unit go to `note` (`Small pinch
+    of salt` → 1 `pinch`, note `small`; `generous`, `heaping`, `scant`, `level`).
 
 ### 12.A Amendments after the independent candidate review (2026-10-10; before freeze and before holdout-v3)
 
@@ -390,10 +396,14 @@ is prospective (no frozen label changes) and is checked by the label checker bef
 - **A1 → §12.4, count word before the food.** A count unit written right after the number is the unit when it agrees
   with the count — plural for a count above one (`2 strips bacon`, `3 ribs celery`, `2 sticks butter`) — or, with a
   count of one, when an uncounted food follows (`1 rib celery`, `1 head garlic`, `1 sheet puff pastry`, `1 stick
-  butter`). A *singular* count word after a count above one begins the food's name, unit `each`: `2 strip steaks`,
-  `4 rib eye steaks`, `4 cube steaks`, `2 sheet cakes`, `2 wedge salads` → 2 / 4 `each`, the whole name kept. With a
-  count of one and a countable food naming a cut or dish (`1 strip steak`, `1 sheet cake`, `1 head cheese`) both
-  readings are defensible: debatable, not used as firm labels.
+  butter`). A *singular*, non-container count word after a count above one, followed by a **plural countable food**, begins
+  the food's name, unit `each`: `2 strip steaks`, `4 rib eye steaks`, `4 cube steaks`, `2 sheet cakes`, `2 wedge
+  salads` → 2 / 4 `each`, the whole name kept. A singular count word before an uncounted food is a sloppy plural and
+  stays the unit (`2 clove garlic` → 2 `clove`; `1 1/2 stick butter` → 3/2 `stick`); containers are always the unit
+  (`2 can tomatoes` → 2 `can`); a count of one or below keeps the unit before any food (`1 bunch scallions`
+  h2-0066, `1/2 stick butter`), and a size word between the number and the unit changes nothing (`1 small head
+  garlic` h2-0074). With a count of one and a countable food naming a cut or dish (`1 strip steak`, `1 sheet cake`,
+  `1 head cheese`) both readings are defensible: debatable, not used as firm labels.
 - **A2 → §12.6, rounding allowance.** The whole-unit rounding allowance applies only when the restated unit is
   **smaller** than the first-stated unit (`1/2 tsp (2 ml)`, `1 lb (454 g)`, `1 kg (2 lb)`); a whole number of a larger
   unit hides more than it states (`2 lb (1 kg)`, `100 g (4 oz)`, `500 g (1 lb)` → only the 7 % test applies → all
@@ -401,11 +411,17 @@ is prospective (no frozen label changes) and is checked by the label checker bef
 - **A3 → §12.11, prepared vs extracted.** Cutting or mashing does not change the food: a count of whole items in a
   remark restates a prepared amount of the same food (`1 cup chopped onion (1 medium onion)`, `1 cup grated carrot
   (2 medium carrots)`, `2 cups diced tomatoes (about 3 tomatoes)`, `1 large onion (about 2 cups chopped)`) → the
-  first-stated amount, the other in `equivalents`, `ready` (frozen probe convention `1 cup chopped onion (1 medium)`).
+  first-stated amount, the other in `equivalents`, `ready` (frozen probe convention `1 cup chopped onion (1 medium)`);
+  `from` does not change this (`1 cup chopped onion (from 1 large onion)` → `ready`), nor do kernels or leaves taken
+  whole from the plant (`2 cups corn kernels (from 3 ears)`, `1 cup basil leaves (from 1 bunch)`). Debatable, not used
+  as firm labels: meat taken off the bone (`2 cups shredded chicken (from 1 rotisserie chicken)`) and drained canned
+  food (`1 1/2 cups chickpeas (from one 15 oz can)`).
   A remark that measures the **source of an extracted part** (juice, zest, peel, pulp, seeds; `2 tbsp lime juice (1
   lime)`, `(about 1 lemon)`, `(juice of 1 lime)`, `1 tbsp zest (from 2 oranges)`) or another state (cooked vs dry,
   soaked, rehydrated) or another food is a second amount → `needs_review`, with or without a marker word.
 - **A4 → §12.7(g), `and`.** Two foods joined by `and` after one amount, without a comma, are a list too (`2 cups
   strawberries and blueberries`, `1 lb shrimp and scallops`, `2 tbsp butter and oil`) → `needs_review`; a fixed compound
   stays one name (§7.6: `salt and pepper`, `half-and-half`, `macaroni and cheese`, `sweet and sour sauce`, `oil and
-  vinegar dressing`).
+  vinegar dressing`, `pork and beans`), and modifiers joined by `and` before one head are one food (`salt and vinegar
+  potato chips` h2-0104, `3 red and yellow bell peppers` → 3 `each` `red and yellow bell peppers`, consistent with
+  h2-0268). Debatable, not used as firm labels: product-or-list pairs such as `peas and carrots`.
