@@ -1,0 +1,14 @@
+commit 8131fe0fa79791c1a0403bb191e12193cc3d9d7d (clean tree)
+package tests: total 1928, passed 1917, failed 0, skipped 11
+
+skipped	tests/parity/benchmark-corpus.test.ts	benchmark corpus parity (frozen legacy vs live Table) > parseIngredientLine is deep-equal on every benchmark line
+skipped	tests/parity/ingredient-line.test.ts	ingredient-line parity (frozen copy vs live Table module) > the corpus has the promised sizes
+skipped	tests/parity/ingredient-line.test.ts	ingredient-line parity (frozen copy vs live Table module) > parseIngredientLine is deep-equal over the Table test literals
+skipped	tests/parity/ingredient-line.test.ts	ingredient-line parity (frozen copy vs live Table module) > parseIngredientLine is deep-equal over the Table property sweep
+skipped	tests/parity/ingredient-line.test.ts	ingredient-line parity (frozen copy vs live Table module) > parseIngredientLine is deep-equal over the hostile lines
+skipped	tests/parity/ingredient-line.test.ts	ingredient-line parity (frozen copy vs live Table module) > parseIngredientLine is deep-equal over the seeded random lines
+skipped	tests/parity/ingredient-line.test.ts	ingredient-line parity (frozen copy vs live Table module) > parseIngredientLine is deep-equal for non-string inputs
+skipped	tests/parity/ingredient-line.test.ts	ingredient-line parity (frozen copy vs live Table module) > splitNote is deep-equal over the corpus
+skipped	tests/parity/ingredient-line.test.ts	ingredient-line parity (frozen copy vs live Table module) > exports the same constants and unit table
+skipped	tests/parity/ingredient-line.test.ts	ingredient-line parity (frozen copy vs live Table module) > the parity corpus exercises every legacy outcome
+skipped	tests/unit/cli.test.ts	recipe-lab > bench says so when the benchmark module is not in this build
