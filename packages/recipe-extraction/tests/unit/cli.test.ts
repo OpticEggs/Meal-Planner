@@ -44,6 +44,7 @@ describe("recipe-lab", () => {
       ["legacy-table-import-2+suggestion", false],
       ["semantic-v1", false],
       ["semantic-v2", false],
+      ["semantic-v3", false],
     ]);
   });
 
