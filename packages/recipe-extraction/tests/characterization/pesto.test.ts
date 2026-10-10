@@ -88,3 +88,24 @@ describe("regression: 1-1/2 cups milk (semantic-v1)", () => {
     expect(r).toMatchObject({ status: "needs_review", quantity: null, reasons: ["quantity_range"] });
   });
 });
+
+describe("pesto: Phase 2B candidate (semantic-v2)", () => {
+  it("semantic-v2 reads it exactly as semantic-v1 does: 1/3 cup pesto, note \"homemade or store-bought\", no alternatives", () => {
+    const r = parseIngredientV1(LINE, { engine: "semantic-v2" });
+    expect(r).toMatchObject({
+      status: "ready",
+      name: "pesto",
+      quantity: { kind: "exact", numerator: "1", denominator: "3", display: "1/3" },
+      unit: { canonical: "cup", dimension: "volume", source: "cup" },
+      note: "homemade or store-bought",
+      alternatives: [],
+      packageSize: null,
+      reasons: [],
+    });
+    expect(validateParsedIngredientV1(r)).toEqual([]);
+    expect(ENGINES["semantic-v2"].parse(LINE)).toEqual(r);
+    expect(parseIngredientV1("1-1/2 cups milk", { engine: "semantic-v2" })).toMatchObject({
+      status: "ready", name: "milk", quantity: { kind: "exact", numerator: "3", denominator: "2" }, unit: { canonical: "cup" }, reasons: [],
+    });
+  });
+});
