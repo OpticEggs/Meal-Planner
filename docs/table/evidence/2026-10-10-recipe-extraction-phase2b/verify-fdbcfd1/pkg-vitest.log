@@ -1,0 +1,285 @@
+HEAD fdbcfd1ec5cf088d3099e440476d8bb90591dc6b 2026-10-10T07:25:24Z
+
+> @table/recipe-extraction@0.1.0 test
+> vitest run --config vitest.config.ts
+
+
+ RUN  v5.0.3 /home/user/Meal-Planner/packages/recipe-extraction
+
+ ❯ bench/__tests__/holdout3.test.ts (18 tests | 11 failed) 379ms
+   ❯ holdout-v3 absent: everything behaves as before (4)
+     × invariants hold, nothing to verify, the status says not frozen; loading holdout3 is a clear error 33ms
+     × default, all and every runs report exactly the sets they reported before (no holdout-v3 key anywhere) 35ms
+   ❯ holdout-v3 present (temporary synthetic file) (7)
+     × it loads alone or with every other split (ids and inputs unique across files); invariants hold before a freeze 74ms
+     × it is opt-in: default, all and every never parse a holdout-v3 input or report it 49ms
+     × --split holdout3 scores holdout-v3 only, with A1–A7 as the Gate G2 acceptance set; unfrozen, the report says so 19ms
+     × once FREEZE-v3.json exists it is verified on every run: edits, a missing file and a changed rule are caught and the run refuses 21ms
+   ❯ holdout-v3 case metadata and the data-driven sensitivity figures (7)
+     × hand-calculated: (a) drops the debatable case, (c) the new-reading case, (d) is absent without an audit file 16ms
+     × hand-calculated: (d) drops exactly the audit's matched ids; the figure names the audit 17ms
+     × the audit file is validated on every run when present; an invalid one makes the run refuse 22ms
+     × breakdowns per repair family, per §12 item and per construction (holdout-v3 only) 23ms
+     × holdout-v3 reports are byte-identical across reruns, with or without an audit file 28ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  bench/__tests__/holdout3.test.ts > holdout-v3 absent: everything behaves as before > invariants hold, nothing to verify, the status says not frozen; loading holdout3 is a clear error
+AssertionError: expected { ok: false, …(1) } to deeply equal { ok: true, problems: [] }
+
+- Expected
++ Received
+
+  {
+-   "ok": true,
+-   "problems": [],
++   "ok": false,
++   "problems": [
++     "EXPOSURE-AUDIT-v3.json: present but ingredients/holdout-v3.jsonl does not exist",
++   ],
+  }
+
+ ❯ bench/__tests__/holdout3.test.ts:130:34
+    128|   it("invariants hold, nothing to verify, the status says not frozen; …
+    129|     const dir = absentCopy();
+    130|     expect(checkInvariants(dir)).toEqual({ ok: true, problems: [] });
+       |                                  ^
+    131|     expect(verifyFreezeV3(dir)).toEqual([]);
+    132|     expect(freezeV3Status(dir)).toEqual({ frozen: false, frozenAt: nul…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  bench/__tests__/holdout3.test.ts > holdout-v3 absent: everything behaves as before > default, all and every runs report exactly the sets they reported before (no holdout-v3 key anywhere)
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ bench/__tests__/holdout3.test.ts:149:22
+    147|     for (const [argv, sets] of [[[], ["dev", "holdout"]], [["--split",…
+    148|       const r = await run(parseArgs([...argv, "--engine", "control:ora…
+    149|       expect(r.code).toBe(0);
+       |                      ^
+    150|       expect(Object.keys(r.report!.corpus.ingredientCases)).toEqual(se…
+    151|       expect(Object.keys(r.report!.outcomes!.engines[0].sets)).toEqual…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  bench/__tests__/holdout3.test.ts > holdout-v3 present (temporary synthetic file) > it loads alone or with every other split (ids and inputs unique across files); invariants hold before a freeze
+AssertionError: expected { ok: false, problems: [ …(3) ] } to deeply equal { ok: true, problems: [] }
+
+- Expected
++ Received
+
+  {
+-   "ok": true,
+-   "problems": [],
++   "ok": false,
++   "problems": [
++     "EXPOSURE-AUDIT-v3.json: ing-h3-0114 is not a holdout-v3 case",
++     "EXPOSURE-AUDIT-v3.json: ing-h3-0189 is not a holdout-v3 case",
++     "EXPOSURE-AUDIT-v3.json: ing-h3-0276 is not a holdout-v3 case",
++   ],
+  }
+
+ ❯ bench/__tests__/holdout3.test.ts:195:34
+    193|     expect(loadIngredientCases(dir, ["holdout3"]).map((c) => c.id)).to…
+    194|     expect(loadIngredientCases(dir, [...EVERY_SPLITS, "holdout3"]).len…
+    195|     expect(checkInvariants(dir)).toEqual({ ok: true, problems: [] });
+       |                                  ^
+    196|     expect(freezeV3Status(dir)).toEqual({ frozen: false, frozenAt: nul…
+    197|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  bench/__tests__/holdout3.test.ts > holdout-v3 present (temporary synthetic file) > it is opt-in: default, all and every never parse a holdout-v3 input or report it
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ bench/__tests__/holdout3.test.ts:205:22
+    203|     for (const argv of [[], ["--split", "all"], ["--split", "every"]])…
+    204|       const r = await run(parseArgs([...argv, "--engine", "control:ora…
+    205|       expect(r.code).toBe(0);
+       |                      ^
+    206|       expect(Object.keys(r.report!.corpus.ingredientCases)).not.toCont…
+    207|       expect(r.json).not.toContain("ing-h3-");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  bench/__tests__/holdout3.test.ts > holdout-v3 present (temporary synthetic file) > --split holdout3 scores holdout-v3 only, with A1–A7 as the Gate G2 acceptance set; unfrozen, the report says so
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ bench/__tests__/holdout3.test.ts:217:22
+    215|     const x = deps(dir, loadIngredientCases(dir, ["holdout3"]));
+    216|     const res = await run(parseArgs(["--split", "holdout3", "--engine"…
+    217|     expect(res.code).toBe(0);
+       |                      ^
+    218|     const r = res.report!;
+    219|     expect(r.corpus.ingredientCases).toEqual({ holdout3: 6 });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+ FAIL  bench/__tests__/holdout3.test.ts > holdout-v3 present (temporary synthetic file) > once FREEZE-v3.json exists it is verified on every run: edits, a missing file and a changed rule are caught and the run refuses
+AssertionError: expected { ok: false, problems: [ …(3) ] } to deeply equal { ok: true, problems: [] }
+
+- Expected
++ Received
+
+  {
+-   "ok": true,
+-   "problems": [],
++   "ok": false,
++   "problems": [
++     "EXPOSURE-AUDIT-v3.json: ing-h3-0114 is not a holdout-v3 case",
++     "EXPOSURE-AUDIT-v3.json: ing-h3-0189 is not a holdout-v3 case",
++     "EXPOSURE-AUDIT-v3.json: ing-h3-0276 is not a holdout-v3 case",
++   ],
+  }
+
+ ❯ bench/__tests__/holdout3.test.ts:249:34
+    247|     expect(FREEZE_V3_RULE).toMatch(/written blind from CONTRACT-v1 §7 …
+    248|     expect(rec.ingredients).toMatchObject({ file: HOLDOUT3_INGREDIENTS…
+    249|     expect(checkInvariants(dir)).toEqual({ ok: true, problems: [] });
+       |                                  ^
+    250|     expect(freezeV3Status(dir)).toEqual({ frozen: true, frozenAt: "202…
+    251|     const x = deps(dir, loadIngredientCases(dir, ["holdout3"]));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯
+
+ FAIL  bench/__tests__/holdout3.test.ts > holdout-v3 case metadata and the data-driven sensitivity figures > hand-calculated: (a) drops the debatable case, (c) the new-reading case, (d) is absent without an audit file
+AssertionError: Fixture invariants failed (3); refusing to benchmark:
+  EXPOSURE-AUDIT-v3.json: ing-h3-0114 is not a holdout-v3 case
+  EXPOSURE-AUDIT-v3.json: ing-h3-0189 is not a holdout-v3 case
+  EXPOSURE-AUDIT-v3.json: ing-h3-0276 is not a holdout-v3 case: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ score bench/__tests__/holdout3.test.ts:333:40
+    331|     const x = deps(dir, cases, [sabotage(cases)]);
+    332|     const res = await run(parseArgs(["--split", "holdout3", "--engine"…
+    333|     expect(res.code, x.err.join("\n")).toBe(0);
+       |                                        ^
+    334|     return { res, s: (res.report!.outcomes as OutcomesSection).engines…
+    335|   };
+ ❯ bench/__tests__/holdout3.test.ts:346:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/11]⎯
+
+ FAIL  bench/__tests__/holdout3.test.ts > holdout-v3 case metadata and the data-driven sensitivity figures > hand-calculated: (d) drops exactly the audit's matched ids; the figure names the audit
+AssertionError: expected { ok: false, …(1) } to deeply equal { ok: true, problems: [] }
+
+- Expected
++ Received
+
+  {
+-   "ok": true,
+-   "problems": [],
++   "ok": false,
++   "problems": [
++     "MANIFEST.json files[25] (EXPOSURE-AUDIT-v3.json): listed twice",
++   ],
+  }
+
+ ❯ bench/__tests__/holdout3.test.ts:367:34
+    365|     const dir = presentCopy();
+    366|     writeAudit(dir, { matchedCaseIds: ["ing-h3-0001", "ing-h3-0005"], …
+    367|     expect(checkInvariants(dir)).toEqual({ ok: true, problems: [] });
+       |                                  ^
+    368|     const { res, s } = await score(dir);
+    369|     // Without 0001 (ready C1) and 0005 (unsupported C7): R = {0002, 0…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/11]⎯
+
+ FAIL  bench/__tests__/holdout3.test.ts > holdout-v3 case metadata and the data-driven sensitivity figures > the audit file is validated on every run when present; an invalid one makes the run refuse
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ bench/__tests__/holdout3.test.ts:387:37
+    385|     const valid = { matchedCaseIds: ["ing-h3-0002"], method: "m", audi…
+    386|     writeAudit(dir, valid);
+    387|     expect(checkInvariants(dir).ok).toBe(true);
+       |                                     ^
+    388|     const bad: [unknown, RegExp][] = [
+    389|       [{ ...valid, extra: 1 }, /unknown key 'extra'/],
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/11]⎯
+
+ FAIL  bench/__tests__/holdout3.test.ts > holdout-v3 case metadata and the data-driven sensitivity figures > breakdowns per repair family, per §12 item and per construction (holdout-v3 only)
+AssertionError: Fixture invariants failed (3); refusing to benchmark:
+  EXPOSURE-AUDIT-v3.json: ing-h3-0114 is not a holdout-v3 case
+  EXPOSURE-AUDIT-v3.json: ing-h3-0189 is not a holdout-v3 case
+  EXPOSURE-AUDIT-v3.json: ing-h3-0276 is not a holdout-v3 case: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ score bench/__tests__/holdout3.test.ts:333:40
+    331|     const x = deps(dir, cases, [sabotage(cases)]);
+    332|     const res = await run(parseArgs(["--split", "holdout3", "--engine"…
+    333|     expect(res.code, x.err.join("\n")).toBe(0);
+       |                                        ^
+    334|     return { res, s: (res.report!.outcomes as OutcomesSection).engines…
+    335|   };
+ ❯ bench/__tests__/holdout3.test.ts:416:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/11]⎯
+
+ FAIL  bench/__tests__/holdout3.test.ts > holdout-v3 case metadata and the data-driven sensitivity figures > holdout-v3 reports are byte-identical across reruns, with or without an audit file
+AssertionError: Fixture invariants failed (3); refusing to benchmark:
+  EXPOSURE-AUDIT-v3.json: ing-h3-0114 is not a holdout-v3 case
+  EXPOSURE-AUDIT-v3.json: ing-h3-0189 is not a holdout-v3 case
+  EXPOSURE-AUDIT-v3.json: ing-h3-0276 is not a holdout-v3 case: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ score bench/__tests__/holdout3.test.ts:333:40
+    331|     const x = deps(dir, cases, [sabotage(cases)]);
+    332|     const res = await run(parseArgs(["--split", "holdout3", "--engine"…
+    333|     expect(res.code, x.err.join("\n")).toBe(0);
+       |                                        ^
+    334|     return { res, s: (res.report!.outcomes as OutcomesSection).engines…
+    335|   };
+ ❯ bench/__tests__/holdout3.test.ts:446:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/11]⎯
+
+
+ Test Files  1 failed | 76 passed | 1 skipped (78)
+      Tests  11 failed | 5088 passed | 11 skipped (5110)
+   Start at  07:25:25
+   Duration  43.45s (tests 91%, import 6%, transform 3%)
+
+    Isolate  78 workers spawned · ~126ms startup each (spawn + environment, per file)
+             at least ~3.16s faster with isolate: false — reuses workers across files instead of one per file
+
+exit 1
