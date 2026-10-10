@@ -19,12 +19,15 @@ def reg(inp):
     return {"test": f"exposed regressions 2B — semantic-v2 (required) > {title}", "reason": "^AssertionError"}
 def safe(describe, it):
     return {"test": f"{describe} > {it}", "reason": "^AssertionError"}
+EXACT_FILE = "tests/regressions/exact-rejections.test.ts"
+def exact(group, line):
+    return {"test": f"exact rejections of recognised non-ingredient shapes (semantic-v2) > {group}: {json.dumps(line, ensure_ascii=False)} → unsupported, no amount", "reason": "^AssertionError"}
 S = "src/ingredient/semantic-v2/"
 def early_return(sig, value):  # insert an early return right after a function signature line
     return {"find": sig, "replace": sig + f"\n  if (Number.isFinite(0)) return {value};"}
 M = []
 def add(mid, desc, file, change, killers):
-    M.append({"id": mid, "description": desc, "file": S + file, **change, "tests": [SAFE, HARNESS], "killedBy": killers, "expect": "KILLED"})
+    M.append({"id": mid, "description": desc, "file": S + file, **change, "tests": [SAFE, HARNESS, EXACT_FILE], "killedBy": killers, "expect": "KILLED"})
 G = "nameLeftoverGuard (remaining-token name guard)"
 add("P-name-guard-off", "remaining-token name guard disabled: a name may keep a unit, multiplier, 'or' or stray letter while ready",
     "name.ts", early_return("export function nameLeftoverGuard(text: string, toks: readonly Tok[]): boolean {", "false"),
@@ -74,7 +77,7 @@ add("P-fraction-unit-off", "§12.1 fraction-unit compounds not read ('a half-cup
     [safe(GP, "fractionUnitWord reads only fraction + weight/volume unit compounds"), reg("a half-cup milk"), reg("a quarter-pound beef")])
 add("P-heading-off", "§12.8 component-heading rule disabled ('SAUCE', 'Cake Layers' read as foods)",
     "classify.ts", early_return("export function componentHeading(toks: readonly Tok[]): boolean {", "false"),
-    [reg("SAUCE"), reg("Cake Layers"), reg("Topping")])
+    [safe(GP, "nonIngredientReason refuses shapes, not words"), exact("section headings (componentHeading)", "SAUCE"), exact("section headings (componentHeading)", "Cake Layers")])
 add("P-and-list-off", "§12.A A4 'A and B' after one amount read as one food again",
     "alternatives.ts", early_return("export function andJoinsTwoFoods(name: string): boolean {", "false"),
     [reg("2 cups strawberries and blueberries"), reg("1/4 cup chopped parsley and mint"), reg("2 cups chopped celery and carrots")])
@@ -86,16 +89,16 @@ add("P-can-designation-off", "§12.9 can-size designation not recognised ('1 #10
     [reg("1 #10 can diced tomatoes"), reg("2 No. 303 cans cut green beans")])
 add("P-unknown-measure-off", "§12.14 unknown measure words not recognised ('1 gill single cream' ready with the measure in the name)",
     "amount.ts", early_return("export function unknownMeasureAt(toks: readonly Tok[], a: number): number {", "a"),
-    [reg("1 gill single cream"), reg("1 tumbler orange juice"), reg("2 ladles chicken stock")])
+    [reg("1 coffee cup plain flour"), reg("1 bowl cooked rice"), reg("2 squirts lemon juice"), reg("1 shake paprika")])
 add("P-remark-source-off", "§12.A A3 remark measuring the source of an extracted part ignored ('(about 1 lemon)' left ready)",
     "remarks.ts", early_return("export function remarkMeasuresAnother(toks: readonly Tok[], name: string | null, text: string): boolean {", "false"),
     [safe(GP, "remarkMeasuresAnother: an amount remark measuring something other than the named food as prepared"), reg("3 tablespoons lemon juice (about 1 lemon)")])
 add("P-equipment-off", "§12.8 equipment shape disabled (counted kitchen tools read as food)",
     "classify.ts", early_return('export function equipmentShape(toks: readonly Tok[]): "equipment" | "unsure" | null {', "null"),
-    [reg("1 rolling pin"), reg("1 roll kitchen twine"), reg("6 popsicle sticks"), reg("1 box toothpicks")])
+    [reg("1 rolling pin"), reg("1 roll kitchen twine"), exact("equipment (equipmentShape)", "1 rolling pin"), exact("equipment (equipmentShape)", "6 popsicle sticks")])
 add("P-nutrition-panel-off", "§12.8 one-line nutrition panel read as an ingredient (invented amount)",
     "classify.ts", early_return("export function nutritionPanel(toks: readonly Tok[]): boolean {", "false"),
-    [reg("Calories: 412kcal | Carbohydrates: 52g | Protein: 18g")])
+    [exact("one-line nutrition panels (nutritionPanel)", "Calories: 412kcal | Carbohydrates: 52g | Protein: 18g"), exact("one-line nutrition panels (nutritionPanel)", "Calories 250 | Fat 10g | Carbs 30g")])
 RF = "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised"
 RU = "a counted line whose food is not recognised: needs_review, no amount, the text after the number kept (Decision 1, owner rule 1)"
 M.append({"id": "P-food-head-off", "description": "recognised-food requirement disabled: every counted line counts as a recognised food (unknown heads and unknown leading words read ready)",

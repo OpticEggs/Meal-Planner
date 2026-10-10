@@ -11,7 +11,8 @@
    "replace": "export function nameLeftoverGuard(text: string, toks: readonly Tok[]): boolean {\n  if (Number.isFinite(0)) return false;",
    "tests": [
     "tests/semantic-v2/safeguards.test.ts",
-    "tests/regressions/semantic-v2-regressions.test.ts"
+    "tests/regressions/semantic-v2-regressions.test.ts",
+    "tests/regressions/exact-rejections.test.ts"
    ],
    "killedBy": [
     {
@@ -33,7 +34,8 @@
    "replace": "export function multiplierAt(toks: readonly Tok[], k: number): boolean {\n  if (Number.isFinite(0)) return false;",
    "tests": [
     "tests/semantic-v2/safeguards.test.ts",
-    "tests/regressions/semantic-v2-regressions.test.ts"
+    "tests/regressions/semantic-v2-regressions.test.ts",
+    "tests/regressions/exact-rejections.test.ts"
    ],
    "killedBy": [
     {
@@ -63,7 +65,8 @@
    "replace": "export const RESTATEMENT_TOLERANCE: Rational = { n: BigInt(13), d: BigInt(100) };",
    "tests": [
     "tests/semantic-v2/safeguards.test.ts",
-    "tests/regressions/semantic-v2-regressions.test.ts"
+    "tests/regressions/semantic-v2-regressions.test.ts",
+    "tests/regressions/exact-rejections.test.ts"
    ],
    "killedBy": [
     {
@@ -85,7 +88,8 @@
    "replace": "export function roundedConversion(firstBase: Rational, ua: UnitV1, restated: ExactQuantity, ub: UnitV1): boolean {\n  if (Number.isFinite(0)) return false;",
    "tests": [
     "tests/semantic-v2/safeguards.test.ts",
-    "tests/regressions/semantic-v2-regressions.test.ts"
+    "tests/regressions/semantic-v2-regressions.test.ts",
+    "tests/regressions/exact-rejections.test.ts"
    ],
    "killedBy": [
     {
@@ -107,7 +111,8 @@
    "replace": "  if (options.length >= 2) { const h = options[options.length - 1].split(\" \").slice(-1)[0]; return options.map((o, k) => (k === options.length - 1 || o.split(\" \").slice(-1)[0] === h ? o : `${o} ${h}`)); }",
    "tests": [
     "tests/semantic-v2/safeguards.test.ts",
-    "tests/regressions/semantic-v2-regressions.test.ts"
+    "tests/regressions/semantic-v2-regressions.test.ts",
+    "tests/regressions/exact-rejections.test.ts"
    ],
    "killedBy": [
     {
@@ -133,7 +138,8 @@
    "replace": "export function postFoodCountUnit(text: string, toks: readonly Tok[]): UnitRead | null {\n  if (Number.isFinite(0)) return null;",
    "tests": [
     "tests/semantic-v2/safeguards.test.ts",
-    "tests/regressions/semantic-v2-regressions.test.ts"
+    "tests/regressions/semantic-v2-regressions.test.ts",
+    "tests/regressions/exact-rejections.test.ts"
    ],
    "killedBy": [
     {
@@ -159,7 +165,8 @@
    "replace": "",
    "tests": [
     "tests/semantic-v2/safeguards.test.ts",
-    "tests/regressions/semantic-v2-regressions.test.ts"
+    "tests/regressions/semantic-v2-regressions.test.ts",
+    "tests/regressions/exact-rejections.test.ts"
    ],
    "killedBy": [
     {
@@ -185,7 +192,8 @@
    "replace": "export function containerCup(unitRead: UnitRead, between: readonly { sec: Secondary; marked: boolean }[]): boolean {\n  if (Number.isFinite(0)) return false;",
    "tests": [
     "tests/semantic-v2/safeguards.test.ts",
-    "tests/regressions/semantic-v2-regressions.test.ts"
+    "tests/regressions/semantic-v2-regressions.test.ts",
+    "tests/regressions/exact-rejections.test.ts"
    ],
    "killedBy": [
     {
@@ -207,7 +215,8 @@
    "replace": "export const PACKAGE_UNITS: ReadonlySet<string> = new Set([...CONTAINER_UNITS, \"block\", \"loaf\", \"ball\", \"fillet\"]);",
    "tests": [
     "tests/semantic-v2/safeguards.test.ts",
-    "tests/regressions/semantic-v2-regressions.test.ts"
+    "tests/regressions/semantic-v2-regressions.test.ts",
+    "tests/regressions/exact-rejections.test.ts"
    ],
    "killedBy": [
     {
@@ -229,7 +238,8 @@
    "replace": "",
    "tests": [
     "tests/semantic-v2/safeguards.test.ts",
-    "tests/regressions/semantic-v2-regressions.test.ts"
+    "tests/regressions/semantic-v2-regressions.test.ts",
+    "tests/regressions/exact-rejections.test.ts"
    ],
    "killedBy": [
     {
@@ -259,7 +269,8 @@
    "replace": "export function remarkSecondAmount(toks: readonly Tok[]): boolean {\n  if (Number.isFinite(0)) return false;",
    "tests": [
     "tests/semantic-v2/safeguards.test.ts",
-    "tests/regressions/semantic-v2-regressions.test.ts"
+    "tests/regressions/semantic-v2-regressions.test.ts",
+    "tests/regressions/exact-rejections.test.ts"
    ],
    "killedBy": [
     {
@@ -285,7 +296,8 @@
    "replace": "export function foreignSystemRemark(toks: readonly Tok[], unit: UnitV1 | null): boolean {\n  if (Number.isFinite(0)) return false;",
    "tests": [
     "tests/semantic-v2/safeguards.test.ts",
-    "tests/regressions/semantic-v2-regressions.test.ts"
+    "tests/regressions/semantic-v2-regressions.test.ts",
+    "tests/regressions/exact-rejections.test.ts"
    ],
    "killedBy": [
     {
@@ -307,7 +319,8 @@
    "replace": "export function fractionUnitWord(t: Tok | undefined): { value: Rational; unitOffset: number; unitWord: string; plural: boolean } | null {\n  if (Number.isFinite(0)) return null;",
    "tests": [
     "tests/semantic-v2/safeguards.test.ts",
-    "tests/regressions/semantic-v2-regressions.test.ts"
+    "tests/regressions/semantic-v2-regressions.test.ts",
+    "tests/regressions/exact-rejections.test.ts"
    ],
    "killedBy": [
     {
@@ -333,19 +346,20 @@
    "replace": "export function componentHeading(toks: readonly Tok[]): boolean {\n  if (Number.isFinite(0)) return false;",
    "tests": [
     "tests/semantic-v2/safeguards.test.ts",
-    "tests/regressions/semantic-v2-regressions.test.ts"
+    "tests/regressions/semantic-v2-regressions.test.ts",
+    "tests/regressions/exact-rejections.test.ts"
    ],
    "killedBy": [
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0023 [D] holdout-v2:ing-h2-0286 \"SAUCE\"",
+     "test": "product numbers, fraction units, remark amounts, foreign units > nonIngredientReason refuses shapes, not words",
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0024 [D] holdout-v2:ing-h2-0288 \"Cake Layers\"",
+     "test": "exact rejections of recognised non-ingredient shapes (semantic-v2) > section headings (componentHeading): \"SAUCE\" → unsupported, no amount",
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0684 [D] final-head-probe:probes.tsv:295 \"Topping\"",
+     "test": "exact rejections of recognised non-ingredient shapes (semantic-v2) > section headings (componentHeading): \"Cake Layers\" → unsupported, no amount",
      "reason": "^AssertionError"
     }
    ],
@@ -359,7 +373,8 @@
    "replace": "export function andJoinsTwoFoods(name: string): boolean {\n  if (Number.isFinite(0)) return false;",
    "tests": [
     "tests/semantic-v2/safeguards.test.ts",
-    "tests/regressions/semantic-v2-regressions.test.ts"
+    "tests/regressions/semantic-v2-regressions.test.ts",
+    "tests/regressions/exact-rejections.test.ts"
    ],
    "killedBy": [
     {
@@ -385,7 +400,8 @@
    "replace": "export function countWordBeginsName(text: string, toks: readonly Tok[], unitRead: UnitRead, value: Rational): boolean {\n  if (Number.isFinite(0)) return false;",
    "tests": [
     "tests/semantic-v2/safeguards.test.ts",
-    "tests/regressions/semantic-v2-regressions.test.ts"
+    "tests/regressions/semantic-v2-regressions.test.ts",
+    "tests/regressions/exact-rejections.test.ts"
    ],
    "killedBy": [
     {
@@ -411,7 +427,8 @@
    "replace": "export function canSizeDesignationAt(toks: readonly Tok[], k: number): number {\n  if (Number.isFinite(0)) return k;",
    "tests": [
     "tests/semantic-v2/safeguards.test.ts",
-    "tests/regressions/semantic-v2-regressions.test.ts"
+    "tests/regressions/semantic-v2-regressions.test.ts",
+    "tests/regressions/exact-rejections.test.ts"
    ],
    "killedBy": [
     {
@@ -433,19 +450,24 @@
    "replace": "export function unknownMeasureAt(toks: readonly Tok[], a: number): number {\n  if (Number.isFinite(0)) return a;",
    "tests": [
     "tests/semantic-v2/safeguards.test.ts",
-    "tests/regressions/semantic-v2-regressions.test.ts"
+    "tests/regressions/semantic-v2-regressions.test.ts",
+    "tests/regressions/exact-rejections.test.ts"
    ],
    "killedBy": [
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0157 [A] candidate-review-r1:R1-HIGH \"1 gill single cream\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0241 [-] candidate-review-r1:R1-HIGH \"1 coffee cup plain flour\"",
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0159 [A] candidate-review-r1:R1-HIGH \"1 tumbler orange juice\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0244 [-] candidate-review-r1:R1-HIGH \"1 bowl cooked rice\"",
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0160 [A] candidate-review-r1:R1-HIGH \"2 ladles chicken stock\"",
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0337 [A] candidate-review-r1-round2:R1R2-HIGH \"2 squirts lemon juice\"",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0347 [A] candidate-review-r1-round2:R1R2-HIGH \"1 shake paprika\"",
      "reason": "^AssertionError"
     }
    ],
@@ -459,7 +481,8 @@
    "replace": "export function remarkMeasuresAnother(toks: readonly Tok[], name: string | null, text: string): boolean {\n  if (Number.isFinite(0)) return false;",
    "tests": [
     "tests/semantic-v2/safeguards.test.ts",
-    "tests/regressions/semantic-v2-regressions.test.ts"
+    "tests/regressions/semantic-v2-regressions.test.ts",
+    "tests/regressions/exact-rejections.test.ts"
    ],
    "killedBy": [
     {
@@ -481,7 +504,8 @@
    "replace": "export function equipmentShape(toks: readonly Tok[]): \"equipment\" | \"unsure\" | null {\n  if (Number.isFinite(0)) return null;",
    "tests": [
     "tests/semantic-v2/safeguards.test.ts",
-    "tests/regressions/semantic-v2-regressions.test.ts"
+    "tests/regressions/semantic-v2-regressions.test.ts",
+    "tests/regressions/exact-rejections.test.ts"
    ],
    "killedBy": [
     {
@@ -493,11 +517,11 @@
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0182 [D] candidate-review-r1:R1-HIGH \"6 popsicle sticks\"",
+     "test": "exact rejections of recognised non-ingredient shapes (semantic-v2) > equipment (equipmentShape): \"1 rolling pin\" → unsupported, no amount",
      "reason": "^AssertionError"
     },
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0184 [D] candidate-review-r1:R1-HIGH \"1 box toothpicks\"",
+     "test": "exact rejections of recognised non-ingredient shapes (semantic-v2) > equipment (equipmentShape): \"6 popsicle sticks\" → unsupported, no amount",
      "reason": "^AssertionError"
     }
    ],
@@ -511,11 +535,16 @@
    "replace": "export function nutritionPanel(toks: readonly Tok[]): boolean {\n  if (Number.isFinite(0)) return false;",
    "tests": [
     "tests/semantic-v2/safeguards.test.ts",
-    "tests/regressions/semantic-v2-regressions.test.ts"
+    "tests/regressions/semantic-v2-regressions.test.ts",
+    "tests/regressions/exact-rejections.test.ts"
    ],
    "killedBy": [
     {
-     "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0173 [D] candidate-review-r1:R1-HIGH \"Calories: 412kcal | Carbohydrates: 52g | Protein: 18g\"",
+     "test": "exact rejections of recognised non-ingredient shapes (semantic-v2) > one-line nutrition panels (nutritionPanel): \"Calories: 412kcal | Carbohydrates: 52g | Protein: 18g\" → unsupported, no amount",
+     "reason": "^AssertionError"
+    },
+    {
+     "test": "exact rejections of recognised non-ingredient shapes (semantic-v2) > one-line nutrition panels (nutritionPanel): \"Calories 250 | Fat 10g | Carbs 30g\" → unsupported, no amount",
      "reason": "^AssertionError"
     }
    ],
