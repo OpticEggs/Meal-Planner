@@ -28,7 +28,7 @@ describe(`frozen label sets (exposed) — ${ENGINE} (required)`, () => {
         tally.c1plus++;
       } else if (c.expect.status === "needs_review") {
         expect(o.outcome).toBe("C5");
-        expect(o.partial).not.toBe("C5b");
+        expect(o.partial).not.toBe("b");
         tally.c5++;
       } else {
         expect(["C7", "C8"]).toContain(o.outcome);
