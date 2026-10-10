@@ -143,7 +143,7 @@ export async function auditLegacyQuantities(c: pg.ClientBase, opts: { householdI
   try {
     const rows = (await c.query(
       `SELECT v.household_id, v.recipe_id, v.id AS version_id, v.version_no, v.title, v.provenance, v.import_draft_id, (r.current_version_id = v.id) AS current,
-              ri.id AS row_id, ri.source_row_id, ri.component_key, ri.ingredient_key, ri.unit, ri.quantity::text AS quantity, ri.note, ri.quantity_basis
+              ri.id AS row_id, ri.source_row_id, ri.component_key, ri.ingredient_key, ri.unit, ri.quantity::text AS quantity, ri.note, ri.quantity_basis, ri.exact_amount, ri.exact_servings
          FROM recipe_ingredients ri JOIN recipe_versions v ON v.id = ri.recipe_version_id JOIN recipes r ON r.id = v.recipe_id
         WHERE ($1::uuid IS NULL OR v.household_id = $1)
         ORDER BY v.household_id, v.recipe_id, v.version_no, ri.sort, ri.ingredient_key`,
@@ -198,12 +198,22 @@ export async function auditLegacyQuantities(c: pg.ClientBase, opts: { householdI
           evidence = { kind: "conflicting", detail: `The import draft has ${candidates.length} line(s) for ${r.ingredient_key} in ${r.unit}, but none divides into the stored ${r.quantity}${draft.servings ? "" : " (the draft records no servings)"}` };
         }
       }
-      if (evidence.kind === "missing" && r.source_row_id) {
-        // Saved by this release with verified lineage: the row it came from, exactly.
+      if (r.quantity_basis === "exact" && r.exact_amount && r.exact_servings) {
+        // AUD-01: an exact row is its own evidence — the amount a member (or a confirmed import) actually chose; it is
+        // never reported, only passed on to rows copied from it. What it came from is history, not its amount: a member
+        // who changed 2-for-3 to 1/2 a serving meant 1/2.
+        evidence = { kind: "earlier_version", versionNo: r.version_no, amount: Q.of(r.exact_amount).toString(), servings: r.exact_servings, via: "lineage" };
+      } else if (evidence.kind === "missing" && r.source_row_id) {
+        // Verified lineage: the row it came from. Lineage proves ancestry, not that the source's amount still applies —
+        // the source's evidence carries over only if it still gives this row's stored decimal.
         const src = byRow.get(r.source_row_id);
-        if (src?.kind === "import_draft") evidence = { kind: "earlier_version", versionNo: rows.find((x) => x.row_id === r.source_row_id)!.version_no, amount: src.amount, servings: src.servings, via: "lineage" };
-        else if (src?.kind === "earlier_version") evidence = { ...src, via: "lineage" };
-        else if (src) evidence = src;
+        const srcVersion = rows.find((x) => x.row_id === r.source_row_id)?.version_no;
+        if (src?.kind === "import_draft" || src?.kind === "earlier_version") {
+          const versionNo = src.kind === "import_draft" ? srcVersion! : src.versionNo;
+          evidence = storedAs(r.quantity, src.amount, src.servings)
+            ? { kind: "earlier_version", versionNo, amount: src.amount, servings: src.servings, via: "lineage" }
+            : { kind: "conflicting", detail: `It comes from a row of version ${srcVersion} whose evidence is ${src.amount} for ${src.servings} servings, which does not give the stored ${r.quantity}; the amount was changed since, so that evidence no longer applies` };
+        } else if (src) evidence = src;
       } else if (evidence.kind === "missing") {
         const earlier = known.get(ident);
         if (earlier) {

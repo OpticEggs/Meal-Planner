@@ -369,6 +369,12 @@ MUTATIONS.push(
     edits: [["        if (amounts.length === 1) {", "        if (amounts.length >= 1) {"]] },
   { name: "LA_inherit_more_rows_than_source", file: "src/server/audit/legacy-quantities.ts", suite: LA, pattern: "LA-04", expect: [/LA-04/],
     edits: [["if (earlier.values.size === 1 && !earlier.unrecoverable && here <= earlier.count)", "if (earlier.values.size === 1 && !earlier.unrecoverable)"]] },
+  // AUD-01: lineage carries the source's amount even where the member changed it.
+  { name: "LA_lineage_ignores_amount_change", file: "src/server/audit/legacy-quantities.ts", suite: LA, pattern: "LA-05", expect: [/LA-05/],
+    edits: [["evidence = storedAs(r.quantity, src.amount, src.servings)\n", "evidence = true\n"]] },
+  // AUD-01: an exact row takes its source's evidence instead of its own exact amount.
+  { name: "LA_exact_row_inherits_source", file: "src/server/audit/legacy-quantities.ts", suite: LA, pattern: "LA-05", expect: [/LA-05/],
+    edits: [["if (r.quantity_basis === \"exact\" && r.exact_amount && r.exact_servings) {", "if (false) {"]] },
 );
 // A harmless change that MUST be classified SURVIVED (proves the classifier can say so).
 const CONTROLS_LIST = [
