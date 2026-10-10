@@ -137,4 +137,7 @@ It needs a separately authorized Phase 3.
 
 ## 11. Change log
 
-(none yet)
+1. **2026-10-10, before candidate freeze and before any holdout-v3 line:** CONTRACT-v1 §12, which §3 makes binding
+   for holdout-v3 labels, was revised after the independent label checker's review (`9cd400c`; disposition in
+   `evidence/2026-10-10-recipe-extraction-phase2b/label-check/`). No threshold, class, severity rule or acceptance
+   basis changed.
