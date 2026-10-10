@@ -15,7 +15,7 @@
 import { ADJECTIVE_WORDS, AND_COMPOUNDS, CATEGORY_NOUNS, COMPOUND_MODIFIERS, FLAVOUR_HEADS, FORM_CHOICE_WORDS, FUNCTION_WORDS, LEADING_SHARE_WORDS, PART_HEADS, PREP_ADVERBS, REMARK_WORDS, SHARED_HEAD_MODIFIERS, SIZE_WORDS } from "./lexicon";
 
 const LEADING_JUNK_WORDS = FUNCTION_WORDS;
-import { foodWord } from "./foods";
+import { foodWord, varietyWord } from "./foods";
 
 const wordsOf = (s: string) => s.split(" ").filter((w) => w.length > 0);
 const lower = (s: string) => s.toLowerCase();
@@ -97,7 +97,10 @@ function trailingHeadSplit(firsts: readonly string[][], last: readonly string[])
     if (o.length === 0 || o.some((w) => headLower.includes(lower(w)))) return false;
     const one = o.length === 1 || (o.length <= 3 && o.every(capitalised)) || COMPOUND_MODIFIERS.has(lower(o.join(" ")));
     if (!one) return false;
-    return o.every(versionWord) || (sources !== undefined && sources.has(lower(o.join(" "))));
+    if (o.every(versionWord) || (sources !== undefined && sources.has(lower(o.join(" "))))) return true;
+    // (round 3) two varieties of one head: capitalised names ("Thai or Genovese basil") or variety words ("butter or
+    // iceberg lettuce", "cherry or grape tomatoes")
+    return (o.every(capitalised) && capitalised(last[0]) && !head.some(capitalised)) || (o.length === 1 && m === 1 && varietyWord(o[0]) && varietyWord(last[0]));
   };
   return firsts.every(shareable) ? { head: head.join(" ") } : null;
 }

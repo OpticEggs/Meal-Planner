@@ -99,13 +99,13 @@ export const MEATS_MORE =
   "spareribs riblets baby-backs babybacks flanken galbi kalbi bulgogi char-siu siu-yuk lechon tocino tapa longsilog adobo " +
   "pulled-pork brisket briskets burnt-ends rib-tips sirloin-tips kebabs kabobs skewers-meat souvlakia satays " +
   "medallions noisettes noisette cutlets chops steaks fillets filets loins shanks shoulders legs thighs breasts wings " +
-  "drumsticks quarters halves carcasses necks bones hocks trotters knuckles jowls bellies " +
+  "drumsticks halves carcasses necks bones hocks trotters knuckles jowls bellies " +
   "liverwurst braunschweiger bologna mortadella pepperoni capicola capocollo coppa speck pancetta guanciale salt-pork fatback " +
   "hot-dogs hotdogs corndogs brats bratwursts italian-sausage chicken-sausage turkey-sausage breakfast-sausage sausage-links " +
   "luncheon lunchmeat deli-meat coldcuts spam vienna-sausages viennas meatball meatballs kofta koftas kofte keftedes frikadeller " +
   "rissole rissoles croquetas croquettes patties burgers hamburgers cheeseburgers smashburgers sliders mince ground-beef " +
   "steak-tips stew-meat stewing-beef beef-cubes fajita-meat stir-fry-beef shabu-shabu sukiyaki yakiniku katsu tonkatsu " +
-  "pinwheel pinwheels chashu chasu rabbits hares quails ducks ducklings geese turkeys chickens hens squab duckbreast magret";
+  "pinwheel pinwheels pig pigs hog hogs ox oxen calf calves cow cows steer sheep isolate isolates hydrolysate fern ferns chashu chasu rabbits hares quails ducks ducklings geese turkeys chickens hens squab duckbreast magret";
 
 /** Fish, shellfish and seafood products. */
 export const SEAFOOD_MORE =
@@ -217,7 +217,7 @@ export const DISHES_MORE =
   "sloppy-joes joes meatloaf pot-roast pot-pie chicken-and-dumplings biscuits-and-gravy chicken-fried-steak fried-chicken " +
   "mac-and-cheese macaroni-and-cheese mac-n-cheese casserole hotdish tater-tot-hotdish green-bean-casserole stuffing dressing " +
   "deviled-eggs devilled-eggs potato-salad egg-salad tuna-salad chicken-salad pasta-salad coleslaw slaw ambrosia waldorf " +
-  "cobb caesar chef's wedge sandwiches subs hoagies heroes wraps paninis melts reubens clubs blts sliders " +
+  "cobb caesar chef's sandwiches subs hoagies heroes wraps paninis melts reubens clubs blts sliders " +
   "burgers cheesesteak cheesesteaks philly lobster-rolls crab-cakes clam-chowder chowders bisques stews soups broths " +
   "salads kabobs pinchos brochettes satays yakitoris rolls wraps dumplings noodles";
 
@@ -295,7 +295,7 @@ export const DRINKS_MORE =
   "pu-erh puerh chai masala-chai jasmine-tea green-tea black-tea white-tea herbal-tea iced-tea sweet-tea bubble-tea boba " +
   "tapioca-pearls cocoa hot-chocolate drinking-chocolate ovaltine nesquik milo horlicks eggnog nog toddy toddies " +
   "glogg gluhwein mulled-wine sangria sangrias margarita margaritas mojito mojitos martini martinis daiquiri daiquiris " +
-  "negroni negronis spritz spritzes mixer mixers cocktail-mixer sour-mix margarita-mix bloody-mary-mix";
+  "negroni negronis sling slings spritz spritzes cocktail-mixer sour-mix margarita-mix bloody-mary-mix";
 
 /** Nuts, seeds, grains, flours, legumes, soy foods, noodles and pasta. */
 export const NUTS_GRAINS_MORE =
@@ -358,7 +358,7 @@ export const PANTRY_MORE =
   "consomme consommé stocks broths bone-broth dashi-granules hondashi chicken-powder chicken-bouillon beef-bouillon " +
   "soup-mix onion-soup-mix gravy-mix sauce-mix seasoning-mix taco-seasoning fajita-seasoning chili-seasoning " +
   "ranch-mix ranch-seasoning dip-mix dressing-mix stuffing-mix croutons breadcrumbs bread-crumbs cracker-crumbs " +
-  "cornflake-crumbs panko-breadcrumbs crumbs coating shake-and-bake fry-mix tempura-batter batter-mix fish-fry " +
+  "cornflake-crumbs panko-breadcrumbs crumbs shake-and-bake fry-mix tempura-batter batter-mix fish-fry " +
   "pudding-mix jello-mix gelatin-mix frosting-mix icing-mix glaze-mix whipped-topping cool-whip reddi-wip dream-whip " +
   "evaporated-milk condensed-milk sweetened-condensed-milk coconut-milk coconut-cream cream-of-coconut coco-lopez " +
   "coconut-water dried-milk powdered-milk nonfat-dry-milk dry-milk carnation " +
@@ -384,6 +384,21 @@ export const MORE_MODIFIERS =
   "bone semi-boneless semi-boned pin-boned skin-off scaled gutted head-on head-off shell-on shell-off tail-on tail-off " +
   "peeled-and-deveined ez-peel easy-peel butterflied butterfly frenched tied rolled netted scored tenderized " +
   "split halved quartered spatchcocked whole-muscle chopped-and-formed " +
+  // intensifiers before a modifier ("2 very ripe plantains", "1 good-quality baguette")
+  "very really slightly super nice good good-quality high-quality best-quality top-quality best finest quite fairly perfectly barely just " +
+  "nicely lightly well overly extra-ripe just-ripe " +
+  // texture and taste adjectives ("4 crusty rolls", "2 juicy lemons")
+  "crusty chewy fluffy juicy meaty starchy waxy floury leafy nutty fruity smoky smokey salty cheesy sticky gooey fudgy hearty lumpy bony " +
+  "moist dense airy buttery sugary syrupy saucy soupy peppery garlicky lemony herby oniony beefy fishy jammy crumbly velvety custardy doughy " +
+  "bready mealy crisp-tender " +
+  // product styles ("barista oat milk", "straw mushrooms", "hanger steak", "isolate")
+  "barista straw hanger hangers sprouting wood underripe hass reed fuerte pinkerton " +
+  // culinary-purpose "-ing" words (the only "-ing" words read as modifiers right after a count: "1 standing rib roast",
+  // "6 canning tomatoes", "1 finishing salt"; "1 dusting cocoa" is a measure)
+  "standing braising broiling poaching steaming sauteing smoking curing brining marinating toasting glazing finishing juicing canning " +
+  "preserving melting blanching sanding decorating fermenting stuffing seasoning dressing simmering sizzling breading leavening remaining " +
+  "frosting filling topping icing rolling self-rising rising piping-hot wedding morning evening christening " +
+  "sweetheart hispi pointed " +
   // cooked in or served from ("skillet cornbread", "sheet-pan chicken", "one-pot pasta", "submarine sandwiches")
   "iron freezer fryer broiler roaster stone glass string steamer skillet sheet-pan one-pot one-pan slow-cooker crockpot instant-pot air-fryer dutch-oven cast-iron submarine " +
   // texture, shape and form

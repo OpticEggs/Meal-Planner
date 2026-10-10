@@ -11,7 +11,7 @@
  * Words are lower case, without diacritics, mostly singular: `foodWord` also accepts the regular plurals ("cherries",
  * "tomatoes", "loaves", "radishes") and hyphenated words whose parts are recognised ("sun-dried", "jalapeno-cheddar").
  */
-import { UNKNOWN_MEASURES, unitOfWord } from "./lexicon";
+import { EQUIPMENT_TOOL_HEADS, EQUIPMENT_VESSEL_HEADS, KITCHEN_ACTION_VERBS, UNKNOWN_MEASURES, unitOfWord } from "./lexicon";
 import {
   BAKED_MORE, CONDIMENTS_MORE, DAIRY_MORE, DISHES_MORE, DRINKS_MORE, FRUITS_MORE, HERBS_MORE, MEATS_MORE, MORE_MODIFIERS, MUSHROOMS_MORE,
   NUTS_GRAINS_MORE, PANTRY_MORE, SEAFOOD_MORE, SPICES_MORE, SWEETS_MORE, VEGETABLES_MORE,
@@ -30,7 +30,7 @@ const FRUITS =
   "muskmelon casaba papaya passionfruit passion pineapple pear quince nectarine peach plum prune damson greengage persimmon pomegranate aril " +
   "lychee litchi longan rambutan mangosteen durian jackfruit breadfruit starfruit carambola dragonfruit pitaya tamarind feijoa loquat " +
   "physalis gooseberries rhubarb olive coconut cherimoya soursop sapote jujube medlar salmonberry marionberry tayberry aronia sloe rowan " +
-  "crabapple pluot aprium tomatillo kiwiberry fruit fruits citrus zest rind segment wedge slice";
+  "crabapple pluot aprium tomatillo kiwiberry fruit fruits citrus zest rind";
 
 /** Vegetables. */
 const VEGETABLES =
@@ -48,7 +48,7 @@ const VEGETABLES =
 /** Mushrooms. */
 const MUSHROOMS =
   "mushroom shiitake portobello portabella portobella cremini crimini button oyster enoki chanterelle morel porcini cep maitake shimeji " +
-  "trumpet truffle truffles lobster chestnut hedgehog beech matsutake wood ear cloud black fungus fungi";
+  "trumpet truffle truffles lobster chestnut hedgehog beech matsutake ear cloud black fungus fungi";
 
 /** Herbs. */
 const HERBS =
@@ -85,13 +85,13 @@ const MEATS =
   "lardons speck jamon serrano iberico coppa capicola mortadella salami pepperoni chorizo soppressata sausage sausages bratwurst kielbasa " +
   "andouille boudin knackwurst weisswurst frankfurter frank hot dog hotdog wiener weiner bologna liverwurst braunschweiger pastrami corned " +
   "brisket roast steak steaks chop chops cutlet cutlets loin tenderloin sirloin ribeye rib eye strip filet fillet mignon porterhouse t-bone " +
-  "tbone flank skirt hanger flatiron chuck shank shoulder butt blade round rump topside silverside brisket oxtail tail tongue cheek cheeks " +
+  "tbone flank skirt flatiron chuck shank shoulder butt blade round rump topside silverside brisket oxtail tail tongue cheek cheeks " +
   "jowl belly side spare spareribs rib ribs riblet riblets baby back country-style short leg legs thigh thighs drumstick drumsticks wing wings " +
   "wingette drumette breast breasts tender tenders tenderloins giblets gizzard gizzards heart hearts liver livers kidney kidneys sweetbread " +
   "sweetbreads tripe marrow bone bones neck necks feet foot trotter trotters hock hocks knuckle knuckles crown saddle haunch " +
   "medallion medallions scallopini scaloppine escalope paillard schnitzel cube mince minced ground burger burgers patty patties meatball " +
   "meatballs meatloaf jerky biltong confit rillettes pate terrine foie gras sausage links link chipolata merguez boerewors salchicha longaniza " +
-  "lap cheong cha siu spam corned carcass whole half quarter quarters piece pieces bites nugget nuggets popcorn strips fingers cutlet gyro " +
+  "lap cheong cha siu spam corned carcass whole nugget nuggets popcorn cutlet gyro " +
   "shawarma kebab kabob souvlaki satay yakitori carnitas barbacoa birria al pastor suadero tinga pulled shredded rotisserie " +
   "stewing deli lunchmeat lunch cold cuts cold-cuts pigs blanket";
 
@@ -105,7 +105,7 @@ const SEAFOOD =
   "crawfish crayfish lobster lobsters crab crabs crabmeat king snow dungeness blue soft-shell softshell claw claws leg legs tail tails " +
   "clam clams cockle cockles mussel mussels oyster oysters scallop scallops abalone conch whelk periwinkle sea urchin uni squid calamari " +
   "octopus cuttlefish surimi imitation fishcake fishcakes fishball fishballs bacalao salt cod lox gravlax smoked kippered tinned fillet fillets " +
-  "filet filets steak steaks loin loins belly collar cheeks head tail roe sashimi sushi tempura cake cakes finger fingers";
+  "filet filets steak steaks loin loins belly collar cheeks head tail roe sashimi sushi tempura cake cakes finger";
 
 /** Dairy, eggs and their alternatives. */
 const DAIRY =
@@ -136,7 +136,7 @@ const BAKED =
   "calzone calzones stromboli empanada empanadas pasty pasties samosa samosas pierogi pierogies pirogi knish knishes dumpling dumplings " +
   "gyoza potsticker potstickers wonton wontons dim sum bao baos hum pastry cobbler crumble crisp betty buckle grunt pandowdy shortcake " +
   "torte gateau trifle tiramisu pavlova meringue meringues souffle eclair whoopie pie bar bars square squares roulade bundt pound " +
-  "angel food sponge chiffon layer layers babka stollen panettone pandoro king kringle cinnamon bun sticky twist twists";
+  "angel food sponge chiffon babka stollen panettone pandoro king kringle cinnamon bun sticky twist twists";
 
 /** Prepared foods and dishes. */
 const DISHES =
@@ -154,7 +154,7 @@ const DISHES =
   "porridge oatmeal muesli granola cereal parfait smoothie acai pudding custard flan creme brulee panna cotta mousse jello gelatin " +
   "terrine pate rillettes croquette croquettes arancini fritter fritters latke latkes rosti hash brown browns tots tater fries chips crisps " +
   "wedges dip dips spread charcuterie crudites antipasto antipasti tapas mezze appetizer appetizers entree side sides " +
-  "leftover leftovers meal dinner dinners lunch breakfast brunch snack snacks treat treats dessert desserts bites " +
+  "leftover leftovers meal dinner dinners lunch breakfast brunch snack snacks treat treats dessert desserts " +
   "lettuce-wrap stir-fry stirfry fried rice lo mein chow mein chop suey egg foo young katsu tonkatsu karaage tempura teriyaki yakitori " +
   "yakisoba okonomiyaki takoyaki tteokbokki kimchi jjigae sundubu samgyeopsal adobo sinigang pancit lechon arroz con pollo mofongo " +
   "ropa vieja picadillo empanada ceviche causa feijoada moqueca coxinha pao de queijo bobotie bunny chow tagine couscous shakshuka " +
@@ -164,7 +164,7 @@ const DISHES =
 const SWEETS =
   "candy candies chocolate chocolates truffle truffles bonbon bonbons caramel caramels toffee toffees fudge brittle nougat marshmallow " +
   "marshmallows gummy gummies gummi jellybean jellybeans licorice liquorice lollipop lollipops lolly lollies mint mints peppermint gum " +
-  "chewing bubblegum sprinkle sprinkles nonpareils jimmies hundreds thousands chip chips morsel morsels chunk chunks kisses kiss bar bars " +
+  "chewing bubblegum sprinkle sprinkles nonpareils jimmies hundreds thousands chip chips kisses kiss bar bars " +
   "cocoa cacao nib nibs couverture callets wafer wafers cookie cookies oreo oreos graham grahams pretzel pretzels popcorn chip chips crisps " +
   "cracker crackers goldfish cheez-it cheez-its rice cake cakes puff puffs cheeto cheetos dorito doritos frito fritos tortilla pita bagel " +
   "trail mix granola bar bars energy protein cluster clusters bark brittle praline pralines turtle turtles peanut butter m&m m&ms " +
@@ -206,7 +206,7 @@ const NUTS_GRAINS =
 /** Other pantry foods. */
 const PANTRY =
   "yeast baking soda powder bicarbonate cream tartar gelatin gelatine agar pectin cornstarch xanthan guar lecithin salt sugar flour cocoa " +
-  "chocolate chip chips morsels coconut flake flakes shredded raisin raisins currants dried fruit candied citron cherries maraschino " +
+  "chocolate chip chips coconut flake flakes shredded raisin raisins currants dried fruit candied citron cherries maraschino " +
   "applesauce apple butter pumpkin puree pie filling condensed evaporated milk powder bouillon stock broth base concentrate demi-glace " +
   "tomato tomatoes paste sauce passata crushed diced whole peeled stewed sun-dried roasted pepper peppers pimientos artichoke hearts olives " +
   "capers anchovies sardines tuna salmon crab chicken spam beans chickpeas lentils corn peas carrots mixed vegetables soup cereal cornflakes " +
@@ -216,13 +216,13 @@ const PANTRY =
 
 /** Food names whose head is a part, a portion or a shape, and cut and dish words used inside food names. */
 const FOOD_NAME_PARTS =
-  "pot back eye strip loin cube sheet wedge finger stone slab drop sprinkle link angel hair bow tie elbow tube pinwheel pinwheels " +
+  "back eye strip loin cube sheet wedge finger stone slab drop sprinkle link angel hair bow tie elbow tube pinwheel pinwheels " +
   "half halves quarter quarters piece pieces chunk chunks bit bits slice slices round rounds ring rings stick sticks spear spears wedge " +
   "wedges cube cubes dice crumble crumbles crumb crumbs shaving shavings shred shreds flake flakes strip strips segment segments floret " +
   "florets cutlet cutlets fillet fillets filet filets steak steaks chop chops tender tenders nugget nuggets ball balls patty patties cake " +
   "cakes bite bites cup cups shell shells bowl bowls boat boats basket baskets cone cones nest nests log logs bar bars square squares " +
   "triangle triangles stack stacks sheet sheets round crown rack racks leg legs claw claws tail tails knuckle hock shank bone bones " +
-  "thigh breast wing drumstick club fish surf turf mac cheese pot sticker stickers pocket pockets puff puffs twist twists braid knot knots " +
+  "thigh breast wing drumstick club fish surf turf mac cheese sticker stickers pocket pockets puff puffs twist twists braid knot knots " +
   "pinwheel bomb bombs drop slider sliders paper";
 
 /**
@@ -298,7 +298,7 @@ const MORE_FOODS =
   "pinot gris grigio gewurztraminer viognier chenin muscadet albarino gruner vermentino verdejo torrontes semillon " +
   "tempranillo grenache garnacha mourvedre carignan barbera nebbiolo dolcetto montepulciano primitivo nero davola aglianico " +
   "carmenere pinotage gamay cabernet franc petit verdot petite sirah " +
-  "seed seeds kernel kernels groats berries flakes pearls bits nibs grits meal " +
+  "seed seeds kernel kernels groats berries flakes pearls nibs grits meal " +
   "teff fonio sorghum millet amaranth kaniwa job's tears wild-rice black-rice red-rice brown-rice sushi-rice " +
   "orecchiette strozzapreti trofie pici bigoli garganelli maltagliati tagliolini taglierini fettucine papardelle " +
   "rotelle ruote wagon wheels alphabet stelline anelli tubetti mezzi rigatoni penne-rigate ziti-rigati manicotti cannelloni " +
@@ -341,8 +341,8 @@ const MORE_FOODS =
   "jambalaya gumbo etouffee po'boy po-boy muffuletta beignet boudin dirty-rice red-beans hushpuppies grits shrimp-and-grits " +
   "biscuits-and-gravy chicken-and-waffles fried-chicken meatloaf pot-roast chicken-fried-steak mac-and-cheese " +
   "cornbread collard-greens succotash coleslaw potato-salad deviled-eggs pimento-cheese " +
-  "sloppy joe joes sloppy-joes hamburger cheeseburger hot-dog corn-dog chili-dog reuben club blt patty-melt grilled-cheese " +
-  "philly cheesesteak hoagie sub hero wedge cubano medianoche torta banh-mi gyro wrap " +
+  "sloppy joes sloppy-joes hamburger cheeseburger hot-dog corn-dog chili-dog reuben club blt patty-melt grilled-cheese " +
+  "philly cheesesteak hoagie sub hero cubano medianoche torta banh-mi gyro wrap " +
   "nachos quesadilla burrito chimichanga enchilada taquito flauta tostada tamale pozole menudo birria barbacoa " +
   "carne asada pollo asado al pastor carnitas chile relleno rellenos mole elote esquites queso fundido " +
   "salsa roja verde pico de gallo guacamole crema " +
@@ -373,10 +373,10 @@ const MORE_FOODS =
 /** Still more foods by class: less common produce, regional foods, prepared items and snacks. */
 const EXTRA_FOODS =
   // produce
-  "chayote cactus nopal nopales nopalitos dragonfruit dragon pitahaya buddha's-hand scape scapes paddle paddles fiddleheads samphire " +
+  "chayote cactus nopal nopales nopalitos dragonfruit dragon pitahaya buddha's-hand scape scapes fiddleheads samphire " +
   "salsify scorzonera crosne crosnes oca ulluco mashua yacon jerusalem sunroot sunchokes topinambur celtuce gai choy yu tatsoi mibuna " +
   "komatsuna amaranth malabar ong choy water spinach kangkong pea shoots pea tendrils sunflower sprouts alfalfa radish sprouts broccoli sprouts " +
-  "cardoon cardoons puntarelle castelfranco treviso tardivo catalogna agretti borage chicory purslane lamb's quarters orach " +
+  "cardoon cardoons puntarelle castelfranco treviso tardivo catalogna agretti borage chicory purslane lamb's orach " +
   "loquat medlar mangosteen salak snakefruit rambutan longan langsat santol jabuticaba feijoa tamarillo pepino naranjilla lulo " +
   "soursop guanabana cherimoya atemoya sugar-apple sapodilla mamey canistel ackee breadfruit plantain pawpaw papaw persimmon hachiya fuyu " +
   "jujube ugli ugli-fruit yuzu sudachi kabosu calamansi calamondin finger-lime makrut bergamot citron etrog blood-orange cara-cara " +
@@ -409,7 +409,7 @@ const EXTRA_FOODS =
   "kaymak clotted-cream double-cream single-cream soured-cream creme-fraiche smetana tvorog farmer's-cheese pot-cheese " +
   "cheddar-cheese colby-jack pepper-jack habanero-jack ghost-pepper-jack smoked-gouda aged-gouda " +
   // breads, baked, sweets extras
-  "disc discs disk disks round rounds hole holes ball balls bomb bombs bite bites " +
+  "disc discs disk disks round rounds hole holes bomb bombs bite " +
   "fortune lucky almond-cookies wafer-cookies sandwich-cookies thumbprint thumbprints rugelach hamantaschen mandelbrot " +
   "linzer kipferl vanillekipferl spritz pfeffernusse lebkuchen springerle stollen " +
   "pretzel-rods pretzel-twists pretzel-bites pretzel-buns soft-pretzels " +
@@ -505,6 +505,23 @@ const COMPOUND_FOODS = [
   "jelly roll", "swiss roll", "cake pop", "muffin top", "stick pretzel", "kettle corn", "tin roof sundae",
   // a product named like a tool, in the plural only ("1 carton Egg Beaters"; "1 egg beater" is the tool)
   "egg beaters", "london broil", "freezer pop",
+  // foods whose last word is also an equipment head (ring, rack, ball, cup, stick, boat, peel, tip, straw, mixer): compound names only
+  "onion ring", "pineapple ring", "kielbasa ring", "sausage ring", "bologna ring", "shrimp ring", "apple ring", "pepper ring", "calamari ring", "squid ring", "jalapeno ring", "banana pepper ring",
+  "cinnamon stick", "celery stick", "carrot stick", "cucumber stick", "cheese stick", "pretzel stick", "bread stick", "fish stick", "crab stick",
+  "mozzarella stick", "veggie stick", "vegetable stick", "jicama stick", "apple stick", "chicken stick", "licorice stick", "rock candy stick",
+  "rice ball", "cheese ball", "melon ball", "energy ball", "matzo ball", "matzah ball", "cake ball", "dough ball", "protein ball", "popcorn ball",
+  "bliss ball", "rum ball", "bourbon ball", "date ball", "coconut ball", "malt ball", "pizza dough ball", "mochi ball", "sesame ball", "fish ball",
+  "falafel ball", "risotto ball", "arancini ball", "crab ball", "shrimp ball", "pork ball", "beef ball", "chicken ball", "turkey ball", "sausage ball",
+  "cookie dough ball", "truffle ball", "oat ball", "peanut butter ball", "chocolate ball", "tapioca ball", "boba ball", "glutinous rice ball", "lamb ball",
+  "applesauce cup", "pudding cup", "jello cup", "jell-o cup", "yogurt cup", "fruit cup", "mousse cup", "trifle cup", "parfait cup", "ramen cup",
+  "banana boat", "zucchini boat", "potato boat", "bread boat", "orange peel", "lemon peel", "lime peel", "citrus peel", "candied peel",
+  "grapefruit peel", "mixed peel", "asparagus tip", "sirloin tip", "steak tip", "wing tip", "cheese straw", "potato straw", "pastry straw",
+  "lamb rack", "pork rack", "veal rack", "venison rack", "cocktail mixer", "margarita mixer", "drink mixer", "bloody mary mixer", "mary mixer",
+  "daiquiri mixer", "mojito mixer", "sour mixer", "colada mixer", "mule mixer", "cosmopolitan mixer", "mimosa mixer", "sangria mixer",
+  // dishes named with a vessel or measure word (round 3): the vessel word is a measure after a count otherwise ("1 pot chili")
+  "string bean", "string cheese", "string hopper", "flat iron steak", "flat bread", "flat bean", "side salad", "side dish", "side bacon",
+  "side pork", "layer cake", "layer bar", "cactus paddle", "nopal paddle", "mug cake", "pan bagnat", "pan con tomate", "pan de muerto", "pan de sal", "hand pie", "hand roll", "bouquet garni", "spritz cookie",
+  "jell-o shot", "jello shot", "jelly shot", "pudding shot", "wood ear", "plate rib", "funnel cake", "kettle chip",
   // assortments sold or served on a tray or platter ("1 veggie tray", "1 deli platter")
   "veggie tray", "vegetable tray", "fruit tray", "cheese tray", "meat tray", "deli tray", "relish tray", "shrimp tray", "deli platter",
   "fruit platter", "cheese platter", "meat platter", "seafood platter", "sushi platter", "party platter", "antipasto platter",
@@ -563,6 +580,12 @@ export function compoundFoodEnding(ws: readonly string[]): boolean {
   return false;
 }
 
+/** A cultivar, style or variety word (VARIETIES: "butter", "iceberg", "Yukon", "Fuji", "kalamata", "basmati"). */
+export function varietyWord(word: string): boolean {
+  return VARIETY_WORDS.has(plainWord(word));
+}
+const VARIETY_WORDS: ReadonlySet<string> = setOf(VARIETIES);
+
 /** Lower case without diacritics ("jalapeño" → "jalapeno", "crème" → "creme"). */
 export function plainWord(w: string): string {
   return w.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[’]/g, "'");
@@ -599,16 +622,73 @@ export function foodModifierWord(word: string): boolean {
   if (foodWord(w) || MODIFIER_WORDS.has(w) || inSet(NAME_PART_WORDS, w) || NAME_JOINERS.has(w)) return true;
   if (/^\d+(?:[.,/]\d+)?%?$/.test(w) || /^\d+%$/.test(w)) return true; // "2%", "80/20", "7"
   if (/^(?:one|two|three|four|five|six|seven|eight|nine|ten|twelve)$/.test(w)) return true; // "three cheese", "five-spice"
-  if (w.includes("-")) return w.split("-").every((p) => p.length === 0 || foodModifierWord(p));
-  // past participles and "-ing" forms describe a food ("hand-pulled", "slow-roasted", "glazed", "smoking")
-  return /^\p{L}{3,}(?:ed|ing)$/u.test(w);
+  if (w.includes("-")) {
+    const parts = w.split("-").filter((p) => p.length > 0);
+    // a number with a time, size or unit word ("5-minute rice", "2-minute noodles", "10-inch tortillas", "16-ounce steak")
+    if (parts.length === 2 && /^\d+(?:[.,/]\d+)?$/.test(parts[0]) && (HYPHEN_MEASURE_WORDS.has(parts[1]) || unitOfWord(parts[1]) !== null)) return true;
+    // a product phrase of kitchen verbs ("slice-and-bake", "heat-and-serve", "peel-and-eat", "pinch-pleated", "no-bake")
+    return parts.every((p) => foodModifierWord(p) || PHRASE_VERBS.has(p) || KITCHEN_ACTION_VERBS.has(p));
+  }
+  // past participles describe a food ("hand-pulled", "slow-roasted", "glazed"); "-ing" words only from the lexicons
+  // (culinary-purpose words: "baking", "frying", "smoking"): any other "-ing" noun may be a measure ("1 helping mashed
+  // potatoes", "1 light sprinkling cheese": `measureGerund`)
+  return /^\p{L}{3,}ed$/u.test(w);
 }
+
+/** Time and size words after a number in a hyphenated modifier ("5-minute", "90-second", "10-inch", "3-layer"). */
+const HYPHEN_MEASURE_WORDS = setOf(
+  "minute minutes min second seconds sec hour hours hr day days week weeks month months year years inch inches in cm mm foot ft layer " +
+    "layers ingredient ingredients piece pieces pc count ct pack serving servings serve portion portions bone grain bean cheese spice herb " +
+    "pepper star egg",
+);
+/** Verbs and particles of product phrases ("slice-and-bake", "heat-and-serve", "boil-in-bag", "make-ahead", "pull-apart"). */
+const PHRASE_VERBS = setOf("bake eat serve cook heat peel pull take make boil fry roast broil grill dip go ready no ahead apart in bag it own pinch");
+
+/** A word that only describes a food (a modifier, variety, style or colour word; not a food or part noun). */
+export function describingWord(word: string): boolean {
+  const w = plainWord(word);
+  return MODIFIER_WORDS.has(w) || COLOUR_WORDS.has(w);
+}
+
+/**
+ * MEASURE GERUND (semantic-v2 round 3, R1 item 1): an "-ing" noun that names an amount, not a kind of food — "helping",
+ * "dusting", "sprinkling", "smattering", "slathering", "drizzling", "dousing" (and their plurals). Culinary-purpose
+ * modifiers ("baking", "frying", "roasting", "pickling", "eating", "dipping", "drinking", "whipping") and food nouns
+ * ("pudding", "dumpling", "stuffing", "icing", "herring", "spring") are not measures.
+ */
+export function measureGerund(word: string): boolean {
+  const w = plainWord(word);
+  if (!/^\p{L}{3,}ings?$/u.test(w)) return false;
+  return !foodWord(w) && !MODIFIER_WORDS.has(w) && !inSet(NAME_PART_WORDS, w);
+}
+
+/**
+ * A tool or appliance noun (not a vessel that can hold an amount) used before a food head says how the food is made or
+ * served: "griddle cakes", "toaster waffles", "toaster pastries", "funnel cakes", "boiler onions", "oven fries". Only
+ * before a food head itself (not a portion head), and never in the measure position of a line (amount.ts reads those).
+ */
+function toolModifier(w: string): boolean {
+  if (VESSEL_LIKE.has(w) || EQUIPMENT_VESSEL_HEADS[w] !== undefined) return false;
+  if (EQUIPMENT_TOOL_HEADS.has(w)) return true;
+  const m = /^(\p{L}{2,}?)(?:er|or)$/u.exec(w);
+  if (m === null) return false;
+  const stem = m[1];
+  const doubled = stem.length >= 3 && stem[stem.length - 1] === stem[stem.length - 2] ? stem.slice(0, -1) : "";
+  return [stem, `${stem}e`, doubled].some((c) => c.length > 0 && (KITCHEN_ACTION_VERBS.has(c) || PHRASE_VERBS.has(c)));
+}
+/** Tools that hold or measure an amount: never a modifier ("1 shaker salt", "1 pot chili", "1 dish baked ziti"). */
+const VESSEL_LIKE = setOf(
+  "oven ovens pot pots pan pans kettle kettles dish dishes plate plates platter platters tray trays board boards ramekin ramekins mold molds mould " +
+    "moulds shaker shakers grinder grinders mill mills spoon spoons ladle ladles scoop scoops measure cup cups bowl bowls mug mugs glass " +
+    "glasses jar jars jug jugs pitcher pitchers tin tins can cans box boxes bag bags bottle bottles basket baskets bucket buckets press presses",
+);
 
 /** Portions and parts that are a name's head only after a food ("chicken pieces", "pineapple tidbits", "burnt ends"). */
 const PORTION_HEADS = setOf(
   "piece chunk bit tidbit morsel slice slab cube dice crumble crumb shaving shred strip sliver coin disc disk plank portion medallion " +
-    "segment wedge half halves quarter ring spear floret nugget bite ball tip end back frame flat neck shell grounds trimming " +
-    "scrap skin rib straw stick rack peel boat cup bottom top",
+    "segment wedge half halves quarter spear floret nugget bite end back frame flat neck shell grounds trimming scrap skin rib bottom " +
+    "top nest finger",
+  // (ring, rack, ball, cup, stick, boat, peel, tip and straw are also equipment heads: foods with them are compound names)
 );
 const COLOUR_WORDS = setOf("red yellow green orange purple black white brown golden pink blue");
 
@@ -633,8 +713,11 @@ export function recognisedFoodNoun(name: string): boolean {
 }
 
 function foodNameReading(name: string, portions: boolean): boolean {
-  const raw = name.trim().split(/[\s,]+/).map((w) => w.replace(/^[("'“‘]+|[)"'”’.:;!?]+$/g, "")).filter((w) => w.length > 0);
+  let raw = name.trim().split(/[\s,]+/).map((w) => w.replace(/^[("'“‘]+|[)"'”’.:;!?]+$/g, "")).filter((w) => w.length > 0);
   if (raw.length === 0) return false;
+  // a food "of" a named place: the food is the head ("prosciutto di Parma", "lentils du Puy", "jamón de Teruel")
+  const origin = raw.findIndex((w, k) => k > 0 && ORIGIN_JOINERS.has(plainWord(w)) && raw.slice(k + 1).length > 0 && raw.slice(k + 1).every((x) => /^\p{Lu}/u.test(x)));
+  if (origin > 0 && !foodWord(raw[raw.length - 1])) raw = raw.slice(0, origin);
   const lower = raw.map(plainWord);
   // a compound food at the end ("tea bags", "banana leaves", "wonton cups")
   let head = raw.length - 1;
@@ -644,12 +727,44 @@ function foodNameReading(name: string, portions: boolean): boolean {
   }
   // a portion or part of a food named before it ("pineapple tidbits", "pork belly slab", "oysters on the half shell")
   if (head === raw.length - 1 && !foodWord(raw[head]) && !(portions && inSet(PORTION_HEADS, lower[head]) && lower.slice(0, head).some(foodWord))) return false;
+  // the head is a food itself, not a portion of one ("griddle cakes" may take a tool word before it; "egg cup" may not)
+  const foodHead = head < raw.length - 1 || foodWord(raw[head]);
+  let brandOnly = false;
   for (let k = 0; k < head; k++) {
     const w = raw[k];
-    // (a capitalised word is a proper name or brand, unless it is a unit or measure word: "2 BUNCH black beans")
-    if (!(foodModifierWord(w) || (/^\p{Lu}/u.test(w) && unitOfWord(w) === null && !UNKNOWN_MEASURES.has(lower[k])))) return false;
+    // (a vessel word names how a plural food is made — "6 pan rolls", "4 mug brownies" — where the count agrees with the
+    // food; after a count of one it is a measure, read before this: "1 pot chili")
+    const vesselBeforePlural = foodHead && VESSEL_LIKE.has(lower[k]) && k === head - 1 && /[^s]s$/.test(lower[head]);
+    // (a compound food inside the name: "pot roast sandwiches", "tea bag holder" aside — the head decides)
+    const innerCompound = k + 1 < raw.length && compoundFood(lower[k], lower[k + 1]);
+    const known = foodModifierWord(w) || (foodHead && toolModifier(lower[k])) || vesselBeforePlural || innerCompound;
+    // (a capitalised word is a proper name or brand, unless it is a unit or measure word ("2 BUNCH black beans") or a
+    // plural opening the name, which counts rather than names ("2 Sips dark rum"))
+    const brand = !known && /^\p{Lu}/u.test(w) && unitOfWord(w) === null && !UNKNOWN_MEASURES.has(lower[k]) && !(k === 0 && head > 0 && /\p{Ll}s$/u.test(w) && !/(?:'s|ss|us|is|as)$/.test(lower[k]));
+    if (!known && !brand) return false;
+    if (brand) brandOnly = true;
     // "cake fresh yeast", "swirl heavy cream": a food noun, then an adjective that only stands before a noun
     if (k + 1 < head && FOOD_WORDS.has(lower[k]) && !MODIFIER_WORDS.has(lower[k]) && !COLOUR_WORDS.has(lower[k]) && PRE_NOUN_MODIFIERS.has(lower[k + 1])) return false;
   }
+  // a brand before a wrap is cling film or foil ("1 Glad wrap", "1 box Reynolds Wrap"): a person checks
+  if (brandOnly && head === raw.length - 1 && BRANDED_EQUIPMENT_HEADS.has(lower[head])) return false;
   return true;
+}
+
+/** Joining words before a place name that says where a food comes from ("di Parma", "du Puy", "de Bayonne"). */
+const ORIGIN_JOINERS = setOf("di de del della dei da du des d' dal dalla");
+/** Heads that are a household product after a brand ("Glad wrap", "Reynolds Wrap"). */
+const BRANDED_EQUIPMENT_HEADS = setOf("wrap wraps foil bag bags");
+
+/**
+ * Food heads that are also equipment or brand words (round 3): with a count of one and a capitalised word before them they
+ * name a product to check, not a food ("1 Big Green Egg", "1 Kamado Joe"); see `homographHeadAfterCapital`.
+ */
+const HOMOGRAPH_HEADS = setOf("egg eggs joe hanger cracker crackers chip chips wood ring rack ball cup stick boat peel tip straw slice mixer wrap");
+
+/** The name ends in a homograph head (HOMOGRAPH_HEADS) and a capitalised word stands before it. */
+export function homographHeadAfterCapital(name: string): boolean {
+  const ws = name.trim().split(/\s+/).filter((w) => /\p{L}/u.test(w));
+  if (ws.length < 2 || !HOMOGRAPH_HEADS.has(plainWord(ws[ws.length - 1]))) return false;
+  return ws.slice(0, -1).some((w) => /^\p{Lu}/u.test(w));
 }

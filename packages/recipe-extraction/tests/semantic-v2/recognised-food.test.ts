@@ -7,6 +7,13 @@
  * with no quantity, unit or package, and the text after the number kept as the name pre-fill. Mass and volume lines are
  * unchanged. A known food after an unresolved measure word never inherits a count. Valid foods named with equipment or
  * measure words are never `unsupported`. Unknown words in these tests are invented ("zorble"), so they stay unknown.
+ *
+ * Round 3 (R1 round-3 review): the word right after a count is a measure when it is a measure gerund ("helping"), a
+ * vessel ("pot", "kettle", "casserole dish") or a food-or-measure word ("square", "bouquet", "spritz", "sip") unless a
+ * compound food follows; on a Title Case line capitals carry no brand signal; a capitalised plural opening the name is not a
+ * variety; equipment homographs (mixer, wrap, egg, cracker, chips, ring, rack, ball, cup, slice…) need a compound or a
+ * drink word / food container; a trailing multiplier gets the same measure check. The plain and overlap data carry
+ * expected fields (data/*.jsonl), so a measure read into the name with a count is caught.
  */
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -14,13 +21,16 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import type { ParsedIngredientV1 } from "../../src/contract";
 import { equipmentNamesFood, equipmentPhrase } from "../../src/ingredient/semantic-v2/classify";
-import { compoundFoodEnding, foodWord, recognisedFoodHead, recognisedFoodNoun } from "../../src/ingredient/semantic-v2/foods";
+import { compoundFoodEnding, foodWord, measureGerund, recognisedFoodHead, recognisedFoodNoun } from "../../src/ingredient/semantic-v2/foods";
 import { lex } from "../../src/ingredient/semantic-v2/lexer";
 import { core, read } from "./helpers";
 
 const toks = (s: string) => lex(s).tokens;
 const DATA = path.join(path.dirname(fileURLToPath(import.meta.url)), "data");
-const dataLines = (file: string) => readFileSync(path.join(DATA, file), "utf8").split("\n").filter((l) => l.trim().length > 0 && !l.startsWith("#"));
+/** A data row: a valid food line written by the implementation worker, and its expected reading (CONTRACT §12.14 included). */
+interface DataRow { line: string; status: string; name: string | null; quantity: string | null; unit: string | null }
+const dataRows = (file: string): DataRow[] => readFileSync(path.join(DATA, file), "utf8").split("\n").filter((l) => l.trim().length > 0).map((l) => JSON.parse(l) as DataRow);
+const qText = (q: ParsedIngredientV1["quantity"]): string | null => (q === null ? null : q.kind === "exact" ? (q.denominator === "1" ? q.numerator : `${q.numerator}/${q.denominator}`) : "range");
 
 /** A safe abstention: a person checks, and no amount, unit, package, equivalent or choice is carried. */
 function expectAbstention(r: ParsedIngredientV1) {
@@ -34,7 +44,9 @@ describe("recognisedFoodHead (named safeguard): the head is a food and every wor
     "chicken thighs", "boneless skinless chicken thighs", "baby back ribs", "Granny Smith apples", "leg of lamb", "three cheese pizzas", "San Marzano tomatoes",
     "Thai bird chilies", "globe eggplant", "silken tofu", "fingerling potatoes", "haricots verts", "spiral ham", "top round roast", "saltines", "Rice Krispies",
     "penne rigate", "premade pizza crust", "street taco tortillas", "burrito-size tortillas", "petite diced tomatoes", "sun-dried tomatoes", "jalapeño poppers",
-    "M&Ms", "Kraft Singles", "extra-virgin olive oil", "2% milk", "80/20 ground beef", "oysters on the half shell", "chicken breast w/ skin", "hearts of palm",
+    "M&Ms", "Kraft Singles", "extra-virgin olive oil", "2% milk", "very ripe plantains", "pig's trotters", "prosciutto di Parma", "5-minute rice",
+    "slice-and-bake cookies", "pinch-pleated dumplings", "griddle cakes", "toaster waffles", "boiler onions", "crusty rolls", "whey protein isolate",
+    "barista oat milk", "straw mushrooms", "fiddlehead ferns", "mug cakes", "pan rolls", "cocktail mixer", "onion rings", "cinnamon sticks", "80/20 ground beef", "oysters on the half shell", "chicken breast w/ skin", "hearts of palm",
     "tea bags", "wonton cups", "bread bowls", "chicken pot pie", "short plate", "Italian grinders", "jello mold", "Egg Beaters", "veggie tray", "chashu pork",
   ])("%s → recognised", (name) => {
     expect(recognisedFoodHead(name)).toBe(true);
@@ -49,8 +61,12 @@ describe("recognisedFoodHead (named safeguard): the head is a food and every wor
     "BUNCH black beans", "Bunch black beans", "SPRIG chicken thighs",
     // a food noun, then an adjective that only stands before a noun: a measure ("1 cake fresh yeast")
     "cake fresh yeast", "swirl heavy cream", "bar dark chocolate", "drop boneless chicken thighs",
-    // a portion head with no food before it
-    "tidbits", "slab",
+    // a portion head with no food before it; a portion head that is also an equipment head, outside a compound name
+    "tidbits", "slab", "egg cup", "tea ball", "crumpet ring", "bacon rack", "banana hanger",
+    // equipment homographs: a mixer without a drink word, a brand before a wrap, a capitalised plural opening the name
+    "Sunbeam mixer", "mixer", "Glad wrap", "Reynolds Wrap", "Sips dark rum",
+    // a vessel word before a singular food (after a count of one it is a measure: "1 pot chili")
+    "pot chili", "shaker salt",
   ])("%s → not recognised", (name) => {
     expect(recognisedFoodHead(name)).toBe(false);
   });
@@ -61,14 +77,14 @@ describe("recognisedFoodHead (named safeguard): the head is a food and every wor
   });
 
   it("a portion head counts after a food (recognisedFoodHead), but only a food head overrides equipment (recognisedFoodNoun)", () => {
-    for (const n of ["pineapple tidbits", "pork belly slab", "popsicle sticks", "tart ring", "applesauce cups", "banana boats"]) expect(recognisedFoodHead(n), n).toBe(true);
-    for (const n of ["popsicle sticks", "tart ring", "pizza peel", "muffin cups"]) expect(recognisedFoodNoun(n), n).toBe(false);
+    for (const n of ["pineapple tidbits", "pork belly slab", "chicken fingers", "egg noodle nest", "applesauce cups", "banana boats"]) expect(recognisedFoodHead(n), n).toBe(true);
+    for (const n of ["popsicle sticks", "tart ring", "pizza peel", "muffin cups", "oak chunks"]) expect(recognisedFoodHead(n) && recognisedFoodNoun(n), n).toBe(false);
     for (const n of ["short plate", "Italian grinders", "jello mold", "chicken thighs"]) expect(recognisedFoodNoun(n), n).toBe(true);
   });
 
   it("food words that are also equipment heads are not foods by themselves", () => {
-    for (const w of ["sheet", "pan", "pot", "rack", "ring", "stick", "tray", "board", "grinder", "skewer", "bowl", "steamer", "fryer"]) expect(foodWord(w), w).toBe(false);
-    for (const w of ["mixer", "wrap", "crackers", "cheese", "tortillas"]) expect(foodWord(w), w).toBe(true);
+    for (const w of ["sheet", "pan", "pot", "rack", "ring", "stick", "tray", "board", "grinder", "skewer", "bowl", "steamer", "fryer", "mixer", "joe", "hanger", "wood", "chunks", "pieces"]) expect(foodWord(w), w).toBe(false);
+    for (const w of ["wrap", "crackers", "cheese", "tortillas", "chips", "egg"]) expect(foodWord(w), w).toBe(true);
     expect(compoundFoodEnding(["chicken", "pot", "pie"])).toBe(true);
     expect(compoundFoodEnding(["pineapple", "tidbits"])).toBe(true); // a hyphenated lexicon entry ("pineapple-tidbits") written with a space
   });
@@ -157,24 +173,45 @@ describe("equipment and food that share a word (owner rule 3)", () => {
   });
 });
 
-describe("burden on valid foods (owner rule 3): never unsupported, rarely sent to a person for an unrecognised food", () => {
-  for (const [file, maxShare] of [["plain-food-lines.txt", 0.005], ["overlap-food-lines.txt", 0.03]] as const) {
-    it(`${file}: 0 unsupported, recognition reviews at most ${maxShare * 100}%`, () => {
-      const lines = dataLines(file);
-      expect(lines.length).toBeGreaterThan(250);
-      const unsupported: string[] = [];
-      const unrecognised: string[] = [];
-      for (const line of lines) {
-        const r = read(line);
-        if (r.status === "unsupported") unsupported.push(line);
-        if (recognitionAbstention(r)) unrecognised.push(line);
-        // an abstention never carries an amount; a ready line always has a name
-        if (r.status === "ready") expect(r.name, line).not.toBeNull();
+describe("the plain and overlap data: expected readings, never unsupported, rarely sent to a person for an unrecognised food", () => {
+  for (const [file, maxShare] of [["plain-food-lines.jsonl", 0.005], ["overlap-food-lines.jsonl", 0.03]] as const) {
+    it(`${file}: every line reads as expected (status, name, quantity, unit); 0 unsupported; recognition reviews at most ${maxShare * 100}%`, () => {
+      const rows = dataRows(file);
+      expect(rows.length).toBeGreaterThan(250);
+      const wrong: string[] = [];
+      let unrecognised = 0;
+      for (const row of rows) {
+        const r = read(row.line);
+        const got = { status: r.status, name: r.name, quantity: qText(r.quantity), unit: r.unit?.canonical ?? null };
+        if (JSON.stringify(got) !== JSON.stringify({ status: row.status, name: row.name, quantity: row.quantity, unit: row.unit })) wrong.push(`${row.line} → ${JSON.stringify(got)}`);
+        expect(r.status, row.line).not.toBe("unsupported");
+        if (recognitionAbstention(r)) unrecognised++;
       }
-      expect(unsupported).toEqual([]);
-      expect(unrecognised.length / lines.length, unrecognised.join(" | ")).toBeLessThanOrEqual(maxShare);
+      expect(wrong).toEqual([]);
+      expect(unrecognised / rows.length).toBeLessThanOrEqual(maxShare);
     });
   }
+
+  it("the data's expectations follow CONTRACT §12.14: a measure word after a count is never read into the name with a count", () => {
+    // written independently of the engine's lexicons: measure, container and vessel nouns, and measure gerunds
+    const MEASURE_NOUNS = new Set(("wheel log rack sleeve shot pat roll chunk pouch canister clamshell tablet portion serving helping square bouquet spritz sip " +
+      "gulp pot pan kettle dish casserole bowl mug glass jug pitcher keg growler tray platter plate slab brick hunk thumb knuckle nub dollop glug drizzle " +
+      "splosh swig slug tot nip jigger punnet crate sack case trug hank rope braid string flat side joint coating dusting sprinkling smattering bar").split(" "));
+    // food names that open with such a word (compound names, or a cut named with "of") stay readable foods
+    const COMPOUND_OPENERS = /^(?:\S+ (?:of|garni)\b|pot (?:roast|pie|sticker)|pan (?:pizza|dulce|bagnat|roll)|flat iron|string (?:cheese|bean)|slab pie|roll[s]?$|bar cookie|casserole$|side salad)/i;
+    const bad: string[] = [];
+    for (const file of ["plain-food-lines.jsonl", "overlap-food-lines.jsonl"]) {
+      for (const row of dataRows(file)) {
+        const m = /^\d[\d/ .]*\s+(?:(?:small|medium|large)\s+)?(\S+)\s+(.+)$/.exec(row.line);
+        if (m === null || !MEASURE_NOUNS.has(m[1].toLowerCase().replace(/e?s$/, "")) && !MEASURE_NOUNS.has(m[1].toLowerCase())) continue;
+        if (COMPOUND_OPENERS.test(`${m[1]} ${m[2]}`)) continue;
+        // (a registry unit read as the unit is not this: "2 bars dark chocolate" → 2 block)
+        if (row.quantity !== null && (row.name ?? "").toLowerCase().startsWith(m[1].toLowerCase())) bad.push(row.line);
+        if (row.status === "ready" && row.unit === "each" && (row.name ?? "").toLowerCase().startsWith(m[1].toLowerCase())) bad.push(row.line);
+      }
+    }
+    expect(bad).toEqual([]);
+  });
 });
 
 describe("R1 round 2: A5, A6, H8′ and the listed regressions", () => {
@@ -245,5 +282,98 @@ describe("R1 round 2: A5, A6, H8′ and the listed regressions", () => {
     expect(core(read("1 bag M&Ms"))).toEqual({ status: "ready", name: "M&Ms", quantity: "1", unit: "bag" });
     expect(core(read("1 can A&W root beer"))).toEqual({ status: "ready", name: "A&W root beer", quantity: "1", unit: "can" });
     expect(read("2 cups strawberries & blueberries")).toMatchObject({ status: "needs_review", name: null });
+  });
+});
+
+describe("R1 round 3, item 1: the word right after a count", () => {
+  it.each([
+    "1 helping mashed potatoes", "1 dusting cocoa powder", "1 sprinkling brown sugar", "1 smattering chopped chives", "1 scattering sesame seeds",
+    "1 slathering softened butter", "1 drizzling warm honey", "1 dousing hot sauce", "1 square baking chocolate", "1 bouquet flat-leaf parsley",
+    "1 spritz lime juice", "2 Sips Dark Rum", "1 Gulp Lemonade", "1 pot chili", "1 casserole dish baked ziti", "1 large pot salted water",
+    "1 kettle boiling water", "1 zorbling apple", "2 squares unsweetened chocolate", "1 braid onions", "1 string chilies", "1 hand bananas",
+  ])("%s → needs_review, the measure in the note, no quantity or unit", (line) => {
+    const r = read(line);
+    expectAbstention(r);
+    expect(r.reasons).toContain("unit_unknown");
+  });
+
+  it("measureGerund: a measure noun in -ing, not a culinary-purpose word or a food", () => {
+    for (const w of ["helping", "dusting", "sprinkling", "smattering", "slathering", "drizzling", "dousing", "zorbling", "helpings"]) expect(measureGerund(w), w).toBe(true);
+    for (const w of ["baking", "frying", "roasting", "pickling", "eating", "dipping", "standing", "canning", "pudding", "dumpling", "stuffing", "icing", "herring", "spring", "string"]) expect(measureGerund(w), w).toBe(false);
+  });
+
+  it.each([
+    ["1 pot roast", "pot roast", "1"], ["2 pot pies", "pot pies", "2"], ["1 bouquet garni", "bouquet garni", "1"], ["4 hand pies", "hand pies", "4"],
+    ["2 mug cakes", "mug cakes", "2"], ["1 pan pizza", "pan pizza", "1"], ["6 baking potatoes", "baking potatoes", "6"], ["1 standing rib roast", "standing rib roast", "1"],
+    ["2 glorped apples", "glorped apples", "2"], ["4 Roma Tomatoes", "Roma Tomatoes", "4"], ["1 Large Egg", "Egg", "1"], ["3 passion fruit", "passion fruit", "3"],
+    ["1 dragon fruit", "dragon fruit", "1"], ["2 string beans", "string beans", "2"], ["1 side of salmon", "side of salmon", "1"],
+  ])("negative control, a food: %s → %s, %s each", (line, name, q) => {
+    expect(core(read(line))).toEqual({ status: "ready", name, quantity: q, unit: "each" });
+  });
+
+  it("a Title Case line carries no brand signal; elsewhere a capitalised name before a food is a brand or variety", () => {
+    expectAbstention(read("2 Zorble Apples"));
+    expect(core(read("2 Zorble apples"))).toEqual({ status: "ready", name: "Zorble apples", quantity: "2", unit: "each" });
+    expect(core(read("2 Hass avocados"))).toEqual({ status: "ready", name: "Hass avocados", quantity: "2", unit: "each" });
+  });
+});
+
+describe("R1 round 3, items 2–3: equipment look-alikes and the trailing multiplier", () => {
+  it.each([
+    "1 Sunbeam mixer", "1 Kenwood Chef mixer", "1 Bosch mixer", "1 Hamilton Beach mixer", "1 Big Green Egg", "1 Kamado Joe", "1 crumpet ring", "1 bacon rack",
+    "1 fish slice", "1 tea ball", "1 egg cup", "1 lobster cracker", "2 crab crackers", "1 bag hickory wood chips", "1 bag mesquite chips", "1 banana hanger",
+    "1 Glad wrap", "1 box Reynolds Wrap", "4 pint jars",
+  ])("%s → never a ready food with an amount", (line) => {
+    const r = read(line);
+    expect(r.status).not.toBe("ready");
+    expect(r.quantity).toBeNull();
+    expect(r.unit).toBeNull();
+  });
+
+  it("recognised equipment shapes are rejected exactly", () => {
+    for (const line of ["1 crumpet ring", "1 bacon rack", "1 fish slice", "1 tea ball", "1 egg cup", "1 lobster cracker", "1 bag hickory wood chips", "4 pint jars"]) {
+      expect(read(line).status, line).toBe("unsupported");
+    }
+  });
+
+  it("mixer is a food with a drink word or a food container; chips, crackers and cups are foods outside their equipment purposes", () => {
+    expect(core(read("1 bottle mixer"))).toEqual({ status: "ready", name: "mixer", quantity: "1", unit: "bottle" });
+    expect(core(read("2 cans cocktail mixer"))).toEqual({ status: "ready", name: "cocktail mixer", quantity: "2", unit: "can" });
+    expect(core(read("1 bag tortilla chips"))).toEqual({ status: "ready", name: "tortilla chips", quantity: "1", unit: "bag" });
+    expect(core(read("1 bag apple chips"))).toEqual({ status: "ready", name: "apple chips", quantity: "1", unit: "bag" });
+    expect(core(read("1 box Ritz crackers"))).toEqual({ status: "ready", name: "Ritz crackers", quantity: "1", unit: "box" });
+    expect(core(read("4 pudding cups"))).toEqual({ status: "ready", name: "pudding cups", quantity: "4", unit: "each" });
+  });
+
+  it("a multiplier after a measure word gets the measure check (R1 item 4)", () => {
+    const r = read("tots of rum x 2");
+    expectAbstention(r);
+    expect(r.reasons).toContain("unit_unknown");
+    expect(core(read("eggs x 3"))).toEqual({ status: "ready", name: "eggs", quantity: "3", unit: "each" });
+  });
+});
+
+describe("R1 round 3, item 5: the review burden on valid foods", () => {
+  it.each([
+    ["2 pig's trotters", "pig's trotters", "2", "each"], ["1 carton barista oat milk", "barista oat milk", "1", "carton"],
+    ["4 slices prosciutto di Parma", "prosciutto di Parma", "4", "slice"], ["12 fiddlehead ferns", "fiddlehead ferns", "12", "each"],
+    ["2 very ripe plantains", "very ripe plantains", "2", "each"], ["4 griddle cakes", "griddle cakes", "4", "each"], ["4 Jell-O shots", "Jell-O shots", "4", "each"],
+    ["1 can straw mushrooms", "straw mushrooms", "1", "can"], ["6 toaster waffles", "toaster waffles", "6", "each"], ["6 boiler onions", "boiler onions", "6", "each"],
+    ["6 pinch-pleated dumplings", "pinch-pleated dumplings", "6", "each"], ["2 beef plate ribs", "beef plate ribs", "2", "each"], ["2 pan bagnat", "pan bagnat", "2", "each"],
+    ["1 box 5-minute rice", "5-minute rice", "1", "box"], ["1 pack 2-minute noodles", "2-minute noodles", "1", "package"], ["2 funnel cakes", "funnel cakes", "2", "each"],
+    ["1 package toaster pastries", "toaster pastries", "1", "package"], ["4 crusty rolls", "crusty rolls", "4", "each"], ["4 slice-and-bake cookies", "slice-and-bake cookies", "4", "each"],
+    ["1 scoop whey protein isolate", "whey protein isolate", "1", "scoop"], ["2 slightly green bananas", "slightly green bananas", "2", "each"],
+  ])("%s → ready %s", (line, name, q, unit) => {
+    expect(core(read(line))).toEqual({ status: "ready", name, quantity: q, unit });
+  });
+
+  it("two varieties share their head; a same-food remark restates the amount", () => {
+    expect(read("1 cup Thai or Genovese basil").alternatives).toEqual(["Thai basil", "Genovese basil"]);
+    expect(read("2 cups butter or iceberg lettuce").alternatives).toEqual(["butter lettuce", "iceberg lettuce"]);
+    expect(read("1 tbsp honey or maple syrup").alternatives).toEqual(["honey", "maple syrup"]);
+    expect(read("1/2 cup Parmesan or Pecorino Romano").alternatives).toEqual(["Parmesan", "Pecorino Romano"]);
+    expect(read("1/2 cup chopped dates (8 Medjool)").status).toBe("ready");
+    expect(read("3 cups cubed watermelon (1/4 melon)").status).toBe("ready");
+    expect(read("2 tbsp lime juice (1 lime)").status).toBe("needs_review");
   });
 });
