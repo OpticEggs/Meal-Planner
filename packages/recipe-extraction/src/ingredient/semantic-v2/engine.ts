@@ -29,7 +29,7 @@ import { REASONS, type AmountUnstated, type IngredientEngine, type ParsedIngredi
 import { cmp, fromExactQuantity, rational, toExactQuantity } from "../../rational";
 import { validateParsedIngredientV1 } from "../../validate";
 import { amountStartsAt, foreignSystemRemark, groupAmount, isPriceGroup, PACKAGE_UNITS, readAmountPhrase, readStatedAmount, placeSecondary, sumInSmallest, type AmountSlots } from "./amount";
-import { nonIngredientReason, numericLead } from "./classify";
+import { equipmentShape, nonIngredientReason, numericLead } from "./classify";
 import { adjacent, isGroup, isNumberish, isSym, isWord, lex, type Tok } from "./lexer";
 import { BULLETS, CONTAINER_UNITS, FRUIT_PART_WORDS, SERVING_LABEL_WORDS, UNIT_WORDS_IN_FOOD_NAMES, FUNCTION_WORDS, INVARIANT_PLURALS, MEASURE_ADJECTIVES, PREP_ADVERBS, REMARK_WORDS, SIZE_WORDS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
 import { numberInProductName, readNameRegion, type NameReading } from "./name";
@@ -170,10 +170,15 @@ function andJoinsFoods(seg: readonly Tok[]): boolean {
   return k > 0 && k < seg.length - 1 && plainFoodItem(seg.slice(0, k)) && plainFoodItem(stripPhrase(seg.slice(k + 1)));
 }
 
-/** A singular imprecise measure word with no number ("Pinch", "dash", "handful"): one of it is meant. */
+/**
+ * UNIT WITH NO NUMBER (CONTRACT §12.15): a singular imprecise measure word ("Pinch", "dash", "handful") or a singular
+ * count unit ("Clove of garlic") with no number is one of it; a plural or vague one ("Dashes of bitters", "a few drops")
+ * states none, and a measuring unit ("Cup of flour", "Tablespoon olive oil") may have lost its number (a person checks).
+ */
 function impliedOne(u: UnitRead, text: string): boolean {
   const written = text.slice(u.s, u.e).toLowerCase().replace(/\.$/, "");
-  return u.unit.dimension === "imprecise" && u.unit.canonical !== "inch" && !/(?:s|es)$/.test(written);
+  const singular = !/(?:s|es)$/.test(written) || written === u.unit.canonical;
+  return ((u.unit.dimension === "imprecise" && u.unit.canonical !== "inch") || (u.unit.dimension === "count" && u.unit.canonical !== "each")) && singular && written !== "ea";
 }
 
 // --- The engine -------------------------------------------------------------------------------------
@@ -246,6 +251,9 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
 
   const nonIngredient = nonIngredientReason(toks);
   if (nonIngredient) return { out: unsupported(raw, normalized, [...reasons.filter((r) => r === "input_truncated"), nonIngredient]) };
+  // (semantic-v2, §12.8) "2 chicken skewers", "1 burrito bowl": a holder that is never eaten, after a word that may name
+  // its contents — food on skewers, or the skewers? A person checks.
+  if (equipmentShape(toks) === "unsure") push(reasons, "unclassified");
 
   // Segments at top-level commas/semicolons: the head, then remarks.
   const segments = splitTopLevel(toks);
@@ -442,6 +450,9 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
   // (semantic-v2, §12.8) "Sugar 10g", "Salt: 1.2 g": sugar or salt, then only a mass in g/mg — a nutrition-panel
   // line or a UK recipe weight; a person checks
   if ((nameFromLabel || !amountAtStart) && nr.name !== null && /^(?:sugars?|salt)$/i.test(nr.name.trim()) && unit !== null && (unit.canonical === "g" || unit.canonical === "mg")) push(fx.reasons, "unclassified");
+  // (semantic-v2, §12.8 unknown default) "Lycopene 2 mg", "Erythritol: 5 mg": a label, then only milligrams — the shape of a
+  // nutrition fact whose label is not in the nutrient vocabulary; a person checks
+  if ((nameFromLabel || !amountAtStart) && nr.name !== null && unit !== null && unit.canonical === "mg") push(fx.reasons, "unclassified");
 
   // (semantic-v2, §12.3) a size placed before the counted unit was known ("4 salmon fillets (6 oz each)", "2 chicken
   // breasts (6 oz each)"): only packaging takes a package size; of anything else it is a per-piece weight

@@ -196,7 +196,15 @@ export const UNKNOWN_MEASURES = setOf(
     "sachet sachets glass glasses mug mugs spoonful spoonfuls shot shots jigger jiggers cl cls centiliter centiliters centilitre centilitres " +
     "peck pecks bushel bushels dab dabs pat pats lump lumps sliver slivers twist twists nub nubs smidgen smidgens " +
     // semantic-v2 (§12.14): packaging and batch words outside the registry ("1 sleeve saltine crackers", "1 recipe pie dough")
-    "sleeve sleeves recipe recipes batch batches",
+    "sleeve sleeves recipe recipes batch batches roll rolls " +
+    // household vessels and spoons used as measures ("1 teacup sugar", "2 ladles stock", "1 bowl rice", "1 saucer milk")
+    "teacup teacups coffeecup coffeecups tumbler tumblers beaker beakers jug jugs pitcher pitchers carafe carafes decanter decanters bowl bowls " +
+    "saucer saucers ladle ladles spoon spoons soupspoon soupspoons tablespoonful bucket buckets pail pails crate crates pottle pottles sack sacks " +
+    "basket baskets barrel barrels keg kegs flagon flagons tray trays " +
+    // archaic and foreign units ("1 gill cream", "2 drams vanilla", "1 stone potatoes", "1 catty pork")
+    "gill gills dram drams drachm drachms minim minims noggin noggins pony ponies firkin firkins stone stones catty catties tael taels " +
+    // informal lumps and portions ("1 hunk Parmesan", "1 thumb ginger", "1 slab tofu", "a blob of butter")
+    "hunk hunks chunk chunks slab slabs thumb thumbs blob blobs wodge wodges swig swigs slug slugs smidge tad",
 );
 
 /** Words after a number that make it a temperature or a time, never an amount ("350°F", "10 minutes"). */
@@ -456,7 +464,9 @@ export const NUTRIENT_WORDS = setOf(
     "sodium potassium calcium iron fat fats saturated unsaturated monounsaturated polyunsaturated trans sugars added total dietary net per serving " +
     // semantic-v2 (CONTRACT §12.8): the rest of a nutrition panel's vocabulary — vitamins, minerals, caffeine, daily value
     "vitamin vitamins mineral minerals magnesium zinc phosphorus selenium copper manganese iodine chromium molybdenum chloride fluoride " +
-    "folate folic acid niacin riboflavin thiamin thiamine biotin pantothenic choline caffeine omega-3 omega-6 daily value dv amount",
+    "folate folic acid niacin riboflavin thiamin thiamine biotin pantothenic choline caffeine omega-3 omega-6 daily value dv amount " +
+    // abbreviations and spelling variants of a nutrition panel ("Sat. fat", "Carb", "Prot", "Chol", "Sugar alcohols", "Fibre")
+    "sat satfat sat-fat carb prot chol cholest sod fibres fibers alcohols polyols mono poly monounsat polyunsat unsat kcals cal cals",
 );
 /**
  * Units of a nutrition value ("250 kcal", "10 g", "200 mg", "15%"), abbreviated or spelled out ("20 grams", "300
@@ -506,21 +516,87 @@ export const CREDIT_OPENERS: readonly (readonly string[])[] = [
   ["photo", "by"], ["photos", "by"], ["photography", "by"], ["inspired", "by"], ["recipe", "source"], ["recipe", "credit"],
 ];
 /**
- * Equipment: head nouns that are equipment, and the modifiers that make an equipment name with an ambiguous head
- * ("baking sheet", "piping bag", "loaf pan", "parchment paper"). Used after a "you will need" label and for a bare
- * equipment line; a container unit followed by a food ("1 bag frozen peas", "2 sheets puff pastry") is food.
+ * EQUIPMENT (semantic-v2, CONTRACT §12.8 non-food items): kitchen TOOLS are nouns that name an implement, a vessel or a
+ * wrapping that is never eaten — pans, dishes, plates, pots, ovens, cookers, skillets, woks, racks of the oven, moulds,
+ * ramekins, liners, foil, twine, wrap, towels, mitts, scales, slicers, peelers, blenders, thermometers… With such a noun
+ * as the head of a line (whatever the words before it say: "1 potato masher", "1 egg slicer", "1 cast iron skillet"),
+ * the line is equipment. A general English class of utensil nouns, not a list of inputs.
  */
-export const EQUIPMENT_HEADS = setOf(
-  "pan pans dish dishes bowl bowls skillet skillets pot pots mixer mixers processor blender thermometer rack racks mold molds mould moulds cutter cutters " +
-    "whisk spatula spatulas ramekin ramekins skewer skewers tray trays board boards knife knives peeler grater zester sieve strainer colander ladle tongs " +
-    "liner liners towel towels twine mandoline steamer wok griddle sheet sheets bag bags tin tins paper foil wrap",
+export const EQUIPMENT_TOOL_HEADS = setOf(
+  "pan pans skillet skillets wok woks saucepan saucepans stockpot stockpots pot pots oven ovens cooker cookers maker makers iron irons griddle " +
+    "griddles dish dishes plate plates platter platters ramekin ramekins mold molds mould moulds tray trays board boards stone stones steel steels " +
+    "mat mats liner liners parchment foil twine towel towels mitt mitts glove gloves scale scales slicer slicers peeler peelers blender blenders " +
+    "processor processors thermometer thermometers grater graters zester zesters masher mashers press presses juicer juicers reamer reamers " +
+    "spinner spinners scraper scrapers torch torches mallet mallets needle needles timer timers spatula spatulas whisk whisks tongs ladle ladles " +
+    "sieve sieves strainer strainers colander colanders mandoline mandolines mandolin knife knives cutter cutters brush brushes pin pins grinder " +
+    "grinders mill mills shaker shakers funnel funnels pestle pestles mortar mortars microplane microplanes toothpick toothpicks cheesecloth " +
+    "kettle kettles baster basters spoon spoons fork forks trivet trivets dehydrator dehydrators opener openers ramekin thermometer cleaver cleavers " +
+    "scissors shears tweezers",
 );
-export const EQUIPMENT_MODIFIERS = setOf(
-  "baking cookie sheet roasting muffin loaf cake springform bundt tart pie piping pastry parchment wax waxed aluminum aluminium plastic cling " +
-    "zip-top ziplock ziploc resealable freezer cutting mixing stand food hand wire cooling casserole square round rimmed nonstick non-stick cast-iron " +
-    "cupcake silicone wooden bamboo metal " +
-    "oven-safe heatproof heat-proof glass metal kitchen paper",
+/**
+ * VESSEL HEADS (semantic-v2, CONTRACT §12.8): nouns that are equipment only in some compounds, because they also hold,
+ * portion or name food ("tea bags", "puff pastry sheets", "cinnamon sticks", "rice paper", "onion rings", "lamb rack",
+ * "peanut butter cups", "wonton wrappers"). Such a head is equipment when the word right before it is a material or
+ * kitchen-use word (EQUIPMENT_MATERIAL_WORDS) or one of the purpose words of that head below ("piping bag", "popsicle
+ * sticks", "wax paper", "tart ring", "cooling rack", "paper baking cups", "mason jars"). With any other word before it,
+ * a `food` head stays food and an `unsure` head (one that holds food but is never eaten: skewers, picks, bowls, jars,
+ * glasses) goes to a person; with no word, or only size and shape words, before them, BARE_EQUIPMENT_HEADS are
+ * equipment ("6 skewers", "1 large bowl"). Each purpose list is a closed class of what that vessel is made for.
+ */
+const VESSEL_HEADS: Readonly<Record<string, [policy: "food" | "unsure", purposes: string]>> = {
+  bag: ["food", "piping pastry icing decorating zip-top ziptop ziplock zip-lock ziploc resealable freezer storage sandwich snack gallon-size quart-size sandwich-size snack-size gallon quart treat oven roasting brining vacuum sous-vide trash garbage"],
+  cup: ["food", "muffin cupcake baking custard souffle soufflé measuring dixie espresso shot"],
+  sheet: ["food", "baking cookie rimmed"],
+  stick: ["food", "popsicle lollipop lolly pop craft cocktail treat"],
+  wrap: ["food", "plastic cling saran beeswax"],
+  wrapper: ["food", "cupcake muffin baking"],
+  paper: ["food", "wax waxed parchment baking kitchen tissue butcher greaseproof"],
+  ring: ["food", "tart cake pastry mousse egg cookie biscuit flan"],
+  rack: ["food", "wire cooling roasting baking oven drying steaming"],
+  tin: ["food", "muffin loaf cake baking tart pie roasting bundt springform cupcake patty"],
+  bottle: ["food", "spray squeeze"],
+  box: ["food", "cake pizza bento lunch storage cardboard"],
+  container: ["food", "storage freezer"],
+  scoop: ["food", "cookie cream melon portion"],
+  steamer: ["food", "bamboo vegetable electric rice"],
+  mixer: ["food", "stand hand handheld electric"],
+  fryer: ["food", "air deep electric"],
+  string: ["food", "kitchen butcher butcher's baker's cotton"],
+  basket: ["food", "frying fry steamer bread wire"],
+  skewer: ["unsure", "kebab kabob shish long flat"],
+  pick: ["unsure", "cocktail party"],
+  bowl: ["unsure", "salad soup cereal dessert serving mixing"],
+  jar: ["unsure", "mason canning jelly jam kilner preserving storage spice half-pint pint quart sterilized sterilised clean empty"],
+  glass: ["unsure", "wine shot martini highball champagne coupe pint rocks old-fashioned collins drinking tall"],
+};
+const PLURAL_OF: Readonly<Record<string, string>> = { box: "boxes", glass: "glasses" };
+export const EQUIPMENT_VESSEL_HEADS: Readonly<Record<string, { policy: "food" | "unsure"; purposes: ReadonlySet<string> }>> = Object.assign(
+  Object.create(null),
+  Object.fromEntries(
+    Object.entries(VESSEL_HEADS).flatMap(([head, [policy, purposes]]) => {
+      const entry = { policy, purposes: setOf(purposes) };
+      return [[head, entry], [PLURAL_OF[head] ?? `${head}s`, entry]];
+    }),
+  ),
 );
+/** Vessel heads that are equipment with no modifier at all ("6 skewers", "2 bowls", "Cocktail picks"). */
+export const BARE_EQUIPMENT_HEADS = setOf("skewer skewers pick picks bowl bowls");
+/**
+ * Materials and kitchen uses that make ANY vessel head equipment ("wooden skewers", "plastic bag", "glass jars",
+ * "silicone cups", "baking sheets", "mixing bowl", "measuring cups", "kitchen string"). General classes of words.
+ */
+export const EQUIPMENT_MATERIAL_WORDS = setOf(
+  "wooden wood bamboo metal steel stainless stainless-steel aluminum aluminium plastic paper parchment foil silicone glass ceramic cast-iron enamel " +
+    "enameled enamelled nonstick non-stick copper rubber nylon disposable reusable heatproof heat-proof ovenproof oven-proof oven-safe microwave-safe " +
+    "dishwasher-safe freezer-safe airtight muslin mesh fine-mesh " +
+    "baking roasting mixing cutting cooling piping measuring serving storage canning preserving decorating icing kitchen",
+);
+/** Size and shape words of an equipment item ("1 large heavy-bottomed pot", "1 9-inch square pan"): never decide the head. */
+export const EQUIPMENT_SHAPE_WORDS = setOf("deep shallow heavy heavy-bottomed heavy-duty rimmed square round oval rectangular tall wide narrow flat extra");
+/** Count and package nouns before an equipment item ("1 roll kitchen twine", "1 box toothpicks", "2 sheets aluminum foil", "1 pair tongs"). */
+export const EQUIPMENT_COUNT_NOUNS = setOf("roll rolls set sets pair pairs box boxes package packages pack packs packet packets bag bags sheet sheets piece pieces length lengths");
+/** Words that continue an equipment line after its head ("1 piping bag fitted with a star tip", "6 jars with lids"). */
+export const EQUIPMENT_CONTINUATIONS = setOf("with fitted lined greased sprayed for about to that which set placed coated brushed covered");
 /** Words of a label that introduces what to have ready ("You will need:", "You'll need:", "What you'll need:"). */
 export const NEED_WORDS = setOf("need needed needs require required");
 /**

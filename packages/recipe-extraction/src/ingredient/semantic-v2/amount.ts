@@ -203,19 +203,25 @@ export function sameAmount(a: ExactQuantity, ua: UnitV1, b: ExactQuantity, ub: U
 }
 
 /**
- * The second restatement test of §12.6: the restated number is a whole number equal to the exact conversion of the
- * first-stated amount rounded to a whole number of the restated unit ("1/4 tsp (1 ml)", "3/4 tsp (4 ml)", "1 lb (454 g)").
- * Halves round up. `firstBase` is the first amount in the dimension's base unit. Only a restatement in a smaller unit
- * than the first one is a rounding convention (a whole number of a larger unit hides more than it states: "2 lb (1 kg)"
- * is outside both tests, §12.6 policy).
+ * The second restatement test of §12.6 — the ROUNDING ALLOWANCE, as amended by CONTRACT §12.A A2 and refined after the
+ * label check: the restated number is a whole number equal to the exact conversion of the first-stated amount rounded
+ * HALF UP to a whole number of the restated unit, and the restated unit is a fine metric unit (`ml` or `g`) — or `lb`
+ * restating `kg` ("1/4 tsp (1 ml)", "3/4 tsp (4 ml)", "1 lb (454 g)", "1 kg (2 lb)"). A restated unit larger than the
+ * first never gets the allowance (§12.A A2: a whole number of a larger unit hides more than it states — "2 lb (1 kg)",
+ * "100 g (4 oz)"), nor does a coarse kitchen unit ("1/2 tbsp (2 tsp)", "1/6 cup (3 tbsp)": only the 7 % test applies).
+ * `firstBase` is the first amount in the dimension's base unit.
  */
 export function roundedConversion(firstBase: Rational, ua: UnitV1, restated: ExactQuantity, ub: UnitV1): boolean {
   if (restated.denominator !== "1" || ua.canonical === ub.canonical || cmp(base(ub), base(ua)) >= 0) return false;
+  if (!ROUNDING_UNITS.has(ub.canonical) && !(ub.canonical === "lb" && ua.canonical === "kg")) return false;
   const converted = div(firstBase, base(ub)); // exact, in the restated unit
   const twice = BigInt(2) * converted.n + converted.d; // round half up: floor((2n + d) / 2d)
   const rounded = twice / (BigInt(2) * converted.d);
   return rounded > BigInt(0) && rounded.toString() === restated.numerator;
 }
+
+/** The fine metric units a rounded conversion is written in (§12.6 rounding allowance); `lb` only restating `kg`. */
+export const ROUNDING_UNITS: ReadonlySet<string> = new Set(["ml", "g"]);
 
 /** |restated − first| ≤ RESTATEMENT_TOLERANCE · first (both positive, in the same base unit). */
 export function withinRestatementTolerance(first: Rational, restated: Rational): boolean {
@@ -668,11 +674,9 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
   // a registry unit. The amount cannot be carried without its unit: it is kept in the note, not invented.
   if (!unitRead && n1.ok && max === null && between.length === 0) {
     // (after any measure adjectives: "2 heaping spoonfuls sugar")
-    const w = toks[a];
-    const known = isWord(w) && UNKNOWN_MEASURES.has(w.lower);
-    const beforeOf = a === k && isWord(w) && isWord(toks[k + 1], "of") && toks[k + 2] !== undefined && !isWord(toks[k + 2], "the") && isPlainNoun(w.lower);
-    if (known || beforeOf) {
-      let c = a + 1;
+    const m = unknownMeasureAt(toks, a);
+    if (m > a) {
+      let c = m;
       if (isSym(toks[c], ".") && adjacent(toks[c - 1], toks[c])) c++;
       // (a bracketed remark before it is already a note of its own: "2 (heaping) spoonfuls")
       const measure = k > n1.next ? `${text.slice(n1.s, n1.e)} ${text.slice(toks[k].s, toks[c - 1].e)}` : text.slice(n1.s, toks[c - 1].e);
@@ -1079,6 +1083,34 @@ export function isTemperatureOrTime(toks: readonly Tok[], k: number): boolean {
   const t = toks[k];
   return isSym(t, "°", "℉", "℃") || (isWord(t) && TIME_WORDS.has(t.lower));
 }
+
+/**
+ * UNKNOWN MEASURE (semantic-v2, CONTRACT §12.14): where a measure word that is not a registry unit starts at `a` (right
+ * after the number and any size or degree words), the index after it; else `a`. A measure word is
+ *  - a word of UNKNOWN_MEASURES (household vessels and spoons, archaic and foreign units, informal lumps: "1 gill", "2
+ *    drams", "1 tumbler", "2 ladles", "1 teacup", "1 hunk", "1 thumb", "1 stone", "1 pottle"…);
+ *  - a "-ful(l)(s)" measure by its form ("2 fistfuls", "1 can-ful", "1 tub-full", "2 ladlefuls");
+ *  - a vessel named by its use before the food ("1 coffee cup plain flour", "2 soup spoons sugar", "1 wine glass red
+ *    wine", "1 yogurt pot sugar": a plain noun, then VESSEL_MEASURES, then the food);
+ *  - any plain noun (or two) between the number and "of" ("1 hunk of Parmesan", "1 large pot of salted water", "1
+ *    dessert spoon of cocoa") — the registry units were read before this test.
+ */
+export function unknownMeasureAt(toks: readonly Tok[], a: number): number {
+  const w = toks[a];
+  if (!isWord(w)) return a;
+  const next = toks[a + 1];
+  if (UNKNOWN_MEASURES.has(w.lower) || MEASURE_BY_FORM.test(w.lower)) return a + 1;
+  if (!isPlainNoun(w.lower) || unitOfWord(w.text) !== null) return a;
+  const food = (t: Tok | undefined) => isWord(t) && !FUNCTION_WORDS.has(t.lower);
+  if (isWord(next) && VESSEL_MEASURES.has(next.lower) && (food(toks[a + 2]) || isWord(toks[a + 2], "of"))) return a + 2;
+  if (isWord(next, "of") && toks[a + 2] !== undefined && !isWord(toks[a + 2], "the")) return a + 1;
+  if (isWord(next) && isPlainNoun(next.lower) && unitOfWord(next.text) === null && isWord(toks[a + 2], "of") && food(toks[a + 3])) return a + 2;
+  return a;
+}
+/** "-ful" measures by their form: "fistful", "spoonfuls", "can-ful", "tub-full" (registry ones — cupful, handful — are read before). */
+const MEASURE_BY_FORM = /^\p{L}{2,}-?full?s?$/u;
+/** Vessels that name a measure after a word saying which one ("coffee cup", "soup spoon", "wine glass", "yogurt pot"). */
+const VESSEL_MEASURES = new Set(["cup", "cups", "spoon", "spoons", "glass", "glasses", "mug", "mugs", "bowl", "bowls", "pot", "pots", "jar", "jars", "tin", "tins"]);
 
 /** A word that can be a measure noun before "of" (not a size, form, remark or function word). */
 function isPlainNoun(w: string): boolean {

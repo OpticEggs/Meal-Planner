@@ -164,6 +164,27 @@ describe("decoration, unknown and foreign units (§12.13, §12.14)", () => {
     expect(read(line).status).toBe("needs_review");
   });
 
+  // R1 H2 (CONTRACT §12.14): a measure word outside the registry — a household vessel or spoon, an archaic or foreign
+  // unit, an informal lump, a "-ful" measure, a vessel named by its use, or any noun between the number and "of"
+  it.each([
+    "1 gill single cream", "2 drams vanilla essence", "1 tumbler orange juice", "2 ladles chicken stock", "1 teacup caster sugar", "1 dessert spoon cocoa powder",
+    "1 thumb fresh ginger", "1 coffee cup plain flour", "1 wine glass red wine", "2 soup spoons sugar", "1 bowl cooked rice", "2 fistfuls spinach", "1 pottle cream",
+    "1 hunk Parmesan", "1 chunk fresh ginger", "1 slab tofu", "1 tub-full yogurt", "1 can-ful water", "1 stone potatoes", "1 crate oranges", "1 bucket ice",
+    "1 hunk of Parmesan", "1 large pot of salted water", "2 mugfuls milk", "1 yogurt pot sugar", "1 roll refrigerated pie dough", "1 jigger rum",
+  ])("unknown measure: %s → needs review, no amount, the measure in the note", (line) => {
+    const r = read(line);
+    expect(r).toMatchObject({ status: "needs_review", quantity: null, unit: null });
+    expect(r.reasons).toContain("unit_unknown");
+    expect(r.name ?? "").not.toMatch(/\b(?:gill|dram|tumbler|ladle|teacup|spoon|thumb|cup|glass|bowl|fistful|pottle|hunk|chunk|slab|stone|crate|bucket|pot|roll|jigger)s?\b/i);
+  });
+
+  it.each([
+    ["2 heads of garlic", "head"], ["1 thumb-sized piece ginger", "piece"], ["1 can pineapple chunks", "can"], ["4 dinner rolls", "each"], ["1 cup cup noodles", "cup"],
+    ["1 lb pineapple chunks", "lb"], ["1 egg yolk", "each"],
+  ])("negative control, a registry unit or a food: %s → %s", (line, unit) => {
+    expect(read(line)).toMatchObject({ status: "ready", unit: { canonical: unit } });
+  });
+
   it("negative controls: single letters that are units or names", () => {
     expect(core(read("1 c sugar"))).toEqual({ status: "ready", name: "sugar", quantity: "1", unit: "cup" });
     expect(read("2 tbsp vitamin C powder")).toMatchObject({ status: "ready", name: "vitamin C powder" });
@@ -176,10 +197,20 @@ describe("implied one and fruit parts", () => {
     expect(read(line)).toMatchObject({ status: "ready", quantity: { numerator: "1" }, unit: { canonical: unit } });
   });
 
-  it("negative controls: a plural measure or a precise unit gets no invented amount", () => {
+  // (CONTRACT §12.15 revised: a singular count unit is one — "Clove of garlic" → 1 clove; "Bunch of cilantro" moved there)
+  it("negative controls: a plural or vague measure or a measuring unit gets no invented amount", () => {
     expect(read("Pinches of salt")).toMatchObject({ status: "needs_review", quantity: null });
-    expect(read("Bunch of cilantro")).toMatchObject({ status: "needs_review", quantity: null });
+    expect(read("Dashes of bitters")).toMatchObject({ status: "needs_review", quantity: null });
+    expect(read("a few drops of vanilla")).toMatchObject({ status: "needs_review", quantity: null });
+    expect(read("Cloves of garlic")).toMatchObject({ status: "needs_review", quantity: null });
     expect(read("Cup flour")).toMatchObject({ status: "needs_review", quantity: null });
+    expect(read("Tablespoon olive oil")).toMatchObject({ status: "needs_review", quantity: null });
+  });
+
+  it("a singular count unit with no number is one (§12.15)", () => {
+    expect(read("Clove of garlic")).toMatchObject({ status: "ready", quantity: { numerator: "1" }, unit: { canonical: "clove" }, name: "garlic" });
+    expect(read("Bunch of cilantro")).toMatchObject({ status: "ready", quantity: { numerator: "1" }, unit: { canonical: "bunch" }, name: "cilantro" });
+    expect(read("Heaping tablespoon of flour")).toMatchObject({ status: "needs_review", quantity: null, note: "Heaping" });
   });
 
   it("Juice of 2 limes, Zest of ½ orange → the fruit counted, the part is the note", () => {

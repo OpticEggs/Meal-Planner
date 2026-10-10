@@ -6,7 +6,7 @@
  */
 import { describe, expect, it } from "vitest";
 import {
-  componentHeading, creditLine, dietPoints, equipmentPhrase, methodStep, nonIngredientReason, nutrientLabelEnd, pageFurniture, ratingLine, recipeTimeLine,
+  componentHeading, creditLine, dietPoints, equipmentPhrase, equipmentShape, methodStep, nonIngredientReason, nutrientLabelEnd, pageFurniture, ratingLine, recipeTimeLine,
 } from "../../src/ingredient/semantic-v2/classify";
 import { lex } from "../../src/ingredient/semantic-v2/lexer";
 import { read } from "./helpers";
@@ -30,6 +30,21 @@ describe("nutrition facts → unsupported (abbreviated or spelled-out units, vit
   ])("food whose name holds a nutrient word stays food: %s", (line, name) => {
     expect(read(line)).toMatchObject({ status: "ready", name });
   });
+
+  // R1 H7, H8: abbreviations and variants, a serving fact with no colon, a one-line panel, star ratings
+  it.each([
+    "Sat. fat: 3 g", "Sat Fat 2g", "Carb 30g", "Carbs 30g", "Prot 20 g", "Sugar alcohols 4 g", "Chol 30mg", "Fibre 4g", "Mono fat 2g", "Added sugar 5g", "Total sugar 10 g",
+    "Serving size 2 cookies (40 g)", "Calories: 412kcal | Carbohydrates: 52g | Protein: 18g", "Calories 250 • Fat 10g", "★★★★★ (212)", "4.5 ★ (20 reviews)",
+  ])("%s → unsupported", (line) => {
+    expect(read(line)).toMatchObject({ status: "unsupported", name: null, quantity: null, unit: null });
+  });
+
+  it.each([["Sugar 10g", "needs_review"], ["Sugar: 1/2 cup", "ready"], ["Lycopene 2 mg", "needs_review"], ["Carb 2 tbsp", "ready"], ["1 cup milk | 2 eggs", "needs_review"]])(
+    "negative controls and the unknown default: %s → %s",
+    (line, status) => {
+      expect(read(line).status).toBe(status);
+    },
+  );
 
   it("the label test is a whole-label test, not a word ban", () => {
     expect(nutrientLabelEnd(toks("Vitamin C: 15 mg"))).toBe(2);
@@ -86,16 +101,44 @@ describe("equipment → unsupported; food in containers stays food", () => {
   });
 
   it.each([
-    ["1 bag frozen peas", "ready"], ["2 sheets puff pastry", "ready"], ["2 tea bags", "ready"], ["2 chicken skewers", "ready"], ["1 burrito bowl", "ready"],
+    ["1 bag frozen peas", "ready"], ["2 sheets puff pastry", "ready"], ["2 tea bags", "ready"],
     ["You will need: 2 eggs", "needs_review"], ["You'll need: 1 bag frozen peas", "needs_review"],
+    // (R1 H1, unknown default) a holder that is never eaten after a word that may name its contents: a person checks
+    // (was: ready) — skewers of chicken, or skewers?
+    ["2 chicken skewers", "needs_review"], ["1 burrito bowl", "needs_review"],
   ])("%s → %s", (line, status) => {
     expect(read(line).status).toBe(status);
   });
 
-  it("the equipment test needs an equipment head and, for an ambiguous head, an equipment modifier", () => {
+  // R1 H1 (CONTRACT §12.8): a tool noun is equipment whatever precedes it, spaced or hyphenated, with or without a size;
+  // a count or package noun before a non-food item does not make it food
+  it.each([
+    "1 rolling pin", "1 (9-inch) pie plate", "1 large Dutch oven", "1 12-cup Bundt pan", "1 4-quart slow cooker", "1 2-quart baking dish", "1 cast iron skillet",
+    "1 cast-iron skillet", "1 wok", "1 kitchen scale", "1 egg slicer", "1 potato masher", "1 instant-read thermometer", "1 mortar and pestle", "1 Dutch oven or large pot",
+    "2 oven mitts", "1 roll kitchen twine", "1 box toothpicks", "2 sheets aluminum foil", "1 sheet of wax paper", "1 package wooden skewers", "1 roll plastic wrap",
+    "6 popsicle sticks", "12 paper baking cups", "24 mini cupcake liners", "2 mason jars", "6 canning jars with lids", "1 piping bag fitted with a star tip",
+    "1 large rimmed baking sheet, lined with parchment", "8″ springform pan", "6 in. skewers", "1 muffin tin", "1 can opener", "2 wine glasses", "1 large bowl",
+  ])("equipment: %s", (line) => {
+    expect(read(line)).toMatchObject({ status: "unsupported", reasons: ["not_an_ingredient"] });
+  });
+
+  it.each([
+    ["4 lasagna sheets", "lasagna sheets"], ["4 puff pastry sheets", "puff pastry"], ["6 rice paper wrappers", "rice paper wrappers"], ["24 wonton wrappers", "wonton wrappers"],
+    ["1 lb onion rings", "onion rings"], ["1 lamb rack", "lamb rack"], ["2 cinnamon sticks", "cinnamon"], ["6 mozzarella sticks", "mozzarella sticks"],
+    ["2 cups pan drippings", "pan drippings"], ["1 pot roast", "pot roast"], ["2 pot stickers", "pot stickers"], ["1 bag kettle chips", "kettle chips"],
+    ["1 (400 g) tin chopped tomatoes", "chopped tomatoes"], ["1 jar salsa", "salsa"], ["1 scoop vanilla ice cream", "vanilla ice cream"], ["1 bottle margarita mixer", "margarita mixer"],
+  ])("negative control, food that shares a word with equipment: %s", (line, name) => {
+    expect(read(line)).toMatchObject({ status: "ready", name });
+  });
+
+  it("the equipment test: a tool head, or a vessel head after a material, use or purpose word", () => {
     expect(equipmentPhrase(toks("2 baking sheets"))).toBe(true);
-    expect(equipmentPhrase(toks("2 chicken skewers"))).toBe(false);
-    expect(equipmentPhrase(toks("1 bag frozen peas"))).toBe(false);
+    expect(equipmentPhrase(toks("1 garlic press"))).toBe(true);
+    expect(equipmentShape(toks("2 chicken skewers"))).toBe("unsure");
+    expect(equipmentShape(toks("2 tea bags"))).toBeNull();
+    expect(equipmentShape(toks("1 bag frozen peas"))).toBeNull();
+    expect(equipmentShape(toks("Oil for the pan"))).toBeNull();
+    expect(equipmentShape(toks("1 cup pan drippings"))).toBeNull();
   });
 });
 

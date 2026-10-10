@@ -186,10 +186,15 @@ describe("real ingredients are never refused as recipe facts (N6)", () => {
 describe("inch marks, dimensions and feet are sizes (N8)", () => {
   it.each([
     ['12" pizza crust', "pizza crust", '12"'], ['9" pie crust', "pie crust", '9"'], ['10" tortillas', "tortillas", '10"'],
-    ["2 feet sausage casing", "sausage casing", "2 feet"], ["3 feet twine", "twine", "3 feet"], ["1 yard cheesecloth", "cheesecloth", "1 yard"],
+    ["2 feet sausage casing", "sausage casing", "2 feet"],
   ])("%s → note, no amount", (line, name, note) => {
     const r = read(line);
     expect(r).toMatchObject({ status: "needs_review", quantity: null, unit: null, name, note });
+  });
+
+  // semantic-v2 (CONTRACT §12.8, R1 H1): twine and cheesecloth are non-food items, whatever their length (was: a size note)
+  it.each(["3 feet twine", "1 yard cheesecloth"])("%s → unsupported (equipment)", (line) => {
+    expect(read(line)).toMatchObject({ status: "unsupported", reasons: ["not_an_ingredient"] });
   });
 
   // semantic-v2 (CONTRACT §12.8 equipment): a sized equipment name is not an ingredient (was: needs_review with the size noted)

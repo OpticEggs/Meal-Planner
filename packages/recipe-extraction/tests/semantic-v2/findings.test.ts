@@ -144,11 +144,16 @@ describe("a number that is part of the food's name (B5)", () => {
 describe("sizes in inches (B6)", () => {
   it.each([
     ["9-inch pie crust", "pie crust", "9-inch"], ["10-inch tortillas", "tortillas", "10-inch"], ["12 inch pizza crust", "pizza crust", "12 inch"],
-    ["8 inch flour tortillas", "flour tortillas", "8 inch"], ["14-inch pizza stone", "pizza stone", "14-inch"],
+    ["8 inch flour tortillas", "flour tortillas", "8 inch"],
   ])("%s → a note, no count invented", (line, name, note) => {
     const r = read(line);
     expect(r).toMatchObject({ status: "needs_review", quantity: null, name, note });
     expect(r.reasons).toContain("quantity_missing");
+  });
+
+  // semantic-v2 (CONTRACT §12.8, R1 H1): a pizza stone is equipment (was: a size note on "pizza stone")
+  it("14-inch pizza stone → unsupported", () => {
+    expect(read("14-inch pizza stone").status).toBe("unsupported");
   });
 
   it("equipment lines are not ingredients", () => {

@@ -64,10 +64,32 @@ describe("restatement tolerance (RESTATEMENT_TOLERANCE, sameAmount, roundedConve
     expect(sameAmount(q(2), u("lb"), q(1), u("kg"))).toBe(false); // a larger unit is not a rounding convention
     expect(sameAmount(q(1), u("cup"), q(120), u("g"))).toBeNull(); // mass vs volume: no density
   });
-  it("roundedConversion needs a whole restated number in a smaller, different unit", () => {
+  // CONTRACT §12.6 as amended (§12.A A2, refined after the label check): only ml or g — or lb restating kg — rounded half up
+  it("roundedConversion needs a whole restated number in ml or g (or lb for kg), smaller than the first unit", () => {
+    const tbsp = rational(BigInt(1478676478125), BigInt(100000000000)); // 1 tbsp in ml
+    const tsp = rational(BigInt(492892159375), BigInt(100000000000)); // 1 tsp in ml
     expect(roundedConversion(rational(BigInt(453592370), BigInt(1000000)), u("lb"), q(454), u("g"))).toBe(true);
+    expect(roundedConversion(rational(BigInt(1000)), u("kg"), q(2), u("lb"))).toBe(true); // 1 kg (2 lb): 2.20 → 2
+    expect(roundedConversion(tbsp, u("tbsp"), q(15), u("ml"))).toBe(true); // 14.79 → 15
+    expect(roundedConversion(tsp, u("tsp"), q(5), u("ml"))).toBe(true);
     expect(roundedConversion(rational(BigInt(354882), BigInt(1000)), u("cup"), q(2), u("cup"))).toBe(false);
+    // coarse restated units get only the 7 % test: 1/2 tbsp (2 tsp), 1 1/2 tbsp (4 tsp)
+    expect(roundedConversion({ n: tbsp.n, d: tbsp.d * BigInt(2) }, u("tbsp"), q(2), u("tsp"))).toBe(false);
+    expect(roundedConversion({ n: tbsp.n * BigInt(3), d: tbsp.d * BigInt(2) }, u("tbsp"), q(4), u("tsp"))).toBe(false);
+    // a larger restated unit never: 100 g (4 oz)… is not even smaller; 2 lb (1 kg)
+    expect(roundedConversion(rational(BigInt(100)), u("g"), q(4), u("oz"))).toBe(false);
+    expect(roundedConversion(rational(BigInt(907184740), BigInt(1000000)), u("lb"), q(1), u("kg"))).toBe(false);
+    // half up: 1/2 tsp = 2.46 ml → 2; 3/4 tsp = 3.70 ml → 4
+    expect(roundedConversion({ n: tsp.n, d: tsp.d * BigInt(2) }, u("tsp"), q(2), u("ml"))).toBe(true);
+    expect(roundedConversion({ n: tsp.n * BigInt(3), d: tsp.d * BigInt(4) }, u("tsp"), q(4), u("ml"))).toBe(true);
   });
+
+  it.each(["1/2 tbsp (2 tsp) sugar", "1/6 cup (3 tbsp) oil", "1 1/2 tbsp (4 tsp) oil", "100 g (4 oz) butter", "500 g (1 lb) beef mince", "2 lb (1 kg) potatoes"])(
+    "%s → needs review (§12.6 refined)",
+    (line) => {
+      expect(read(line).reasons).toContain("quantity_unassigned");
+    },
+  );
 });
 
 describe("shareOptions (option-preservation rule)", () => {
