@@ -26,6 +26,8 @@ const out = rows.map((r: any) => ({
   week: r.week_id, key: r.ingredient_key, fingerprint: r.line_fingerprint, meal: r.line.meal?.quantity ?? null, unit: r.line.meal?.unit ?? null,
   packagesForMeal: r.line.packagesForMeal, packagesNeeded: r.line.packagesNeeded, toSend: r.line.toSend, sent: r.line.sent,
   approvalValid: r.line.approval?.valid ?? null, status: r.line.status,
+  // Whether any recipe row behind the line has an exact basis (rows written by a release with migration 015).
+  anyExact: (r.line.meal?.sources ?? []).some((s: any) => s.exact === true),
 }));
 await c.end();
 console.log(JSON.stringify(out, null, 1));

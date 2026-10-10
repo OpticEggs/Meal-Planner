@@ -118,7 +118,7 @@ export async function loadRecipeVersions(c: Db, householdId: string, ids: string
       ingredients: ings.rows
         .filter((x) => x.recipe_version_id === v.id)
         .map((x) => ({
-          componentKey: x.component_key, ingredientKey: x.ingredient_key, quantity: x.quantity, unit: x.unit, form: x.form, note: x.note,
+          rowId: x.id, componentKey: x.component_key, ingredientKey: x.ingredient_key, quantity: x.quantity, unit: x.unit, form: x.form, note: x.note,
           ...(x.quantity_basis === "exact" ? { exactAmount: x.exact_amount, exactServings: x.exact_servings } : {}),
         })),
     });

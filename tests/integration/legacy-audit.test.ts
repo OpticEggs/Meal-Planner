@@ -11,6 +11,7 @@ import { db, fresh, op, q, url } from "./helpers";
 import * as sources from "@/server/commands/sources";
 import * as imports from "@/server/commands/imports";
 import { auditLegacyQuantities, auditTargetAllowed } from "@/server/audit/legacy-quantities";
+import { saveRecipeVersionCommand } from "@/server/commands/library";
 import { parseIngredientLine } from "@/server/integrations/recipe-import/ingredient-line";
 
 const run = promisify(execFile);
@@ -117,6 +118,44 @@ describe("legacy quantity audit (read-only)", () => {
     expect(find(rub.versionId, "salt")).toMatchObject({ recoverable: true, evidence: { kind: "import_draft", amount: "1", servings: 3 } });
     expect(report.summary).toMatchObject({ recoverable: 4, sourceLineOnly: 1, conflicting: 0, seasoningFindings: 2 });
     expect(report.readOnly).toBe(true);
+  });
+
+  it("LA-04: ambiguous sources are reported as conflicting, never as a recoverable amount (EQR)", async () => {
+    const { fx, jon } = await fresh();
+    // a) One import draft, two different lines that both round to the stored 0.6667 per serving: which is which is unknowable.
+    const dA = await oldDraft(fx, jon, "two-onions", 3, [
+      line("2 each onion", { use: true, name: "onion", quantity: "2", unit: "each", form: "raw" }),
+      line("2.0001 each onion", { use: true, name: "onion", quantity: "2.0001", unit: "each", form: "raw" }),
+    ]);
+    const a = await oldVersion(fx, null, 1, "Two onions", "imported", dA, [["onion", "0.6667", "each", "From: 2 each onion"], ["onion", "0.6667", "each", "From: 2.0001 each onion"]]);
+    // b) A later version (earlier release, no lineage) has MORE same-looking rows than the version they could come from.
+    const dB = await oldDraft(fx, jon, "one-cucumber", 3, [line("2 each cucumber", { use: true, name: "cucumber", quantity: "2", unit: "each", form: "raw" })]);
+    const b1 = await oldVersion(fx, null, 1, "Cucumber", "imported", dB, [["cucumber", "0.6667", "each", "From: 2 each cucumber"]]);
+    const b2 = await oldVersion(fx, b1.recipeId, 2, "Cucumber (ours)", "manual", null, [["cucumber", "0.6667", "each", null], ["cucumber", "0.6667", "each", null]]);
+    // c) The unambiguous inheritance still counts: one row, one possible source.
+    const dC = await oldDraft(fx, jon, "one-pea", 3, [line("1 cup frozen peas", { use: true, name: "frozen peas", quantity: "1", unit: "cup", form: "raw" })]);
+    const c1 = await oldVersion(fx, null, 1, "Peas", "imported", dC, [["frozen_peas", "0.3333", "cup", null]]);
+    const c2 = await oldVersion(fx, c1.recipeId, 2, "Peas (ours)", "manual", null, [["frozen_peas", "0.3333", "cup", null]]);
+    // d) A row saved by this release with verified lineage follows that lineage, even beside a same-looking new row.
+    const [b1row] = await q<any>("SELECT id FROM recipe_ingredients WHERE recipe_version_id=$1", [b1.versionId]);
+    const d = await saveRecipeVersionCommand(jon, op(), {
+      recipeId: b1.recipeId, expectedVersionNo: 2, title: "Cucumber (lineage)", instructions: "", components: [{ key: "main", name: "Main" }],
+      ingredients: [
+        { componentKey: "main", ingredientName: "cucumber", ingredientKey: "cucumber", quantity: "0.6667", unit: "each", sourceRowId: b1row.id },
+        { componentKey: "main", ingredientName: "cucumber", ingredientKey: "cucumber", quantity: "0.6667", unit: "each", sourceRowId: null },
+      ],
+    } as any) as any;
+    expect(d.status, JSON.stringify(d)).toBe("accepted");
+    const c = await db();
+    const report = await auditLegacyQuantities(c, { householdId: fx.householdId });
+    await c.end();
+    const of = (versionId: string) => report.rows.filter((r) => r.versionId === versionId);
+    expect(of(a.versionId).map((r) => [r.evidence.kind, r.recoverable])).toEqual([["conflicting", false], ["conflicting", false]]);
+    expect(of(b1.versionId).map((r) => [r.evidence.kind, r.recoverable])).toEqual([["import_draft", true]]);
+    expect(of(b2.versionId).map((r) => [r.evidence.kind, r.recoverable])).toEqual([["conflicting", false], ["conflicting", false]]);
+    expect(of(c2.versionId).map((r) => [r.evidence.kind, r.recoverable])).toEqual([["earlier_version", true]]);
+    // d): the inherited row is legacy and traced through its lineage; the new row is exact and not reported.
+    expect(of(d.result.versionId)).toEqual([expect.objectContaining({ recoverable: true, evidence: expect.objectContaining({ kind: "earlier_version", versionNo: 1, amount: "2", servings: 3, via: "lineage" }) })]);
   });
 
   it("LA-02: it never writes — every statement is a read inside a READ ONLY transaction that is rolled back, and nothing changed", async () => {

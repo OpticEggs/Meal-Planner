@@ -1,4 +1,5 @@
 import type { Db } from "../db/pool";
+import { Q } from "@/domain/exact";
 import { Reject, runCommand, type Actor } from "./framework";
 import { ensureCycle } from "../groceries/recompute";
 import { loadHousehold, weekById } from "../queries/load";
@@ -235,6 +236,11 @@ export function recordAvailabilityCommand(
     if (!line) throw new Reject("not_found", "That item is not on this week's list");
     let reviewedDemand: string | null = null;
     let reviewedUnit: string | null = null;
+    // EQR (D137): what the observation certifies, exactly. A review of the line as it is now (same fingerprint)
+    // certifies that line's exact requirement; an older review certifies exactly the decimal that was shown — never
+    // the server's newer requirement, and never more than was shown.
+    let reviewedExact: string | null = null;
+    let reviewedBinding: "current_requirement" | "shown_decimal" | null = null;
     if (p.reviewed) {
       if (!/^\d+(\.\d+)?$/.test(String(p.reviewed.quantity)) || !p.reviewed.unit) throw new Reject("invalid", "Reviewed amount must be a number with a unit");
       reviewedDemand = String(p.reviewed.quantity);
@@ -242,20 +248,24 @@ export function recordAvailabilityCommand(
       if (line.meal && convert(reviewedDemand, reviewedUnit, line.meal.unit) === null) {
         throw new Reject("stale_review", `${line.name} is now measured in ${line.meal.unit}; review it again.`);
       }
+      const current = !!p.reviewed.fingerprint && p.reviewed.fingerprint === line.fingerprint && !!line.meal?.rational && normalizeUnit(line.meal.unit) === reviewedUnit;
+      if (current && line.meal!.quantity !== reviewedDemand) throw new Reject("invalid", "The reviewed amount is not the amount on this line");
+      reviewedExact = current ? Q.of(line.meal!.rational!).toString() : Q.of(reviewedDemand).toString();
+      reviewedBinding = current ? "current_requirement" : "shown_decimal";
     } else if (p.state === "enough") {
       // "Have enough" vouches for a specific amount. Never substitute the server's current
       // demand for what the observer actually saw.
       throw new Reject("invalid", "Have enough needs the amount you reviewed");
     }
     await c.query(
-      `INSERT INTO availability_observations(household_id, cycle_id, ingredient_key, state, quantity, unit, reviewed_demand, reviewed_unit, member_id)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
-      [actor.householdId, cycleId, p.ingredientKey, p.state, p.quantity ?? null, p.unit ? normalizeUnit(p.unit) : null, reviewedDemand, reviewedUnit, actor.memberId],
+      `INSERT INTO availability_observations(household_id, cycle_id, ingredient_key, state, quantity, unit, reviewed_demand, reviewed_unit, reviewed_exact, reviewed_binding, member_id)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
+      [actor.householdId, cycleId, p.ingredientKey, p.state, p.quantity ?? null, p.unit ? normalizeUnit(p.unit) : null, reviewedDemand, reviewedUnit, reviewedExact, reviewedBinding, actor.memberId],
     );
     const label = { enough: "Have enough", some: "Have some", need: "Need" }[p.state];
     const changedSince = !!(p.reviewed?.fingerprint && p.reviewed.fingerprint !== line.fingerprint);
     return {
-      status: "accepted", result: { boundTo: reviewedDemand ? { quantity: reviewedDemand, unit: reviewedUnit } : null, changedSinceReview: changedSince },
+      status: "accepted", result: { boundTo: reviewedDemand ? { quantity: reviewedDemand, unit: reviewedUnit, exact: reviewedExact, binding: reviewedBinding } : null, changedSinceReview: changedSince },
       change: { weekId: p.weekId, summary: { type: "availability", text: `${actor.displayName}: ${line.name} — ${label}` } },
       recomputeWeeks: [p.weekId],
     };

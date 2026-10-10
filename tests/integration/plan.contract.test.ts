@@ -294,7 +294,8 @@ describe("T21 edit a recipe in the library after adopting it", () => {
     const r = await saveRecipeVersionCommand(jon, op(), {
       recipeId: fx.recipes.salmon.recipeId, expectedVersionNo: 1, title: "Salmon rice bowls (household version)", instructions: "Use more ginger.",
       components: [{ key: "protein", name: "Salmon" }, { key: "base", name: "Rice" }],
-      ingredients: [{ componentKey: "protein", ingredientKey: "salmon", ingredientName: "Salmon fillet", quantity: "8", unit: "oz" }, { componentKey: "base", ingredientKey: "rice", ingredientName: "Jasmine rice", quantity: "90", unit: "g" }],
+      // EQR (2026-10-10): rows stated afresh (null = added here; an edit must say where each row came from).
+      ingredients: [{ componentKey: "protein", ingredientKey: "salmon", ingredientName: "Salmon fillet", quantity: "8", unit: "oz", sourceRowId: null }, { componentKey: "base", ingredientKey: "rice", ingredientName: "Jasmine rice", quantity: "90", unit: "g", sourceRowId: null }],
     });
     expect(r.status).toBe("accepted");
     expect(await protectedState(fx.weekId)).toEqual(before);

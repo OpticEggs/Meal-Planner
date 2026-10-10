@@ -39,7 +39,7 @@ export function auditTargetAllowed(url: string, remoteReadOnly: boolean): { ok: 
 export type Risk = "short_decimal" | "rounded_4dp" | "rounded_12dp" | "long_decimal";
 export type Evidence =
   | { kind: "import_draft"; draftId: string; line: string; amount: string; servings: number; matches: "exact" | "4dp_half_up" | "12dp_half_up" | "12dp_down" }
-  | { kind: "earlier_version"; versionNo: number; amount: string; servings: number; via: "import_draft" }
+  | { kind: "earlier_version"; versionNo: number; amount: string; servings: number; via: "lineage" | "same_row" }
   | { kind: "source_line_only"; line: string; note: string }
   | { kind: "conflicting"; detail: string }
   | { kind: "missing" };
@@ -143,7 +143,7 @@ export async function auditLegacyQuantities(c: pg.ClientBase, opts: { householdI
   try {
     const rows = (await c.query(
       `SELECT v.household_id, v.recipe_id, v.id AS version_id, v.version_no, v.title, v.provenance, v.import_draft_id, (r.current_version_id = v.id) AS current,
-              ri.component_key, ri.ingredient_key, ri.unit, ri.quantity::text AS quantity, ri.note, ri.quantity_basis
+              ri.id AS row_id, ri.source_row_id, ri.component_key, ri.ingredient_key, ri.unit, ri.quantity::text AS quantity, ri.note, ri.quantity_basis
          FROM recipe_ingredients ri JOIN recipe_versions v ON v.id = ri.recipe_version_id JOIN recipes r ON r.id = v.recipe_id
         WHERE ($1::uuid IS NULL OR v.household_id = $1)
         ORDER BY v.household_id, v.recipe_id, v.version_no, ri.sort, ri.ingredient_key`,
@@ -159,33 +159,75 @@ export async function auditLegacyQuantities(c: pg.ClientBase, opts: { householdI
     )).rows;
 
     const findings: LegacyRowFinding[] = [];
-    // Evidence found for a row, by recipe + row identity + decimal, so a later version that inherited the row
-    // can point at it.
-    const known = new Map<string, { versionNo: number; amount: string; servings: number }>();
+    // EQR: a row's evidence is never borrowed from a look-alike. Evidence by row id (for verified lineage), and per
+    // recipe + row identity the evidence of the latest earlier version that had that identity — used for rows of
+    // an earlier release (no lineage) only when it is unambiguous: one recoverable value and no more same-looking
+    // rows than that version had.
+    const byRow = new Map<string, Evidence>();
+    type Seen = { versionNo: number; values: Set<string>; unrecoverable: boolean; count: number };
+    const known = new Map<string, Seen>();
+    const identOf = (r: { recipe_id: string; component_key: string; ingredient_key: string; unit: string; quantity: string }) =>
+      `${r.recipe_id}|${r.component_key}|${r.ingredient_key}|${r.unit}|${Q.of(r.quantity).toString()}`;
+    const countIn = new Map<string, number>(); // version id + identity → rows
+    for (const r of rows) countIn.set(`${r.version_id}|${identOf(r)}`, (countIn.get(`${r.version_id}|${identOf(r)}`) ?? 0) + 1);
+    let pending = new Map<string, Seen>();
+    let pendingVersion: string | null = null;
+    const flush = () => {
+      for (const [k, v] of pending) known.set(k, v);
+      pending = new Map();
+    };
     for (const r of rows) {
-      const ident = `${r.recipe_id}|${r.component_key}|${r.ingredient_key}|${r.unit}|${Q.of(r.quantity).toString()}`;
+      if (r.version_id !== pendingVersion) {
+        flush();
+        pendingVersion = r.version_id;
+      }
+      const ident = identOf(r);
       let evidence: Evidence = { kind: "missing" };
       const draft = r.import_draft_id ? drafts.get(r.import_draft_id) : undefined;
       if (draft) {
         const candidates = draft.lines.filter((l) => l.decision?.use && slug(l.decision.name) === r.ingredient_key && normalizeUnit(l.decision.unit) === r.unit);
-        const matched = candidates.map((l) => ({ l, how: draft.servings ? storedAs(r.quantity, (l.decision as { quantity: string }).quantity, draft.servings) : null })).find((x) => x.how);
-        if (matched && draft.servings) {
-          const a = parseAmount((matched.l.decision as { quantity: string }).quantity)!;
-          const amount = Q.frac(a.n, a.d).toString();
-          evidence = { kind: "import_draft", draftId: r.import_draft_id, line: matched.l.raw, amount, servings: draft.servings, matches: matched.how! };
+        const fits = draft.servings
+          ? candidates.map((l) => ({ l, how: storedAs(r.quantity, (l.decision as { quantity: string }).quantity, draft.servings!) })).filter((x) => x.how)
+          : [];
+        const amounts = [...new Set(fits.map((x) => { const a = parseAmount((x.l.decision as { quantity: string }).quantity)!; return Q.frac(a.n, a.d).toString(); }))];
+        if (amounts.length === 1) {
+          evidence = { kind: "import_draft", draftId: r.import_draft_id, line: fits[0].l.raw, amount: amounts[0], servings: draft.servings!, matches: fits[0].how! };
+        } else if (amounts.length > 1) {
+          evidence = { kind: "conflicting", detail: `Lines ${fits.map((x) => `"${x.l.raw}"`).join(" and ")} of the import draft all divide into the stored ${r.quantity}; which one this row came from is unknown` };
         } else if (candidates.length) {
           evidence = { kind: "conflicting", detail: `The import draft has ${candidates.length} line(s) for ${r.ingredient_key} in ${r.unit}, but none divides into the stored ${r.quantity}${draft.servings ? "" : " (the draft records no servings)"}` };
         }
       }
-      if (evidence.kind === "missing" || evidence.kind === "conflicting") {
+      if (evidence.kind === "missing" && r.source_row_id) {
+        // Saved by this release with verified lineage: the row it came from, exactly.
+        const src = byRow.get(r.source_row_id);
+        if (src?.kind === "import_draft") evidence = { kind: "earlier_version", versionNo: rows.find((x) => x.row_id === r.source_row_id)!.version_no, amount: src.amount, servings: src.servings, via: "lineage" };
+        else if (src?.kind === "earlier_version") evidence = { ...src, via: "lineage" };
+        else if (src) evidence = src;
+      } else if (evidence.kind === "missing") {
         const earlier = known.get(ident);
-        if (earlier) evidence = { kind: "earlier_version", versionNo: earlier.versionNo, amount: earlier.amount, servings: earlier.servings, via: "import_draft" };
+        if (earlier) {
+          const here = countIn.get(`${r.version_id}|${ident}`) ?? 0;
+          if (earlier.values.size === 1 && !earlier.unrecoverable && here <= earlier.count) {
+            const [amount, servings] = [...earlier.values][0].split("|");
+            evidence = { kind: "earlier_version", versionNo: earlier.versionNo, amount, servings: Number(servings), via: "same_row" };
+          } else {
+            evidence = { kind: "conflicting", detail: `Version ${earlier.versionNo} has ${earlier.count} row(s) like this (${earlier.values.size} recoverable value(s)) and this version has ${here}; which earlier row each came from is unknown` };
+          }
+        }
       }
       if (evidence.kind === "missing" && typeof r.note === "string" && r.note.startsWith("From: ")) {
         evidence = { kind: "source_line_only", line: r.note.slice(6), note: "The original line is kept, but not the servings it was divided by" };
       }
-      if (evidence.kind === "import_draft") known.set(ident, { versionNo: r.version_no, amount: evidence.amount, servings: evidence.servings });
-      if (evidence.kind === "earlier_version") known.set(ident, { versionNo: evidence.versionNo, amount: evidence.amount, servings: evidence.servings });
+      byRow.set(r.row_id, evidence);
+      const seen = pending.get(ident) ?? { versionNo: r.version_no, values: new Set<string>(), unrecoverable: false, count: 0 };
+      seen.count++;
+      if (evidence.kind === "import_draft") seen.values.add(`${evidence.amount}|${evidence.servings}`);
+      else if (evidence.kind === "earlier_version") {
+        seen.values.add(`${evidence.amount}|${evidence.servings}`);
+        seen.versionNo = evidence.versionNo;
+      } else seen.unrecoverable = true;
+      pending.set(ident, seen);
 
       // Seasoning identity lost (any basis): stored as plain salt/pepper while its own source line reads as something else now.
       if (typeof r.note === "string" && r.note.startsWith("From: ") && isHouseholdSeasoning(r.ingredient_key.replace(/_/g, " "))) {

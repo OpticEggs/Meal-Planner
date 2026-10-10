@@ -171,6 +171,7 @@ export async function projectionInput(
       availability: (avail.rows as Record<string, unknown>[]).map((a) => ({
         id: a.id as string, ingredientKey: a.ingredient_key as string, state: a.state as "enough" | "some" | "need", quantity: a.quantity as string | null,
         unit: a.unit as string | null, reviewedDemand: a.reviewed_demand as string | null, reviewedUnit: a.reviewed_unit as string | null, memberName: a.display_name as string,
+        reviewedExact: (a.reviewed_exact as string | null) ?? null,
       })),
       products,
       intentProducts,

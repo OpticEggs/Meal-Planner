@@ -9,7 +9,8 @@ import type { Actor } from "@/server/commands/framework";
 
 const draft = (recipeId: string | null, title: string, expectedVersionNo?: number) => ({
   recipeId, title, instructions: "Cook it.", components: [{ key: "main", name: "Main" }],
-  ingredients: [{ componentKey: "main", ingredientName: "Rice", ingredientKey: "rice", quantity: "75", unit: "g" }],
+  // EQR (2026-10-10): an edit says where each row came from; these rows are stated afresh (null = added here).
+  ingredients: [{ componentKey: "main", ingredientName: "Rice", ingredientKey: "rice", quantity: "75", unit: "g", ...(recipeId ? { sourceRowId: null } : {}) }],
   ...(expectedVersionNo === undefined ? {} : { expectedVersionNo }),
 });
 const versions = async (recipeId: string) => (await q<any>("SELECT version_no, title FROM recipe_versions WHERE recipe_id=$1 ORDER BY version_no", [recipeId]));

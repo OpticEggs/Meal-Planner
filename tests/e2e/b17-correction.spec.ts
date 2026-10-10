@@ -31,10 +31,12 @@ async function saveVia(page: Page, recipeId: string, patch: (d: any) => void) {
         recipeId, expectedVersionNo: v.versionNo, title: v.title, cuisine: v.cuisine, summary: v.summary, sourceLabel: v.sourceLabel,
         effortMinutes: v.effortMinutes, effortLevel: v.effortLevel, leftoverFriendly: v.leftoverFriendly, instructions: v.instructions,
         reheatInstructions: v.reheatInstructions, components: v.components.map((c: any) => ({ key: c.key, name: c.name })),
-        ingredients: v.ingredients.map((i: any) => ({ componentKey: i.componentKey, ingredientKey: i.ingredientKey, ingredientName: i.name, quantity: i.quantity, unit: i.unit, form: i.form, note: i.note })),
+        // EQR (2026-10-10): an edit names the stored row each row came from (rows a patch adds are new: null).
+        ingredients: v.ingredients.map((i: any) => ({ componentKey: i.componentKey, ingredientKey: i.ingredientKey, ingredientName: i.name, quantity: i.quantity, unit: i.unit, form: i.form, note: i.note, sourceRowId: i.rowId ?? null })),
       };
       // eslint-disable-next-line no-new-func
       new Function("d", patchSrc)(d);
+      for (const i of d.ingredients) if (!("sourceRowId" in i)) i.sourceRowId = null;
       const res = await fetch("/api/commands/SaveRecipeVersion", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ operationId: `t-${crypto.randomUUID()}`, payload: d }) });
       return res.json();
     },
@@ -184,7 +186,8 @@ test("RB17-02: two occurrences of one ingredient stay distinct; a change to the 
   // Version 2 lists turkey twice in the same component (10 g and 100 g).
   expect((await saveVia(jon.page, id, (d: any) => {
     const t = d.ingredients.find((i: any) => i.ingredientKey === "ground_turkey");
-    d.ingredients = [{ ...t, quantity: "10", unit: "g", form: null, note: null }, { ...t, quantity: "100", unit: "g", form: null, note: null }, ...d.ingredients.filter((i: any) => i !== t)];
+    // (EQR: the second occurrence is added here, so it comes from no stored row.)
+    d.ingredients = [{ ...t, quantity: "10", unit: "g", form: null, note: null }, { ...t, quantity: "100", unit: "g", form: null, note: null, sourceRowId: null }, ...d.ingredients.filter((i: any) => i !== t)];
   })).status).toBe("accepted");
   await alex.page.goto(`/recipes/${id}`);
   await alex.page.getByRole("button", { name: "Edit (new version)" }).click();

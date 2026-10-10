@@ -21,6 +21,8 @@ export interface RecipeIngredient {
    *  the decimal `quantity` alone, a legacy approximation. */
   exactAmount?: string | null;
   exactServings?: number | null;
+  /** EQR: this stored row's id — what an edit names as the row a new row came from (verified by the server). */
+  rowId?: string;
 }
 
 export interface RecipeVersion {

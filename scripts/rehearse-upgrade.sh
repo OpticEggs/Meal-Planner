@@ -6,8 +6,10 @@
 #     planned week, home supply, approvals, a partial transfer), and that release exports the household.
 #  2. This release applies its pending migrations. Every pre-existing column of every table must be byte-for-
 #     byte unchanged, and every existing recipe row must read 'legacy'.
-#  3. Both releases recompute the grocery projection on the migrated database: amounts, package counts, what
-#     is still to send, fingerprints and approval validity must equal what the previous release showed before.
+#  3. Both releases recompute the grocery projection on the migrated database: amounts, package counts, what is
+#     still to send and status must equal what the previous release showed before. The previous release's own
+#     fingerprints and approvals must be unchanged; this release may change a line's review identity (and so the
+#     approval bound to it) only where an exact recipe row is behind the line — listed explicitly (EQR, D138).
 #  4. This release saves an exact recipe; the previous release still reads and projects the database (rollback).
 #  5. Export/restore: this release's export round-trips; the previous release's export (taken before the
 #     upgrade) restores into the new schema as legacy rows.
@@ -65,6 +67,7 @@ in_prev env DATABASE_URL="$DB" TABLE_FIXED_NOW=2026-10-12T19:00:00Z TABLE_RETAIL
 in_prev env DATABASE_URL="$DB" npx tsx "$NEW/scripts/rehearsal/data.mts" columns > "$OUT/1-columns.json"
 in_prev env DATABASE_URL="$DB" npx tsx "$NEW/scripts/rehearsal/data.mts" checksum "$OUT/1-columns.json" > "$OUT/1-checksums.json"
 in_prev env DATABASE_URL="$DB" npx tsx "$NEW/scripts/rehearsal/data.mts" export "$HH" > "$OUT/1-export-prev.json"
+in_prev env DATABASE_URL="$DB" npx tsx "$NEW/scripts/rehearsal/data.mts" basis > "$OUT/1-basis.json"
 pass "1 populated by $PREV_SHA: $(grep -c '"key"' "$OUT/1-projection-prev.json") grocery lines; export taken by $PREV_SHA"
 
 # 2. Upgrade with this release.
@@ -73,13 +76,18 @@ cat "$OUT/2-migrate-new.log" >> "$OUT/summary.txt"
 in_new env DATABASE_URL="$DB" npx tsx scripts/rehearsal/data.mts checksum "$OUT/1-columns.json" > "$OUT/2-checksums.json"
 if cmp -s "$OUT/1-checksums.json" "$OUT/2-checksums.json"; then pass "2 every pre-existing column of every table is unchanged by the migration"; else fail "2 data changed by the migration (see 1-/2-checksums.json)"; fi
 in_new env DATABASE_URL="$DB" npx tsx scripts/rehearsal/data.mts basis > "$OUT/2-basis.json"
-if node -e 'const b=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")); process.exit(b.legacy>0 && !b.exact ? 0 : 1)' "$OUT/2-basis.json"; then pass "2 every existing recipe row reads legacy: $(tr -d '\n ' < "$OUT/2-basis.json")"; else fail "2 basis after upgrade: $(tr -d '\n ' < "$OUT/2-basis.json")"; fi
+# Rows the previous release wrote keep the basis they had; before migration 015 there was none, so all read legacy.
+if node -e 'const f=require("fs"); const a=JSON.parse(f.readFileSync(process.argv[1],"utf8")); const b=JSON.parse(f.readFileSync(process.argv[2],"utf8")); const want=a.column==="absent" ? {legacy:Object.values(b).reduce((x,y)=>x+y,0)} : a; process.exit(JSON.stringify(want)===JSON.stringify(b) ? 0 : 1)' "$OUT/1-basis.json" "$OUT/2-basis.json"; then pass "2 every existing recipe row keeps its basis (before: $(tr -d '\n ' < "$OUT/1-basis.json"); after: $(tr -d '\n ' < "$OUT/2-basis.json"))"; else fail "2 basis changed by the upgrade: $(tr -d '\n ' < "$OUT/1-basis.json") → $(tr -d '\n ' < "$OUT/2-basis.json")"; fi
 
 # 3. Same projection from both releases on the migrated database.
 in_new env DATABASE_URL="$DB" TABLE_FIXED_NOW=2026-10-12T19:00:00Z TABLE_RETAILER=simulated TABLE_ENV=test npx tsx scripts/rehearsal/snapshot.mts > "$OUT/3-projection-new.json"
-if cmp -s "$OUT/1-projection-prev.json" "$OUT/3-projection-new.json"; then pass "3 this release projects the upgraded week exactly as $PREV_SHA did (amounts, packages, to send, fingerprints, approvals)"; else fail "3 projection differs after upgrade (diff 1-projection-prev.json 3-projection-new.json)"; diff "$OUT/1-projection-prev.json" "$OUT/3-projection-new.json" > "$OUT/3-projection.diff" || true; fi
+if in_new npx tsx scripts/rehearsal/compare.mts "$OUT/1-projection-prev.json" "$OUT/3-projection-new.json" > "$OUT/3-compare.json"; then
+  pass "3 this release projects the upgraded week as $PREV_SHA did: amounts, packages, to send and status on every line; review identity changed only where exact rows are behind a line: $(node -e 'console.log(JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")).changedIdentity.join("; ")||"none")' "$OUT/3-compare.json")"
+else fail "3 projection after the upgrade differs (3-compare.json)"; fi
 in_prev env DATABASE_URL="$DB" TABLE_FIXED_NOW=2026-10-12T19:00:00Z TABLE_RETAILER=simulated TABLE_ENV=test npx tsx "$NEW/scripts/rehearsal/snapshot.mts" > "$OUT/3-projection-prev-on-new-schema.json"
-if cmp -s "$OUT/1-projection-prev.json" "$OUT/3-projection-prev-on-new-schema.json"; then pass "3 $PREV_SHA still projects the same on the upgraded schema"; else fail "3 $PREV_SHA projects differently on the upgraded schema"; fi
+if in_new npx tsx scripts/rehearsal/compare.mts "$OUT/1-projection-prev.json" "$OUT/3-projection-prev-on-new-schema.json" > "$OUT/3-compare-prev.json"; then
+  pass "3 $PREV_SHA still projects the same amounts, packages and to-send on the upgraded schema (approvals this release found stale stay stale: $(node -e 'console.log(JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")).changedIdentity.join("; ")||"none")' "$OUT/3-compare-prev.json"))"
+else fail "3 $PREV_SHA projects differently on the upgraded schema (3-compare-prev.json)"; fi
 
 # 4. Rollback: this release saves an exact recipe; the previous release still reads and projects everything.
 if ! in_new env DATABASE_URL="$DB" npx tsx scripts/rehearsal/save-exact.mts > "$OUT/4-new-save.log" 2>&1; then fail "4 this release could not save a recipe on the upgraded database (4-new-save.log)"; fi
@@ -99,7 +107,7 @@ fresh_db table_restore_check
 in_new env DATABASE_URL="$BASE/table_restore_check" npx tsx scripts/migrate.ts > /dev/null
 in_new env DATABASE_URL="$BASE/table_restore_check" npx tsx scripts/rehearsal/data.mts restore "$OUT/1-export-prev.json" > "$OUT/5-restore-prev.json"
 in_new env DATABASE_URL="$BASE/table_restore_check" npx tsx scripts/rehearsal/data.mts basis > "$OUT/5-basis-prev-restored.json"
-if node -e 'const b=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")); process.exit(b.legacy>0 && !b.exact ? 0 : 1)' "$OUT/5-basis-prev-restored.json"; then pass "5 $PREV_SHA's pre-upgrade export restores into the new schema, every recipe row legacy"; else fail "5 restoring $PREV_SHA's export"; fi
+if node -e 'const f=require("fs"); const a=JSON.parse(f.readFileSync(process.argv[1],"utf8")); const b=JSON.parse(f.readFileSync(process.argv[2],"utf8")); const want=a.column==="absent" ? {legacy:Object.values(b).reduce((x,y)=>x+y,0)} : a; process.exit(JSON.stringify(want)===JSON.stringify(b) ? 0 : 1)' "$OUT/1-basis.json" "$OUT/5-basis-prev-restored.json"; then pass "5 $PREV_SHA's pre-upgrade export restores into the new schema with every row's basis as it was ($(tr -d '\n ' < "$OUT/5-basis-prev-restored.json"))"; else fail "5 restoring $PREV_SHA's export: basis $(tr -d '\n ' < "$OUT/5-basis-prev-restored.json")"; fi
 fresh_db table_restore_check
 in_prev env DATABASE_URL="$BASE/table_restore_check" npx tsx scripts/migrate.ts > /dev/null
 if in_prev env DATABASE_URL="$BASE/table_restore_check" npx tsx "$NEW/scripts/rehearsal/data.mts" restore "$OUT/5-export-new.json" > "$OUT/5-restore-new-into-prev.log" 2>&1; then

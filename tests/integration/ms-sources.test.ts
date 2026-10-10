@@ -247,7 +247,7 @@ describe("reviewed import (URL-05..15)", () => {
     await q("UPDATE cooking_events SET recipe_version_id=$2 WHERE id=$1", [fx.events.salmon, v1]);
     const edit = await cmd(library.saveRecipeVersionCommand(alex, op(), {
       recipeId: c.result.recipeId, expectedVersionNo: 1, title: "Rice bowl (ours)", instructions: "", components: [{ key: "main", name: "Main" }],
-      ingredients: [{ componentKey: "main", ingredientName: "rice", quantity: "1", unit: "cup" }],
+      ingredients: [{ componentKey: "main", ingredientName: "rice", quantity: "1", unit: "cup", sourceRowId: null }], // EQR: a row stated afresh
     }));
     expect(edit.status, JSON.stringify(edit)).toBe("accepted");
     expect((await q<any>("SELECT recipe_version_id FROM cooking_events WHERE id=$1", [fx.events.salmon]))[0].recipe_version_id).toBe(v1);

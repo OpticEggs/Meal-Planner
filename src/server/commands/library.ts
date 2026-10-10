@@ -90,6 +90,9 @@ export interface RecipeDraft {
     /** SERVER-INTERNAL (a confirmed import): the exact whole-recipe amount and its servings this row came
      *  from. Never accepted from a client — SaveRecipeVersion strips them (EQ, D134). */
     exactAmount?: string | null; exactServings?: number | null;
+    /** EQR (D136): the row of an earlier version of THIS recipe this row came from — null for a row the member
+     *  added. REQUIRED (null or a row id) on every row when editing an existing recipe; verified here. */
+    sourceRowId?: string | null;
   }[];
   /** The version the member edited. REQUIRED when saving an existing recipe (RB17-03): a missing,
    *  malformed or stale expectation is refused with no write. Not used when creating a recipe. */
@@ -115,17 +118,23 @@ type Basis = { basis: "exact"; amount: string; servings: number } | { basis: "le
 const fractionText = (q: Q) => q.toString();
 const FITS = /^[1-9]\d{0,17}(\/[1-9]\d{0,17})?$/;
 
+type SourceRow = { id: string; q: string; quantity_basis: string; exact_amount: string | null; exact_servings: number | null };
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const invalidLineage = () =>
+  new Reject("invalid_lineage", "A row of this recipe does not come from the version you edited. Reload the recipe and make your change again; nothing was saved.");
+
 /**
- * The quantity basis of one row being saved (EQ, D134):
+ * The quantity basis of one row being saved (EQ D134, EQR D136):
  *  - a confirmed import gives its exact whole-recipe amount and servings → exact (checked against the decimal);
- *  - a row whose number the member left as it was in the version being edited keeps that row's basis (also
- *    when its name or unit changed) — a title-only edit of an old recipe never relabels an inherited legacy
- *    approximation as exact, and an imported 2/3 stays 2/3;
- *  - anything else is the decimal the member typed for ONE portion, which is exact as typed (servings 1).
+ *  - a row with verified lineage whose number is unchanged keeps THAT row's own basis (also when renamed,
+ *    re-measured or moved) — a title-only edit never relabels an inherited legacy approximation as exact, and
+ *    each of two equal-looking occurrences keeps its own exact source;
+ *  - a changed number, or a new row, is the decimal the member typed for ONE portion: exact as typed (servings 1).
+ * Nothing is inferred from another row that happens to carry the same number.
  */
 function basisOf(
-  ing: { componentKey: string; ingredientKey: string; unit: string; quantity: string; ingredientName: string; exactAmount?: string | null; exactServings?: number | null },
-  previous: { component_key: string; ingredient_key: string; unit: string; q: string; quantity_basis: string; exact_amount: string | null; exact_servings: number | null }[],
+  ing: { quantity: string; ingredientName: string; exactAmount?: string | null; exactServings?: number | null },
+  source: SourceRow | undefined,
 ): Basis {
   if (ing.exactAmount != null || ing.exactServings != null) {
     const r = parseAmount(String(ing.exactAmount ?? ""));
@@ -134,15 +143,9 @@ function basisOf(
     if (perServing(String(ing.exactAmount), servings)?.value !== String(ing.quantity)) throw new Reject("invalid", `The amount for ${ing.ingredientName} does not match its exact amount`);
     return { basis: "exact", amount: fractionText(Q.frac(r.n, r.d)), servings };
   }
-  // A row whose number is unchanged keeps the basis of the row it came from — the same ingredient, unit and
-  // component first; failing that, any row of the edited version with that number (a renamed ingredient or a
-  // changed unit still carries the same, possibly rounded, number). A legacy match always wins.
-  const value = Q.of(ing.quantity);
-  const sameNumber = previous.filter((x) => Q.of(x.q).eq(value));
-  const sameRow = sameNumber.filter((x) => x.component_key === ing.componentKey && x.ingredient_key === ing.ingredientKey && x.unit === ing.unit);
-  const same = sameRow.length ? sameRow : sameNumber;
-  if (same.some((x) => x.quantity_basis !== "exact")) return { basis: "legacy" };
-  if (same.length) return { basis: "exact", amount: same[0].exact_amount!, servings: same[0].exact_servings! };
+  if (source && Q.of(source.q).eq(Q.of(ing.quantity))) {
+    return source.quantity_basis === "exact" ? { basis: "exact", amount: source.exact_amount!, servings: source.exact_servings! } : { basis: "legacy" };
+  }
   const typed = fractionText(Q.of(ing.quantity));
   if (!FITS.test(typed)) throw new Reject("invalid", `Quantity for ${ing.ingredientName} has too many digits`);
   return { basis: "exact", amount: typed, servings: 1 };
@@ -181,10 +184,14 @@ export async function writeRecipeVersion(
       return {
         componentKey, ingredientKey: key, name, quantity: String(ing.quantity), unit, form: ing.form ?? "raw", note: ing.note ? String(ing.note).slice(0, 200) : null, sort: i,
         ingredientName: String(ing.ingredientName ?? key), exactAmount: ing.exactAmount, exactServings: ing.exactServings,
+        sourceRowId: ing.sourceRowId,
       };
     });
+    // A new recipe has nothing to come from.
+    if (!p.recipeId && ings.some((i) => i.sourceRowId != null)) throw invalidLineage();
     let recipeId = p.recipeId ?? null;
     let versionNo = 1;
+    const sources = new Map<string, SourceRow>();
     if (recipeId) {
       await recipeInHousehold(c, actor.householdId, recipeId);
       const v = await c.query("SELECT max(version_no) AS n FROM recipe_versions WHERE recipe_id=$1", [recipeId]);
@@ -209,6 +216,24 @@ export async function writeRecipeVersion(
         }
       }
       versionNo = current + 1;
+      // EQR (D136): every row of an edit says which row it came from (or null: added). Verified: a real row of this
+      // recipe, in this household, in a version no newer than the one reviewed, each used once. An edit that does
+      // not say (an outdated screen) is refused rather than guessed.
+      if (ings.some((i) => i.sourceRowId === undefined)) {
+        throw new Reject("lineage_required", "This screen is out of date: reload the recipe, then make your change again. Nothing was saved.");
+      }
+      const ids = ings.map((i) => i.sourceRowId).filter((x): x is string => x !== null);
+      if (ids.some((x) => typeof x !== "string" || !UUID.test(x)) || new Set(ids).size !== ids.length) throw invalidLineage();
+      if (ids.length) {
+        const found = await c.query(
+          `SELECT ri.id, ri.quantity::text AS q, ri.quantity_basis, ri.exact_amount, ri.exact_servings
+             FROM recipe_ingredients ri JOIN recipe_versions v ON v.id = ri.recipe_version_id
+            WHERE ri.id = ANY($1::uuid[]) AND v.recipe_id = $2 AND v.household_id = $3 AND v.version_no <= $4`,
+          [ids, recipeId, actor.householdId, current],
+        );
+        if (found.rowCount !== ids.length) throw invalidLineage();
+        for (const x of found.rows) sources.set(x.id, x);
+      }
     } else {
       recipeId = randomUUID();
       await c.query("INSERT INTO recipes(id, household_id, created_by) VALUES ($1,$2,$3)", [recipeId, actor.householdId, actor.memberId]);
@@ -246,21 +271,12 @@ export async function writeRecipeVersion(
     for (const cmp of components) {
       await c.query("INSERT INTO recipe_components(recipe_version_id, key, name, sort) VALUES ($1,$2,$3,$4)", [vid, cmp.key, cmp.name, cmp.sort]);
     }
-    // The rows of the version this one was edited from (empty for a new recipe): their basis is inherited by
-    // rows left unchanged.
-    const previous = versionNo > 1
-      ? (await c.query(
-          `SELECT ri.component_key, ri.ingredient_key, ri.unit, ri.quantity::text AS q, ri.quantity_basis, ri.exact_amount, ri.exact_servings
-             FROM recipe_ingredients ri JOIN recipe_versions v ON v.id=ri.recipe_version_id WHERE v.recipe_id=$1 AND v.version_no=$2`,
-          [recipeId, versionNo - 1],
-        )).rows
-      : [];
     for (const ing of ings) {
-      const b = basisOf(ing, previous);
+      const b = basisOf(ing, ing.sourceRowId ? sources.get(ing.sourceRowId) : undefined);
       await c.query(
-        `INSERT INTO recipe_ingredients(recipe_version_id, component_key, ingredient_key, quantity, unit, form, note, sort, quantity_basis, exact_amount, exact_servings)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
-        [vid, ing.componentKey, ing.ingredientKey, ing.quantity, ing.unit, ing.form, ing.note, ing.sort, b.basis, b.basis === "exact" ? b.amount : null, b.basis === "exact" ? b.servings : null],
+        `INSERT INTO recipe_ingredients(recipe_version_id, component_key, ingredient_key, quantity, unit, form, note, sort, quantity_basis, exact_amount, exact_servings, source_row_id)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
+        [vid, ing.componentKey, ing.ingredientKey, ing.quantity, ing.unit, ing.form, ing.note, ing.sort, b.basis, b.basis === "exact" ? b.amount : null, b.basis === "exact" ? b.servings : null, ing.sourceRowId ?? null],
       );
     }
     await c.query("UPDATE recipes SET current_version_id=$2 WHERE id=$1", [recipeId, vid]);

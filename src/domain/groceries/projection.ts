@@ -42,6 +42,9 @@ export interface AvailabilityInput {
   unit: string | null;
   reviewedDemand: string | null;
   reviewedUnit: string | null;
+  /** EQR (D137): the exact requirement this "Have enough" certified (a fraction in reviewedUnit); absent on
+   *  observations recorded before migration 016, which keep the 3-place rule. */
+  reviewedExact?: string | null;
   memberName: string;
 }
 
@@ -215,7 +218,7 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
   const destination: Destination = input.destination ?? "retailer_cart";
   // 1. Meal demand from accepted, scheduled cooking events.
   type MealSource = { eventId: string; cookNight: string; recipeTitle: string; quantity: string; unit: string; rational: string; exact: boolean };
-  const meal = new Map<string, { byUnit: Map<string, Q>; exact: boolean; sources: MealSource[] }>();
+  const meal = new Map<string, { byUnit: Map<string, Q>; exact: boolean; anyExact: boolean; sources: MealSource[] }>();
   // Ordinary salt and black pepper: never bought (the household has them); recipes keep them.
   const seasonings = new Map<string, { key: string; name: string; recipes: string[] }>();
   for (const { event, recipe, allocations } of input.events) {
@@ -229,9 +232,10 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
         seasonings.set(l.ingredientKey, sz);
         continue;
       }
-      const m = meal.get(l.ingredientKey) ?? { byUnit: new Map<string, Q>(), exact: true, sources: [] as MealSource[] };
+      const m = meal.get(l.ingredientKey) ?? { byUnit: new Map<string, Q>(), exact: true, anyExact: false, sources: [] as MealSource[] };
       m.byUnit.set(l.unit, (m.byUnit.get(l.unit) ?? Q.zero).plus(l.exact));
       m.exact = m.exact && l.fromExactRows;
+      m.anyExact = m.anyExact || l.anyExactRows;
       m.sources.push({ eventId: event.id, cookNight: event.cookNight, recipeTitle: recipe.title, quantity: l.exact.toDecimal(3), unit: l.unit, rational: l.exact.toString(), exact: l.fromExactRows });
       meal.set(l.ingredientKey, m);
     }
@@ -295,11 +299,17 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
     let homeSupply: Q | null = null;
     if (avail && mealQty && mealUnit) {
       if (avail.state === "enough") {
-        const reviewed = avail.reviewedDemand && avail.reviewedUnit ? convertQ(Q.of(avail.reviewedDemand), avail.reviewedUnit, mealUnit) : null;
-        // "Have enough" binds to the amount the member was shown, which is the demand to 3 decimal places
-        // (`meal.quantity` below). Comparing it with the unrounded demand would call 1.333 fl oz too little
-        // for 1.3333… fl oz and put the line back on the list although nothing changed.
-        if (reviewed && reviewed.gte(mealQty.toDecimal(SHOWN_PLACES))) {
+        // EQR (D137): an observation recorded since migration 016 certifies an exact amount — the exact requirement
+        // the member reviewed, or exactly the decimal shown on an older screen — and covers the need only if that
+        // amount is at least the exact requirement now. An unchanged repeating requirement (1/3) therefore stays
+        // covered, and a larger one that merely shows the same 3 decimals is not.
+        const exactSeen = avail.reviewedExact && avail.reviewedUnit ? convertQ(Q.of(avail.reviewedExact), avail.reviewedUnit, mealUnit) : null;
+        // Observations recorded before it carry only the shown decimal: they keep the earlier rule — the demand to 3
+        // decimal places (`meal.quantity` below) — so nothing already confirmed reappears on the upgrade.
+        const legacySeen = !avail.reviewedExact && avail.reviewedDemand && avail.reviewedUnit ? convertQ(Q.of(avail.reviewedDemand), avail.reviewedUnit, mealUnit) : null;
+        const reviewed = exactSeen ?? legacySeen;
+        const covers = exactSeen ? exactSeen.gte(mealQty) : legacySeen ? legacySeen.gte(mealQty.toDecimal(SHOWN_PLACES)) : false;
+        if (reviewed && covers) {
           homeSupply = mealQty;
         } else {
           homeSupply = reviewed ?? Q.zero;
@@ -443,6 +453,10 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
     const fingerprint = hashOf({
       key,
       meal: mealQty ? [mealQty.toDecimal(6), mealUnit] : null,
+      // EQR (D138): when an exact row contributes, the exact requirement and its basis are part of the identity (a
+      // reduced fraction, so equal amounts written differently agree). All-legacy lines keep the identity they had,
+      // so approvals given before the upgrade stay valid.
+      ...(m?.anyExact && mealQty ? { mealExact: [mealQty.toString(), m.exact ? "exact" : "mixed"] } : {}),
       mealUnitConflict,
       requests: reqs.map((r) => (r.productId ? [r.id, r.kind, r.packages, r.productId] : [r.id, r.kind, r.packages])).sort(),
       availability: avail ? avail.id : null,
