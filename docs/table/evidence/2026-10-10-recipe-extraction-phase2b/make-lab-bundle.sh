@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Restorable bundle of the lab branch (coordinator, Phase 2B). Usage: make-lab-bundle.sh <output-dir>
+# Restorable bundle of the lab branch (coordinator, Phase 2B/2C). Usage: make-lab-bundle.sh <output-dir> [verified-main-commit]
 # scripts/make-bundle.sh is the app's script and assumes the work is on `main` (it bundles HEAD + main and expects
 # both to restore to HEAD). The lab branch is not main, so this bundles the lab branch (as HEAD and by name) together
 # with origin/main as `main`, and proves that each restores to the right commit with a full fsck. Needs a full
@@ -10,7 +10,7 @@ OUT="${1:?usage: make-lab-bundle.sh <output-dir>}"; mkdir -p "$OUT"
 LAB=claude/quirky-gauss-depmd8
 [ "$(git rev-parse --is-shallow-repository)" = false ] || { echo "shallow clone: run git fetch --unshallow origin first"; exit 1; }
 [ "$(git rev-parse --abbrev-ref HEAD)" = "$LAB" ] || { echo "check out $LAB first"; exit 1; }
-HEAD_SHA=$(git rev-parse HEAD); MAIN_SHA=$(git rev-parse origin/main); SHORT=$(git rev-parse --short HEAD)
+HEAD_SHA=$(git rev-parse HEAD); MAIN_SHA=$(git rev-parse "${2:-origin/main}"); SHORT=$(git rev-parse --short HEAD)  # $2: the verified main commit (default origin/main)
 git branch -f main "$MAIN_SHA" >/dev/null   # local main = the real main, never the lab head
 B="$OUT/meal-planner-lab-$SHORT.bundle"
 git bundle create "$B" HEAD "$LAB" main
