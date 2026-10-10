@@ -27,7 +27,7 @@ import { NOT_ALIASES } from "../../unit-aliases";
 import { bakedWord, drinkWord, foodWord, meatOrFishWord, plainWord, twoWordFood, vesselLikeWord } from "./foods";
 import { isWord, type Tok } from "./lexer";
 import {
-  APPLIANCE_WORDS, BOTTLE_SIZE_WORDS, CUT_PART_WORDS, EQUIPMENT_TOOL_HEADS, EQUIPMENT_VESSEL_HEADS, FUNCTION_WORDS, INVARIANT_PLURALS, PART_NOUNS, ROMANCE_JOINERS,
+  APPLIANCE_WORDS, BOTTLE_SIZE_WORDS, CUT_PART_WORDS, EQUIPMENT_TOOL_HEADS, EQUIPMENT_VESSEL_HEADS, FUNCTION_WORDS, INVARIANT_PLURALS, PART_NOUNS, ROMANCE_JOINERS, SHAPE_FOOD_NOUNS, VESSEL_COMPOUNDS,
 } from "./lexicon";
 
 const hasOwn = (o: object, k: string) => Object.prototype.hasOwnProperty.call(o, k);
@@ -90,6 +90,10 @@ export function unresolvedMeasureAt(toks: readonly Tok[], a: number, count: Rati
   if (twoWordFood(lw, next.lower)) return a;
   // 1. a noun the contract declares is not a unit
   if (hasOwn(NOT_ALIASES, lw)) return a + 1;
+  // (a cooking vessel named in one or two words: "1 dutch oven stew", "1 crockpot chili", "1 sheet pan vegetables")
+  if (VESSEL_COMPOUNDS.has(lw) && runEnd(toks, a) > a) return a + 1;
+  const pair = `${lw}-${plainWord(next.lower)}`;
+  if (VESSEL_COMPOUNDS.has(pair) && runEnd(toks, a) > a + 1) return a + 2;
   const end = runEnd(toks, a);
   if (end === a) return a; // the word is the head itself ("4 waffle cones", "2 sprays")
   const head = plainWord((toks[end] as { lower: string }).lower);
@@ -99,8 +103,10 @@ export function unresolvedMeasureAt(toks: readonly Tok[], a: number, count: Rati
   if (above1 && regularPlural(lw) && foodWord(head) && !readsPlural(head) && (PART_NOUNS.has(lw) || holdingUtensil(lw) || BOTTLE_SIZE_WORDS.has(lw))) return a + 1;
   // (a count above one that agrees with a plural food head: the word describes the items — "6 pan rolls", "4 griddle cakes")
   const agrees = above1 && readsPlural(head);
-  // 3. a part, piece, shape, strand or spray of a food
+  // 3. a part, piece, shape, strand or spray of a food (a shape food only after a count of one: "Seven grain cereal" names
+  // a product by its components, §12.9)
   if (PART_NOUNS.has(lw) && !agrees && !(CUT_PART_WORDS.has(lw) && meatOrFishWord(head))) return a + 1;
+  if (SHAPE_FOOD_NOUNS.has(lw) && !above1) return a + 1;
   // 4. a vessel or utensil that holds food — not a baked dish named after the vessel it is baked in ("1 skillet cookie",
   // "1 skillet cornbread"; "1 skillet cornbread batter" is a measure of batter)
   if (holdingUtensil(lw) && !agrees && !(end === a + 1 && bakedWord(head))) return a + 1;

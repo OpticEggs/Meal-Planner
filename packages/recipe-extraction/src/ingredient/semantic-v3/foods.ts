@@ -524,7 +524,7 @@ const COMPOUND_FOODS = [
   "jell-o shot", "jello shot", "jelly shot", "pudding shot", "wood ear", "plate rib", "funnel cake", "kettle chip",
   // assortments sold or served on a tray or platter ("1 veggie tray", "1 deli platter")
   // (semantic-v3, FL-C8) cuts, fish, cups and cases named with a word that is otherwise a measure or a vessel
-  "sand dab", "brisket point", "brisket flat", "hot pot", "brick pastry", "chocolate cup", "meringue cup", "waffle cup", "wafer cup", "tuile cup",
+  "sand dab", "crumb cake", "crumb bar", "coffee cake", "pound cake", "sponge cake", "layer cake", "grain bowl", "brisket point", "brisket flat", "hot pot", "brick pastry", "chocolate cup", "meringue cup", "waffle cup", "wafer cup", "tuile cup",
   "pastry case", "tart case", "tartlet case", "vol-au-vent case", "filo case", "phyllo case", "pie case",
   "veggie tray", "vegetable tray", "fruit tray", "cheese tray", "meat tray", "deli tray", "relish tray", "shrimp tray", "deli platter",
   "fruit platter", "cheese platter", "meat platter", "seafood platter", "sushi platter", "party platter", "antipasto platter",
@@ -727,7 +727,7 @@ const PARTICIPLE_VERBS = setOf(
     "glue fold pinch stamp mark label portion weigh grade sort select clean scrub",
 );
 /** Irregular past participles of the same verbs ("grown", "frozen", "beaten", "ground", "fed", "bred", "caught", "set"). */
-const IRREGULAR_PARTICIPLES = setOf("grown frozen risen beaten broken chosen eaten hidden proven shaken stolen swollen taken thrown woken bitten blown drawn known sewn shown sown spun torn worn ground bound found wound fed bred caught bought brought made kept left dried fried set cut split shed spread lit");
+const IRREGULAR_PARTICIPLES = setOf("processed grown frozen risen beaten broken chosen eaten hidden proven shaken stolen swollen taken thrown woken bitten blown drawn known sewn shown sown spun torn worn ground bound found wound fed bred caught bought brought made kept left dried fried set cut split shed spread lit");
 
 /** The past participle of a known verb (PARTICIPLE_VERBS, KITCHEN_ACTION_VERBS, PHRASE_VERBS, or an irregular one). */
 export function knownParticiple(word: string): boolean {

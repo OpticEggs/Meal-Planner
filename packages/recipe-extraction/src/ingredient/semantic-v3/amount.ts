@@ -18,7 +18,7 @@ import { add, cmp, div, fromDecimalString, fromExactQuantity, mul, rational, toE
 import { adjacent, isGroup, isSym, isWord, type GroupTok, type Tok } from "./lexer";
 import {
   APPROX_SYMBOLS, APPROX_WORDS, BOUND_PHRASES, CARDINALS, CONTAINER_UNITS, FORM_WORDS, FRACTION_WORDS, FUNCTION_WORDS, LENGTH_MEASURED_FOODS, LENGTH_WORDS, MEASURE_ADJECTIVES,
-  INVARIANT_PLURALS, PACKAGING_NOUNS, RANGE_DASHES, ROMANCE_JOINERS, REMARK_WORDS, SIZE_WORDS, TIME_WORDS, UNKNOWN_MEASURES, unitOfWord,
+  INVARIANT_PLURALS, PACKAGING_NOUNS, RANGE_DASHES, ROMANCE_JOINERS, VESSEL_COMPOUNDS, REMARK_WORDS, SIZE_WORDS, TIME_WORDS, UNKNOWN_MEASURES, unitOfWord,
 } from "./lexicon";
 import { andFraction, fractionUnitWord, readNumber, type NumberRead } from "./quantity";
 import { compoundFood, describingWord, foodWord, measureGerund, plainWord, recognisedFoodHead, twoWordFood } from "./foods";
@@ -710,6 +710,17 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
         packageSpan: slots0.packageSpan, packageProvisional: null, equivalents: [], approximate, fromWord: false, effects: fx, next: pk.container.next,
       };
     }
+  }
+
+  // (semantic-v3, CONTRACT §13.2) "1 sheet pan vegetables", "2 cup measuring cups": a unit word that begins the name of a
+  // cooking vessel ("sheet pan") is no unit of the food — the vessel is an unresolved measure
+  if (unitRead && n1.ok && max === null && isWord(toks[k]) && isWord(toks[k + 1]) && VESSEL_COMPOUNDS.has(`${plainWord(text.slice(unitRead.s, unitRead.e).replace(/\.$/, ""))}-${plainWord((toks[k] as { lower: string }).lower)}`)) {
+    fx.notes.push({ s: n1.s, text: text.slice(n1.s, toks[k].e) });
+    fx.reasons.push("unit_unknown");
+    return {
+      quantity: null, quantitySpan: null, amountWritten: true, unit: null, unitSpan: null, packageSize: null, packageSpan: null, packageProvisional: null,
+      equivalents: [], approximate, fromWord: false, effects: fx, next: k + 1,
+    };
   }
 
   // (semantic-v3, CONTRACT §13.2 precedence over §12.3) "8 oz tub whipped topping", "500 g pot yogurt": a size before an

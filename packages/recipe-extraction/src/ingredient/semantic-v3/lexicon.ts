@@ -789,6 +789,7 @@ export const PART_NOUNS = setOf(
   // plant parts
   "stem stems stalklet stalklets frond fronds cob cobs husk husks shuck shucks blade blades needle needles spear spears floret florets tip tips " +
     "crown crowns heart hearts core cores kernel kernels hull hulls rind rinds peel peels skin skins tendril tendrils shoot shoots runner runners " +
+    "pad pads " +
     // cut-off pieces and ends
     "heel heels end ends butt butts nub crust crusts shard shards sliver slivers shaving shavings shred shreds flake flakes crumb crumbs " +
     "segment segments morsel morsels bit bits lobe lobes " +
@@ -800,6 +801,12 @@ export const PART_NOUNS = setOf(
     // dispensed portions
     "spray sprays mist mists pump pumps spritz squirt squirts dropper droppers dropperful",
 );
+
+/**
+ * SHAPE FOODS (semantic-v3, CONTRACT §13.2): food nouns that also name a shape or a grain OF another food ("1 cake tofu",
+ * "1 grain rice"). Only in the measure slot (they stay food heads: "rice cakes", "griddle cakes").
+ */
+export const SHAPE_FOOD_NOUNS = setOf("cake cakes grain grains");
 
 /**
  * CUT WORDS (semantic-v3): part nouns that also name a cut of meat before its head ("blade steak", "crown roast", "heel of
@@ -839,3 +846,10 @@ export const PACKAGING_NOUNS = setOf(
   "pouch pouches canister canisters clamshell clamshells sachet sachets tray trays crate crates sack sacks net nets sleeve sleeves jug jugs " +
     "bucket buckets pail pails keg kegs tetra tetrapak tetra-pak brick bricks cartridge cartridges capsule capsules case cases",
 );
+
+/**
+ * COOKING VESSELS NAMED IN ONE OR TWO WORDS (semantic-v3, CONTRACT §13.2): pots and pans whose name is a compound or a
+ * trade name ("dutch oven", "slow cooker", "crockpot", "sheet pan", "stock pot"). In the measure slot they are an
+ * unresolved measure ("1 dutch oven stew", "1 crockpot chili"), like any holding vessel.
+ */
+export const VESSEL_COMPOUNDS = setOf("dutch-oven slow-cooker pressure-cooker rice-cooker instant-pot crock-pot crockpot crockpots sheet-pan roasting-pan stock-pot stockpot frying-pan saute-pan sauté-pan cast-iron baking-dish casserole-dish pie-dish pie-plate loaf-pan cake-pan tart-pan");
