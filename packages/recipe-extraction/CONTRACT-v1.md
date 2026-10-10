@@ -381,3 +381,31 @@ leaves open. Unit and container lists refer to `UNIT_REGISTRY` (`src/contract.ts
 15. *(restated)* **Imprecise unit with no number** — reads as one (`Pinch of salt` → 1 `pinch`, frozen h2-0061;
     `Dash of hot sauce`, `a splash of milk`); a size word before it goes to `note` (`Small pinch of salt` → 1
     `pinch`, note `small`). Added 2026-10-10, before holdout-v3, to document the frozen convention.
+
+### 12.A Amendments after the independent candidate review (2026-10-10; before freeze and before holdout-v3)
+
+The candidate review (R1) found three places where §12 did not settle a case or contradicted itself. Each amendment
+is prospective (no frozen label changes) and is checked by the label checker before holdout-v3 is written.
+
+- **A1 → §12.4, count word before the food.** A count unit written right after the number is the unit when it agrees
+  with the count — plural for a count above one (`2 strips bacon`, `3 ribs celery`, `2 sticks butter`) — or, with a
+  count of one, when an uncounted food follows (`1 rib celery`, `1 head garlic`, `1 sheet puff pastry`, `1 stick
+  butter`). A *singular* count word after a count above one begins the food's name, unit `each`: `2 strip steaks`,
+  `4 rib eye steaks`, `4 cube steaks`, `2 sheet cakes`, `2 wedge salads` → 2 / 4 `each`, the whole name kept. With a
+  count of one and a countable food naming a cut or dish (`1 strip steak`, `1 sheet cake`, `1 head cheese`) both
+  readings are defensible: debatable, not used as firm labels.
+- **A2 → §12.6, rounding allowance.** The whole-unit rounding allowance applies only when the restated unit is
+  **smaller** than the first-stated unit (`1/2 tsp (2 ml)`, `1 lb (454 g)`, `1 kg (2 lb)`); a whole number of a larger
+  unit hides more than it states (`2 lb (1 kg)`, `100 g (4 oz)`, `500 g (1 lb)` → only the 7 % test applies → all
+  three `needs_review`). This replaces the contradictory policy sentence; the policy list stays as stated.
+- **A3 → §12.11, prepared vs extracted.** Cutting or mashing does not change the food: a count of whole items in a
+  remark restates a prepared amount of the same food (`1 cup chopped onion (1 medium onion)`, `1 cup grated carrot
+  (2 medium carrots)`, `2 cups diced tomatoes (about 3 tomatoes)`, `1 large onion (about 2 cups chopped)`) → the
+  first-stated amount, the other in `equivalents`, `ready` (frozen probe convention `1 cup chopped onion (1 medium)`).
+  A remark that measures the **source of an extracted part** (juice, zest, peel, pulp, seeds; `2 tbsp lime juice (1
+  lime)`, `(about 1 lemon)`, `(juice of 1 lime)`, `1 tbsp zest (from 2 oranges)`) or another state (cooked vs dry,
+  soaked, rehydrated) or another food is a second amount → `needs_review`, with or without a marker word.
+- **A4 → §12.7(g), `and`.** Two foods joined by `and` after one amount, without a comma, are a list too (`2 cups
+  strawberries and blueberries`, `1 lb shrimp and scallops`, `2 tbsp butter and oil`) → `needs_review`; a fixed compound
+  stays one name (§7.6: `salt and pepper`, `half-and-half`, `macaroni and cheese`, `sweet and sour sauce`, `oil and
+  vinegar dressing`).
