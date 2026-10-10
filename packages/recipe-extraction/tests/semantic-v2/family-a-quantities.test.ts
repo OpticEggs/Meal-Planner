@@ -267,3 +267,18 @@ describe("unnecessary reviews removed (R1 M5)", () => {
     expect(read(line).status).toBe("needs_review");
   });
 });
+
+describe("parts taken whole restate; extracted parts do not (§12.A A3)", () => {
+  it.each([["3 ears corn (about 2 cups kernels)", "2 cup"], ["1 head cauliflower (about 4 cups florets)", "4 cup"], ["1 bunch cilantro (about 1 cup leaves)", "1 cup"]])(
+    "%s → ready, equivalent %s",
+    (line, eq) => {
+      const r = read(line);
+      expect(r.status).toBe("ready");
+      expect(r.equivalents.map(amountText)).toEqual([eq]);
+    },
+  );
+
+  it.each(["1 cup pomegranate arils (1 pomegranate)", "2 lemons (1/4 cup juice)", "1 cup egg whites (about 8 eggs)"])("%s → needs review", (line) => {
+    expect(read(line).reasons).toContain("quantity_unassigned");
+  });
+});

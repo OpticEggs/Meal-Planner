@@ -6,7 +6,7 @@
  */
 import { describe, expect, it } from "vitest";
 import {
-  componentHeading, creditLine, dietPoints, equipmentPhrase, equipmentShape, methodStep, nonIngredientReason, nutrientLabelEnd, pageFurniture, ratingLine, recipeTimeLine,
+  agentNounTool, componentHeading, creditLine, dietPoints, equipmentPhrase, equipmentShape, methodStep, nonIngredientReason, nutrientLabelEnd, pageFurniture, ratingLine, recipeTimeLine,
 } from "../../src/ingredient/semantic-v2/classify";
 import { lex } from "../../src/ingredient/semantic-v2/lexer";
 import { read } from "./helpers";
@@ -157,4 +157,54 @@ describe("section headings in any case (§12.8)", () => {
     expect(componentHeading(toks("Hot sauce"))).toBe(false);
     expect(componentHeading(toks("2 SAUCE"))).toBe(false);
   });
+});
+
+// --- fix round 1, general shapes (R1 H1 unknown default, H7/H8, L2) -------------------------------------------------------
+
+describe("equipment by the form of its head: agent nouns of kitchen actions (§12.8)", () => {
+  it.each(["1 cherry pitter", "1 garlic crusher", "1 egg separator", "1 egg beater", "1 potato ricer", "1 cocktail muddler", "1 cake tester", "1 knife sharpener", "1 tea infuser", "1 oyster shucker", "1 deep fryer", "1 bread machine", "1 gravy boat", "12 cupcake papers", "1 cup measuring cup"])(
+    "%s → unsupported",
+    (line) => {
+      expect(read(line).status).toBe("unsupported");
+    },
+  );
+
+  it("agentNounTool: a kitchen verb + -er/-or; foods that look like agent nouns are not tools", () => {
+    for (const w of ["slicer", "pitter", "separators", "ricer", "muddler", "sharpener", "stripper"]) expect(agentNounTool(w), w).toBe(true);
+    for (const w of ["butter", "water", "pepper", "crackers", "creamer", "roaster", "broiler", "fryer", "cooler", "oyster", "lobster", "liver"]) expect(agentNounTool(w), w).toBe(false);
+  });
+
+  it.each([["1 cup coffee creamer", "ready"], ["1 bottle margarita mixer", "ready"], ["4 roaster chickens", "ready"], ["1 lb oyster crackers", "ready"], ["1 bottle mixer", "ready"]])(
+    "negative control: %s → %s",
+    (line, status) => {
+      expect(read(line).status).toBe(status);
+    },
+  );
+});
+
+describe("nutrition panels separated by commas or semicolons; daily values (R1 H8)", () => {
+  it.each(["Protein 20g, Fat 10g", "Fat 10g; Carbs 20g", "Calories: 320; Fat: 12g", "Saturated Fat 3 g 15%", "Potassium 400mg 11%", "Omega-3: 1.2 g"])("%s → unsupported", (line) => {
+    expect(read(line).status).toBe("unsupported");
+  });
+
+  it.each([["1 cup milk, 2 eggs", "needs_review"], ["Butter 100g, softened", "ready"]])("negative control: %s → %s", (line, status) => {
+    expect(read(line).status).toBe(status);
+  });
+});
+
+describe("instructions that open with a verb that also names food, and page prompts (R1 L2)", () => {
+  it.each([
+    "Brown the beef in a skillet.", "Top with cheese and serve.", "Roast for 20 minutes", "Grill over medium heat", "Cool completely", "Toast the nuts", "Store in an airtight container",
+    "Sear the steaks", "Crack the eggs into a bowl", "Shake well", "Enjoy!", "Cook Mode", "Save to Recipe Box", "Did you make this recipe?", "Skip to content", "Get the Recipe",
+    "Hide Images", "Tap or click steps to mark as complete", "No reviews yet", "Pressure cook 12 minutes",
+  ])("%s → unsupported", (line) => {
+    expect(read(line).status).toBe("unsupported");
+  });
+
+  it.each(["Brown sugar", "Roast chicken, from the deli", "Top sirloin steak, cut into strips", "Toast, for serving", "Cool Whip", "Store-bought pesto", "Top round", "Recipe"])(
+    "negative control, a food: %s → not unsupported",
+    (line) => {
+      expect(read(line).status).not.toBe("unsupported");
+    },
+  );
 });

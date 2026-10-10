@@ -15,7 +15,7 @@ import { adjacent, hasNumber, isGroup, isNumberish, isSym, isWord, type Tok } fr
 import {
   APPROX_SYMBOLS, APPROX_WORDS, BARE_EQUIPMENT_HEADS, CARDINALS, CREDIT_OPENERS, DISH_WORDS, GENERIC_COMPONENT_WORDS, DIET_POINT_HEADS, DIET_POINT_WORDS,
   EQUIPMENT_CONTINUATIONS, EQUIPMENT_COUNT_NOUNS, EQUIPMENT_LABEL_WORDS, EQUIPMENT_MATERIAL_WORDS, EQUIPMENT_SHAPE_WORDS, EQUIPMENT_TOOL_HEADS, EQUIPMENT_VESSEL_HEADS,
-  FACT_UNITS, FUNCTION_WORDS, LENGTH_WORDS, SIZE_WORDS, HEADING_WORDS, INSTRUCTION_CUES, INSTRUCTION_VERBS, META_LABEL_WORDS, META_NOUNS, NEED_WORDS, NOTE_LABELS, NUTRIENT_WORDS,
+  FACT_UNITS, FOOD_NAME_VERBS, FUNCTION_WORDS, IMPERATIVE_CUES, KITCHEN_ACTION_VERBS, LENGTH_WORDS, SIZE_WORDS, HEADING_WORDS, INSTRUCTION_CUES, INSTRUCTION_VERBS, META_LABEL_WORDS, META_NOUNS, NEED_WORDS, NOTE_LABELS, NUTRIENT_WORDS,
   PAGE_KEYWORDS, PAGE_WORDS, RATING_HEADS, RATING_WORDS, RECIPE_PART_WORDS, SERVING_FACT_HEADS, SERVING_FACT_WORDS, SERVING_LABEL_WORDS,
   TIME_LABEL_WORDS, TIME_WORDS, WEAK_INSTRUCTION_VERBS, YIELD_WORDS, unitOfWord,
 } from "./lexicon";
@@ -126,6 +126,9 @@ export function nonIngredientReason(toks: readonly Tok[]): ReasonCode | null {
   const opensWithVerb = first && toks[0] === (first as unknown as Tok) && !isWord(toks[1], "of") && !isSym(toks[1], ":");
   if (opensWithVerb && INSTRUCTION_VERBS.has(first.lower) && (wordCount(toks) >= 3 || isSym(last, ".", "!"))) return "not_an_ingredient";
   if (opensWithVerb && WEAK_INSTRUCTION_VERBS.has(first.lower) && wordCount(toks) >= 2 && (sentenceCue(toks) || isSym(last, ".", "!"))) return "not_an_ingredient";
+  // (semantic-v2, R1 L2) "Brown the beef", "Roast for 20 minutes", "Top with cheese", "Cool completely", "Enjoy!"
+  if (opensWithVerb && FOOD_NAME_VERBS.has(first.lower) && (isWord(toks[1]) && IMPERATIVE_CUES.has((toks[1] as { lower: string }).lower))) return "not_an_ingredient";
+  if (opensWithVerb && (FOOD_NAME_VERBS.has(first.lower) || INSTRUCTION_VERBS.has(first.lower)) && toks.length === 2 && isSym(last, "!")) return "not_an_ingredient";
   return null;
 }
 
@@ -158,6 +161,11 @@ export function nutrientLabelEnd(toks: readonly Tok[]): number {
   while (k < toks.length) {
     const t = toks[k];
     if (!isWord(t)) break;
+    if (t.lower === "omega" && isSym(toks[k + 1], "-") && toks[k + 2]?.kind === "num") {
+      sawNutrient = true; // "Omega-3"
+      k += 3;
+      continue;
+    }
     if (t.lower === "vitamin" || t.lower === "vitamins") {
       sawNutrient = true;
       k++;
@@ -205,17 +213,17 @@ export function servingFact(label: readonly Tok[], value: readonly Tok[]): boole
   return isNumberish(value[k]) || (isWord(value[k]) && Object.prototype.hasOwnProperty.call(CARDINALS, (value[k] as { lower: string }).lower));
 }
 
-/** Separators of a one-line nutrition panel ("Calories: 412kcal | Carbs: 52g", "Fat 10g • Protein 18g"). */
-const PANEL_SEPARATORS = ["|", "•", "·", "/"];
+/** Separators of a one-line nutrition panel ("Calories: 412kcal | Carbs: 52g", "Fat 10g • Protein 18g", "Protein 20g, Fat 10g"). */
+const PANEL_SEPARATORS = ["|", "•", "·", ",", ";"];
 
 /**
- * NUTRITION PANEL on one line: two or more parts separated by "|", "•" or "·", every part a nutrition fact on its own
- * ("Calories: 412kcal | Carbohydrates: 52g | Protein: 18g").
+ * NUTRITION PANEL on one line: two or more parts separated by "|", "•", "·", "," or ";", every part a nutrition fact on
+ * its own ("Calories: 412kcal | Carbohydrates: 52g | Protein: 18g", "Protein 20g, Fat 10g").
  */
 export function nutritionPanel(toks: readonly Tok[]): boolean {
   const parts: Tok[][] = [[]];
   for (const t of toks) {
-    if (isSym(t) && PANEL_SEPARATORS.includes(t.text) && t.text !== "/") parts.push([]);
+    if (isSym(t) && PANEL_SEPARATORS.includes(t.text)) parts.push([]);
     else parts[parts.length - 1].push(t);
   }
   const filled = parts.filter((p) => p.length > 0);
@@ -310,7 +318,7 @@ export function creditLine(toks: readonly Tok[]): boolean {
 export function pageFurniture(toks: readonly Tok[]): boolean {
   if (hasNumber(toks) || toks.some(isGroup)) return false;
   const ws = words(toks);
-  return ws.length > 0 && ws.length <= 6 && ws.every((w) => PAGE_WORDS.has(w.lower)) && ws.some((w) => PAGE_KEYWORDS.has(w.lower)) && toks.every((t) => isWord(t) || isSym(t, ".", "!", ":", "-", "|", "»", "›", ">"));
+  return ws.length > 0 && ws.length <= 8 && ws.every((w) => PAGE_WORDS.has(w.lower)) && ws.some((w) => PAGE_KEYWORDS.has(w.lower)) && toks.every((t) => isWord(t) || isSym(t, ".", "!", "?", ":", "-", "|", "»", "›", ">"));
 }
 
 /** Words that never stand inside an equipment name before its head ("Oil for the pan", "Butter to grease the dish"). */
@@ -381,18 +389,19 @@ export function equipmentShape(toks: readonly Tok[]): "equipment" | "unsure" | n
     k = 1;
     if (content[1].lower === "of" && content.length >= 3) k = 2;
   } else {
-    // a measured amount ("1 cup …", "2 tbsp …", "a pinch …") is never equipment
+    // a measured amount ("1 cup …", "2 tbsp …", "a pinch …") is food, unless a sure equipment item follows it ("1 cup
+    // measuring cup": a 1-cup measuring cup)
     const u = unitOfWord(content[0].lower);
     if (u !== null && content.length >= 2) {
       const dim = UNIT_REGISTRY[u].dimension;
-      if (dim === "mass" || dim === "volume" || dim === "imprecise") return null;
+      if (dim === "mass" || dim === "volume" || dim === "imprecise") return equipmentShape(seg.slice(content[0].at + 1)) === "equipment" ? "equipment" : null;
     }
   }
   for (let j = k; j < content.length; j++) {
     const w = content[j].lower;
     if (EQUIPMENT_STOPS.has(w) || (FUNCTION_WORDS.has(w) && w !== "can")) return null; // ("can" is a container: "1 can opener")
-    const tool = EQUIPMENT_TOOL_HEADS.has(w);
     const vessel = EQUIPMENT_VESSEL_HEADS[w];
+    const tool = vessel === undefined && (EQUIPMENT_TOOL_HEADS.has(w) || agentNounTool(w));
     if (!tool && vessel === undefined) continue;
     // the head must end the item, or be followed by a continuation
     let n = content[j].at + 1;
@@ -408,16 +417,30 @@ export function equipmentShape(toks: readonly Tok[]): "equipment" | "unsure" | n
   return null;
 }
 
+/**
+ * A deverbal agent noun of a kitchen action (KITCHEN_ACTION_VERBS) names a tool: "cherry pitter", "garlic crusher", "egg
+ * separator", "potato ricer", "knife sharpener", "egg beater", "cake tester" — verb + "-er"/"-r"/"-or", a doubled final
+ * consonant ("pitter", "chopper", "stripper"), in the singular or plural.
+ */
+export function agentNounTool(word: string): boolean {
+  const w = word.toLowerCase().replace(/s$/, "");
+  const m = /^(\p{L}{2,}?)(?:er|or)$/u.exec(w);
+  if (m === null) return false;
+  const stem = m[1];
+  const candidates = [stem, `${stem}e`, stem.length >= 3 && stem[stem.length - 1] === stem[stem.length - 2] ? stem.slice(0, -1) : "", stem.endsWith("at") ? `${stem}e` : ""];
+  return candidates.some((c) => c.length > 0 && KITCHEN_ACTION_VERBS.has(c));
+}
+
 /** A vessel head with the words before it (CONTRACT §12.8; see `equipmentShape`). */
 function vesselVerdict(before: readonly string[], head: string): "equipment" | "unsure" | null {
   const entry = EQUIPMENT_VESSEL_HEADS[head];
-  const mods = before.filter((w) => !SIZE_WORDS.has(w) && !EQUIPMENT_SHAPE_WORDS.has(w));
+  const mods = before.filter((w) => (!SIZE_WORDS.has(w) && !EQUIPMENT_SHAPE_WORDS.has(w)) || entry.purposes.has(w)); // ("deep fryer")
   if (mods.length === 0) return BARE_EQUIPMENT_HEADS.has(head) ? "equipment" : null;
   const prev = mods[mods.length - 1];
   if (EQUIPMENT_VESSEL_HEADS[prev] !== undefined && !EQUIPMENT_MATERIAL_WORDS.has(prev) && !entry.purposes.has(prev)) {
     // "rice paper wrappers": the vessel word before is judged in turn ("rice paper" is food)
     const inner = vesselVerdict(mods.slice(0, -1), prev);
-    return inner === "equipment" || mods.length === 1 ? "equipment" : entry.policy === "unsure" ? "unsure" : null;
+    return inner === "equipment" ? "equipment" : entry.policy === "unsure" ? "unsure" : null;
   }
   if (EQUIPMENT_MATERIAL_WORDS.has(prev) || entry.purposes.has(prev)) {
     // ("rice paper wrappers": a material word that is itself a vessel noun takes its own modifier into account)
@@ -489,8 +512,9 @@ function factValue(toks: readonly Tok[], nutrient: boolean): boolean {
   while (k < toks.length && (isNumberish(toks[k]) || isSym(toks[k], "/", "-", "–", ".", ",", "~"))) k++;
   // (semantic-v2) a bracket after the value that only restates it ("(240 ml)", "(15% DV)") is part of the value
   const rest = toks.slice(k).filter((t) => !(isGroup(t) && t.children.length > 0 && t.children.every((c) => isNumberish(c) || isSym(c, "%", ".", "/", ",") || (isWord(c) && (FACT_UNITS.has(c.lower) || unitOfWord(c.text) !== null || APPROX_WORDS.has(c.lower))))));
-  const ok = (t: Tok) =>
+  const ok = (t: Tok, k: number) =>
+    (nutrient && isNumberish(t) && isSym(rest[k + 1], "%")) || // ("3 g 15%": the daily value after the amount)
     (isSym(t) && ["%", ".", ")", "("].includes(t.text)) ||
     (isWord(t) && (FACT_UNITS.has(t.lower) || SERVING_LABEL_WORDS.has(t.lower) || ["each", "of", "a", "an"].includes(t.lower) || (!nutrient && unitOfWord(t.text) !== null)));
-  return rest.length <= 3 && rest.every(ok);
+  return rest.length <= 4 && rest.every(ok);
 }

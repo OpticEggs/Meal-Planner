@@ -1191,7 +1191,7 @@ export function unknownMeasureAt(toks: readonly Tok[], a: number): number {
   const w = toks[a];
   if (!isWord(w)) return a;
   const next = toks[a + 1];
-  if (UNKNOWN_MEASURES.has(w.lower) || MEASURE_BY_FORM.test(w.lower)) return a + 1;
+  if (UNKNOWN_MEASURES.has(w.lower) || MEASURE_BY_FORM.test(w.lower) || HYPHENATED_VESSEL.test(w.lower)) return a + 1;
   if (!isPlainNoun(w.lower) || unitOfWord(w.text) !== null) return a;
   const food = (t: Tok | undefined) => isWord(t) && !FUNCTION_WORDS.has(t.lower);
   if (isWord(next) && VESSEL_MEASURES.has(next.lower) && (food(toks[a + 2]) || isWord(toks[a + 2], "of"))) return a + 2;
@@ -1201,6 +1201,8 @@ export function unknownMeasureAt(toks: readonly Tok[], a: number): number {
 }
 /** "-ful" measures by their form: "fistful", "spoonfuls", "can-ful", "tub-full" (registry ones — cupful, handful — are read before). */
 const MEASURE_BY_FORM = /^\p{L}{2,}-?full?s?$/u;
+/** A vessel named by its use in one hyphenated word ("tea-cup", "soup-spoon", "wine-glass"). */
+const HYPHENATED_VESSEL = /^\p{L}+-(?:cups?|spoons?|glass(?:es)?|mugs?|bowls?)$/u;
 /** Vessels that name a measure after a word saying which one ("coffee cup", "soup spoon", "wine glass", "yogurt pot"). */
 const VESSEL_MEASURES = new Set(["cup", "cups", "spoon", "spoons", "glass", "glasses", "mug", "mugs", "bowl", "bowls", "pot", "pots", "jar", "jars", "tin", "tins"]);
 

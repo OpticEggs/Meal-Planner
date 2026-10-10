@@ -12,7 +12,9 @@
  *
  * A remark-only option ("or 1 tsp dried") names the same food in another form ("dried thyme").
  */
-import { ADJECTIVE_WORDS, AND_COMPOUNDS, CATEGORY_NOUNS, COMPOUND_MODIFIERS, FLAVOUR_HEADS, FORM_CHOICE_WORDS, LEADING_SHARE_WORDS, PREP_ADVERBS, REMARK_WORDS, SHARED_HEAD_MODIFIERS, SIZE_WORDS } from "./lexicon";
+import { ADJECTIVE_WORDS, AND_COMPOUNDS, CATEGORY_NOUNS, COMPOUND_MODIFIERS, FLAVOUR_HEADS, FORM_CHOICE_WORDS, FUNCTION_WORDS, LEADING_SHARE_WORDS, PART_HEADS, PREP_ADVERBS, REMARK_WORDS, SHARED_HEAD_MODIFIERS, SIZE_WORDS } from "./lexicon";
+
+const LEADING_JUNK_WORDS = FUNCTION_WORDS;
 
 const wordsOf = (s: string) => s.split(" ").filter((w) => w.length > 0);
 const lower = (s: string) => s.toLowerCase();
@@ -69,6 +71,14 @@ export function shareOptions(options: readonly string[]): string[] {
  */
 function trailingHeadSplit(firsts: readonly string[][], last: readonly string[]): { head: string } | null {
   if (last.length < 2) return null;
+  // sources of the last word (a noun before its product, or any food before a part: "apple or white grape juice" shares
+  // "juice", "walnut or pecan halves" shares "halves") share that word alone
+  const lastWord = lower(last[last.length - 1]);
+  const lastSources = SHARED_HEAD_MODIFIERS[lastWord];
+  const oneWordFood = (o: readonly string[]) => o.length === 1 && !versionWord(o[0]) && lower(o[0]) !== lastWord && !LEADING_JUNK_WORDS.has(lower(o[0]));
+  if (firsts.every((o) => (lastSources !== undefined && lastSources.has(lower(o.join(" "))) && !o.every(versionWord)) || (PART_HEADS.has(lastWord) && oneWordFood(o)))) {
+    return { head: last[last.length - 1] };
+  }
   let m = 1;
   const pair = `${lower(last[0])} ${lower(last[1] ?? "")}`;
   if (last.length >= 3 && COMPOUND_MODIFIERS.has(pair) && !firsts.every((o) => o.length === 1 && COMPOUND_MODIFIERS.has(`${lower(o[0])} ${lower(last[1])}`))) m = 2;

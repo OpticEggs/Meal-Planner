@@ -187,3 +187,20 @@ describe("two foods joined by 'and' after one amount (§12.A A4, R1 H5)", () => 
     expect(andJoinsTwoFoods("macaroni and cheese")).toBe(false);
   });
 });
+
+describe("(b) a part or a product of a source shares its last word (R1 M1)", () => {
+  it.each([
+    ["1 cup walnut or pecan halves", ["walnut halves", "pecan halves"]], ["1 cup broccoli or cauliflower florets", ["broccoli florets", "cauliflower florets"]],
+    ["1 lb salmon or cod fillets", ["salmon fillets", "cod fillets"]], ["1 cup apple or white grape juice", ["apple juice", "white grape juice"]],
+    ["1 cup cottage or ricotta cheese", ["cottage cheese", "ricotta cheese"]], ["1 cup strawberry or raspberry jam", ["strawberry jam", "raspberry jam"]],
+  ])("%s", (line, options) => {
+    expect(choice(line)).toEqual(options);
+  });
+
+  it.each([["1 cup ricotta or cottage cheese", ["ricotta", "cottage cheese"]], ["1 tbsp hoisin or oyster sauce", ["hoisin", "oyster sauce"]]])(
+    "negative control, a product of the head's kind stays as written: %s",
+    (line, options) => {
+      expect(choice(line)).toEqual(options);
+    },
+  );
+});

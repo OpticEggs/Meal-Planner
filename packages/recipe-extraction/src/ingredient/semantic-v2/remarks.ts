@@ -14,7 +14,7 @@
  */
 import { REASONS, UNIT_REGISTRY, type AmountUnstated } from "../../contract";
 import { allWords, hasNumber, isGroup, isSym, isWord, wordsAt, type GroupTok, type Tok } from "./lexer";
-import { ADJECTIVE_WORDS, APPLICATION_GERUNDS, APPROX_WORDS, CARDINALS, EXTRACTED_PART_WORDS, LEADING_JUNK, PREP_ADVERBS, REMARK_SOURCE_WORDS, REMARK_STATE_WORDS, TIME_WORDS, TRAILING_PREP_WORDS, unitOfWord, FORM_WORDS, FUNCTION_WORDS, IF_DESIRED, REMARK_WORDS, SIZE_WORDS, UNSTATED_PHRASES } from "./lexicon";
+import { ADJECTIVE_WORDS, APPLICATION_GERUNDS, APPROX_WORDS, CARDINALS, EXTRACTED_PART_WORDS, LEADING_JUNK, PART_HEADS, PREP_ADVERBS, REMARK_SOURCE_WORDS, REMARK_STATE_WORDS, TIME_WORDS, TRAILING_PREP_WORDS, unitOfWord, FORM_WORDS, FUNCTION_WORDS, IF_DESIRED, REMARK_WORDS, SIZE_WORDS, UNSTATED_PHRASES } from "./lexicon";
 import { amountStartsAt, isPriceGroup, readAmountPhrase } from "./amount";
 import { readUnit } from "./unit";
 import { emptyEffects, mergeEffects, type AmountReading, type Effects } from "./types";
@@ -367,6 +367,8 @@ function otherFoodIn(ws: readonly string[], nameWs: readonly string[]): boolean 
   return ws.some((w) => {
     if (names.has(w) || names.has(singularOf(w))) return false;
     if (FUNCTION_WORDS.has(w) || APPROX_WORDS.has(w) || SIZE_WORDS.has(w) || REMARK_WORDS.has(w) || ADJECTIVE_WORDS.has(w) || TRAILING_PREP_WORDS.has(w) || PREP_ADVERBS.has(w)) return false;
+    // (parts taken whole — kernels, leaves, florets — are the same food, §12.A A3: "3 ears corn (about 2 cups kernels)")
+    if (PART_HEADS.has(w) && !EXTRACTED_PART_WORDS.has(w)) return false;
     if (unitOfWord(w) !== null || Object.prototype.hasOwnProperty.call(CARDINALS, w) || TIME_WORDS.has(w) || ["half", "each", "total", "whole", "about", "approximately", "roughly", "around", "x", "made", "times"].includes(w)) return false;
     return true;
   });
