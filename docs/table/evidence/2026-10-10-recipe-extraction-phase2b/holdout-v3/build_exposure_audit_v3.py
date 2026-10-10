@@ -54,14 +54,15 @@ def plain_file(p, src):
         add(line, src)
         for cell in line.rstrip("\n").split("\t"): add(cell, src)
 
-# Documentation and evidence markdown (never holdout-v3 files: they are not in the repository before this audit).
+# Documentation and evidence markdown (holdout-v3's own files excluded).
 pkg = os.path.join(root, "packages/recipe-extraction")
 md = [os.path.join(pkg, f) for f in ("CONTRACT-v1.md", "README.md", "fixtures/README.md")]
 md += glob.glob(os.path.join(root, "docs/table/recipe-extraction/**/*.md"), recursive=True)
 for ev in ("2026-10-09-recipe-extraction-phase2", "2026-10-10-recipe-extraction-phase2b"):
     md += glob.glob(os.path.join(root, "docs/table/evidence", ev, "**/*.md"), recursive=True)
 for p in sorted(set(md)):
-    if "holdout-v3" in os.path.basename(p).lower(): continue
+    # holdout-v3's own evidence (adjudication, label check, authoring) and any file naming it are not exposure sources.
+    if "/holdout-v3/" in p or "holdout-v3" in os.path.basename(p).lower(): continue
     md_file(p, "docs " + os.path.relpath(p, root))
 # Reviewer R1: every text file it wrote or read as output (repo clones and node_modules excluded).
 for p in sorted(glob.glob("/home/user/rx2b-r1/**/*", recursive=True)):
