@@ -19,7 +19,7 @@
 import { REASONS, type AmountUnstated, type IngredientEngine, type ParsedIngredientV1, type ReasonCode, type SpanField, type UnitV1 } from "../../contract";
 import { cmp, fromExactQuantity, rational, toExactQuantity } from "../../rational";
 import { validateParsedIngredientV1 } from "../../validate";
-import { amountStartsAt, groupAmount, isPriceGroup, PACKAGE_UNITS, readAmountPhrase, readStatedAmount, placeSecondary, sumInSmallest, type AmountSlots } from "./amount";
+import { amountStartsAt, foreignSystemRemark, groupAmount, isPriceGroup, PACKAGE_UNITS, readAmountPhrase, readStatedAmount, placeSecondary, sumInSmallest, type AmountSlots } from "./amount";
 import { nonIngredientReason, numericLead } from "./classify";
 import { adjacent, isGroup, isNumberish, isSym, isWord, lex, type Tok } from "./lexer";
 import { BULLETS, CONTAINER_UNITS, FRUIT_PART_WORDS, SERVING_LABEL_WORDS, UNIT_WORDS_IN_FOOD_NAMES, FUNCTION_WORDS, INVARIANT_PLURALS, MEASURE_ADJECTIVES, PREP_ADVERBS, REMARK_WORDS, SIZE_WORDS, TRAILING_PREP_WORDS, unitOfWord } from "./lexicon";
@@ -131,6 +131,28 @@ function bareUnitAtStart(u: UnitRead, text: string): boolean {
   const written = text.slice(u.s, u.e).toLowerCase().replace(/\.$/, "");
   if (written.length <= 1 || UNIT_WORDS_IN_FOOD_NAMES.has(written)) return false;
   return u.unit.dimension === "mass" || u.unit.dimension === "volume";
+}
+
+/**
+ * MULTIPLIER AFTER THE FOOD (CONTRACT §12.2): the head ends in "x N" / "×N" / "(xN)" after at least one food word; the
+ * number (an amount phrase reaching the end) is the line's amount. `at` is where the multiplier starts.
+ */
+function trailingMultiplier(text: string, head: readonly Tok[]): { amount: AmountReading; at: number } | null {
+  const last = head[head.length - 1];
+  if (isGroup(last) && head.length >= 2 && isWord(head[head.length - 2])) {
+    const c = last.children;
+    if ((isWord(c[0], "x") || isSym(c[0], "×")) && c.length >= 2) {
+      const a = readAmountPhrase(text, c, 1);
+      if (a !== null && a.next === c.length && a.quantity !== null) return { amount: a, at: head.length - 1 };
+    }
+    return null;
+  }
+  for (let k = 1; k < head.length - 1; k++) {
+    if (!(isWord(head[k], "x") || isSym(head[k], "×")) || !isWord(head[k - 1]) || isWord(head[k - 1], "x")) continue;
+    const a = readAmountPhrase(text, head, k + 1);
+    if (a !== null && a.next === head.length && a.quantity !== null) return { amount: a, at: k };
+  }
+  return null;
 }
 
 /** A comma item "celery and onion": two plain foods joined by "and"/"&". */
@@ -288,6 +310,14 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
       }
     }
     if (!amount) {
+      // MULTIPLIER after the food (§12.2): "eggs x 3", "eggs x3", "eggs ×3", "eggs (x3)" — the count of the food
+      const m = trailingMultiplier(text, head);
+      if (m !== null) {
+        amount = m.amount;
+        region = head.slice(0, m.at);
+      }
+    }
+    if (!amount) {
       // "flour 2 cups": the first number, if the amount phrase from there ends the head and has a unit
       const p = head.findIndex((t, k) => k > 0 && isNumberish(t));
       if (p > 0 && isWord(head[p - 1])) {
@@ -395,6 +425,12 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
       if (!amt.packageProvisional.marked) slots.quantity = null;
     }
   }
+
+  // (semantic-v2, §12.14) "1 pint milk (UK)": a non-US system named for a US volume — the size differs, a person checks
+  if (foreignSystemRemark(head, unit)) push(fx.reasons, "unclassified");
+  // (semantic-v2, §12.8) "Sugar 10g", "Salt: 1.2 g": sugar or salt, then only a mass in g/mg — a nutrition-panel
+  // line or a UK recipe weight; a person checks
+  if ((nameFromLabel || !amountAtStart) && nr.name !== null && /^(?:sugars?|salt)$/i.test(nr.name.trim()) && unit !== null && (unit.canonical === "g" || unit.canonical === "mg")) push(fx.reasons, "unclassified");
 
   // (semantic-v2, §12.3) a size placed before the counted unit was known ("4 salmon fillets (6 oz each)", "2 chicken
   // breasts (6 oz each)"): only packaging takes a package size; of anything else it is a per-piece weight

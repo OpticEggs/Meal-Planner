@@ -100,17 +100,18 @@ describe("equipment → unsupported; food in containers stays food", () => {
 });
 
 describe("section headings in any case (§12.8)", () => {
-  it.each(["SAUCE", "Cake Layers", "Topping", "PIZZA DOUGH", "Filling", "Frosting"])("%s → section_heading", (line) => {
+  it.each(["SAUCE", "Sauce", "Dressing", "Cake Layers", "Topping", "PIZZA DOUGH", "Pie Crust", "Filling", "Frosting", "To serve", "Filling and topping"])("%s → section_heading", (line) => {
     expect(read(line)).toMatchObject({ status: "unsupported", reasons: ["section_heading"] });
   });
 
-  it.each(["Dressing", "whipped topping", "SALT", "OLIVE OIL", "SALT TO TASTE", "Hot sauce"])("%s is not refused", (line) => {
+  it.each(["Pesto", "whipped topping", "Whipped cream", "Croutons", "SALT", "OLIVE OIL", "SYRUP", "SALT TO TASTE", "Hot sauce", "Soy sauce"])("%s is not refused", (line) => {
     expect(read(line).status).not.toBe("unsupported");
   });
 
-  it("componentHeading reads the last word and the case", () => {
+  it("componentHeading needs only component words, optionally after dish words", () => {
     expect(componentHeading(toks("SAUCE"))).toBe(true);
-    expect(componentHeading(toks("Sauce"))).toBe(false);
+    expect(componentHeading(toks("Pizza Dough"))).toBe(true);
+    expect(componentHeading(toks("Hot sauce"))).toBe(false);
     expect(componentHeading(toks("2 SAUCE"))).toBe(false);
   });
 });

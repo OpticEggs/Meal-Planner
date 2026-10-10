@@ -127,12 +127,14 @@ describe("counted things", () => {
     expect(read("1 inch ginger")).toMatchObject({ status: "ready", quantity: { numerator: "1" }, unit: { canonical: "inch" }, name: "ginger" });
     for (const [line, name, note] of [
       ["1-inch ginger", "ginger", "1-inch"], ["9-inch pie crust", "pie crust", "9-inch"], ["10-inch tortillas", "tortillas", "10-inch"],
-      ["12 inch pizza crust", "pizza crust", "12 inch"], ["8 inch flour tortillas", "flour tortillas", "8 inch"], ["6 in. skewers", "skewers", "6 in"],
+      ["12 inch pizza crust", "pizza crust", "12 inch"], ["8 inch flour tortillas", "flour tortillas", "8 inch"],
     ] as const) {
       const r = read(line);
       expect(r, line).toMatchObject({ status: "needs_review", quantity: null, unit: null, name, note });
       expect(r.reasons, line).toContain("quantity_missing");
     }
+    // semantic-v2 (CONTRACT §12.8): skewers are not food — "6 in. skewers" is unsupported (semantic-v1: a size note)
+    expect(read("6 in. skewers").status).toBe("unsupported");
     // with a count, the size is a note on what is counted
     expect(read("2 (10-inch) flour tortillas")).toMatchObject({ status: "ready", quantity: { numerator: "2" }, name: "flour tortillas", note: "10-inch" });
   });

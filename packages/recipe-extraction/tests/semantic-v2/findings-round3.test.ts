@@ -161,13 +161,13 @@ describe("real ingredients are never refused as recipe facts (N6)", () => {
     },
   );
 
-  it.each(["BREAD", "STOCK", "OLIVE OIL", "SALT"])("an all-capital line that may be food is food: %s", (line) => {
+  it.each(["BREAD", "STOCK", "SYRUP", "OLIVE OIL", "SALT"])("an all-capital line that may be food is food: %s", (line) => {
     expect(read(line)).toMatchObject({ status: "needs_review", name: line });
   });
 
-  // semantic-v2 (CONTRACT §12.8: "section headings in any case (SAUCE, Topping, Cake Layers)"): a line in capitals that
-  // names a dish component is a section heading; the semantic-v1 expectation (needs_review) is superseded.
-  it.each(["SYRUP", "PIE CRUST", "SAUCE", "DRESSING", "CRUST"])("an all-capital dish component is a section heading: %s", (line) => {
+  // semantic-v2 (CONTRACT §12.8: a line of generic component words, optionally after a dish word, is a heading in any
+  // case): the semantic-v1 expectation (needs_review) is superseded for these four; "SYRUP" is not a generic component
+  it.each(["PIE CRUST", "SAUCE", "DRESSING", "CRUST"])("an all-capital generic component is a section heading: %s", (line) => {
     expect(read(line)).toMatchObject({ status: "unsupported", reasons: ["section_heading"] });
   });
 
@@ -186,7 +186,6 @@ describe("real ingredients are never refused as recipe facts (N6)", () => {
 describe("inch marks, dimensions and feet are sizes (N8)", () => {
   it.each([
     ['12" pizza crust', "pizza crust", '12"'], ['9" pie crust', "pie crust", '9"'], ['10" tortillas', "tortillas", '10"'],
-    ["9x13 inch pan", "pan", "9x13 inch"], ["13x9 pan", "pan", "13x9"], ["9 by 13 inch pan", "pan", "9 by 13 inch"],
     ["2 feet sausage casing", "sausage casing", "2 feet"], ["3 feet twine", "twine", "3 feet"], ["1 yard cheesecloth", "cheesecloth", "1 yard"],
   ])("%s → note, no amount", (line, name, note) => {
     const r = read(line);
@@ -194,7 +193,7 @@ describe("inch marks, dimensions and feet are sizes (N8)", () => {
   });
 
   // semantic-v2 (CONTRACT §12.8 equipment): a sized equipment name is not an ingredient (was: needs_review with the size noted)
-  it.each(["8″ springform pan", '9 x 13" baking dish'])("%s → unsupported (equipment)", (line) => {
+  it.each(["8″ springform pan", '9 x 13" baking dish', "9x13 inch pan", "13x9 pan", "9 by 13 inch pan"])("%s → unsupported (equipment)", (line) => {
     expect(read(line)).toMatchObject({ status: "unsupported", reasons: ["not_an_ingredient"] });
   });
 

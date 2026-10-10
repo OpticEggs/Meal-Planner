@@ -13,9 +13,9 @@
 import type { ReasonCode } from "../../contract";
 import { adjacent, hasNumber, isGroup, isNumberish, isSym, isWord, type Tok } from "./lexer";
 import {
-  APPROX_SYMBOLS, APPROX_WORDS, CARDINALS, COMPONENT_NOUNS, CREDIT_OPENERS, DIET_POINT_HEADS, DIET_POINT_WORDS, EQUIPMENT_HEADS, EQUIPMENT_LABEL_WORDS,
+  APPROX_SYMBOLS, APPROX_WORDS, CARDINALS, CREDIT_OPENERS, DISH_WORDS, GENERIC_COMPONENT_WORDS, DIET_POINT_HEADS, DIET_POINT_WORDS, EQUIPMENT_HEADS, EQUIPMENT_LABEL_WORDS,
   EQUIPMENT_MODIFIERS, FACT_UNITS, HEADING_WORDS, INSTRUCTION_CUES, INSTRUCTION_VERBS, META_LABEL_WORDS, META_NOUNS, NEED_WORDS, NOTE_LABELS, NUTRIENT_WORDS,
-  PAGE_KEYWORDS, PAGE_WORDS, PART_HEAD_WORDS, RATING_HEADS, RATING_WORDS, RECIPE_PART_WORDS, SERVING_FACT_HEADS, SERVING_FACT_WORDS, SERVING_LABEL_WORDS,
+  PAGE_KEYWORDS, PAGE_WORDS, RATING_HEADS, RATING_WORDS, RECIPE_PART_WORDS, SERVING_FACT_HEADS, SERVING_FACT_WORDS, SERVING_LABEL_WORDS,
   TIME_LABEL_WORDS, TIME_WORDS, WEAK_INSTRUCTION_VERBS, YIELD_WORDS, unitOfWord,
 } from "./lexicon";
 import { findUnstated, unstatedAt } from "./remarks";
@@ -81,7 +81,7 @@ export function nonIngredientReason(toks: readonly Tok[]): ReasonCode | null {
     if (servingFact(label, value) || dietPoints(label, value) || metadataLabel(label)) return "not_an_ingredient";
     if (labelWords.some((w) => NEED_WORDS.has(w.lower)) && equipmentPhrase(value)) return "not_an_ingredient"; // "You will need: 2 baking sheets"
   }
-  if (numericLead(toks)) return equipmentPhrase(toks) ? "not_an_ingredient" : null; // "1 9x13-inch baking pan"
+  if (numericLead(toks)) return equipmentPhrase(toks) || scalingControls(toks) ? "not_an_ingredient" : null; // "1 9x13-inch baking pan", "1x 2x 3x"
   if (hasUrl(toks)) return "not_an_ingredient";
   // "Oven: 350°F", "Prep time: 10 minutes"
   if (colon > 0 && isNumberish(toks[colon + 1]) && temperatureOrTimeAt(toks, colon + 1)) return "not_an_ingredient";
@@ -94,7 +94,7 @@ export function nonIngredientReason(toks: readonly Tok[]): ReasonCode | null {
   if (lead > 0 && lead < toks.length && factValue(toks.slice(lead), true)) return "not_an_ingredient";
   const pointsLead = toks.findIndex((t) => !isWord(t));
   if (pointsLead > 0 && dietPoints(toks.slice(0, pointsLead), toks.slice(pointsLead))) return "not_an_ingredient"; // "WW Points 4"
-  if (methodStep(toks) || creditLine(toks) || pageFurniture(toks) || equipmentPhrase(toks)) return "not_an_ingredient";
+  if (methodStep(toks) || creditLine(toks) || pageFurniture(toks) || equipmentPhrase(toks) || scalingControls(toks)) return "not_an_ingredient";
   // headings
   if (isSym(last, ":")) return "section_heading"; // "For the sauce:", "Marinade:"
   if (isSym(toks[0], "#")) return "section_heading";
@@ -230,6 +230,16 @@ export function recipeTimeLine(toks: readonly Tok[]): boolean {
   return timed;
 }
 
+/** SCALING CONTROLS of a recipe card: "1x 2x 3x", "½x 1x 2x" — only numbers each followed by "x" (§12.2 iii, page furniture). */
+export function scalingControls(toks: readonly Tok[]): boolean {
+  let pairs = 0;
+  for (let i = 0; i < toks.length; i += 2) {
+    if (!isNumberish(toks[i]) || !(isWord(toks[i + 1], "x") || isSym(toks[i + 1], "×"))) return false;
+    pairs++;
+  }
+  return pairs >= 2;
+}
+
 /** METHOD STEP: "Step 2", "Step 3: Add the onions", "STEP ONE" — "step" and its number open the line. */
 export function methodStep(toks: readonly Tok[]): boolean {
   const n = toks[1];
@@ -252,7 +262,10 @@ export function pageFurniture(toks: readonly Tok[]): boolean {
 }
 
 /** Equipment heads that never name food on their own ("skillet", "food processor"); other heads need an equipment modifier. */
-const PLAIN_EQUIPMENT = new Set(["skillet", "skillets", "mixer", "mixers", "processor", "blender", "thermometer", "colander", "ladle", "tongs", "peeler", "grater", "zester", "sieve", "strainer", "spatula", "spatulas", "whisk", "mandoline", "ramekin", "ramekins"]);
+const PLAIN_EQUIPMENT = new Set([
+  "skillet", "skillets", "mixer", "mixers", "processor", "blender", "thermometer", "colander", "ladle", "tongs", "peeler", "grater", "zester", "sieve", "strainer",
+  "spatula", "spatulas", "whisk", "mandoline", "ramekin", "ramekins", "pan", "pans", "skewer", "skewers", "foil", "twine", "liner", "liners", "parchment",
+]);
 
 /**
  * EQUIPMENT: the part before any comma or bracket is [count] [size] [equipment modifiers] EQUIPMENT_HEAD ("2 baking
@@ -275,21 +288,22 @@ export function equipmentPhrase(toks: readonly Tok[]): boolean {
 }
 
 /**
- * SECTION HEADING by its last word: in capitals and ending in a dish component ("SAUCE", "PIZZA DOUGH", "CAKE LAYERS"),
- * or in any case ending in a recipe part that is never bought (PART_HEAD_WORDS: "Topping", "Cake Layers", "Filling"),
- * written as one word or with every word capitalised ("whipped topping" may be food). No number, comma, bracket or
- * no-fixed-amount phrase ("SALT TO TASTE" is food).
+ * SECTION HEADING by its words (CONTRACT §12.8): a line with no amount, comma or bracket made only of generic component
+ * words (GENERIC_COMPONENT_WORDS: sauce, dressing, glaze, topping, filling, frosting, crust, dough, batter, marinade,
+ * garnish, base, layers, assembly), optionally after dish words (DISH_WORDS: "Cake Layers", "Pie Crust", "Pizza Dough"),
+ * in any case ("SAUCE", "Dressing"); also "To serve". A specific food ("Pesto", "Hot sauce", "Whipped topping") is not one.
  */
 export function componentHeading(toks: readonly Tok[]): boolean {
-  if (hasNumber(toks) || toks.some((t) => isGroup(t) || isSym(t, ",", ";")) || findUnstated(toks) !== null) return false;
-  const ws = words(toks);
-  if (ws.length === 0 || ws.length > 4 || !toks.every((t) => isWord(t) || isSym(t, "&", "-", "–", "*", "_", "#", "."))) return false;
-  const lastW = ws[ws.length - 1].lower;
-  const letters = ws.map((w) => w.text).join("");
-  const capitals = letters.length >= 3 && letters === letters.toUpperCase() && letters !== letters.toLowerCase();
-  if (capitals && (COMPONENT_NOUNS.has(lastW) || PART_HEAD_WORDS.has(lastW))) return true;
-  const titled = ws.every((w) => /^\p{Lu}/u.test(w.text) || ["and", "for", "the", "of", "&"].includes(w.lower));
-  return PART_HEAD_WORDS.has(lastW) && (ws.length === 1 || titled);
+  if (hasNumber(toks) || toks.some((t) => isGroup(t) || isSym(t, ",", ";"))) return false;
+  if (!toks.every((t) => isWord(t) || isSym(t, "&", "-", "–", "*", "_", "#", ".", "/"))) return false;
+  const ws = words(toks).map((w) => w.lower);
+  if (ws.length === 0 || ws.length > 5) return false;
+  if (ws.join(" ") === "to serve" || ws.join(" ") === "for serving") return true;
+  if (findUnstated(toks) !== null) return false;
+  let k = 0;
+  while (k < ws.length && (DISH_WORDS.has(ws[k]) || ws[k] === "the" || ws[k] === "for")) k++;
+  const rest = ws.slice(k);
+  return rest.length > 0 && rest.every((w) => GENERIC_COMPONENT_WORDS.has(w) || w === "and") && GENERIC_COMPONENT_WORDS.has(rest[rest.length - 1]);
 }
 
 /** A determiner or preposition after the first word, outside a no-fixed-amount phrase ("to taste" is not a cue). */

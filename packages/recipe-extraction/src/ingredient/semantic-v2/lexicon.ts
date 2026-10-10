@@ -505,5 +505,28 @@ export const INSTRUCTION_CUES = setOf("the a an all into onto with until in to f
 export const NOTE_LABELS = setOf("note notes tip tips equipment instructions directions method step steps");
 export const HEADING_WORDS = setOf("ingredients ingredient");
 
-/** List markers removed from the start of a line. */
-export const BULLETS = new Set(["-", "•", "·", "*", "–", "—", "‣", "◦", "▪", "▫", "■", "□", "●", "○", "►", "▸", "➤", "→", "✓", "✔", "+"]);
+/** List markers removed from the start of a line (semantic-v2 adds the checkbox glyphs ▢ ☐ ◻ ❏ of recipe cards, §12.13). */
+export const BULLETS = new Set(["-", "•", "·", "*", "–", "—", "‣", "◦", "▪", "▫", "■", "□", "●", "○", "►", "▸", "➤", "→", "✓", "✔", "+", "▢", "☐", "◻", "◽", "❏", "❑"]);
+
+/**
+ * REMARK SECOND-AMOUNT MARKERS (CONTRACT §12.11): an amount inside a remark measures a source, another state or a
+ * substitute — not the line's food — when the remark also says where it comes from or what it becomes ("from", "makes",
+ * "yields"), names a substitution ("use", "substitute", "instead") or another state of the food (dry, uncooked, cooked).
+ */
+export const REMARK_SOURCE_WORDS = setOf("from makes make yields yield using use substitute substituting instead replace replacing");
+export const REMARK_STATE_WORDS = setOf("dry dried uncooked cooked raw");
+
+/**
+ * Generic recipe components (CONTRACT §12.8): a line with no amount made only of these words, optionally after dish
+ * words ("Cake Layers", "Pie Crust", "Pizza Dough"), is a section heading in any case ("SAUCE", "Dressing").
+ */
+export const GENERIC_COMPONENT_WORDS = setOf(
+  "sauce sauces dressing dressings glaze topping toppings filling fillings frosting icing crust crusts dough batter marinade garnish garnishes " +
+    "base layer layers assembly streusel decoration decorations",
+);
+export const DISH_WORDS = setOf(
+  "cake cakes pie pies pizza pizzas tart tarts salad salads bread cookie cookies cupcake cupcakes cheesecake brownie brownies muffin muffins pancake " +
+    "pancakes waffle waffles crepe crepes quiche galette cobbler crisp crumble bar bars loaf roll rolls bun buns biscuit biscuits scone scones dumpling " +
+    "dumplings taco tacos burger burgers sandwich sandwiches soup stew pasta noodle noodles bowl bowls wrap wraps enchilada enchiladas casserole lasagna " +
+    "dessert main side trifle pudding sundae shortcake focaccia flatbread pretzel pretzels donut donuts doughnut doughnuts sponge chocolate vanilla",
+);

@@ -33,7 +33,8 @@ export interface NormalizedLine {
 
 export function normalizeLine(input: unknown): NormalizedLine {
   const raw = typeof input === "string" ? input : "";
-  const full = raw.replace(JOINERS, "").replace(SOFT_HYPHEN, " ").replace(CONTROLS, " ").replace(/\s+/g, " ").trim();
+  // (semantic-v2, CONTRACT §12.13) names are recorded in NFC: a combining accent is read as its composed letter
+  const full = raw.normalize("NFC").replace(JOINERS, "").replace(SOFT_HYPHEN, " ").replace(CONTROLS, " ").replace(/\s+/g, " ").trim();
   if (full.length <= LIMITS.maxLineChars) return { raw, normalized: full, truncated: false };
   let cut = LIMITS.maxLineChars;
   const last = full.charCodeAt(cut - 1);

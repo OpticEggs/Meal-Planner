@@ -18,7 +18,7 @@ import {
 } from "./lexicon";
 import { amountStartsAt, groupAmounts, isPriceGroup, placeSecondary, readAmountPhrase, readStatedAmount, type AmountSlots } from "./amount";
 import { classifyGroup, classifyPiece, dropBarePrices, remarkOnly, splitOr, textOf, trimEdges, unstatedAt } from "./remarks";
-import { readNumber } from "./quantity";
+import { fractionUnitWord, readNumber } from "./quantity";
 import type { Effects } from "./types";
 import { distributeOptions, foodHead, isRemarkOption } from "./alternatives";
 import { readUnit, type UnitRead } from "./unit";
@@ -428,6 +428,8 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
       }
       return o.length > 0;
     });
+    // (semantic-v2) an option holding a left-over unit, multiplier or unknown unit token is not a clean option
+    if (usable.some((o) => nameLeftoverGuard(text, o))) flag();
     const written = usable.map((o) => nameText(text, o)).filter((x) => x.length > 0);
     // a shared head ("chicken or vegetable broth", "1 tbsp fresh or 1 tsp dried thyme"); never when the
     // earlier option is a whole ingredient or already in the head ("2 cups flour or 1 cup almond flour")
@@ -508,6 +510,9 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
     }
     toks = [];
   }
+  // (semantic-v2) the general final guard: whatever path produced this name, a left-over unit, multiplier or unknown
+  // unit token in it means the amount was not fully read — a person checks
+  if (options === null && nameLeftoverGuard(text, toks)) flag();
   const name = options === null ? nameText(text, toks) : "";
   const span: [number, number] | null = options === null && toks.length > 0 && name.length > 0 ? [toks[0].s, toks[toks.length - 1].e] : null;
   return { name: name.length > 0 ? name : null, nameSpan: span, options, trailingUnit, plusRemark, amountUnclear, distributive };
@@ -532,6 +537,31 @@ export function postFoodCountUnit(text: string, toks: readonly Tok[]): UnitRead 
   const before = toks.slice(0, -1).filter((t) => t.kind === "word") as { lower: string }[];
   if (!before.some((w) => !REMARK_WORDS.has(w.lower) && !SIZE_WORDS.has(w.lower) && !TRAILING_PREP_WORDS.has(w.lower) && !FUNCTION_WORDS.has(w.lower))) return null;
   return readUnit(text, toks, toks.length - 1);
+}
+
+/**
+ * REMAINING-TOKEN NAME GUARD (semantic-v2, CONTRACT §2 "never contains the amount, unit or package size", §12.1, §12.2,
+ * §12.14): true when the tokens of a name still hold a weight or volume unit word ("x cup milk", "half-cup milk"), a
+ * fraction-unit compound, a stand-alone multiplier "x"/"×", or a lone lower-case letter opening the name that is no
+ * known unit ("1 m sausage"). Food names that begin with a unit spelling ("pound cake", "gram flour", "cup noodles":
+ * UNIT_WORDS_IN_FOOD_NAMES) and one-letter unit abbreviations inside a name ("vitamin C powder") are not left-overs.
+ * Numbers are not checked here: a number left in a name is cut off by `stopAtNumber` unless it names the product.
+ */
+export function nameLeftoverGuard(text: string, toks: readonly Tok[]): boolean {
+  const ws = toks.filter((t) => t.kind === "word") as { lower: string; text: string; s: number; e: number }[];
+  for (let i = 0; i < toks.length; i++) {
+    const t = toks[i];
+    if (isSym(t, "×") || (isWord(t, "x") && !adjacent(toks[i - 1], t))) return true;
+    if (!isWord(t)) continue;
+    if (fractionUnitWord(t) !== null) return true;
+    const u = readUnit(text, toks, i);
+    if (u !== null && (u.unit.dimension === "mass" || u.unit.dimension === "volume")) {
+      const written = text.slice(u.s, u.e).toLowerCase().replace(/\.$/, "");
+      if (written.length > 1 && !UNIT_WORDS_IN_FOOD_NAMES.has(written)) return true;
+    }
+  }
+  const first = ws[0];
+  return first !== undefined && toks[0] === (first as unknown as Tok) && /^[b-z]$/.test(first.text) && ws.length > 1 && unitOfWord(first.text) === null;
 }
 
 /** The option's first word is a weight or volume unit ("floz precooked", "kg"): no food is named by it. */

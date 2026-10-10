@@ -14,7 +14,7 @@
  */
 import { UNIT_REGISTRY, type AmountUnstated } from "../../contract";
 import { allWords, hasNumber, isGroup, isSym, isWord, wordsAt, type GroupTok, type Tok } from "./lexer";
-import { APPLICATION_GERUNDS, APPROX_WORDS, LEADING_JUNK, PREP_ADVERBS, TRAILING_PREP_WORDS, unitOfWord, FORM_WORDS, FUNCTION_WORDS, IF_DESIRED, REMARK_WORDS, SIZE_WORDS, UNSTATED_PHRASES } from "./lexicon";
+import { APPLICATION_GERUNDS, APPROX_WORDS, LEADING_JUNK, PREP_ADVERBS, REMARK_SOURCE_WORDS, REMARK_STATE_WORDS, TRAILING_PREP_WORDS, unitOfWord, FORM_WORDS, FUNCTION_WORDS, IF_DESIRED, REMARK_WORDS, SIZE_WORDS, UNSTATED_PHRASES } from "./lexicon";
 import { amountStartsAt, isPriceGroup, readAmountPhrase } from "./amount";
 import { readUnit } from "./unit";
 import { emptyEffects, mergeEffects, type Effects } from "./types";
@@ -277,6 +277,8 @@ function classifyBare(text: string, toks: readonly Tok[], fx: Effects): void {
       return;
     }
   }
+  // (semantic-v2, §12.11) an amount of a source, another state or a substitute: a second amount → review
+  if (remarkSecondAmount(bare)) fx.unassigned++;
   // a longer remark: note text; a phrase inside it still says "no fixed amount" when no amount is stated
   const inner = findUnstated(bare);
   if (inner) {
@@ -284,6 +286,19 @@ function classifyBare(text: string, toks: readonly Tok[], fx: Effects): void {
     if (inner.optional) fx.optional = true;
   }
   fx.notes.push({ s, text: flat });
+}
+
+/**
+ * REMARK SECOND AMOUNT (CONTRACT §12.11): the remark states an amount (a number, or "half"/"one"…) and marks it as the
+ * amount of a source, another state or a substitute — "(from 1/3 cup dry)", "(1 cup dry makes 3 cooked)", "(from 1
+ * lime)", "use half for table salt", "(about 6 oz dry)". A remark that only restates or describes ("about 2 medium", "1
+ * cup chopped", "cut into 6 pieces") is not one.
+ */
+export function remarkSecondAmount(toks: readonly Tok[]): boolean {
+  const ws = allWords(toks);
+  const counted = hasNumber(toks) || ws.some((w) => w === "half" || w === "one" || w === "two" || w === "three");
+  if (!counted) return false;
+  return ws.some((w) => REMARK_SOURCE_WORDS.has(w) || REMARK_STATE_WORDS.has(w));
 }
 
 /** Removes bare price annotations ("$0.25", "$1.23*") from a run. */

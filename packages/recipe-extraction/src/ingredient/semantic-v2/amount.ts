@@ -34,6 +34,15 @@ const OTHER_SYSTEM_WORDS = new Set(["uk", "imperial", "british", "australian", "
 /** US customary volume units whose size differs in other systems. */
 const US_VOLUME = new Set(["tsp", "tbsp", "fl_oz", "cup", "pint", "quart", "gallon"]);
 
+/**
+ * FOREIGN-UNIT REMARK (CONTRACT §12.14): a bracket anywhere in the line that names only a non-US measurement system
+ * ("1 pint milk (UK)", "2 cups flour (metric)") when the unit is a US volume whose size differs elsewhere.
+ */
+export function foreignSystemRemark(toks: readonly Tok[], unit: UnitV1 | null): boolean {
+  if (unit === null || !US_VOLUME.has(unit.canonical)) return false;
+  return toks.some((t) => isGroup(t) && t.children.length > 0 && t.children.every((c) => (isWord(c) && (OTHER_SYSTEM_WORDS.has(c.lower) || ["measure", "measures", "measurements", "cup", "cups", "pint", "pints", "size"].includes(c.lower))) || isSym(c, ".")) && t.children.some((c) => isWord(c) && OTHER_SYSTEM_WORDS.has(c.lower)));
+}
+
 function exactOf(value: Rational, decimal: boolean): ExactQuantity | null {
   return toExactQuantity(value, decimal ? "decimal" : "fraction");
 }
@@ -190,7 +199,22 @@ export function sameAmount(a: ExactQuantity, ua: UnitV1, b: ExactQuantity, ub: U
   const x = inBase(a, ua);
   const y = inBase(b, ub);
   if (x === null || y === null) return null;
-  return withinRestatementTolerance(x, y);
+  return withinRestatementTolerance(x, y) || roundedConversion(x, ua, b, ub);
+}
+
+/**
+ * The second restatement test of §12.6: the restated number is a whole number equal to the exact conversion of the
+ * first-stated amount rounded to a whole number of the restated unit ("1/4 tsp (1 ml)", "3/4 tsp (4 ml)", "1 lb (454 g)").
+ * Halves round up. `firstBase` is the first amount in the dimension's base unit. Only a restatement in a unit no larger
+ * than the first one is a rounding convention (a whole number of a larger unit hides more than it states: "2 lb (1 kg)"
+ * is outside both tests, §12.6 policy).
+ */
+export function roundedConversion(firstBase: Rational, ua: UnitV1, restated: ExactQuantity, ub: UnitV1): boolean {
+  if (restated.denominator !== "1" || cmp(base(ub), base(ua)) > 0) return false;
+  const converted = div(firstBase, base(ub)); // exact, in the restated unit
+  const twice = BigInt(2) * converted.n + converted.d; // round half up: floor((2n + d) / 2d)
+  const rounded = twice / (BigInt(2) * converted.d);
+  return rounded > BigInt(0) && rounded.toString() === restated.numerator;
 }
 
 /** |restated − first| ≤ RESTATEMENT_TOLERANCE · first (both positive, in the same base unit). */

@@ -29,6 +29,8 @@ describe("not ingredients → unsupported, nothing read", () => {
     ["Recipe adapted from www.example.org", "not_an_ingredient"],
     ["•", "not_an_ingredient"],
     ["()", "not_an_ingredient"],
+    // semantic-v2 (CONTRACT §12.8): a generic component word alone is a heading in any case (semantic-v1: needs_review)
+    ["Dressing", "section_heading"],
   ])("%j → %s", (line, reason) => {
     const r = read(line);
     expect(r).toMatchObject({ status: "unsupported", name: null, quantity: null, unit: null, packageSize: null, reasons: [reason] });
@@ -48,7 +50,8 @@ describe("ingredient lines that resemble them", () => {
     ["Season salt", "needs_review"],
     ["Garnish: chopped parsley", "ready"],
     ["1 cup pesto (see https://www.example.com/pesto)", "ready"],
-    ["Dressing", "needs_review"],
+    ["Pesto", "needs_review"],
+    ["Hot sauce", "needs_review"],
     ["SALT TO TASTE", "ready"],
   ])("%s → %s", (line, status) => {
     expect(read(line).status).toBe(status);
