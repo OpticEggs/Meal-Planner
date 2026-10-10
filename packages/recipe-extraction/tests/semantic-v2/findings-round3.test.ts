@@ -205,12 +205,12 @@ describe("inch marks, dimensions and feet are sizes (N8)", () => {
 describe("options are never invented, dropped or stripped of their food (SF-a)", () => {
   it.each([
     ["2 cups greens, spinach or kale", ["spinach", "kale"]], ["1 cup nuts, almonds or cashews", ["almonds", "cashews"]],
-    ["2 lbs potatoes, russet or Yukon gold", ["russet", "Yukon gold"]], ["1 cup milk, dairy or non-dairy", ["dairy milk", "non-dairy milk"]],
+    ["2 lbs potatoes, russet or Yukon gold", ["russet potatoes", "Yukon gold potatoes"]], ["1 cup milk, dairy or non-dairy", ["dairy milk", "non-dairy milk"]],
     ["1 lb bacon (smoked or unsmoked)", ["smoked bacon", "unsmoked bacon"]], ["1 cup Greek or plain yogurt", ["Greek yogurt", "plain yogurt"]],
     ["2 tbsp maple or agave syrup", ["maple syrup", "agave syrup"]], ["1 cup pinto or black beans", ["pinto beans", "black beans"]],
     ["1 lb flank or skirt steak", ["flank steak", "skirt steak"]], ["1 cup oats (rolled or quick-cooking)", ["rolled oats", "quick-cooking oats"]],
     ["1 tbsp fresh or 1 tsp dried thyme", ["fresh thyme", "dried thyme"]], ["1 lb fresh or 12 oz frozen spinach", ["fresh spinach", "frozen spinach"]],
-    ["1 cup cooked or 1/2 cup dry quinoa", ["cooked quinoa", "dry quinoa"]], ["1 cup Swiss or provolone cheese", ["Swiss cheese", "provolone cheese"]],
+    ["1 cup cooked or 1/2 cup dry quinoa", ["cooked quinoa", "dry quinoa"]], ["1 cup Swiss or provolone cheese", ["Swiss", "provolone cheese"]],
     ["2 tbsp white or yellow miso", ["white miso", "yellow miso"]], ["1 cup sweet or dry vermouth", ["sweet vermouth", "dry vermouth"]],
     ["1 lb sea or bay scallops", ["sea scallops", "bay scallops"]], ["1 tbsp fresh or 1 tsp ground ginger", ["fresh ginger", "ground ginger"]],
     ["1 cup yogurt, Greek or regular", ["Greek yogurt", "regular yogurt"]], ["2 cups milk, whole or low-fat", ["whole milk", "low-fat milk"]],
@@ -219,14 +219,14 @@ describe("options are never invented, dropped or stripped of their food (SF-a)",
     expect(read(line)).toMatchObject({ status: "needs_review", name: null, alternatives: options });
   });
 
+  // semantic-v2 (CONTRACT §12.7 e, f): "X, A or B" lists kinds of a category X as [A, B] and is otherwise a list of every
+  // item; semantic-v1 kept X as the name with the choice in the note (an S5 shape: one option privileged)
   it.each([
-    ["1 cup cheese, cheddar or Swiss", "cheese", "cheddar or Swiss"], ["1 lb fish, cod or haddock", "fish", "cod or haddock"],
-    ["1 lb pasta, penne or rigatoni", "pasta", "penne or rigatoni"], ["1 lb beef, chuck or brisket", "beef", "chuck or brisket"],
-    ["2 cups lettuce, romaine or iceberg", "lettuce", "romaine or iceberg"], ["1 cup milk, cream or half-and-half", "milk", "cream or half-and-half"],
-  ])("unsure whether the food is one of the options: %s → the food, the choice as a note, a person decides", (line, name, note) => {
-    const r = read(line);
-    expect(r).toMatchObject({ status: "needs_review", name, note, alternatives: [] });
-    expect(r.reasons).toContain("unclassified");
+    ["1 cup cheese, cheddar or Swiss", ["cheddar", "Swiss"]], ["1 lb fish, cod or haddock", ["cod", "haddock"]],
+    ["1 lb pasta, penne or rigatoni", ["penne", "rigatoni"]], ["1 lb beef, chuck or brisket", ["chuck", "brisket"]],
+    ["2 cups lettuce, romaine or iceberg", ["romaine", "iceberg"]], ["1 cup milk, cream or half-and-half", ["milk", "cream", "half-and-half"]],
+  ])("kinds of a category, or a list: %s → every option, no name", (line, options) => {
+    expect(read(line)).toMatchObject({ status: "needs_review", name: null, alternatives: options });
   });
 
   it.each(["1 cup cheese (such as cheddar or Gruyère)", "1 cup cheese (like cheddar or Colby)", "1 cup cheese (e.g. cheddar or Colby)"])("examples in a remark are a note: %s", (line) => {

@@ -14,7 +14,7 @@
  */
 import { UNIT_REGISTRY, type AmountUnstated } from "../../contract";
 import { allWords, hasNumber, isGroup, isSym, isWord, wordsAt, type GroupTok, type Tok } from "./lexer";
-import { APPLICATION_GERUNDS, APPROX_WORDS, LEADING_JUNK, PREP_ADVERBS, REMARK_SOURCE_WORDS, REMARK_STATE_WORDS, TRAILING_PREP_WORDS, unitOfWord, FORM_WORDS, FUNCTION_WORDS, IF_DESIRED, REMARK_WORDS, SIZE_WORDS, UNSTATED_PHRASES } from "./lexicon";
+import { ADJECTIVE_WORDS, APPLICATION_GERUNDS, APPROX_WORDS, LEADING_JUNK, PREP_ADVERBS, REMARK_SOURCE_WORDS, REMARK_STATE_WORDS, TRAILING_PREP_WORDS, unitOfWord, FORM_WORDS, FUNCTION_WORDS, IF_DESIRED, REMARK_WORDS, SIZE_WORDS, UNSTATED_PHRASES } from "./lexicon";
 import { amountStartsAt, isPriceGroup, readAmountPhrase } from "./amount";
 import { readUnit } from "./unit";
 import { emptyEffects, mergeEffects, type Effects } from "./types";
@@ -140,6 +140,15 @@ export function remarkOnly(toks: readonly Tok[]): boolean {
   return ws.length > 0 && ws.every((w) => remark(w) || FUNCTION_WORDS.has(w) || Object.prototype.hasOwnProperty.call(FORM_WORDS, w) || prep(w));
 }
 
+/** Sourcing words: where the food comes from (§7.8, §12.7 f) — an option naming one is about sourcing, not another food. */
+const SOURCING_WORDS = new Set(["homemade", "home-made", "store-bought", "storebought", "store-made", "bought", "purchased", "premade", "pre-made", "ready-made", "readymade", "jarred", "bottled", "canned", "boxed", "packaged", "scratch"]);
+
+/** An option that names a sourcing word and otherwise only version words ("low-sodium boxed", "organic store-bought"). */
+function sourcingRemark(toks: readonly Tok[]): boolean {
+  const ws = allWords(toks);
+  return ws.some((w) => SOURCING_WORDS.has(w)) && ws.every((w) => SOURCING_WORDS.has(w) || REMARK_WORDS.has(w) || ADJECTIVE_WORDS.has(w) || FUNCTION_WORDS.has(w) || /^(?:low|reduced|no|un|non)-/.test(w));
+}
+
 /** Remark words that name a different product when offered as a choice ("boneless or bone-in", "whole or ground"). */
 const PRODUCT_CUT_WORDS = new Set(["bone-in", "boneless", "skin-on", "skinless", "whole", "ground", "shelled", "unshelled", "unpeeled"]);
 
@@ -232,7 +241,9 @@ function classifyBare(text: string, toks: readonly Tok[], fx: Effects): void {
     const explicit = options[0].length === 0; // "or cream", "(or 1 cup water)"
     const opts = explicit ? options.slice(1) : options;
     const complete = opts.every((o) => o.length > 0);
-    const isRemark = complete && opts.every((o) => remarkOnly(o) && !hasNumber(o));
+    // (semantic-v2, §12.7 f) "(or see recipe)", "(or low-sodium boxed)": an option that opens like a remark, or a choice
+    // of sourcing (homemade, boxed, jarred…) described only by version words, is a note, not another ingredient
+    const isRemark = complete && opts.every((o) => (remarkOnly(o) || REMARK_OPENER.test(textOf(text, o)) || sourcingRemark(o)) && !hasNumber(o));
     const short = opts.every((o) => o.filter((t) => t.kind === "word").length <= 3 && !o.some(isGroup));
     // an option that is a phrase or starts with a conjunction ("container/to taste") is not a food
     const junk = opts.some((o) => {

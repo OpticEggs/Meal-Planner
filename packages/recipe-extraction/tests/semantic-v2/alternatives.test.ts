@@ -14,7 +14,8 @@ describe("a choice of ingredients", () => {
     ["1 tbsp lemon or lime juice", ["lemon juice", "lime juice"]],
     ["2 cups fresh or frozen peas", ["fresh peas", "frozen peas"]],
     ["1/4 cup red or white wine vinegar", ["red wine vinegar", "white wine vinegar"]],
-    ["1 lb ground beef or turkey", ["ground beef", "turkey"]],
+    // (semantic-v2, CONTRACT §12.7 c: a leading product-form word is shared — semantic-v1 gave "turkey")
+    ["1 lb ground beef or turkey", ["ground beef", "ground turkey"]],
     ["1 cup heavy cream or half-and-half", ["heavy cream", "half-and-half"]],
     ["2 tablespoons soy sauce (or tamari)", ["soy sauce", "tamari"]],
     ["1 cup milk (or use cream)", ["milk", "cream"]],
@@ -93,7 +94,7 @@ describe("option helpers", () => {
     expect(distributeOptions(["chicken", "vegetable broth"])).toEqual(["chicken broth", "vegetable broth"]);
     expect(distributeOptions(["red", "green bell pepper"])).toEqual(["red bell pepper", "green bell pepper"]);
     expect(distributeOptions(["milk", "cream"])).toEqual(["milk", "cream"]);
-    expect(distributeOptions(["ground beef", "turkey"])).toEqual(["ground beef", "turkey"]);
+    expect(distributeOptions(["ground beef", "turkey"])).toEqual(["ground beef", "ground turkey"]); // semantic-v2: §12.7 c
     expect(distributeOptions(["olive oil", "melted butter"])).toEqual(["olive oil", "melted butter"]);
     expect(distributeOptions(["x"])).toEqual(["x"]);
   });

@@ -267,6 +267,72 @@ export const STANDALONE_INGREDIENTS = setOf(
 );
 
 /**
+ * SHARED-HEAD MODIFIERS (semantic-v2, CONTRACT §12.7 b, f): for a product head, the words that name what the product is
+ * made from or which kind it is, and that do NOT name a product of that kind on their own — "chicken" is not a broth,
+ * "lemon" is not a juice, "hamburger" is not a bun. Before "or … <head>" such a word shares the head ("lemon or lime
+ * juice" → lemon juice, lime juice; "chicken, beef, or vegetable broth"); a word that is a product of the kind by itself
+ * ("feta or goat cheese", "sriracha or hot sauce", "cumin or chili powder", "tea or apple juice") is not listed, so
+ * those options stay as written. A closed list of modifier words per head, not of inputs.
+ */
+const SHARED_HEADS: Readonly<Record<string, string>> = {
+  broth: "chicken beef vegetable veggie turkey fish seafood bone mushroom veal pork ham lamb duck shrimp miso",
+  stock: "chicken beef vegetable veggie turkey fish seafood bone mushroom veal pork ham lamb duck shrimp",
+  bouillon: "chicken beef vegetable fish",
+  juice: "lemon lime orange grapefruit apple pineapple cranberry grape tomato carrot pomegranate cherry",
+  zest: "lemon lime orange grapefruit",
+  buns: "hamburger burger hot_dog hotdog slider hoagie sub brioche dinner sandwich",
+  rolls: "dinner sandwich hoagie sub kaiser brioche",
+  milk: "almond oat soy rice coconut cashew hemp dairy",
+  oil: "olive vegetable canola coconut sesame peanut avocado sunflower grapeseed corn safflower walnut",
+  vinegar: "rice wine cider apple_cider white_wine red_wine rice_wine balsamic sherry malt champagne",
+  flour: "all-purpose bread cake pastry almond coconut rice oat chickpea tapioca spelt rye buckwheat corn self-rising",
+  extract: "vanilla almond peppermint lemon orange maple coconut",
+  seeds: "sesame poppy pumpkin sunflower chia flax caraway fennel",
+  noodles: "rice egg glass udon soba",
+  powder: "garlic onion chili chile curry cocoa baking ginger mustard",
+  paste: "tomato curry chili garlic ginger",
+  sauce: "soy fish tomato barbecue bbq pizza pasta",
+  rice: "jasmine basmati arborio sushi",
+  beans: "kidney pinto navy cannellini lima garbanzo great_northern refried",
+  yogurt: "greek vanilla coconut soy",
+  syrup: "maple corn simple agave golden",
+  greens: "collard mustard turnip beet salad",
+  tortillas: "corn flour",
+  scallops: "sea bay",
+  seasoning: "taco cajun creole poultry steak fajita",
+  potatoes: "russet yukon_gold red new fingerling baking",
+  steak: "flank skirt hanger flat_iron strip sirloin round cube minute tri-tip porterhouse t-bone",
+  chops: "pork lamb veal",
+};
+export const SHARED_HEAD_MODIFIERS: Readonly<Record<string, ReadonlySet<string>>> = Object.fromEntries(
+  Object.entries(SHARED_HEADS).flatMap(([head, mods]) => {
+    // ("hot_dog": a two-word source, written with a space in a line)
+    const set = new Set(words(mods).map((w) => w.replace(/_/g, " ")));
+    const singular = head.endsWith("s") ? head.slice(0, -1) : `${head}s`;
+    return [[head, set], [singular, set]];
+  }),
+);
+
+/**
+ * Category nouns (CONTRACT §12.7 f): "X, A or B" with X one of these lists kinds of X ("nuts, pecans or walnuts",
+ * "cheese, cheddar or Swiss", "greens, spinach or kale") — the options are A and B, not X.
+ */
+export const CATEGORY_NOUNS = setOf(
+  "nuts nut cheese cheeses greens herbs herb berries beans mushrooms fish seafood meat beef pork lamb veal protein vegetables veggies fruit fruits liquor spirits " +
+    "sweetener sweeteners cereal grains lettuce squash citrus chiles chilies chillies peppers pasta noodles wine",
+);
+
+/**
+ * Leading words a choice shares forward (CONTRACT §12.7 c: product-form, variety or preparation words): "ground beef or
+ * turkey" → ground beef, ground turkey; "dried oregano or thyme"; "chopped parsley or cilantro"; "shredded cheddar or
+ * Monterey Jack".
+ */
+export const LEADING_SHARE_WORDS = setOf(
+  "ground dried fresh frozen smoked low-sodium reduced-sodium unsalted salted sweetened unsweetened lean extra-lean boneless skinless organic " +
+    "chopped minced diced sliced shredded grated crushed cubed toasted roasted canned jarred",
+);
+
+/**
  * Nouns whose plural is the same word (zero plural: "12 shrimp", "4 salmon"). A count before them is a count,
  * not a number inside a name. A linguistic list (fish, shellfish and game names with zero plurals), general.
  */

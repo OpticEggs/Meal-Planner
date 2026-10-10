@@ -265,17 +265,20 @@ describe("a no-fixed-amount phrase after 'or' (SF3)", () => {
 describe("options are never made up (SF4)", () => {
   it.each([
     ["2 tbsp butter or olive oil", ["butter", "olive oil"]], ["1/4 cup honey or maple syrup", ["honey", "maple syrup"]],
-    ["2 cups cheddar or Monterey Jack cheese", ["cheddar cheese", "Monterey Jack cheese"]], ["2 cups milk or almond milk", ["milk", "almond milk"]],
-    ["1 cup ricotta or cottage cheese", ["ricotta cheese", "cottage cheese"]], ["2 tbsp margarine or vegetable oil", ["margarine", "vegetable oil"]],
+    // (semantic-v2, CONTRACT §12.7 b: a first option that names a cheese by itself is kept as written — semantic-v1 added "cheese")
+    ["2 cups cheddar or Monterey Jack cheese", ["cheddar", "Monterey Jack cheese"]], ["2 cups milk or almond milk", ["milk", "almond milk"]],
+    ["1 cup ricotta or cottage cheese", ["ricotta", "cottage cheese"]], ["2 tbsp margarine or vegetable oil", ["margarine", "vegetable oil"]],
     ["1 tbsp lemon or lime juice", ["lemon juice", "lime juice"]], ["4 cups chicken or vegetable broth", ["chicken broth", "vegetable broth"]],
     ["2 tbsp red or white wine vinegar", ["red wine vinegar", "white wine vinegar"]], ["2 cups fresh or frozen peas", ["fresh peas", "frozen peas"]],
     ["1 cup stock (chicken, beef or vegetable)", ["chicken stock", "beef stock", "vegetable stock"]],
     ["1 cup chicken, beef, or vegetable stock", ["chicken stock", "beef stock", "vegetable stock"]],
     ["1 cup flour (all-purpose (or bread (or cake)))", ["all-purpose flour", "bread flour", "cake flour"]],
     ["1 tbsp oil (vegetable, canola, or peanut)", ["vegetable oil", "canola oil", "peanut oil"]],
-    ["1 cup cream (heavy or light)", ["heavy cream", "light cream"]], ["1 cup shredded cheese (cheddar, jack or colby)", ["shredded cheddar cheese", "shredded jack cheese", "shredded colby cheese"]],
+    // (semantic-v2, §12.7 f: kinds of cheese in brackets are the options themselves — semantic-v1 added "shredded … cheese")
+    ["1 cup cream (heavy or light)", ["heavy cream", "light cream"]], ["1 cup shredded cheese (cheddar, jack or colby)", ["cheddar", "jack", "colby"]],
     ["1 lb sausage, sweet or hot", ["sweet sausage", "hot sausage"]], ["2 cups milk (whole or 2%)", ["whole milk", "2% milk"]],
-    ["2 lbs potatoes, russet or Yukon gold", ["russet", "Yukon gold"]],
+    // (semantic-v2, §12.7 f: varieties of the named food take its name)
+    ["2 lbs potatoes, russet or Yukon gold", ["russet potatoes", "Yukon gold potatoes"]],
     ["2 cups greens (spinach, kale or chard)", ["spinach", "kale", "chard"]], ["1 cup nuts (walnuts or pecans)", ["walnuts", "pecans"]],
   ])("%s", (line, options) => {
     const r = read(line);

@@ -20,7 +20,7 @@ import { amountStartsAt, groupAmounts, isPriceGroup, placeSecondary, readAmountP
 import { classifyGroup, classifyPiece, dropBarePrices, remarkOnly, splitOr, textOf, trimEdges, unstatedAt } from "./remarks";
 import { fractionUnitWord, readNumber } from "./quantity";
 import type { Effects } from "./types";
-import { distributeOptions, foodHead, isRemarkOption } from "./alternatives";
+import { foodHead, isRemarkOption, shareOptions } from "./alternatives";
 import { readUnit, type UnitRead } from "./unit";
 
 export interface NameContext {
@@ -433,7 +433,7 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
     const written = usable.map((o) => nameText(text, o)).filter((x) => x.length > 0);
     // a shared head ("chicken or vegetable broth", "1 tbsp fresh or 1 tsp dried thyme"); never when the
     // earlier option is a whole ingredient or already in the head ("2 cups flour or 1 cup almond flour")
-    let texts = distributeOptions(written);
+    let texts = shareOptions(written);
     // "fresh thyme or 1 tsp dried": a remark-only option names the first option's food in another form
     texts = texts.map((x, k) => (k > 0 && isRemarkOption(x) ? `${x} ${foodHead(texts[0])}` : x));
     if (texts.length >= 2) options = texts;

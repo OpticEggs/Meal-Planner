@@ -26,7 +26,7 @@ import { BULLETS, CONTAINER_UNITS, FRUIT_PART_WORDS, SERVING_LABEL_WORDS, UNIT_W
 import { numberInProductName, readNameRegion, type NameReading } from "./name";
 import { normalizeLine } from "./normalize";
 import { classifyPiece, splitOr, splitTopLevel, textOf, trimEdges, unstatedAt } from "./remarks";
-import { adjectival, distributeOptions, foodHead, isRemarkOption, plural, uniqueOptions, versionsOf, withKind } from "./alternatives";
+import { categoryNoun, foodHead, isRemarkOption, shareOptions, uniqueOptions, varietiesOf, withKind } from "./alternatives";
 import { emptyEffects, mergeEffects, type AmountReading } from "./types";
 import { readUnit, type UnitRead } from "./unit";
 
@@ -625,31 +625,22 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
   // (an item written with an article is a food of its own: "(cheddar, mozzarella, or a blend)")
   const articled = fx.options.some((o) => o.mode === "list" && /^an? /i.test(text.slice(o.s)));
   if (listed.length >= 2) {
-    // a bracketed choice after the food: "sugar (granulated or powdered)", "nuts (walnuts or pecans)"
-    if (base.length === 1) {
-      const how = articled ? "members" : versionsOf(listed, base[0], true);
-      base = how === "members" ? listed : listed.map((v) => withKind(v, base[0]));
-    } else base = listed;
+    // a bracketed choice after the food: varieties of it ("sugar (granulated or powdered)", "oil (vegetable or
+    // canola)") or the foods themselves ("nuts (walnuts or pecans)", "pasta (penne or rigatoni)") — §12.7 f
+    if (base.length === 1) base = !articled && varietiesOf(listed, base[0]) ? listed.map((v) => withKind(v, base[0])) : shareOptions(listed);
+    else base = listed;
     choice = true;
   } else if (listed.length === 1 && base.length === 1) {
     base = [...base, ...listed];
     choice = true;
   } else if (variants.length >= 2 && base.length === 1) {
-    // a choice after a comma: "1 onion, red or white" (versions), "chicken, beef or vegetable stock" (a shared
-    // head), "greens, spinach or kale" (members); "cheese, cheddar or Swiss" is not decided by the grammar
-    const how = versionsOf(variants, base[0], false);
-    const asWritten = [base[0], ...variants];
-    const shared = distributeOptions(asWritten);
-    const lastModifier = variants[variants.length - 1].split(" ")[0];
-    if (how === "versions") base = variants.map((v) => withKind(v, base[0]));
-    else if (!adjectival(lastModifier) && !plural(base[0]) && shared.some((x, k) => x !== asWritten[k])) base = shared;
-    else if (how === "members") base = variants;
-    else {
-      // unsure: the food stays the name, the choice is a note, and a person decides
-      push(fx.reasons, "unclassified");
-      fx.notes.push({ s: variantOpts[0].s, text: `${variants.slice(0, -1).join(", ")} or ${variants[variants.length - 1]}` });
-      base = [base[0]];
-    }
+    // a choice after a comma (§12.7 f, e): varieties of the named food ("1 onion, red or white", "broth, chicken or
+    // vegetable", "flour, all-purpose or bread") → each with the food; kinds of a category ("nuts, pecans or walnuts",
+    // "cheese, cheddar or Swiss") → the kinds; otherwise a list in which every item is an option ("raisins, cranberries
+    // or cherries", "chicken, beef or vegetable stock") — never one option privileged or dropped
+    if (varietiesOf(variants, base[0])) base = variants.map((v) => withKind(v, base[0]));
+    else if (categoryNoun(base[0])) base = shareOptions(variants);
+    else base = shareOptions([base[0], ...variants]);
     choice = base.length >= 2;
   } else if (variants.length >= 2 && base.length === 0) {
     base = variants;
@@ -660,22 +651,14 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
   const named = name;
   const listTakesAdditional = listOptions.length > 0 && named !== null;
   if (listTakesAdditional && named !== null) {
-    // "stock, chicken, beef, or vegetable" (versions), "chicken, beef, or vegetable stock" (a shared head);
-    // otherwise every option of the list as written
+    // a comma list ending in "or" (§12.7 e, f): varieties of the first item ("stock, chicken, beef, or vegetable"),
+    // kinds of a category ("nuts, pecans, walnuts, or almonds"), or — otherwise — every item an option, with shared
+    // words completed by `shareOptions` ("maple syrup, honey, or agave"; "chicken, beef, or vegetable broth")
     const kinds = [...listOptions.map((o) => o.text), ...additional.map((o) => o.text)];
-    const asWritten = [named, ...kinds];
-    const shared = distributeOptions(asWritten);
-    const how = versionsOf(kinds, named, false);
     extra = [];
-    if (how === "versions") base = kinds.map((v) => withKind(v, named));
-    else if (shared.some((x, k) => x !== asWritten[k])) base = shared;
-    else if (how === "members") base = kinds;
-    else if (kinds.every((k) => !k.includes(" "))) {
-      // "stock, chicken, beef, or vegetable", "salt, pepper, or paprika": is the first word one of the options?
-      push(fx.reasons, "unclassified");
-      fx.notes.push({ s: listOptions[0].s, text: `${kinds.slice(0, -1).join(", ")} or ${kinds[kinds.length - 1]}` });
-      base = [named];
-    } else base = asWritten; // "cheddar, Monterey Jack, or pepper jack": full names, every one an option
+    if (varietiesOf(kinds, named)) base = kinds.map((v) => withKind(v, named));
+    else if (categoryNoun(named)) base = shareOptions(kinds);
+    else base = shareOptions([named, ...kinds]);
     choice = base.length >= 2;
   }
   // an option with its own amount ("(or 1 tsp dried)", "(or 2 cups)") is a second amount nobody can place
