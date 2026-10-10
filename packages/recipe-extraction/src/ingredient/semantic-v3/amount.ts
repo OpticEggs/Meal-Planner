@@ -18,12 +18,12 @@ import { add, cmp, div, fromDecimalString, fromExactQuantity, mul, rational, toE
 import { adjacent, isGroup, isSym, isWord, type GroupTok, type Tok } from "./lexer";
 import {
   APPROX_SYMBOLS, APPROX_WORDS, BOUND_PHRASES, CARDINALS, CONTAINER_UNITS, FORM_WORDS, FRACTION_WORDS, FUNCTION_WORDS, LENGTH_MEASURED_FOODS, LENGTH_WORDS, MEASURE_ADJECTIVES,
-  INVARIANT_PLURALS, RANGE_DASHES, ROMANCE_JOINERS, REMARK_WORDS, SIZE_WORDS, TIME_WORDS, UNKNOWN_MEASURES, unitOfWord,
+  INVARIANT_PLURALS, PACKAGING_NOUNS, RANGE_DASHES, ROMANCE_JOINERS, REMARK_WORDS, SIZE_WORDS, TIME_WORDS, UNKNOWN_MEASURES, unitOfWord,
 } from "./lexicon";
 import { andFraction, fractionUnitWord, readNumber, type NumberRead } from "./quantity";
 import { compoundFood, describingWord, foodWord, measureGerund, plainWord, recognisedFoodHead, twoWordFood } from "./foods";
 import { emptyEffects, type AmountReading, type Effects } from "./types";
-import { holdingVessel, unresolvedMeasureAt } from "./measure-slot";
+import { unresolvedMeasureAt } from "./measure-slot";
 import { NOT_ALIASES } from "../../unit-aliases";
 import { readUnit, type UnitRead } from "./unit";
 import { unitV1 } from "../../units";
@@ -155,6 +155,7 @@ export function isPriceGroup(g: GroupTok): boolean {
   k++;
   if (isWord(c[k], "each")) k++;
   else if (isWord(c[k], "per") && isWord(c[k + 1])) k += 2;
+  else if (isSym(c[k], "/") && isWord(c[k + 1])) k += 2; // (semantic-v3) "($1.99/bunch)", "($4/lb)": a price per unit
   return k === c.length;
 }
 
@@ -718,12 +719,26 @@ export function readAmountPhrase(text: string, toks: readonly Tok[], i: number):
     const c0 = isWord(toks[k], "of") ? k + 1 : k;
     const w = toks[c0];
     const after = toks[c0 + 1];
-    if (isWord(w) && isWord(after) && !FUNCTION_WORDS.has(after.lower) && !twoWordFood(w.lower, after.lower) && (Object.prototype.hasOwnProperty.call(NOT_ALIASES, plainWord(w.lower)) || holdingVessel(plainWord(w.lower)))) {
+    if (isWord(w) && isWord(after) && !FUNCTION_WORDS.has(after.lower) && !twoWordFood(w.lower, after.lower) && (Object.prototype.hasOwnProperty.call(NOT_ALIASES, plainWord(w.lower)) || PACKAGING_NOUNS.has(plainWord(w.lower)))) {
       fx.notes.push({ s: n1.s, text: text.slice(n1.s, w.e) });
       fx.reasons.push("unit_unknown");
       return {
         quantity: null, quantitySpan: null, amountWritten: true, unit: null, unitSpan: null, packageSize: null, packageSpan: null, packageProvisional: null,
         equivalents: [], approximate, fromWord: false, effects: fx, next: c0 + 1,
+      };
+    }
+  }
+
+  // (semantic-v3, CONTRACT §13.1) "4 125 g pots yogurt", "1 900 g tub yogurt": a count and a size before an undeclared
+  // container — the container is no unit, so nothing is read; the count, size and noun stay in the note
+  if (!unitRead && n1.ok && max === null && between.length > 0 && isWord(toks[a]) && isWord(toks[a + 1]) && !FUNCTION_WORDS.has((toks[a + 1] as { lower: string }).lower)) {
+    const w = plainWord((toks[a] as { lower: string }).lower);
+    if (Object.prototype.hasOwnProperty.call(NOT_ALIASES, w) || PACKAGING_NOUNS.has(w)) {
+      fx.notes.push({ s: n1.s, text: text.slice(n1.s, toks[a].e) });
+      fx.reasons.push("unit_unknown");
+      return {
+        quantity: null, quantitySpan: null, amountWritten: true, unit: null, unitSpan: null, packageSize: null, packageSpan: null, packageProvisional: null,
+        equivalents: [], approximate, fromWord: false, effects: fx, next: a + 1,
       };
     }
   }

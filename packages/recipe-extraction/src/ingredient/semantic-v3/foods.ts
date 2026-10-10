@@ -909,6 +909,10 @@ export function massFoodWord(word: string): boolean {
   const fs = forms(plainWord(word));
   return fs.some((f) => MASS_CLASS_WORDS.has(f)) && !fs.some((f) => COUNT_CLASS_WORDS.has(f));
 }
+/** (semantic-v3) A food noun in a class bought by weight or volume (it may also be counted: "cheese", "pasta"). */
+export function massClassWord(word: string): boolean {
+  return forms(plainWord(word)).some((f) => MASS_CLASS_WORDS.has(f));
+}
 /** (semantic-v3) A meat, poultry, game or fish noun (the heads a cut word such as "blade", "heel" or "crown" may stand before). */
 export function meatOrFishWord(word: string): boolean {
   return inSet(MEAT_CLASS_WORDS, plainWord(word));

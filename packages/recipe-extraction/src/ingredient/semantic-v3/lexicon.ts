@@ -829,3 +829,13 @@ export const BOTTLE_SIZE_WORDS = setOf(
 
 /** Romance joiners after a noun that heads a dish name ("pots de crème", "pan de bono", "eggs en cocotte", "pot au feu"). */
 export const ROMANCE_JOINERS = setOf("de du des d' en au aux à la al alla all' alle di del della dei con");
+
+/**
+ * PACKAGING NOUNS (semantic-v3, CONTRACT §13.1–§13.2): containers a food is sold in that the registry does not declare
+ * (beside the contract's NOT_ALIASES: tub, pot, bar, punnet). After a weight or volume and before the food ("8 oz tub
+ * whipped topping", "200 g pouch tuna") the size is the container's, not an amount of the food — an unresolved measure.
+ */
+export const PACKAGING_NOUNS = setOf(
+  "pouch pouches canister canisters clamshell clamshells sachet sachets tray trays crate crates sack sacks net nets sleeve sleeves jug jugs " +
+    "bucket buckets pail pails keg kegs tetra tetrapak tetra-pak brick bricks cartridge cartridges capsule capsules case cases",
+);

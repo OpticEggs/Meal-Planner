@@ -177,7 +177,7 @@ export function varietiesOf(options: readonly string[], base: string): boolean {
   // wheat" → white bread, wheat bread)
   // (semantic-v3, CONTRACT §12.7 f) an option that is only a cultivar or variety word of the named food ("lettuce, romaine
   // or green leaf", "apples, honeycrisp or gala") makes the list varieties of that food: each option takes its name
-  const cultivar = (o: string) => wordsOf(o).length > 0 && wordsOf(o).every((w) => varietyWord(w) && !massFoodWord(w)) && !categoryNoun(base);
+  const cultivar = (o: string) => wordsOf(o).length > 0 && wordsOf(o).every((w) => varietyWord(w) && !massFoodWord(w));
   return options.length >= 2 && (options.every(variety) || options.some((o) => wordsOf(o).length === 1 && versionWord(o)) || options.some(cultivar));
 }
 

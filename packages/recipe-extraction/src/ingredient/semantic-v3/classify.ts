@@ -95,6 +95,9 @@ export function nonIngredientReason(toks: readonly Tok[]): ReasonCode | null {
   if (hasUrl(toks)) return "not_an_ingredient";
   // "Oven: 350°F", "Prep time: 10 minutes"
   if (colon > 0 && isNumberish(toks[colon + 1]) && temperatureOrTimeAt(toks, colon + 1)) return "not_an_ingredient";
+  // (semantic-v3, §12.8 recipe times) "Resting time: overnight", "Chill time: 4 hours", "Marinating time: up to a day": a
+  // label naming a time is recipe metadata, whatever its value
+  if (colon > 0 && colon <= 3 && isWord(toks[colon - 1], "time", "times") && toks.slice(0, colon).every((t) => isWord(t))) return "not_an_ingredient";
 
   const ws = words(toks);
   const first = ws[0];
@@ -122,6 +125,8 @@ export function nonIngredientReason(toks: readonly Tok[]): ReasonCode | null {
     return "section_heading";
   }
   if (componentHeading(toks)) return "section_heading"; // "SAUCE", "Cake Layers", "Topping"
+  // (semantic-v3, §12.8) "Equipment", "Special equipment", "Tools": an equipment label alone is a heading
+  if (ws.length > 0 && ws.length <= 3 && !hasNumber(toks) && !toks.some(isGroup) && ws.some((w) => EQUIPMENT_LABEL_WORDS.has(w.lower)) && ws.every((w) => EQUIPMENT_LABEL_WORDS.has(w.lower) || ["special", "kitchen", "you'll", "need", "the", "and", ":"].includes(w.lower))) return "section_heading";
   if (isSym(toks[0], "*", "_") && isSym(last, "*", "_") && !hasNumber(toks)) return "section_heading"; // "**Sauce**"
   // notes, yields, instructions
   if (first && NOTE_LABELS.has(first.lower) && isSym(toks[1], ":")) return "not_an_ingredient";
@@ -543,6 +548,9 @@ export function equipmentNamesFood(toks: readonly Tok[]): boolean {
  * in any case ("SAUCE", "Dressing"); also "To serve". A specific food ("Pesto", "Hot sauce", "Whipped topping") is not one.
  */
 export function componentHeading(toks: readonly Tok[]): boolean {
+  // (semantic-v3, CONTRACT §13.7) "Topping (optional)": a heading may end in "(optional)"
+  const lastTok = toks[toks.length - 1];
+  if (toks.length >= 2 && isGroup(lastTok) && lastTok.children.length === 1 && isWord(lastTok.children[0], "optional")) toks = toks.slice(0, -1);
   if (hasNumber(toks) || toks.some((t) => isGroup(t) || isSym(t, ",", ";"))) return false;
   if (!toks.every((t) => isWord(t) || isSym(t, "&", "-", "–", "*", "_", "#", ".", "/"))) return false;
   const ws = words(toks).map((w) => w.lower);

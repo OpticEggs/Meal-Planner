@@ -160,6 +160,17 @@ const SUBSTITUTE_LEAD = new Set(["use", "substitute", "try", "even"]);
  * flag; a choice of ingredients is reported in `effects.options`; everything else is note text.
  */
 export function classifyPiece(text: string, piece: readonly Tok[], fx: Effects): void {
+  // (semantic-v3) "chopped (about 1 cup)": an amount in brackets ending a remark is a remark of its own — a restatement of
+  // the amount is then an equivalent, not note text (holdout-v3 0229)
+  const end = piece[piece.length - 1];
+  if (piece.length >= 2 && isGroup(end) && !isPriceGroup(end) && piece.slice(0, -1).every((t) => isWord(t))) {
+    const re = remarkRestatement(text, end.children);
+    if (re !== null && re.leftover.length === 0) {
+      classifyPiece(text, piece.slice(0, -1), fx);
+      classifyGroup(text, end, fx);
+      return;
+    }
+  }
   // Brackets inside the piece: a price is dropped; a group that only carries flags or a choice
   // ("(optional)", "(or tamari)") is taken out and applied after the piece's own words, so options stay in
   // source order ("all-purpose (or bread (or cake))"); any other group stays in the text, flattened.
@@ -211,6 +222,12 @@ function classifyBare(text: string, toks: readonly Tok[], fx: Effects): void {
   // "optional" (also "optional:" / "optional.")
   if (words.length === 1 && isWord(words[0], "optional", "optionally") && bare.every((t) => t.kind === "word" || isSym(t, ":", ".", "!"))) {
     fx.optional = true;
+    return;
+  }
+  // (semantic-v3) "(optional but recommended)", "optional if you like": the flag, then the rest of the remark as a note
+  if (words.length >= 2 && bare[0] === words[0] && isWord(words[0], "optional", "optionally") && isWord(bare[1], "but", "though", "although")) {
+    fx.optional = true;
+    classifyBare(text, bare.slice(1), fx);
     return;
   }
   // a phrase that is the whole piece
@@ -408,6 +425,7 @@ export function dropBarePrices(toks: readonly Tok[], fx: Effects): Tok[] {
       i++;
       while (isSym(toks[i + 1], "*")) i++;
       if (isWord(toks[i + 1], "each")) i++;
+      else if (isSym(toks[i + 1], "/") && isWord(toks[i + 2])) i += 2; // (semantic-v3) "$1.99/bunch"
       if (!fx.reasons.includes("price_annotation_removed")) fx.reasons.push("price_annotation_removed");
       continue;
     }

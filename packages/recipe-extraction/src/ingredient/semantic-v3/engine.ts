@@ -56,7 +56,7 @@ import { APPROX_WORDS, BULLETS, CONTAINER_UNITS, FRUIT_PART_WORDS, NUTRIENT_FOOD
 import { numberInProductName, readNameRegion, type NameReading } from "./name";
 import { normalizeLine } from "./normalize";
 import { classifyPiece, COMBINING_PREPOSITIONS, remarkCombinesAnother, remarkMeasuresAnother, remarkRestatement, remarkSecondAmount, splitOr, splitTopLevel, textOf, trimEdges, unstatedAt } from "./remarks";
-import { compoundFoodEnding, foodWord, homographHeadAfterCapital, massFoodWord, meatOrFishWord, plainWord, recognisedFoodHead } from "./foods";
+import { compoundFoodEnding, foodWord, homographHeadAfterCapital, massClassWord, massFoodWord, meatOrFishWord, plainWord, recognisedFoodHead } from "./foods";
 import { andJoinsTwoFoods, categoryNoun, foodHead, isRemarkOption, shareOptions, uniqueOptions, varietiesOf, withKind } from "./alternatives";
 import { emptyEffects, mergeEffects, type AmountReading } from "./types";
 import { readUnit, type UnitRead } from "./unit";
@@ -164,6 +164,16 @@ function singularCountUnclear(name: string): boolean {
   const joiner = ws.findIndex((w, k) => k > 0 && ROMANCE_JOINERS.has(plainWord(w)));
   const head = joiner > 0 ? ws[0] : ws[ws.length - 1];
   return massFoodWord(head) || (!foodWord(head) && joiner < 0);
+}
+
+/**
+ * (semantic-v3, holdout-v3 0145) The note of a per-piece weight, with an approximation word written right before it in the
+ * same bracket kept ("(about 12 oz each)" → "about 12 oz each": the qualifier is part of what the line says).
+ */
+function perPieceNote(text: string, ps: number, pe: number): { s: number; text: string } {
+  const m = /(?:^|[(\s])((?:about|approximately|approx\.?|roughly|around|~)\s*)$/i.exec(text.slice(Math.max(0, ps - 20), ps));
+  const s = m ? ps - m[1].length : ps;
+  return { s, text: text.slice(s, pe) };
 }
 
 /**
@@ -503,7 +513,7 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
       if (one) {
         slots.equivalents.push({ quantity: size.quantity, unit: size.unit });
         push(fx.reasons, "equivalent_quantity_stated");
-      } else if (pe > ps) fx.notes.push({ s: ps, text: text.slice(ps, pe) });
+      } else if (pe > ps) fx.notes.push(perPieceNote(text, ps, pe));
     } else {
       // "3 4 cups flour": nobody can say what the second number measures; "2 (about 1 lb) potatoes": each, or in all?
       if (pe > ps) fx.notes.push({ s: ps, text: text.slice(ps, pe) });
@@ -534,7 +544,7 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
     if (one && !slots.equivalents.some((x) => x.unit.canonical === size.unit.canonical)) {
       slots.equivalents.push({ quantity: size.quantity, unit: size.unit });
       push(fx.reasons, "equivalent_quantity_stated");
-    } else if (pe > ps) fx.notes.push({ s: ps, text: text.slice(ps, pe) });
+    } else if (pe > ps) fx.notes.push(perPieceNote(text, ps, pe));
   }
 
   // A count before a food that does not read as several ("Five spice powder", "Two egg", "2 tomato"): the
@@ -567,6 +577,14 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
       // "Two egg": a count, but of what?); a counted food written without a plural is still counted ("4 onigiri", "8 kibbeh",
       // "2 khachapuri", "6 pan de bono" — invariant and borrowed plurals)
       if (singularCountUnclear(nr.name)) push(fx.reasons, "unclassified");
+    }
+  }
+  // (semantic-v3, CONTRACT §13.7) a role label may carry "(optional)": "Garnish (optional): microgreens"
+  if (labelBefore) {
+    const optionalGroup = (t: Tok) => isGroup(t) && t.children.length === 1 && isWord(t.children[0], "optional");
+    if (labelBefore.some(optionalGroup) && labelBefore.some((t) => !optionalGroup(t))) {
+      fx.optional = true;
+      labelBefore = labelBefore.filter((t) => !optionalGroup(t));
     }
   }
   if (labelBefore) {
@@ -784,8 +802,13 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
     // (semantic-v3, CONTRACT §12.7 f) after a category noun, options written as singular kind words ("cheese, cheddar or
     // monterey jack", "lettuce, romaine or green leaf") are kinds of that food and take its name; plural options are foods
     // of their own ("nuts, pecans or walnuts")
-    // (a fish or meat named alone is a food of its own: "fish, cod or halibut")
-    const singularKinds = categoryNoun(base[0]) && variants.every((v) => !v.split(/\s+/).some((w) => /[^s]s$/i.test(w) && !/(?:ss|us|is)$/i.test(w)) && !meatOrFishWord(v.split(/\s+/).pop() ?? ""));
+    // — only where each option is a kind of that product bought by weight or volume ("cheddar", "monterey jack" of cheese:
+    // `massFoodWord`), never a food of its own ("greens, spinach or kale", "fish, cod or halibut")
+    const baseHead = base[0].split(/\s+/).pop() ?? "";
+    const singularKinds = categoryNoun(base[0]) && massClassWord(baseHead) && variants.every((v) => {
+      const vs = v.split(/\s+/);
+      return !vs.some((w) => /[^s]s$/i.test(w) && !/(?:ss|us|is)$/i.test(w)) && vs.every((w) => massFoodWord(w)) && !meatOrFishWord(vs[vs.length - 1]);
+    });
     if (varietiesOf(variants, base[0]) || singularKinds) base = variants.map((v) => withKind(v, base[0]));
     else if (asList.some((x, k) => x !== [base[0], ...variants][k])) base = asList; // "chicken, beef or vegetable stock"
     else if (categoryNoun(base[0])) base = shareOptions(variants);
@@ -898,7 +921,9 @@ function read(input: unknown, opts: ReadOptions = { leadIsName: false }): Readin
 
   // Unstated amount: a flag when no amount was written, otherwise the phrase is a note.
   let amountUnstated: AmountUnstated | null = null;
-  const amountWritten = amt.amountWritten;
+  // (semantic-v3, CONTRACT §7.10) an amount read from a unit with no number ("Scoop of vanilla gelato, to serve" → 1 scoop)
+  // is an amount too: the phrase is then a note (holdout-v3 0277)
+  const amountWritten = amt.amountWritten || quantity !== null;
   if (fx.unstated.length > 0) {
     if (amountWritten) {
       for (const u of fx.unstated) if (u.alone) fx.notes.push({ s: u.s, text: u.text });

@@ -75,6 +75,9 @@ function sizeGradesMaterial(toks: readonly Tok[], i: number): boolean {
   return n > 0 && isWord(next) && SIZE_GRADED_NOUNS.has(next.lower);
 }
 
+/** (semantic-v3) A bracket that only states a dimension and how it is measured ("1 1/2-inch-thick", "2 cm thick", "3-inch-long"). */
+const DIMENSION_GROUP = /^\s*(?:about\s+|~\s*)?\d+(?:[.,]\d+)?(?:\s+\d+\/\d+|\/\d+)?\s*-?\s*(?:inch|inches|in\.?|cm|mm|centimetres?|centimeters?)[-\s]+(?:thick|wide|long|deep|across|in\s+diameter|diameter|tall|high)\s*$/iu;
+
 /** A dimension written in the name ("9-inch", "1 inch") — a size, so a note. */
 function dimensionAt(text: string, toks: readonly Tok[], i: number): number {
   const sa = readStatedAmount(text, toks, i);
@@ -206,6 +209,11 @@ export function readNameRegion(region: readonly Tok[], ctx: NameContext, fx: Eff
     }
     if (isPriceGroup(t)) {
       if (!fx.reasons.includes("price_annotation_removed")) fx.reasons.push("price_annotation_removed");
+      continue;
+    }
+    // (semantic-v3) "(1 1/2-inch-thick)", "(2 cm thick)": a dimension of the item, with how it is measured — a size, so a note
+    if (DIMENSION_GROUP.test(text.slice(t.innerS, t.innerE))) {
+      fx.notes.push({ s: t.s, text: text.slice(t.innerS, t.innerE).trim() });
       continue;
     }
     const list = groupAmounts(text, t);
