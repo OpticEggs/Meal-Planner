@@ -1,0 +1,5 @@
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  bench/__tests__/holdout3.test.ts > holdout-v3 absent: everything behaves as before > invariants hold, nothing to verify, the status says not frozen; loading holdout3 is a clear error
+ FAIL  bench/__tests__/holdout3.test.ts > holdout-v3 absent: everything behaves as before > default, all and every runs report exactly the sets they reported before (no holdout-v3 key anywhere)
+ FAIL  bench/__tests__/holdout3.test.ts > holdout-v3 present (temporary synthetic file) > it loads alone or with every other split (ids and inputs unique across files); invariants hold before a freeze
+ FAIL  bench/__tests__/holdout3.test.ts > holdout-v3 present (temporary synthetic file) > it is opt-in: default, all and every never parse a holdout-v3 input or report it

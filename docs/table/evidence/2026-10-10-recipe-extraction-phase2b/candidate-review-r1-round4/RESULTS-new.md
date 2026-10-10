@@ -1,0 +1,760 @@
+## Partitions (firm labels)
+
+| partition | n | R/A/U | exact (C1/C5ok/C7) | C1/R | C5 ok/A | C7/U | safe abstention/U | other C8 | C2 high | C2 med | C3 | burden: unrecognised food/modifier | burden: unknown measure | other C3 | C4/C6 | C5b/invented | HIGH | regressions vs ea674ec | of which burden |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| new probes (all firm) | 576 | 352/95/129 | 430 | 293/352 | 72/95 | 65/129 | 55/129 | 0 | 32 | 0 | 58 | 41 | 3 | 14 | 0 | 1 | 32 | 2 | 2 |
+
+## By group (new probes, firm)
+
+| partition | n | R/A/U | exact (C1/C5ok/C7) | C1/R | C5 ok/A | C7/U | safe abstention/U | other C8 | C2 high | C2 med | C3 | burden: unrecognised food/modifier | burden: unknown measure | other C3 | C4/C6 | C5b/invented | HIGH | regressions vs ea674ec | of which burden |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| A-mult4 | 10 | 10/0/0 | 10 | 10/10 | 0/0 | 0/0 | 0/0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| A-remark4 | 7 | 3/4/0 | 7 | 3/3 | 4/4 | 0/0 | 0/0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| A5-imprecise4 | 2 | 2/0/0 | 2 | 2/2 | 0/0 | 0/0 | 0/0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| A6-package4 | 10 | 10/0/0 | 10 | 10/10 | 0/0 | 0/0 | 0/0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| B-and4 | 10 | 5/5/0 | 10 | 5/5 | 5/5 | 0/0 | 0/0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| B-choice4 | 11 | 0/11/0 | 10 | 0/0 | 10/11 | 0/0 | 0/0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 |
+| D-misc4 | 10 | 0/0/10 | 8 | 0/0 | 0/0 | 8/10 | 2/10 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| E-brand4 | 41 | 0/0/41 | 24 | 0/0 | 0/0 | 24/41 | 13/41 | 0 | 4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 4 | 0 | 0 |
+| E-foodword4 | 54 | 0/0/54 | 22 | 0/0 | 0/0 | 22/54 | 29/54 | 0 | 3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 3 | 0 | 0 |
+| E-household4 | 19 | 0/0/19 | 9 | 0/0 | 0/0 | 9/19 | 8/19 | 0 | 2 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 2 | 0 | 0 |
+| E-titlecase4 | 5 | 0/0/5 | 2 | 0/0 | 0/0 | 2/5 | 3/5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| O-overlap4 | 82 | 82/0/0 | 58 | 58/82 | 0/0 | 0/0 | 0/0 | 0 | 1 | 0 | 23 | 21 | 2 | 0 | 0 | 0 | 1 | 2 | 2 |
+| P-counted4 | 182 | 182/0/0 | 147 | 147/182 | 0/0 | 0/0 | 0/0 | 0 | 0 | 0 | 35 | 20 | 1 | 14 | 0 | 0 | 0 | 0 | 0 |
+| P-measured4 | 58 | 58/0/0 | 58 | 58/58 | 0/0 | 0/0 | 0/0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| U-unknown4 | 75 | 0/75/0 | 53 | 0/0 | 53/75 | 0/0 | 0/0 | 0 | 22 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 22 | 0 | 0 |
+
+## HIGH lines, firm (32)
+
+- [O-overlap4] `4 pots de crème`
+  - label: ready name="pots de crème" q=4 u=each pkg=- alts=[]
+  - fc37ce7: C2 high [S7] — ready name="de crème" q=4 u=container pkg=- alts=[] note=null reasons=count_unit
+  - ea674ec: C2 high [S7] — ready name="de crème" q=4 u=container pkg=- alts=[] note=null reasons=count_unit
+- [E-brand4] `1 Le Creuset tagine`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C2 high [S1 S8] — ready name="Le Creuset tagine" q=1 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S1 S8] — ready name="Le Creuset tagine" q=1 u=each pkg=- alts=[] note=null reasons=
+- [E-brand4] `1 Emile Henry tagine`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C2 high [S1 S8] — ready name="Emile Henry tagine" q=1 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S1 S8] — ready name="Emile Henry tagine" q=1 u=each pkg=- alts=[] note=null reasons=
+- [E-brand4] `1 Pyrex casserole`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C2 high [S1 S8] — ready name="Pyrex casserole" q=1 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S1 S8] — ready name="Pyrex casserole" q=1 u=each pkg=- alts=[] note=null reasons=
+- [E-brand4] `1 Le Creuset pâté terrine`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C2 high [S1 S8] — ready name="Le Creuset pâté terrine" q=1 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S1 S8] — ready name="Le Creuset pâté terrine" q=1 u=each pkg=- alts=[] note=null reasons=
+- [E-foodword4] `1 cow creamer`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C2 high [S1 S8] — ready name="cow creamer" q=1 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C8 [] — needs_review name="cow creamer" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 bag cherry wood chunks`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C2 high [S1 S8] — ready name="cherry wood chunks" q=1 u=bag pkg=- alts=[] note=null reasons=count_unit
+  - ea674ec: C2 high [S1 S8] — ready name="cherry wood chunks" q=1 u=bag pkg=- alts=[] note=null reasons=count_unit
+- [E-foodword4] `1 bag apple wood chunks`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C2 high [S1 S8] — ready name="apple wood chunks" q=1 u=bag pkg=- alts=[] note=null reasons=count_unit
+  - ea674ec: C2 high [S1 S8] — ready name="apple wood chunks" q=1 u=bag pkg=- alts=[] note=null reasons=count_unit
+- [E-household4] `1 box Cascade pods`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C2 high [S1 S8] — ready name="Cascade pods" q=1 u=box pkg=- alts=[] note=null reasons=count_unit
+  - ea674ec: C2 high [S1 S8] — ready name="Cascade pods" q=1 u=box pkg=- alts=[] note=null reasons=count_unit
+- [E-household4] `1 bag Tide pods`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C2 high [S1 S8] — ready name="Tide pods" q=1 u=bag pkg=- alts=[] note=null reasons=count_unit
+  - ea674ec: C2 high [S1 S8] — ready name="Tide pods" q=1 u=bag pkg=- alts=[] note=null reasons=count_unit
+- [U-unknown4 S] `1 split prosecco`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C2 high [S4] — ready name="split prosecco" q=1 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="split prosecco" q=1 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `2 splits cava`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C2 high [S4] — ready name="splits cava" q=2 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="splits cava" q=2 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `1 cone piloncillo`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C2 high [S4] — ready name="cone piloncillo" q=1 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="cone piloncillo" q=1 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `2 cones piloncillo`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C2 high [S4] — ready name="cones piloncillo" q=2 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="cones piloncillo" q=2 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `1 cone jaggery`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C2 high [S4] — ready name="cone jaggery" q=1 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="cone jaggery" q=1 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `2 discs Mexican chocolate`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C2 high [S4] — ready name="discs Mexican chocolate" q=2 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="discs Mexican chocolate" q=2 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `1 disk Ibarra chocolate`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C2 high [S4] — ready name="disk Ibarra chocolate" q=1 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="disk Ibarra chocolate" q=1 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `3 stems lemongrass`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C2 high [S4] — ready name="stems lemongrass" q=3 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="stems lemongrass" q=3 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `4 stems mint`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C2 high [S4] — ready name="stems mint" q=4 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="stems mint" q=4 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `2 fronds dill`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C2 high [S4] — ready name="fronds dill" q=2 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="fronds dill" q=2 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `1 frond fennel`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C2 high [S4] — ready name="frond fennel" q=1 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="frond fennel" q=1 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `1 cob corn`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C2 high [S4] — ready name="cob corn" q=1 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="cob corn" q=1 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `20 threads saffron`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C2 high [S4] — ready name="threads saffron" q=20 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="threads saffron" q=20 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `2 strands saffron`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C2 high [S4] — ready name="strands saffron" q=2 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="strands saffron" q=2 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `1 heel sourdough`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C2 high [S4] — ready name="heel sourdough" q=1 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="heel sourdough" q=1 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `1 spray avocado oil`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C2 high [S4] — ready name="spray avocado oil" q=1 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="spray avocado oil" q=1 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `2 sprays cooking oil`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C2 high [S4] — ready name="sprays cooking oil" q=2 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="sprays cooking oil" q=2 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `1 blade mace`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C2 high [S4] — ready name="blade mace" q=1 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="blade mace" q=1 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `2 blades mace`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C2 high [S4] — ready name="blades mace" q=2 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="blades mace" q=2 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `2 Blades Mace`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C2 high [S4] — ready name="Blades Mace" q=2 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="Blades Mace" q=2 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `1 Cone Piloncillo`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C2 high [S4] — ready name="Cone Piloncillo" q=1 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="Cone Piloncillo" q=1 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `1 Split Prosecco`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C2 high [S4] — ready name="Split Prosecco" q=1 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="Split Prosecco" q=1 u=each pkg=- alts=[] note=null reasons=
+
+## HIGH lines, debatable (not counted) (3)
+
+- [B-and4 SD] `2 tbsp oil and vinegar`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=SD
+  - fc37ce7: C2 high [S4] — ready name="oil and vinegar" q=2 u=tbsp pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="oil and vinegar" q=2 u=tbsp pkg=- alts=[] note=null reasons=
+- [U-unknown4 SD] `6 flakes Maldon salt`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=SD
+  - fc37ce7: C2 high [S4] — ready name="flakes Maldon salt" q=6 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="flakes Maldon salt" q=6 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 SD] `2 nests fresh tagliatelle`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=SD
+  - fc37ce7: C2 high [S4] — ready name="nests fresh tagliatelle" q=2 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C2 high [S4] — ready name="nests fresh tagliatelle" q=2 u=each pkg=- alts=[] note=null reasons=
+
+## Regressions vs ea674ec (firm) (2)
+
+- [O-overlap4] `1 hot pot soup base`
+  - label: ready name="hot pot soup base" q=1 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="hot pot soup base" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C1 [] — ready name="hot pot soup base" q=1 u=each pkg=- alts=[] note=null reasons=
+- [O-overlap4] `1 packet hot pot seasoning`
+  - label: ready name="hot pot seasoning" q=1 u=packet pkg=- alts=[]
+  - fc37ce7: C3b [] abstention — needs_review name="packet hot pot seasoning" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C1 [] — ready name="hot pot seasoning" q=1 u=packet pkg=- alts=[] note=null reasons=count_unit
+
+## Fixed vs ea674ec (firm) (23)
+
+- [P-counted4] `2 slightly stale baguettes`
+  - label: ready name="slightly stale baguettes" q=2 u=each pkg=- alts=[]
+  - fc37ce7: C1 [] — ready name="slightly stale baguettes" q=2 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C3a [] — needs_review name="slightly stale baguettes" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [P-counted4] `2 wedges Brie de Meaux`
+  - label: ready name="Brie de Meaux" q=2 u=wedge pkg=- alts=[]
+  - fc37ce7: C1 [] — ready name="Brie de Meaux" q=2 u=wedge pkg=- alts=[] note=null reasons=count_unit
+  - ea674ec: C3b [] — needs_review name="wedges Brie de Meaux" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `2 griddle scones`
+  - label: ready name="griddle scones" q=2 u=each pkg=- alts=[]
+  - fc37ce7: C1 [] — ready name="griddle scones" q=2 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C3a [] — needs_review name="griddle scones" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `4 tray bakes`
+  - label: ready name="tray bakes" q=4 u=each pkg=- alts=[]
+  - fc37ce7: C1 [] — ready name="tray bakes" q=4 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C3a [] — needs_review name="tray bakes" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `4 fried hand pies`
+  - label: ready name="fried hand pies" q=4 u=each pkg=- alts=[]
+  - fc37ce7: C1 [] — ready name="fried hand pies" q=4 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C3a [] — needs_review name="fried hand pies" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `2 mug muffins`
+  - label: ready name="mug muffins" q=2 u=each pkg=- alts=[]
+  - fc37ce7: C1 [] — ready name="mug muffins" q=2 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C3a [] — needs_review name="mug muffins" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `8 pan biscuits`
+  - label: ready name="pan biscuits" q=8 u=each pkg=- alts=[]
+  - fc37ce7: C1 [] — ready name="pan biscuits" q=8 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C3a [] — needs_review name="pan biscuits" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `2 toaster strudels`
+  - label: ready name="toaster strudels" q=2 u=each pkg=- alts=[]
+  - fc37ce7: C1 [] — ready name="toaster strudels" q=2 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C3a [] — needs_review name="toaster strudels" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `4 blender muffins`
+  - label: ready name="blender muffins" q=4 u=each pkg=- alts=[]
+  - fc37ce7: C1 [] — ready name="blender muffins" q=4 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C3a [] — needs_review name="blender muffins" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `4 griddle burgers`
+  - label: ready name="griddle burgers" q=4 u=each pkg=- alts=[]
+  - fc37ce7: C1 [] — ready name="griddle burgers" q=4 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C3a [] — needs_review name="griddle burgers" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `6 string hoppers`
+  - label: ready name="string hoppers" q=6 u=each pkg=- alts=[]
+  - fc37ce7: C1 [] — ready name="string hoppers" q=6 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C3a [] — needs_review name="string hoppers" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `2 plate lunches`
+  - label: ready name="plate lunches" q=2 u=each pkg=- alts=[]
+  - fc37ce7: C1 [] — ready name="plate lunches" q=2 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C3a [] — needs_review name="plate lunches" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 bag oak wood chips`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C7 [] — unsupported name=null q=- u=- pkg=- alts=[] note=null reasons=not_an_ingredient
+  - ea674ec: C2 high [S1 S8] — ready name="oak wood chips" q=1 u=bag pkg=- alts=[] note=null reasons=count_unit
+- [E-foodword4] `1 bag maple wood chips`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C7 [] — unsupported name=null q=- u=- pkg=- alts=[] note=null reasons=not_an_ingredient
+  - ea674ec: C2 high [S1 S8] — ready name="maple wood chips" q=1 u=bag pkg=- alts=[] note=null reasons=count_unit
+- [U-unknown4 S] `1 side coleslaw`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C5a [] abstention — needs_review name="coleslaw" q=- u=- pkg=- alts=[] note="1 side" reasons=unit_unknown
+  - ea674ec: C2 high [S4] — ready name="side coleslaw" q=1 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `1 stack pancakes`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C5a [] abstention — needs_review name="pancakes" q=- u=- pkg=- alts=[] note="1 stack" reasons=unit_unknown
+  - ea674ec: C2 high [S4] — ready name="stack pancakes" q=1 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `1 scraping nutmeg`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C5a [] abstention — needs_review name="nutmeg" q=- u=- pkg=- alts=[] note="1 scraping" reasons=unit_unknown
+  - ea674ec: C2 high [S4] — ready name="scraping nutmeg" q=1 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `1 grating lemon zest`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C5a [] abstention — needs_review name="lemon zest" q=- u=- pkg=- alts=[] note="1 grating" reasons=unit_unknown
+  - ea674ec: C2 high [S4] — ready name="grating lemon zest" q=1 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `1 spattering hot sauce`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C5a [] abstention — needs_review name="hot sauce" q=- u=- pkg=- alts=[] note="1 spattering" reasons=unit_unknown
+  - ea674ec: C2 high [S4] — ready name="spattering hot sauce" q=1 u=each pkg=- alts=[] note=null reasons=
+- [U-unknown4 S] `1 Pump Vanilla Syrup`
+  - label: needs_review name=null q=- u=- pkg=- alts=[] flags=S
+  - fc37ce7: C5a [] abstention — needs_review name="Pump Vanilla Syrup" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C2 high [S4] — ready name="Pump Vanilla Syrup" q=1 u=each pkg=- alts=[] note=null reasons=
+- [B-choice4] `2 tsp Aleppo or Urfa pepper`
+  - label: needs_review name=null q=2 u=tsp pkg=- alts="Aleppo pepper;Urfa pepper"
+  - fc37ce7: C5a [] — needs_review name=null q=2 u=tsp pkg=- alts=["Aleppo pepper","Urfa pepper"] note=null reasons=ingredient_alternatives
+  - ea674ec: C5b [] — needs_review name=null q=2 u=tsp pkg=- alts=["Aleppo","Urfa pepper"] note=null reasons=ingredient_alternatives
+- [O-overlap4] `2 pull-apart breads`
+  - label: ready name="pull-apart breads" q=2 u=each pkg=- alts=[]
+  - fc37ce7: C1 [] — ready name="pull-apart breads" q=2 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C3a [] — needs_review name="pull-apart breads" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `6 spoon sweets`
+  - label: ready name="spoon sweets" q=6 u=each pkg=- alts=[]
+  - fc37ce7: C1 [] — ready name="spoon sweets" q=6 u=each pkg=- alts=[] note=null reasons=
+  - ea674ec: C3a [] — needs_review name="spoon sweets" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+
+## C4/C6 food rejected (firm) (0)
+
+
+## Review burden: unrecognised food or modifier (firm) (41)
+
+- [P-counted4] `1 red kuri squash`
+  - label: ready name="red kuri squash" q=1 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="red kuri squash" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="red kuri squash" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [P-counted4] `6 sunburst squash`
+  - label: ready name="sunburst squash" q=6 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="sunburst squash" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="sunburst squash" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [P-counted4] `2 bitter melons`
+  - label: ready name="bitter melons" q=2 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="bitter melons" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="bitter melons" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [P-counted4] `1 winter melon`
+  - label: ready name="winter melon" q=1 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="winter melon" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="winter melon" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [P-counted4] `6 eddoes`
+  - label: ready name="eddoes" q=6 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="eddoes" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="eddoes" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [P-counted4] `2 boniatos`
+  - label: ready name="boniatos" q=2 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="boniatos" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="boniatos" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [P-counted4] `6 caperberries`
+  - label: ready name="caperberries" q=6 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="caperberries" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="caperberries" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [P-counted4] `4 sand dabs`
+  - label: ready name="sand dabs" q=4 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="sand dabs" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="sand dabs" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [P-counted4] `6 fatayer`
+  - label: ready name="fatayer" q=6 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="fatayer" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="fatayer" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [P-counted4] `6 siopao`
+  - label: ready name="siopao" q=6 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="siopao" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="siopao" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [P-counted4] `6 spanakopita triangles`
+  - label: ready name="spanakopita triangles" q=6 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="spanakopita triangles" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="spanakopita triangles" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [P-counted4] `6 farm-fresh eggs`
+  - label: ready name="farm-fresh eggs" q=6 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="farm-fresh eggs" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="farm-fresh eggs" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [P-counted4] `2 supermarket rotisserie chickens`
+  - label: ready name="supermarket rotisserie chickens" q=2 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="supermarket rotisserie chickens" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="supermarket rotisserie chickens" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [P-counted4] `3 locally grown peaches`
+  - label: ready name="locally grown peaches" q=3 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="locally grown peaches" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="locally grown peaches" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [P-counted4] `2 extremely ripe avocados`
+  - label: ready name="extremely ripe avocados" q=2 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="extremely ripe avocados" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="extremely ripe avocados" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [P-counted4] `1 bottle barrel-aged stout`
+  - label: ready name="barrel-aged stout" q=1 u=bottle pkg=- alts=[]
+  - fc37ce7: C3b [] abstention — needs_review name="bottle barrel-aged stout" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3b [] — needs_review name="bottle barrel-aged stout" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [P-counted4] `1 bottle cask-strength bourbon`
+  - label: ready name="cask-strength bourbon" q=1 u=bottle pkg=- alts=[]
+  - fc37ce7: C3b [] abstention — needs_review name="bottle cask-strength bourbon" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3b [] — needs_review name="bottle cask-strength bourbon" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [P-counted4] `6 oven-roasted chicken thighs`
+  - label: ready name="oven-roasted chicken thighs" q=6 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="oven-roasted chicken thighs" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="oven-roasted chicken thighs" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [P-counted4] `4 griddle-baked flatbreads`
+  - label: ready name="griddle-baked flatbreads" q=4 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="griddle-baked flatbreads" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="griddle-baked flatbreads" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [P-counted4] `6 pan-seared scallops`
+  - label: ready name="pan-seared scallops" q=6 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="pan-seared scallops" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="pan-seared scallops" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `6 muffin-tin quiches`
+  - label: ready name="muffin-tin quiches" q=6 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="muffin-tin quiches" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="muffin-tin quiches" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `1 sheet brick pastry`
+  - label: ready name="brick pastry" q=1 u=sheet pkg=- alts=[]
+  - fc37ce7: C3b [] abstention — needs_review name="sheet brick pastry" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3b [] — needs_review name="sheet brick pastry" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `4 eggs en cocotte`
+  - label: ready name="eggs en cocotte" q=4 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="eggs en cocotte" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="eggs en cocotte" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `1 brisket point`
+  - label: ready name="brisket point" q=1 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="brisket point" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="brisket point" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `4 cowboy steaks`
+  - label: ready name="cowboy steaks" q=4 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="cowboy steaks" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="cowboy steaks" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `6 sous-vide egg bites`
+  - label: ready name="sous-vide egg bites" q=6 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="sous-vide egg bites" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="sous-vide egg bites" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `1 jar fridge pickles`
+  - label: ready name="fridge pickles" q=1 u=jar pkg=- alts=[]
+  - fc37ce7: C3b [] abstention — needs_review name="jar fridge pickles" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3b [] — needs_review name="jar fridge pickles" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `1 jar refrigerator pickles`
+  - label: ready name="refrigerator pickles" q=1 u=jar pkg=- alts=[]
+  - fc37ce7: C3b [] abstention — needs_review name="jar refrigerator pickles" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3b [] — needs_review name="jar refrigerator pickles" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `12 icebox cookies`
+  - label: ready name="icebox cookies" q=12 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="icebox cookies" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="icebox cookies" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `1 icebox cake`
+  - label: ready name="icebox cake" q=1 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="icebox cake" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="icebox cake" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `1 jar pot-set yogurt`
+  - label: ready name="pot-set yogurt" q=1 u=jar pkg=- alts=[]
+  - fc37ce7: C3b [] abstention — needs_review name="jar pot-set yogurt" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3b [] — needs_review name="jar pot-set yogurt" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `1 hot pot soup base`
+  - label: ready name="hot pot soup base" q=1 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="hot pot soup base" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C1 [] — ready name="hot pot soup base" q=1 u=each pkg=- alts=[] note=null reasons=
+- [O-overlap4] `1 packet hot pot seasoning`
+  - label: ready name="hot pot seasoning" q=1 u=packet pkg=- alts=[]
+  - fc37ce7: C3b [] abstention — needs_review name="packet hot pot seasoning" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C1 [] — ready name="hot pot seasoning" q=1 u=packet pkg=- alts=[] note=null reasons=count_unit
+- [O-overlap4] `2 platter-size pizzas`
+  - label: ready name="platter-size pizzas" q=2 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="platter-size pizzas" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="platter-size pizzas" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `6 tin-roof brownies`
+  - label: ready name="tin-roof brownies" q=6 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="tin-roof brownies" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="tin-roof brownies" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `4 vol-au-vent cases`
+  - label: ready name="vol-au-vent cases" q=4 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="vol-au-vent cases" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="vol-au-vent cases" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `12 tartlet cases`
+  - label: ready name="tartlet cases" q=12 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="tartlet cases" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="tartlet cases" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `1 jar barrel pickles`
+  - label: ready name="barrel pickles" q=1 u=jar pkg=- alts=[]
+  - fc37ce7: C3b [] abstention — needs_review name="jar barrel pickles" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3b [] — needs_review name="jar barrel pickles" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `6 cloverleaf rolls`
+  - label: ready name="cloverleaf rolls" q=6 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="cloverleaf rolls" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="cloverleaf rolls" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `6 accordion potatoes`
+  - label: ready name="accordion potatoes" q=6 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="accordion potatoes" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="accordion potatoes" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `4 foil-packet dinners`
+  - label: ready name="foil-packet dinners" q=4 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] abstention — needs_review name="foil-packet dinners" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C3a [] — needs_review name="foil-packet dinners" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+
+## Review burden: unknown measure (firm) (3)
+
+- [P-counted4] `1 suckling pig`
+  - label: ready name="suckling pig" q=1 u=each pkg=- alts=[]
+  - fc37ce7: C3b [] abstention — needs_review name="pig" q=- u=- pkg=- alts=[] note="1 suckling" reasons=unit_unknown
+  - ea674ec: C3a [] — needs_review name="suckling pig" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `6 pan de bono`
+  - label: ready name="pan de bono" q=6 u=each pkg=- alts=[]
+  - fc37ce7: C3b [] abstention — needs_review name="de bono" q=- u=- pkg=- alts=[] note="6 pan" reasons=unit_unknown,unclassified
+  - ea674ec: C3a [] — needs_review name="pan de bono" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [O-overlap4] `4 shot-glass desserts`
+  - label: ready name="shot-glass desserts" q=4 u=each pkg=- alts=[]
+  - fc37ce7: C3b [] abstention — needs_review name="desserts" q=- u=- pkg=- alts=[] note="4 shot-glass" reasons=unit_unknown
+  - ea674ec: C3b [] — needs_review name="desserts" q=- u=- pkg=- alts=[] note="4 shot-glass" reasons=unit_unknown
+
+## Other C3 (firm) (14)
+
+- [P-counted4] `4 sudachi`
+  - label: ready name="sudachi" q=4 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] — needs_review name="sudachi" q=4 u=each pkg=- alts=[] note=null reasons=unclassified
+  - ea674ec: C3a [] — needs_review name="sudachi" q=4 u=each pkg=- alts=[] note=null reasons=unclassified
+- [P-counted4] `6 pączki`
+  - label: ready name="pączki" q=6 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] — needs_review name="pączki" q=6 u=each pkg=- alts=[] note=null reasons=unclassified
+  - ea674ec: C3a [] — needs_review name="pączki" q=6 u=each pkg=- alts=[] note=null reasons=unclassified
+- [P-counted4] `2 khachapuri`
+  - label: ready name="khachapuri" q=2 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] — needs_review name="khachapuri" q=2 u=each pkg=- alts=[] note=null reasons=unclassified
+  - ea674ec: C3a [] — needs_review name="khachapuri" q=2 u=each pkg=- alts=[] note=null reasons=unclassified
+- [P-counted4] `6 simit`
+  - label: ready name="simit" q=6 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] — needs_review name="simit" q=6 u=each pkg=- alts=[] note=null reasons=unclassified
+  - ea674ec: C3a [] — needs_review name="simit" q=6 u=each pkg=- alts=[] note=null reasons=unclassified
+- [P-counted4] `2 lahmacun`
+  - label: ready name="lahmacun" q=2 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] — needs_review name="lahmacun" q=2 u=each pkg=- alts=[] note=null reasons=unclassified
+  - ea674ec: C3a [] — needs_review name="lahmacun" q=2 u=each pkg=- alts=[] note=null reasons=unclassified
+- [P-counted4] `4 manakish`
+  - label: ready name="manakish" q=4 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] — needs_review name="manakish" q=4 u=each pkg=- alts=[] note=null reasons=unclassified
+  - ea674ec: C3a [] — needs_review name="manakish" q=4 u=each pkg=- alts=[] note=null reasons=unclassified
+- [P-counted4] `8 kibbeh`
+  - label: ready name="kibbeh" q=8 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] — needs_review name="kibbeh" q=8 u=each pkg=- alts=[] note=null reasons=unclassified
+  - ea674ec: C3a [] — needs_review name="kibbeh" q=8 u=each pkg=- alts=[] note=null reasons=unclassified
+- [P-counted4] `8 gulab jamun`
+  - label: ready name="gulab jamun" q=8 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] — needs_review name="gulab jamun" q=8 u=each pkg=- alts=[] note=null reasons=unclassified
+  - ea674ec: C3a [] — needs_review name="gulab jamun" q=8 u=each pkg=- alts=[] note=null reasons=unclassified
+- [P-counted4] `4 dorayaki`
+  - label: ready name="dorayaki" q=4 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] — needs_review name="dorayaki" q=4 u=each pkg=- alts=[] note=null reasons=unclassified
+  - ea674ec: C3a [] — needs_review name="dorayaki" q=4 u=each pkg=- alts=[] note=null reasons=unclassified
+- [P-counted4] `2 taiyaki`
+  - label: ready name="taiyaki" q=2 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] — needs_review name="taiyaki" q=2 u=each pkg=- alts=[] note=null reasons=unclassified
+  - ea674ec: C3a [] — needs_review name="taiyaki" q=2 u=each pkg=- alts=[] note=null reasons=unclassified
+- [P-counted4] `4 onigiri`
+  - label: ready name="onigiri" q=4 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] — needs_review name="onigiri" q=4 u=each pkg=- alts=[] note=null reasons=unclassified
+  - ea674ec: C3a [] — needs_review name="onigiri" q=4 u=each pkg=- alts=[] note=null reasons=unclassified
+- [P-counted4] `12 lumpia`
+  - label: ready name="lumpia" q=12 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] — needs_review name="lumpia" q=12 u=each pkg=- alts=[] note=null reasons=unclassified
+  - ea674ec: C3a [] — needs_review name="lumpia" q=12 u=each pkg=- alts=[] note=null reasons=unclassified
+- [P-counted4] `20 pelmeni`
+  - label: ready name="pelmeni" q=20 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] — needs_review name="pelmeni" q=20 u=each pkg=- alts=[] note=null reasons=unclassified
+  - ea674ec: C3a [] — needs_review name="pelmeni" q=20 u=each pkg=- alts=[] note=null reasons=unclassified
+- [P-counted4] `12 vareniki`
+  - label: ready name="vareniki" q=12 u=each pkg=- alts=[]
+  - fc37ce7: C3a [] — needs_review name="vareniki" q=12 u=each pkg=- alts=[] note=null reasons=unclassified
+  - ea674ec: C3a [] — needs_review name="vareniki" q=12 u=each pkg=- alts=[] note=null reasons=unclassified
+
+## C2 medium (firm) (0)
+
+
+## C5b / invented (firm) (1)
+
+- [B-choice4] `1 lb cremini or shiitake mushrooms`
+  - label: needs_review name=null q=1 u=lb pkg=- alts="cremini mushrooms;shiitake mushrooms"
+  - fc37ce7: C5b [] invented — needs_review name=null q=1 u=lb pkg=- alts=["cremini","shiitake mushrooms"] note=null reasons=ingredient_alternatives
+  - ea674ec: C5b [] — needs_review name=null q=1 u=lb pkg=- alts=["cremini","shiitake mushrooms"] note=null reasons=ingredient_alternatives
+
+## Other C8 (firm) (0)
+
+
+## Safe abstentions on unsupported labels (firm) (55)
+
+- [E-brand4] `1 Ninja Creami`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="Ninja Creami" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="Ninja Creami" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-brand4] `1 Staub braiser`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="Staub braiser" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="Staub braiser" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-brand4] `1 Hario V60`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="Hario V60" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="Hario V60" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-brand4] `1 Keurig`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="Keurig" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="Keurig" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-brand4] `1 Weber Smokey Mountain`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="Weber Smokey Mountain" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C2 high [S1 S8] — ready name="Weber Smokey Mountain" q=1 u=each pkg=- alts=[] note=null reasons=
+- [E-brand4] `1 Masterbuilt turkey fryer`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="Masterbuilt turkey fryer" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="Masterbuilt turkey fryer" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-brand4] `1 Presto FryDaddy`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="Presto FryDaddy" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="Presto FryDaddy" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-brand4] `1 Whirley Pop popcorn popper`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="Whirley Pop popcorn popper" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="Whirley Pop popcorn popper" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-brand4] `1 Anova sous vide`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="Anova sous vide" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="Anova sous vide" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-brand4] `1 Yeti tumbler`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="Yeti tumbler" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="Yeti tumbler" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-brand4] `1 Brita pitcher`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="Brita pitcher" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="Brita pitcher" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-brand4] `1 Igloo cooler`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="Igloo cooler" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="Igloo cooler" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-brand4] `1 Yeti cooler`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="Yeti cooler" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="Yeti cooler" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 ceramic pie bird`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="ceramic pie bird" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="ceramic pie bird" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 honey dipper`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="honey dipper" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="honey dipper" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 turkey fryer`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="turkey fryer" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="turkey fryer" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 vertical chicken roaster`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="vertical chicken roaster" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="vertical chicken roaster" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 pig roaster`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="pig roaster" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="pig roaster" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 tamale steamer`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="tamale steamer" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="tamale steamer" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 bag charcoal briquettes`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="bag charcoal briquettes" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="bag charcoal briquettes" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 bag hardwood pellets`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="bag hardwood pellets" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="bag hardwood pellets" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 cedar plank`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="cedar plank" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="cedar plank" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `2 alder planks`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="alder planks" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="alder planks" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 butter churn`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="butter churn" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="butter churn" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 pie crust shield`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="pie crust shield" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="pie crust shield" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 pie server`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="pie server" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="pie server" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 cookie stamp`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="cookie stamp" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="cookie stamp" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 taco holder`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="taco holder" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="taco holder" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 garlic keeper`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="garlic keeper" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="garlic keeper" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 bread bin`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="bread bin" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="bread bin" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 ravioli stamp`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="ravioli stamp" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="ravioli stamp" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 gnocchi board`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="gnocchi board" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="gnocchi board" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 rice paddle`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="rice paddle" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C2 high [S1 S8] — ready name="rice paddle" q=1 u=each pkg=- alts=[] note=null reasons=
+- [E-foodword4] `1 soda siphon`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="soda siphon" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="soda siphon" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 milk frother`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="milk frother" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="milk frother" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 tea cozy`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="tea cozy" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="tea cozy" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 espresso tamper`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="espresso tamper" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="espresso tamper" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 knock box`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="knock box" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="knock box" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 wine key`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="wine key" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="wine key" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 lid lifter`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="lid lifter" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="lid lifter" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-foodword4] `1 spoon rest`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="rest" q=- u=- pkg=- alts=[] note="1 spoon" reasons=unit_unknown,unclassified
+  - ea674ec: C8 [] — needs_review name="rest" q=- u=- pkg=- alts=[] note="1 spoon" reasons=unit_unknown,unclassified
+- [E-foodword4] `4 kitchen sponges`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="kitchen sponges" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="kitchen sponges" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-household4] `1 box Hefty slider bags`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="box Hefty slider bags" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="box Hefty slider bags" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-household4] `1 package Solo cups`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="package Solo cups" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="package Solo cups" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-household4] `1 box birthday candles`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="box birthday candles" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="box birthday candles" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-household4] `1 package cupcake toppers`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="package cupcake toppers" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="package cupcake toppers" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-household4] `1 package coffee filters`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="package coffee filters" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="package coffee filters" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-household4] `1 box dishwasher pods`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="box dishwasher pods" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="box dishwasher pods" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-household4] `1 bottle dish soap`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="bottle dish soap" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="bottle dish soap" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-household4] `1 bottle hand soap`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="bottle hand soap" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="bottle hand soap" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-titlecase4] `1 Honey Dipper`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="Honey Dipper" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="Honey Dipper" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-titlecase4] `1 Turkey Fryer`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="Turkey Fryer" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="Turkey Fryer" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [E-titlecase4] `1 Cedar Plank`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="Cedar Plank" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+  - ea674ec: C8 [] — needs_review name="Cedar Plank" q=- u=- pkg=- alts=[] note=null reasons=unclassified,quantity_missing
+- [D-misc4] `Store leftovers in an airtight container`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="Store leftovers in an airtight container" q=- u=- pkg=- alts=[] note=null reasons=quantity_missing
+  - ea674ec: C8 [] — needs_review name="Store leftovers in an airtight container" q=- u=- pkg=- alts=[] note=null reasons=quantity_missing
+- [D-misc4] `Pin it for later!`
+  - label: unsupported name=null q=- u=- pkg=- alts=[]
+  - fc37ce7: C8 [] abstention — needs_review name="Pin it" q=- u=- pkg=- alts=[] note="for later" reasons=quantity_missing
+  - ea674ec: C8 [] — needs_review name="Pin it" q=- u=- pkg=- alts=[] note="for later" reasons=quantity_missing
+
+## CE or safety net (0)
+

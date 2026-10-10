@@ -1,0 +1,2 @@
+engines=legacy-table-import-2,legacy-table-import-2+suggestion,semantic-v1 lines=669 outputs=2007 invalid=0 nondeterministic=0
+exit=0

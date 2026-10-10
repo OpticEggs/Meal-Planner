@@ -1,0 +1,8 @@
+# input	old label	new label	unit-slot word (CONTRACT-v1 §13.1)
+1 bar dark chocolate	{"status": "ready", "name": "dark chocolate", "acceptNames": [], "quantity": "1", "unit": "block", "packageSize": null, "alternatives": [], "acceptAlternatives": []}	needs_review, no amount	bar
+2 bars cream cheese	{"status": "ready", "name": "cream cheese", "acceptNames": [], "quantity": "2", "unit": "block", "packageSize": null, "alternatives": [], "acceptAlternatives": []}	needs_review, no amount	bars
+1 tub sour cream	{"status": "ready", "name": "sour cream", "acceptNames": [], "quantity": "1", "unit": "container", "packageSize": null, "alternatives": [], "acceptAlternatives": []}	needs_review, no amount	tub
+3 × 120g pots natural yoghurt	{"status": "ready", "name": "natural yoghurt", "acceptNames": [], "quantity": "3", "unit": "container", "packageSize": "120 g", "alternatives": [], "acceptAlternatives": []}	needs_review, no amount	pots
+8 oz tub whipped topping	{"status": "ready", "name": "whipped topping", "acceptNames": [], "quantity": "1", "unit": "container", "packageSize": "8 oz", "alternatives": [], "acceptAlternatives": []}	needs_review, no amount	tub
+1 tub vanilla frosting	{"status": "ready", "name": "vanilla frosting", "acceptNames": [], "quantity": "1", "unit": "container", "packageSize": null, "alternatives": [], "acceptAlternatives": []}	needs_review, no amount	tub
+1 tub garlic and herb cheese spread	{"status": "ready", "name": "garlic and herb cheese spread", "acceptNames": [], "quantity": "1", "unit": "container", "packageSize": null, "alternatives": [], "acceptAlternatives": []}	needs_review, no amount	tub

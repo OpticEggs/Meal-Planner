@@ -1,0 +1,28 @@
+range-min-only: SURVIVED
+qty-by-display: SURVIVED
+unit-by-source: SURVIVED
+name-no-punct-trim: killed by O07 
+subclass-strict: killed by O27 O67 
+alts-not-contradiction: killed by O28 O29 O38 
+a-before-b: killed by O23 O25 O26 O34 O35 O41 O45 O62 O70 
+c-needs-pkg-null: SURVIVED
+a-needs-name: killed by O27 
+s1-ready-only: killed by O45 O49 O62 
+s2-any-status: killed by O23 O31 O33 O34 O35 O36 O39 O41 O46 
+s2-needs-engine-qty: killed by O14 
+s3-unit-only: killed by O20 
+s5-no-accept: killed by O26 
+s7-any-status: SURVIVED
+s7-strict-name: killed by O05 
+s8-any-status: killed by O47 O48 O49 O50 
+bare-ignore-qty: SURVIVED
+bare-ignore-unit: killed by O62 
+bare-ignore-alts: SURVIVED
+nondet-scored-fields-only: SURVIVED
+validate-first-parse-only: SURVIVED
+ce-status-string-only: killed by O53 O54 O55 O56 O57 O58 O69 
+s-codes-on-ce: killed by O52 O53 O54 O55 O69 
+pkg-not-high (v1, equivalent to the default because of the reading-1 high fallback): SURVIVED
+c1plus-ignores-equivalents: killed by O04 
+dropped-includes-empty: killed by O24 O25 O26 O30 O31 
+pkg-not-high (v2, wrong package alone → medium): killed by O10 O65 

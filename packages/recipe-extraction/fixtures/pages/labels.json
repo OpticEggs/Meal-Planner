@@ -1,0 +1,659 @@
+[
+  {
+    "id": "page-dev-plain-jsonld",
+    "split": "dev",
+    "file": "dev-plain-jsonld.html",
+    "requestedUrl": "https://www.example.com/recipes/lemon-herb-lentil-salad/",
+    "finalUrl": "https://www.example.com/recipes/lemon-herb-lentil-salad/",
+    "isRecipe": true,
+    "expectedCandidateCount": 1,
+    "candidates": [
+      {
+        "structure": "json_ld",
+        "title": "Invented Lemon Herb Lentil Salad",
+        "servings": 6,
+        "yieldText": "6 servings",
+        "prepMinutes": 15,
+        "cookMinutes": 25,
+        "totalMinutes": 40,
+        "author": "Robin Placeholder",
+        "siteName": "Example Weeknight Table",
+        "category": "Salad",
+        "cuisine": "Mediterranean-inspired",
+        "ingredientLines": [
+          "1 cup dried green lentils, rinsed",
+          "3 cups water",
+          "1/3 cup extra-virgin olive oil",
+          "2 tbsp lemon juice",
+          "1 small shallot, minced",
+          "1/2 cup chopped parsley",
+          "1/2 tsp kosher salt",
+          "1/4 cup crumbled feta (optional)"
+        ],
+        "instructionCount": 4,
+        "imageUrls": [
+          "https://www.example.com/media/lentil-salad-1x1.jpg",
+          "https://www.example.com/media/lentil-salad-4x3.jpg"
+        ],
+        "declaredUrl": "https://www.example.com/recipes/lemon-herb-lentil-salad/"
+      }
+    ],
+    "expectedDiagnostics": [],
+    "provenance": {
+      "kind": "synthetic_pattern",
+      "source": "Written for this benchmark (pattern: plain JSON-LD Recipe, string author, string instructions, image string array); invented page, no third-party content"
+    },
+    "rationale": "One JSON-LD Recipe. No publisher, WebSite or Organization in the block, so the site name falls back to og:site_name (§3). The recipe names its own images, so og:image is not used. Title from the recipe name, not og:title."
+  },
+  {
+    "id": "page-dev-yoast-graph",
+    "split": "dev",
+    "file": "dev-yoast-graph.html",
+    "requestedUrl": "https://www.example.org/2026/03/sheet-pan-gnocchi/",
+    "finalUrl": "https://www.example.org/2026/03/sheet-pan-gnocchi/",
+    "isRecipe": true,
+    "expectedCandidateCount": 1,
+    "candidates": [
+      {
+        "structure": "json_ld",
+        "title": "Invented Sheet-Pan Gnocchi",
+        "servings": 4,
+        "yieldText": "4 servings",
+        "prepMinutes": 10,
+        "cookMinutes": 30,
+        "totalMinutes": 40,
+        "author": "Casey Sample",
+        "siteName": "Example Supper Club Media",
+        "category": "Dinner",
+        "cuisine": "Italian-American",
+        "ingredientLines": [
+          "1 (16 oz) package shelf-stable gnocchi",
+          "1 pint cherry tomatoes",
+          "1 red bell pepper, sliced",
+          "2 tbsp olive oil",
+          "3 cloves garlic, smashed",
+          "1/2 cup grated Parmesan"
+        ],
+        "instructionCount": 5,
+        "imageUrls": [
+          "https://www.example.org/wp-content/uploads/2026/03/gnocchi-1200.jpg",
+          "https://www.example.org/wp-content/uploads/2026/03/gnocchi-500x500.jpg"
+        ],
+        "declaredUrl": "https://www.example.org/2026/03/sheet-pan-gnocchi/",
+        "accept": {
+          "yieldText": [
+            "4",
+            "4, 4 servings"
+          ]
+        }
+      }
+    ],
+    "expectedDiagnostics": [],
+    "provenance": {
+      "kind": "synthetic_pattern",
+      "source": "Written for this benchmark (pattern: Yoast-style @graph with @id references, HowToSection/HowToStep, recipeYield array); invented page, no third-party content"
+    },
+    "rationale": "Author and publisher are one-hop @id references (Person, Organization). The recipe's own publisher wins over the WebSite name and og:site_name (§3). The first image is an @id reference to the ImageObject, resolved to its url. Five HowToSteps in two HowToSections. recipeYield ['4','4 servings'] states one integer → servings 4; yieldText labelled '4 servings' with '4' and the joined form accepted (CONTRACT AMBIGUITY: which yield entry is the text)."
+  },
+  {
+    "id": "page-dev-type-array-br",
+    "split": "dev",
+    "file": "dev-type-array-br.html",
+    "requestedUrl": "https://news.example.com/food/blueberry-muffins",
+    "finalUrl": "https://news.example.com/food/blueberry-muffins",
+    "isRecipe": true,
+    "expectedCandidateCount": 1,
+    "candidates": [
+      {
+        "structure": "json_ld",
+        "title": "Invented Blueberry Muffins",
+        "servings": 12,
+        "yieldText": "12 muffins",
+        "prepMinutes": 15,
+        "cookMinutes": 22,
+        "totalMinutes": 37,
+        "author": "Dana Example",
+        "siteName": "Example Morning Paper",
+        "category": "Breakfast",
+        "cuisine": null,
+        "ingredientLines": [
+          "2 cups all-purpose flour",
+          "1/2 cup sugar",
+          "2 tsp baking powder",
+          "1 cup blueberries, fresh or frozen",
+          "1/3 cup melted butter",
+          "1 large egg"
+        ],
+        "instructionCount": 3,
+        "imageUrls": [
+          "https://news.example.com/img/2026/blueberry-muffins.jpg"
+        ],
+        "declaredUrl": null
+      }
+    ],
+    "expectedDiagnostics": [],
+    "provenance": {
+      "kind": "synthetic_pattern",
+      "source": "Written for this benchmark (pattern: @type array [Recipe, NewsArticle]; recipeIngredient as one string split by <br>; author array; ImageObject); invented page, no third-party content"
+    },
+    "rationale": "@type array containing Recipe. The single recipeIngredient string holds six lines separated by <br>, <br/> and <br /> (CONTRACT AMBIGUITY: splitting one string on line-break markup is read as six published lines). '12 muffins' states one integer 1–100 → servings 12 per §3. Publisher is on the recipe node itself. No url property → declaredUrl null."
+  },
+  {
+    "id": "page-dev-microdata",
+    "split": "dev",
+    "file": "dev-microdata.html",
+    "requestedUrl": "https://cookbook.example.org/recipes/maple-oat-bars",
+    "finalUrl": "https://cookbook.example.org/recipes/maple-oat-bars",
+    "isRecipe": true,
+    "expectedCandidateCount": 1,
+    "candidates": [
+      {
+        "structure": "microdata",
+        "title": "Invented Maple Oat Bars",
+        "servings": 16,
+        "yieldText": "16 bars",
+        "prepMinutes": 20,
+        "cookMinutes": 35,
+        "totalMinutes": 55,
+        "author": "Jordan Fixture",
+        "siteName": "Example Cookbook Archive",
+        "category": "Dessert",
+        "cuisine": null,
+        "ingredientLines": [
+          "2 cups rolled oats",
+          "1/2 cup maple syrup",
+          "1/3 cup melted coconut oil",
+          "1/2 cup chopped pecans",
+          "1/4 tsp fine salt",
+          "1 tsp vanilla extract"
+        ],
+        "instructionCount": 4,
+        "imageUrls": [
+          "https://cookbook.example.org/img/maple-oat-bars.jpg"
+        ],
+        "declaredUrl": "https://cookbook.example.org/recipes/maple-oat-bars"
+      }
+    ],
+    "expectedDiagnostics": [
+      "microdata_used"
+    ],
+    "provenance": {
+      "kind": "synthetic_pattern",
+      "source": "Written for this benchmark (pattern: schema.org microdata only (no JSON-LD)); invented page, no third-party content"
+    },
+    "rationale": "Microdata recipe: <abbr> markup removed and repeated spaces collapsed in the ingredient text; times from meta content and time datetime; site name from og:site_name (no structured publisher)."
+  },
+  {
+    "id": "page-dev-opengraph-only",
+    "split": "dev",
+    "file": "dev-opengraph-only.html",
+    "requestedUrl": "https://blog.example.net/notes/tomato-soup",
+    "finalUrl": "https://blog.example.net/notes/tomato-soup",
+    "isRecipe": false,
+    "expectedCandidateCount": 0,
+    "candidates": [],
+    "expectedDiagnostics": [
+      "no_structured_data"
+    ],
+    "provenance": {
+      "kind": "synthetic_pattern",
+      "source": "Written for this benchmark (pattern: Open Graph / Twitter tags only, no structured data); invented page, no third-party content"
+    },
+    "rationale": "No JSON-LD and no microdata: not a recipe, even though the prose lists amounts."
+  },
+  {
+    "id": "page-dev-two-recipes",
+    "split": "dev",
+    "file": "dev-two-recipes.html",
+    "requestedUrl": "https://www.example.com/menus/taco-night/",
+    "finalUrl": "https://www.example.com/menus/taco-night/",
+    "isRecipe": true,
+    "expectedCandidateCount": 2,
+    "candidates": [
+      {
+        "structure": "json_ld",
+        "title": "Invented Pickled Red Onions",
+        "servings": 8,
+        "yieldText": "8 servings",
+        "prepMinutes": 10,
+        "cookMinutes": null,
+        "totalMinutes": 70,
+        "author": "Riley Mock",
+        "siteName": "Example Taco Night",
+        "category": "Condiment",
+        "cuisine": null,
+        "ingredientLines": [
+          "1 large red onion, thinly sliced",
+          "3/4 cup apple cider vinegar",
+          "1/2 cup water",
+          "1 tbsp sugar",
+          "1 1/2 tsp kosher salt"
+        ],
+        "instructionCount": 3,
+        "imageUrls": [
+          "https://www.example.com/media/pickled-onions.jpg"
+        ],
+        "declaredUrl": "https://www.example.com/menus/taco-night/#pickled-onions"
+      },
+      {
+        "structure": "json_ld",
+        "title": "Invented Black Bean Tacos",
+        "servings": 4,
+        "yieldText": "4",
+        "prepMinutes": 15,
+        "cookMinutes": 10,
+        "totalMinutes": 25,
+        "author": "Riley Mock",
+        "siteName": "Example Taco Night",
+        "category": "Main Course",
+        "cuisine": "Mexican-inspired",
+        "ingredientLines": [
+          "2 (15 oz) cans black beans, drained and rinsed",
+          "1 tsp ground cumin",
+          "8 small corn tortillas",
+          "1 avocado, sliced",
+          "1/2 cup crumbled cotija",
+          "lime wedges, for serving"
+        ],
+        "instructionCount": 4,
+        "imageUrls": [
+          "https://www.example.com/media/taco-night-og.jpg"
+        ],
+        "declaredUrl": null
+      }
+    ],
+    "expectedDiagnostics": [
+      "multiple_recipes"
+    ],
+    "provenance": {
+      "kind": "synthetic_pattern",
+      "source": "Written for this benchmark (pattern: two Recipe objects in one JSON-LD array; og:image fallback for the recipe without an image); invented page, no third-party content"
+    },
+    "rationale": "Two recipes in document order. PT1H10M = 70 minutes. The second recipe names no image, so its image falls back to og:image (§3); the first names its own."
+  },
+  {
+    "id": "page-dev-malformed-plus-valid",
+    "split": "dev",
+    "file": "dev-malformed-plus-valid.html",
+    "requestedUrl": "https://kitchen.example.org/recipes/miso-glazed-carrots",
+    "finalUrl": "https://kitchen.example.org/recipes/miso-glazed-carrots",
+    "isRecipe": true,
+    "expectedCandidateCount": 1,
+    "candidates": [
+      {
+        "structure": "json_ld",
+        "title": "Invented Miso-Glazed Carrots",
+        "servings": 4,
+        "yieldText": "Serves 4",
+        "prepMinutes": 10,
+        "cookMinutes": 25,
+        "totalMinutes": 35,
+        "author": "Avery Stub",
+        "siteName": "Example Kitchen Lab",
+        "category": "Side Dish",
+        "cuisine": "Japanese-inspired",
+        "ingredientLines": [
+          "1 lb carrots, halved lengthwise",
+          "2 tbsp white miso",
+          "1 tbsp honey",
+          "1 tbsp butter, melted",
+          "1 tsp rice vinegar",
+          "sesame seeds, for garnish"
+        ],
+        "instructionCount": 3,
+        "imageUrls": [
+          "https://kitchen.example.org/photos/miso-carrots.jpg"
+        ],
+        "declaredUrl": "https://kitchen.example.org/recipes/miso-glazed-carrots"
+      }
+    ],
+    "expectedDiagnostics": [
+      "jsonld_invalid_json"
+    ],
+    "provenance": {
+      "kind": "synthetic_pattern",
+      "source": "Written for this benchmark (pattern: one malformed JSON-LD block followed by a valid Recipe block); invented page, no third-party content"
+    },
+    "rationale": "The first block is not valid JSON and is skipped with a diagnostic; the second still yields the recipe. 'Serves 4' states one integer."
+  },
+  {
+    "id": "page-dev-entities-relative",
+    "split": "dev",
+    "file": "dev-entities-relative.html",
+    "requestedUrl": "https://www.example.net/recipes/brown-butter-rice-pudding",
+    "finalUrl": "https://www.example.net/recipes/brown-butter-rice-pudding",
+    "isRecipe": true,
+    "expectedCandidateCount": 1,
+    "candidates": [
+      {
+        "structure": "json_ld",
+        "title": "Invented Brown Butter Rice Pudding",
+        "servings": 6,
+        "yieldText": "6 servings",
+        "prepMinutes": 10,
+        "cookMinutes": 45,
+        "totalMinutes": 55,
+        "author": "Sky Dummy",
+        "siteName": "Example Dessert Desk",
+        "category": "Dessert",
+        "cuisine": null,
+        "ingredientLines": [
+          "½ cup arborio rice",
+          "4 cups whole milk",
+          "⅓ cup sugar",
+          "⅔ cup heavy cream",
+          "3 tbsp unsalted butter (for the brown butter & topping)",
+          "1 cinnamon stick",
+          "2 large egg yolks",
+          "pinch of ground nutmeg"
+        ],
+        "instructionCount": 3,
+        "imageUrls": [
+          "https://www.example.net/media/rice-pudding-wide.jpg",
+          "https://www.example.net/recipes/media/rice-pudding-square.jpg"
+        ],
+        "declaredUrl": null
+      }
+    ],
+    "expectedDiagnostics": [],
+    "provenance": {
+      "kind": "synthetic_pattern",
+      "source": "Written for this benchmark (pattern: HTML entities and markup in ingredient strings; relative image URLs; Recipe as WebPage mainEntity); invented page, no third-party content"
+    },
+    "rationale": "&frac12; &#8531; &#x2154; &amp; &nbsp; decoded; <strong> markup removed. Root-relative and path-relative image URLs resolve against finalUrl (the path-relative one against /recipes/). Publisher on the recipe gives the site name. CONTRACT AMBIGUITY: &nbsp; after decoding and whitespace collapse is labelled as an ordinary space; the scorer canonicalizes whitespace in ingredient lines."
+  },
+  {
+    "id": "page-dev-article-nonrecipe",
+    "split": "dev",
+    "file": "dev-article-nonrecipe.html",
+    "requestedUrl": "https://www.example.org/news/farmers-market-opens/",
+    "finalUrl": "https://www.example.org/news/farmers-market-opens/",
+    "isRecipe": false,
+    "expectedCandidateCount": 0,
+    "candidates": [],
+    "expectedDiagnostics": [
+      "no_recipe_data"
+    ],
+    "provenance": {
+      "kind": "synthetic_pattern",
+      "source": "Written for this benchmark (pattern: news article with non-recipe JSON-LD (@graph of NewsArticle, BreadcrumbList, Organization)); invented page, no third-party content"
+    },
+    "rationale": "Structured data exists but none of it is a Recipe."
+  },
+  {
+    "id": "page-dev-redirect-headings",
+    "split": "dev",
+    "file": "dev-redirect-headings.html",
+    "requestedUrl": "https://share.example.net/r/7Kq2",
+    "finalUrl": "https://www.example.net/kitchen/black-bean-chili/",
+    "isRecipe": true,
+    "expectedCandidateCount": 1,
+    "candidates": [
+      {
+        "structure": "json_ld",
+        "title": "Invented Black Bean Chili",
+        "servings": null,
+        "yieldText": "4 to 6 servings",
+        "prepMinutes": 20,
+        "cookMinutes": 60,
+        "totalMinutes": 80,
+        "author": "Ellis Sample",
+        "siteName": "Example Chili Collective",
+        "category": "Main Course",
+        "cuisine": "Tex-Mex-inspired",
+        "ingredientLines": [
+          "For the chili:",
+          "2 tbsp olive oil",
+          "1 onion, diced",
+          "2 (15 oz) cans black beans, drained",
+          "1 (28 oz) can crushed tomatoes",
+          "1 tbsp chili powder",
+          "For the topping:",
+          "1/2 cup sour cream",
+          "2 green onions, sliced"
+        ],
+        "instructionCount": 4,
+        "imageUrls": [
+          "https://www.example.net/kitchen/media/chili.jpg"
+        ],
+        "declaredUrl": "https://www.example.net/kitchen/black-bean-chili/"
+      }
+    ],
+    "expectedDiagnostics": [],
+    "provenance": {
+      "kind": "synthetic_pattern",
+      "source": "Written for this benchmark (pattern: short-link redirect to another host; ingredient headings inside recipeIngredient; WebSite name in the block; ../ relative image); invented page, no third-party content"
+    },
+    "rationale": "The relative image resolves against finalUrl (not the short link). Headings stay in ingredientLines as published. '4 to 6 servings' is a range → servings null. No publisher → WebSite name in the block (§3). Author via one-hop @id."
+  },
+  {
+    "id": "page-hold-graph-website",
+    "split": "holdout",
+    "file": "hold-graph-website.html",
+    "requestedUrl": "https://www.example.com/2026/09/roast-squash-farro-bowls/",
+    "finalUrl": "https://www.example.com/2026/09/roast-squash-farro-bowls/",
+    "isRecipe": true,
+    "expectedCandidateCount": 1,
+    "candidates": [
+      {
+        "structure": "json_ld",
+        "title": "Invented Roast Squash Farro Bowls",
+        "servings": 2,
+        "yieldText": "Serves 2",
+        "prepMinutes": 15,
+        "cookMinutes": 55,
+        "totalMinutes": 70,
+        "author": "Noel Fixture",
+        "siteName": "Example Grain Kitchen",
+        "category": "Lunch",
+        "cuisine": null,
+        "ingredientLines": [
+          "2 cups cubed butternut squash",
+          "1 cup uncooked farro",
+          "2 cups baby kale",
+          "Dressing:",
+          "3 tbsp tahini",
+          "2 tbsp lemon juice",
+          "1 small garlic clove, grated",
+          "water, as needed"
+        ],
+        "instructionCount": 5,
+        "imageUrls": [
+          "https://www.example.com/wp-content/uploads/2026/09/farro-bowls.jpg"
+        ],
+        "declaredUrl": null
+      }
+    ],
+    "expectedDiagnostics": [],
+    "provenance": {
+      "kind": "synthetic_pattern",
+      "source": "Written for this benchmark (pattern: @graph with WebSite name only; @type single-element array; ImageObject by @id; HowToSections; ingredient heading); invented page, no third-party content"
+    },
+    "rationale": "No publisher on the recipe and no Organization; the WebSite name in the block is the site name (§3). PT1H10M = 70. Five steps across two sections. No url property → declaredUrl null."
+  },
+  {
+    "id": "page-hold-redirect-li-entities",
+    "split": "holdout",
+    "file": "hold-redirect-li-entities.html",
+    "requestedUrl": "https://go.example/x/91",
+    "finalUrl": "https://recipes.example.com/soups/spiced-carrot-soup",
+    "isRecipe": true,
+    "expectedCandidateCount": 1,
+    "candidates": [
+      {
+        "structure": "json_ld",
+        "title": "Invented Spiced Carrot Soup",
+        "servings": 6,
+        "yieldText": "6 servings",
+        "prepMinutes": 20,
+        "cookMinutes": 40,
+        "totalMinutes": 60,
+        "author": "Harper Draft",
+        "siteName": "Example Soup Society",
+        "category": "Soup",
+        "cuisine": "Moroccan-inspired",
+        "ingredientLines": [
+          "2 lb carrots, chopped",
+          "1 onion, diced",
+          "¼ cup olive oil",
+          "1 tsp cumin & coriander, mixed",
+          "½ tsp ground ginger",
+          "4 cups vegetable stock",
+          "1/2 cup crème fraîche"
+        ],
+        "instructionCount": 4,
+        "imageUrls": [
+          "https://recipes.example.com/soups/images/carrot-soup.jpg",
+          "https://recipes.example.com/img/carrot-soup-2.jpg"
+        ],
+        "declaredUrl": "https://recipes.example.com/soups/spiced-carrot-soup",
+        "accept": {
+          "yieldText": [
+            "6",
+            "6, 6 servings"
+          ]
+        }
+      }
+    ],
+    "expectedDiagnostics": [],
+    "provenance": {
+      "kind": "synthetic_pattern",
+      "source": "Written for this benchmark (pattern: redirect to another host; recipeIngredient as one <ul><li> string with entities; relative and protocol-relative images; recipeYield array); invented page, no third-party content"
+    },
+    "rationale": "Seven <li> lines with &frac14; &amp; &#189; &nbsp; &egrave; &icirc; decoded. 'images/…' resolves against the final URL's directory (/soups/); '//host/…' takes the final URL's scheme. Yield array states one integer → 6."
+  },
+  {
+    "id": "page-hold-microdata-og-image",
+    "split": "holdout",
+    "file": "hold-microdata-og-image.html",
+    "requestedUrl": "https://bakery.example.org/cookies/brown-butter-cookies.html",
+    "finalUrl": "https://bakery.example.org/cookies/brown-butter-cookies.html",
+    "isRecipe": true,
+    "expectedCandidateCount": 1,
+    "candidates": [
+      {
+        "structure": "microdata",
+        "title": "Invented Brown Butter Cookies",
+        "servings": 24,
+        "yieldText": "Makes 24 cookies",
+        "prepMinutes": 25,
+        "cookMinutes": 12,
+        "totalMinutes": null,
+        "author": "Morgan Testcase",
+        "siteName": "Example Bakery Notes",
+        "category": "Cookies",
+        "cuisine": "American",
+        "ingredientLines": [
+          "1 cup unsalted butter, browned and cooled",
+          "1 cup packed brown sugar",
+          "1/2 cup granulated sugar",
+          "2 large eggs",
+          "2 1/4 cups all-purpose flour",
+          "1 tsp baking soda",
+          "1 1/2 cups chocolate chips"
+        ],
+        "instructionCount": 5,
+        "imageUrls": [
+          "https://bakery.example.org/og/brown-butter-cookies.jpg"
+        ],
+        "declaredUrl": null
+      }
+    ],
+    "expectedDiagnostics": [
+      "microdata_used"
+    ],
+    "provenance": {
+      "kind": "synthetic_pattern",
+      "source": "Written for this benchmark (pattern: microdata with nested Person author, no recipe image (og:image fallback, root-relative)); invented page, no third-party content"
+    },
+    "rationale": "The nested Person's name is the author (not the recipe name). The recipe names no image, so the og:image is used, resolved against finalUrl. No total time stated → null."
+  },
+  {
+    "id": "page-hold-two-recipes-malformed",
+    "split": "holdout",
+    "file": "hold-two-recipes-malformed.html",
+    "requestedUrl": "https://www.example.org/holiday/brunch-board/",
+    "finalUrl": "https://www.example.org/holiday/brunch-board/",
+    "isRecipe": true,
+    "expectedCandidateCount": 2,
+    "candidates": [
+      {
+        "structure": "json_ld",
+        "title": "Invented Overnight Oats",
+        "servings": 2,
+        "yieldText": "2 servings",
+        "prepMinutes": 5,
+        "cookMinutes": null,
+        "totalMinutes": 485,
+        "author": "Taylor Mockup",
+        "siteName": "Example Holiday Table",
+        "category": "Breakfast",
+        "cuisine": null,
+        "ingredientLines": [
+          "1 cup rolled oats",
+          "1 cup oat milk",
+          "1/2 cup Greek yogurt",
+          "1 tbsp chia seeds",
+          "2 tsp maple syrup"
+        ],
+        "instructionCount": 2,
+        "imageUrls": [
+          "https://www.example.org/holiday/img/oats.jpg",
+          "https://www.example.org/holiday/img/oats-2.jpg"
+        ],
+        "declaredUrl": null
+      },
+      {
+        "structure": "json_ld",
+        "title": "Invented Citrus Salad",
+        "servings": 4,
+        "yieldText": "4 servings",
+        "prepMinutes": 15,
+        "cookMinutes": null,
+        "totalMinutes": 15,
+        "author": "Taylor Mockup",
+        "siteName": "Example Holiday Table",
+        "category": "Salad",
+        "cuisine": null,
+        "ingredientLines": [
+          "2 oranges, peeled and sliced",
+          "1 grapefruit, segmented",
+          "1 tbsp honey",
+          "fresh mint, for garnish"
+        ],
+        "instructionCount": 2,
+        "imageUrls": [
+          "https://www.example.org/holiday/img/brunch-og.jpg"
+        ],
+        "declaredUrl": null
+      }
+    ],
+    "expectedDiagnostics": [
+      "jsonld_invalid_json",
+      "multiple_recipes"
+    ],
+    "provenance": {
+      "kind": "synthetic_pattern",
+      "source": "Written for this benchmark (pattern: truncated JSON-LD block plus two Recipe blocks; og:image fallback on one); invented page, no third-party content"
+    },
+    "rationale": "The truncated first block is skipped (its draft recipe is not a candidate). PT8H5M = 485 minutes. The citrus salad names no image → og:image."
+  },
+  {
+    "id": "page-hold-faq-nonrecipe",
+    "split": "holdout",
+    "file": "hold-faq-nonrecipe.html",
+    "requestedUrl": "https://help.example.com/faq/storing-leftovers",
+    "finalUrl": "https://help.example.com/faq/storing-leftovers",
+    "isRecipe": false,
+    "expectedCandidateCount": 0,
+    "candidates": [],
+    "expectedDiagnostics": [
+      "no_recipe_data"
+    ],
+    "provenance": {
+      "kind": "synthetic_pattern",
+      "source": "Written for this benchmark (pattern: FAQPage (with mainEntity questions) and Organization JSON-LD, no recipe); invented page, no third-party content"
+    },
+    "rationale": "mainEntity holds Questions, not a Recipe: structured data without a recipe."
+  }
+]

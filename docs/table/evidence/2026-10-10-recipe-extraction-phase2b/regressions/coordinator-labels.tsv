@@ -1,0 +1,125 @@
+# input	status	name(|accepted...)	qty	unit	pkg	alts(;)(||accepted set)	flags (D=debatable)	origin	family
+a half-cup milk	ready	milk	1/2	cup	-	-	-	K1	A
+a quarter-cup sugar	ready	sugar	1/4	cup	-	-	-	K1	A
+a quarter-pound beef	ready	beef	1/4	lb	-	-	-	K1	A
+a half-pound ground beef	ready	ground beef	1/2	lb	-	-	-	K1	A
+1 half-cup butter	ready	butter	1/2	cup	-	-	D	K1	A
+a half-cup of milk	ready	milk	1/2	cup	-	-	-	K1	A
+400g (14oz) can chopped tomatoes	ready	chopped tomatoes	1	can	400 g	-	-	K2	C
+400 g (14 oz) can tomatoes	ready	tomatoes	1	can	400 g	-	-	K2	C
+400g/14oz can chopped tomatoes	ready	chopped tomatoes	1	can	400 g	-	-	K2	C
+400 g / 14 oz can tomatoes	ready	tomatoes	1	can	400 g	-	-	K2	C
+14 oz (400 g) can tomatoes	ready	tomatoes	1	can	14 oz	-	-	K2	C
+15 oz (425 g) can black beans	ready	black beans	1	can	15 oz	-	-	K2	C
+400ml (14fl oz) can coconut milk	ready	coconut milk	1	can	400 ml	-	-	K2	C
+28 oz (794 g) can whole tomatoes	ready	whole tomatoes	1	can	28 oz	-	-	K2	C
+8 oz (225 g) package cream cheese	ready	cream cheese	1	package	8 oz	-	-	K2	C
+8-oz (225 g) package cream cheese	ready	cream cheese	1	package	8 oz	-	-	K2	C
+16 oz (1 lb) bag frozen peas	ready	frozen peas	1	bag	16 oz	-	-	K2	C
+400ml can coconut milk	ready	coconut milk	1	can	400 ml	-	-	K2-control	C
+1 x 400g (14oz) can tomatoes	ready	tomatoes	1	can	400 g	-	-	K2-control	C
+400 g can (14 oz) tomatoes	ready	tomatoes	1	can	400 g	-	-	K2-control	C
+Protein: 20 grams	unsupported	-	-	-	-	-	-	K3	D
+Fat: 10 grams	unsupported	-	-	-	-	-	-	K3	D
+Sodium: 300 milligrams	unsupported	-	-	-	-	-	-	K3	D
+Carbohydrates: 30 grams	unsupported	-	-	-	-	-	-	K3	D
+Serving size: 1 cup (240 ml)	unsupported	-	-	-	-	-	-	K3	D
+Points: 5	unsupported	-	-	-	-	-	-	K3	D
+Weight Watchers points: 5	unsupported	-	-	-	-	-	-	K3	D
+Protein 20g	unsupported	-	-	-	-	-	-	K3-control	D
+Calories: 250 kcal	unsupported	-	-	-	-	-	-	K3-control	D
+Total Fat 10g	unsupported	-	-	-	-	-	-	K3-control	D
+Serving size: 1 cup	unsupported	-	-	-	-	-	-	K3-control	D
+Five spice powder	needs_review	Five spice powder	-	-	-	-	-	K4	A
+Seven spice blend	needs_review	Seven spice blend	-	-	-	-	-	K4	A
+Three cheese blend	needs_review	Three cheese blend	-	-	-	-	-	K4	A
+Four cheese pizza	needs_review	Four cheese pizza	-	-	-	-	-	K4	A
+You will need: 2 baking sheets	unsupported	-	-	-	-	-	-	K4	D
+You'll need: 1 piping bag	unsupported	-	-	-	-	-	-	K4	D
+1 lb ham or smoked turkey	needs_review	-	1	lb	-	ham;smoked turkey	-	R3-S1	B
+1 lb sausage or ground beef	needs_review	-	1	lb	-	sausage;ground beef	-	R3-S1	B
+1 cup tea or apple juice	needs_review	-	1	cup	-	tea;apple juice	-	R3-S1	B
+2 cups lettuce or mixed greens	needs_review	-	2	cup	-	lettuce;mixed greens	-	R3-S1	B
+1/2 cup Parmesan or Pecorino Romano	needs_review	-	1/2	cup	-	Parmesan;Pecorino Romano	-	R3-S1	B
+1 lb chicken or firm tofu	needs_review	-	1	lb	-	chicken;firm tofu	-	R3-S1	B
+1/4 cup rum or orange juice	needs_review	-	1/4	cup	-	rum;orange juice	-	R3-S1	B
+1 lb pasta or zucchini noodles	needs_review	-	1	lb	-	pasta;zucchini noodles	-	R3-S1	B
+4 slices bacon or smoked ham	needs_review	-	4	slice	-	bacon;smoked ham	-	R3-S1	B
+1 cup kale or Swiss chard	needs_review	-	1	cup	-	kale;Swiss chard	-	R3-S1	B
+1 shallot or red onion	needs_review	-	1	each	-	shallot;red onion	-	R3-S1	B
+1 leek or yellow onion	needs_review	-	1	each	-	leek;yellow onion	-	R3-S1	B
+1 cup peas or green beans	needs_review	-	1	cup	-	peas;green beans	-	R3-S1	B
+2 tbsp brandy or dry sherry	needs_review	-	2	tbsp	-	brandy;dry sherry	-	R3-S1	B
+1 cup apples or ripe pears	needs_review	-	1	cup	-	apples;ripe pears||apples;pears	-	R3-S1	B
+1 tsp cumin or chili powder	needs_review	-	1	tsp	-	cumin;chili powder||cumin powder;chili powder	-	R3-S1	B
+1 cup spinach or baby kale	needs_review	-	1	cup	-	spinach;baby kale	-	R3-S1	B
+2 tbsp tahini or peanut butter	needs_review	-	2	tbsp	-	tahini;peanut butter	-	R3-S1	B
+1 cup mayonnaise or Greek yogurt	needs_review	-	1	cup	-	mayonnaise;Greek yogurt	-	R3-S1	B
+1 tbsp sriracha or hot sauce	needs_review	-	1	tbsp	-	sriracha;hot sauce	-	R3-S1	B
+1 cup raisins or dried cranberries	needs_review	-	1	cup	-	raisins;dried cranberries	-	R3-S1	B
+1/2 cup feta or goat cheese	needs_review	-	1/2	cup	-	feta;goat cheese||feta cheese;goat cheese	-	R3-S1	B
+1 lb shrimp or sea scallops	needs_review	-	1	lb	-	shrimp;sea scallops	-	R3-S1	B
+1 tsp oregano or Italian seasoning	needs_review	-	1	tsp	-	oregano;Italian seasoning	-	R3-S1	B
+1 cup quinoa or brown rice	needs_review	-	1	cup	-	quinoa;brown rice	-	R3-S1	B
+1 tbsp capers or green olives	needs_review	-	1	tbsp	-	capers;green olives	-	R3-S1	B
+2 tbsp parsley or fresh cilantro	needs_review	-	2	tbsp	-	parsley;fresh cilantro||parsley;cilantro	-	R3-S1	B
+1 cup cream or whole milk	needs_review	-	1	cup	-	cream;whole milk	-	R3-S1	B
+1 tbsp Dijon or whole grain mustard	needs_review	-	1	tbsp	-	Dijon;whole grain mustard||Dijon mustard;whole grain mustard	-	R3-S1	B
+1 cup broth, chicken or vegetable	needs_review	-	1	cup	-	chicken broth;vegetable broth	-	R3-S1	B
+1 cup flour, all-purpose or bread	needs_review	-	1	cup	-	all-purpose flour;bread flour	-	R3-S1	B
+1 cup stock, chicken or vegetable	needs_review	-	1	cup	-	chicken stock;vegetable stock	-	R3-S1	B
+1/3 cup (5 tbsp) butter	ready	butter	1/3	cup	-	-	-	R3-S2	A
+2/3 cup (10 tbsp) sugar	ready	sugar	2/3	cup	-	-	-	R3-S2	A
+2 cups (500 ml / 17 fl oz) stock	ready	stock	2	cup	-	-	-	R3-S2	A
+1 cup (250 ml) (8.5 fl oz) milk	ready	milk	1	cup	-	-	-	R3-S2	A
+1 lb (14 oz) ground beef	needs_review	*	*	*	-	-	-	R3-S2-control	A
+1 lb (12 oz) ground beef	needs_review	*	*	*	-	-	-	R3-S2-control	A
+1 pint milk (UK)	needs_review	*	*	*	-	-	-	R3-S3	A
+1 m sausage	needs_review	*	*	*	-	-	-	R3-S3	A
+1x cup milk	ready	milk	1	cup	-	-	-	FH-SF1	A
+1x can chickpeas	ready	chickpeas	1	can	-	-	-	FH-SF1	A
+2x cans chickpeas	ready	chickpeas	2	can	-	-	-	FH-SF1	A
+1 x can chickpeas	ready	chickpeas	1	can	-	-	-	FH-SF1	A
+3x eggs	ready	eggs	3	each	-	-	D	FH-SF1	A
+2x 400g tins tomatoes	ready	tomatoes	2	tin	400 g	-	-	FH-SF1-control	A
+2 x 15 oz cans beans	ready	beans	2	can	15 oz	-	-	FH-SF1-control	A
+Vitamin C: 15 mg	unsupported	-	-	-	-	-	-	FH-SF2	D
+Magnesium: 40 mg	unsupported	-	-	-	-	-	-	FH-SF2	D
+Zinc 1 mg	unsupported	-	-	-	-	-	-	FH-SF2	D
+Caffeine: 95 mg	unsupported	-	-	-	-	-	-	FH-SF2	D
+4.8 stars (120 reviews)	unsupported	-	-	-	-	-	-	FH-SF2	D
+Vitamin D: 2 mcg	unsupported	-	-	-	-	-	-	FH-SF2	D
+Serving size: 2 cookies	unsupported	-	-	-	-	-	-	FH-SF2	D
+5 from 3 votes	unsupported	-	-	-	-	-	-	FH-SF2	D
+Protein: 20 g	unsupported	-	-	-	-	-	-	FH-SF2-control	D
+Iron: 2 mg	unsupported	-	-	-	-	-	-	FH-SF2-control	D
+1 scoop protein powder	ready	protein powder	1	scoop	-	-	-	FH-SF2-food-control	D
+2 tbsp vitamin C powder	ready	vitamin C powder	2	tbsp	-	-	-	FH-SF2-food-control	D
+1 tsp sodium bicarbonate	ready	sodium bicarbonate	1	tsp	-	-	-	FH-SF2-food-control	D
+2 tbsp low-sodium soy sauce	ready	low-sodium soy sauce	2	tbsp	-	-	-	FH-SF2-food-control	D
+1 bottle vitamin water	ready	vitamin water	1	bottle	-	-	-	FH-SF2-food-control	D
+2 cups spinach, kale, or chard	needs_review	-	2	cup	-	spinach;kale;chard	-	FH-SF4	B
+1 tsp thyme, rosemary, or oregano	needs_review	-	1	tsp	-	thyme;rosemary;oregano	-	FH-SF4	B
+2 tbsp butter, ghee, or oil	needs_review	-	2	tbsp	-	butter;ghee;oil	-	FH-SF4	B
+1 lb chicken, pork, or tofu	needs_review	-	1	lb	-	chicken;pork;tofu	-	FH-SF4	B
+1 cup milk, cream, or half-and-half	needs_review	-	1	cup	-	milk;cream;half-and-half	-	FH-SF4	B
+1 cup pecans, walnuts, or almonds	needs_review	-	1	cup	-	pecans;walnuts;almonds	-	FH-SF4	B
+1/2 cup raisins, cranberries or cherries	needs_review	-	1/2	cup	-	raisins;cranberries;cherries	-	FH-SF4	B
+1 cup pecans or walnuts or almonds	needs_review	-	1	cup	-	pecans;walnuts;almonds	-	FH-SF4-control	B
+4 lemon wedges	ready	lemon	4	wedge	-	-	-	FH-SF3	C
+2 cinnamon sticks	ready	cinnamon	2	stick	-	-	-	FH-SF3	C
+2 bacon strips	ready	bacon	2	strip	-	-	-	FH-SF3	C
+2 lettuce heads	ready	lettuce	2	head	-	-	-	FH-SF3	C
+3 vanilla bean pods	ready	vanilla bean	3	pod	-	-	D	FH-SF3	C
+2 fish sticks	ready	fish sticks	2	each	-	-	-	FH-SF3-identity-control	C
+4 mozzarella sticks	ready	mozzarella sticks	4	each	-	-	-	FH-SF3-identity-control	C
+3 bay leaves	ready	bay leaves	3	each	-	-	-	FH-SF3-identity-control	C
+6 breadsticks	ready	breadsticks	6	each	-	-	-	FH-SF3-identity-control	C
+1 cup torn basil leaves	ready	torn basil leaves|basil leaves|basil	1	cup	-	-	-	FH-SF3-control	C
+lime wedges, to serve	ready	lime wedges	-	-	-	-	-	FH-SF3-control	C
+3 garlic cloves	ready	garlic	3	clove	-	-	-	FH-SF3-control	C
+4 oz dark or milk chocolate	needs_review	-	4	oz	-	dark chocolate;milk chocolate	-	R1-MEDIUM	B
+1 cup red, green, or yellow bell pepper	needs_review	-	1	cup	-	red bell pepper;green bell pepper;yellow bell pepper	-	R1-MEDIUM	B
+2 cups red, yellow or orange peppers	needs_review	-	2	cup	-	red peppers;yellow peppers;orange peppers	-	R1-MEDIUM	B
+1 (No. 2) can corn	ready	corn	1	can	-	-	-	R1-MEDIUM	A
+2 cups acorn or butternut squash	needs_review	-	2	cup	-	acorn squash;butternut squash	-	R1R2-REPORTED	B

@@ -1,0 +1,17 @@
+# bare numbers after a comma; B5 plural number-word names
+2 eggs, 3
+1 cup flour, 2
+Seven layer bars, 12
+Two bite brownies, 12
+Seven grain crackers, 1 box
+Three bean chili, 2 cans
+Four seasons pizza, 1
+Five guys burgers, 2
+2 cups flour, 3 eggs
+1 cup sugar, 1/2
+1 lb beef, 2
+Eggs, 2
+Eggs, two
+Three cheese blend, 12
+2 eggs, plus 1
+1 tbsp butter, 1 for greasing

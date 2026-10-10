@@ -1,0 +1,15 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/Meal-Planner
+
+
+ Test Files  5 passed (5)
+      Tests  459 passed (459)
+   Start at  19:01:24
+   Duration  2.35s (tests 69%, transform 24%, import 6%, worker 1%)
+
+    Isolate  5 workers spawned · ~116ms startup each (spawn + environment, per file)
+             at least ~464ms faster with isolate: false — reuses workers across files instead of one per file
+

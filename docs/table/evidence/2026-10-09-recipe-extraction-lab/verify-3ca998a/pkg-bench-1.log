@@ -1,0 +1,12 @@
+Recipe extraction benchmark — 310 ingredient case(s), split all
+legacy-table-import-2:
+  overall  core 106/310  full 106/310  review 209/310  false-certain 10 (H1/M9/L0)  fabricated 0/52  cross-dim 0/266
+  dev      core 62/182  full 62/182  review 122/182  false-certain 6 (H1/M5/L0)  fabricated 0/29  cross-dim 0/157
+  holdout  core 44/128  full 44/128  review 87/128  false-certain 4 (H0/M4/L0)  fabricated 0/23  cross-dim 0/109
+legacy-table-import-2+suggestion:
+  overall  core 106/310  full 106/310  review 209/310  false-certain 10 (H1/M9/L0)  fabricated 0/52  cross-dim 15/266
+  dev      core 62/182  full 62/182  review 122/182  false-certain 6 (H1/M5/L0)  fabricated 0/29  cross-dim 10/157
+  holdout  core 44/128  full 44/128  review 87/128  false-certain 4 (H0/M4/L0)  fabricated 0/23  cross-dim 5/109
+pages (default): detection P 12/12 R 12/12  count 15/15  ingredient lists 14/14  diagnostics 15/15  retention 15/15
+Wrote /tmp/claude-0/-home-user-Meal-Planner/7c930bb6-c34b-51a2-998f-d2325352dd1d/scratchpad/verify/out-3ca998a/benchmark-report.json (deterministic)
+Wrote /tmp/claude-0/-home-user-Meal-Planner/7c930bb6-c34b-51a2-998f-d2325352dd1d/scratchpad/verify/out-3ca998a/benchmark-report.md

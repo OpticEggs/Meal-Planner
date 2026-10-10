@@ -1,0 +1,6 @@
+HEAD fdbcfd1ec5cf088d3099e440476d8bb90591dc6b 2026-10-10T07:25:18Z
+
+> @table/recipe-extraction@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+exit 0

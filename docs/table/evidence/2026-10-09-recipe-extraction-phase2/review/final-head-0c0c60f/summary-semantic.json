@@ -1,0 +1,71 @@
+{
+ "engine": "semantic-v1",
+ "probes": 748,
+ "debatable": 67,
+ "invalid": 0,
+ "safetyNetUsed": 0,
+ "nondeterministic": 0,
+ "byLabel": {
+  "ready": 535,
+  "needs_review": 114,
+  "unsupported": 99
+ },
+ "classes": {
+  "C1": 483,
+  "C2": 40,
+  "C3": 31,
+  "C4": 0,
+  "C5": 108,
+  "C6": 0,
+  "C7": 61,
+  "C8": 25
+ },
+ "classesFirm": {
+  "C1": 472,
+  "C2": 25,
+  "C3": 18,
+  "C4": 0,
+  "C5": 84,
+  "C6": 0,
+  "C7": 60,
+  "C8": 22
+ },
+ "C2sev": {
+  "high": 35,
+  "medium": 5
+ },
+ "C2sevFirm": {
+  "high": 21,
+  "medium": 4
+ },
+ "partials": {
+  "C3a": 16,
+  "C3b": 7,
+  "C3c": 2,
+  "C3x": 6,
+  "C5a": 86,
+  "C5b": 22,
+  "C5c": 0,
+  "C5x": 0
+ },
+ "S": {
+  "S1": 16,
+  "S2": 2,
+  "S3": 5,
+  "S4": 6,
+  "S5": 5,
+  "S6": 1,
+  "S7": 3,
+  "S8": 13
+ },
+ "SFirm": {
+  "S1": 13,
+  "S2": 2,
+  "S3": 3,
+  "S4": 0,
+  "S5": 5,
+  "S6": 0,
+  "S7": 0,
+  "S8": 10
+ }
+}

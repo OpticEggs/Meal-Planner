@@ -1,0 +1,33 @@
+Counter({'ready': 271, 'needs_review': 69, 'unsupported': 19})
+('ing-h2-0017', 'unit without qty (status needs_review)')
+('ing-h2-0018', 'unit without qty (status needs_review)')
+('ing-h2-0056', 'unit without qty (status needs_review)')
+('ing-h2-0280', 'unit without qty (status needs_review)')
+('ing-h2-0281', 'unit without qty (status needs_review)')
+('ing-h2-0282', 'unit without qty (status needs_review)')
+('ing-h2-0283', 'unit without qty (status needs_review)')
+ing-h2-0020 [('\xa0', 'U+00A0', 'NO-BREAK SPACE')]
+ing-h2-0098 [('\xa0', 'U+00A0', 'NO-BREAK SPACE'), ('\xa0', 'U+00A0', 'NO-BREAK SPACE'), ('\xa0', 'U+00A0', 'NO-BREAK SPACE')]
+ing-h2-0300 [('\u3000', 'U+3000', 'IDEOGRAPHIC SPACE')]
+ing-h2-0301 [('\t', 'U+0009', '?')]
+ing-h2-0019 [('２', 'U+FF12', 'FULLWIDTH DIGIT TWO')]
+ing-h2-0027 [('⁄', 'U+2044', 'FRACTION SLASH')]
+ing-h2-0026 [('⁄', 'U+2044', 'FRACTION SLASH')]
+ing-h2-0034 [('-', 'U+002D', 'HYPHEN-MINUS'), ('é', 'U+00E9', 'LATIN SMALL LETTER E WITH ACUTE')]
+ing-h2-0035 [('-', 'U+002D', 'HYPHEN-MINUS')]
+ing-h2-0273 [('–', 'U+2013', 'EN DASH')]
+ing-h2-0276 [('½', 'U+00BD', 'VULGAR FRACTION ONE HALF'), ('–', 'U+2013', 'EN DASH')]
+ing-h2-0110 [('—', 'U+2014', 'EM DASH')]
+ing-h2-0111 [('—', 'U+2014', 'EM DASH')]
+ing-h2-0250 [('—', 'U+2014', 'EM DASH')]
+ing-h2-0200 [('’', 'U+2019', 'RIGHT SINGLE QUOTATION MARK')]
+ing-h2-0298 [('—', 'U+2014', 'EM DASH'), ('—', 'U+2014', 'EM DASH'), ('—', 'U+2014', 'EM DASH')]
+ing-h2-0264 [('⁄', 'U+2044', 'FRACTION SLASH')]
+ing-h2-0275 [('-', 'U+002D', 'HYPHEN-MINUS')]
+ing-h2-0269 [('-', 'U+002D', 'HYPHEN-MINUS')]
+ing-h2-0270 [('-', 'U+002D', 'HYPHEN-MINUS')]
+ing-h2-0271 [('-', 'U+002D', 'HYPHEN-MINUS')]
+ing-h2-0309 [('-', 'U+002D', 'HYPHEN-MINUS')]
+ing-h2-0341 [('-', 'U+002D', 'HYPHEN-MINUS')]
+ing-h2-0181 [('-', 'U+002D', 'HYPHEN-MINUS')]
+lens [('ing-h2-0303', 238), ('ing-h2-0304', 228), ('ing-h2-0305', 238)]

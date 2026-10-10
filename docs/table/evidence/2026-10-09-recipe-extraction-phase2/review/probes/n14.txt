@@ -1,0 +1,12 @@
+# normalization: joiners removed vs spaced
+1 cup jalape\u{200D}ño
+1 cup pota\u{AD}toes
+1\u{AD}2 cups flour
+1\u{200D}2 cups flour
+1\u{2060}2 cups flour
+1\u{FEFF}1/2 cups flour
+1\u{200C}/2 cup milk
+2 eggs\u{200B}beaten
+1\u{200B}2 cups flour
+1 cup crème\u{00A0}fraîche
+\u{FEFF}2 cups flour

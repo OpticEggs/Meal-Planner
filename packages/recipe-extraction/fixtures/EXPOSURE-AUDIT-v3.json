@@ -1,0 +1,9 @@
+{
+  "matchedCaseIds": [
+    "ing-h3-0114",
+    "ing-h3-0189",
+    "ing-h3-0276"
+  ],
+  "method": "Exact match after NFKC, lower case, whitespace collapse and trim, of every holdout-v3 input against 57972 exposed strings: the audit list of build_exposed_inputs.py (23321: exposed fixture sets, regression corpus, semantic-v2 test data and literals, Phase 2/2B review probes, implementation scratch probes) plus documentation/evidence markdown spans, lines and cells and every reviewer-R1 text file; run after the holdout-v3 freeze and before scoring (EVALUATION-PLAN-v3 §9.4; docs/table/evidence/2026-10-10-recipe-extraction-phase2b/holdout-v3/build_exposure_audit_v3.py)",
+  "auditedAt": "2026-10-10"
+}

@@ -1,0 +1,2244 @@
+C1	1 1/4 cups all-purpose flour
+    label: ready | all-purpose flour | 5/4 | cup | - | -
+    got:   ready | all-purpose flour | 5/4 | cup | - | alts[] | eq[] | form - | note - | 
+C1	2 1/2 tablespoons soy sauce
+    label: ready | soy sauce | 5/2 | tbsp | - | -
+    got:   ready | soy sauce | 5/2 | tbsp | - | alts[] | eq[] | form - | note - | 
+C3b	1-1/4 cups buttermilk
+    label: ready | buttermilk | 5/4 | cup | - | -
+    got:   needs_review | 1-1/4 cups buttermilk | - | - | - | alts[] | eq[] | form - | note - | quantity_range
+C1	1 ½ tsp kosher salt
+    label: ready | kosher salt | 3/2 | tsp | - | -
+    got:   ready | kosher salt | 3/2 | tsp | - | alts[] | eq[] | form - | note - | 
+C3b	2⅔ cups water
+    label: ready | water | 8/3 | cup | - | -
+    got:   needs_review | 2⅔ cups water | - | - | - | alts[] | eq[] | form - | note - | legacy_fraction_not_exact_decimal
+C3b	1⁄3 cup honey
+    label: ready | honey | 1/3 | cup | - | -
+    got:   needs_review | 1⁄3 cup honey | - | - | - | alts[] | eq[] | form - | note - | legacy_fraction_not_exact_decimal
+C1	1 1⁄2 cups rolled oats
+    label: ready | rolled oats | 3/2 | cup | - | -
+    got:   ready | rolled oats | 3/2 | cup | - | alts[] | eq[] | form - | note - | 
+C1	0.75 cup granulated sugar
+    label: ready | granulated sugar | 3/4 | cup | - | -
+    got:   ready | granulated sugar | 3/4 | cup | - | alts[] | eq[] | form - | note - | 
+C1	.25 tsp cayenne pepper
+    label: ready | cayenne pepper | 1/4 | tsp | - | -
+    got:   ready | cayenne pepper | 1/4 | tsp | - | alts[] | eq[] | form - | note - | 
+C1	1.5 lbs chicken thighs
+    label: ready | chicken thighs | 3/2 | lb | - | -
+    got:   ready | chicken thighs | 3/2 | lb | - | alts[] | eq[] | form - | note - | 
+C3b	1-1/2 lb pork tenderloin
+    label: ready | pork tenderloin | 3/2 | lb | - | -
+    got:   needs_review | 1-1/2 lb pork tenderloin | - | - | - | alts[] | eq[] | form - | note - | quantity_range
+C3b	2-1/4 cups bread flour
+    label: ready | bread flour | 9/4 | cup | - | -
+    got:   needs_review | 2-1/4 cups bread flour | - | - | - | alts[] | eq[] | form - | note - | quantity_range
+C1	1 ¼ cups sugar
+    label: ready | sugar | 5/4 | cup | - | -
+    got:   ready | sugar | 5/4 | cup | - | alts[] | eq[] | form - | note - | 
+C1	½ tsp. salt
+    label: ready | salt | 1/2 | tsp | - | -
+    got:   ready | salt | 1/2 | tsp | - | alts[] | eq[] | form - | note - | 
+C1	3 ½ cups chicken broth
+    label: ready | chicken broth | 7/2 | cup | - | -
+    got:   ready | chicken broth | 7/2 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1/8 teaspoon ground cloves
+    label: ready | ground cloves | 1/8 | tsp | - | -
+    got:   ready | ground cloves | 1/8 | tsp | - | alts[] | eq[] | form - | note - | 
+C1	1 1/2 teaspoons baking powder
+    label: ready | baking powder | 3/2 | tsp | - | -
+    got:   ready | baking powder | 3/2 | tsp | - | alts[] | eq[] | form - | note - | 
+C1	3/4 c. milk
+    label: ready | milk | 3/4 | cup | - | -
+    got:   ready | milk | 3/4 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 3/4 oz. pine nuts
+    label: ready | pine nuts | 7/4 | oz | - | -
+    got:   ready | pine nuts | 7/4 | oz | - | alts[] | eq[] | form - | note - | 
+C2-high [S1,S4] {D}	11/2 cups flour
+    label: needs_review | flour | - | cup | - | -
+    got:   ready | flour | 11/2 | cup | - | alts[] | eq[] | form - | note - | 
+C5b	2-3 tablespoons olive oil
+    label: needs_review | olive oil | 2..3 | tbsp | - | -
+    got:   needs_review | 2-3 tablespoons olive oil | - | - | - | alts[] | eq[] | form - | note - | quantity_range
+C5b	1 to 2 teaspoons red pepper flakes
+    label: needs_review | red pepper flakes | 1..2 | tsp | - | -
+    got:   needs_review | 1 to 2 teaspoons red pepper flakes | - | - | - | alts[] | eq[] | form - | note - | quantity_range
+C5b	3 or 4 sprigs thyme
+    label: needs_review | thyme | 3..4 | sprig | - | -
+    got:   needs_review | 3 or 4 sprigs thyme | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or,quantity_range
+C5b	1–2 jalapeños
+    label: needs_review | jalapeños | 1..2 | each | - | -
+    got:   needs_review | 1–2 jalapeños | - | - | - | alts[] | eq[] | form - | note - | quantity_range
+C5b	2 - 3 cloves garlic
+    label: needs_review | garlic | 2..3 | clove | - | -
+    got:   needs_review | 2 - 3 cloves garlic | - | - | - | alts[] | eq[] | form - | note - | quantity_range
+C5b	1/2-1 tsp salt
+    label: needs_review | salt | 1/2..1 | tsp | - | -
+    got:   needs_review | 1/2-1 tsp salt | - | - | - | alts[] | eq[] | form - | note - | quantity_range
+C5b	1 1/2 - 2 cups milk
+    label: needs_review | milk | 3/2..2 | cup | - | -
+    got:   needs_review | 1 1/2 - 2 cups milk | - | - | - | alts[] | eq[] | form - | note - | quantity_range
+C5b	1½–2 lb ground beef
+    label: needs_review | ground beef | 3/2..2 | lb | - | -
+    got:   needs_review | 1½–2 lb ground beef | - | - | - | alts[] | eq[] | form - | note - | quantity_range
+C5b	1/4-1/2 tsp cayenne
+    label: needs_review | cayenne | 1/4..1/2 | tsp | - | -
+    got:   needs_review | 1/4-1/2 tsp cayenne | - | - | - | alts[] | eq[] | form - | note - | quantity_range
+C5b	4-6 chicken thighs
+    label: needs_review | chicken thighs | 4..6 | each | - | -
+    got:   needs_review | 4-6 chicken thighs | - | - | - | alts[] | eq[] | form - | note - | quantity_range
+C5b	6-8 oz dried pasta
+    label: needs_review | dried pasta|pasta | 6..8 | oz | - | -
+    got:   needs_review | 6-8 oz dried pasta | - | - | - | alts[] | eq[] | form - | note - | quantity_range
+C5b	12-16 ounces penne
+    label: needs_review | penne | 12..16 | oz | - | -
+    got:   needs_review | 12-16 ounces penne | - | - | - | alts[] | eq[] | form - | note - | quantity_range
+C5b	1 or 2 shallots
+    label: needs_review | shallots | 1..2 | each | - | -
+    got:   needs_review | 1 or 2 shallots | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or,quantity_range
+C5b	2 or 3 tablespoons milk
+    label: needs_review | milk | 2..3 | tbsp | - | -
+    got:   needs_review | 2 or 3 tablespoons milk | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or,quantity_range
+C3b	two eggs
+    label: ready | eggs | 2 | each | - | -
+    got:   needs_review | two eggs | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	One 14-ounce can coconut milk
+    label: ready | coconut milk | 1 | can | 14 oz | -
+    got:   needs_review | One 14-ounce can coconut milk | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	a pinch of nutmeg
+    label: ready | nutmeg | 1 | pinch | - | -
+    got:   needs_review | a pinch of nutmeg | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	half a lemon
+    label: ready | lemon | 1/2 | each | - | -
+    got:   needs_review | half a lemon | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	a dozen eggs
+    label: ready | eggs | 12 | each | - | -
+    got:   needs_review | a dozen eggs | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	twelve cherry tomatoes
+    label: ready | cherry tomatoes | 12 | each | - | -
+    got:   needs_review | twelve cherry tomatoes | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	three cloves garlic, minced
+    label: ready | garlic | 3 | clove | - | -
+    got:   needs_review | three cloves garlic | - | - | - | alts[] | eq[] | form - | note minced | quantity_missing
+C5b {D}	a couple of bay leaves
+    label: needs_review | bay leaves|bay | - | - | - | -
+    got:   needs_review | a couple of bay leaves | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C5b	a few sprigs of rosemary
+    label: needs_review | rosemary | - | sprig | - | -
+    got:   needs_review | a few sprigs of rosemary | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C5b {D}	several basil leaves
+    label: needs_review | basil leaves|basil | - | - | - | -
+    got:   needs_review | several basil leaves | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	a 2-inch piece of ginger
+    label: ready | ginger | 1 | piece | - | -
+    got:   needs_review | a 2-inch piece of ginger | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	one and a half cups milk
+    label: ready | milk | 3/2 | cup | - | -
+    got:   needs_review | one and a half cups milk | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	a quarter cup sugar
+    label: ready | sugar | 1/4 | cup | - | -
+    got:   needs_review | a quarter cup sugar | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	half cup cream
+    label: ready | cream | 1/2 | cup | - | -
+    got:   needs_review | half cup cream | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	ten ounces spinach
+    label: ready | spinach | 10 | oz | - | -
+    got:   needs_review | ten ounces spinach | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	four tablespoons butter
+    label: ready | butter | 4 | tbsp | - | -
+    got:   needs_review | four tablespoons butter | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	an onion, diced
+    label: ready | onion | 1 | each | - | -
+    got:   needs_review | an onion | - | - | - | alts[] | eq[] | form - | note diced | quantity_missing
+C3b	one 28-oz can crushed tomatoes
+    label: ready | crushed tomatoes | 1 | can | 28 oz | -
+    got:   needs_review | one 28-oz can crushed tomatoes | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	two 15-ounce cans black beans
+    label: ready | black beans | 2 | can | 15 oz | -
+    got:   needs_review | two 15-ounce cans black beans | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	a third cup of oil
+    label: ready | oil | 1/3 | cup | - | -
+    got:   needs_review | a third cup of oil | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	one-half cup milk
+    label: ready | milk | 1/2 | cup | - | -
+    got:   needs_review | one-half cup milk | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	three-quarters cup sugar
+    label: ready | sugar | 3/4 | cup | - | -
+    got:   needs_review | three-quarters cup sugar | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	a 5-pound bag of potatoes
+    label: ready | potatoes | 1 | bag | 5 lb | -
+    got:   needs_review | a 5-pound bag of potatoes | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	2 cups broth (homemade (see note) or store-bought)
+    label: ready | broth | 2 | cup | - | -
+    got:   needs_review | 2 cups broth (homemade or store-bought) | - | - | - | alts[] | eq[] | form - | note see note | legacy_contains_or
+C3b	1 (8 oz) package cream cheese (softened (room temperature))
+    label: ready | cream cheese | 1 | package | 8 oz | -
+    got:   needs_review | 1 (8 oz) package cream cheese (softened ) | - | - | - | alts[] | eq[] | form - | note room temperature | legacy_parenthetical_number,legacy_more_than_one_quantity
+C1	1/2 cup walnuts (toasted, chopped)
+    label: ready | walnuts | 1/2 | cup | - | -
+    got:   ready | walnuts | 1/2 | cup | - | alts[] | eq[] | form - | note toasted, chopped | 
+C2-medium	2 tbsp butter (melted (and cooled))
+    label: ready | butter | 2 | tbsp | - | -
+    got:   ready | butter (melted ) | 2 | tbsp | - | alts[] | eq[] | form - | note and cooled | 
+C1	1 cup panko (Japanese breadcrumbs)
+    label: ready | panko | 1 | cup | - | -
+    got:   ready | panko | 1 | cup | - | alts[] | eq[] | form - | note Japanese breadcrumbs | 
+C3b	3 tbsp gochujang (Korean chili paste), or to taste
+    label: ready | gochujang | 3 | tbsp | - | -
+    got:   needs_review | 3 tbsp gochujang | - | - | - | alts[] | eq[] | form - | note Korean chili paste; or to taste | legacy_no_fixed_quantity,legacy_contains_or
+C1	1 lb shrimp ((peeled and deveined))
+    label: ready | shrimp | 1 | lb | - | -
+    got:   ready | shrimp ( ) | 1 | lb | - | alts[] | eq[] | form - | note peeled and deveined | 
+C3b	1 cup (2 sticks) unsalted butter
+    label: ready | unsalted butter | 1 | cup | - | -
+    got:   needs_review | 1 cup (2 sticks) unsalted butter | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 cup (8 oz) sour cream
+    label: ready | sour cream | 1 | cup | - | -
+    got:   needs_review | 1 cup (8 oz) sour cream | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	200 g (7 oz) dark chocolate, chopped
+    label: ready | dark chocolate | 200 | g | - | -
+    got:   needs_review | 200 g (7 oz) dark chocolate | - | - | - | alts[] | eq[] | form - | note chopped | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 cup (240 ml) whole milk
+    label: ready | whole milk | 1 | cup | - | -
+    got:   needs_review | 1 cup (240 ml) whole milk | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	2 tbsp (30 ml) lemon juice
+    label: ready | lemon juice | 2 | tbsp | - | -
+    got:   needs_review | 2 tbsp (30 ml) lemon juice | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 cup grated Parmesan (about 3 oz)
+    label: ready | grated Parmesan|Parmesan | 1 | cup | - | -
+    got:   needs_review | 1 cup grated Parmesan (about 3 oz) | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 lb lean ground beef (90/10)
+    label: ready | lean ground beef | 1 | lb | - | -
+    got:   needs_review | 1 lb lean ground beef (90/10) | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	2 cups basil (packed) (about 2 oz)
+    label: ready | basil | 2 | cup | - | -
+    got:   needs_review | 2 cups basil (about 2 oz) | - | - | - | alts[] | eq[] | form - | note packed | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 can (15 oz) pumpkin puree (not pie filling)
+    label: ready | pumpkin puree | 1 | can | 15 oz | -
+    got:   needs_review | can (15 oz) pumpkin puree | - | - | - | alts[] | eq[] | form - | note not pie filling | legacy_parenthetical_number,legacy_unit_not_supported
+C5b	1 cup buttermilk or plain yogurt
+    label: needs_review | - | 1 | cup | - | buttermilk;plain yogurt
+    got:   needs_review | 1 cup buttermilk or plain yogurt | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b	2 tbsp butter or olive oil
+    label: needs_review | - | 2 | tbsp | - | butter;olive oil
+    got:   needs_review | 2 tbsp butter or olive oil | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C3b	1 cup blueberries (fresh or frozen)
+    label: ready | blueberries | 1 | cup | - | -
+    got:   needs_review | 1 cup blueberries | - | - | - | alts[] | eq[] | form - | note fresh or frozen | legacy_contains_or
+C3b	2 cups spinach, fresh or frozen
+    label: ready | spinach | 2 | cup | - | -
+    got:   needs_review | 2 cups spinach | - | - | - | alts[] | eq[] | form - | note fresh or frozen | legacy_contains_or
+C5b	1/2 cup pecans or walnuts, chopped
+    label: needs_review | - | 1/2 | cup | - | pecans;walnuts
+    got:   needs_review | 1/2 cup pecans or walnuts | - | - | - | alts[] | eq[] | form - | note chopped | legacy_contains_or
+C5b	1 lb ground turkey or chicken
+    label: needs_review | - | 1 | lb | - | ground turkey;ground chicken||ground turkey;chicken
+    got:   needs_review | 1 lb ground turkey or chicken | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b	1 cup heavy cream or half-and-half
+    label: needs_review | - | 1 | cup | - | heavy cream;half-and-half
+    got:   needs_review | 1 cup heavy cream or half-and-half | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b {D}	1 cup chicken stock (or water)
+    label: needs_review | - | 1 | cup | - | chicken stock;water
+    got:   needs_review | 1 cup chicken stock | - | - | - | alts[] | eq[] | form - | note or water | legacy_contains_or
+C5b {DK}	2 tbsp lime juice (from 1 lime)
+    label: needs_review | lime juice | 2 | tbsp | - | -
+    got:   needs_review | 2 tbsp lime juice (from 1 lime) | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C5b {D}	1 cup sugar, white or brown
+    label: needs_review | - | 1 | cup | - | white sugar;brown sugar
+    got:   needs_review | 1 cup sugar | - | - | - | alts[] | eq[] | form - | note white or brown | legacy_contains_or
+C5b {D}	1 tbsp oil (vegetable or canola)
+    label: needs_review | - | 1 | tbsp | - | vegetable oil;canola oil
+    got:   needs_review | 1 tbsp oil | - | - | - | alts[] | eq[] | form - | note vegetable or canola | legacy_contains_or
+C5b	1 cup mozzarella or provolone, shredded
+    label: needs_review | - | 1 | cup | - | mozzarella;provolone
+    got:   needs_review | 1 cup mozzarella or provolone | - | - | - | alts[] | eq[] | form - | note shredded | legacy_contains_or
+C5b	1 can (15 oz) black beans or kidney beans, drained
+    label: needs_review | - | 1 | can | 15 oz | black beans;kidney beans
+    got:   needs_review | can (15 oz) black beans or kidney beans | - | - | - | alts[] | eq[] | form - | note drained | legacy_contains_or,legacy_parenthetical_number,legacy_unit_not_supported
+C5b	Fresh basil or parsley, for garnish
+    label: needs_review | - | - | - | - | fresh basil;parsley||basil;parsley||fresh basil;fresh parsley
+    got:   needs_review | Fresh basil or parsley | - | - | - | alts[] | eq[] | form - | note for garnish | legacy_no_fixed_quantity,legacy_contains_or,quantity_missing
+C3b	1 cup orange juice (freshly squeezed or bottled)
+    label: ready | orange juice | 1 | cup | - | -
+    got:   needs_review | 1 cup orange juice | - | - | - | alts[] | eq[] | form - | note freshly squeezed or bottled | legacy_contains_or
+C5b	1 cup almond milk or oat milk
+    label: needs_review | - | 1 | cup | - | almond milk;oat milk
+    got:   needs_review | 1 cup almond milk or oat milk | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b	2 cups arugula or baby spinach
+    label: needs_review | - | 2 | cup | - | arugula;baby spinach
+    got:   needs_review | 2 cups arugula or baby spinach | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b	1/4 cup maple syrup or honey
+    label: needs_review | - | 1/4 | cup | - | maple syrup;honey
+    got:   needs_review | 1/4 cup maple syrup or honey | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b {D}	1 tsp dried thyme or 1 tbsp fresh thyme
+    label: needs_review | - | 1 | tsp | - | dried thyme;fresh thyme
+    got:   needs_review | 1 tsp dried thyme or 1 tbsp fresh thyme | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or,legacy_more_than_one_quantity
+C5b	1 cup shredded cheddar or Monterey Jack
+    label: needs_review | - | 1 | cup | - | shredded cheddar;Monterey Jack||cheddar;Monterey Jack||shredded cheddar;shredded Monterey Jack
+    got:   needs_review | 1 cup shredded cheddar or Monterey Jack | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b	1 tbsp rice vinegar or white wine vinegar
+    label: needs_review | - | 1 | tbsp | - | rice vinegar;white wine vinegar
+    got:   needs_review | 1 tbsp rice vinegar or white wine vinegar | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b	1 lemon or lime
+    label: needs_review | - | 1 | each | - | lemon;lime
+    got:   needs_review | 1 lemon or lime | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C3b	1 cup tomato sauce (jarred or homemade)
+    label: ready | tomato sauce | 1 | cup | - | -
+    got:   needs_review | 1 cup tomato sauce | - | - | - | alts[] | eq[] | form - | note jarred or homemade | legacy_contains_or
+C5b	1/2 cup sour cream or Greek yogurt
+    label: needs_review | - | 1/2 | cup | - | sour cream;Greek yogurt
+    got:   needs_review | 1/2 cup sour cream or Greek yogurt | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C1	1 cup vegetable broth (low-sodium if possible)
+    label: ready | vegetable broth | 1 | cup | - | -
+    got:   ready | vegetable broth | 1 | cup | - | alts[] | eq[] | form - | note low-sodium if possible | 
+C5b	1 tbsp chopped parsley or cilantro
+    label: needs_review | - | 1 | tbsp | - | chopped parsley;cilantro||parsley;cilantro||chopped parsley;chopped cilantro
+    got:   needs_review | 1 tbsp chopped parsley or cilantro | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b	2 cups cooked rice or quinoa
+    label: needs_review | - | 2 | cup | - | rice;quinoa||cooked rice;quinoa
+    got:   needs_review | 2 cups cooked rice or quinoa | - | - | - | alts[] | eq[] | form cooked | note - | legacy_contains_or
+C5b {D}	1 cup milk (2% or whole)
+    label: needs_review | - | 1 | cup | - | 2% milk;whole milk
+    got:   needs_review | 1 cup milk (2% or whole) | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or,legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	2 (14.5 oz) cans fire-roasted tomatoes
+    label: ready | fire-roasted tomatoes | 2 | can | 14.5 oz | -
+    got:   needs_review | 2 (14.5 oz) cans fire-roasted tomatoes | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 (28-ounce) can crushed tomatoes
+    label: ready | crushed tomatoes | 1 | can | 28 oz | -
+    got:   needs_review | 1 (28-ounce) can crushed tomatoes | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 15-oz can chickpeas, drained and rinsed
+    label: ready | chickpeas | 1 | can | 15 oz | -
+    got:   needs_review | 1 15-oz can chickpeas | - | - | - | alts[] | eq[] | form - | note drained and rinsed | legacy_more_than_one_quantity
+C3b	2 cans (15 oz each) cannellini beans
+    label: ready | cannellini beans | 2 | can | 15 oz | -
+    got:   needs_review | cans (15 oz each) cannellini beans | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_unit_not_supported
+C3b	1 (1-pound) bag baby carrots
+    label: ready | baby carrots | 1 | bag | 1 lb | -
+    got:   needs_review | 1 (1-pound) bag baby carrots | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	3 (6 oz) containers plain yogurt
+    label: ready | plain yogurt | 3 | container | 6 oz | -
+    got:   needs_review | 3 (6 oz) containers plain yogurt | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 (0.25 oz) envelope active dry yeast
+    label: ready | active dry yeast | 1 | envelope | 1/4 oz | -
+    got:   needs_review | 1 (0.25 oz) envelope active dry yeast | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	2 (8-ounce) packages cream cheese
+    label: ready | cream cheese | 2 | package | 8 oz | -
+    got:   needs_review | 2 (8-ounce) packages cream cheese | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 (12 fl oz) bottle beer
+    label: ready | beer | 1 | bottle | 12 fl_oz | -
+    got:   needs_review | 1 (12 fl oz) bottle beer | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 jar (24 oz) marinara sauce
+    label: ready | marinara sauce | 1 | jar | 24 oz | -
+    got:   needs_review | jar (24 oz) marinara sauce | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_unit_not_supported
+C3b {D}	4 (6-oz) salmon fillets
+    label: ready | salmon | 4 | fillet | 6 oz | -
+    got:   needs_review | 4 (6-oz) salmon fillets | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 14 oz can coconut milk
+    label: ready | coconut milk | 1 | can | 14 oz | -
+    got:   needs_review | 1 14 oz can coconut milk | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	2 x 400g tins chopped tomatoes
+    label: ready | chopped tomatoes | 2 | tin | 400 g | -
+    got:   needs_review | 2 x 400g tins chopped tomatoes | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	1 x 250 g pack halloumi
+    label: ready | halloumi | 1 | package | 250 g | -
+    got:   needs_review | 1 x 250 g pack halloumi | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	1 12-ounce package frozen spinach, thawed
+    label: ready | frozen spinach | 1 | package | 12 oz | -
+    got:   needs_review | 1 12-ounce package frozen spinach | - | - | - | alts[] | eq[] | form - | note thawed | legacy_more_than_one_quantity
+C3b	3 cans (5 oz each) tuna, drained
+    label: ready | tuna | 3 | can | 5 oz | -
+    got:   needs_review | cans (5 oz each) tuna | - | - | - | alts[] | eq[] | form - | note drained | legacy_parenthetical_number,legacy_unit_not_supported
+C3b	2 8-oz packages cream cheese
+    label: ready | cream cheese | 2 | package | 8 oz | -
+    got:   needs_review | 2 8-oz packages cream cheese | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	3 12-inch flour tortillas
+    label: ready | flour tortillas | 3 | each | - | -
+    got:   needs_review | 3 12-inch flour tortillas | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	1 2-lb bag carrots
+    label: ready | carrots | 1 | bag | 2 lb | -
+    got:   needs_review | 1 2-lb bag carrots | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	1 5-oz bag arugula
+    label: ready | arugula | 1 | bag | 5 oz | -
+    got:   needs_review | 1 5-oz bag arugula | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	2 1-lb packages ground beef
+    label: ready | ground beef | 2 | package | 1 lb | -
+    got:   needs_review | 2 1-lb packages ground beef | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	1 28 oz can whole peeled tomatoes
+    label: ready | whole peeled tomatoes | 1 | can | 28 oz | -
+    got:   needs_review | 1 28 oz can whole peeled tomatoes | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	1 (16 oz) box penne
+    label: ready | penne | 1 | box | 16 oz | -
+    got:   needs_review | 1 (16 oz) box penne | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1/2 (14 oz) can coconut milk
+    label: ready | coconut milk | 1/2 | can | 14 oz | -
+    got:   needs_review | 1/2 (14 oz) can coconut milk | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 can tomato paste (6 oz)
+    label: ready | tomato paste | 1 | can | 6 oz | -
+    got:   needs_review | can tomato paste (6 oz) | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_unit_not_supported
+C3b	1 package (8 oz) mushrooms, sliced
+    label: ready | mushrooms | 1 | package | 8 oz | -
+    got:   needs_review | package (8 oz) mushrooms | - | - | - | alts[] | eq[] | form - | note sliced | legacy_parenthetical_number,legacy_unit_not_supported
+C3b	1 large (28 oz) can tomatoes
+    label: ready | tomatoes | 1 | can | 28 oz | -
+    got:   needs_review | 1 large (28 oz) can tomatoes | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	2 (10 oz) bags frozen broccoli florets
+    label: ready | frozen broccoli florets | 2 | bag | 10 oz | -
+    got:   needs_review | 2 (10 oz) bags frozen broccoli florets | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 (14-ounce) block extra-firm tofu
+    label: ready | extra-firm tofu | 1 | block | 14 oz | -
+    got:   needs_review | 1 (14-ounce) block extra-firm tofu | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 (750 ml) bottle dry red wine
+    label: ready | dry red wine | 1 | bottle | 750 ml | -
+    got:   needs_review | 1 (750 ml) bottle dry red wine | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 (32 oz) carton chicken broth
+    label: ready | chicken broth | 1 | carton | 32 oz | -
+    got:   needs_review | 1 (32 oz) carton chicken broth | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 (1 lb) loaf French bread
+    label: ready | French bread | 1 | loaf | 1 lb | -
+    got:   needs_review | 1 (1 lb) loaf French bread | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 (2 1/4 tsp) packet instant yeast
+    label: ready | instant yeast | 1 | packet | 9/4 tsp | -
+    got:   needs_review | 1 (2 1/4 tsp) packet instant yeast | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 package (1/4 oz) yeast
+    label: ready | yeast | 1 | package | 1/4 oz | -
+    got:   needs_review | package (1/4 oz) yeast | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_unit_not_supported
+C3b	1 (14 oz) can (400 g) coconut milk
+    label: ready | coconut milk | 1 | can | 14 oz | -
+    got:   needs_review | 1 (14 oz) can (400 g) coconut milk | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 (5.3 oz) container Greek yogurt
+    label: ready | Greek yogurt | 1 | container | 53/10 oz | -
+    got:   needs_review | 1 (5.3 oz) container Greek yogurt | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	2 (6 fl oz) cans pineapple juice
+    label: ready | pineapple juice | 2 | can | 6 fl_oz | -
+    got:   needs_review | 2 (6 fl oz) cans pineapple juice | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 (12-fluid ounce) can evaporated milk
+    label: ready | evaporated milk | 1 | can | 12 fl_oz | -
+    got:   needs_review | 1 (12-fluid ounce) can evaporated milk | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	2 sticks butter
+    label: ready | butter | 2 | stick | - | -
+    got:   needs_review | sticks butter | 2 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C3b	1 head cauliflower, cut into florets
+    label: ready | cauliflower | 1 | head | - | -
+    got:   needs_review | head cauliflower | 1 | - | - | alts[] | eq[] | form - | note cut into florets | legacy_unit_not_supported
+C3b	1 bunch cilantro
+    label: ready | cilantro | 1 | bunch | - | -
+    got:   needs_review | bunch cilantro | 1 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C3b	2 ears corn, husked
+    label: ready | corn | 2 | ear | - | -
+    got:   needs_review | ears corn | 2 | - | - | alts[] | eq[] | form - | note husked | legacy_unit_not_supported
+C3b	6 cloves garlic
+    label: ready | garlic | 6 | clove | - | -
+    got:   needs_review | cloves garlic | 6 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C1	1 large onion, diced
+    label: ready | onion | 1 | each | - | -
+    got:   ready | onion | 1 | each | - | alts[] | eq[] | form - | note large; diced | 
+C1	2 medium carrots, peeled
+    label: ready | carrots | 2 | each | - | -
+    got:   ready | carrots | 2 | each | - | alts[] | eq[] | form - | note medium; peeled | 
+C3b	1 (9-inch) unbaked pie crust
+    label: ready | unbaked pie crust|pie crust | 1 | each | - | -
+    got:   needs_review | 1 (9-inch) unbaked pie crust | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C1 {D}	2 bay leaves
+    label: ready | bay leaves|bay | 2 | each | - | -
+    got:   ready | bay leaves | 2 | each | - | alts[] | eq[] | form - | note - | 
+C1	3 chicken breasts
+    label: ready | chicken breasts | 3 | each | - | -
+    got:   ready | chicken breasts | 3 | each | - | alts[] | eq[] | form - | note - | 
+C2-high	6 garlic cloves, smashed
+    label: ready | garlic | 6 | clove | - | -
+    got:   ready | garlic cloves | 6 | each | - | alts[] | eq[] | form - | note smashed | 
+C2-high	4 lemon wedges
+    label: ready | lemon | 4 | wedge | - | -
+    got:   ready | lemon wedges | 4 | each | - | alts[] | eq[] | form - | note - | 
+C2-high	2 thyme sprigs
+    label: ready | thyme | 2 | sprig | - | -
+    got:   ready | thyme sprigs | 2 | each | - | alts[] | eq[] | form - | note - | 
+C2-high	2 cinnamon sticks
+    label: ready | cinnamon | 2 | stick | - | -
+    got:   ready | cinnamon sticks | 2 | each | - | alts[] | eq[] | form - | note - | 
+C2-high	1 garlic bulb
+    label: ready | garlic | 1 | bulb | - | -
+    got:   ready | garlic bulb | 1 | each | - | alts[] | eq[] | form - | note - | 
+C2-high	4 bacon slices
+    label: ready | bacon | 4 | slice | - | -
+    got:   ready | bacon slices | 4 | each | - | alts[] | eq[] | form - | note - | 
+C2-high	2 celery stalks
+    label: ready | celery | 2 | stalk | - | -
+    got:   ready | celery stalks | 2 | each | - | alts[] | eq[] | form - | note - | 
+C2-high {K}	3 vanilla bean pods
+    label: ready | vanilla bean | 3 | pod | - | -
+    got:   ready | vanilla bean pods | 3 | each | - | alts[] | eq[] | form - | note - | 
+C2-high {DK}	4 kaffir lime leaves
+    label: ready | kaffir lime | 4 | leaf | - | -
+    got:   ready | kaffir lime leaves | 4 | each | - | alts[] | eq[] | form - | note - | 
+C3b	3 links Italian sausage
+    label: ready | Italian sausage | 3 | link | - | -
+    got:   needs_review | links Italian sausage | 3 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C2-high	1 ball fresh mozzarella
+    label: ready | fresh mozzarella | 1 | ball | - | -
+    got:   ready | ball fresh mozzarella | 1 | each | - | alts[] | eq[] | form - | note - | 
+C2-high	1 tube refrigerated biscuit dough
+    label: ready | refrigerated biscuit dough | 1 | tube | - | -
+    got:   ready | tube refrigerated biscuit dough | 1 | each | - | alts[] | eq[] | form - | note - | 
+C3b	2 sheets puff pastry, thawed
+    label: ready | puff pastry | 2 | sheet | - | -
+    got:   needs_review | sheets puff pastry | 2 | - | - | alts[] | eq[] | form - | note thawed | legacy_unit_not_supported
+C3b	4 strips lemon zest
+    label: ready | lemon zest | 4 | strip | - | -
+    got:   needs_review | strips lemon zest | 4 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C3b	1 loaf ciabatta
+    label: ready | ciabatta | 1 | loaf | - | -
+    got:   needs_review | loaf ciabatta | 1 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C2-high	2 cubes chicken bouillon
+    label: ready | chicken bouillon | 2 | cube | - | -
+    got:   ready | cubes chicken bouillon | 2 | each | - | alts[] | eq[] | form - | note - | 
+C3b	1 packet taco seasoning
+    label: ready | taco seasoning | 1 | packet | - | -
+    got:   needs_review | packet taco seasoning | 1 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C3b	1 envelope unflavored gelatin
+    label: ready | unflavored gelatin | 1 | envelope | - | -
+    got:   needs_review | envelope unflavored gelatin | 1 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C3b	1 tin sardines
+    label: ready | sardines | 1 | tin | - | -
+    got:   needs_review | tin sardines | 1 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C1	8 ounces cream cheese
+    label: ready | cream cheese | 8 | oz | - | -
+    got:   ready | cream cheese | 8 | oz | - | alts[] | eq[] | form - | note - | 
+C1	12 fl. oz. lager
+    label: ready | lager | 12 | fl_oz | - | -
+    got:   ready | lager | 12 | fl_oz | - | alts[] | eq[] | form - | note - | 
+C1	16 fluid ounces chicken broth
+    label: ready | chicken broth | 16 | fl_oz | - | -
+    got:   ready | chicken broth | 16 | fl_oz | - | alts[] | eq[] | form - | note - | 
+C1	4 oz. vodka
+    label: ready | vodka | 4 | oz | - | -
+    got:   ready | vodka | 4 | oz | - | alts[] | eq[] | form - | note - | 
+C3b	6 fl oz (180 ml) orange juice
+    label: ready | orange juice | 6 | fl_oz | - | -
+    got:   needs_review | 6 fl oz (180 ml) orange juice | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	10 oz (283 g) frozen spinach
+    label: ready | frozen spinach | 10 | oz | - | -
+    got:   needs_review | 10 oz (283 g) frozen spinach | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C2-high [S3]	2 ozs feta
+    label: ready | feta | 2 | oz | - | -
+    got:   ready | ozs feta | 2 | each | - | alts[] | eq[] | form - | note - | 
+C1	3 fl.oz milk
+    label: ready | milk | 3 | fl_oz | - | -
+    got:   ready | milk | 3 | fl_oz | - | alts[] | eq[] | form - | note - | 
+C3b	1 oz (2 tbsp) butter
+    label: ready | butter | 1 | oz | - | -
+    got:   needs_review | 1 oz (2 tbsp) butter | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C1	8 fl oz heavy cream
+    label: ready | heavy cream | 8 | fl_oz | - | -
+    got:   ready | heavy cream | 8 | fl_oz | - | alts[] | eq[] | form - | note - | 
+C2-high [S3]	1 fluid oz bitters
+    label: ready | bitters | 1 | fl_oz | - | -
+    got:   ready | fluid oz bitters | 1 | each | - | alts[] | eq[] | form - | note - | 
+C3b	1 ounce (2 tablespoons) dark rum
+    label: ready | dark rum | 1 | oz | - | -
+    got:   needs_review | 1 ounce (2 tablespoons) dark rum | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 lb 8 oz potatoes
+    label: ready | potatoes | 24 | oz | - | -
+    got:   needs_review | 1 lb 8 oz potatoes | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	2 cups plus 2 tablespoons flour
+    label: ready | flour | 34 | tbsp | - | -
+    got:   needs_review | 2 cups plus 2 tablespoons flour | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b {K}	1 tbsp + 1 tsp sugar
+    label: ready | sugar | 4 | tsp | - | -
+    got:   needs_review | 1 tbsp + 1 tsp sugar | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	1/4 cup plus 2 tbsp milk
+    label: ready | milk | 6 | tbsp | - | -
+    got:   needs_review | 1/4 cup plus 2 tbsp milk | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b {K}	1/2 cup + 2 tbsp sugar
+    label: ready | sugar | 10 | tbsp | - | -
+    got:   needs_review | 1/2 cup + 2 tbsp sugar | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	2 lbs 4 oz pork shoulder
+    label: ready | pork shoulder | 36 | oz | - | -
+    got:   needs_review | 2 lbs 4 oz pork shoulder | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	1 cup / 240 ml water
+    label: ready | water | 1 | cup | - | -
+    got:   needs_review | 1 cup / 240 ml water | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	1 pound (450 g) ground beef
+    label: ready | ground beef | 1 | lb | - | -
+    got:   needs_review | 1 pound (450 g) ground beef | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	2 cups (about 10 oz) frozen corn
+    label: ready | frozen corn | 2 | cup | - | -
+    got:   needs_review | 2 cups (about 10 oz) frozen corn | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	3 tbsp (45 g) butter
+    label: ready | butter | 3 | tbsp | - | -
+    got:   needs_review | 3 tbsp (45 g) butter | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 kg (2.2 lb) beef chuck
+    label: ready | beef chuck | 1 | kg | - | -
+    got:   needs_review | 1 kg (2.2 lb) beef chuck | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	250 ml (1 cup) cream
+    label: ready | cream | 250 | ml | - | -
+    got:   needs_review | 250 ml (1 cup) cream | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 1/2 cups (360 ml) milk, warmed
+    label: ready | milk | 3/2 | cup | - | -
+    got:   needs_review | 1 1/2 cups (360 ml) milk | - | - | - | alts[] | eq[] | form - | note warmed | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	113 g (1/2 cup) butter
+    label: ready | butter | 113 | g | - | -
+    got:   needs_review | 113 g (1/2 cup) butter | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 stick (1/2 cup) butter
+    label: ready | butter | 1 | stick | - | -
+    got:   needs_review | stick (1/2 cup) butter | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_unit_not_supported
+C3b	1 1/2 sticks butter
+    label: ready | butter | 3/2 | stick | - | -
+    got:   needs_review | sticks butter | 3/2 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C3b	3/4 stick butter, melted
+    label: ready | butter | 3/4 | stick | - | -
+    got:   needs_review | stick butter | 3/4 | - | - | alts[] | eq[] | form - | note melted | legacy_unit_not_supported
+C3b	6 cups (1.5 L) vegetable broth
+    label: ready | vegetable broth | 6 | cup | - | -
+    got:   needs_review | 6 cups (1.5 L) vegetable broth | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	2 cups (1 pint) strawberries
+    label: ready | strawberries | 2 | cup | - | -
+    got:   needs_review | 2 cups (1 pint) strawberries | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 cup (5 oz) all-purpose flour
+    label: ready | all-purpose flour | 1 | cup | - | -
+    got:   needs_review | 1 cup (5 oz) all-purpose flour | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 gallon (16 cups) water
+    label: ready | water | 1 | gallon | - | -
+    got:   needs_review | gallon (16 cups) water | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_unit_not_supported
+C3b	1 tablespoon (3 teaspoons) cumin
+    label: ready | cumin | 1 | tbsp | - | -
+    got:   needs_review | 1 tablespoon (3 teaspoons) cumin | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 cup (250 g) mascarpone
+    label: ready | mascarpone | 1 | cup | - | -
+    got:   needs_review | 1 cup (250 g) mascarpone | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 cup sugar (200g)
+    label: ready | sugar | 1 | cup | - | -
+    got:   needs_review | 1 cup sugar (200g) | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 cup walnuts (4 oz)
+    label: ready | walnuts | 1 | cup | - | -
+    got:   needs_review | 1 cup walnuts (4 oz) | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	8 oz (1 cup) ricotta
+    label: ready | ricotta | 8 | oz | - | -
+    got:   needs_review | 8 oz (1 cup) ricotta | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1/4 oz (1 packet) active dry yeast
+    label: ready | active dry yeast | 1/4 | oz | - | -
+    got:   needs_review | 1/4 oz (1 packet) active dry yeast | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	2 1/4 tsp (1 envelope) yeast
+    label: ready | yeast | 9/4 | tsp | - | -
+    got:   needs_review | 2 1/4 tsp (1 envelope) yeast | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	500g (1lb 2oz) pasta
+    label: ready | pasta | 500 | g | - | -
+    got:   needs_review | 500g (1lb 2oz) pasta | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	3 medium potatoes (about 1 lb)
+    label: ready | potatoes | 3 | each | - | -
+    got:   needs_review | 3 medium potatoes (about 1 lb) | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	2 large onions (about 1 1/2 lb), sliced
+    label: ready | onions | 2 | each | - | -
+    got:   needs_review | 2 large onions (about 1 1/2 lb) | - | - | - | alts[] | eq[] | form - | note sliced | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 cup (about 2 medium) diced onion
+    label: ready | diced onion|onion | 1 | cup | - | -
+    got:   needs_review | 1 cup (about 2 medium) diced onion | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3a	flour, 2 cups
+    label: ready | flour | 2 | cup | - | -
+    got:   needs_review | flour | - | - | - | alts[] | eq[] | form - | note 2 cups | quantity_missing
+C3b	Butter – 100 g
+    label: ready | Butter | 100 | g | - | -
+    got:   needs_review | Butter – 100 g | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	Eggs: 3
+    label: ready | Eggs | 3 | each | - | -
+    got:   needs_review | Eggs: 3 | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3a	7-Up soda, 1 can
+    label: ready | 7-Up soda | 1 | can | - | -
+    got:   needs_review | 7-Up soda | - | - | - | alts[] | eq[] | form - | note 1 can | legacy_unrecognized_quantity
+C3b	about 2 cups cooked rice
+    label: ready | rice | 2 | cup | - | -
+    got:   needs_review | about 2 cups cooked rice | - | - | - | alts[] | eq[] | form cooked | note - | quantity_missing
+C3b	~1 tsp salt
+    label: ready | salt | 1 | tsp | - | -
+    got:   needs_review | ~1 tsp salt | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	approximately 3 lbs pork shoulder
+    label: ready | pork shoulder | 3 | lb | - | -
+    got:   needs_review | approximately 3 lbs pork shoulder | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	roughly 1/2 cup parsley, chopped
+    label: ready | parsley | 1/2 | cup | - | -
+    got:   needs_review | roughly 1/2 cup parsley | - | - | - | alts[] | eq[] | form - | note chopped | quantity_missing
+C3b	Salt and pepper to taste
+    label: ready | salt and pepper | - | - | - | -
+    got:   needs_review | Salt and pepper to taste | - | - | - | alts[] | eq[] | form - | note - | legacy_no_fixed_quantity,quantity_missing
+C3a	Olive oil, for drizzling
+    label: ready | Olive oil | - | - | - | -
+    got:   needs_review | Olive oil | - | - | - | alts[] | eq[] | form - | note for drizzling | quantity_missing
+C3a	Lemon wedges, for serving
+    label: ready | Lemon wedges|lemon | - | - | - | -
+    got:   needs_review | Lemon wedges | - | - | - | alts[] | eq[] | form - | note for serving | legacy_no_fixed_quantity,quantity_missing
+C3a	Chopped chives, to garnish
+    label: ready | Chopped chives|chives | - | - | - | -
+    got:   needs_review | Chopped chives | - | - | - | alts[] | eq[] | form - | note to garnish | quantity_missing
+C3a	Cooking spray, as needed
+    label: ready | Cooking spray | - | - | - | -
+    got:   needs_review | Cooking spray | - | - | - | alts[] | eq[] | form - | note as needed | legacy_no_fixed_quantity,quantity_missing
+C3a	flour, for dusting
+    label: ready | flour | - | - | - | -
+    got:   needs_review | flour | - | - | - | alts[] | eq[] | form - | note for dusting | quantity_missing
+C5a	Freshly ground black pepper
+    label: needs_review | Freshly ground black pepper|black pepper | - | - | - | -
+    got:   needs_review | Freshly ground black pepper | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	1 tsp salt, plus more to taste
+    label: ready | salt | 1 | tsp | - | -
+    got:   needs_review | 1 tsp salt | - | - | - | alts[] | eq[] | form - | note plus more to taste | legacy_no_fixed_quantity
+C3b	Vegetable oil for frying
+    label: ready | Vegetable oil | - | - | - | -
+    got:   needs_review | Vegetable oil for frying | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C5a	salt
+    label: needs_review | salt | - | - | - | -
+    got:   needs_review | salt | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	1/4 cup raisins (optional)
+    label: ready | raisins | 1/4 | cup | - | -
+    got:   needs_review | 1/4 cup raisins | - | - | - | alts[] | eq[] | form - | note optional | legacy_no_fixed_quantity
+C3b	optional: 1 tsp chili flakes
+    label: ready | chili flakes | 1 | tsp | - | -
+    got:   needs_review | optional: 1 tsp chili flakes | - | - | - | alts[] | eq[] | form - | note - | legacy_no_fixed_quantity,quantity_missing
+C3b	2 tbsp capers, optional
+    label: ready | capers | 2 | tbsp | - | -
+    got:   needs_review | 2 tbsp capers | - | - | - | alts[] | eq[] | form - | note optional | legacy_no_fixed_quantity
+C2-medium	2 cups cooked brown rice
+    label: ready | brown rice | 2 | cup | - | -
+    got:   ready | cooked brown rice | 2 | cup | - | alts[] | eq[] | form cooked | note - | 
+C2-medium	1 lb uncooked spaghetti
+    label: ready | spaghetti | 1 | lb | - | -
+    got:   ready | uncooked spaghetti | 1 | lb | - | alts[] | eq[] | form raw | note - | 
+C2-medium	3 cups shredded cooked chicken
+    label: ready | shredded chicken|chicken | 3 | cup | - | -
+    got:   ready | shredded cooked chicken | 3 | cup | - | alts[] | eq[] | form cooked | note - | 
+C2-medium	1 cup raw cashews
+    label: ready | cashews | 1 | cup | - | -
+    got:   ready | raw cashews | 1 | cup | - | alts[] | eq[] | form raw | note - | 
+C1 {D}	1 cup raw sugar
+    label: ready | raw sugar | 1 | cup | - | -
+    got:   ready | raw sugar | 1 | cup | - | alts[] | eq[] | form raw | note - | 
+C1 {D}	1/4 cup raw honey
+    label: ready | raw honey | 1/4 | cup | - | -
+    got:   ready | raw honey | 1/4 | cup | - | alts[] | eq[] | form raw | note - | 
+C2-medium	1 lb raw shrimp
+    label: ready | shrimp | 1 | lb | - | -
+    got:   ready | raw shrimp | 1 | lb | - | alts[] | eq[] | form raw | note - | 
+C2-medium	1 cup uncooked white rice
+    label: ready | white rice | 1 | cup | - | -
+    got:   ready | uncooked white rice | 1 | cup | - | alts[] | eq[] | form raw | note - | 
+C3b	1 cup 2% milk
+    label: ready | 2% milk | 1 | cup | - | -
+    got:   needs_review | 1 cup 2% milk | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C1	1 cup low-fat buttermilk
+    label: ready | low-fat buttermilk | 1 | cup | - | -
+    got:   ready | low-fat buttermilk | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	2 tbsp extra virgin olive oil
+    label: ready | extra virgin olive oil | 2 | tbsp | - | -
+    got:   ready | extra virgin olive oil | 2 | tbsp | - | alts[] | eq[] | form - | note - | 
+C1	1 lb boneless skinless chicken breasts
+    label: ready | boneless skinless chicken breasts | 1 | lb | - | -
+    got:   ready | boneless skinless chicken breasts | 1 | lb | - | alts[] | eq[] | form - | note - | 
+C1	1 cup unsweetened almond milk
+    label: ready | unsweetened almond milk | 1 | cup | - | -
+    got:   ready | unsweetened almond milk | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1/2 cup whole wheat flour
+    label: ready | whole wheat flour | 1/2 | cup | - | -
+    got:   ready | whole wheat flour | 1/2 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 tbsp low-sodium soy sauce
+    label: ready | low-sodium soy sauce | 1 | tbsp | - | -
+    got:   ready | low-sodium soy sauce | 1 | tbsp | - | alts[] | eq[] | form - | note - | 
+C1	1 cup nonfat Greek yogurt
+    label: ready | nonfat Greek yogurt | 1 | cup | - | -
+    got:   ready | nonfat Greek yogurt | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1 {D}	8 oz fresh mozzarella
+    label: ready | fresh mozzarella | 8 | oz | - | -
+    got:   ready | fresh mozzarella | 8 | oz | - | alts[] | eq[] | form - | note - | 
+C1	1 cup light brown sugar, packed
+    label: ready | light brown sugar | 1 | cup | - | -
+    got:   ready | light brown sugar | 1 | cup | - | alts[] | eq[] | form - | note packed | 
+C1	1 cup salted butter
+    label: ready | salted butter | 1 | cup | - | -
+    got:   ready | salted butter | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1/2 cup dark chocolate chips
+    label: ready | dark chocolate chips | 1/2 | cup | - | -
+    got:   ready | dark chocolate chips | 1/2 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 cup old-fashioned rolled oats
+    label: ready | old-fashioned rolled oats | 1 | cup | - | -
+    got:   ready | old-fashioned rolled oats | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	2 cups whole milk ricotta
+    label: ready | whole milk ricotta | 2 | cup | - | -
+    got:   ready | whole milk ricotta | 2 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 cup sharp cheddar, grated
+    label: ready | sharp cheddar | 1 | cup | - | -
+    got:   ready | sharp cheddar | 1 | cup | - | alts[] | eq[] | form - | note grated | 
+C1	1 lb small red potatoes
+    label: ready | red potatoes | 1 | lb | - | -
+    got:   ready | red potatoes | 1 | lb | - | alts[] | eq[] | form - | note small | 
+C1	2 large egg yolks
+    label: ready | egg yolks | 2 | each | - | -
+    got:   ready | egg yolks | 2 | each | - | alts[] | eq[] | form - | note large | 
+C1	1 cup baby spinach
+    label: ready | baby spinach | 1 | cup | - | -
+    got:   ready | baby spinach | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C3b	1 lb. 93% lean ground turkey
+    label: ready | 93% lean ground turkey | 1 | lb | - | -
+    got:   needs_review | 1 lb. 93% lean ground turkey | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	1 cup 1% milk
+    label: ready | 1% milk | 1 | cup | - | -
+    got:   needs_review | 1 cup 1% milk | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	1/4 cup 100% pure maple syrup
+    label: ready | 100% pure maple syrup|pure maple syrup | 1/4 | cup | - | -
+    got:   needs_review | 1/4 cup 100% pure maple syrup | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	1 cup 0% Greek yogurt
+    label: ready | 0% Greek yogurt | 1 | cup | - | -
+    got:   needs_review | 1 cup 0% Greek yogurt | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C1	2 tbsp smoked paprika
+    label: ready | smoked paprika | 2 | tbsp | - | -
+    got:   ready | smoked paprika | 2 | tbsp | - | alts[] | eq[] | form - | note - | 
+C1	1 cup frozen peas (no need to thaw)
+    label: ready | frozen peas | 1 | cup | - | -
+    got:   ready | frozen peas | 1 | cup | - | alts[] | eq[] | form - | note no need to thaw | 
+C1	1 cup canned pumpkin
+    label: ready | canned pumpkin | 1 | cup | - | -
+    got:   ready | canned pumpkin | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	2 cups frozen mixed vegetables
+    label: ready | frozen mixed vegetables | 2 | cup | - | -
+    got:   ready | frozen mixed vegetables | 2 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1/2 cup dried cranberries
+    label: ready | dried cranberries | 1/2 | cup | - | -
+    got:   ready | dried cranberries | 1/2 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 tbsp dried oregano
+    label: ready | dried oregano | 1 | tbsp | - | -
+    got:   ready | dried oregano | 1 | tbsp | - | alts[] | eq[] | form - | note - | 
+C1	2 cups fresh spinach
+    label: ready | fresh spinach|spinach | 2 | cup | - | -
+    got:   ready | fresh spinach | 2 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 cup jarred roasted red peppers
+    label: ready | jarred roasted red peppers|roasted red peppers | 1 | cup | - | -
+    got:   ready | jarred roasted red peppers | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 cup store-bought pesto
+    label: ready | store-bought pesto|pesto | 1 | cup | - | -
+    got:   ready | store-bought pesto | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	8 oz thick-cut bacon
+    label: ready | thick-cut bacon | 8 | oz | - | -
+    got:   ready | thick-cut bacon | 8 | oz | - | alts[] | eq[] | form - | note - | 
+C1	1 cup heavy whipping cream
+    label: ready | heavy whipping cream | 1 | cup | - | -
+    got:   ready | heavy whipping cream | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	2 tbsp toasted sesame oil
+    label: ready | toasted sesame oil | 2 | tbsp | - | -
+    got:   ready | toasted sesame oil | 2 | tbsp | - | alts[] | eq[] | form - | note - | 
+C1	1 cup self-rising flour
+    label: ready | self-rising flour | 1 | cup | - | -
+    got:   ready | self-rising flour | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 cup unbleached all-purpose flour
+    label: ready | unbleached all-purpose flour | 1 | cup | - | -
+    got:   ready | unbleached all-purpose flour | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 tsp ground ginger
+    label: ready | ground ginger | 1 | tsp | - | -
+    got:   ready | ground ginger | 1 | tsp | - | alts[] | eq[] | form - | note - | 
+C1	1 tbsp grated fresh ginger
+    label: ready | grated fresh ginger|fresh ginger|ginger | 1 | tbsp | - | -
+    got:   ready | grated fresh ginger | 1 | tbsp | - | alts[] | eq[] | form - | note - | 
+C1	1 cup cherry tomatoes, halved
+    label: ready | cherry tomatoes | 1 | cup | - | -
+    got:   ready | cherry tomatoes | 1 | cup | - | alts[] | eq[] | form - | note halved | 
+C1	1 lb frozen shrimp, thawed
+    label: ready | frozen shrimp | 1 | lb | - | -
+    got:   ready | frozen shrimp | 1 | lb | - | alts[] | eq[] | form - | note thawed | 
+C3b {K}	1 cup 7-Up
+    label: ready | 7-Up | 1 | cup | - | -
+    got:   needs_review | 1 cup 7-Up | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	2 tbsp V8 juice
+    label: ready | V8 juice | 2 | tbsp | - | -
+    got:   needs_review | 2 tbsp V8 juice | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b {K}	1 tsp Chinese 5 spice
+    label: ready | Chinese 5 spice | 1 | tsp | - | -
+    got:   needs_review | 1 tsp Chinese 5 spice | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C8	For the dressing:
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | For the dressing | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8 {K}	FILLING
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | FILLING | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Preheat the oven to 350°F.
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Preheat the oven to 350°F. | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	https://example.com/recipe
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | https://example.com/recipe | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Equipment: 9x13 baking dish
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Equipment: 9x13 baking dish | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Makes 12 muffins
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Makes 12 muffins | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Serves 4
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Serves 4 | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Prep time: 15 minutes
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Prep time: 15 minutes | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Calories: 320
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Calories: 320 | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8 {K}	Topping
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Topping | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Step 3: Add the onions
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Step 3: Add the onions | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Note: you can use frozen peas
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Note: you can use frozen peas | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Ingredients
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Ingredients | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C2-high [S1,S8] {D}	1 hour
+    label: unsupported | - | - | - | - | -
+    got:   ready | hour | 1 | each | - | alts[] | eq[] | form - | note - | 
+C8	Total: 45 minutes
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Total: 45 minutes | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Yield: 2 loaves
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Yield: 2 loaves | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Per serving: 250 calories
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Per serving: 250 calories | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Fiber 4g
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Fiber 4g | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Garnish:
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Garnish | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Cook the pasta according to package directions.
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Cook the pasta according to package directions. | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Optional toppings:
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Optional toppings | - | - | - | alts[] | eq[] | form - | note - | legacy_no_fixed_quantity,quantity_missing
+C8	Watch the video below
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Watch the video below | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Servings: 6
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Servings: 6 | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Cook time: 1 hour 20 minutes
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Cook time: 1 hour 20 minutes | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Makes about 2 cups
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Makes about 2 cups | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Serving size: 2 cookies
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Serving size: 2 cookies | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Saturated fat: 3 g
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Saturated fat: 3 g | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Cholesterol 25 mg
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Cholesterol 25 mg | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8 {D}	One-Pot Pasta
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | One-Pot Pasta | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C1	1 egg, beaten
+    label: ready | egg | 1 | each | - | -
+    got:   ready | egg | 1 | each | - | alts[] | eq[] | form - | note beaten | 
+C1	2 cups water, divided
+    label: ready | water | 2 | cup | - | -
+    got:   ready | water | 2 | cup | - | alts[] | eq[] | form - | note divided | 
+C1	1/2 lemon, juiced
+    label: ready | lemon | 1/2 | each | - | -
+    got:   ready | lemon | 1/2 | each | - | alts[] | eq[] | form - | note juiced | 
+C3b	12 oz. bacon, cut into 1-inch pieces
+    label: ready | bacon | 12 | oz | - | -
+    got:   needs_review | 12 oz. bacon | - | - | - | alts[] | eq[] | form - | note cut into 1-inch pieces | legacy_more_than_one_quantity
+C3b	2 lbs. potatoes, cut into 2-inch chunks
+    label: ready | potatoes | 2 | lb | - | -
+    got:   needs_review | 2 lbs. potatoes | - | - | - | alts[] | eq[] | form - | note cut into 2-inch chunks | legacy_more_than_one_quantity
+C3b	1 cup water (110°F)
+    label: ready | water | 1 | cup | - | -
+    got:   needs_review | 1 cup water (110°F) | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 9-inch pie crust
+    label: ready | pie crust | 1 | each | - | -
+    got:   needs_review | 1 9-inch pie crust | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C2-medium	1 cup sugar + more for sprinkling
+    label: ready | sugar | 1 | cup | - | -
+    got:   ready | sugar + more for sprinkling | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 tsp. baking soda
+    label: ready | baking soda | 1 | tsp | - | -
+    got:   ready | baking soda | 1 | tsp | - | alts[] | eq[] | form - | note - | 
+C1 {D}	1 T butter
+    label: ready | butter | 1 | tbsp | - | -
+    got:   ready | butter | 1 | tbsp | - | alts[] | eq[] | form - | note - | 
+C1 {D}	1 t salt
+    label: ready | salt | 1 | tsp | - | -
+    got:   ready | salt | 1 | tsp | - | alts[] | eq[] | form - | note - | 
+C1	2 C flour
+    label: ready | flour | 2 | cup | - | -
+    got:   ready | flour | 2 | cup | - | alts[] | eq[] | form - | note - | 
+C2-medium	1 lg egg
+    label: ready | egg | 1 | each | - | -
+    got:   ready | lg egg | 1 | each | - | alts[] | eq[] | form - | note - | 
+C2-medium	3 med. tomatoes
+    label: ready | tomatoes | 3 | each | - | -
+    got:   ready | med. tomatoes | 3 | each | - | alts[] | eq[] | form - | note - | 
+C3b	1 qt chicken stock
+    label: ready | chicken stock | 1 | quart | - | -
+    got:   needs_review | qt chicken stock | 1 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C3b	1 pt heavy cream
+    label: ready | heavy cream | 1 | pint | - | -
+    got:   needs_review | pt heavy cream | 1 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C3b	1 gal whole milk
+    label: ready | whole milk | 1 | gallon | - | -
+    got:   needs_review | gal whole milk | 1 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C1	2 L water
+    label: ready | water | 2 | l | - | -
+    got:   ready | water | 2 | l | - | alts[] | eq[] | form - | note - | 
+C1	500 mL coconut water
+    label: ready | coconut water | 500 | ml | - | -
+    got:   ready | coconut water | 500 | ml | - | alts[] | eq[] | form - | note - | 
+C2-high [S3]	1 dl cream
+    label: ready | cream | 1 | dl | - | -
+    got:   ready | dl cream | 1 | each | - | alts[] | eq[] | form - | note - | 
+C1	100 gr sugar
+    label: ready | sugar | 100 | g | - | -
+    got:   ready | sugar | 100 | g | - | alts[] | eq[] | form - | note - | 
+C1	2 Tbs. honey
+    label: ready | honey | 2 | tbsp | - | -
+    got:   ready | honey | 2 | tbsp | - | alts[] | eq[] | form - | note - | 
+C1	3 tsps sugar
+    label: ready | sugar | 3 | tsp | - | -
+    got:   ready | sugar | 3 | tsp | - | alts[] | eq[] | form - | note - | 
+C2-high [S4]	1 lb. each ground beef and ground pork
+    label: needs_review | - | 1 | lb | - | -
+    got:   ready | each ground beef and ground pork | 1 | lb | - | alts[] | eq[] | form - | note - | 
+C5b	2 eggs + 1 yolk
+    label: needs_review | - | 2 | each | - | -
+    got:   needs_review | 2 eggs + 1 yolk | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C1	3 eggs, at room temperature
+    label: ready | eggs | 3 | each | - | -
+    got:   ready | eggs | 3 | each | - | alts[] | eq[] | form - | note at room temperature | 
+C1	1 cup of milk
+    label: ready | milk | 1 | cup | - | -
+    got:   ready | milk | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	2 cups of all purpose flour
+    label: ready | all purpose flour | 2 | cup | - | -
+    got:   ready | all purpose flour | 2 | cup | - | alts[] | eq[] | form - | note - | 
+C3b	a handful of fresh basil leaves
+    label: ready | fresh basil leaves|basil leaves|basil | 1 | handful | - | -
+    got:   needs_review | a handful of fresh basil leaves | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	a splash of vinegar
+    label: ready | vinegar | 1 | splash | - | -
+    got:   needs_review | a splash of vinegar | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	a knob of butter
+    label: ready | butter | 1 | knob | - | -
+    got:   needs_review | a knob of butter | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C2-high	1 small bunch parsley
+    label: ready | parsley | 1 | bunch | - | -
+    got:   ready | bunch parsley | 1 | each | - | alts[] | eq[] | form - | note small | 
+C2-high [S3]	2 heaping tablespoons cocoa powder
+    label: ready | cocoa powder | 2 | tbsp | - | -
+    got:   ready | heaping tablespoons cocoa powder | 2 | each | - | alts[] | eq[] | form - | note - | 
+C2-high [S3]	1 level tsp baking powder
+    label: ready | baking powder | 1 | tsp | - | -
+    got:   ready | level tsp baking powder | 1 | each | - | alts[] | eq[] | form - | note - | 
+C2-high [S3]	1 scant cup sugar
+    label: ready | sugar | 1 | cup | - | -
+    got:   ready | scant cup sugar | 1 | each | - | alts[] | eq[] | form - | note - | 
+C1	1/2 c. packed brown sugar
+    label: ready | packed brown sugar|brown sugar | 1/2 | cup | - | -
+    got:   ready | packed brown sugar | 1/2 | cup | - | alts[] | eq[] | form - | note - | 
+C2-high [S3,S7] {D}	1 pound cake
+    label: ready | pound cake | 1 | each | - | -
+    got:   ready | cake | 1 | lb | - | alts[] | eq[] | form - | note - | 
+C1	2 tbsp gram flour
+    label: ready | gram flour | 2 | tbsp | - | -
+    got:   ready | gram flour | 2 | tbsp | - | alts[] | eq[] | form - | note - | 
+C1	1 cup crème fraîche
+    label: ready | crème fraîche | 1 | cup | - | -
+    got:   ready | crème fraîche | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	2 jalapeños, seeded
+    label: ready | jalapeños | 2 | each | - | -
+    got:   ready | jalapeños | 2 | each | - | alts[] | eq[] | form - | note seeded | 
+C5b	1,5 kg flour
+    label: needs_review | flour | - | kg | - | -
+    got:   needs_review | 1 | - | - | - | alts[] | eq[] | form - | note 5 kg flour | number_format_ambiguous
+C5b	1,000 g flour
+    label: needs_review | flour | - | g | - | -
+    got:   needs_review | 1 | - | - | - | alts[] | eq[] | form - | note 000 g flour | number_format_ambiguous
+C5b	0 g sugar
+    label: needs_review | sugar | - | g | - | -
+    got:   needs_review | 0 g sugar | - | - | - | alts[] | eq[] | form - | note - | quantity_not_positive
+C3b	1 inch ginger, grated
+    label: ready | ginger | 1 | inch | - | -
+    got:   needs_review | inch ginger | 1 | - | - | alts[] | eq[] | form - | note grated | legacy_unit_not_supported
+C3b	2 drops almond extract
+    label: ready | almond extract | 2 | drop | - | -
+    got:   needs_review | drops almond extract | 2 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C3b	1 dash hot sauce
+    label: ready | hot sauce | 1 | dash | - | -
+    got:   needs_review | dash hot sauce | 1 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C3b	1 1/2 lb beef, cut into 1 1/2-inch cubes
+    label: ready | beef | 3/2 | lb | - | -
+    got:   needs_review | 1 1/2 lb beef | - | - | - | alts[] | eq[] | form - | note cut into 1 1/2-inch cubes | legacy_more_than_one_quantity
+C1	2 lbs chicken wings, tips removed
+    label: ready | chicken wings | 2 | lb | - | -
+    got:   ready | chicken wings | 2 | lb | - | alts[] | eq[] | form - | note tips removed | 
+C3b	1 cup milk, warmed to 110 degrees
+    label: ready | milk | 1 | cup | - | -
+    got:   needs_review | 1 cup milk | - | - | - | alts[] | eq[] | form - | note warmed to 110 degrees | legacy_more_than_one_quantity
+C3b	6 tbsp butter, cut into 6 pieces
+    label: ready | butter | 6 | tbsp | - | -
+    got:   needs_review | 6 tbsp butter | - | - | - | alts[] | eq[] | form - | note cut into 6 pieces | legacy_more_than_one_quantity
+C1	1 lb pasta, such as rigatoni
+    label: ready | pasta | 1 | lb | - | -
+    got:   ready | pasta | 1 | lb | - | alts[] | eq[] | form - | note such as rigatoni | 
+C3b	1/2 cup chopped fresh cilantro, plus more for garnish
+    label: ready | chopped fresh cilantro|fresh cilantro|cilantro | 1/2 | cup | - | -
+    got:   needs_review | 1/2 cup chopped fresh cilantro | - | - | - | alts[] | eq[] | form - | note plus more for garnish | legacy_no_fixed_quantity
+C3b	1 onion, halved and sliced 1/4 inch thick
+    label: ready | onion | 1 | each | - | -
+    got:   needs_review | 1 onion | - | - | - | alts[] | eq[] | form - | note halved and sliced 1/4 inch thick | legacy_more_than_one_quantity
+C1	2 tsp kosher salt (such as Diamond Crystal; use half for table salt)
+    label: ready | kosher salt | 2 | tsp | - | -
+    got:   ready | kosher salt | 2 | tsp | - | alts[] | eq[] | form - | note such as Diamond Crystal; use half for table salt | 
+C3b	1 cup rice, rinsed until water runs clear (about 3 times)
+    label: ready | rice | 1 | cup | - | -
+    got:   needs_review | 1 cup rice | - | - | - | alts[] | eq[] | form - | note rinsed until water runs clear (about 3 times) | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 lb carrots (about 6 medium)
+    label: ready | carrots | 1 | lb | - | -
+    got:   needs_review | 1 lb carrots (about 6 medium) | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C5b {DK}	1 cup cooked lentils (from 1/2 cup dry)
+    label: needs_review | lentils | 1 | cup | - | -
+    got:   needs_review | 1 cup cooked lentils (from 1/2 cup dry) | - | - | - | alts[] | eq[] | form cooked | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C5b {DK}	3 cups cooked pasta (about 6 oz dry)
+    label: needs_review | pasta | 3 | cup | - | -
+    got:   needs_review | 3 cups cooked pasta (about 6 oz dry) | - | - | - | alts[] | eq[] | form cooked | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C5a {K}	Three-bean salad
+    label: needs_review | Three-bean salad | - | - | - | -
+    got:   needs_review | Three-bean salad | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C5b {D}	1 cup cooked chickpeas (or one 15-oz can, drained)
+    label: needs_review | chickpeas | 1 | cup | - | -
+    got:   needs_review | 1 cup cooked chickpeas (or one 15-oz can, drained) | - | - | - | alts[] | eq[] | form cooked | note - | legacy_contains_or,legacy_parenthetical_number,legacy_more_than_one_quantity
+C5b {D}	1 lb ground beef (or 2 cups cooked lentils)
+    label: needs_review | - | 1 | lb | - | ground beef;cooked lentils||ground beef;lentils
+    got:   needs_review | 1 lb ground beef (or 2 cups cooked lentils) | - | - | - | alts[] | eq[] | form cooked | note - | legacy_contains_or,legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	2 cups milk, or as needed
+    label: ready | milk | 2 | cup | - | -
+    got:   needs_review | 2 cups milk | - | - | - | alts[] | eq[] | form - | note or as needed | legacy_no_fixed_quantity,legacy_contains_or
+C3b {D}	1 lb fresh or frozen cranberries
+    label: ready | cranberries | 1 | lb | - | -
+    got:   needs_review | 1 lb fresh or frozen cranberries | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b	3 cups chicken or turkey stock
+    label: needs_review | - | 3 | cup | - | chicken stock;turkey stock
+    got:   needs_review | 3 cups chicken or turkey stock | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C2-high [S4]	1/2 tsp each salt and pepper
+    label: needs_review | - | 1/2 | tsp | - | -
+    got:   ready | each salt and pepper | 1/2 | tsp | - | alts[] | eq[] | form - | note - | 
+C2-high [S4]	1 tbsp each chopped parsley and dill
+    label: needs_review | - | 1 | tbsp | - | -
+    got:   ready | each chopped parsley and dill | 1 | tbsp | - | alts[] | eq[] | form - | note - | 
+C1	2 cups mixed berries (strawberries, blueberries, raspberries)
+    label: ready | mixed berries | 2 | cup | - | -
+    got:   ready | mixed berries | 2 | cup | - | alts[] | eq[] | form - | note strawberries, blueberries, raspberries | 
+C3b	1 bunch kale (about 8 oz), stems removed
+    label: ready | kale | 1 | bunch | - | -
+    got:   needs_review | bunch kale (about 8 oz) | - | - | - | alts[] | eq[] | form - | note stems removed | legacy_parenthetical_number,legacy_unit_not_supported
+C3b	4 boneless pork chops (1-inch thick)
+    label: ready | boneless pork chops | 4 | each | - | -
+    got:   needs_review | 4 boneless pork chops (1-inch thick) | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b {D}	2 (6 oz) boneless skinless chicken breasts
+    label: ready | boneless skinless chicken breasts | 2 | each | 6 oz | -
+    got:   needs_review | 2 (6 oz) boneless skinless chicken breasts | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 (15.25 oz) can corn, drained
+    label: ready | corn | 1 | can | 61/4 oz | -
+    got:   needs_review | 1 (15.25 oz) can corn | - | - | - | alts[] | eq[] | form - | note drained | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 (10.75 oz) can condensed cream of mushroom soup
+    label: ready | condensed cream of mushroom soup | 1 | can | 43/4 oz | -
+    got:   needs_review | 1 (10.75 oz) can condensed cream of mushroom soup | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	2 (3 oz) packages ramen noodles
+    label: ready | ramen noodles | 2 | package | 3 oz | -
+    got:   needs_review | 2 (3 oz) packages ramen noodles | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 (6-inch) piece daikon
+    label: ready | daikon | 1 | piece | - | -
+    got:   needs_review | 1 (6-inch) piece daikon | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C2-high [S2]	2 dozen eggs
+    label: ready | eggs | 24 | each | - | -
+    got:   ready | dozen eggs | 2 | each | - | alts[] | eq[] | form - | note - | 
+C2-high [S2]	1/2 dozen eggs
+    label: ready | eggs | 6 | each | - | -
+    got:   ready | dozen eggs | 1/2 | each | - | alts[] | eq[] | form - | note - | 
+C1	1 large egg white
+    label: ready | egg white | 1 | each | - | -
+    got:   ready | egg white | 1 | each | - | alts[] | eq[] | form - | note large | 
+C3b {D}	1 cup flour, plus 2 tablespoons for dusting
+    label: ready | flour | 18 | tbsp | - | -
+    got:   needs_review | 1 cup flour | - | - | - | alts[] | eq[] | form - | note plus 2 tablespoons for dusting | legacy_more_than_one_quantity
+C3b	1/3 c + 1 Tbsp oil
+    label: ready | oil | 19/3 | tbsp | - | -
+    got:   needs_review | 1/3 c + 1 Tbsp oil | - | - | - | alts[] | eq[] | form - | note - | legacy_fraction_not_exact_decimal
+C3b	1/3 cup plus 1 teaspoon sugar
+    label: ready | sugar | 17 | tsp | - | -
+    got:   needs_review | 1/3 cup plus 1 teaspoon sugar | - | - | - | alts[] | eq[] | form - | note - | legacy_fraction_not_exact_decimal
+C3b	2 tbsp. + 2 tsp. honey
+    label: ready | honey | 8 | tsp | - | -
+    got:   needs_review | 2 tbsp. + 2 tsp. honey | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	1 kg 200 g potatoes
+    label: ready | potatoes | 1200 | g | - | -
+    got:   needs_review | 1 kg 200 g potatoes | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	1 cup + 1 tbsp (130 g) flour
+    label: ready | flour | 17 | tbsp | - | -
+    got:   needs_review | 1 cup + 1 tbsp (130 g) flour | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 quart (4 cups) chicken stock
+    label: ready | chicken stock | 1 | quart | - | -
+    got:   needs_review | quart (4 cups) chicken stock | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_unit_not_supported
+C1	1 cup (half a pint) heavy cream
+    label: ready | heavy cream | 1 | cup | - | -
+    got:   ready | heavy cream | 1 | cup | - | alts[] | eq[] | form - | note half a pint | 
+C3b	1 lb. (16 oz.) spaghetti
+    label: ready | spaghetti | 1 | lb | - | -
+    got:   needs_review | 1 lb. (16 oz.) spaghetti | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	2 Tbsp. (1 oz.) butter
+    label: ready | butter | 2 | tbsp | - | -
+    got:   needs_review | 2 Tbsp. (1 oz.) butter | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 cup chopped onion (1 medium)
+    label: ready | chopped onion|onion | 1 | cup | - | -
+    got:   needs_review | 1 cup chopped onion (1 medium) | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 medium onion (1 cup chopped)
+    label: ready | onion | 1 | each | - | -
+    got:   needs_review | 1 medium onion (1 cup chopped) | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	3 cloves garlic (1 tbsp minced)
+    label: ready | garlic | 3 | clove | - | -
+    got:   needs_review | cloves garlic (1 tbsp minced) | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_unit_not_supported
+C3b	2 lbs (about 4) chicken breasts
+    label: ready | chicken breasts | 2 | lb | - | -
+    got:   needs_review | 2 lbs (about 4) chicken breasts | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	4 chicken breasts (about 2 lbs)
+    label: ready | chicken breasts | 4 | each | - | -
+    got:   needs_review | 4 chicken breasts (about 2 lbs) | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	450g/1lb minced beef
+    label: ready | minced beef | 450 | g | - | -
+    got:   needs_review | 450g/1lb minced beef | - | - | - | alts[] | eq[] | form - | note - | legacy_unrecognized_quantity
+C3b	2 lb (900 g) bone-in chicken thighs
+    label: ready | bone-in chicken thighs | 2 | lb | - | -
+    got:   needs_review | 2 lb (900 g) bone-in chicken thighs | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 oz. (28 g) chocolate
+    label: ready | chocolate | 1 | oz | - | -
+    got:   needs_review | 1 oz. (28 g) chocolate | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C5b	1/2 to 3/4 cup milk
+    label: needs_review | milk | 1/2..3/4 | cup | - | -
+    got:   needs_review | 1/2 to 3/4 cup milk | - | - | - | alts[] | eq[] | form - | note - | quantity_range
+C5b	2 to 2 1/2 lbs chicken
+    label: needs_review | chicken | 2..5/2 | lb | - | -
+    got:   needs_review | 2 to 2 1/2 lbs chicken | - | - | - | alts[] | eq[] | form - | note - | quantity_range
+C5b	1 ⅓ – 1 ½ cups water
+    label: needs_review | water | 4/3..3/2 | cup | - | -
+    got:   needs_review | 1 ⅓ – 1 ½ cups water | - | - | - | alts[] | eq[] | form - | note - | legacy_fraction_not_exact_decimal
+C5b	2 1/2-3 cups broth
+    label: needs_review | broth | 5/2..3 | cup | - | -
+    got:   needs_review | 2 1/2-3 cups broth | - | - | - | alts[] | eq[] | form - | note - | quantity_range
+C5b	2—3 tbsp lemon juice
+    label: needs_review | lemon juice | 2..3 | tbsp | - | -
+    got:   needs_review | 2—3 tbsp lemon juice | - | - | - | alts[] | eq[] | form - | note - | quantity_range
+C5b	½ - 1 tsp chili powder
+    label: needs_review | chili powder | 1/2..1 | tsp | - | -
+    got:   needs_review | ½ - 1 tsp chili powder | - | - | - | alts[] | eq[] | form - | note - | quantity_range
+C2-medium	1/2 of a lemon
+    label: ready | lemon | 1/2 | each | - | -
+    got:   ready | a lemon | 1/2 | each | - | alts[] | eq[] | form - | note - | 
+C3b	1 and 1/2 cups sugar
+    label: ready | sugar | 3/2 | cup | - | -
+    got:   needs_review | 1 and 1/2 cups sugar | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C1	3 3/4 cups flour
+    label: ready | flour | 15/4 | cup | - | -
+    got:   ready | flour | 15/4 | cup | - | alts[] | eq[] | form - | note - | 
+C3b {D}	1 1/2 inch piece ginger
+    label: ready | ginger | 1 | piece | - | -
+    got:   needs_review | inch piece ginger | 3/2 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C3b {K}	1 lb 80/20 ground beef
+    label: ready | 80/20 ground beef | 1 | lb | - | -
+    got:   needs_review | 1 lb 80/20 ground beef | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	1 lb 85% lean ground beef
+    label: ready | 85% lean ground beef | 1 | lb | - | -
+    got:   needs_review | 1 lb 85% lean ground beef | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	1 cup 2 percent milk
+    label: ready | 2 percent milk | 1 | cup | - | -
+    got:   needs_review | 1 cup 2 percent milk | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C1	1 cup Thousand Island dressing
+    label: ready | Thousand Island dressing | 1 | cup | - | -
+    got:   ready | Thousand Island dressing | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 tsp five-spice powder
+    label: ready | five-spice powder | 1 | tsp | - | -
+    got:   ready | five-spice powder | 1 | tsp | - | alts[] | eq[] | form - | note - | 
+C1 {K}	2 tsp five spice powder
+    label: ready | five spice powder | 2 | tsp | - | -
+    got:   ready | five spice powder | 2 | tsp | - | alts[] | eq[] | form - | note - | 
+C5a {K}	Five-spice powder
+    label: needs_review | Five-spice powder | - | - | - | -
+    got:   needs_review | Five-spice powder | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	2 tbsp A1 sauce
+    label: ready | A1 sauce | 2 | tbsp | - | -
+    got:   needs_review | 2 tbsp A1 sauce | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b {K}	1/2 cup 10X sugar
+    label: ready | 10X sugar | 1/2 | cup | - | -
+    got:   needs_review | 1/2 cup 10X sugar | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b {K}	1 cup 7 grain cereal
+    label: ready | 7 grain cereal | 1 | cup | - | -
+    got:   needs_review | 1 cup 7 grain cereal | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b {K}	1 cup 00 pizza flour
+    label: ready | 00 pizza flour | 1 | cup | - | -
+    got:   needs_review | 1 cup 00 pizza flour | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C1	1 cup sugar
+    label: ready | sugar | 1 | cup | - | -
+    got:   ready | sugar | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	2 tbsp oil
+    label: ready | oil | 2 | tbsp | - | -
+    got:   ready | oil | 2 | tbsp | - | alts[] | eq[] | form - | note - | 
+C1	1 1/2	cups milk
+    label: ready | milk | 3/2 | cup | - | -
+    got:   ready | milk | 3/2 | cup | - | alts[] | eq[] | form - | note - | 
+C3b	2 15-oz cans black beans
+    label: ready | black beans | 2 | can | 15 oz | -
+    got:   needs_review | 2 15-oz cans black beans | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	2 15 oz cans black beans
+    label: ready | black beans | 2 | can | 15 oz | -
+    got:   needs_review | 2 15 oz cans black beans | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	2 14.5 oz cans diced tomatoes
+    label: ready | diced tomatoes | 2 | can | 29/2 oz | -
+    got:   needs_review | 2 14.5 oz cans diced tomatoes | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	3 6-ounce cans tomato paste
+    label: ready | tomato paste | 3 | can | 6 oz | -
+    got:   needs_review | 3 6-ounce cans tomato paste | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	1 1-lb loaf bread
+    label: ready | bread | 1 | loaf | 1 lb | -
+    got:   needs_review | 1 1-lb loaf bread | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	2 7-oz containers Greek yogurt
+    label: ready | Greek yogurt | 2 | container | 7 oz | -
+    got:   needs_review | 2 7-oz containers Greek yogurt | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	1 12 oz bag chocolate chips
+    label: ready | chocolate chips | 1 | bag | 12 oz | -
+    got:   needs_review | 1 12 oz bag chocolate chips | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	One (8-ounce) package cream cheese
+    label: ready | cream cheese | 1 | package | 8 oz | -
+    got:   needs_review | One (8-ounce) package cream cheese | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,quantity_missing
+C3b	1 pkg (8 oz) cream cheese
+    label: ready | cream cheese | 1 | package | 8 oz | -
+    got:   needs_review | pkg (8 oz) cream cheese | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_unit_not_supported
+C3b	1 8-oz. pkg. cream cheese
+    label: ready | cream cheese | 1 | package | 8 oz | -
+    got:   needs_review | 1 8-oz. pkg. cream cheese | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	2 pkgs (3 oz each) gelatin
+    label: ready | gelatin | 2 | package | 3 oz | -
+    got:   needs_review | pkgs (3 oz each) gelatin | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_unit_not_supported
+C3b	1 (15 oz.) can black beans, rinsed
+    label: ready | black beans | 1 | can | 15 oz | -
+    got:   needs_review | 1 (15 oz.) can black beans | - | - | - | alts[] | eq[] | form - | note rinsed | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 can black beans (15 ounces)
+    label: ready | black beans | 1 | can | 15 oz | -
+    got:   needs_review | can black beans (15 ounces) | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_unit_not_supported
+C3b	1 lg. can (28 oz.) tomatoes
+    label: ready | tomatoes | 1 | can | 28 oz | -
+    got:   needs_review | 1 lg. can (28 oz.) tomatoes | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 small can (4 oz) green chiles
+    label: ready | green chiles | 1 | can | 4 oz | -
+    got:   needs_review | 1 small can (4 oz) green chiles | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	2 cans (10 3/4 oz each) condensed soup
+    label: ready | condensed soup | 2 | can | 43/4 oz | -
+    got:   needs_review | cans (10 3/4 oz each) condensed soup | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_unit_not_supported
+C3b	1 (6.5 oz) jar artichoke hearts
+    label: ready | artichoke hearts | 1 | jar | 13/2 oz | -
+    got:   needs_review | 1 (6.5 oz) jar artichoke hearts | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 (1 oz) packet ranch seasoning
+    label: ready | ranch seasoning | 1 | packet | 1 oz | -
+    got:   needs_review | 1 (1 oz) packet ranch seasoning | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 bag (12 oz) cranberries
+    label: ready | cranberries | 1 | bag | 12 oz | -
+    got:   needs_review | bag (12 oz) cranberries | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_unit_not_supported
+C3b	1 box (1 lb) spaghetti
+    label: ready | spaghetti | 1 | box | 1 lb | -
+    got:   needs_review | box (1 lb) spaghetti | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_unit_not_supported
+C3b	1 bottle (750 ml) wine
+    label: ready | wine | 1 | bottle | 750 ml | -
+    got:   needs_review | bottle (750 ml) wine | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_unit_not_supported
+C3b	1 (14 fl. oz.) can coconut milk
+    label: ready | coconut milk | 1 | can | 14 fl_oz | -
+    got:   needs_review | 1 (14 fl. oz.) can coconut milk | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 can (13.5 oz) coconut milk
+    label: ready | coconut milk | 1 | can | 27/2 oz | -
+    got:   needs_review | can (13.5 oz) coconut milk | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_unit_not_supported
+C3b	1 x 400 g can chickpeas
+    label: ready | chickpeas | 1 | can | 400 g | -
+    got:   needs_review | 1 x 400 g can chickpeas | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C1	12 oz. beer
+    label: ready | beer | 12 | oz | - | -
+    got:   ready | beer | 12 | oz | - | alts[] | eq[] | form - | note - | 
+C2-high [S3]	2 fl. ounces lime juice
+    label: ready | lime juice | 2 | fl_oz | - | -
+    got:   ready | fl. ounces lime juice | 2 | each | - | alts[] | eq[] | form - | note - | 
+C1	1.5 oz tequila
+    label: ready | tequila | 3/2 | oz | - | -
+    got:   ready | tequila | 3/2 | oz | - | alts[] | eq[] | form - | note - | 
+C1	1 1/2 fl oz gin
+    label: ready | gin | 3/2 | fl_oz | - | -
+    got:   ready | gin | 3/2 | fl_oz | - | alts[] | eq[] | form - | note - | 
+C5b	1/2 cup red or white wine
+    label: needs_review | - | 1/2 | cup | - | red wine;white wine
+    got:   needs_review | 1/2 cup red or white wine | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b	1 red or yellow bell pepper
+    label: needs_review | - | 1 | each | - | red bell pepper;yellow bell pepper
+    got:   needs_review | 1 red or yellow bell pepper | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C3b	1 lb shrimp, fresh or frozen
+    label: ready | shrimp | 1 | lb | - | -
+    got:   needs_review | 1 lb shrimp | - | - | - | alts[] | eq[] | form - | note fresh or frozen | legacy_contains_or
+C5b	1 cup brown or white rice
+    label: needs_review | - | 1 | cup | - | brown rice;white rice
+    got:   needs_review | 1 cup brown or white rice | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b	1 cup sweet or dry vermouth
+    label: needs_review | - | 1 | cup | - | sweet vermouth;dry vermouth
+    got:   needs_review | 1 cup sweet or dry vermouth | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b	4 hamburger or hot dog buns
+    label: needs_review | - | 4 | each | - | hamburger buns;hot dog buns
+    got:   needs_review | 4 hamburger or hot dog buns | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b	1 lb bacon or pancetta
+    label: needs_review | - | 1 | lb | - | bacon;pancetta
+    got:   needs_review | 1 lb bacon or pancetta | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b {D}	1 tsp salt (or 1/2 tsp table salt)
+    label: needs_review | - | 1 | tsp | - | salt;table salt
+    got:   needs_review | 1 tsp salt (or 1/2 tsp table salt) | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or,legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 cup sugar (or to taste)
+    label: ready | sugar | 1 | cup | - | -
+    got:   needs_review | 1 cup sugar | - | - | - | alts[] | eq[] | form - | note or to taste | legacy_no_fixed_quantity,legacy_contains_or
+C1	1/2 cup oil (such as canola)
+    label: ready | oil | 1/2 | cup | - | -
+    got:   ready | oil | 1/2 | cup | - | alts[] | eq[] | form - | note such as canola | 
+C5b {D}	1 cup salsa (mild or hot)
+    label: needs_review | - | 1 | cup | - | mild salsa;hot salsa
+    got:   needs_review | 1 cup salsa | - | - | - | alts[] | eq[] | form - | note mild or hot | legacy_contains_or
+C5b {D}	2 tbsp butter and/or oil
+    label: needs_review | - | 2 | tbsp | - | butter;oil
+    got:   needs_review | 2 tbsp butter and/or oil | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b {D}	2 tbsp honey (or agave)
+    label: needs_review | - | 2 | tbsp | - | honey;agave
+    got:   needs_review | 2 tbsp honey | - | - | - | alts[] | eq[] | form - | note or agave | legacy_contains_or
+C5b {D}	1 tbsp fresh thyme (or 1 tsp dried)
+    label: needs_review | - | 1 | tbsp | - | fresh thyme;dried thyme
+    got:   needs_review | 1 tbsp fresh thyme (or 1 tsp dried) | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or,legacy_parenthetical_number,legacy_more_than_one_quantity
+C5b {D}	1/2 cup chopped nuts (pecans or walnuts)
+    label: needs_review | - | 1/2 | cup | - | pecans;walnuts
+    got:   needs_review | 1/2 cup chopped nuts | - | - | - | alts[] | eq[] | form - | note pecans or walnuts | legacy_contains_or
+C5b	2 tbsp lemon or lime juice
+    label: needs_review | - | 2 | tbsp | - | lemon juice;lime juice
+    got:   needs_review | 2 tbsp lemon or lime juice | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b	1 cup cilantro or flat-leaf parsley
+    label: needs_review | - | 1 | cup | - | cilantro;flat-leaf parsley
+    got:   needs_review | 1 cup cilantro or flat-leaf parsley | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b	1 cup ricotta or cottage cheese
+    label: needs_review | - | 1 | cup | - | ricotta;cottage cheese
+    got:   needs_review | 1 cup ricotta or cottage cheese | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b	1 tbsp sambal oelek or sriracha
+    label: needs_review | - | 1 | tbsp | - | sambal oelek;sriracha
+    got:   needs_review | 1 tbsp sambal oelek or sriracha | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b	2 cups penne or rigatoni
+    label: needs_review | - | 2 | cup | - | penne;rigatoni
+    got:   needs_review | 2 cups penne or rigatoni | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b	1 lb tilapia or other mild fish
+    label: needs_review | - | 1 | lb | - | tilapia;other mild fish||tilapia;mild fish
+    got:   needs_review | 1 lb tilapia or other mild fish | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b	1 cup feta or goat cheese
+    label: needs_review | - | 1 | cup | - | feta;goat cheese
+    got:   needs_review | 1 cup feta or goat cheese | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C8	For garnish:
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | For garnish | - | - | - | alts[] | eq[] | form - | note - | legacy_no_fixed_quantity,quantity_missing
+C8	Special equipment: stand mixer
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Special equipment: stand mixer | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	1. Preheat oven to 400 degrees
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | 1. Preheat oven to 400 degrees | - | - | - | alts[] | eq[] | form - | note - | legacy_unrecognized_quantity
+C8	2) Mix flour and sugar
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | 2) Mix flour and sugar | - | - | - | alts[] | eq[] | form - | note - | legacy_unrecognized_quantity
+C8	Tip: use room-temperature eggs
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Tip: use room-temperature eggs | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Recipe adapted from Example Kitchen
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Recipe adapted from Example Kitchen | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Nutrition Facts
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Nutrition Facts | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Protein 12 g
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Protein 12 g | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Carbs: 30g
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Carbs: 30g | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8 {K}	Net carbs: 5 grams
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Net carbs: 5 grams | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Calories 450 kcal
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Calories 450 kcal | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Servings 8
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Servings 8 | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Makes 24 cookies
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Makes 24 cookies | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Yield: 1 9-inch pie
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Yield: 1 9-inch pie | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Active time: 30 min
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Active time: 30 min | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Course: dinner
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Course: dinner | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Cuisine: Italian
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Cuisine: Italian | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Print recipe
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Print recipe | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Jump to recipe
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Jump to recipe | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8 {K}	WW Points: 4
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | WW Points: 4 | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8 {K}	SmartPoints: 7
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | SmartPoints: 7 | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C2-high [S1,S8] {D}	2 baking sheets
+    label: unsupported | - | - | - | - | -
+    got:   ready | baking sheets | 2 | each | - | alts[] | eq[] | form - | note - | 
+C8 {D}	1 9x13-inch baking pan
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | 1 9x13-inch baking pan | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C8 {D}	Parchment paper
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Parchment paper | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8 {D}	Sugar 10g
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Sugar 10g | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8 {K}	Total Carbohydrate 22 grams
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Total Carbohydrate 22 grams | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8 {K}	Potassium: 400 milligrams
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Potassium: 400 milligrams | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Vitamin C: 15 mg
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Vitamin C: 15 mg | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Servings: 4 people
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Servings: 4 people | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C1	1 large egg, beaten
+    label: ready | egg | 1 | each | - | -
+    got:   ready | egg | 1 | each | - | alts[] | eq[] | form - | note large; beaten | 
+C1	2 extra-large eggs
+    label: ready | eggs | 2 | each | - | -
+    got:   ready | eggs | 2 | each | - | alts[] | eq[] | form - | note extra-large | 
+C2-medium	1 jumbo onion
+    label: ready | onion | 1 | each | - | -
+    got:   ready | jumbo onion | 1 | each | - | alts[] | eq[] | form - | note - | 
+C1	3 small zucchini
+    label: ready | zucchini | 3 | each | - | -
+    got:   ready | zucchini | 3 | each | - | alts[] | eq[] | form - | note small | 
+C1 {K}	2 lbs medium potatoes
+    label: ready | potatoes | 2 | lb | - | -
+    got:   ready | potatoes | 2 | lb | - | alts[] | eq[] | form - | note medium | 
+C2-high [S7]	1 cup small curd cottage cheese
+    label: ready | small curd cottage cheese | 1 | cup | - | -
+    got:   ready | curd cottage cheese | 1 | cup | - | alts[] | eq[] | form - | note small | 
+C1 {D}	1 cup mini marshmallows
+    label: ready | mini marshmallows | 1 | cup | - | -
+    got:   ready | mini marshmallows | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 cup baby carrots
+    label: ready | baby carrots | 1 | cup | - | -
+    got:   ready | baby carrots | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	2 large russet potatoes
+    label: ready | russet potatoes | 2 | each | - | -
+    got:   ready | russet potatoes | 2 | each | - | alts[] | eq[] | form - | note large | 
+C2-high	1 medium head cabbage
+    label: ready | cabbage | 1 | head | - | -
+    got:   ready | head cabbage | 1 | each | - | alts[] | eq[] | form - | note medium | 
+C2-high [S3]	1 small handful parsley
+    label: ready | parsley | 1 | handful | - | -
+    got:   ready | handful parsley | 1 | each | - | alts[] | eq[] | form - | note small | 
+C2-high [S3]	1 big pinch salt
+    label: ready | salt | 1 | pinch | - | -
+    got:   ready | big pinch salt | 1 | each | - | alts[] | eq[] | form - | note - | 
+C1	1 cup unsalted roasted peanuts
+    label: ready | unsalted roasted peanuts | 1 | cup | - | -
+    got:   ready | unsalted roasted peanuts | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	2 cups low-sodium chicken broth
+    label: ready | low-sodium chicken broth | 2 | cup | - | -
+    got:   ready | low-sodium chicken broth | 2 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 cup reduced-fat sour cream
+    label: ready | reduced-fat sour cream | 1 | cup | - | -
+    got:   ready | reduced-fat sour cream | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 lb extra-lean ground beef
+    label: ready | extra-lean ground beef | 1 | lb | - | -
+    got:   ready | extra-lean ground beef | 1 | lb | - | alts[] | eq[] | form - | note - | 
+C1	1 cup gluten-free flour
+    label: ready | gluten-free flour | 1 | cup | - | -
+    got:   ready | gluten-free flour | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 cup sugar-free maple syrup
+    label: ready | sugar-free maple syrup | 1 | cup | - | -
+    got:   ready | sugar-free maple syrup | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	2 tbsp light mayonnaise
+    label: ready | light mayonnaise | 2 | tbsp | - | -
+    got:   ready | light mayonnaise | 2 | tbsp | - | alts[] | eq[] | form - | note - | 
+C1	1 cup lite coconut milk
+    label: ready | lite coconut milk | 1 | cup | - | -
+    got:   ready | lite coconut milk | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 cup instant rice
+    label: ready | instant rice | 1 | cup | - | -
+    got:   ready | instant rice | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 cup quick-cooking oats
+    label: ready | quick-cooking oats | 1 | cup | - | -
+    got:   ready | quick-cooking oats | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 tbsp prepared horseradish
+    label: ready | prepared horseradish | 1 | tbsp | - | -
+    got:   ready | prepared horseradish | 1 | tbsp | - | alts[] | eq[] | form - | note - | 
+C1	1/4 cup dry sherry
+    label: ready | dry sherry | 1/4 | cup | - | -
+    got:   ready | dry sherry | 1/4 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 cup dry white wine
+    label: ready | dry white wine | 1 | cup | - | -
+    got:   ready | dry white wine | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1/2 cup dry breadcrumbs
+    label: ready | dry breadcrumbs | 1/2 | cup | - | -
+    got:   ready | dry breadcrumbs | 1/2 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 tbsp dry mustard
+    label: ready | dry mustard | 1 | tbsp | - | -
+    got:   ready | dry mustard | 1 | tbsp | - | alts[] | eq[] | form - | note - | 
+C1	2 cups dried black beans
+    label: ready | dried black beans | 2 | cup | - | -
+    got:   ready | dried black beans | 2 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 cup dried apricots
+    label: ready | dried apricots | 1 | cup | - | -
+    got:   ready | dried apricots | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 cup leftover turkey
+    label: ready | leftover turkey|turkey | 1 | cup | - | -
+    got:   ready | leftover turkey | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 cup organic cane sugar
+    label: ready | organic cane sugar|cane sugar | 1 | cup | - | -
+    got:   ready | organic cane sugar | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 cup fresh orange juice
+    label: ready | fresh orange juice|orange juice | 1 | cup | - | -
+    got:   ready | fresh orange juice | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C3b	1 package frozen puff pastry
+    label: ready | frozen puff pastry | 1 | package | - | -
+    got:   needs_review | package frozen puff pastry | 1 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C1	1 cup homemade chicken stock
+    label: ready | homemade chicken stock|chicken stock | 1 | cup | - | -
+    got:   ready | homemade chicken stock | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1 {D}	1 cup canned coconut milk
+    label: ready | canned coconut milk | 1 | cup | - | -
+    got:   ready | canned coconut milk | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 cup evaporated milk
+    label: ready | evaporated milk | 1 | cup | - | -
+    got:   ready | evaporated milk | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 cup sweetened condensed milk
+    label: ready | sweetened condensed milk | 1 | cup | - | -
+    got:   ready | sweetened condensed milk | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	2 tbsp powdered sugar
+    label: ready | powdered sugar | 2 | tbsp | - | -
+    got:   ready | powdered sugar | 2 | tbsp | - | alts[] | eq[] | form - | note - | 
+C1	1 cup roasted red peppers
+    label: ready | roasted red peppers | 1 | cup | - | -
+    got:   ready | roasted red peppers | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 cup sun-dried tomatoes
+    label: ready | sun-dried tomatoes | 1 | cup | - | -
+    got:   ready | sun-dried tomatoes | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C2-medium {D}	1 cup cooked and shredded chicken
+    label: ready | shredded chicken|chicken | 1 | cup | - | -
+    got:   ready | cooked and shredded chicken | 1 | cup | - | alts[] | eq[] | form cooked | note - | 
+C2-medium	2 cups uncooked long-grain rice
+    label: ready | long-grain rice | 2 | cup | - | -
+    got:   ready | uncooked long-grain rice | 2 | cup | - | alts[] | eq[] | form raw | note - | 
+C2-medium	1 lb raw almonds
+    label: ready | almonds | 1 | lb | - | -
+    got:   ready | raw almonds | 1 | lb | - | alts[] | eq[] | form raw | note - | 
+C2-medium	1/2 cup raw pumpkin seeds
+    label: ready | pumpkin seeds | 1/2 | cup | - | -
+    got:   ready | raw pumpkin seeds | 1/2 | cup | - | alts[] | eq[] | form raw | note - | 
+C3b {K}	a half-gallon milk
+    label: ready | milk | 1/2 | gallon | - | -
+    got:   needs_review | a half-gallon milk | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b {K}	a quarter-teaspoon salt
+    label: ready | salt | 1/4 | tsp | - | -
+    got:   needs_review | a quarter-teaspoon salt | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	two-thirds cup sugar
+    label: ready | sugar | 2/3 | cup | - | -
+    got:   needs_review | two-thirds cup sugar | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	one-quarter cup oil
+    label: ready | oil | 1/4 | cup | - | -
+    got:   needs_review | one-quarter cup oil | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b {D}	a 3-pound whole chicken
+    label: ready | whole chicken | 1 | each | 3 lb | -
+    got:   needs_review | a 3-pound whole chicken | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b {DK}	Juice of 1 lemon
+    label: ready | lemon juice|lemon | 1 | each | - | -
+    got:   needs_review | Juice of 1 lemon | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C1	1 lemon, zested and juiced
+    label: ready | lemon | 1 | each | - | -
+    got:   ready | lemon | 1 | each | - | alts[] | eq[] | form - | note zested and juiced | 
+C5b	1 cup broth, chicken or vegetable
+    label: needs_review | - | 1 | cup | - | chicken broth;vegetable broth
+    got:   needs_review | 1 cup broth | - | - | - | alts[] | eq[] | form - | note chicken or vegetable | legacy_contains_or
+C5b {D}	1 cup peanut butter, creamy or chunky
+    label: needs_review | - | 1 | cup | - | creamy peanut butter;chunky peanut butter
+    got:   needs_review | 1 cup peanut butter | - | - | - | alts[] | eq[] | form - | note creamy or chunky | legacy_contains_or
+C3b	1 can coconut milk, full-fat
+    label: ready | coconut milk | 1 | can | - | -
+    got:   needs_review | can coconut milk | 1 | - | - | alts[] | eq[] | form - | note full-fat | legacy_unit_not_supported
+C5b {D}	2 eggs (or 1/2 cup egg substitute)
+    label: needs_review | - | 2 | each | - | eggs;egg substitute
+    got:   needs_review | 2 eggs (or 1/2 cup egg substitute) | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or,legacy_parenthetical_number,legacy_more_than_one_quantity
+C1	1 cup milk (any kind)
+    label: ready | milk | 1 | cup | - | -
+    got:   ready | milk | 1 | cup | - | alts[] | eq[] | form - | note any kind | 
+C3b {D}	3 tablespoons butter, divided (2 tbsp + 1 tbsp)
+    label: ready | butter | 3 | tbsp | - | -
+    got:   needs_review | 3 tablespoons butter | - | - | - | alts[] | eq[] | form - | note divided (2 tbsp + 1 tbsp) | legacy_parenthetical_number,legacy_more_than_one_quantity
+C5b {D}	1 (14 oz) can chickpeas, or 1 1/2 cups cooked
+    label: needs_review | chickpeas | 1 | can | 14 oz | -
+    got:   needs_review | 1 (14 oz) can chickpeas | - | - | - | alts[] | eq[] | form cooked | note or 1 1/2 cups cooked | legacy_contains_or,legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 cup chopped tomatoes (2 medium)
+    label: ready | chopped tomatoes|tomatoes | 1 | cup | - | -
+    got:   needs_review | 1 cup chopped tomatoes (2 medium) | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	2 cups shredded mozzarella (8 oz)
+    label: ready | shredded mozzarella | 2 | cup | - | -
+    got:   needs_review | 2 cups shredded mozzarella (8 oz) | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	4 oz cream cheese (half of an 8-oz package)
+    label: ready | cream cheese | 4 | oz | - | -
+    got:   needs_review | 4 oz cream cheese (half of an 8-oz package) | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1/2 (8 oz) package cream cheese
+    label: ready | cream cheese | 1/2 | package | 8 oz | -
+    got:   needs_review | 1/2 (8 oz) package cream cheese | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C5b	1 (8 oz) package cream cheese, plus 2 oz
+    label: needs_review | cream cheese | 1 | package | 8 oz | -
+    got:   needs_review | 1 (8 oz) package cream cheese | - | - | - | alts[] | eq[] | form - | note plus 2 oz | legacy_parenthetical_number,legacy_more_than_one_quantity
+C5b	3 eggs plus 1 egg yolk
+    label: needs_review | - | 3 | each | - | -
+    got:   needs_review | 3 eggs plus 1 egg yolk | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b {D}	1 cup sugar, divided (1/2 cup for the batter, 1/2 cup for topping)
+    label: ready | sugar | 1 | cup | - | -
+    got:   needs_review | 1 cup sugar | - | - | - | alts[] | eq[] | form - | note divided (1/2 cup for the batter, 1/2 cup for topping) | legacy_parenthetical_number,legacy_more_than_one_quantity
+C1	1½ cups milk
+    label: ready | milk | 3/2 | cup | - | -
+    got:   ready | milk | 3/2 | cup | - | alts[] | eq[] | form - | note - | 
+C1	2 jalapeños
+    label: ready | jalapeños | 2 | each | - | -
+    got:   ready | jalapeños | 2 | each | - | alts[] | eq[] | form - | note - | 
+C1	1 cup flour​
+    label: ready | flour | 1 | cup | - | -
+    got:   ready | flour | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C8	Protein: 20 g
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Protein: 20 g | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Iron: 2 mg
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Iron: 2 mg | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Calcium: 100 mg
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Calcium: 100 mg | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Sugars: 5 g
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Sugars: 5 g | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Dietary Fiber: 3 g
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Dietary Fiber: 3 g | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Trans Fat: 0 g
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Trans Fat: 0 g | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Potassium 400mg
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Potassium 400mg | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Carbohydrates: 30 g
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Carbohydrates: 30 g | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Vitamin A: 10%
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Vitamin A: 10% | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Total Sugars 12g
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Total Sugars 12g | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Added Sugars: 4 g
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Added Sugars: 4 g | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Monounsaturated Fat: 6 g
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Monounsaturated Fat: 6 g | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Polyunsaturated fat 2 g
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Polyunsaturated fat 2 g | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Vitamin D: 2 mcg
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Vitamin D: 2 mcg | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Magnesium: 40 mg
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Magnesium: 40 mg | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Zinc 1 mg
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Zinc 1 mg | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Caffeine: 95 mg
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Caffeine: 95 mg | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8 {D}	Salt: 1.2 g
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Salt: 1.2 g | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Energy: 1200 kJ
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Energy: 1200 kJ | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Fat 10 g
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Fat 10 g | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C1	1/2cup sugar
+    label: ready | sugar | 1/2 | cup | - | -
+    got:   ready | sugar | 1/2 | cup | - | alts[] | eq[] | form - | note - | 
+C1	2cups flour
+    label: ready | flour | 2 | cup | - | -
+    got:   ready | flour | 2 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1 1/2cups milk
+    label: ready | milk | 3/2 | cup | - | -
+    got:   ready | milk | 3/2 | cup | - | alts[] | eq[] | form - | note - | 
+C1	1/2c sugar
+    label: ready | sugar | 1/2 | cup | - | -
+    got:   ready | sugar | 1/2 | cup | - | alts[] | eq[] | form - | note - | 
+C1	250g butter
+    label: ready | butter | 250 | g | - | -
+    got:   ready | butter | 250 | g | - | alts[] | eq[] | form - | note - | 
+C1	2tbsp honey
+    label: ready | honey | 2 | tbsp | - | -
+    got:   ready | honey | 2 | tbsp | - | alts[] | eq[] | form - | note - | 
+C2-high [S1,S4] {D}	11⁄2 cups flour
+    label: needs_review | flour | - | cup | - | -
+    got:   ready | flour | 11/2 | cup | - | alts[] | eq[] | form - | note - | 
+C1 {D}	1 / 2 cup sugar
+    label: ready | sugar | 1/2 | cup | - | -
+    got:   ready | sugar | 1/2 | cup | - | alts[] | eq[] | form - | note - | 
+C5b {D}	1/2/3 cup sugar
+    label: needs_review | sugar | - | cup | - | -
+    got:   needs_review | 1/2/3 cup sugar | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b {D}	2 tbsp. 1 tsp. salt
+    label: ready | salt | 7 | tsp | - | -
+    got:   needs_review | 2 tbsp. 1 tsp. salt | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	1 lb. 2 oz. (510 g) flour
+    label: ready | flour | 18 | oz | - | -
+    got:   needs_review | 1 lb. 2 oz. (510 g) flour | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	8 oz. (2 sticks) butter
+    label: ready | butter | 8 | oz | - | -
+    got:   needs_review | 8 oz. (2 sticks) butter | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	2 cups (16 fl oz) milk
+    label: ready | milk | 2 | cup | - | -
+    got:   needs_review | 2 cups (16 fl oz) milk | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	2 cups (16 oz) milk
+    label: ready | milk | 2 | cup | - | -
+    got:   needs_review | 2 cups (16 oz) milk | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 pint (2 cups) blueberries
+    label: ready | blueberries | 1 | pint | - | -
+    got:   needs_review | pint (2 cups) blueberries | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_unit_not_supported
+C3b	1 pint cherry tomatoes
+    label: ready | cherry tomatoes | 1 | pint | - | -
+    got:   needs_review | pint cherry tomatoes | 1 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C3b	1 quart strawberries
+    label: ready | strawberries | 1 | quart | - | -
+    got:   needs_review | quart strawberries | 1 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C3b	2 cups (1/2 lb) cheese
+    label: ready | cheese | 2 | cup | - | -
+    got:   needs_review | 2 cups (1/2 lb) cheese | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 tbsp. (15 ml) olive oil
+    label: ready | olive oil | 1 | tbsp | - | -
+    got:   needs_review | 1 tbsp. (15 ml) olive oil | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	15 mL (1 tbsp) olive oil
+    label: ready | olive oil | 15 | ml | - | -
+    got:   needs_review | 15 mL (1 tbsp) olive oil | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C1	5 ml vanilla
+    label: ready | vanilla | 5 | ml | - | -
+    got:   ready | vanilla | 5 | ml | - | alts[] | eq[] | form - | note - | 
+C3b	1 Tbsp + 1 tsp (20 ml) lemon juice
+    label: ready | lemon juice | 4 | tsp | - | -
+    got:   needs_review | 1 Tbsp + 1 tsp (20 ml) lemon juice | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	100g/3.5oz butter
+    label: ready | butter | 100 | g | - | -
+    got:   needs_review | 100g/3.5oz butter | - | - | - | alts[] | eq[] | form - | note - | legacy_unrecognized_quantity
+C3b	75g (⅓ cup) sugar
+    label: ready | sugar | 75 | g | - | -
+    got:   needs_review | 75g (⅓ cup) sugar | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C3b	1¼ cups (300ml) milk
+    label: ready | milk | 5/4 | cup | - | -
+    got:   needs_review | 1¼ cups (300ml) milk | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C1	2½ tbsp. honey
+    label: ready | honey | 5/2 | tbsp | - | -
+    got:   ready | honey | 5/2 | tbsp | - | alts[] | eq[] | form - | note - | 
+C3b	¾ lb. (340 g) fettuccine
+    label: ready | fettuccine | 3/4 | lb | - | -
+    got:   needs_review | ¾ lb. (340 g) fettuccine | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1/2 pound (8 ounces) mushrooms
+    label: ready | mushrooms | 1/2 | lb | - | -
+    got:   needs_review | 1/2 pound (8 ounces) mushrooms | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 1/2 pounds (680 grams) beef
+    label: ready | beef | 3/2 | lb | - | -
+    got:   needs_review | 1 1/2 pounds (680 grams) beef | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C1	2.5 kg turkey
+    label: ready | turkey | 5/2 | kg | - | -
+    got:   ready | turkey | 5/2 | kg | - | alts[] | eq[] | form - | note - | 
+C1	0.5 l water
+    label: ready | water | 1/2 | l | - | -
+    got:   ready | water | 1/2 | l | - | alts[] | eq[] | form - | note - | 
+C3b	1 lb (0.45 kg) potatoes
+    label: ready | potatoes | 1 | lb | - | -
+    got:   needs_review | 1 lb (0.45 kg) potatoes | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	3 large eggs (150 g)
+    label: ready | eggs | 3 | each | - | -
+    got:   needs_review | 3 large eggs (150 g) | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	2 egg whites (60 g)
+    label: ready | egg whites | 2 | each | - | -
+    got:   needs_review | 2 egg whites (60 g) | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 cup (100 g) walnut halves
+    label: ready | walnut halves | 1 | cup | - | -
+    got:   needs_review | 1 cup (100 g) walnut halves | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1/2 tsp (2.5 ml) salt
+    label: ready | salt | 1/2 | tsp | - | -
+    got:   needs_review | 1/2 tsp (2.5 ml) salt | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 tsp (5 g) salt
+    label: ready | salt | 1 | tsp | - | -
+    got:   needs_review | 1 tsp (5 g) salt | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 stick (4 oz) butter
+    label: ready | butter | 1 | stick | - | -
+    got:   needs_review | stick (4 oz) butter | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_unit_not_supported
+C3b	1 lb (4 sticks) butter
+    label: ready | butter | 1 | lb | - | -
+    got:   needs_review | 1 lb (4 sticks) butter | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	2 tbsp (1/4 stick) butter
+    label: ready | butter | 2 | tbsp | - | -
+    got:   needs_review | 2 tbsp (1/4 stick) butter | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C3b	1 envelope (1 tbsp) unflavored gelatin
+    label: ready | unflavored gelatin | 1 | envelope | 1 tbsp | -
+    got:   needs_review | envelope (1 tbsp) unflavored gelatin | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_unit_not_supported
+C3b	1 package (3.4 oz) instant pudding mix
+    label: ready | instant pudding mix | 1 | package | 17/5 oz | -
+    got:   needs_review | package (3.4 oz) instant pudding mix | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_unit_not_supported
+C3b	1 can (12 oz) soda
+    label: ready | soda | 1 | can | 12 oz | -
+    got:   needs_review | can (12 oz) soda | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_unit_not_supported
+C3b	2 cans tuna
+    label: ready | tuna | 2 | can | - | -
+    got:   needs_review | cans tuna | 2 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C3b	1 can of beans
+    label: ready | beans | 1 | can | - | -
+    got:   needs_review | can of beans | 1 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C3b	3 heads garlic
+    label: ready | garlic | 3 | head | - | -
+    got:   needs_review | heads garlic | 3 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C3b	2 heads of lettuce
+    label: ready | lettuce | 2 | head | - | -
+    got:   needs_review | heads of lettuce | 2 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C3b	1 piece of ginger
+    label: ready | ginger | 1 | piece | - | -
+    got:   needs_review | piece of ginger | 1 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C3b	3 pieces of chicken
+    label: ready | chicken | 3 | piece | - | -
+    got:   needs_review | pieces of chicken | 3 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C3b	2 fillets of salmon
+    label: ready | salmon | 2 | fillet | - | -
+    got:   needs_review | fillets of salmon | 2 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C3b	2 sprigs of mint
+    label: ready | mint | 2 | sprig | - | -
+    got:   needs_review | sprigs of mint | 2 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C3b	1 pinch of saffron threads
+    label: ready | saffron threads | 1 | pinch | - | -
+    got:   needs_review | pinch of saffron threads | 1 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C2-high	2 cubes of sugar
+    label: ready | sugar | 2 | cube | - | -
+    got:   ready | cubes of sugar | 2 | each | - | alts[] | eq[] | form - | note - | 
+C2-high {D}	1 bar dark chocolate
+    label: ready | dark chocolate | 1 | block | - | -
+    got:   ready | bar dark chocolate | 1 | each | - | alts[] | eq[] | form - | note - | 
+C2-high	2 bars cream cheese
+    label: ready | cream cheese | 2 | block | - | -
+    got:   ready | bars cream cheese | 2 | each | - | alts[] | eq[] | form - | note - | 
+C2-high	1 tub sour cream
+    label: ready | sour cream | 1 | container | - | -
+    got:   ready | tub sour cream | 1 | each | - | alts[] | eq[] | form - | note - | 
+C3b	1 bottle hot sauce
+    label: ready | hot sauce | 1 | bottle | - | -
+    got:   needs_review | bottle hot sauce | 1 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C2-high [S4] {D}	1 sleeve saltine crackers
+    label: needs_review | saltine crackers | 1 | - | - | -
+    got:   ready | sleeve saltine crackers | 1 | each | - | alts[] | eq[] | form - | note - | 
+C3b	1 stick cinnamon
+    label: ready | cinnamon | 1 | stick | - | -
+    got:   needs_review | stick cinnamon | 1 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C3b	1 knob ginger
+    label: ready | ginger | 1 | knob | - | -
+    got:   needs_review | knob ginger | 1 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C1	4 chicken drumsticks
+    label: ready | chicken drumsticks | 4 | each | - | -
+    got:   ready | chicken drumsticks | 4 | each | - | alts[] | eq[] | form - | note - | 
+C1	2 leeks, white parts only
+    label: ready | leeks | 2 | each | - | -
+    got:   ready | leeks | 2 | each | - | alts[] | eq[] | form - | note white parts only | 
+C1	1 lb pound cake, cubed
+    label: ready | pound cake | 1 | lb | - | -
+    got:   ready | pound cake | 1 | lb | - | alts[] | eq[] | form - | note cubed | 
+C3b	1 pint vanilla ice cream
+    label: ready | vanilla ice cream | 1 | pint | - | -
+    got:   needs_review | pint vanilla ice cream | 1 | - | - | alts[] | eq[] | form - | note - | legacy_unit_not_supported
+C1	1 cup graham cracker crumbs
+    label: ready | graham cracker crumbs | 1 | cup | - | -
+    got:   ready | graham cracker crumbs | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C2-high [S4]	1 cup milk/cream
+    label: needs_review | - | 1 | cup | - | milk;cream
+    got:   ready | milk/cream | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C2-high [S4]	2 tbsp butter/margarine
+    label: needs_review | - | 2 | tbsp | - | butter;margarine
+    got:   ready | butter/margarine | 2 | tbsp | - | alts[] | eq[] | form - | note - | 
+C2-high [S4]	1 cup chicken/vegetable stock
+    label: needs_review | - | 1 | cup | - | chicken stock;vegetable stock
+    got:   ready | chicken/vegetable stock | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C2-high [S4]	1 tbsp lemon/lime juice
+    label: needs_review | - | 1 | tbsp | - | lemon juice;lime juice
+    got:   ready | lemon/lime juice | 1 | tbsp | - | alts[] | eq[] | form - | note - | 
+C5b	1 cup broth or water
+    label: needs_review | - | 1 | cup | - | broth;water
+    got:   needs_review | 1 cup broth or water | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C3b	1 cup spinach or more
+    label: ready | spinach | 1 | cup | - | -
+    got:   needs_review | 1 cup spinach or more | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C3b	1 cup water or as needed
+    label: ready | water | 1 | cup | - | -
+    got:   needs_review | 1 cup water or as needed | - | - | - | alts[] | eq[] | form - | note - | legacy_no_fixed_quantity,legacy_contains_or
+C3b	1 tsp salt or less
+    label: ready | salt | 1 | tsp | - | -
+    got:   needs_review | 1 tsp salt or less | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C3a	salt, or to taste
+    label: ready | salt | - | - | - | -
+    got:   needs_review | salt | - | - | - | alts[] | eq[] | form - | note or to taste | legacy_no_fixed_quantity,legacy_contains_or,quantity_missing
+C5b	1-2 tbsp honey or maple syrup
+    label: needs_review | - | 1..2 | tbsp | - | honey;maple syrup
+    got:   needs_review | 1-2 tbsp honey or maple syrup | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or,quantity_range
+C5b	butter or oil, for greasing
+    label: needs_review | - | - | - | - | butter;oil
+    got:   needs_review | butter or oil | - | - | - | alts[] | eq[] | form - | note for greasing | legacy_contains_or,quantity_missing
+C5b	1 lb fettuccine or linguine
+    label: needs_review | - | 1 | lb | - | fettuccine;linguine
+    got:   needs_review | 1 lb fettuccine or linguine | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b {D}	1 tbsp cornstarch (or arrowroot)
+    label: needs_review | - | 1 | tbsp | - | cornstarch;arrowroot
+    got:   needs_review | 1 tbsp cornstarch | - | - | - | alts[] | eq[] | form - | note or arrowroot | legacy_contains_or
+C5b {D}	1 egg or 2 egg whites
+    label: needs_review | - | 1 | each | - | egg;egg whites
+    got:   needs_review | 1 egg or 2 egg whites | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or,legacy_more_than_one_quantity
+C5b	1 cup Greek yogurt or sour cream, plus more for serving
+    label: needs_review | - | 1 | cup | - | Greek yogurt;sour cream
+    got:   needs_review | 1 cup Greek yogurt or sour cream | - | - | - | alts[] | eq[] | form - | note plus more for serving | legacy_no_fixed_quantity,legacy_contains_or
+C2-high [S2,S3,S6] {DK}	28 oz can tomatoes
+    label: ready | tomatoes | 1 | can | 28 oz | -
+    got:   ready | can tomatoes | 28 | oz | - | alts[] | eq[] | form - | note - | 
+C3b {DK}	15-oz can black beans
+    label: ready | black beans | 1 | can | 15 oz | -
+    got:   needs_review | 15-oz can black beans | - | - | - | alts[] | eq[] | form - | note - | legacy_unrecognized_quantity
+C2-high [S2,S3,S6] {DK}	12 oz bag frozen peas
+    label: ready | frozen peas | 1 | bag | 12 oz | -
+    got:   ready | bag frozen peas | 12 | oz | - | alts[] | eq[] | form - | note - | 
+C3b {DK}	8-ounce package cream cheese
+    label: ready | cream cheese | 1 | package | 8 oz | -
+    got:   needs_review | 8-ounce package cream cheese | - | - | - | alts[] | eq[] | form - | note - | legacy_unrecognized_quantity
+C3b {DK}	16 oz. (1 lb.) bag frozen corn
+    label: ready | frozen corn | 1 | bag | 16 oz | -
+    got:   needs_review | 16 oz. (1 lb.) bag frozen corn | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C2-high [S2,S3,S6] {DK}	400 g can chickpeas
+    label: ready | chickpeas | 1 | can | 400 g | -
+    got:   ready | can chickpeas | 400 | g | - | alts[] | eq[] | form - | note - | 
+C1	8 oz water
+    label: ready | water | 8 | oz | - | -
+    got:   ready | water | 8 | oz | - | alts[] | eq[] | form - | note - | 
+C1	16 oz milk
+    label: ready | milk | 16 | oz | - | -
+    got:   ready | milk | 16 | oz | - | alts[] | eq[] | form - | note - | 
+C1	4 ounces heavy cream
+    label: ready | heavy cream | 4 | oz | - | -
+    got:   ready | heavy cream | 4 | oz | - | alts[] | eq[] | form - | note - | 
+C3b	2 oz (60 ml) espresso
+    label: ready | espresso | 2 | oz | - | -
+    got:   needs_review | 2 oz (60 ml) espresso | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C1	4 fl. oz bourbon
+    label: ready | bourbon | 4 | fl_oz | - | -
+    got:   ready | bourbon | 4 | fl_oz | - | alts[] | eq[] | form - | note - | 
+C2-high [S3]	4 fluid oz. rum
+    label: ready | rum | 4 | fl_oz | - | -
+    got:   ready | fluid oz. rum | 4 | each | - | alts[] | eq[] | form - | note - | 
+C1	4 fl.oz. cream
+    label: ready | cream | 4 | fl_oz | - | -
+    got:   ready | cream | 4 | fl_oz | - | alts[] | eq[] | form - | note - | 
+C1	4 floz stock
+    label: ready | stock | 4 | fl_oz | - | -
+    got:   ready | stock | 4 | fl_oz | - | alts[] | eq[] | form - | note - | 
+C2-high [S3]	4 fl-oz juice
+    label: ready | juice | 4 | fl_oz | - | -
+    got:   ready | fl-oz juice | 4 | each | - | alts[] | eq[] | form - | note - | 
+C3b	2x 400g tins tomatoes
+    label: ready | tomatoes | 2 | tin | 400 g | -
+    got:   needs_review | 2x 400g tins tomatoes | - | - | - | alts[] | eq[] | form - | note - | legacy_unrecognized_quantity
+C3b	1x can chickpeas
+    label: ready | chickpeas | 1 | can | - | -
+    got:   needs_review | 1x can chickpeas | - | - | - | alts[] | eq[] | form - | note - | legacy_unrecognized_quantity
+C3b	2 x 15 oz cans beans
+    label: ready | beans | 2 | can | 15 oz | -
+    got:   needs_review | 2 x 15 oz cans beans | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C1	- 1 cup sugar
+    label: ready | sugar | 1 | cup | - | -
+    got:   ready | sugar | 1 | cup | - | alts[] | eq[] | form - | note - | 
+C1	• 2 eggs
+    label: ready | eggs | 2 | each | - | -
+    got:   ready | eggs | 2 | each | - | alts[] | eq[] | form - | note - | 
+C1	* 1 tsp salt
+    label: ready | salt | 1 | tsp | - | -
+    got:   ready | salt | 1 | tsp | - | alts[] | eq[] | form - | note - | 
+C3b	1. 2 cups flour
+    label: ready | flour | 2 | cup | - | -
+    got:   needs_review | 1. 2 cups flour | - | - | - | alts[] | eq[] | form - | note - | legacy_unrecognized_quantity
+C3b	1) 1/2 cup milk
+    label: ready | milk | 1/2 | cup | - | -
+    got:   needs_review | 1) 1/2 cup milk | - | - | - | alts[] | eq[] | form - | note - | legacy_unrecognized_quantity
+C3b	10. 1 tsp vanilla
+    label: ready | vanilla | 1 | tsp | - | -
+    got:   needs_review | 10. 1 tsp vanilla | - | - | - | alts[] | eq[] | form - | note - | legacy_unrecognized_quantity
+C3b	a) 1 cup rice
+    label: ready | rice | 1 | cup | - | -
+    got:   needs_review | a) 1 cup rice | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	▢ 1 cup sugar
+    label: ready | sugar | 1 | cup | - | -
+    got:   needs_review | ▢ 1 cup sugar | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	☐ 2 tbsp butter
+    label: ready | butter | 2 | tbsp | - | -
+    got:   needs_review | ☐ 2 tbsp butter | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C3b	✓ 1 egg
+    label: ready | egg | 1 | each | - | -
+    got:   needs_review | ✓ 1 egg | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C5b {D}	1 2 eggs
+    label: needs_review | eggs | - | each | - | -
+    got:   needs_review | 1 2 eggs | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C8	Salad:
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Salad | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	To serve:
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | To serve | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Instructions
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Instructions | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Directions:
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Directions | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Method
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Method | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Notes
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Notes | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Advertisement
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Advertisement | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Add to shopping list
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Add to shopping list | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	See recipe card below
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | See recipe card below | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	5 from 3 votes
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | 5 from 3 votes | - | - | - | alts[] | eq[] | form - | note - | legacy_more_than_one_quantity
+C8	4.8 stars (120 reviews)
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | 4.8 stars (120 reviews) | - | - | - | alts[] | eq[] | form - | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C8	Servings: 4-6
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Servings: 4-6 | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Prep 10 mins
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Prep 10 mins | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Cook 20 mins
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Cook 20 mins | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Total 30 mins
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Total 30 mins | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Serves: 6 to 8
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Serves: 6 to 8 | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Makes: 1 loaf
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Makes: 1 loaf | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Yields 3 dozen
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Yields 3 dozen | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Bake 25 minutes
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Bake 25 minutes | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	Chill for 2 hours
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | Chill for 2 hours | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C8	350°F oven
+    label: unsupported | - | - | - | - | -
+    got:   needs_review | 350°F oven | - | - | - | alts[] | eq[] | form - | note - | legacy_unrecognized_quantity
+C2-high [S4] {D}	1 recipe pie dough (see below)
+    label: needs_review | pie dough | 1 | - | - | -
+    got:   ready | recipe pie dough | 1 | each | - | alts[] | eq[] | form - | note see below | 
+C5b	1 cup pecans, walnuts, or almonds
+    label: needs_review | - | 1 | cup | - | pecans;walnuts;almonds
+    got:   needs_review | 1 cup pecans | - | - | - | alts[] | eq[] | form - | note walnuts, or almonds | legacy_contains_or
+C5b	1/2 cup raisins, cranberries or cherries
+    label: needs_review | - | 1/2 | cup | - | raisins;cranberries;cherries
+    got:   needs_review | 1/2 cup raisins | - | - | - | alts[] | eq[] | form - | note cranberries or cherries | legacy_contains_or
+C5b	2 cups spinach, kale, or chard
+    label: needs_review | - | 2 | cup | - | spinach;kale;chard
+    got:   needs_review | 2 cups spinach | - | - | - | alts[] | eq[] | form - | note kale, or chard | legacy_contains_or
+C5b	1 tsp thyme, rosemary, or oregano
+    label: needs_review | - | 1 | tsp | - | thyme;rosemary;oregano
+    got:   needs_review | 1 tsp thyme | - | - | - | alts[] | eq[] | form - | note rosemary, or oregano | legacy_contains_or
+C5b {K}	2 tbsp butter, ghee, or oil
+    label: needs_review | - | 2 | tbsp | - | butter;ghee;oil
+    got:   needs_review | 2 tbsp butter | - | - | - | alts[] | eq[] | form - | note ghee, or oil | legacy_contains_or
+C5b	1 lb chicken, pork, or tofu
+    label: needs_review | - | 1 | lb | - | chicken;pork;tofu
+    got:   needs_review | 1 lb chicken | - | - | - | alts[] | eq[] | form - | note pork, or tofu | legacy_contains_or
+C5b	1 cup pecans or walnuts or almonds
+    label: needs_review | - | 1 | cup | - | pecans;walnuts;almonds
+    got:   needs_review | 1 cup pecans or walnuts or almonds | - | - | - | alts[] | eq[] | form - | note - | legacy_contains_or
+C5b	1 cup milk, cream, or half-and-half
+    label: needs_review | - | 1 | cup | - | milk;cream;half-and-half
+    got:   needs_review | 1 cup milk | - | - | - | alts[] | eq[] | form - | note cream, or half-and-half | legacy_contains_or
+C5b {DK}	1 cup cooked farro (from 1/2 cup uncooked)
+    label: needs_review | farro | 1 | cup | - | -
+    got:   needs_review | 1 cup cooked farro (from 1/2 cup uncooked) | - | - | - | alts[] | eq[] | form raw | note - | legacy_parenthetical_number,legacy_more_than_one_quantity
+C1 {K}	1 lb large shrimp
+    label: ready | shrimp | 1 | lb | - | -
+    got:   ready | shrimp | 1 | lb | - | alts[] | eq[] | form - | note large | 
+C2-medium {K}	1 lb jumbo sea scallops
+    label: ready | sea scallops | 1 | lb | - | -
+    got:   ready | jumbo sea scallops | 1 | lb | - | alts[] | eq[] | form - | note - | 
+C5b {K}	between 1 and 2 tbsp sugar
+    label: needs_review | sugar | 1..2 | tbsp | - | -
+    got:   needs_review | between 1 and 2 tbsp sugar | - | - | - | alts[] | eq[] | form - | note - | quantity_missing
+C2-high {K}	2 bacon strips
+    label: ready | bacon | 2 | strip | - | -
+    got:   ready | bacon strips | 2 | each | - | alts[] | eq[] | form - | note - | 
+C2-high {K}	2 lettuce heads
+    label: ready | lettuce | 2 | head | - | -
+    got:   ready | lettuce heads | 2 | each | - | alts[] | eq[] | form - | note - | 
+C3b	1x cup milk
+    label: ready | milk | 1 | cup | - | -
+    got:   needs_review | 1x cup milk | - | - | - | alts[] | eq[] | form - | note - | legacy_unrecognized_quantity
+C3b {D}	3x eggs
+    label: ready | eggs | 3 | each | - | -
+    got:   needs_review | 3x eggs | - | - | - | alts[] | eq[] | form - | note - | legacy_unrecognized_quantity
+C3b	2x cans chickpeas
+    label: ready | chickpeas | 2 | can | - | -
+    got:   needs_review | 2x cans chickpeas | - | - | - | alts[] | eq[] | form - | note - | legacy_unrecognized_quantity
+C2-high	1 x can chickpeas
+    label: ready | chickpeas | 1 | can | - | -
+    got:   ready | x can chickpeas | 1 | each | - | alts[] | eq[] | form - | note - | 

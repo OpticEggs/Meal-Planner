@@ -1,0 +1,14 @@
+applied: 001_auth.sql, 002_table.sql, 003_reconciliation.sql, 004_staple_products.sql, 005_staple_management.sql, 006_nutrition_sources.sql, 007_kroger.sql, 008_cook_record_corrections.sql, 009_cook_record_chain.sql, 010_recipe_sources.sql, 011_shopping_destinations.sql, 012_recipe_content.sql, 013_partial_handoff.sql
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /home/user/Meal-Planner
+
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  18:04:29
+   Duration  8.14s (tests 85%, transform 9%, import 6%)
+
+exit=0

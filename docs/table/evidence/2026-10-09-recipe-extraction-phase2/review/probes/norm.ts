@@ -1,0 +1,19 @@
+import { parseIngredientV1 } from "/home/user/rx-author/packages/recipe-extraction/src/index";
+const P = (l: any) => parseIngredientV1(l, { engine: "semantic-v1" });
+const show = (l: any) => { const r = P(l); console.log(JSON.stringify(String(l).slice(0, 60)), "→", JSON.stringify({ raw: r.raw.slice(0, 40), n: r.normalized.slice(0, 60), nlen: r.normalized.length, s: r.status, name: r.name, q: r.quantity && (r.quantity as any).numerator, u: r.unit?.canonical, reasons: r.reasons, spans: r.evidence.spans })); };
+show("1 cup‮milk");
+show("1 cup milk");
+show("1 cup jalape‍ño");
+show("1 cup pota­toes");
+show("⁦⁩");
+show("1 cup milk");
+show("1 cup milk\u0085");
+show("ｌ cup milk");
+show("１ cup milk");
+show("１/２ cup milk");
+show("1 cup flour" + " x".repeat(300));
+show(" ".repeat(600) + "2 cups flour");
+show("2 cups " + "😀".repeat(260));
+show("2 cups " + "a".repeat(492) + "😀");
+show(null); show(123 as any); show({ toString() { return "1 cup milk"; } });
+show("1 cup milk".padEnd(500, " ") + "x");

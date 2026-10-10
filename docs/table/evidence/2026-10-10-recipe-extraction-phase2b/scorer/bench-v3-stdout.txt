@@ -1,0 +1,28 @@
+Recipe extraction benchmark — 669 ingredient case(s), split every
+legacy-table-import-2:
+  overall  core 209/669  full 205/669  review 474/669  false-certain 31 (H12/M19/L0)  fabricated 0/125  cross-dim 5/559
+  dev      core 62/182  full 62/182  review 122/182  false-certain 6 (H1/M5/L0)  fabricated 0/29  cross-dim 0/157
+  holdout  core 44/128  full 44/128  review 87/128  false-certain 4 (H0/M4/L0)  fabricated 0/23  cross-dim 0/109
+  holdout2 core 103/359  full 99/359  review 265/359  false-certain 21 (H11/M10/L0)  fabricated 0/73  cross-dim 5/293
+  outcomes dev      C1 54/152  C1+ 54/152  C2 6 (H1/M5)  C3+C4 92/152  C5 22/22  C7 3/8  CE 0  invalid 0 error 0 nondet 0  S1:0 S2:0 S3:0 S4:0 S5:0 S6:0 S7:0 S8:0
+  outcomes holdout  C1 37/104  C1+ 37/104  C2 4 (H0/M4)  C3+C4 63/104  C5 18/18  C7 2/6  CE 0  invalid 0 error 0 nondet 0  S1:0 S2:0 S3:0 S4:0 S5:0 S6:0 S7:0 S8:0
+  outcomes holdout2 C1 73/271  C1+ 71/271  C2 21 (H11/M10)  C3+C4 177/271  C5 69/69  C7 2/19  CE 0  invalid 0 error 0 nondet 0  S1:0 S2:0 S3:5 S4:0 S5:0 S6:0 S7:0 S8:0  G2 A1 not met, A2 not met, A3 not met, A4 not met, A5 not met
+legacy-table-import-2+suggestion:
+  overall  core 210/669  full 205/669  review 474/669  false-certain 31 (H12/M19/L0)  fabricated 0/125  cross-dim 43/559
+  dev      core 62/182  full 62/182  review 122/182  false-certain 6 (H1/M5/L0)  fabricated 0/29  cross-dim 10/157
+  holdout  core 44/128  full 44/128  review 87/128  false-certain 4 (H0/M4/L0)  fabricated 0/23  cross-dim 5/109
+  holdout2 core 104/359  full 99/359  review 265/359  false-certain 21 (H11/M10/L0)  fabricated 0/73  cross-dim 28/293
+  outcomes dev      C1 54/152  C1+ 54/152  C2 6 (H1/M5)  C3+C4 92/152  C5 22/22  C7 3/8  CE 0  invalid 0 error 0 nondet 0  S1:0 S2:0 S3:10 S4:0 S5:3 S6:10 S7:0 S8:0
+  outcomes holdout  C1 37/104  C1+ 37/104  C2 4 (H0/M4)  C3+C4 63/104  C5 18/18  C7 2/6  CE 0  invalid 0 error 0 nondet 0  S1:0 S2:0 S3:5 S4:0 S5:2 S6:5 S7:0 S8:0
+  outcomes holdout2 C1 73/271  C1+ 71/271  C2 21 (H11/M10)  C3+C4 177/271  C5 69/69  C7 2/19  CE 0  invalid 0 error 0 nondet 0  S1:0 S2:0 S3:28 S4:0 S5:9 S6:23 S7:0 S8:0  G2 A1 not met, A2 not met, A3 not met, A4 not met, A5 not met
+semantic-v1:
+  overall  core 642/669  full 635/669  review 154/669  false-certain 6 (H5/M1/L0)  fabricated 0/125  cross-dim 1/559
+  dev      core 182/182  full 181/182  review 30/182  false-certain 0 (H0/M0/L0)  fabricated 0/29  cross-dim 0/157
+  holdout  core 127/128  full 125/128  review 25/128  false-certain 0 (H0/M0/L0)  fabricated 0/23  cross-dim 0/109
+  holdout2 core 333/359  full 329/359  review 99/359  false-certain 6 (H5/M1/L0)  fabricated 0/73  cross-dim 1/293
+  outcomes dev      C1 152/152  C1+ 152/152  C2 0 (H0/M0)  C3+C4 0/152  C5 22/22  C7 8/8  CE 0  invalid 0 error 0 nondet 0  S1:0 S2:0 S3:0 S4:0 S5:0 S6:0 S7:0 S8:0
+  outcomes holdout  C1 103/104  C1+ 103/104  C2 0 (H0/M0)  C3+C4 1/104  C5 18/18  C7 6/6  CE 0  invalid 0 error 0 nondet 0  S1:0 S2:0 S3:0 S4:0 S5:0 S6:0 S7:0 S8:0
+  outcomes holdout2 C1 254/271  C1+ 254/271  C2 6 (H5/M1)  C3+C4 13/271  C5 67/69  C7 16/19  CE 0  invalid 0 error 0 nondet 0  S1:0 S2:0 S3:1 S4:2 S5:1 S6:1 S7:0 S8:0  G2 A1 not met, A2 not met, A3 not met, A4 not met, A5 met
+pages (default): detection P 12/12 R 12/12  count 15/15  ingredient lists 14/14  diagnostics 15/15  retention 15/15
+Wrote ../../docs/table/evidence/2026-10-10-recipe-extraction-phase2b/scorer/report-v3.json (deterministic)
+Wrote ../../docs/table/evidence/2026-10-10-recipe-extraction-phase2b/scorer/report-v3.md

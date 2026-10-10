@@ -1,0 +1,35 @@
+{
+ "frozenAt": "2026-10-10",
+ "candidateEngine": "semantic-v2",
+ "commit": "f379e06cee9ec89d321a897a5c492811856fba5f",
+ "reviewedEngineCommit": "fc37ce70733d0a1cf219ea97fb9e361d1b60dc86",
+ "engineUnchangedSinceReview": true,
+ "gitTree": {
+  "src/ingredient/semantic-v2": "dd0c1d498a6eb2c311e2655d5f35af3f8c6b9ad6",
+  "src/ingredient/semantic (v1, frozen)": "ac7e2ac226a6b5e388df8da1696ccb2a9df4239c",
+  "src/legacy (frozen baseline)": "ad0b556b30aa3144e30ea4a7ba8325211cfa3b2f",
+  "bench": "acab4988656d7557b45c4942648238845ad6817e"
+ },
+ "pins (bench/pins.ts, as the scoring report will carry them)": {
+  "engineSourceDigests": {
+   "legacy": "081c8cfd9fbe2e2f4bf9d27b905960b6b90954731dd61f06c419289b2cb99583",
+   "semantic": "ab41d0c66467604e81cfbeb0b12a3d5f4b8c41cfc7f369ccd09dacb4993717f3",
+   "semantic-v2": "8fef38e0f1a6e5c23c8d1554094c31113ea1af3fe9e1a086add91d2eb4f7317c"
+  },
+  "packageSourceDigest": "7897871ac88dbf3c7d01d219e9cc90d1709292ed8c00ce066a56fd5423d97e3c",
+  "planFile": "docs/table/recipe-extraction/EVALUATION-PLAN-v3.md",
+  "planSha256": "34c68ed9b2aa7a5db9e78b37191d99a58fe710dc07ed83aceceffd4003a492c1",
+  "scorerSha256": "7821e8532eb123e9694291c6d0deac6bdac40f96715d06a4d2aa2161fc3a3892"
+ },
+ "sha256": {
+  "packages/recipe-extraction/CONTRACT-v1.md": "d2fe6294590fddb37f63fbab7500f784c944fe087918790ec59616731b45bbf8",
+  "packages/recipe-extraction/fixtures/README.md": "a8e9260a2e9cc2c89a83c9236d7bdd9ca324a9940aa1824576a97a92f0936874",
+  "docs/table/recipe-extraction/EVALUATION-PLAN-v3.md": "34c68ed9b2aa7a5db9e78b37191d99a58fe710dc07ed83aceceffd4003a492c1",
+  "packages/recipe-extraction/bench/outcomes.ts": "7821e8532eb123e9694291c6d0deac6bdac40f96715d06a4d2aa2161fc3a3892",
+  "packages/recipe-extraction/src/ingredient/semantic-v2/foods.ts": "73a2ac5ff23b51412b2c6f843568cc5fcb8e3385d8181ad461bd2ea66235a94c",
+  "packages/recipe-extraction/src/ingredient/semantic-v2/foods-more.ts": "6edb88bf279906d9257c8cdca51cfdbba8f22c173df4334d64ea0c040302378f",
+  "packages/recipe-extraction/tests/regressions/exposed-regressions-2b.jsonl": "94526c63eb57d7bf75ab2808861c3c0f2a17908fec21b50a8089a32595f5f9a8",
+  "packages/recipe-extraction/tools/mutation/specs/parser.json": "3909d93b003a83af2fb2b07ae6a1047187b829f05d6811e01b782193bfcac9a6"
+ },
+ "defaultEngine": "legacy-table-import-2 (unchanged)"
+}

@@ -658,6 +658,7 @@ seven commits ending in its holdout-v2 freeze (`dee4ed0` → `46a6547`), so it w
 11 skipped after it; `46a6547` alone passes. The commit is kept as
 `evidence/2026-10-09-verify-bca110e/lab-reconciliation/` for the lab session or the owner to apply; it touches only
 `src/legacy/PROVENANCE.json` and that document, not the frozen holdout-v2 labels. These app corrections do not complete or replace the extraction engine; its Phase 3 is unauthorized.
+_Later (lab session, 2026-10-09): applied unchanged on the lab branch as `034f2c3` after merging `main` `8c9fd8c`; lab suite 1917 passed, 11 skipped._
 
 ## Original RIO correction package — finding-by-finding (recheck of `8c9fd8c`) — added 2026-10-09
 

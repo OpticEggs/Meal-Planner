@@ -1,0 +1,41 @@
+{
+  "frozenAt": "2026-10-09",
+  "rule": "Holdout labels (ingredients/holdout.jsonl, the split=holdout entries of pages/labels.json and the pages/hold-*.html files) were written from CONTRACT-v1 §7 and §3 before any engine was run on them. They are never tuned against engine output. Any change needs an entry in LABEL-CHANGES.md (case id, old and new label, an independent rationale that does not cite engine output, and a reviewer) and a new freeze: recompute these hashes, update frozenAt, and record the previous hashes in that log entry.",
+  "canonicalization": "ingredients and page files: SHA-256 of the exact file bytes. Page labels: SHA-256 of the UTF-8 canonical JSON (object keys sorted by UTF-16 code unit order, no whitespace, array order kept) of the array of split=holdout entries of pages/labels.json in file order.",
+  "ingredients": {
+    "file": "ingredients/holdout.jsonl",
+    "sha256": "7ddd898e6474adbabac8211e0404991710db26126bec6f7ede23bcb9ddf99b06",
+    "cases": 128
+  },
+  "pages": {
+    "labels": {
+      "file": "pages/labels.json",
+      "subset": "split=holdout",
+      "sha256": "d6807cf6f31c4de329b205c854dff5f5fd5cbc4e0cab847ee52e654ef4edee32",
+      "entries": 5,
+      "candidates": 5
+    },
+    "files": [
+      {
+        "file": "pages/hold-faq-nonrecipe.html",
+        "sha256": "452991936a75cbadbb6fea17c3c229317e21cd537ec3d542b5b7531ab89cff94"
+      },
+      {
+        "file": "pages/hold-graph-website.html",
+        "sha256": "f0bee8631c8c850fb02bf0cf958cafd5260783e1c693a5d8e8e7d282e7aaf2dd"
+      },
+      {
+        "file": "pages/hold-microdata-og-image.html",
+        "sha256": "0c83041061dcf958c03db6776d80e30c216976e9bdcf3c1f3449de5f342f23bb"
+      },
+      {
+        "file": "pages/hold-redirect-li-entities.html",
+        "sha256": "9be1f879ad90f5bd01a1bca80e2bc2db4e74c5b3b5fda6ff53252be8b37ff49f"
+      },
+      {
+        "file": "pages/hold-two-recipes-malformed.html",
+        "sha256": "648585bdfc06dd6a6a060ce2f19dabf68215152b50fe20da33f9a86a16ac2709"
+      }
+    ]
+  }
+}

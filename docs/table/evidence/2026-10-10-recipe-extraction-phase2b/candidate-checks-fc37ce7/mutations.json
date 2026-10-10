@@ -1,0 +1,2772 @@
+{
+  "baselines": [
+    {
+      "counts": {
+        "failed": 0,
+        "passed": 106,
+        "total": 106
+      },
+      "ok": true,
+      "testNamePattern": null,
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts"
+      ],
+      "why": "all 106 tests passed"
+    },
+    {
+      "counts": {
+        "failed": 0,
+        "passed": 0,
+        "total": 106
+      },
+      "ok": false,
+      "testNamePattern": "no test has this name",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts"
+      ],
+      "why": "no tests ran"
+    },
+    {
+      "counts": {
+        "failed": 0,
+        "passed": 167,
+        "total": 167
+      },
+      "ok": true,
+      "testNamePattern": null,
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts",
+        "bench/__tests__/outcome-controls.test.ts",
+        "bench/__tests__/outcomes.test.ts"
+      ],
+      "why": "all 167 tests passed"
+    },
+    {
+      "counts": {
+        "failed": 0,
+        "passed": 185,
+        "total": 185
+      },
+      "ok": true,
+      "testNamePattern": null,
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts",
+        "bench/__tests__/outcome-controls.test.ts",
+        "bench/__tests__/outcomes.test.ts",
+        "bench/__tests__/holdout3.test.ts"
+      ],
+      "why": "all 185 tests passed"
+    },
+    {
+      "counts": {
+        "failed": 0,
+        "passed": 1194,
+        "total": 1194
+      },
+      "ok": true,
+      "testNamePattern": null,
+      "tests": [
+        "tests/semantic-v2/safeguards.test.ts",
+        "tests/regressions/semantic-v2-regressions.test.ts",
+        "tests/regressions/exact-rejections.test.ts"
+      ],
+      "why": "all 1194 tests passed"
+    },
+    {
+      "counts": {
+        "failed": 0,
+        "passed": 1386,
+        "total": 1386
+      },
+      "ok": true,
+      "testNamePattern": null,
+      "tests": [
+        "tests/semantic-v2/recognised-food.test.ts",
+        "tests/regressions/semantic-v2-regressions.test.ts"
+      ],
+      "why": "all 1386 tests passed"
+    },
+    {
+      "counts": {
+        "failed": 0,
+        "passed": 1114,
+        "total": 1114
+      },
+      "ok": true,
+      "testNamePattern": null,
+      "tests": [
+        "tests/regressions/semantic-v2-regressions.test.ts"
+      ],
+      "why": "all 1114 tests passed"
+    }
+  ],
+  "format": "recipe-extraction-mutation-results/v1",
+  "package": "packages/recipe-extraction",
+  "results": [
+    {
+      "asExpected": true,
+      "description": "No-op control: a comment changes, behaviour does not.",
+      "expect": "SURVIVED",
+      "failed": [],
+      "file": "bench/outcomes.ts",
+      "id": "self-noop",
+      "killedByIntended": [],
+      "result": "SURVIVED",
+      "spec": "tools/mutation/specs/selftest.json",
+      "tests": {
+        "failed": 0,
+        "passed": 106,
+        "total": 106
+      },
+      "why": "all 106 tests passed"
+    },
+    {
+      "asExpected": true,
+      "description": "Syntax-breaking control: an extra parenthesis makes bench/outcomes.ts fail to compile, so every test file importing it fails to load.",
+      "expect": "ERROR",
+      "failed": [],
+      "file": "bench/outcomes.ts",
+      "id": "self-syntax-error",
+      "killedByIntended": [],
+      "result": "ERROR",
+      "spec": "tools/mutation/specs/selftest.json",
+      "tests": {
+        "failed": 0,
+        "passed": 0,
+        "total": 0
+      },
+      "why": "test file failed to compile or load: oracles-v3.test.ts: Transform failed with 1 error:; scorer-v3.test.ts: Transform failed with 1 error:"
+    },
+    {
+      "asExpected": true,
+      "description": "Missing-anchor control: the text to replace does not occur.",
+      "expect": "ERROR",
+      "failed": [],
+      "file": "bench/outcomes.ts",
+      "id": "self-missing-anchor",
+      "killedByIntended": [],
+      "result": "ERROR",
+      "spec": "tools/mutation/specs/selftest.json",
+      "tests": {
+        "failed": 0,
+        "passed": 0,
+        "total": 0
+      },
+      "why": "replacement not applied: anchor not found"
+    },
+    {
+      "asExpected": true,
+      "description": "Ambiguous-anchor control: the text occurs many times and no occurrence is named.",
+      "expect": "ERROR",
+      "failed": [],
+      "file": "bench/outcomes.ts",
+      "id": "self-ambiguous-anchor",
+      "killedByIntended": [],
+      "result": "ERROR",
+      "spec": "tools/mutation/specs/selftest.json",
+      "tests": {
+        "failed": 0,
+        "passed": 0,
+        "total": 0
+      },
+      "why": "replacement not applied: anchor occurs 24 times (give \"occurrence\")"
+    },
+    {
+      "asExpected": true,
+      "description": "Missing-file control: the file to mutate does not exist.",
+      "expect": "ERROR",
+      "failed": [],
+      "file": "bench/no-such-file.ts",
+      "id": "self-missing-file",
+      "killedByIntended": [],
+      "result": "ERROR",
+      "spec": "tools/mutation/specs/selftest.json",
+      "tests": {
+        "failed": 0,
+        "passed": 0,
+        "total": 0
+      },
+      "why": "replacement not applied: file bench/no-such-file.ts does not exist"
+    },
+    {
+      "asExpected": true,
+      "description": "No-test control: the name filter selects no test, so nothing ran (the baseline is unusable too).",
+      "expect": "ERROR",
+      "failed": [],
+      "file": "bench/outcomes.ts",
+      "id": "self-no-tests-ran",
+      "killedByIntended": [],
+      "result": "ERROR",
+      "spec": "tools/mutation/specs/selftest.json",
+      "tests": {
+        "failed": 0,
+        "passed": 0,
+        "total": 0
+      },
+      "why": "the unmutated baseline is not usable: no tests ran"
+    },
+    {
+      "asExpected": true,
+      "description": "Unknown-killer control: a real fault, but the named killing test does not exist in the run.",
+      "expect": "ERROR",
+      "failed": [],
+      "file": "bench/outcomes.ts",
+      "id": "self-unknown-killer",
+      "killedByIntended": [],
+      "result": "ERROR",
+      "spec": "tools/mutation/specs/selftest.json",
+      "tests": {
+        "failed": 8,
+        "passed": 98,
+        "total": 106
+      },
+      "why": "killedBy test(s) not in this run: no such describe > no such test"
+    },
+    {
+      "asExpected": true,
+      "description": "A real fault (S codes on CE) whose only listed killer is a test that keeps passing: other tests fail.",
+      "expect": "KILLED-UNEXPECTED",
+      "failed": [
+        {
+          "message": "AssertionError: severe: expected [ 'S1' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O52 CE invalid output, SF-6"
+        },
+        {
+          "message": "AssertionError: severe: expected [ 'S4' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O53 CE invalid output, N-2"
+        },
+        {
+          "message": "AssertionError: severe: expected [ 'S4' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O54 CE invalid output"
+        },
+        {
+          "message": "AssertionError: severe: expected [ 'S2' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O55 CE invalid output"
+        },
+        {
+          "message": "AssertionError: severe: expected [ 'S2' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O57 CE invalid output"
+        },
+        {
+          "message": "AssertionError: severe: expected [ 'S1' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O69 CE invalid output, reading 1 fabricated amount with null units"
+        },
+        {
+          "message": "AssertionError: expected { id: 'ing-h2-0158', …(18) } to match object { outcome: 'CE', …(2) }",
+          "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction (SF-6): v2 gives a CE line with a status outside the contract an S code; v3 gives none"
+        },
+        {
+          "message": "AssertionError: expected { id: 'ing-h2-0181', …(18) } to match object { outcome: 'CE', severe: [], …(1) }",
+          "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction (N-2): v2 judges validity by the status string, so an invalid output with a contract status is scored; v3 runs the validator"
+        }
+      ],
+      "file": "bench/outcomes.ts",
+      "id": "self-killed-unexpected",
+      "killedByIntended": [],
+      "result": "KILLED-UNEXPECTED",
+      "spec": "tools/mutation/specs/selftest.json",
+      "tests": {
+        "failed": 8,
+        "passed": 98,
+        "total": 106
+      },
+      "why": "only other tests failed (8)"
+    },
+    {
+      "asExpected": true,
+      "description": "The same fault with its real killer but a wrong expected reason: the killer fails, not for that reason.",
+      "expect": "KILLED-UNEXPECTED",
+      "failed": [
+        {
+          "message": "AssertionError: severe: expected [ 'S1' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O52 CE invalid output, SF-6"
+        },
+        {
+          "message": "AssertionError: severe: expected [ 'S4' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O53 CE invalid output, N-2"
+        },
+        {
+          "message": "AssertionError: severe: expected [ 'S4' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O54 CE invalid output"
+        },
+        {
+          "message": "AssertionError: severe: expected [ 'S2' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O55 CE invalid output"
+        },
+        {
+          "message": "AssertionError: severe: expected [ 'S2' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O57 CE invalid output"
+        },
+        {
+          "message": "AssertionError: severe: expected [ 'S1' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O69 CE invalid output, reading 1 fabricated amount with null units"
+        },
+        {
+          "message": "AssertionError: expected { id: 'ing-h2-0158', …(18) } to match object { outcome: 'CE', …(2) }",
+          "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction (SF-6): v2 gives a CE line with a status outside the contract an S code; v3 gives none"
+        },
+        {
+          "message": "AssertionError: expected { id: 'ing-h2-0181', …(18) } to match object { outcome: 'CE', severe: [], …(1) }",
+          "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction (N-2): v2 judges validity by the status string, so an invalid output with a contract status is scored; v3 runs the validator"
+        }
+      ],
+      "file": "bench/outcomes.ts",
+      "id": "self-wrong-reason",
+      "killedByIntended": [],
+      "result": "KILLED-UNEXPECTED",
+      "spec": "tools/mutation/specs/selftest.json",
+      "tests": {
+        "failed": 8,
+        "passed": 98,
+        "total": 106
+      },
+      "why": "intended test(s) failed, but not by an assertion matching the intended reason: outcomes v3 hand-calculated oracles > O52 CE invalid output, SF-6: AssertionError: severe: expected [ 'S1' ] to deeply equal []"
+    },
+    {
+      "asExpected": true,
+      "description": "The same fault with its real killer and reason: KILLED.",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: severe: expected [ 'S1' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O52 CE invalid output, SF-6"
+        },
+        {
+          "message": "AssertionError: severe: expected [ 'S4' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O53 CE invalid output, N-2"
+        },
+        {
+          "message": "AssertionError: severe: expected [ 'S4' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O54 CE invalid output"
+        },
+        {
+          "message": "AssertionError: severe: expected [ 'S2' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O55 CE invalid output"
+        },
+        {
+          "message": "AssertionError: severe: expected [ 'S2' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O57 CE invalid output"
+        },
+        {
+          "message": "AssertionError: severe: expected [ 'S1' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O69 CE invalid output, reading 1 fabricated amount with null units"
+        },
+        {
+          "message": "AssertionError: expected { id: 'ing-h2-0158', …(18) } to match object { outcome: 'CE', …(2) }",
+          "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction (SF-6): v2 gives a CE line with a status outside the contract an S code; v3 gives none"
+        },
+        {
+          "message": "AssertionError: expected { id: 'ing-h2-0181', …(18) } to match object { outcome: 'CE', severe: [], …(1) }",
+          "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction (N-2): v2 judges validity by the status string, so an invalid output with a contract status is scored; v3 runs the validator"
+        }
+      ],
+      "file": "bench/outcomes.ts",
+      "id": "self-killed",
+      "killedByIntended": [
+        "outcomes v3 hand-calculated oracles > O52 CE invalid output, SF-6"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/selftest.json",
+      "tests": {
+        "failed": 8,
+        "passed": 98,
+        "total": 106
+      },
+      "why": "1 of 1 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "SCORE-01 reverted: the bare no-amount needs_review lines are selected by category tag (only quantity_missing / seasoning_ordinary / seasoning_lookalike), as v2's isBareFoodNeedsReview did, instead of by label (quantity, unit and alternatives all null).",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: bareNoAmount: expected false to be true // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > O43 C5c, bare no-amount, SCORE-01 tag/label difference"
+        },
+        {
+          "message": "AssertionError: dev: expected [ Array(4) ] to deeply equal [ Array(5) ]",
+          "test": "saboteurs trip their class or code on exactly the lines they touch > sensitivity (SCORE-01): needs_review figures leave out exactly the needs_review labels with quantity, unit and alternatives all null"
+        },
+        {
+          "message": "AssertionError: expected [ 'ing-h2-0012', 'ing-h2-0013' ] to deeply equal [ 'ing-h2-0012', 'ing-h2-0013', …(1) ]",
+          "test": "pre-registered sensitivity figures (informational, not the acceptance basis) > reports needs_review figures without the labels with no amount (quantity, unit, alternatives all null — SCORE-01), with counts"
+        },
+        {
+          "message": "AssertionError: expected [ 'ing-h2-0205', 'ing-h2-0206', …(21) ] to deeply equal [ 'ing-h2-0158', 'ing-h2-0186', …(27) ]",
+          "test": "SCORE-01: sensitivity 3(b) — needs_review labels with no amount > repair: v3 selects exactly the 29 label-defined lines (listed), by label alone, and reports 29 excluded / 40 kept"
+        },
+        {
+          "message": "AssertionError: expected false to be true // Object.is equality",
+          "test": "SCORE-01: sensitivity 3(b) — needs_review labels with no amount > repair: the definition does not depend on tags — retagging a label changes nothing, giving it a unit does"
+        }
+      ],
+      "file": "bench/outcomes.ts",
+      "id": "SCORE-01-revert-tag-heuristic",
+      "killedByIntended": [
+        "outcomes v3 hand-calculated oracles > O43 C5c, bare no-amount, SCORE-01 tag/label difference",
+        "SCORE-01: sensitivity 3(b) — needs_review labels with no amount > repair: v3 selects exactly the 29 label-defined lines (listed), by label alone, and reports 29 excluded / 40 kept",
+        "SCORE-01: sensitivity 3(b) — needs_review labels with no amount > repair: the definition does not depend on tags — retagging a label changes nothing, giving it a unit does",
+        "saboteurs trip their class or code on exactly the lines they touch > sensitivity (SCORE-01): needs_review figures leave out exactly the needs_review labels with quantity, unit and alternatives all null"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/scorer.json",
+      "tests": {
+        "failed": 5,
+        "passed": 162,
+        "total": 167
+      },
+      "why": "4 of 4 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "SCORE-02 reverted (SF-6): S codes are skipped only when the engine threw (v2's guard), so an invalid or nondeterministic CE line gets S codes again.",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: severe: expected [ 'S1' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O52 CE invalid output, SF-6"
+        },
+        {
+          "message": "AssertionError: severe: expected [ 'S4' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O53 CE invalid output, N-2"
+        },
+        {
+          "message": "AssertionError: severe: expected [ 'S4' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O54 CE invalid output"
+        },
+        {
+          "message": "AssertionError: severe: expected [ 'S2' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O55 CE invalid output"
+        },
+        {
+          "message": "AssertionError: severe: expected [ 'S2' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O57 CE invalid output"
+        },
+        {
+          "message": "AssertionError: severe: expected [ 'S1' ] to deeply equal []",
+          "test": "outcomes v3 hand-calculated oracles > O69 CE invalid output, reading 1 fabricated amount with null units"
+        },
+        {
+          "message": "AssertionError: S2: expected [ 'ing-dev-0001', …(490) ] to deeply equal []",
+          "test": "saboteurs trip their class or code on exactly the lines they touch > CE: an invalid output (ready, no amount, no amountUnstated) is CE with no S code on exactly those lines; A6 not met"
+        },
+        {
+          "message": "AssertionError: expected { id: 'ing-h2-0005', …(18) } to match object { outcome: 'CE', …(2) }",
+          "test": "outcome classes (§4) > a fabricated amount on a ready reading is C2 high with S1; with a null unit the reading is invalid, so CE (documented reading)"
+        },
+        {
+          "message": "AssertionError: expected { id: 'ing-h2-0005', …(18) } to match object { outcome: 'CE', …(2) }",
+          "test": "outcome classes (§4) > CE: an engine error, an output that fails the contract validator, or two different parses (never C1, no S code)"
+        },
+        {
+          "message": "AssertionError: expected { id: 'ing-h2-0158', …(18) } to match object { outcome: 'CE', …(2) }",
+          "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction (SF-6): v2 gives a CE line with a status outside the contract an S code; v3 gives none"
+        },
+        {
+          "message": "AssertionError: expected { id: 'ing-h2-0181', …(18) } to match object { outcome: 'CE', severe: [], …(1) }",
+          "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction (N-2): v2 judges validity by the status string, so an invalid output with a contract status is scored; v3 runs the validator"
+        }
+      ],
+      "file": "bench/outcomes.ts",
+      "id": "SCORE-02-revert-s-codes-on-ce",
+      "killedByIntended": [
+        "outcomes v3 hand-calculated oracles > O52 CE invalid output, SF-6",
+        "outcomes v3 hand-calculated oracles > O53 CE invalid output, N-2",
+        "outcomes v3 hand-calculated oracles > O55 CE invalid output",
+        "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction (SF-6): v2 gives a CE line with a status outside the contract an S code; v3 gives none",
+        "saboteurs trip their class or code on exactly the lines they touch > CE: an invalid output (ready, no amount, no amountUnstated) is CE with no S code on exactly those lines; A6 not met"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/scorer.json",
+      "tests": {
+        "failed": 11,
+        "passed": 156,
+        "total": 167
+      },
+      "why": "5 of 5 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "SCORE-02 reverted (N-2): validity is judged by the status string only — the contract validator is not run, so an invalid output with a contract status is classified and scored.",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: outcome: expected 'C2' to be 'CE' // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > O53 CE invalid output, N-2"
+        },
+        {
+          "message": "AssertionError: outcome: expected 'C2' to be 'CE' // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > O54 CE invalid output"
+        },
+        {
+          "message": "AssertionError: outcome: expected 'C2' to be 'CE' // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > O55 CE invalid output"
+        },
+        {
+          "message": "AssertionError: outcome: expected 'C1' to be 'CE' // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > O56 CE invalid output"
+        },
+        {
+          "message": "AssertionError: outcome: expected 'C2' to be 'CE' // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > O57 CE invalid output"
+        },
+        {
+          "message": "AssertionError: outcome: expected 'C3' to be 'CE' // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > O58 CE invalid output"
+        },
+        {
+          "message": "AssertionError: outcome: expected 'C2' to be 'CE' // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > O69 CE invalid output, reading 1 fabricated amount with null units"
+        },
+        {
+          "message": "AssertionError: ce.invalid: expected false to be true // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > P04 CE invalid output, CE nondeterministic, second parse, CL2(a)"
+        },
+        {
+          "message": "AssertionError: outcome: expected 'C1' to be 'CE' // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > P11 CE invalid output, unit dimension field"
+        },
+        {
+          "message": "AssertionError: outcome: expected 'C7' to be 'CE' // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > P12 CE invalid output, unsupported input"
+        },
+        {
+          "message": "AssertionError: ce.invalid: expected false to be true // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > O74 CE invalid output, CE nondeterministic, second parse, CL2(a)"
+        },
+        {
+          "message": "AssertionError: expected [] to deeply equal [ 'ing-dev-0001', …(490) ]",
+          "test": "saboteurs trip their class or code on exactly the lines they touch > CE: an invalid output (ready, no amount, no amountUnstated) is CE with no S code on exactly those lines; A6 not met"
+        },
+        {
+          "message": "AssertionError: expected { id: 'ing-h2-0005', …(18) } to match object { outcome: 'CE', …(2) }",
+          "test": "outcome classes (§4) > a fabricated amount on a ready reading is C2 high with S1; with a null unit the reading is invalid, so CE (documented reading)"
+        },
+        {
+          "message": "AssertionError: expected { id: 'ing-h2-0006', …(18) } to match object { outcome: 'CE', …(4) }",
+          "test": "outcome classes (§4) > CE: an engine error, an output that fails the contract validator, or two different parses (never C1, no S code)"
+        },
+        {
+          "message": "AssertionError: expected [] to deeply equal [ Array(1) ]",
+          "test": "plan v3 change log 2: both parses validated, S6 without a quantity, different throws > (a) lists the second parse's problems only when they differ from the first's"
+        },
+        {
+          "message": "AssertionError: expected { id: 'ing-h2-0181', …(18) } to match object { outcome: 'CE', severe: [], …(1) }",
+          "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction (N-2): v2 judges validity by the status string, so an invalid output with a contract status is scored; v3 runs the validator"
+        },
+        {
+          "message": "AssertionError: expected { id: 'A6', …(4) } to match object { status: 'not met', …(1) }",
+          "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > repair: A6 is computed from the dimensions — v2 recorded it outside the scorer even with an invalid output; v3 says not met"
+        },
+        {
+          "message": "AssertionError: expected { engineError: 'Error: second', …(2) } to deeply equal { engineError: 'Error: second', …(2) }",
+          "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > the four dimensions are recorded separately on a line that fails two of them"
+        }
+      ],
+      "file": "bench/outcomes.ts",
+      "id": "SCORE-02-revert-status-string-validity",
+      "killedByIntended": [
+        "outcomes v3 hand-calculated oracles > O53 CE invalid output, N-2",
+        "outcomes v3 hand-calculated oracles > O56 CE invalid output",
+        "outcomes v3 hand-calculated oracles > O58 CE invalid output",
+        "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction (N-2): v2 judges validity by the status string, so an invalid output with a contract status is scored; v3 runs the validator",
+        "saboteurs trip their class or code on exactly the lines they touch > CE: an invalid output (ready, no amount, no amountUnstated) is CE with no S code on exactly those lines; A6 not met"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/scorer.json",
+      "tests": {
+        "failed": 18,
+        "passed": 149,
+        "total": 167
+      },
+      "why": "5 of 5 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "SCORE-02 reverted: the two parses are not compared (v2 parsed each line once), so a nondeterministic engine is scored as if deterministic.",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: outcome: expected 'C1' to be 'CE' // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > O59 CE nondeterministic"
+        },
+        {
+          "message": "AssertionError: ce.nondeterministic: expected false to be true // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > O60 CE nondeterministic, CE engine error"
+        },
+        {
+          "message": "AssertionError: outcome: expected 'C1' to be 'CE' // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > P03 CE nondeterministic, unscored fields"
+        },
+        {
+          "message": "AssertionError: ce.nondeterministic: expected false to be true // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > P04 CE invalid output, CE nondeterministic, second parse, CL2(a)"
+        },
+        {
+          "message": "AssertionError: ce.nondeterministic: expected false to be true // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > O73 CE engine error, CE nondeterministic, CL2(c)"
+        },
+        {
+          "message": "AssertionError: ce.nondeterministic: expected false to be true // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > O74 CE invalid output, CE nondeterministic, second parse, CL2(a)"
+        },
+        {
+          "message": "AssertionError: expected [] to deeply equal [ 'ing-dev-0001', …(526) ]",
+          "test": "saboteurs trip their class or code on exactly the lines they touch > CE: a nondeterministic engine (the second parse differs) is CE (nondeterministic dimension) on exactly those lines; A6 not met"
+        },
+        {
+          "message": "AssertionError: nondeterministicNote: expected '{\"C1\":[\"ing-h2-0001\",\"ing-h2-0002\",\"i…' not to be '{\"C1\":[\"ing-h2-0001\",\"ing-h2-0002\",\"i…' // Object.is equality",
+          "test": "saboteurs trip their class or code on exactly the lines they touch > every saboteur is distinguishable from the oracle on holdout-v2"
+        },
+        {
+          "message": "AssertionError: expected { id: 'ing-h2-0001', …(18) } to match object { outcome: 'CE', severe: [], …(1) }",
+          "test": "outcome classes (§4) > CE: an engine error, an output that fails the contract validator, or two different parses (never C1, no S code)"
+        },
+        {
+          "message": "AssertionError: expected { engineError: null, …(2) } to deeply equal { engineError: null, …(2) }",
+          "test": "plan v3 change log 2: both parses validated, S6 without a quantity, different throws > (a) lists the second parse's problems only when they differ from the first's"
+        },
+        {
+          "message": "AssertionError: expected { id: 'ing-h2-0001', …(18) } to match object { outcome: 'CE', severe: [], …(1) }",
+          "test": "plan v3 change log 2: both parses validated, S6 without a quantity, different throws > (b) S6 when the engine drops the package and states a mass unit with no quantity; (c) different thrown messages are nondeterministic"
+        },
+        {
+          "message": "AssertionError: expected [] to deeply equal [ 'ing-h2-0001' ]",
+          "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction: v2 never parses a line twice, so a nondeterministic engine is scored; v3 makes it CE"
+        },
+        {
+          "message": "AssertionError: expected { engineError: 'Error: second', …(2) } to deeply equal { engineError: 'Error: second', …(2) }",
+          "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > the four dimensions are recorded separately on a line that fails two of them"
+        }
+      ],
+      "file": "bench/outcomes.ts",
+      "id": "SCORE-02-revert-no-nondeterminism-check",
+      "killedByIntended": [
+        "outcomes v3 hand-calculated oracles > O59 CE nondeterministic",
+        "outcomes v3 hand-calculated oracles > O60 CE nondeterministic, CE engine error",
+        "saboteurs trip their class or code on exactly the lines they touch > CE: a nondeterministic engine (the second parse differs) is CE (nondeterministic dimension) on exactly those lines; A6 not met"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/scorer.json",
+      "tests": {
+        "failed": 13,
+        "passed": 154,
+        "total": 167
+      },
+      "why": "3 of 3 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "SCORE-02 reverted for A6: the status is again 'checked outside the scorer' whatever the CE count, instead of being computed from the validity, error and determinism dimensions.",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected 'checked outside the scorer' to be 'scorer checks met; rest checked outsi…' // Object.is equality",
+          "test": "oracle > passes A1–A5 on holdout-v2, A1 and A2 with confidence (≥ 189 ready lines), and the scorer's A6 checks"
+        },
+        {
+          "message": "AssertionError: expected 'checked outside the scorer' to be 'not met' // Object.is equality",
+          "test": "saboteurs trip their class or code on exactly the lines they touch > CE: an invalid output (ready, no amount, no amountUnstated) is CE with no S code on exactly those lines; A6 not met"
+        },
+        {
+          "message": "AssertionError: expected 'checked outside the scorer' to be 'not met' // Object.is equality",
+          "test": "saboteurs trip their class or code on exactly the lines they touch > CE: an engine error is CE (engine error dimension) on exactly the lines that throw; A6 not met"
+        },
+        {
+          "message": "AssertionError: expected 'checked outside the scorer' to be 'not met' // Object.is equality",
+          "test": "saboteurs trip their class or code on exactly the lines they touch > CE: a nondeterministic engine (the second parse differs) is CE (nondeterministic dimension) on exactly those lines; A6 not met"
+        },
+        {
+          "message": "AssertionError: expected 'checked outside the scorer' to be 'scorer checks met; rest checked outsi…' // Object.is equality",
+          "test": "acceptance statuses (§6) > A2 needs every field; A3/A4 need zero counts; A5 is the point estimate ≤ 10 %; A6 needs CE = 0 in the scorer; A7 is outside the scorer"
+        },
+        {
+          "message": "AssertionError: expected { id: 'A6', …(4) } to match object { status: 'not met', …(1) }",
+          "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > repair: A6 is computed from the dimensions — v2 recorded it outside the scorer even with an invalid output; v3 says not met"
+        }
+      ],
+      "file": "bench/outcomes.ts",
+      "id": "SCORE-02-revert-a6-outside-scorer",
+      "killedByIntended": [
+        "saboteurs trip their class or code on exactly the lines they touch > CE: an invalid output (ready, no amount, no amountUnstated) is CE with no S code on exactly those lines; A6 not met",
+        "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > repair: A6 is computed from the dimensions — v2 recorded it outside the scorer even with an invalid output; v3 says not met",
+        "acceptance statuses (§6) > A2 needs every field; A3/A4 need zero counts; A5 is the point estimate ≤ 10 %; A6 needs CE = 0 in the scorer; A7 is outside the scorer"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/scorer.json",
+      "tests": {
+        "failed": 6,
+        "passed": 161,
+        "total": 167
+      },
+      "why": "3 of 3 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "SCORE-02 reverted for A2: a CE line's fields count as accurate when they match (an invalid output is coerced into field accuracy).",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected { name: { strict: true, …(1) }, …(2) } to deeply equal { name: { strict: false, …(1) }, …(2) }",
+          "test": "outcome classes (§4) > CE: an engine error, an output that fails the contract validator, or two different parses (never C1, no S code)"
+        }
+      ],
+      "file": "bench/outcomes.ts",
+      "id": "SCORE-02-revert-ce-field-accuracy",
+      "killedByIntended": [
+        "outcome classes (§4) > CE: an engine error, an output that fails the contract validator, or two different parses (never C1, no S code)"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/scorer.json",
+      "tests": {
+        "failed": 1,
+        "passed": 166,
+        "total": 167
+      },
+      "why": "1 of 1 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "Sensitivity (c) reads the wrong frozen flag: it leaves out the debatable cases instead of the cases that rely on a §12 new reading.",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected [ 'ing-h3-0003' ] to deeply equal [ 'ing-h3-0006' ]",
+          "test": "holdout-v3 present (temporary synthetic file) > --split holdout3 scores holdout-v3 only, with A1–A7 as the Gate G2 acceptance set; unfrozen, the report says so"
+        },
+        {
+          "message": "AssertionError: expected [ [ 'ing-h3-0003' ], 5 ] to deeply equal [ [ 'ing-h3-0006' ], 5 ]",
+          "test": "holdout-v3 case metadata and the data-driven sensitivity figures > hand-calculated: (a) drops the debatable case, (c) the new-reading case, (d) is absent without an audit file"
+        },
+        {
+          "message": "AssertionError: (c): expected [ [ 'ing-h3-0001' ], 3 ] to deeply equal [ [ 'ing-h3-0002' ], 3 ]",
+          "test": "holdout-v3 sensitivity figures from frozen case data: (a) debatable, (c) new readings, (d) exposure audit > hand-calculated on four lines (R = r1, r2, r3; r2 is C2 high with S7)"
+        }
+      ],
+      "file": "bench/outcomes.ts",
+      "id": "SENS-c-uses-debatable-flag",
+      "killedByIntended": [
+        "holdout-v3 sensitivity figures from frozen case data: (a) debatable, (c) new readings, (d) exposure audit > hand-calculated on four lines (R = r1, r2, r3; r2 is C2 high with S7)",
+        "holdout-v3 case metadata and the data-driven sensitivity figures > hand-calculated: (a) drops the debatable case, (c) the new-reading case, (d) is absent without an audit file"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/scorer.json",
+      "tests": {
+        "failed": 3,
+        "passed": 182,
+        "total": 185
+      },
+      "why": "2 of 2 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "Sensitivity (d) ignores the exposure audit's matched ids (excludes nothing).",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected [ [], 6, 2, …(2) ] to deeply equal [ …(5) ]",
+          "test": "holdout-v3 case metadata and the data-driven sensitivity figures > hand-calculated: (d) drops exactly the audit's matched ids; the figure names the audit"
+        },
+        {
+          "message": "AssertionError: (d): expected [ [], 4, 2, 'exact', '2026-10-11' ] to deeply equal [ [ 'ing-h3-0003' ], 3, 2, …(2) ]",
+          "test": "holdout-v3 sensitivity figures from frozen case data: (a) debatable, (c) new readings, (d) exposure audit > hand-calculated on four lines (R = r1, r2, r3; r2 is C2 high with S7)"
+        }
+      ],
+      "file": "bench/outcomes.ts",
+      "id": "SENS-d-ignores-audit-ids",
+      "killedByIntended": [
+        "holdout-v3 sensitivity figures from frozen case data: (a) debatable, (c) new readings, (d) exposure audit > hand-calculated on four lines (R = r1, r2, r3; r2 is C2 high with S7)",
+        "holdout-v3 case metadata and the data-driven sensitivity figures > hand-calculated: (d) drops exactly the audit's matched ids; the figure names the audit"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/scorer.json",
+      "tests": {
+        "failed": 2,
+        "passed": 183,
+        "total": 185
+      },
+      "why": "2 of 2 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "Plan v3 change log 2(a) reverted: only the first parse is validated, so an invalid second output does not make the line invalid.",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: ce.invalid: expected false to be true // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > P04 CE invalid output, CE nondeterministic, second parse, CL2(a)"
+        },
+        {
+          "message": "AssertionError: ce.invalid: expected false to be true // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > O74 CE invalid output, CE nondeterministic, second parse, CL2(a)"
+        },
+        {
+          "message": "AssertionError: expected { engineError: null, …(2) } to deeply equal { engineError: null, …(2) }",
+          "test": "plan v3 change log 2: both parses validated, S6 without a quantity, different throws > (a) lists the second parse's problems only when they differ from the first's"
+        }
+      ],
+      "file": "bench/outcomes.ts",
+      "id": "CL2a-revert-first-parse-only",
+      "killedByIntended": [
+        "outcomes v3 hand-calculated oracles > P04 CE invalid output, CE nondeterministic, second parse, CL2(a)",
+        "outcomes v3 hand-calculated oracles > O74 CE invalid output, CE nondeterministic, second parse, CL2(a)"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/scorer.json",
+      "tests": {
+        "failed": 3,
+        "passed": 164,
+        "total": 167
+      },
+      "why": "2 of 2 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "Plan v3 change log 2(b) reverted: S6 fires only when the engine also states a quantity.",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: severe: expected [ 'S3' ] to deeply equal [ 'S3', 'S6' ]",
+          "test": "outcomes v3 hand-calculated oracles > O72 S3, S6, C5b, CL2(b), package representation, overlap"
+        },
+        {
+          "message": "AssertionError: expected [ 'S3' ] to deeply equal [ 'S3', 'S6' ]",
+          "test": "plan v3 change log 2: both parses validated, S6 without a quantity, different throws > (b) S6 when the engine drops the package and states a mass unit with no quantity; (c) different thrown messages are nondeterministic"
+        }
+      ],
+      "file": "bench/outcomes.ts",
+      "id": "CL2b-revert-s6-needs-quantity",
+      "killedByIntended": [
+        "outcomes v3 hand-calculated oracles > O72 S3, S6, C5b, CL2(b), package representation, overlap"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/scorer.json",
+      "tests": {
+        "failed": 2,
+        "passed": 165,
+        "total": 167
+      },
+      "why": "1 of 1 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "Plan v3 change log 2(c) reverted: two thrown errors compare equal whatever their messages, so different messages are not nondeterministic.",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: ce.nondeterministic: expected false to be true // Object.is equality",
+          "test": "outcomes v3 hand-calculated oracles > O73 CE engine error, CE nondeterministic, CL2(c)"
+        },
+        {
+          "message": "AssertionError: expected 'throw' not to be 'throw' // Object.is equality",
+          "test": "engine plumbing > serializeParse compares canonical JSON (key order does not matter) or the thrown message"
+        },
+        {
+          "message": "AssertionError: expected { id: 'ing-h2-0001', …(18) } to match object { outcome: 'CE', severe: [], …(1) }",
+          "test": "plan v3 change log 2: both parses validated, S6 without a quantity, different throws > (b) S6 when the engine drops the package and states a mass unit with no quantity; (c) different thrown messages are nondeterministic"
+        }
+      ],
+      "file": "bench/outcomes.ts",
+      "id": "CL2c-revert-throws-compare-equal",
+      "killedByIntended": [
+        "outcomes v3 hand-calculated oracles > O73 CE engine error, CE nondeterministic, CL2(c)"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/scorer.json",
+      "tests": {
+        "failed": 3,
+        "passed": 164,
+        "total": 167
+      },
+      "why": "1 of 1 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "remaining-token name guard disabled: a name may keep a unit, multiplier, 'or' or stray letter while ready",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected false to be true // Object.is equality",
+          "test": "nameLeftoverGuard (remaining-token name guard) > flags x cup milk"
+        },
+        {
+          "message": "AssertionError: expected false to be true // Object.is equality",
+          "test": "nameLeftoverGuard (remaining-token name guard) > flags half-cup milk"
+        },
+        {
+          "message": "AssertionError: expected false to be true // Object.is equality",
+          "test": "nameLeftoverGuard (remaining-token name guard) > flags cups flour"
+        },
+        {
+          "message": "AssertionError: expected false to be true // Object.is equality",
+          "test": "nameLeftoverGuard (remaining-token name guard) > flags milk × 2"
+        },
+        {
+          "message": "AssertionError: expected false to be true // Object.is equality",
+          "test": "nameLeftoverGuard (remaining-token name guard) > flags m sausage"
+        },
+        {
+          "message": "AssertionError: expected false to be true // Object.is equality",
+          "test": "nameLeftoverGuard (remaining-token name guard) > flags whole milk or 2%"
+        },
+        {
+          "message": "AssertionError: expected false to be true // Object.is equality",
+          "test": "nameLeftoverGuard (remaining-token name guard) > flags tbsp sugar"
+        },
+        {
+          "message": "AssertionError: 1 cup x cup milk: expected 'ready' to be 'needs_review' // Object.is equality",
+          "test": "nameLeftoverGuard (remaining-token name guard) > a reading whose name keeps a left-over is never ready"
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/name.ts",
+      "id": "P-name-guard-off",
+      "killedByIntended": [
+        "nameLeftoverGuard (remaining-token name guard) > a reading whose name keeps a left-over is never ready"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 8,
+        "passed": 1186,
+        "total": 1194
+      },
+      "why": "1 of 2 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "§12.2 multiplier rule disabled ('1x cup milk' leaves 'x cup' in the name)",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected false to be true // Object.is equality",
+          "test": "multiplierAt (multiplier rule) > x before a unit, container or food after a count"
+        },
+        {
+          "message": "AssertionError: expected [ …(3) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0106 [A] coordinator:FH-SF1 \"1x cup milk\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0107 [A] coordinator:FH-SF1 \"1x can chickpeas\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0108 [A] coordinator:FH-SF1 \"2x cans chickpeas\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0109 [A] coordinator:FH-SF1 \"1 x can chickpeas\""
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/amount.ts",
+      "id": "P-multiplier-off",
+      "killedByIntended": [
+        "multiplierAt (multiplier rule) > x before a unit, container or food after a count",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0106 [A] coordinator:FH-SF1 \"1x cup milk\"",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0108 [A] coordinator:FH-SF1 \"2x cans chickpeas\"",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0109 [A] coordinator:FH-SF1 \"1 x can chickpeas\""
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 5,
+        "passed": 1189,
+        "total": 1194
+      },
+      "why": "4 of 4 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "§12.6 tolerance widened from 7 % to 13 % (accepts the contradictory '1 lb (14 oz)')",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0102 [A] coordinator:R3-S2-control \"1 lb (14 oz) ground beef\""
+        },
+        {
+          "message": "AssertionError: expected { n: 13n, d: 100n } to deeply equal { n: 7n, d: 100n }",
+          "test": "restatement tolerance (RESTATEMENT_TOLERANCE, sameAmount, roundedConversion) > is exactly 7/100, inclusive, against the first-stated amount"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "restatement tolerance (RESTATEMENT_TOLERANCE, sameAmount, roundedConversion) > same-dimension restatements"
+        },
+        {
+          "message": "AssertionError: expected [ 'equivalent_quantity_stated' ] to include 'quantity_unassigned'",
+          "test": "restatement tolerance (RESTATEMENT_TOLERANCE, sameAmount, roundedConversion) > 1/6 cup (3 tbsp) oil → needs review (§12.6 refined)"
+        },
+        {
+          "message": "AssertionError: expected [ 'equivalent_quantity_stated' ] to include 'quantity_unassigned'",
+          "test": "restatement tolerance (RESTATEMENT_TOLERANCE, sameAmount, roundedConversion) > 1 1/2 tbsp (4 tsp) oil → needs review (§12.6 refined)"
+        },
+        {
+          "message": "AssertionError: expected [ 'equivalent_quantity_stated' ] to include 'quantity_unassigned'",
+          "test": "restatement tolerance (RESTATEMENT_TOLERANCE, sameAmount, roundedConversion) > 500 g (1 lb) beef mince → needs review (§12.6 refined)"
+        },
+        {
+          "message": "AssertionError: expected [ 'equivalent_quantity_stated' ] to include 'quantity_unassigned'",
+          "test": "restatement tolerance (RESTATEMENT_TOLERANCE, sameAmount, roundedConversion) > 2 lb (1 kg) potatoes → needs review (§12.6 refined)"
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/amount.ts",
+      "id": "P-tolerance-widened",
+      "killedByIntended": [
+        "restatement tolerance (RESTATEMENT_TOLERANCE, sameAmount, roundedConversion) > is exactly 7/100, inclusive, against the first-stated amount",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0102 [A] coordinator:R3-S2-control \"1 lb (14 oz) ground beef\""
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 7,
+        "passed": 1187,
+        "total": 1194
+      },
+      "why": "2 of 2 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "§12.6 whole-unit rounding allowance removed ('1/2 tsp (2 ml)' becomes a second amount)",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected false to be true // Object.is equality",
+          "test": "restatement tolerance (RESTATEMENT_TOLERANCE, sameAmount, roundedConversion) > same-dimension restatements"
+        },
+        {
+          "message": "AssertionError: expected false to be true // Object.is equality",
+          "test": "restatement tolerance (RESTATEMENT_TOLERANCE, sameAmount, roundedConversion) > roundedConversion needs a whole restated number in ml or g (or lb for kg), smaller than the first unit"
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/amount.ts",
+      "id": "P-rounding-allowance-off",
+      "killedByIntended": [
+        "restatement tolerance (RESTATEMENT_TOLERANCE, sameAmount, roundedConversion) > roundedConversion needs a whole restated number in ml or g (or lb for kg), smaller than the first unit",
+        "restatement tolerance (RESTATEMENT_TOLERANCE, sameAmount, roundedConversion) > same-dimension restatements"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 2,
+        "passed": 1192,
+        "total": 1194
+      },
+      "why": "2 of 2 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "§12.7 option preservation broken: the last option's head is shared with every option (semantic-v1's 'kale chard')",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0016 [B] holdout-v2:ing-h2-0218 \"4 cups kale or Swiss chard (stems removed)\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0017 [B] holdout-v2:ing-h2-0219 \"1 tbsp maple syrup, honey, or agave\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0018 [B] holdout-v2:ing-h2-0220 \"1 (15 oz) can chickpeas or white beans, drained\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0028 [B] holdout-v1:ing-hold-0031 \"1 cup buttermilk or plain yogurt\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0066 [B] coordinator:R3-S1 \"1 lb ham or smoked turkey\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0067 [B] coordinator:R3-S1 \"1 lb sausage or ground beef\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0068 [B] coordinator:R3-S1 \"1 cup tea or apple juice\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0069 [B] coordinator:R3-S1 \"2 cups lettuce or mixed greens\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0070 [B] coordinator:R3-S1 \"1/2 cup Parmesan or Pecorino Romano\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0071 [B] coordinator:R3-S1 \"1 lb chicken or firm tofu\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0072 [B] coordinator:R3-S1 \"1/4 cup rum or orange juice\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0073 [B] coordinator:R3-S1 \"1 lb pasta or zucchini noodles\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0074 [B] coordinator:R3-S1 \"4 slices bacon or smoked ham\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0075 [B] coordinator:R3-S1 \"1 cup kale or Swiss chard\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0076 [B] coordinator:R3-S1 \"1 shallot or red onion\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0077 [B] coordinator:R3-S1 \"1 leek or yellow onion\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0078 [B] coordinator:R3-S1 \"1 cup peas or green beans\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0079 [B] coordinator:R3-S1 \"2 tbsp brandy or dry sherry\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0080 [B] coordinator:R3-S1 \"1 cup apples or ripe pears\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0082 [B] coordinator:R3-S1 \"1 cup spinach or baby kale\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0083 [B] coordinator:R3-S1 \"2 tbsp tahini or peanut butter\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0084 [B] coordinator:R3-S1 \"1 cup mayonnaise or Greek yogurt\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0085 [B] coordinator:R3-S1 \"1 tbsp sriracha or hot sauce\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0086 [B] coordinator:R3-S1 \"1 cup raisins or dried cranberries\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0088 [B] coordinator:R3-S1 \"1 lb shrimp or sea scallops\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0089 [B] coordinator:R3-S1 \"1 tsp oregano or Italian seasoning\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0090 [B] coordinator:R3-S1 \"1 cup quinoa or brown rice\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0091 [B] coordinator:R3-S1 \"1 tbsp capers or green olives\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0092 [B] coordinator:R3-S1 \"2 tbsp parsley or fresh cilantro\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0093 [B] coordinator:R3-S1 \"1 cup cream or whole milk\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0128 [B] coordinator:FH-SF4 \"2 cups spinach, kale, or chard\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0129 [B] coordinator:FH-SF4 \"1 tsp thyme, rosemary, or oregano\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0130 [B] coordinator:FH-SF4 \"2 tbsp butter, ghee, or oil\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0131 [B] coordinator:FH-SF4 \"1 lb chicken, pork, or tofu\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0132 [B] coordinator:FH-SF4 \"1 cup milk, cream, or half-and-half\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0133 [B] coordinator:FH-SF4 \"1 cup pecans, walnuts, or almonds\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0134 [B] coordinator:FH-SF4 \"1/2 cup raisins, cranberries or cherries\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0135 [B] coordinator:FH-SF4-control \"1 cup pecans or walnuts or almonds\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0149 [B] coordinator:R1-MEDIUM \"1 cup red, green, or yellow bell pepper\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0164 [B] candidate-review-r1:R1-HIGH \"2 tbsp fresh oregano or dried\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0257 [-] candidate-review-r1:R1-HIGH \"2 tsp fresh rosemary or dried\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0258 [-] candidate-review-r1:R1-HIGH \"1/4 cup fresh basil or dried\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0259 [-] candidate-review-r1:R1-HIGH \"1 tbsp fresh sage or dried\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0260 [-] candidate-review-r1:R1-HIGH \"2 cups fresh cherries or frozen\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0261 [-] candidate-review-r1:R1-HIGH \"1 lb fresh green beans or frozen\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0262 [-] candidate-review-r1:R1-HIGH \"1 tbsp dried dill or fresh\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0295 [B] candidate-review-r1:R1-MEDIUM \"1 cup red, yellow, or orange bell pepper, diced\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0298 [B] candidate-review-r1:R1-MEDIUM \"1 lb Yukon Gold potatoes or red\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0380 [B] candidate-review-r1-round2:R1R2-REPORTED \"2 chamomile or mint tea bags\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0384 [B] candidate-review-r1-round2:R1R2-REPORTED \"1 cup goat or sheep milk yogurt\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0531 [B] final-head-probe:probes.tsv:76 \"2 tbsp butter or olive oil\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0534 [B] final-head-probe:probes.tsv:79 \"1/2 cup pecans or walnuts, chopped\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0535 [B] final-head-probe:probes.tsv:80 \"1 lb ground turkey or chicken\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0536 [B] final-head-probe:probes.tsv:81 \"1 cup heavy cream or half-and-half\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0541 [B] final-head-probe:probes.tsv:86 \"1 cup mozzarella or provolone, shredded\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0543 [B] final-head-probe:probes.tsv:88 \"Fresh basil or parsley, for garnish\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0546 [B] final-head-probe:probes.tsv:91 \"2 cups arugula or baby spinach\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0547 [B] final-head-probe:probes.tsv:92 \"1/4 cup maple syrup or honey\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0549 [B] final-head-probe:probes.tsv:94 \"1 cup shredded cheddar or Monterey Jack\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0551 [B] final-head-probe:probes.tsv:96 \"1 lemon or lime\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0553 [B] final-head-probe:probes.tsv:98 \"1/2 cup sour cream or Greek yogurt\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0555 [B] final-head-probe:probes.tsv:100 \"1 tbsp chopped parsley or cilantro\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0556 [B] final-head-probe:probes.tsv:101 \"2 cups cooked rice or quinoa\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0914 [B] final-head-probe:probes.tsv:463 \"1 red or yellow bell pepper\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0919 [B] final-head-probe:probes.tsv:468 \"1 lb bacon or pancetta\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0929 [B] final-head-probe:probes.tsv:478 \"1 cup cilantro or flat-leaf parsley\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0930 [B] final-head-probe:probes.tsv:479 \"1 cup ricotta or cottage cheese\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0931 [B] final-head-probe:probes.tsv:480 \"1 tbsp sambal oelek or sriracha\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0932 [B] final-head-probe:probes.tsv:481 \"2 cups penne or rigatoni\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0933 [B] final-head-probe:probes.tsv:482 \"1 lb tilapia or other mild fish\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-1109 [B] final-head-probe:probes.tsv:666 \"1 cup milk/cream\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-1110 [B] final-head-probe:probes.tsv:667 \"2 tbsp butter/margarine\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-1113 [B] final-head-probe:probes.tsv:670 \"1 cup broth or water\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-1118 [B] final-head-probe:probes.tsv:675 \"1-2 tbsp honey or maple syrup\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-1119 [B] final-head-probe:probes.tsv:676 \"butter or oil, for greasing\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-1120 [B] final-head-probe:probes.tsv:677 \"1 lb fettuccine or linguine\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-1123 [B] final-head-probe:probes.tsv:680 \"1 cup Greek yogurt or sour cream, plus more for serving\""
+        },
+        {
+          "message": "AssertionError: expected [ 'kale chard', 'Swiss chard' ] to deeply equal [ 'kale', 'Swiss chard' ]",
+          "test": "shareOptions (option-preservation rule) > [\"kale\",\"Swiss chard\"] → [\"kale\",\"Swiss chard\"]"
+        },
+        {
+          "message": "AssertionError: expected [ 'ground beef turkey', 'turkey' ] to deeply equal [ 'ground beef', 'ground turkey' ]",
+          "test": "shareOptions (option-preservation rule) > [\"ground beef\",\"turkey\"] → [\"ground beef\",\"ground turkey\"]"
+        },
+        {
+          "message": "AssertionError: expected [ 'ground beef turkey', …(1) ] to deeply equal [ 'ground beef', 'smoked turkey' ]",
+          "test": "shareOptions (option-preservation rule) > [\"ground beef\",\"smoked turkey\"] → [\"ground beef\",\"smoked turkey\"]"
+        },
+        {
+          "message": "AssertionError: expected [ 'whole milk 2%', '2%' ] to deeply equal [ 'whole milk', '2% milk' ]",
+          "test": "shareOptions (option-preservation rule) > [\"whole milk\",\"2%\"] → [\"whole milk\",\"2% milk\"]"
+        },
+        {
+          "message": "AssertionError: expected [ 'feta cheese', 'goat cheese' ] to deeply equal [ 'feta', 'goat cheese' ]",
+          "test": "shareOptions (option-preservation rule) > [\"feta\",\"goat cheese\"] → [\"feta\",\"goat cheese\"]"
+        },
+        {
+          "message": "AssertionError: expected [ 'pecans almonds', …(2) ] to deeply equal [ 'pecans', 'walnuts', 'almonds' ]",
+          "test": "shareOptions (option-preservation rule) > [\"pecans\",\"walnuts\",\"almonds\"] → [\"pecans\",\"walnuts\",\"almonds\"]"
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/alternatives.ts",
+      "id": "P-invent-options",
+      "killedByIntended": [
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0075 [B] coordinator:R3-S1 \"1 cup kale or Swiss chard\"",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0016 [B] holdout-v2:ing-h2-0218 \"4 cups kale or Swiss chard (stems removed)\""
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 83,
+        "passed": 1111,
+        "total": 1194
+      },
+      "why": "2 of 3 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "§12.4 post-food count unit disabled ('2 celery ribs' → 2 each 'celery ribs')",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0003 [C] holdout-v2:ing-h2-0054 \"eight cardamom pods\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0005 [C] holdout-v2:ing-h2-0065 \"2 celery ribs, diced\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0006 [C] holdout-v2:ing-h2-0072 \"2 star anise pods\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0136 [C] coordinator:FH-SF3 \"4 lemon wedges\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0137 [C] coordinator:FH-SF3 \"2 cinnamon sticks\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0138 [C] coordinator:FH-SF3 \"2 bacon strips\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0139 [C] coordinator:FH-SF3 \"2 lettuce heads\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0147 [C] coordinator:FH-SF3-control \"3 garlic cloves\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0568 [C] final-head-probe:probes.tsv:113 \"4 (6-oz) salmon fillets\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0606 [C] final-head-probe:probes.tsv:151 \"6 garlic cloves, smashed\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0607 [C] final-head-probe:probes.tsv:153 \"2 thyme sprigs\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0608 [C] final-head-probe:probes.tsv:155 \"1 garlic bulb\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0609 [C] final-head-probe:probes.tsv:156 \"4 bacon slices\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0610 [C] final-head-probe:probes.tsv:157 \"2 celery stalks\""
+        },
+        {
+          "message": "AssertionError: expected null to be 'rib' // Object.is equality",
+          "test": "postFoodCountUnit (count-noun rule) > celery ribs → rib"
+        },
+        {
+          "message": "AssertionError: expected null to be 'wedge' // Object.is equality",
+          "test": "postFoodCountUnit (count-noun rule) > lemon wedges → wedge"
+        },
+        {
+          "message": "AssertionError: expected null to be 'stick' // Object.is equality",
+          "test": "postFoodCountUnit (count-noun rule) > cinnamon sticks → stick"
+        },
+        {
+          "message": "AssertionError: expected null to be 'pod' // Object.is equality",
+          "test": "postFoodCountUnit (count-noun rule) > cardamom pods → pod"
+        },
+        {
+          "message": "AssertionError: expected null to be 'clove' // Object.is equality",
+          "test": "postFoodCountUnit (count-noun rule) > garlic cloves → clove"
+        },
+        {
+          "message": "AssertionError: expected null to be 'bunch' // Object.is equality",
+          "test": "postFoodCountUnit (count-noun rule) > kale bunches → bunch"
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/name.ts",
+      "id": "P-count-noun-off",
+      "killedByIntended": [
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0005 [C] holdout-v2:ing-h2-0065 \"2 celery ribs, diced\"",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0136 [C] coordinator:FH-SF3 \"4 lemon wedges\"",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0003 [C] holdout-v2:ing-h2-0054 \"eight cardamom pods\""
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 20,
+        "passed": 1174,
+        "total": 1194
+      },
+      "why": "3 of 3 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "§12.4 product-identity exception removed ('2 fish sticks' → 2 stick 'fish')",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0141 [C] coordinator:FH-SF3-identity-control \"2 fish sticks\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0142 [C] coordinator:FH-SF3-identity-control \"4 mozzarella sticks\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0143 [C] coordinator:FH-SF3-identity-control \"3 bay leaves\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0445 [-] candidate-review-r1-round3:R1R3-NEW:C3 recognised-food abstentions = review burden \"2 beef plate ribs\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0604 [C] final-head-probe:probes.tsv:149 \"2 bay leaves\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0611 [C] final-head-probe:probes.tsv:159 \"4 kaffir lime leaves\""
+        },
+        {
+          "message": "AssertionError: expected 'stick' to be null",
+          "test": "postFoodCountUnit (count-noun rule) > fish sticks → none"
+        },
+        {
+          "message": "AssertionError: expected 'leaf' to be null",
+          "test": "postFoodCountUnit (count-noun rule) > bay leaves → none"
+        },
+        {
+          "message": "AssertionError: expected 'sheet' to be null",
+          "test": "postFoodCountUnit (count-noun rule) > lasagna sheets → none"
+        },
+        {
+          "message": "AssertionError: expected 'cube' to be null",
+          "test": "postFoodCountUnit (count-noun rule) > bouillon cubes → none"
+        },
+        {
+          "message": "AssertionError: expected 'rib' to be null",
+          "test": "postFoodCountUnit (count-noun rule) > short ribs → none"
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/name.ts",
+      "id": "P-identity-list-off",
+      "killedByIntended": [
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0141 [C] coordinator:FH-SF3-identity-control \"2 fish sticks\"",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0143 [C] coordinator:FH-SF3-identity-control \"3 bay leaves\"",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0611 [C] final-head-probe:probes.tsv:159 \"4 kaffir lime leaves\""
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 11,
+        "passed": 1183,
+        "total": 1194
+      },
+      "why": "3 of 3 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "§12.5 container-cup rule disabled ('3 (5.3 oz) cups yogurt' read as volume cups)",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected [ …(3) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0007 [C] holdout-v2:ing-h2-0087 \"3 (5.3 oz) cups vanilla Greek yogurt\""
+        },
+        {
+          "message": "AssertionError: expected false to be true // Object.is equality",
+          "test": "containerCup (container-cup rule) and PACKAGE_UNITS > a cup with a marked weight between count and unit is a container; a measuring cup is not"
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/amount.ts",
+      "id": "P-container-cup-off",
+      "killedByIntended": [
+        "containerCup (container-cup rule) and PACKAGE_UNITS > a cup with a marked weight between count and unit is a container; a measuring cup is not",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0007 [C] holdout-v2:ing-h2-0087 \"3 (5.3 oz) cups vanilla Greek yogurt\""
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 2,
+        "passed": 1192,
+        "total": 1194
+      },
+      "why": "2 of 2 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "§12.3 package units widened to fillets (per-piece weights become package sizes)",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0568 [C] final-head-probe:probes.tsv:113 \"4 (6-oz) salmon fillets\""
+        },
+        {
+          "message": "AssertionError: fillet: expected true to be false // Object.is equality",
+          "test": "containerCup (container-cup rule) and PACKAGE_UNITS > only packaging units plus block, loaf and ball take a package size"
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/amount.ts",
+      "id": "P-package-units-widened",
+      "killedByIntended": [
+        "containerCup (container-cup rule) and PACKAGE_UNITS > only packaging units plus block, loaf and ball take a package size",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0568 [C] final-head-probe:probes.tsv:113 \"4 (6-oz) salmon fillets\""
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 2,
+        "passed": 1192,
+        "total": 1194
+      },
+      "why": "2 of 2 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "§12.8 nutrition-fact rule removed (nutrient + mass read as an ingredient)",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected 'needs_review' to be 'unsupported' // Object.is equality",
+          "test": "exact rejections of recognised non-ingredient shapes (semantic-v2) > nutrition facts (nutrient label + mass): \"Vitamin C: 15 mg\" → unsupported, no amount"
+        },
+        {
+          "message": "AssertionError: expected 'ready' to be 'unsupported' // Object.is equality",
+          "test": "exact rejections of recognised non-ingredient shapes (semantic-v2) > nutrition facts (nutrient label + mass): \"Protein: 20 grams\" → unsupported, no amount"
+        },
+        {
+          "message": "AssertionError: expected 'ready' to be 'unsupported' // Object.is equality",
+          "test": "exact rejections of recognised non-ingredient shapes (semantic-v2) > nutrition facts (nutrient label + mass): \"Sat. fat: 3 g\" → unsupported, no amount"
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0049 [D] coordinator:K3 \"Protein: 20 grams\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0050 [D] coordinator:K3 \"Fat: 10 grams\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0051 [D] coordinator:K3 \"Sodium: 300 milligrams\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0052 [D] coordinator:K3 \"Carbohydrates: 30 grams\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0113 [D] coordinator:FH-SF2 \"Vitamin C: 15 mg\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0114 [D] coordinator:FH-SF2 \"Magnesium: 40 mg\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0116 [D] coordinator:FH-SF2 \"Caffeine: 95 mg\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0121 [D] coordinator:FH-SF2-control \"Protein: 20 g\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0122 [D] coordinator:FH-SF2-control \"Iron: 2 mg\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0174 [D] candidate-review-r1:R1-HIGH \"Sat. fat: 3 g\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0763 [D] final-head-probe:probes.tsv:312 \"Saturated fat: 3 g\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0943 [D] final-head-probe:probes.tsv:492 \"Carbs: 30g\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0944 [D] final-head-probe:probes.tsv:493 \"Net carbs: 5 grams\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0961 [D] final-head-probe:probes.tsv:510 \"Potassium: 400 milligrams\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-1030 [D] final-head-probe:probes.tsv:583 \"Calcium: 100 mg\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-1031 [D] final-head-probe:probes.tsv:584 \"Sugars: 5 g\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-1032 [D] final-head-probe:probes.tsv:585 \"Dietary Fiber: 3 g\""
+        },
+        {
+          "message": "AssertionError: expected [ …(3) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-1033 [D] final-head-probe:probes.tsv:586 \"Trans Fat: 0 g\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-1035 [D] final-head-probe:probes.tsv:588 \"Carbohydrates: 30 g\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-1038 [D] final-head-probe:probes.tsv:591 \"Added Sugars: 4 g\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-1039 [D] final-head-probe:probes.tsv:592 \"Monounsaturated Fat: 6 g\""
+        },
+        {
+          "message": "AssertionError: expected null to be 'not_an_ingredient' // Object.is equality",
+          "test": "product numbers, fraction units, remark amounts, foreign units > nonIngredientReason refuses shapes, not words"
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/classify.ts",
+      "id": "P-nutrition-off",
+      "killedByIntended": [
+        "product numbers, fraction units, remark amounts, foreign units > nonIngredientReason refuses shapes, not words",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0113 [D] coordinator:FH-SF2 \"Vitamin C: 15 mg\"",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0049 [D] coordinator:K3 \"Protein: 20 grams\"",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0116 [D] coordinator:FH-SF2 \"Caffeine: 95 mg\""
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 25,
+        "passed": 1169,
+        "total": 1194
+      },
+      "why": "4 of 4 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "§12.11 second amount in a remark ignored ('(from 1/3 cup dry)' left ready: suppressed ambiguity)",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0272 [-] candidate-review-r1:R1-HIGH \"2 tbsp lime juice (juice of 1 lime)\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0819 [-] final-head-probe:probes.tsv:368 \"2 tsp kosher salt (such as Diamond Crystal; use half for table salt)\""
+        },
+        {
+          "message": "AssertionError: expected false to be true // Object.is equality",
+          "test": "product numbers, fraction units, remark amounts, foreign units > remarkSecondAmount needs both an amount and a source, state or substitution marker"
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/remarks.ts",
+      "id": "P-remark-second-amount-off",
+      "killedByIntended": [
+        "product numbers, fraction units, remark amounts, foreign units > remarkSecondAmount needs both an amount and a source, state or substitution marker"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 3,
+        "passed": 1191,
+        "total": 1194
+      },
+      "why": "1 of 3 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "§12.14 non-US unit remark ignored ('1 pint milk (UK)' left ready)",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0104 [A] coordinator:R3-S3 \"1 pint milk (UK)\""
+        },
+        {
+          "message": "AssertionError: expected false to be true // Object.is equality",
+          "test": "product numbers, fraction units, remark amounts, foreign units > foreignSystemRemark: a non-US system named for a US volume"
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/amount.ts",
+      "id": "P-foreign-unit-off",
+      "killedByIntended": [
+        "product numbers, fraction units, remark amounts, foreign units > foreignSystemRemark: a non-US system named for a US volume",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0104 [A] coordinator:R3-S3 \"1 pint milk (UK)\""
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 2,
+        "passed": 1192,
+        "total": 1194
+      },
+      "why": "2 of 2 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "§12.1 fraction-unit compounds not read ('a half-cup milk' → 1 each 'half-cup milk')",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected [ …(3) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0029 [A] coordinator:K1 \"a half-cup milk\""
+        },
+        {
+          "message": "AssertionError: expected [ …(3) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0030 [A] coordinator:K1 \"a quarter-cup sugar\""
+        },
+        {
+          "message": "AssertionError: expected [ …(3) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0031 [A] coordinator:K1 \"a quarter-pound beef\""
+        },
+        {
+          "message": "AssertionError: expected [ …(3) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0032 [A] coordinator:K1 \"a half-pound ground beef\""
+        },
+        {
+          "message": "AssertionError: expected [ …(3) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0034 [A] coordinator:K1 \"a half-cup of milk\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0153 [A] candidate-review-r1:R1-HIGH \"2 half-pound strip steaks\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0304 [A] candidate-review-r1:R1-MEDIUM \"a half-inch piece fresh ginger\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-1007 [-] final-head-probe:probes.tsv:557 \"a half-gallon milk\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-1008 [-] final-head-probe:probes.tsv:558 \"a quarter-teaspoon salt\""
+        },
+        {
+          "message": "AssertionError: expected false to be true // Object.is equality",
+          "test": "nameLeftoverGuard (remaining-token name guard) > flags half-cup milk"
+        },
+        {
+          "message": "AssertionError: expected undefined to deeply equal { n: 1n, d: 2n }",
+          "test": "product numbers, fraction units, remark amounts, foreign units > fractionUnitWord reads only fraction + weight/volume unit compounds"
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/quantity.ts",
+      "id": "P-fraction-unit-off",
+      "killedByIntended": [
+        "product numbers, fraction units, remark amounts, foreign units > fractionUnitWord reads only fraction + weight/volume unit compounds",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0029 [A] coordinator:K1 \"a half-cup milk\"",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0031 [A] coordinator:K1 \"a quarter-pound beef\""
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 11,
+        "passed": 1183,
+        "total": 1194
+      },
+      "why": "3 of 3 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "§12.8 component-heading rule disabled ('SAUCE', 'Cake Layers' read as foods)",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected 'needs_review' to be 'unsupported' // Object.is equality",
+          "test": "exact rejections of recognised non-ingredient shapes (semantic-v2) > section headings (componentHeading): \"SAUCE\" → unsupported, no amount"
+        },
+        {
+          "message": "AssertionError: expected 'needs_review' to be 'unsupported' // Object.is equality",
+          "test": "exact rejections of recognised non-ingredient shapes (semantic-v2) > section headings (componentHeading): \"Cake Layers\" → unsupported, no amount"
+        },
+        {
+          "message": "AssertionError: expected 'needs_review' to be 'unsupported' // Object.is equality",
+          "test": "exact rejections of recognised non-ingredient shapes (semantic-v2) > section headings (componentHeading): \"Topping\" → unsupported, no amount"
+        },
+        {
+          "message": "AssertionError: expected null to be 'section_heading' // Object.is equality",
+          "test": "product numbers, fraction units, remark amounts, foreign units > nonIngredientReason refuses shapes, not words"
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/classify.ts",
+      "id": "P-heading-off",
+      "killedByIntended": [
+        "product numbers, fraction units, remark amounts, foreign units > nonIngredientReason refuses shapes, not words",
+        "exact rejections of recognised non-ingredient shapes (semantic-v2) > section headings (componentHeading): \"SAUCE\" → unsupported, no amount",
+        "exact rejections of recognised non-ingredient shapes (semantic-v2) > section headings (componentHeading): \"Cake Layers\" → unsupported, no amount"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 4,
+        "passed": 1190,
+        "total": 1194
+      },
+      "why": "3 of 3 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "§12.A A4 'A and B' after one amount read as one food again",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0165 [B] candidate-review-r1:R1-HIGH \"2 cups chopped celery and carrots\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0166 [B] candidate-review-r1:R1-HIGH \"1 cup onion and bell pepper, diced\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0167 [B] candidate-review-r1:R1-HIGH \"1/4 cup chopped parsley and mint\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0168 [B] candidate-review-r1:R1-HIGH \"2 cups strawberries and blueberries\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0263 [-] candidate-review-r1:R1-HIGH \"1/2 cup raisins and cranberries\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0264 [-] candidate-review-r1:R1-HIGH \"1 cup diced onion and celery\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0265 [-] candidate-review-r1:R1-HIGH \"2 tbsp butter and oil\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0266 [-] candidate-review-r1:R1-HIGH \"1 cup chopped carrots and parsnips\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0267 [-] candidate-review-r1:R1-HIGH \"4 cups broccoli and cauliflower florets\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0268 [-] candidate-review-r1:R1-HIGH \"1 lb shrimp and scallops\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0269 [-] candidate-review-r1:R1-HIGH \"2 cups spinach and kale\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0270 [-] candidate-review-r1:R1-HIGH \"1/4 cup sesame and flax seeds\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0271 [-] candidate-review-r1:R1-HIGH \"1 cup sliced peppers and onions\""
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/alternatives.ts",
+      "id": "P-and-list-off",
+      "killedByIntended": [
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0168 [B] candidate-review-r1:R1-HIGH \"2 cups strawberries and blueberries\"",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0167 [B] candidate-review-r1:R1-HIGH \"1/4 cup chopped parsley and mint\"",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0165 [B] candidate-review-r1:R1-HIGH \"2 cups chopped celery and carrots\""
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 13,
+        "passed": 1181,
+        "total": 1194
+      },
+      "why": "3 of 3 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "§12.A A1 count word that begins a product name taken as the unit again ('2 strip steaks' → 2 strip)",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0153 [A] candidate-review-r1:R1-HIGH \"2 half-pound strip steaks\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0169 [C] candidate-review-r1:R1-HIGH \"2 strip steaks\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0170 [C] candidate-review-r1:R1-HIGH \"4 cube steaks\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0171 [C] candidate-review-r1:R1-HIGH \"2 sheet cakes\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0238 [-] candidate-review-r1:R1-HIGH \"4 rib eye steaks\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0239 [-] candidate-review-r1:R1-HIGH \"4 strip loin steaks\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0240 [-] candidate-review-r1:R1-HIGH \"2 wedge salads\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0353 [C] candidate-review-r1-round2:R1R2-HIGH \"6 drop biscuits\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0354 [C] candidate-review-r1-round2:R1R2-HIGH \"12 drop cookies\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0355 [C] candidate-review-r1-round2:R1R2-HIGH \"4 sprinkle donuts\""
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/amount.ts",
+      "id": "P-count-word-name-off",
+      "killedByIntended": [
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0169 [C] candidate-review-r1:R1-HIGH \"2 strip steaks\"",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0170 [C] candidate-review-r1:R1-HIGH \"4 cube steaks\"",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0171 [C] candidate-review-r1:R1-HIGH \"2 sheet cakes\""
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 10,
+        "passed": 1184,
+        "total": 1194
+      },
+      "why": "3 of 3 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "§12.9 can-size designation not recognised ('1 #10 can' read with the designation as an amount)",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0151 [A] coordinator:R1-MEDIUM \"1 (No. 2) can corn\""
+        },
+        {
+          "message": "AssertionError: expected [ …(3) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0299 [A] candidate-review-r1:R1-MEDIUM \"1 #10 can diced tomatoes\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0300 [A] candidate-review-r1:R1-MEDIUM \"2 No. 303 cans cut green beans\""
+        },
+        {
+          "message": "AssertionError: expected [ …(3) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0391 [A] candidate-review-r1-round2:R1R2-REPORTED \"1 #2½ can pumpkin purée\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0392 [A] candidate-review-r1-round2:R1R2-REPORTED \"2 No. 2 1/2 cans apricots\""
+        },
+        {
+          "message": "AssertionError: expected [ …(2) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0393 [A] candidate-review-r1-round2:R1R2-REPORTED \"1 large (#2) can crushed pineapple\""
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/amount.ts",
+      "id": "P-can-designation-off",
+      "killedByIntended": [
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0299 [A] candidate-review-r1:R1-MEDIUM \"1 #10 can diced tomatoes\"",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0300 [A] candidate-review-r1:R1-MEDIUM \"2 No. 303 cans cut green beans\""
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 6,
+        "passed": 1188,
+        "total": 1194
+      },
+      "why": "2 of 2 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "§12.14 unknown measure words not recognised ('1 gill single cream' ready with the measure in the name)",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0241 [-] candidate-review-r1:R1-HIGH \"1 coffee cup plain flour\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0242 [-] candidate-review-r1:R1-HIGH \"1 wine glass red wine\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0244 [-] candidate-review-r1:R1-HIGH \"1 bowl cooked rice\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0248 [-] candidate-review-r1:R1-HIGH \"1 chunk fresh ginger\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0249 [-] candidate-review-r1:R1-HIGH \"1 slab tofu\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0252 [-] candidate-review-r1:R1-HIGH \"1 stone potatoes\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0337 [A] candidate-review-r1-round2:R1R2-HIGH \"2 squirts lemon juice\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0347 [A] candidate-review-r1-round2:R1R2-HIGH \"1 shake paprika\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0349 [A] candidate-review-r1-round2:R1R2-HIGH \"1 knuckle ginger\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0350 [A] candidate-review-r1-round2:R1R2-HIGH \"2 clusters grapes\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0419 [A] candidate-review-r1-round3:R1R3-NEW:HIGH lines, firm \"1 square baking chocolate\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0420 [A] candidate-review-r1-round3:R1R3-NEW:HIGH lines, firm \"1 bouquet flat-leaf parsley\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0421 [A] candidate-review-r1-round3:R1R3-NEW:HIGH lines, firm \"1 spritz lime juice\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0425 [A] candidate-review-r1-round3:R1R3-NEW:HIGH lines, firm \"1 casserole dish baked ziti\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0427 [A] candidate-review-r1-round3:R1R3-NEW:HIGH lines, firm \"1 kettle boiling water\""
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/amount.ts",
+      "id": "P-unknown-measure-off",
+      "killedByIntended": [
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0241 [-] candidate-review-r1:R1-HIGH \"1 coffee cup plain flour\"",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0244 [-] candidate-review-r1:R1-HIGH \"1 bowl cooked rice\"",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0337 [A] candidate-review-r1-round2:R1R2-HIGH \"2 squirts lemon juice\"",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0347 [A] candidate-review-r1-round2:R1R2-HIGH \"1 shake paprika\""
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 15,
+        "passed": 1179,
+        "total": 1194
+      },
+      "why": "4 of 4 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "§12.A A3 remark measuring the source of an extracted part ignored ('(about 1 lemon)' left ready)",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0154 [A] candidate-review-r1:R1-HIGH \"3 tablespoons lemon juice (about 1 lemon)\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0273 [-] candidate-review-r1:R1-HIGH \"3 tbsp orange juice (1 orange)\""
+        },
+        {
+          "message": "AssertionError: expected false to be true // Object.is equality",
+          "test": "product numbers, fraction units, remark amounts, foreign units > remarkMeasuresAnother: an amount remark measuring something other than the named food as prepared"
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/remarks.ts",
+      "id": "P-remark-source-off",
+      "killedByIntended": [
+        "product numbers, fraction units, remark amounts, foreign units > remarkMeasuresAnother: an amount remark measuring something other than the named food as prepared",
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0154 [A] candidate-review-r1:R1-HIGH \"3 tablespoons lemon juice (about 1 lemon)\""
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 3,
+        "passed": 1191,
+        "total": 1194
+      },
+      "why": "2 of 2 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "§12.8 equipment shape disabled (counted kitchen tools read as food)",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected 'needs_review' to be 'unsupported' // Object.is equality",
+          "test": "exact rejections of recognised non-ingredient shapes (semantic-v2) > equipment (equipmentShape): \"1 rolling pin\" → unsupported, no amount"
+        },
+        {
+          "message": "AssertionError: expected 'needs_review' to be 'unsupported' // Object.is equality",
+          "test": "exact rejections of recognised non-ingredient shapes (semantic-v2) > equipment (equipmentShape): \"1 roll kitchen twine\" → unsupported, no amount"
+        },
+        {
+          "message": "AssertionError: expected 'ready' to be 'unsupported' // Object.is equality",
+          "test": "exact rejections of recognised non-ingredient shapes (semantic-v2) > equipment (equipmentShape): \"6 popsicle sticks\" → unsupported, no amount"
+        },
+        {
+          "message": "AssertionError: expected 'needs_review' to be 'unsupported' // Object.is equality",
+          "test": "exact rejections of recognised non-ingredient shapes (semantic-v2) > equipment (equipmentShape): \"1 box toothpicks\" → unsupported, no amount"
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0064 [D] coordinator:K4 \"You will need: 2 baking sheets\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0182 [D] candidate-review-r1:R1-HIGH \"6 popsicle sticks\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0200 [D] candidate-review-r1:R1-HIGH \"6 lollipop sticks\""
+        },
+        {
+          "message": "AssertionError: expected [ …(3) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0212 [-] candidate-review-r1:R1-HIGH \"1 mortar and pestle\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0403 [D] candidate-review-r1-round3:R1R3-NEW:HIGH lines, firm \"1 fish slice\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0406 [D] candidate-review-r1-round3:R1R3-NEW:HIGH lines, firm \"1 lobster cracker\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0407 [D] candidate-review-r1-round3:R1R3-NEW:HIGH lines, firm \"2 crab crackers\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0408 [D] candidate-review-r1-round3:R1R3-NEW:HIGH lines, firm \"1 bag hickory wood chips\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0409 [D] candidate-review-r1-round3:R1R3-NEW:HIGH lines, firm \"1 bag mesquite chips\""
+        },
+        {
+          "message": "AssertionError: expected [ …(3) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0449 [D] candidate-review-r1-round3:R1R3-NEW:Other C8 \"4 pint jars\""
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/classify.ts",
+      "id": "P-equipment-off",
+      "killedByIntended": [
+        "exact rejections of recognised non-ingredient shapes (semantic-v2) > equipment (equipmentShape): \"1 rolling pin\" → unsupported, no amount",
+        "exact rejections of recognised non-ingredient shapes (semantic-v2) > equipment (equipmentShape): \"6 popsicle sticks\" → unsupported, no amount"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 14,
+        "passed": 1180,
+        "total": 1194
+      },
+      "why": "2 of 4 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "§12.8 one-line nutrition panel read as an ingredient (invented amount)",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected 'needs_review' to be 'unsupported' // Object.is equality",
+          "test": "exact rejections of recognised non-ingredient shapes (semantic-v2) > one-line nutrition panels (nutritionPanel): \"Calories: 412kcal | Carbohydrates: 52g | Protein: 18g\" → unsupported, no amount"
+        },
+        {
+          "message": "AssertionError: expected 'needs_review' to be 'unsupported' // Object.is equality",
+          "test": "exact rejections of recognised non-ingredient shapes (semantic-v2) > one-line nutrition panels (nutritionPanel): \"Calories 250 | Fat 10g | Carbs 30g\" → unsupported, no amount"
+        },
+        {
+          "message": "AssertionError: expected 'needs_review' to be 'unsupported' // Object.is equality",
+          "test": "exact rejections of recognised non-ingredient shapes (semantic-v2) > one-line nutrition panels (nutritionPanel): \"Protein 20g • Fat 9g • Carbs 41g\" → unsupported, no amount"
+        },
+        {
+          "message": "AssertionError: expected 'needs_review' to be 'unsupported' // Object.is equality",
+          "test": "exact rejections of recognised non-ingredient shapes (semantic-v2) > one-line nutrition panels (nutritionPanel): \"Calories: 320; Protein: 12 g; Fat: 8 g\" → unsupported, no amount"
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/classify.ts",
+      "id": "P-nutrition-panel-off",
+      "killedByIntended": [
+        "exact rejections of recognised non-ingredient shapes (semantic-v2) > one-line nutrition panels (nutritionPanel): \"Calories: 412kcal | Carbohydrates: 52g | Protein: 18g\" → unsupported, no amount",
+        "exact rejections of recognised non-ingredient shapes (semantic-v2) > one-line nutrition panels (nutritionPanel): \"Calories 250 | Fat 10g | Carbs 30g\" → unsupported, no amount"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 4,
+        "passed": 1190,
+        "total": 1194
+      },
+      "why": "2 of 2 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": true,
+      "description": "recognised-food requirement disabled: every counted line counts as a recognised food (unknown heads and unknown leading words read ready)",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0305 [D] candidate-review-r1-round2:R1R2-HIGH \"1 splatter guard\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0306 [D] candidate-review-r1-round2:R1R2-HIGH \"1 dough hook\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0307 [D] candidate-review-r1-round2:R1R2-HIGH \"1 popover tin\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0308 [D] candidate-review-r1-round2:R1R2-HIGH \"1 pizza wheel\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0310 [D] candidate-review-r1-round2:R1R2-HIGH \"1 double boiler\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0311 [D] candidate-review-r1-round2:R1R2-HIGH \"1 bain-marie\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0312 [D] candidate-review-r1-round2:R1R2-HIGH \"1 comal\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0313 [D] candidate-review-r1-round2:R1R2-HIGH \"1 molcajete\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0314 [D] candidate-review-r1-round2:R1R2-HIGH \"1 chinois\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0316 [D] candidate-review-r1-round2:R1R2-HIGH \"1 banneton\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0317 [D] candidate-review-r1-round2:R1R2-HIGH \"1 cake dome\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0318 [D] candidate-review-r1-round2:R1R2-HIGH \"1 bag pie weights\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0319 [D] candidate-review-r1-round2:R1R2-HIGH \"1 box cling film\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0320 [D] candidate-review-r1-round2:R1R2-HIGH \"1 decorating comb\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0321 [D] candidate-review-r1-round2:R1R2-HIGH \"1 cake leveler\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0322 [D] candidate-review-r1-round2:R1R2-HIGH \"1 turntable\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0323 [D] candidate-review-r1-round2:R1R2-HIGH \"6 cocktail umbrellas\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0324 [D] candidate-review-r1-round2:R1R2-HIGH \"12 paper straws\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0325 [D] candidate-review-r1-round2:R1R2-HIGH \"1 nut milk bag\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0326 [D] candidate-review-r1-round2:R1R2-HIGH \"1 muslin cloth\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0327 [D] candidate-review-r1-round2:R1R2-HIGH \"1 apron\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0328 [D] candidate-review-r1-round2:R1R2-HIGH \"1 popcorn popper\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0329 [D] candidate-review-r1-round2:R1R2-HIGH \"1 corkscrew\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0330 [D] candidate-review-r1-round2:R1R2-HIGH \"1 dough docker\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0331 [D] candidate-review-r1-round2:R1R2-HIGH \"1 fondue set\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0332 [D] candidate-review-r1-round2:R1R2-HIGH \"1 pastry wheel\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0333 [D] candidate-review-r1-round2:R1R2-HIGH \"1 3-quart saucier\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0334 [D] candidate-review-r1-round2:R1R2-HIGH \"1 oil mister\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0335 [D] candidate-review-r1-round2:R1R2-HIGH \"1 bread lame\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0346 [A] candidate-review-r1-round2:R1R2-HIGH \"1 cake fresh yeast\""
+        },
+        {
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0351 [A] candidate-review-r1-round2:R1R2-HIGH \"1 tub-load ice\""
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0410 [D] candidate-review-r1-round3:R1R3-NEW:HIGH lines, firm \"1 banana hanger\""
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > comal → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > dough hook → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > cocktail umbrellas → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > popcorn popper → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > apron → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > xyzzy → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > zorbles → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > burrito bowl → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > mixing bowls → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > piping tips → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > zorble chicken thighs → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > tot dark rum → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > twig rosemary → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > glugs olive oil → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > BUNCH black beans → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > Bunch black beans → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > SPRIG chicken thighs → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > cake fresh yeast → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > swirl heavy cream → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > bar dark chocolate → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > drop boneless chicken thighs → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > tidbits → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > slab → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > egg cup → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > tea ball → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > crumpet ring → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > bacon rack → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > banana hanger → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > Sunbeam mixer → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > mixer → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > Glad wrap → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > Reynolds Wrap → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > Sips dark rum → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > pot chili → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > shaker salt → not recognised"
+        },
+        {
+          "message": "AssertionError: expected true to be false // Object.is equality",
+          "test": "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > a capitalised word is accepted as a proper name or brand before a food head, a lower-case unknown word is not"
+        },
+        {
+          "message": "AssertionError: expected { raw: '1 comal', …(15) } to match object { status: 'needs_review', …(5) }",
+          "test": "a counted line whose food is not recognised: needs_review, no amount, the text after the number kept (Decision 1, owner rule 1) > 1 comal → needs_review, name pre-fill \"comal\""
+        },
+        {
+          "message": "AssertionError: expected { raw: '1 xyzzy', …(15) } to match object { status: 'needs_review', …(5) }",
+          "test": "a counted line whose food is not recognised: needs_review, no amount, the text after the number kept (Decision 1, owner rule 1) > 1 xyzzy → needs_review, name pre-fill \"xyzzy\""
+        },
+        {
+          "message": "AssertionError: expected { raw: '2 blorps', …(15) } to match object { status: 'needs_review', …(5) }",
+          "test": "a counted line whose food is not recognised: needs_review, no amount, the text after the number kept (Decision 1, owner rule 1) > 2 blorps → needs_review, name pre-fill \"blorps\""
+        },
+        {
+          "message": "AssertionError: expected { …(16) } to match object { status: 'needs_review', …(5) }",
+          "test": "a counted line whose food is not recognised: needs_review, no amount, the text after the number kept (Decision 1, owner rule 1) > 3 zorbleberry chicken thighs → needs_review, name pre-fill \"zorbleberry chicken thighs\""
+        },
+        {
+          "message": "AssertionError: expected { raw: '4 slices zorble pork', …(15) } to match object { status: 'needs_review', …(5) }",
+          "test": "a counted line whose food is not recognised: needs_review, no amount, the text after the number kept (Decision 1, owner rule 1) > 4 slices zorble pork → needs_review, name pre-fill \"slices zorble pork\""
+        },
+        {
+          "message": "AssertionError: expected { raw: '1 bag zorble mix', …(15) } to match object { status: 'needs_review', …(5) }",
+          "test": "a counted line whose food is not recognised: needs_review, no amount, the text after the number kept (Decision 1, owner rule 1) > 1 bag zorble mix → needs_review, name pre-fill \"bag zorble mix\""
+        },
+        {
+          "message": "AssertionError: expected { …(16) } to match object { status: 'needs_review', …(5) }",
+          "test": "a counted line whose food is not recognised: needs_review, no amount, the text after the number kept (Decision 1, owner rule 1) > 2 large zorbles, seasoned → needs_review, name pre-fill \"large zorbles\""
+        },
+        {
+          "message": "AssertionError: expected { raw: '1 (4 oz) bar zorble', …(15) } to match object { status: 'needs_review', …(5) }",
+          "test": "a counted line whose food is not recognised: needs_review, no amount, the text after the number kept (Decision 1, owner rule 1) > 1 (4 oz) bar zorble → needs_review, name pre-fill \"bar zorble\""
+        },
+        {
+          "message": "AssertionError: expected { raw: '2 pinch zorble', …(15) } to match object { status: 'needs_review', …(5) }",
+          "test": "a counted line whose food is not recognised: needs_review, no amount, the text after the number kept (Decision 1, owner rule 1) > 2 pinch zorble → needs_review, name pre-fill \"pinch zorble\""
+        },
+        {
+          "message": "AssertionError: expected 'large; seasoned' to be 'seasoned' // Object.is equality",
+          "test": "a counted line whose food is not recognised: needs_review, no amount, the text after the number kept (Decision 1, owner rule 1) > a remark after a comma and a package size no longer read stay in the note"
+        },
+        {
+          "message": "AssertionError: expected { raw: '1 cake fresh yeast', …(15) } to match object { status: 'needs_review', …(5) }",
+          "test": "a known food after an unresolved measure word never inherits a count (owner rule 2) > 1 cake fresh yeast → needs_review, no quantity or unit"
+        },
+        {
+          "message": "AssertionError: expected { raw: '1 cookie tray', …(15) } to match object { status: 'needs_review', …(5) }",
+          "test": "equipment and food that share a word (owner rule 3) > a serving piece after a food word, or a sure equipment shape whose words name a generic food, goes to a person"
+        },
+        {
+          "message": "AssertionError: expected [ …(3) ] to deeply equal []",
+          "test": "the plain and overlap data: expected readings, never unsupported, rarely sent to a person for an unrecognised food > plain-food-lines.jsonl: every line reads as expected (status, name, quantity, unit); 0 unsupported; recognition reviews at most 0.5%"
+        },
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "the plain and overlap data: expected readings, never unsupported, rarely sent to a person for an unrecognised food > overlap-food-lines.jsonl: every line reads as expected (status, name, quantity, unit); 0 unsupported; recognition reviews at most 3%"
+        },
+        {
+          "message": "AssertionError: expected { status: 'ready', …(3) } to deeply equal { status: 'ready', …(3) }",
+          "test": "R1 round 2: A5, A6, H8′ and the listed regressions > A5 negative controls: a sloppy plural of a measure stays the unit; mass and volume words are excluded"
+        },
+        {
+          "message": "AssertionError: expected { raw: '2 Zorble Apples', …(15) } to match object { status: 'needs_review', …(5) }",
+          "test": "R1 round 3, item 1: the word right after a count > a Title Case line carries no brand signal; elsewhere a capitalised name before a food is a brand or variety"
+        },
+        {
+          "message": "AssertionError: expected 'ready' not to be 'ready' // Object.is equality",
+          "test": "R1 round 3, items 2–3: equipment look-alikes and the trailing multiplier > 1 banana hanger → never a ready food with an amount"
+        },
+        {
+          "message": "AssertionError: expected 'ready' not to be 'ready' // Object.is equality",
+          "test": "R1 round 3, items 2–3: equipment look-alikes and the trailing multiplier > 1 box Reynolds Wrap → never a ready food with an amount"
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/foods.ts",
+      "id": "P-food-head-off",
+      "killedByIntended": [
+        "recognisedFoodHead (named safeguard): the head is a food and every word before it is recognised > a capitalised word is accepted as a proper name or brand before a food head, a lower-case unknown word is not"
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 86,
+        "passed": 1300,
+        "total": 1386
+      },
+      "why": "1 of 2 intended test(s) failed by assertion for the intended reason"
+    },
+    {
+      "asExpected": false,
+      "description": "gerund measures accepted as modifiers again ('1 helping mashed potatoes' read with a count)",
+      "expect": "KILLED",
+      "failed": [],
+      "file": "src/ingredient/semantic-v2/foods.ts",
+      "id": "P-measure-gerund-off",
+      "killedByIntended": [],
+      "result": "SURVIVED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 0,
+        "passed": 1114,
+        "total": 1114
+      },
+      "why": "all 1114 tests passed"
+    },
+    {
+      "asExpected": true,
+      "description": "a food homograph after a capitalised brand read as food again ('1 Big Green Egg' ready)",
+      "expect": "KILLED",
+      "failed": [
+        {
+          "message": "AssertionError: expected [ …(4) ] to deeply equal []",
+          "test": "exposed regressions 2B — semantic-v2 (required) > rx2b-0399 [D] candidate-review-r1-round3:R1R3-NEW:HIGH lines, firm \"1 Big Green Egg\""
+        }
+      ],
+      "file": "src/ingredient/semantic-v2/foods.ts",
+      "id": "P-homograph-off",
+      "killedByIntended": [
+        "exposed regressions 2B — semantic-v2 (required) > rx2b-0399 [D] candidate-review-r1-round3:R1R3-NEW:HIGH lines, firm \"1 Big Green Egg\""
+      ],
+      "result": "KILLED",
+      "spec": "tools/mutation/specs/parser.json",
+      "tests": {
+        "failed": 1,
+        "passed": 1113,
+        "total": 1114
+      },
+      "why": "1 of 2 intended test(s) failed by assertion for the intended reason"
+    }
+  ],
+  "specs": [
+    {
+      "description": "Controls for the runner itself: a no-op SURVIVES; a syntax break, a missing anchor, an ambiguous anchor, a filter that runs no test, and an unknown killer name are ERROR (setup failure is never a kill); a real fault whose listed killer does not fail, or fails for another reason, is KILLED-UNEXPECTED; the same fault with its real killer is KILLED.",
+      "file": "tools/mutation/specs/selftest.json",
+      "owner": "scorer worker (Phase 2B, Worker B) — runner self-test",
+      "sha256": "4a7f46a2edadca65d8a20f8b7685cda60280bff2455537f3138cf1e06c53d138"
+    },
+    {
+      "description": "Scorer mutations for outcomes v3 (bench/outcomes.ts): each reverts one part of SCORE-01 or SCORE-02 to the outcomes v2 behaviour and must be KILLED by the named oracle or regression tests, by an assertion, for the stated reason.",
+      "file": "tools/mutation/specs/scorer.json",
+      "owner": "scorer worker (Phase 2B, Worker B)",
+      "sha256": "5111d8e412f709c9e28a5ca5825cc81b35be05eb74579f1baaceb3ae98f39adc"
+    },
+    {
+      "description": "Parser mutations for the candidate semantic-v2: each disables or weakens one named safeguard and must be KILLED by an assertion in its direct test or in the required regression harness, for the stated reason.",
+      "file": "tools/mutation/specs/parser.json",
+      "owner": "coordinator (Phase 2B)",
+      "sha256": "5e44d198002f4d11abca8bc8368871cbb6f1dc380fcf0dcf1d9e9564a99b3cf5"
+    }
+  ],
+  "summary": {
+    "ERROR": 6,
+    "KILLED": 35,
+    "KILLED-UNEXPECTED": 2,
+    "SURVIVED": 2,
+    "asExpected": 44,
+    "total": 45
+  }
+}

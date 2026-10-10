@@ -1,0 +1,301 @@
+{
+  "format": "recipe-extraction-mutations/v1",
+  "owner": "scorer worker (Phase 2B, Worker B)",
+  "description": "Scorer mutations for outcomes v3 (bench/outcomes.ts): each reverts one part of SCORE-01 or SCORE-02 to the outcomes v2 behaviour and must be KILLED by the named oracle or regression tests, by an assertion, for the stated reason.",
+  "mutations": [
+    {
+      "id": "SCORE-01-revert-tag-heuristic",
+      "description": "SCORE-01 reverted: the bare no-amount needs_review lines are selected by category tag (only quantity_missing / seasoning_ordinary / seasoning_lookalike), as v2's isBareFoodNeedsReview did, instead of by label (quantity, unit and alternatives all null).",
+      "file": "bench/outcomes.ts",
+      "find": "export const isBareNoAmountLabel = (c: IngredientCase) => c.expect.status === \"needs_review\" && c.expect.quantity === null && c.expect.unit === null && c.expect.alternatives.length === 0;",
+      "replace": "export const isBareNoAmountLabel = (c: IngredientCase) => c.expect.status === \"needs_review\" && c.categories.length > 0 && c.categories.every((t) => ([\"quantity_missing\", \"seasoning_ordinary\", \"seasoning_lookalike\"] as string[]).includes(t));",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts",
+        "bench/__tests__/outcome-controls.test.ts",
+        "bench/__tests__/outcomes.test.ts"
+      ],
+      "killedBy": [
+        {
+          "test": "outcomes v3 hand-calculated oracles > O43 C5c, bare no-amount, SCORE-01 tag/label difference",
+          "reason": "^AssertionError: bareNoAmount: expected false to be true"
+        },
+        {
+          "test": "SCORE-01: sensitivity 3(b) — needs_review labels with no amount > repair: v3 selects exactly the 29 label-defined lines (listed), by label alone, and reports 29 excluded / 40 kept",
+          "reason": "^AssertionError: expected \\[ .* to deeply equal \\["
+        },
+        {
+          "test": "SCORE-01: sensitivity 3(b) — needs_review labels with no amount > repair: the definition does not depend on tags — retagging a label changes nothing, giving it a unit does",
+          "reason": "^AssertionError: expected false to be true"
+        },
+        {
+          "test": "saboteurs trip their class or code on exactly the lines they touch > sensitivity (SCORE-01): needs_review figures leave out exactly the needs_review labels with quantity, unit and alternatives all null",
+          "reason": "^AssertionError: (dev|holdout|holdout2): expected \\["
+        }
+      ],
+      "expect": "KILLED"
+    },
+    {
+      "id": "SCORE-02-revert-s-codes-on-ce",
+      "description": "SCORE-02 reverted (SF-6): S codes are skipped only when the engine threw (v2's guard), so an invalid or nondeterministic CE line gets S codes again.",
+      "file": "bench/outcomes.ts",
+      "find": "  // Semantic accuracy (dimension 4) only for a valid, deterministic, non-error output (SCORE-02).\n  if (!ce) {",
+      "replace": "  // Semantic accuracy (dimension 4) only for a valid, deterministic, non-error output (SCORE-02).\n  if (validity.engineError === null) {",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts",
+        "bench/__tests__/outcome-controls.test.ts",
+        "bench/__tests__/outcomes.test.ts"
+      ],
+      "killedBy": [
+        {
+          "test": "outcomes v3 hand-calculated oracles > O52 CE invalid output, SF-6",
+          "reason": "^AssertionError: severe: expected \\[ 'S1' \\] to deeply equal \\[\\]"
+        },
+        {
+          "test": "outcomes v3 hand-calculated oracles > O53 CE invalid output, N-2",
+          "reason": "^AssertionError: severe: expected \\[ 'S4' \\] to deeply equal \\[\\]"
+        },
+        {
+          "test": "outcomes v3 hand-calculated oracles > O55 CE invalid output",
+          "reason": "^AssertionError: severe: expected \\[ 'S2' \\] to deeply equal \\[\\]"
+        },
+        {
+          "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction (SF-6): v2 gives a CE line with a status outside the contract an S code; v3 gives none",
+          "reason": "^AssertionError: expected .* to match object"
+        },
+        {
+          "test": "saboteurs trip their class or code on exactly the lines they touch > CE: an invalid output (ready, no amount, no amountUnstated) is CE with no S code on exactly those lines; A6 not met",
+          "reason": "^AssertionError: S2: expected \\["
+        }
+      ],
+      "expect": "KILLED"
+    },
+    {
+      "id": "SCORE-02-revert-status-string-validity",
+      "description": "SCORE-02 reverted (N-2): validity is judged by the status string only — the contract validator is not run, so an invalid output with a contract status is classified and scored.",
+      "file": "bench/outcomes.ts",
+      "find": "const problemsOf = (p: Parse): string[] => (p.ok ? validateParsedIngredientV1(p.output) : []);",
+      "replace": "const problemsOf = (p: Parse): string[] => (p.ok && !READ_STATUSES.includes(String((p.output as { status?: unknown } | null)?.status)) ? [\"status outside the contract\"] : []);",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts",
+        "bench/__tests__/outcome-controls.test.ts",
+        "bench/__tests__/outcomes.test.ts"
+      ],
+      "killedBy": [
+        {
+          "test": "outcomes v3 hand-calculated oracles > O53 CE invalid output, N-2",
+          "reason": "^AssertionError: outcome: expected 'C2' to be 'CE'"
+        },
+        {
+          "test": "outcomes v3 hand-calculated oracles > O56 CE invalid output",
+          "reason": "^AssertionError: outcome: expected 'C1' to be 'CE'"
+        },
+        {
+          "test": "outcomes v3 hand-calculated oracles > O58 CE invalid output",
+          "reason": "^AssertionError: outcome: expected 'C3' to be 'CE'"
+        },
+        {
+          "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > reproduction (N-2): v2 judges validity by the status string, so an invalid output with a contract status is scored; v3 runs the validator",
+          "reason": "^AssertionError: expected .* to match object"
+        },
+        {
+          "test": "saboteurs trip their class or code on exactly the lines they touch > CE: an invalid output (ready, no amount, no amountUnstated) is CE with no S code on exactly those lines; A6 not met",
+          "reason": "^AssertionError: expected \\[\\] to deeply equal \\["
+        }
+      ],
+      "expect": "KILLED"
+    },
+    {
+      "id": "SCORE-02-revert-no-nondeterminism-check",
+      "description": "SCORE-02 reverted: the two parses are not compared (v2 parsed each line once), so a nondeterministic engine is scored as if deterministic.",
+      "file": "bench/outcomes.ts",
+      "find": "nondeterministic: serializeParse(o.first) !== serializeParse(o.second) };",
+      "replace": "nondeterministic: false };",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts",
+        "bench/__tests__/outcome-controls.test.ts",
+        "bench/__tests__/outcomes.test.ts"
+      ],
+      "killedBy": [
+        {
+          "test": "outcomes v3 hand-calculated oracles > O59 CE nondeterministic",
+          "reason": "^AssertionError: outcome: expected 'C1' to be 'CE'"
+        },
+        {
+          "test": "outcomes v3 hand-calculated oracles > O60 CE nondeterministic, CE engine error",
+          "reason": "^AssertionError: ce.nondeterministic: expected false to be true"
+        },
+        {
+          "test": "saboteurs trip their class or code on exactly the lines they touch > CE: a nondeterministic engine (the second parse differs) is CE (nondeterministic dimension) on exactly those lines; A6 not met",
+          "reason": "^AssertionError: expected \\[\\] to deeply equal \\["
+        }
+      ],
+      "expect": "KILLED"
+    },
+    {
+      "id": "SCORE-02-revert-a6-outside-scorer",
+      "description": "SCORE-02 reverted for A6: the status is again 'checked outside the scorer' whatever the CE count, instead of being computed from the validity, error and determinism dimensions.",
+      "file": "bench/outcomes.ts",
+      "find": "      status: a6 ? \"scorer checks met; rest checked outside the scorer\" : \"not met\",",
+      "replace": "      status: \"checked outside the scorer\",",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts",
+        "bench/__tests__/outcome-controls.test.ts",
+        "bench/__tests__/outcomes.test.ts"
+      ],
+      "killedBy": [
+        {
+          "test": "saboteurs trip their class or code on exactly the lines they touch > CE: an invalid output (ready, no amount, no amountUnstated) is CE with no S code on exactly those lines; A6 not met",
+          "reason": "^AssertionError: expected 'checked outside the scorer' to be 'not met'"
+        },
+        {
+          "test": "SCORE-02: CE from validity, engine error and nondeterminism; no S code on CE > repair: A6 is computed from the dimensions — v2 recorded it outside the scorer even with an invalid output; v3 says not met",
+          "reason": "^AssertionError: expected .* to match object"
+        },
+        {
+          "test": "acceptance statuses (§6) > A2 needs every field; A3/A4 need zero counts; A5 is the point estimate ≤ 10 %; A6 needs CE = 0 in the scorer; A7 is outside the scorer",
+          "reason": "^AssertionError: expected 'checked outside the scorer' to be 'scorer checks met"
+        }
+      ],
+      "expect": "KILLED"
+    },
+    {
+      "id": "SCORE-02-revert-ce-field-accuracy",
+      "description": "SCORE-02 reverted for A2: a CE line's fields count as accurate when they match (an invalid output is coerced into field accuracy).",
+      "file": "bench/outcomes.ts",
+      "find": "    fields: ce\n",
+      "replace": "    fields: false\n",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts",
+        "bench/__tests__/outcome-controls.test.ts",
+        "bench/__tests__/outcomes.test.ts"
+      ],
+      "killedBy": [
+        {
+          "test": "outcome classes (§4) > CE: an engine error, an output that fails the contract validator, or two different parses (never C1, no S code)",
+          "reason": "^AssertionError: expected \\{ name: .* to deeply equal \\{ name:"
+        }
+      ],
+      "expect": "KILLED"
+    },
+    {
+      "id": "SENS-c-uses-debatable-flag",
+      "description": "Sensitivity (c) reads the wrong frozen flag: it leaves out the debatable cases instead of the cases that rely on a §12 new reading.",
+      "file": "bench/outcomes.ts",
+      "find": "(x) => x.metadata?.reliesOnNewReading === true)",
+      "replace": "(x) => x.metadata?.debatable === true)",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts",
+        "bench/__tests__/outcome-controls.test.ts",
+        "bench/__tests__/outcomes.test.ts",
+        "bench/__tests__/holdout3.test.ts"
+      ],
+      "killedBy": [
+        {
+          "test": "holdout-v3 sensitivity figures from frozen case data: (a) debatable, (c) new readings, (d) exposure audit > hand-calculated on four lines (R = r1, r2, r3; r2 is C2 high with S7)",
+          "reason": "^AssertionError: \\(c\\): expected \\[ \\[ 'ing-h3-0001' \\], 3 \\] to deeply equal"
+        },
+        {
+          "test": "holdout-v3 case metadata and the data-driven sensitivity figures > hand-calculated: (a) drops the debatable case, (c) the new-reading case, (d) is absent without an audit file",
+          "reason": "^AssertionError: expected \\[ \\[ 'ing-h3-0003' \\], 5 \\] to deeply equal \\[ \\[ 'ing-h3-0006' \\], 5 \\]"
+        }
+      ],
+      "expect": "KILLED"
+    },
+    {
+      "id": "SENS-d-ignores-audit-ids",
+      "description": "Sensitivity (d) ignores the exposure audit's matched ids (excludes nothing).",
+      "file": "bench/outcomes.ts",
+      "find": "SENSITIVITY_DEFINITIONS.exposureAudit, (x) => matched.has(x.id))",
+      "replace": "SENSITIVITY_DEFINITIONS.exposureAudit, (x) => false)",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts",
+        "bench/__tests__/outcome-controls.test.ts",
+        "bench/__tests__/outcomes.test.ts",
+        "bench/__tests__/holdout3.test.ts"
+      ],
+      "killedBy": [
+        {
+          "test": "holdout-v3 sensitivity figures from frozen case data: (a) debatable, (c) new readings, (d) exposure audit > hand-calculated on four lines (R = r1, r2, r3; r2 is C2 high with S7)",
+          "reason": "^AssertionError: \\(d\\): expected \\[ \\[\\], 4, 2, 'exact'"
+        },
+        {
+          "test": "holdout-v3 case metadata and the data-driven sensitivity figures > hand-calculated: (d) drops exactly the audit's matched ids; the figure names the audit",
+          "reason": "^AssertionError: expected \\[ \\[\\], 6, 2,"
+        }
+      ],
+      "expect": "KILLED"
+    },
+    {
+      "id": "CL2a-revert-first-parse-only",
+      "description": "Plan v3 change log 2(a) reverted: only the first parse is validated, so an invalid second output does not make the line invalid.",
+      "file": "bench/outcomes.ts",
+      "find": "  const second = problemsOf(o.second);",
+      "replace": "  const second: string[] = [];",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts",
+        "bench/__tests__/outcome-controls.test.ts",
+        "bench/__tests__/outcomes.test.ts"
+      ],
+      "killedBy": [
+        {
+          "test": "outcomes v3 hand-calculated oracles > P04 CE invalid output, CE nondeterministic, second parse, CL2(a)",
+          "reason": "^AssertionError: ce.invalid: expected false to be true"
+        },
+        {
+          "test": "outcomes v3 hand-calculated oracles > O74 CE invalid output, CE nondeterministic, second parse, CL2(a)",
+          "reason": "^AssertionError: ce.invalid: expected false to be true"
+        }
+      ],
+      "expect": "KILLED"
+    },
+    {
+      "id": "CL2b-revert-s6-needs-quantity",
+      "description": "Plan v3 change log 2(b) reverted: S6 fires only when the engine also states a quantity.",
+      "file": "bench/outcomes.ts",
+      "find": "    if (c.expect.packageSize !== null && !present(g.packageSize)) {",
+      "replace": "    if (c.expect.packageSize !== null && !present(g.packageSize) && present(g.quantity)) {",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts",
+        "bench/__tests__/outcome-controls.test.ts",
+        "bench/__tests__/outcomes.test.ts"
+      ],
+      "killedBy": [
+        {
+          "test": "outcomes v3 hand-calculated oracles > O72 S3, S6, C5b, CL2(b), package representation, overlap",
+          "reason": "^AssertionError: severe: expected \\[ 'S3' \\] to deeply equal \\[ 'S3', 'S6' \\]"
+        }
+      ],
+      "expect": "KILLED"
+    },
+    {
+      "id": "CL2c-revert-throws-compare-equal",
+      "description": "Plan v3 change log 2(c) reverted: two thrown errors compare equal whatever their messages, so different messages are not nondeterministic.",
+      "file": "bench/outcomes.ts",
+      "find": "  if (!p.ok) return `throw ${JSON.stringify(p.error)}`;",
+      "replace": "  if (!p.ok) return \"throw\";",
+      "tests": [
+        "bench/__tests__/oracles-v3.test.ts",
+        "bench/__tests__/scorer-v3.test.ts",
+        "bench/__tests__/outcome-controls.test.ts",
+        "bench/__tests__/outcomes.test.ts"
+      ],
+      "killedBy": [
+        {
+          "test": "outcomes v3 hand-calculated oracles > O73 CE engine error, CE nondeterministic, CL2(c)",
+          "reason": "^AssertionError: ce.nondeterministic: expected false to be true"
+        }
+      ],
+      "expect": "KILLED"
+    }
+  ]
+}

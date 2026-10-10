@@ -1,0 +1,344 @@
+
+## semantic-v1 — all holdout-v2 (359 lines)
+{
+ "set": "holdout2",
+ "criteria": [
+  {
+   "id": "A1",
+   "criterion": "C1 on R ≥ 98 %",
+   "rule": "met on the point estimate; met with confidence only if the Wilson lower bound ≥ 98 %",
+   "status": "not met",
+   "evidence": {
+    "C1": {
+     "num": 254,
+     "den": 271,
+     "rate": 0.9373,
+     "ci95": [
+      0.9018,
+      0.9605
+     ]
+    }
+   }
+  },
+  {
+   "id": "A2",
+   "criterion": "name, quantity and unit field accuracy on R each ≥ 98 %",
+   "rule": "as A1, for each field (accepted name matches)",
+   "status": "not met",
+   "evidence": {
+    "name": {
+     "num": 260,
+     "den": 271,
+     "rate": 0.9594,
+     "ci95": [
+      0.9288,
+      0.9772
+     ]
+    },
+    "quantity": {
+     "num": 266,
+     "den": 271,
+     "rate": 0.9815,
+     "ci95": [
+      0.9575,
+      0.9921
+     ]
+    },
+    "unit": {
+     "num": 265,
+     "den": 271,
+     "rate": 0.9779,
+     "ci95": [
+      0.9525,
+      0.9898
+     ]
+    }
+   }
+  },
+  {
+   "id": "A3",
+   "criterion": "high-severity false certainty = 0",
+   "rule": "count of C2 lines with high severity, on all lines",
+   "status": "not met",
+   "evidence": {
+    "C2High": {
+     "num": 5,
+     "den": 359,
+     "rate": 0.0139,
+     "ci95": [
+      0.006,
+      0.0322
+     ]
+    }
+   }
+  },
+  {
+   "id": "A4",
+   "criterion": "S1 = 0, S3 = 0, S4 = 0, S5 = 0, S6 = 0",
+   "rule": "on all lines",
+   "status": "not met",
+   "evidence": {
+    "S1": {
+     "num": 0,
+     "den": 359,
+     "rate": 0,
+     "ci95": [
+      0,
+      0.0106
+     ]
+    },
+    "S3": {
+     "num": 1,
+     "den": 359,
+     "rate": 0.0028,
+     "ci95": [
+      0.0005,
+      0.0156
+     ]
+    },
+    "S4": {
+     "num": 2,
+     "den": 359,
+     "rate": 0.0056,
+     "ci95": [
+      0.0015,
+      0.0201
+     ]
+    },
+    "S5": {
+     "num": 1,
+     "den": 359,
+     "rate": 0.0028,
+     "ci95": [
+      0.0005,
+      0.0156
+     ]
+    },
+    "S6": {
+     "num": 1,
+     "den": 359,
+     "rate": 0.0028,
+     "ci95": [
+      0.0005,
+      0.0156
+     ]
+    }
+   }
+  },
+  {
+   "id": "A5",
+   "criterion": "C3 + C4 on R ≤ 10 %",
+   "rule": "point estimate",
+   "status": "met",
+   "evidence": {
+    "C3plusC4": {
+     "num": 13,
+     "den": 271,
+     "rate": 0.048,
+     "ci95": [
+      0.0282,
+      0.0803
+     ]
+    }
+   }
+  },
+  {
+   "id": "A6",
+   "criterion": "legacy engines, frozen-baseline snapshot and parity tests unchanged and passing; contract validator passes on every output; reports byte-deterministic",
+   "rule": "recorded by the coordinator",
+   "status": "checked outside the scorer",
+   "evidence": {
+    "CE": {
+     "num": 0,
+     "den": 359,
+     "rate": 0,
+     "ci95": [
+      0,
+      0.0106
+     ]
+    }
+   }
+  },
+  {
+   "id": "A7",
+   "criterion": "the pesto regression (ing-dev-0001, tests/characterization/pesto.test.ts) passes as a normal test",
+   "rule": "recorded by the coordinator",
+   "status": "checked outside the scorer",
+   "evidence": {}
+  }
+ ],
+ "a1ToA5Met": false
+}
+
+## semantic-v1 — holdout-v2 without the 12 audit-matched lines (347 lines)
+{
+ "set": "holdout2",
+ "criteria": [
+  {
+   "id": "A1",
+   "criterion": "C1 on R ≥ 98 %",
+   "rule": "met on the point estimate; met with confidence only if the Wilson lower bound ≥ 98 %",
+   "status": "not met",
+   "evidence": {
+    "C1": {
+     "num": 250,
+     "den": 266,
+     "rate": 0.9398,
+     "ci95": [
+      0.9045,
+      0.9626
+     ]
+    }
+   }
+  },
+  {
+   "id": "A2",
+   "criterion": "name, quantity and unit field accuracy on R each ≥ 98 %",
+   "rule": "as A1, for each field (accepted name matches)",
+   "status": "not met",
+   "evidence": {
+    "name": {
+     "num": 255,
+     "den": 266,
+     "rate": 0.9586,
+     "ci95": [
+      0.9275,
+      0.9768
+     ]
+    },
+    "quantity": {
+     "num": 262,
+     "den": 266,
+     "rate": 0.985,
+     "ci95": [
+      0.962,
+      0.9941
+     ]
+    },
+    "unit": {
+     "num": 260,
+     "den": 266,
+     "rate": 0.9774,
+     "ci95": [
+      0.9517,
+      0.9896
+     ]
+    }
+   }
+  },
+  {
+   "id": "A3",
+   "criterion": "high-severity false certainty = 0",
+   "rule": "count of C2 lines with high severity, on all lines",
+   "status": "not met",
+   "evidence": {
+    "C2High": {
+     "num": 5,
+     "den": 347,
+     "rate": 0.0144,
+     "ci95": [
+      0.0062,
+      0.0333
+     ]
+    }
+   }
+  },
+  {
+   "id": "A4",
+   "criterion": "S1 = 0, S3 = 0, S4 = 0, S5 = 0, S6 = 0",
+   "rule": "on all lines",
+   "status": "not met",
+   "evidence": {
+    "S1": {
+     "num": 0,
+     "den": 347,
+     "rate": 0,
+     "ci95": [
+      0,
+      0.0109
+     ]
+    },
+    "S3": {
+     "num": 1,
+     "den": 347,
+     "rate": 0.0029,
+     "ci95": [
+      0.0005,
+      0.0161
+     ]
+    },
+    "S4": {
+     "num": 2,
+     "den": 347,
+     "rate": 0.0058,
+     "ci95": [
+      0.0016,
+      0.0208
+     ]
+    },
+    "S5": {
+     "num": 1,
+     "den": 347,
+     "rate": 0.0029,
+     "ci95": [
+      0.0005,
+      0.0161
+     ]
+    },
+    "S6": {
+     "num": 1,
+     "den": 347,
+     "rate": 0.0029,
+     "ci95": [
+      0.0005,
+      0.0161
+     ]
+    }
+   }
+  },
+  {
+   "id": "A5",
+   "criterion": "C3 + C4 on R ≤ 10 %",
+   "rule": "point estimate",
+   "status": "met",
+   "evidence": {
+    "C3plusC4": {
+     "num": 12,
+     "den": 266,
+     "rate": 0.0451,
+     "ci95": [
+      0.026,
+      0.0772
+     ]
+    }
+   }
+  },
+  {
+   "id": "A6",
+   "criterion": "legacy engines, frozen-baseline snapshot and parity tests unchanged and passing; contract validator passes on every output; reports byte-deterministic",
+   "rule": "recorded by the coordinator",
+   "status": "checked outside the scorer",
+   "evidence": {
+    "CE": {
+     "num": 0,
+     "den": 347,
+     "rate": 0,
+     "ci95": [
+      0,
+      0.0109
+     ]
+    }
+   }
+  },
+  {
+   "id": "A7",
+   "criterion": "the pesto regression (ing-dev-0001, tests/characterization/pesto.test.ts) passes as a normal test",
+   "rule": "recorded by the coordinator",
+   "status": "checked outside the scorer",
+   "evidence": {}
+  }
+ ],
+ "a1ToA5Met": false
+}
+
+excluded ids: ing-h2-0061, ing-h2-0211, ing-h2-0214, ing-h2-0247, ing-h2-0284, ing-h2-0295, ing-h2-0296, ing-h2-0302, ing-h2-0311, ing-h2-0326, ing-h2-0328, ing-h2-0349

@@ -1,0 +1,65 @@
+{
+ "engine": "semantic-v1",
+ "file": "holdout.jsonl",
+ "N": 128,
+ "R": 104,
+ "A": 18,
+ "U": 6,
+ "invalidOutputs": 0,
+ "safetyNetUsed": 0,
+ "C1": 103,
+ "C2": 0,
+ "C2high": 0,
+ "C2medium": 0,
+ "C3": 1,
+ "C4": 0,
+ "C3sub": {
+  "a": 0,
+  "b": 1,
+  "c": 0,
+  "x": 0
+ },
+ "C5": 18,
+ "C5sub": {
+  "a": 17,
+  "b": 1,
+  "c": 0,
+  "x": 0
+ },
+ "C6": [],
+ "C7": 6,
+ "C8": [],
+ "S": {
+  "S1": [],
+  "S2": [],
+  "S3": [],
+  "S4": [],
+  "S5": [],
+  "S6": [],
+  "S7": [],
+  "S8": []
+ },
+ "linesWithSevere": 0,
+ "fieldOnR": {
+  "name": 103,
+  "qty": 104,
+  "unit": 104
+ },
+ "bySource": {
+  "synthetic_pattern": {
+   "R": 0,
+   "C1": 0
+  },
+  "repo_test_input": {
+   "R": 0,
+   "C1": 0
+  }
+ },
+ "C2ids": [],
+ "C3C4ids": [
+  "ing-hold-0021 C3b [] 1 1/3 cups chicken stock (homemade (or low-sodium boxed))"
+ ],
+ "C5b": [
+  "ing-hold-0031 1 cup buttermilk or plain yogurt"
+ ]
+}

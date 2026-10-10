@@ -1,0 +1,5 @@
+commit 56eafe471c23147c181fc254c8022e03b2f1adf1
+porcelain-lines 1
+2026-10-09T22:53:51Z
+holdout-v2 sha256 793507a4b7360fb7a99dad69519fbe337ad97b3c41ad102d0db8b46f6ee6617f
+run: npm run bench -- --split every --pages --out-json benchmark-report.json --out-md benchmark-report.md (all registered engines)

@@ -1,0 +1,285 @@
+{"line": "1 leg of lamb", "status": "ready", "name": "leg of lamb", "quantity": "1", "unit": "each"}
+{"line": "1 boneless leg of lamb", "status": "ready", "name": "boneless leg of lamb", "quantity": "1", "unit": "each"}
+{"line": "1 rack of lamb", "status": "ready", "name": "rack of lamb", "quantity": "1", "unit": "each"}
+{"line": "2 racks of lamb", "status": "ready", "name": "racks of lamb", "quantity": "2", "unit": "each"}
+{"line": "1 rack of lamb, frenched", "status": "ready", "name": "rack of lamb", "quantity": "1", "unit": "each"}
+{"line": "12 finger sandwiches", "status": "ready", "name": "finger sandwiches", "quantity": "12", "unit": "each"}
+{"line": "3 stone crab claws", "status": "ready", "name": "stone crab claws", "quantity": "3", "unit": "each"}
+{"line": "2 slab pies", "status": "ready", "name": "slab pies", "quantity": "2", "unit": "each"}
+{"line": "1 chicken pot pie", "status": "ready", "name": "chicken pot pie", "quantity": "1", "unit": "each"}
+{"line": "4 bread bowls", "status": "ready", "name": "bread bowls", "quantity": "4", "unit": "each"}
+{"line": "4 tortilla bowls", "status": "ready", "name": "tortilla bowls", "quantity": "4", "unit": "each"}
+{"line": "12 wonton cups", "status": "ready", "name": "wonton cups", "quantity": "12", "unit": "each"}
+{"line": "6 lettuce cups", "status": "ready", "name": "lettuce cups", "quantity": "6", "unit": "each"}
+{"line": "8 phyllo cups", "status": "ready", "name": "phyllo cups", "quantity": "8", "unit": "each"}
+{"line": "2 rolls, split", "status": "ready", "name": "rolls", "quantity": "2", "unit": "each"}
+{"line": "1 lb short plate", "status": "ready", "name": "short plate", "quantity": "1", "unit": "lb"}
+{"line": "4 Italian grinders", "status": "ready", "name": "Italian grinders", "quantity": "4", "unit": "each"}
+{"line": "2 pot roasts", "status": "ready", "name": "pot roasts", "quantity": "2", "unit": "each"}
+{"line": "1 beef pot roast", "status": "ready", "name": "beef pot roast", "quantity": "1", "unit": "each"}
+{"line": "1 pan pizza", "status": "ready", "name": "pan pizza", "quantity": "1", "unit": "each"}
+{"line": "2 deep-dish pan pizzas", "status": "ready", "name": "deep-dish pan pizzas", "quantity": "2", "unit": "each"}
+{"line": "1 skillet cornbread", "status": "ready", "name": "skillet cornbread", "quantity": "1", "unit": "each"}
+{"line": "1 sheet-pan dinner", "status": "ready", "name": "sheet-pan dinner", "quantity": "1", "unit": "each"}
+{"line": "2 cup noodles", "status": "ready", "name": "noodles", "quantity": "2", "unit": "cup"}
+{"line": "6 tea bags", "status": "ready", "name": "tea bags", "quantity": "6", "unit": "each"}
+{"line": "2 green tea bags", "status": "ready", "name": "green tea bags", "quantity": "2", "unit": "each"}
+{"line": "10 rice paper wrappers", "status": "ready", "name": "rice paper wrappers", "quantity": "10", "unit": "each"}
+{"line": "1 pie crust", "status": "ready", "name": "pie crust", "quantity": "1", "unit": "each"}
+{"line": "2 refrigerated pie crusts", "status": "ready", "name": "refrigerated pie crusts", "quantity": "2", "unit": "each"}
+{"line": "12 tart shells", "status": "ready", "name": "tart shells", "quantity": "12", "unit": "each"}
+{"line": "1 pound cake", "status": "ready", "name": "cake", "quantity": "1", "unit": "lb"}
+{"line": "2 pound cakes", "status": "ready", "name": "cakes", "quantity": "2", "unit": "lb"}
+{"line": "1 sheet cake", "status": "ready", "name": "cake", "quantity": "1", "unit": "sheet"}
+{"line": "2 sheet cakes", "status": "ready", "name": "sheet cakes", "quantity": "2", "unit": "each"}
+{"line": "8 drop biscuits", "status": "ready", "name": "drop biscuits", "quantity": "8", "unit": "each"}
+{"line": "12 drop cookies", "status": "ready", "name": "drop cookies", "quantity": "12", "unit": "each"}
+{"line": "1 bag stick pretzels", "status": "ready", "name": "stick pretzels", "quantity": "1", "unit": "bag"}
+{"line": "12 link sausages", "status": "ready", "name": "link sausages", "quantity": "12", "unit": "each"}
+{"line": "4 cube steaks", "status": "ready", "name": "cube steaks", "quantity": "4", "unit": "each"}
+{"line": "2 strip steaks", "status": "ready", "name": "strip steaks", "quantity": "2", "unit": "each"}
+{"line": "4 wedge salads", "status": "ready", "name": "wedge salads", "quantity": "4", "unit": "each"}
+{"line": "1 Dutch baby", "status": "ready", "name": "Dutch baby", "quantity": "1", "unit": "each"}
+{"line": "4 mason jar salads", "status": "ready", "name": "mason jar salads", "quantity": "4", "unit": "each"}
+{"line": "6 popsicles", "status": "ready", "name": "popsicles", "quantity": "6", "unit": "each"}
+{"line": "6 muffin tops", "status": "ready", "name": "muffin tops", "quantity": "6", "unit": "each"}
+{"line": "4 pudding cups", "status": "ready", "name": "pudding cups", "quantity": "4", "unit": "each"}
+{"line": "2 jelly rolls", "status": "ready", "name": "jelly rolls", "quantity": "2", "unit": "each"}
+{"line": "1 bundt cake", "status": "ready", "name": "bundt cake", "quantity": "1", "unit": "each"}
+{"line": "24 ladyfingers", "status": "ready", "name": "ladyfingers", "quantity": "24", "unit": "each"}
+{"line": "12 cake pops", "status": "ready", "name": "cake pops", "quantity": "12", "unit": "each"}
+{"line": "4 sprinkle donuts", "status": "ready", "name": "sprinkle donuts", "quantity": "4", "unit": "each"}
+{"line": "6 pot stickers", "status": "ready", "name": "pot stickers", "quantity": "6", "unit": "each"}
+{"line": "24 potstickers", "status": "ready", "name": "potstickers", "quantity": "24", "unit": "each"}
+{"line": "2 pan dulce", "status": "ready", "name": "pan dulce", "quantity": "2", "unit": "each"}
+{"line": "6 conchas", "status": "ready", "name": "conchas", "quantity": "6", "unit": "each"}
+{"line": "1 spoon bread", "status": "ready", "name": "spoon bread", "quantity": "1", "unit": "each"}
+{"line": "1 skillet cookie", "status": "ready", "name": "skillet cookie", "quantity": "1", "unit": "each"}
+{"line": "2 tin roof sundaes", "status": "needs_review", "name": "tin roof sundaes", "quantity": null, "unit": null}
+{"line": "1 bag kettle corn", "status": "ready", "name": "kettle corn", "quantity": "1", "unit": "bag"}
+{"line": "1 bag kettle chips", "status": "ready", "name": "kettle chips", "quantity": "1", "unit": "bag"}
+{"line": "12 pinwheels", "status": "ready", "name": "pinwheels", "quantity": "12", "unit": "each"}
+{"line": "24 pinwheel cookies", "status": "ready", "name": "pinwheel cookies", "quantity": "24", "unit": "each"}
+{"line": "6 cheese straws", "status": "ready", "name": "cheese straws", "quantity": "6", "unit": "each"}
+{"line": "1 bag cheese straws", "status": "ready", "name": "cheese straws", "quantity": "1", "unit": "bag"}
+{"line": "12 shrimp cocktail", "status": "ready", "name": "shrimp cocktail", "quantity": "12", "unit": "each"}
+{"line": "1 head cheese", "status": "ready", "name": "cheese", "quantity": "1", "unit": "head"}
+{"line": "2 heads garlic", "status": "ready", "name": "garlic", "quantity": "2", "unit": "head"}
+{"line": "1 heart of romaine", "status": "ready", "name": "heart of romaine", "quantity": "1", "unit": "each"}
+{"line": "2 hearts of romaine", "status": "ready", "name": "hearts of romaine", "quantity": "2", "unit": "each"}
+{"line": "1 can hearts of palm", "status": "ready", "name": "hearts of palm", "quantity": "1", "unit": "can"}
+{"line": "4 ears corn", "status": "ready", "name": "corn", "quantity": "4", "unit": "ear"}
+{"line": "2 corn on the cob", "status": "ready", "name": "corn on the cob", "quantity": "2", "unit": "each"}
+{"line": "6 corn cobs", "status": "ready", "name": "corn cobs", "quantity": "6", "unit": "each"}
+{"line": "1 bulb fennel", "status": "ready", "name": "fennel", "quantity": "1", "unit": "bulb"}
+{"line": "1 bunch radishes", "status": "ready", "name": "radishes", "quantity": "1", "unit": "bunch"}
+{"line": "2 cloves garlic", "status": "ready", "name": "garlic", "quantity": "2", "unit": "clove"}
+{"line": "6 button mushrooms", "status": "ready", "name": "button mushrooms", "quantity": "6", "unit": "each"}
+{"line": "1 wheel brie", "status": "needs_review", "name": "brie", "quantity": null, "unit": null}
+{"line": "1 cheese wheel", "status": "ready", "name": "cheese wheel", "quantity": "1", "unit": "each"}
+{"line": "1 box wagon wheels", "status": "ready", "name": "wagon wheels", "quantity": "1", "unit": "box"}
+{"line": "1 log goat cheese", "status": "needs_review", "name": "goat cheese", "quantity": null, "unit": null}
+{"line": "4 egg rolls", "status": "ready", "name": "egg rolls", "quantity": "4", "unit": "each"}
+{"line": "12 spring rolls", "status": "ready", "name": "spring rolls", "quantity": "12", "unit": "each"}
+{"line": "6 summer rolls", "status": "ready", "name": "summer rolls", "quantity": "6", "unit": "each"}
+{"line": "2 Swiss rolls", "status": "ready", "name": "Swiss rolls", "quantity": "2", "unit": "each"}
+{"line": "6 cinnamon rolls", "status": "ready", "name": "cinnamon rolls", "quantity": "6", "unit": "each"}
+{"line": "12 dinner rolls", "status": "ready", "name": "dinner rolls", "quantity": "12", "unit": "each"}
+{"line": "8 crescent rolls", "status": "ready", "name": "crescent rolls", "quantity": "8", "unit": "each"}
+{"line": "6 kaiser rolls", "status": "ready", "name": "kaiser rolls", "quantity": "6", "unit": "each"}
+{"line": "4 sushi rolls", "status": "ready", "name": "sushi rolls", "quantity": "4", "unit": "each"}
+{"line": "2 California rolls", "status": "ready", "name": "California rolls", "quantity": "2", "unit": "each"}
+{"line": "6 sausage rolls", "status": "ready", "name": "sausage rolls", "quantity": "6", "unit": "each"}
+{"line": "4 lobster rolls", "status": "ready", "name": "lobster rolls", "quantity": "4", "unit": "each"}
+{"line": "2 cabbage rolls", "status": "ready", "name": "cabbage rolls", "quantity": "2", "unit": "each"}
+{"line": "1 tube cookie dough", "status": "ready", "name": "cookie dough", "quantity": "1", "unit": "tube"}
+{"line": "1 tube polenta", "status": "ready", "name": "polenta", "quantity": "1", "unit": "tube"}
+{"line": "1 tube tomato paste", "status": "ready", "name": "tomato paste", "quantity": "1", "unit": "tube"}
+{"line": "1 box mac and cheese", "status": "ready", "name": "mac and cheese", "quantity": "1", "unit": "box"}
+{"line": "6 juice boxes", "status": "ready", "name": "juice boxes", "quantity": "6", "unit": "each"}
+{"line": "4 bottles beer", "status": "ready", "name": "beer", "quantity": "4", "unit": "bottle"}
+{"line": "1 bottle wine", "status": "ready", "name": "wine", "quantity": "1", "unit": "bottle"}
+{"line": "2 cans tuna", "status": "ready", "name": "tuna", "quantity": "2", "unit": "can"}
+{"line": "1 tin sardines", "status": "ready", "name": "sardines", "quantity": "1", "unit": "tin"}
+{"line": "1 jar pickles", "status": "ready", "name": "pickles", "quantity": "1", "unit": "jar"}
+{"line": "1 bag ice", "status": "ready", "name": "ice", "quantity": "1", "unit": "bag"}
+{"line": "6 Hot Pockets", "status": "ready", "name": "Hot Pockets", "quantity": "6", "unit": "each"}
+{"line": "4 pita pockets", "status": "ready", "name": "pita pockets", "quantity": "4", "unit": "each"}
+{"line": "2 club sandwiches", "status": "ready", "name": "club sandwiches", "quantity": "2", "unit": "each"}
+{"line": "4 submarine sandwiches", "status": "ready", "name": "submarine sandwiches", "quantity": "4", "unit": "each"}
+{"line": "2 hoagies", "status": "ready", "name": "hoagies", "quantity": "2", "unit": "each"}
+{"line": "3 hero sandwiches", "status": "ready", "name": "hero sandwiches", "quantity": "3", "unit": "each"}
+{"line": "1 torpedo roll", "status": "ready", "name": "torpedo roll", "quantity": "1", "unit": "each"}
+{"line": "4 sliders", "status": "ready", "name": "sliders", "quantity": "4", "unit": "each"}
+{"line": "2 banana boats", "status": "ready", "name": "banana boats", "quantity": "2", "unit": "each"}
+{"line": "12 bird's nest cookies", "status": "ready", "name": "bird's nest cookies", "quantity": "12", "unit": "each"}
+{"line": "12 taco shells", "status": "ready", "name": "taco shells", "quantity": "12", "unit": "each"}
+{"line": "1 box jumbo shells", "status": "ready", "name": "jumbo shells", "quantity": "1", "unit": "box"}
+{"line": "8 sugar cones", "status": "ready", "name": "sugar cones", "quantity": "8", "unit": "each"}
+{"line": "6 waffle cones", "status": "ready", "name": "waffle cones", "quantity": "6", "unit": "each"}
+{"line": "12 ice cream cones", "status": "ready", "name": "ice cream cones", "quantity": "12", "unit": "each"}
+{"line": "4 snow cones", "status": "ready", "name": "snow cones", "quantity": "4", "unit": "each"}
+{"line": "1 pan of brownies", "status": "needs_review", "name": "brownies", "quantity": null, "unit": null}
+{"line": "1 tray of lasagna", "status": "needs_review", "name": "lasagna", "quantity": null, "unit": null}
+{"line": "1 casserole", "status": "ready", "name": "casserole", "quantity": "1", "unit": "each"}
+{"line": "2 Cornish hens", "status": "ready", "name": "Cornish hens", "quantity": "2", "unit": "each"}
+{"line": "1 crown roast", "status": "ready", "name": "crown roast", "quantity": "1", "unit": "each"}
+{"line": "1 crown roast of pork", "status": "ready", "name": "crown roast of pork", "quantity": "1", "unit": "each"}
+{"line": "1 standing rib roast", "status": "ready", "name": "standing rib roast", "quantity": "1", "unit": "each"}
+{"line": "4 lamb loin chops", "status": "ready", "name": "lamb loin chops", "quantity": "4", "unit": "each"}
+{"line": "2 pork rib chops", "status": "ready", "name": "pork rib chops", "quantity": "2", "unit": "each"}
+{"line": "1 slab bacon", "status": "needs_review", "name": "bacon", "quantity": null, "unit": null}
+{"line": "2 slabs ribs", "status": "needs_review", "name": "ribs", "quantity": null, "unit": null}
+{"line": "1 brick cream cheese", "status": "needs_review", "name": "cream cheese", "quantity": null, "unit": null}
+{"line": "1 block cheddar", "status": "ready", "name": "cheddar", "quantity": "1", "unit": "block"}
+{"line": "1 bar cream cheese", "status": "needs_review", "name": "cream cheese", "quantity": null, "unit": null}
+{"line": "2 bars dark chocolate", "status": "needs_review", "name": "dark chocolate", "quantity": null, "unit": null}
+{"line": "4 granola bars", "status": "ready", "name": "granola bars", "quantity": "4", "unit": "each"}
+{"line": "12 candy canes", "status": "ready", "name": "candy canes", "quantity": "12", "unit": "each"}
+{"line": "6 lollipops", "status": "ready", "name": "lollipops", "quantity": "6", "unit": "each"}
+{"line": "1 jello mold", "status": "ready", "name": "jello mold", "quantity": "1", "unit": "each"}
+{"line": "1 fruit basket", "status": "ready", "name": "fruit basket", "quantity": "1", "unit": "each"}
+{"line": "1 charcuterie board", "status": "ready", "name": "charcuterie board", "quantity": "1", "unit": "each"}
+{"line": "6 deviled eggs", "status": "ready", "name": "deviled eggs", "quantity": "6", "unit": "each"}
+{"line": "4 scotch eggs", "status": "ready", "name": "scotch eggs", "quantity": "4", "unit": "each"}
+{"line": "2 bird's eye chilies", "status": "ready", "name": "bird's eye chilies", "quantity": "2", "unit": "each"}
+{"line": "1 bag fish sticks", "status": "ready", "name": "fish sticks", "quantity": "1", "unit": "bag"}
+{"line": "12 fish fingers", "status": "ready", "name": "fish fingers", "quantity": "12", "unit": "each"}
+{"line": "8 chicken fingers", "status": "ready", "name": "chicken fingers", "quantity": "8", "unit": "each"}
+{"line": "6 chicken drumsticks", "status": "ready", "name": "chicken drumsticks", "quantity": "6", "unit": "each"}
+{"line": "12 chicken wings", "status": "ready", "name": "chicken wings", "quantity": "12", "unit": "each"}
+{"line": "4 chicken legs", "status": "ready", "name": "chicken legs", "quantity": "4", "unit": "each"}
+{"line": "2 turkey legs", "status": "ready", "name": "turkey legs", "quantity": "2", "unit": "each"}
+{"line": "1 turkey crown", "status": "ready", "name": "turkey crown", "quantity": "1", "unit": "each"}
+{"line": "2 chicken quarters", "status": "ready", "name": "chicken quarters", "quantity": "2", "unit": "each"}
+{"line": "1 bag tater tots", "status": "ready", "name": "tater tots", "quantity": "1", "unit": "bag"}
+{"line": "1 box fish fillets", "status": "ready", "name": "fish fillets", "quantity": "1", "unit": "box"}
+{"line": "6 shrimp skewers", "status": "needs_review", "name": "shrimp skewers", "quantity": null, "unit": null}
+{"line": "4 beef kebabs", "status": "ready", "name": "beef kebabs", "quantity": "4", "unit": "each"}
+{"line": "2 chicken kebabs", "status": "ready", "name": "chicken kebabs", "quantity": "2", "unit": "each"}
+{"line": "8 satay sticks", "status": "ready", "name": "satay", "quantity": "8", "unit": "stick"}
+{"line": "12 cocktail sausages", "status": "ready", "name": "cocktail sausages", "quantity": "12", "unit": "each"}
+{"line": "24 cocktail shrimp", "status": "ready", "name": "cocktail shrimp", "quantity": "24", "unit": "each"}
+{"line": "6 cocktail onions", "status": "ready", "name": "cocktail onions", "quantity": "6", "unit": "each"}
+{"line": "12 cocktail franks", "status": "ready", "name": "cocktail franks", "quantity": "12", "unit": "each"}
+{"line": "1 jar cocktail cherries", "status": "ready", "name": "cocktail cherries", "quantity": "1", "unit": "jar"}
+{"line": "2 tbsp gram flour", "status": "ready", "name": "gram flour", "quantity": "2", "unit": "tbsp"}
+{"line": "1 cup pound cake crumbs", "status": "ready", "name": "pound cake crumbs", "quantity": "1", "unit": "cup"}
+{"line": "1 cup cup noodles broth", "status": "ready", "name": "cup noodles broth", "quantity": "1", "unit": "cup"}
+{"line": "1 lb jumbo lump crab", "status": "ready", "name": "jumbo lump crab", "quantity": "1", "unit": "lb"}
+{"line": "6 pepper rings", "status": "ready", "name": "pepper rings", "quantity": "6", "unit": "each"}
+{"line": "2 onion rings", "status": "ready", "name": "onion rings", "quantity": "2", "unit": "each"}
+{"line": "1 bag onion rings", "status": "ready", "name": "onion rings", "quantity": "1", "unit": "bag"}
+{"line": "1 cup apple rings", "status": "ready", "name": "apple rings", "quantity": "1", "unit": "cup"}
+{"line": "4 pineapple rings", "status": "ready", "name": "pineapple rings", "quantity": "4", "unit": "each"}
+{"line": "1 can pineapple chunks", "status": "ready", "name": "pineapple chunks", "quantity": "1", "unit": "can"}
+{"line": "1 bag pita chips", "status": "ready", "name": "pita chips", "quantity": "1", "unit": "bag"}
+{"line": "1 box cereal bars", "status": "ready", "name": "cereal bars", "quantity": "1", "unit": "box"}
+{"line": "2 ice cream sandwiches", "status": "ready", "name": "ice cream sandwiches", "quantity": "2", "unit": "each"}
+{"line": "12 cupcakes", "status": "ready", "name": "cupcakes", "quantity": "12", "unit": "each"}
+{"line": "6 muffins", "status": "ready", "name": "muffins", "quantity": "6", "unit": "each"}
+{"line": "4 English muffins", "status": "ready", "name": "English muffins", "quantity": "4", "unit": "each"}
+{"line": "1 angel food cake", "status": "ready", "name": "angel food cake", "quantity": "1", "unit": "each"}
+{"line": "1 sponge cake", "status": "ready", "name": "sponge cake", "quantity": "1", "unit": "each"}
+{"line": "2 layer cakes", "status": "ready", "name": "layer cakes", "quantity": "2", "unit": "each"}
+{"line": "1 tube cake", "status": "ready", "name": "cake", "quantity": "1", "unit": "tube"}
+{"line": "1 sheet pan of roasted vegetables", "status": "needs_review", "name": "roasted vegetables", "quantity": null, "unit": null}
+{"line": "2 rib roasts", "status": "ready", "name": "rib roasts", "quantity": "2", "unit": "each"}
+{"line": "4 ribeye roasts", "status": "ready", "name": "ribeye roasts", "quantity": "4", "unit": "each"}
+{"line": "1 sirloin tip roast", "status": "ready", "name": "sirloin tip roast", "quantity": "1", "unit": "each"}
+{"line": "2 London broils", "status": "ready", "name": "London broils", "quantity": "2", "unit": "each"}
+{"line": "4 tomahawk steaks", "status": "ready", "name": "tomahawk steaks", "quantity": "4", "unit": "each"}
+{"line": "2 T-bone steaks", "status": "ready", "name": "T-bone steaks", "quantity": "2", "unit": "each"}
+{"line": "4 porterhouse steaks", "status": "ready", "name": "porterhouse steaks", "quantity": "4", "unit": "each"}
+{"line": "6 chicken cutlets", "status": "ready", "name": "chicken cutlets", "quantity": "6", "unit": "each"}
+{"line": "1 chicken crown", "status": "ready", "name": "chicken crown", "quantity": "1", "unit": "each"}
+{"line": "8 chicken lollipops", "status": "ready", "name": "chicken lollipops", "quantity": "8", "unit": "each"}
+{"line": "12 wing flats", "status": "ready", "name": "wing flats", "quantity": "12", "unit": "each"}
+{"line": "12 drumettes", "status": "ready", "name": "drumettes", "quantity": "12", "unit": "each"}
+{"line": "4 pork belly strips", "status": "ready", "name": "pork belly", "quantity": "4", "unit": "strip"}
+{"line": "6 bacon strips", "status": "ready", "name": "bacon", "quantity": "6", "unit": "strip"}
+{"line": "4 beef strips", "status": "ready", "name": "beef", "quantity": "4", "unit": "strip"}
+{"line": "2 flank steaks", "status": "ready", "name": "flank steaks", "quantity": "2", "unit": "each"}
+{"line": "1 hanger steak", "status": "ready", "name": "hanger steak", "quantity": "1", "unit": "each"}
+{"line": "6 fish tacos", "status": "ready", "name": "fish tacos", "quantity": "6", "unit": "each"}
+{"line": "4 fish sticks", "status": "ready", "name": "fish sticks", "quantity": "4", "unit": "each"}
+{"line": "2 fish fillets", "status": "ready", "name": "fish", "quantity": "2", "unit": "fillet"}
+{"line": "6 crab cakes", "status": "ready", "name": "crab cakes", "quantity": "6", "unit": "each"}
+{"line": "4 crab claws", "status": "ready", "name": "crab claws", "quantity": "4", "unit": "each"}
+{"line": "2 lobster tails", "status": "ready", "name": "lobster tails", "quantity": "2", "unit": "each"}
+{"line": "1 shrimp ring", "status": "ready", "name": "shrimp ring", "quantity": "1", "unit": "each"}
+{"line": "1 veggie tray", "status": "ready", "name": "veggie tray", "quantity": "1", "unit": "each"}
+{"line": "1 fruit tray", "status": "ready", "name": "fruit tray", "quantity": "1", "unit": "each"}
+{"line": "1 cheese tray", "status": "ready", "name": "cheese tray", "quantity": "1", "unit": "each"}
+{"line": "1 deli platter", "status": "ready", "name": "deli platter", "quantity": "1", "unit": "each"}
+{"line": "1 cookie tray", "status": "needs_review", "name": "cookie tray", "quantity": null, "unit": null}
+{"line": "1 sheet of nori", "status": "ready", "name": "nori", "quantity": "1", "unit": "sheet"}
+{"line": "4 sheets lasagna", "status": "ready", "name": "lasagna", "quantity": "4", "unit": "sheet"}
+{"line": "2 sheets phyllo", "status": "ready", "name": "phyllo", "quantity": "2", "unit": "sheet"}
+{"line": "6 lasagna sheets", "status": "ready", "name": "lasagna sheets", "quantity": "6", "unit": "each"}
+{"line": "4 rice paper sheets", "status": "ready", "name": "rice paper", "quantity": "4", "unit": "sheet"}
+{"line": "2 jars marinara", "status": "ready", "name": "marinara", "quantity": "2", "unit": "jar"}
+{"line": "1 pot of coffee", "status": "needs_review", "name": "coffee", "quantity": null, "unit": null}
+{"line": "1 pot of chili", "status": "needs_review", "name": "chili", "quantity": null, "unit": null}
+{"line": "1 bowl of popcorn", "status": "needs_review", "name": "popcorn", "quantity": null, "unit": null}
+{"line": "1 cup of tea", "status": "ready", "name": "tea", "quantity": "1", "unit": "cup"}
+{"line": "2 mugs hot chocolate", "status": "needs_review", "name": "hot chocolate", "quantity": null, "unit": null}
+{"line": "1 glass of milk", "status": "needs_review", "name": "milk", "quantity": null, "unit": null}
+{"line": "1 pitcher of lemonade", "status": "needs_review", "name": "lemonade", "quantity": null, "unit": null}
+{"line": "1 jug apple cider", "status": "needs_review", "name": "apple cider", "quantity": null, "unit": null}
+{"line": "1 keg beer", "status": "needs_review", "name": "beer", "quantity": null, "unit": null}
+{"line": "1 growler IPA", "status": "needs_review", "name": "IPA", "quantity": null, "unit": null}
+{"line": "4 cups yogurt", "status": "ready", "name": "yogurt", "quantity": "4", "unit": "cup"}
+{"line": "6 yogurt cups", "status": "ready", "name": "yogurt cups", "quantity": "6", "unit": "each"}
+{"line": "4 fruit cups", "status": "ready", "name": "fruit cups", "quantity": "4", "unit": "each"}
+{"line": "6 applesauce cups", "status": "ready", "name": "applesauce cups", "quantity": "6", "unit": "each"}
+{"line": "12 peanut butter cups", "status": "ready", "name": "peanut butter cups", "quantity": "12", "unit": "each"}
+{"line": "6 Jell-O cups", "status": "ready", "name": "Jell-O cups", "quantity": "6", "unit": "each"}
+{"line": "4 pudding pops", "status": "ready", "name": "pudding pops", "quantity": "4", "unit": "each"}
+{"line": "6 ice pops", "status": "ready", "name": "ice pops", "quantity": "6", "unit": "each"}
+{"line": "12 freezer pops", "status": "ready", "name": "freezer pops", "quantity": "12", "unit": "each"}
+{"line": "4 fudge pops", "status": "ready", "name": "fudge pops", "quantity": "4", "unit": "each"}
+{"line": "2 cake pops", "status": "ready", "name": "cake pops", "quantity": "2", "unit": "each"}
+{"line": "12 donut holes", "status": "ready", "name": "donut holes", "quantity": "12", "unit": "each"}
+{"line": "6 muffin bottoms", "status": "ready", "name": "muffin bottoms", "quantity": "6", "unit": "each"}
+{"line": "4 brownie bites", "status": "ready", "name": "brownie bites", "quantity": "4", "unit": "each"}
+{"line": "12 bagel bites", "status": "ready", "name": "bagel bites", "quantity": "12", "unit": "each"}
+{"line": "6 pizza rolls", "status": "ready", "name": "pizza rolls", "quantity": "6", "unit": "each"}
+{"line": "8 egg bites", "status": "ready", "name": "egg bites", "quantity": "8", "unit": "each"}
+{"line": "4 hash brown patties", "status": "ready", "name": "hash brown patties", "quantity": "4", "unit": "each"}
+{"line": "6 sausage patties", "status": "ready", "name": "sausage patties", "quantity": "6", "unit": "each"}
+{"line": "4 veggie patties", "status": "ready", "name": "veggie patties", "quantity": "4", "unit": "each"}
+{"line": "2 waffle fries", "status": "ready", "name": "waffle fries", "quantity": "2", "unit": "each"}
+{"line": "1 bag curly fries", "status": "ready", "name": "curly fries", "quantity": "1", "unit": "bag"}
+{"line": "1 bag shoestring fries", "status": "ready", "name": "shoestring fries", "quantity": "1", "unit": "bag"}
+{"line": "1 box Rice-A-Roni", "status": "ready", "name": "Rice-A-Roni", "quantity": "1", "unit": "box"}
+{"line": "1 box Hamburger Helper", "status": "ready", "name": "Hamburger Helper", "quantity": "1", "unit": "box"}
+{"line": "1 box Pop-Tarts", "status": "ready", "name": "Pop-Tarts", "quantity": "1", "unit": "box"}
+{"line": "6 Toaster Strudels", "status": "ready", "name": "Toaster Strudels", "quantity": "6", "unit": "each"}
+{"line": "1 box Eggo waffles", "status": "ready", "name": "Eggo waffles", "quantity": "1", "unit": "box"}
+{"line": "4 Lunchables", "status": "ready", "name": "Lunchables", "quantity": "4", "unit": "each"}
+{"line": "1 box Cheez-Its", "status": "ready", "name": "Cheez-Its", "quantity": "1", "unit": "box"}
+{"line": "1 bag Goldfish", "status": "ready", "name": "Goldfish", "quantity": "1", "unit": "bag"}
+{"line": "1 bag Doritos", "status": "ready", "name": "Doritos", "quantity": "1", "unit": "bag"}
+{"line": "1 bag Fritos", "status": "ready", "name": "Fritos", "quantity": "1", "unit": "bag"}
+{"line": "1 bag Cheetos", "status": "ready", "name": "Cheetos", "quantity": "1", "unit": "bag"}
+{"line": "2 Kit Kat bars", "status": "ready", "name": "Kit Kat bars", "quantity": "2", "unit": "each"}
+{"line": "4 Snickers bars", "status": "ready", "name": "Snickers bars", "quantity": "4", "unit": "each"}
+{"line": "1 Hershey bar", "status": "ready", "name": "Hershey bar", "quantity": "1", "unit": "each"}
+{"line": "12 Hershey's Kisses", "status": "ready", "name": "Hershey's Kisses", "quantity": "12", "unit": "each"}
+{"line": "1 bag Skittles", "status": "ready", "name": "Skittles", "quantity": "1", "unit": "bag"}
+{"line": "1 bag Starburst", "status": "ready", "name": "Starburst", "quantity": "1", "unit": "bag"}
+{"line": "1 box Junior Mints", "status": "ready", "name": "Junior Mints", "quantity": "1", "unit": "box"}
+{"line": "1 bag Twizzlers", "status": "ready", "name": "Twizzlers", "quantity": "1", "unit": "bag"}
+{"line": "2 Twinkies", "status": "ready", "name": "Twinkies", "quantity": "2", "unit": "each"}
+{"line": "4 Ding Dongs", "status": "ready", "name": "Ding Dongs", "quantity": "4", "unit": "each"}
+{"line": "6 Oreo cookies", "status": "ready", "name": "Oreo cookies", "quantity": "6", "unit": "each"}
+{"line": "1 sleeve Chips Ahoy", "status": "needs_review", "name": "Chips Ahoy", "quantity": null, "unit": null}
+{"line": "1 box Wheat Thins", "status": "ready", "name": "Wheat Thins", "quantity": "1", "unit": "box"}
+{"line": "1 box Teddy Grahams", "status": "ready", "name": "Teddy Grahams", "quantity": "1", "unit": "box"}
+{"line": "1 bag Funyuns", "status": "ready", "name": "Funyuns", "quantity": "1", "unit": "bag"}
+{"line": "1 can Pringles", "status": "ready", "name": "Pringles", "quantity": "1", "unit": "can"}
+{"line": "2 cans Red Bull", "status": "ready", "name": "Red Bull", "quantity": "2", "unit": "can"}
+{"line": "6 cans Coke", "status": "ready", "name": "Coke", "quantity": "6", "unit": "can"}
+{"line": "4 bottles Gatorade", "status": "ready", "name": "Gatorade", "quantity": "4", "unit": "bottle"}
+{"line": "1 bottle Snapple", "status": "ready", "name": "Snapple", "quantity": "1", "unit": "bottle"}

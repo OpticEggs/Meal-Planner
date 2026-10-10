@@ -1,0 +1,59 @@
+
+== holdout-v2.jsonl: 359 cases, needs_review 69, bare no-amount 29
+   needs_review with qty+unit null but alternatives present: 2 ing-h2-0223 "Butter or oil, for greasing"; ing-h2-0224 "chicken stock or water"
+   needs_review with quantity but no unit: 0 
+   needs_review with unit but no quantity: 7 ing-h2-0017 "0 ml rum"; ing-h2-0018 "0.0 g instant yeast"; ing-h2-0056 "a few sprigs fresh dill"; ing-h2-0280 "2,5 tbsp olive oil"; ing-h2-0281 "0,75 l oat milk"; ing-h2-0282 "1,250 g strong flour"; ing-h2-0283 "beef mince, 1,5 lb"
+   ing-h2-0158  [price_annotation,quantity_missing,seasoning_ordinary]  "salt ($0.01)"  name="salt" note=null
+   ing-h2-0186  [optional,quantity_missing]  "fresh cilantro (optional)"  name="fresh cilantro" note=null
+   ing-h2-0205  [quantity_missing]  "vanilla ice cream"  name="vanilla ice cream" note=null
+   ing-h2-0206  [quantity_missing]  "Lemon zest"  name="Lemon zest" note=null
+   ing-h2-0207  [quantity_missing,prep_note]  "crusty bread, sliced"  name="crusty bread" note="sliced"
+   ing-h2-0208  [quantity_missing,unicode_text,seasoning_lookalike]  "Pickled jalapeños (from a jar)"  name="Pickled jalapeños" note="from a jar"
+   ing-h2-0209  [quantity_missing,size_word]  "large eggs"  name="eggs" note="large"
+   ing-h2-0210  [quantity_missing]  "some grated cheddar"  name="grated cheddar" note=null
+   ing-h2-0211  [quantity_missing,seasoning_ordinary]  "Freshly ground pepper"  name="Freshly ground pepper" note=null
+   ing-h2-0323  [quantity_missing,seasoning_ordinary]  "sea salt"  name="sea salt" note=null
+   ing-h2-0325  [quantity_missing,seasoning_ordinary]  "ground black pepper"  name="ground black pepper" note=null
+   ing-h2-0327  [quantity_missing,seasoning_ordinary]  "salt & pepper"  name="salt & pepper" note=null
+   ing-h2-0328  [quantity_missing,seasoning_ordinary]  "freshly cracked black pepper"  name="freshly cracked black pepper" note=null
+   ing-h2-0343  [quantity_missing,seasoning_lookalike]  "flaky sea salt"  name="flaky sea salt" note=null
+   ing-h2-0344  [quantity_missing,seasoning_ordinary]  "table salt"  name="table salt" note=null
+   ing-h2-0345  [quantity_missing,seasoning_ordinary]  "coarse salt"  name="coarse salt" note=null
+   ing-h2-0346  [quantity_missing,seasoning_ordinary]  "cracked black pepper"  name="cracked black pepper" note=null
+   ing-h2-0347  [quantity_missing,seasoning_ordinary]  "Salt and black pepper"  name="Salt and black pepper" note=null
+   ing-h2-0348  [quantity_missing,seasoning_ordinary]  "kosher salt and freshly ground pepper"  name="kosher salt and freshly ground pepper" note=null
+   ing-h2-0350  [quantity_missing,seasoning_lookalike,unicode_text]  "jalapeño pepper"  name="jalapeño pepper" note=null
+   ing-h2-0351  [quantity_missing,seasoning_lookalike]  "white pepper"  name="white pepper" note=null
+   ing-h2-0352  [quantity_missing,seasoning_lookalike]  "pepper jack cheese"  name="pepper jack cheese" note=null
+   ing-h2-0353  [quantity_missing,seasoning_lookalike]  "seasoned salt"  name="seasoned salt" note=null
+   ing-h2-0354  [quantity_missing,seasoning_lookalike]  "salt pork"  name="salt pork" note=null
+   ing-h2-0355  [quantity_missing,seasoning_lookalike]  "lemon pepper"  name="lemon pepper" note=null
+   ing-h2-0356  [quantity_missing,seasoning_lookalike]  "pepperoni"  name="pepperoni" note=null
+   ing-h2-0357  [quantity_missing,seasoning_lookalike]  "sweet peppers"  name="sweet peppers" note=null
+   ing-h2-0358  [quantity_missing,seasoning_lookalike]  "Szechuan pepper"  name="Szechuan pepper" note=null
+   ing-h2-0359  [quantity_missing,seasoning_lookalike]  "smoked salt"  name="smoked salt" note=null
+   old 23 (DELTA excludedIds v2) ⊂ new set: true; extra: ing-h2-0158, ing-h2-0186, ing-h2-0207, ing-h2-0208, ing-h2-0209, ing-h2-0350
+   old ids not in the label-based set: 0
+
+== holdout.jsonl: 128 cases, needs_review 18, bare no-amount 5
+   needs_review with qty+unit null but alternatives present: 0 
+   needs_review with quantity but no unit: 0 
+   needs_review with unit but no quantity: 4 ing-hold-0006 "0 tbsp sugar"; ing-hold-0106 "1,5 l water"; ing-hold-0107 "1,000 ml whole milk"; ing-hold-0108 "0,5 kg carrots"
+   ing-hold-0050  [quantity_missing]  "ice cubes"  name="ice cubes" note=null
+   ing-hold-0051  [quantity_missing,seasoning_ordinary]  "black pepper"  name="black pepper" note=null
+   ing-hold-0052  [quantity_missing,prep_note]  "basil leaves, torn"  name="basil leaves" note="torn"
+   ing-hold-0053  [quantity_missing]  "sesame oil"  name="sesame oil" note=null
+   ing-hold-0119  [seasoning_ordinary,quantity_missing]  "kosher salt and freshly ground black pepper"  name="kosher salt and freshly ground black pepper" note=null
+
+== dev.jsonl: 182 cases, needs_review 22, bare no-amount 5
+   needs_review with qty+unit null but alternatives present: 0 
+   needs_review with quantity but no unit: 0 
+   needs_review with unit but no quantity: 4 ing-dev-0021 "0 cups shredded coconut"; ing-dev-0155 "1,5 kg potatoes"; ing-dev-0156 "1,000 g flour"; ing-dev-0157 "2,5 dl milk"
+   ing-dev-0076  [quantity_missing]  "fresh parsley"  name="fresh parsley" note=null
+   ing-dev-0077  [quantity_missing,seasoning_ordinary]  "salt"  name="salt" note=null
+   ing-dev-0078  [quantity_missing]  "eggs"  name="eggs" note=null
+   ing-dev-0079  [quantity_missing,prep_note]  "butter, softened"  name="butter" note="softened"
+   ing-dev-0080  [quantity_missing]  "cooking spray"  name="cooking spray" note=null
+holdout-v2.jsonl inferred-tag-rule 23 0205,0206,0210,0211,0323,0325,0327,0328,0343,0344,0345,0346,0347,0348,0351,0352,0353,0354,0355,0356,0357,0358,0359 | label rule 29 | needs_review tagged quantity_missing 31 | tagged quantity_missing but not label-bare: ing-h2-0056 "a few sprigs fresh dill"; ing-h2-0224 "chicken stock or water"
+holdout.jsonl inferred-tag-rule 4 0050,0051,0053,0119 | label rule 5 | needs_review tagged quantity_missing 5 | tagged quantity_missing but not label-bare: 
+dev.jsonl inferred-tag-rule 4 0076,0077,0078,0080 | label rule 5 | needs_review tagged quantity_missing 5 | tagged quantity_missing but not label-bare: 

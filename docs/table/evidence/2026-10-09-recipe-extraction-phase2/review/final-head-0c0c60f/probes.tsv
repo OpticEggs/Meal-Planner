@@ -1,0 +1,749 @@
+# input	status	name(|accepted...)	qty	unit	pkg	alts(;)(||accepted set)	flags (D=debatable label, K=known category)	group
+1 1/4 cups all-purpose flour	ready	all-purpose flour	5/4	cup	-	-	-	fraction
+2 1/2 tablespoons soy sauce	ready	soy sauce	5/2	tbsp	-	-	-	fraction
+1-1/4 cups buttermilk	ready	buttermilk	5/4	cup	-	-	-	fraction
+1 ½ tsp kosher salt	ready	kosher salt	3/2	tsp	-	-	-	fraction
+2⅔ cups water	ready	water	8/3	cup	-	-	-	fraction
+1⁄3 cup honey	ready	honey	1/3	cup	-	-	-	fraction
+1 1⁄2 cups rolled oats	ready	rolled oats	3/2	cup	-	-	-	fraction
+0.75 cup granulated sugar	ready	granulated sugar	3/4	cup	-	-	-	fraction
+.25 tsp cayenne pepper	ready	cayenne pepper	1/4	tsp	-	-	-	fraction
+1.5 lbs chicken thighs	ready	chicken thighs	3/2	lb	-	-	-	fraction
+1-1/2 lb pork tenderloin	ready	pork tenderloin	3/2	lb	-	-	-	fraction
+2-1/4 cups bread flour	ready	bread flour	9/4	cup	-	-	-	fraction
+1 ¼ cups sugar	ready	sugar	5/4	cup	-	-	-	fraction
+½ tsp. salt	ready	salt	1/2	tsp	-	-	-	fraction
+3 ½ cups chicken broth	ready	chicken broth	7/2	cup	-	-	-	fraction
+1/8 teaspoon ground cloves	ready	ground cloves	1/8	tsp	-	-	-	fraction
+1 1/2 teaspoons baking powder	ready	baking powder	3/2	tsp	-	-	-	fraction
+3/4 c. milk	ready	milk	3/4	cup	-	-	-	fraction
+1 3/4 oz. pine nuts	ready	pine nuts	7/4	oz	-	-	-	fraction
+11/2 cups flour	needs_review	flour	-	cup	-	-	D	fraction
+2-3 tablespoons olive oil	needs_review	olive oil	2..3	tbsp	-	-	-	range
+1 to 2 teaspoons red pepper flakes	needs_review	red pepper flakes	1..2	tsp	-	-	-	range
+3 or 4 sprigs thyme	needs_review	thyme	3..4	sprig	-	-	-	range
+1–2 jalapeños	needs_review	jalapeños	1..2	each	-	-	-	range
+2 - 3 cloves garlic	needs_review	garlic	2..3	clove	-	-	-	range
+1/2-1 tsp salt	needs_review	salt	1/2..1	tsp	-	-	-	range
+1 1/2 - 2 cups milk	needs_review	milk	3/2..2	cup	-	-	-	range
+1½–2 lb ground beef	needs_review	ground beef	3/2..2	lb	-	-	-	range
+1/4-1/2 tsp cayenne	needs_review	cayenne	1/4..1/2	tsp	-	-	-	range
+4-6 chicken thighs	needs_review	chicken thighs	4..6	each	-	-	-	range
+6-8 oz dried pasta	needs_review	dried pasta|pasta	6..8	oz	-	-	-	range
+12-16 ounces penne	needs_review	penne	12..16	oz	-	-	-	range
+1 or 2 shallots	needs_review	shallots	1..2	each	-	-	-	range
+2 or 3 tablespoons milk	needs_review	milk	2..3	tbsp	-	-	-	range
+two eggs	ready	eggs	2	each	-	-	-	numword
+One 14-ounce can coconut milk	ready	coconut milk	1	can	14 oz	-	-	numword
+a pinch of nutmeg	ready	nutmeg	1	pinch	-	-	-	numword
+half a lemon	ready	lemon	1/2	each	-	-	-	numword
+a dozen eggs	ready	eggs	12	each	-	-	-	numword
+twelve cherry tomatoes	ready	cherry tomatoes	12	each	-	-	-	numword
+three cloves garlic, minced	ready	garlic	3	clove	-	-	-	numword
+a couple of bay leaves	needs_review	bay leaves|bay	-	-	-	-	D	numword
+a few sprigs of rosemary	needs_review	rosemary	-	sprig	-	-	-	numword
+several basil leaves	needs_review	basil leaves|basil	-	-	-	-	D	numword
+a 2-inch piece of ginger	ready	ginger	1	piece	-	-	-	numword
+one and a half cups milk	ready	milk	3/2	cup	-	-	-	numword
+a quarter cup sugar	ready	sugar	1/4	cup	-	-	-	numword
+half cup cream	ready	cream	1/2	cup	-	-	-	numword
+ten ounces spinach	ready	spinach	10	oz	-	-	-	numword
+four tablespoons butter	ready	butter	4	tbsp	-	-	-	numword
+an onion, diced	ready	onion	1	each	-	-	-	numword
+one 28-oz can crushed tomatoes	ready	crushed tomatoes	1	can	28 oz	-	-	numword
+two 15-ounce cans black beans	ready	black beans	2	can	15 oz	-	-	numword
+a third cup of oil	ready	oil	1/3	cup	-	-	-	numword
+one-half cup milk	ready	milk	1/2	cup	-	-	-	numword
+three-quarters cup sugar	ready	sugar	3/4	cup	-	-	-	numword
+a 5-pound bag of potatoes	ready	potatoes	1	bag	5 lb	-	-	numword
+2 cups broth (homemade (see note) or store-bought)	ready	broth	2	cup	-	-	-	nested
+1 (8 oz) package cream cheese (softened (room temperature))	ready	cream cheese	1	package	8 oz	-	-	nested
+1/2 cup walnuts (toasted, chopped)	ready	walnuts	1/2	cup	-	-	-	nested
+2 tbsp butter (melted (and cooled))	ready	butter	2	tbsp	-	-	-	nested
+1 cup panko (Japanese breadcrumbs)	ready	panko	1	cup	-	-	-	nested
+3 tbsp gochujang (Korean chili paste), or to taste	ready	gochujang	3	tbsp	-	-	-	nested
+1 lb shrimp ((peeled and deveined))	ready	shrimp	1	lb	-	-	-	nested
+1 cup (2 sticks) unsalted butter	ready	unsalted butter	1	cup	-	-	-	restate
+1 cup (8 oz) sour cream	ready	sour cream	1	cup	-	-	-	restate
+200 g (7 oz) dark chocolate, chopped	ready	dark chocolate	200	g	-	-	-	restate
+1 cup (240 ml) whole milk	ready	whole milk	1	cup	-	-	-	restate
+2 tbsp (30 ml) lemon juice	ready	lemon juice	2	tbsp	-	-	-	restate
+1 cup grated Parmesan (about 3 oz)	ready	grated Parmesan|Parmesan	1	cup	-	-	-	restate
+1 lb lean ground beef (90/10)	ready	lean ground beef	1	lb	-	-	-	nested
+2 cups basil (packed) (about 2 oz)	ready	basil	2	cup	-	-	-	nested
+1 can (15 oz) pumpkin puree (not pie filling)	ready	pumpkin puree	1	can	15 oz	-	-	package
+1 cup buttermilk or plain yogurt	needs_review	-	1	cup	-	buttermilk;plain yogurt	-	alt
+2 tbsp butter or olive oil	needs_review	-	2	tbsp	-	butter;olive oil	-	alt
+1 cup blueberries (fresh or frozen)	ready	blueberries	1	cup	-	-	-	sourcing
+2 cups spinach, fresh or frozen	ready	spinach	2	cup	-	-	-	sourcing
+1/2 cup pecans or walnuts, chopped	needs_review	-	1/2	cup	-	pecans;walnuts	-	alt
+1 lb ground turkey or chicken	needs_review	-	1	lb	-	ground turkey;ground chicken||ground turkey;chicken	-	alt
+1 cup heavy cream or half-and-half	needs_review	-	1	cup	-	heavy cream;half-and-half	-	alt
+1 cup chicken stock (or water)	needs_review	-	1	cup	-	chicken stock;water	D	alt
+2 tbsp lime juice (from 1 lime)	needs_review	lime juice	2	tbsp	-	-	DK	remark-amount
+1 cup sugar, white or brown	needs_review	-	1	cup	-	white sugar;brown sugar	D	alt
+1 tbsp oil (vegetable or canola)	needs_review	-	1	tbsp	-	vegetable oil;canola oil	D	alt
+1 cup mozzarella or provolone, shredded	needs_review	-	1	cup	-	mozzarella;provolone	-	alt
+1 can (15 oz) black beans or kidney beans, drained	needs_review	-	1	can	15 oz	black beans;kidney beans	-	alt
+Fresh basil or parsley, for garnish	needs_review	-	-	-	-	fresh basil;parsley||basil;parsley||fresh basil;fresh parsley	-	alt
+1 cup orange juice (freshly squeezed or bottled)	ready	orange juice	1	cup	-	-	-	sourcing
+1 cup almond milk or oat milk	needs_review	-	1	cup	-	almond milk;oat milk	-	alt
+2 cups arugula or baby spinach	needs_review	-	2	cup	-	arugula;baby spinach	-	alt
+1/4 cup maple syrup or honey	needs_review	-	1/4	cup	-	maple syrup;honey	-	alt
+1 tsp dried thyme or 1 tbsp fresh thyme	needs_review	-	1	tsp	-	dried thyme;fresh thyme	D	alt
+1 cup shredded cheddar or Monterey Jack	needs_review	-	1	cup	-	shredded cheddar;Monterey Jack||cheddar;Monterey Jack||shredded cheddar;shredded Monterey Jack	-	alt
+1 tbsp rice vinegar or white wine vinegar	needs_review	-	1	tbsp	-	rice vinegar;white wine vinegar	-	alt
+1 lemon or lime	needs_review	-	1	each	-	lemon;lime	-	alt
+1 cup tomato sauce (jarred or homemade)	ready	tomato sauce	1	cup	-	-	-	sourcing
+1/2 cup sour cream or Greek yogurt	needs_review	-	1/2	cup	-	sour cream;Greek yogurt	-	alt
+1 cup vegetable broth (low-sodium if possible)	ready	vegetable broth	1	cup	-	-	-	sourcing
+1 tbsp chopped parsley or cilantro	needs_review	-	1	tbsp	-	chopped parsley;cilantro||parsley;cilantro||chopped parsley;chopped cilantro	-	alt
+2 cups cooked rice or quinoa	needs_review	-	2	cup	-	rice;quinoa||cooked rice;quinoa	-	alt
+1 cup milk (2% or whole)	needs_review	-	1	cup	-	2% milk;whole milk	D	alt
+2 (14.5 oz) cans fire-roasted tomatoes	ready	fire-roasted tomatoes	2	can	14.5 oz	-	-	package
+1 (28-ounce) can crushed tomatoes	ready	crushed tomatoes	1	can	28 oz	-	-	package
+1 15-oz can chickpeas, drained and rinsed	ready	chickpeas	1	can	15 oz	-	-	package
+2 cans (15 oz each) cannellini beans	ready	cannellini beans	2	can	15 oz	-	-	package
+1 (1-pound) bag baby carrots	ready	baby carrots	1	bag	1 lb	-	-	package
+3 (6 oz) containers plain yogurt	ready	plain yogurt	3	container	6 oz	-	-	package
+1 (0.25 oz) envelope active dry yeast	ready	active dry yeast	1	envelope	1/4 oz	-	-	package
+2 (8-ounce) packages cream cheese	ready	cream cheese	2	package	8 oz	-	-	package
+1 (12 fl oz) bottle beer	ready	beer	1	bottle	12 fl_oz	-	-	package
+1 jar (24 oz) marinara sauce	ready	marinara sauce	1	jar	24 oz	-	-	package
+4 (6-oz) salmon fillets	ready	salmon	4	fillet	6 oz	-	D	package
+1 14 oz can coconut milk	ready	coconut milk	1	can	14 oz	-	-	package
+2 x 400g tins chopped tomatoes	ready	chopped tomatoes	2	tin	400 g	-	-	package
+1 x 250 g pack halloumi	ready	halloumi	1	package	250 g	-	-	package
+1 12-ounce package frozen spinach, thawed	ready	frozen spinach	1	package	12 oz	-	-	package
+3 cans (5 oz each) tuna, drained	ready	tuna	3	can	5 oz	-	-	package
+2 8-oz packages cream cheese	ready	cream cheese	2	package	8 oz	-	-	package
+3 12-inch flour tortillas	ready	flour tortillas	3	each	-	-	-	package
+1 2-lb bag carrots	ready	carrots	1	bag	2 lb	-	-	package
+1 5-oz bag arugula	ready	arugula	1	bag	5 oz	-	-	package
+2 1-lb packages ground beef	ready	ground beef	2	package	1 lb	-	-	package
+1 28 oz can whole peeled tomatoes	ready	whole peeled tomatoes	1	can	28 oz	-	-	package
+1 (16 oz) box penne	ready	penne	1	box	16 oz	-	-	package
+1/2 (14 oz) can coconut milk	ready	coconut milk	1/2	can	14 oz	-	-	package
+1 can tomato paste (6 oz)	ready	tomato paste	1	can	6 oz	-	-	package
+1 package (8 oz) mushrooms, sliced	ready	mushrooms	1	package	8 oz	-	-	package
+1 large (28 oz) can tomatoes	ready	tomatoes	1	can	28 oz	-	-	package
+2 (10 oz) bags frozen broccoli florets	ready	frozen broccoli florets	2	bag	10 oz	-	-	package
+1 (14-ounce) block extra-firm tofu	ready	extra-firm tofu	1	block	14 oz	-	-	package
+1 (750 ml) bottle dry red wine	ready	dry red wine	1	bottle	750 ml	-	-	package
+1 (32 oz) carton chicken broth	ready	chicken broth	1	carton	32 oz	-	-	package
+1 (1 lb) loaf French bread	ready	French bread	1	loaf	1 lb	-	-	package
+1 (2 1/4 tsp) packet instant yeast	ready	instant yeast	1	packet	9/4 tsp	-	-	package
+1 package (1/4 oz) yeast	ready	yeast	1	package	1/4 oz	-	-	package
+1 (14 oz) can (400 g) coconut milk	ready	coconut milk	1	can	14 oz	-	-	package
+1 (5.3 oz) container Greek yogurt	ready	Greek yogurt	1	container	53/10 oz	-	-	package
+2 (6 fl oz) cans pineapple juice	ready	pineapple juice	2	can	6 fl_oz	-	-	package
+1 (12-fluid ounce) can evaporated milk	ready	evaporated milk	1	can	12 fl_oz	-	-	package
+2 sticks butter	ready	butter	2	stick	-	-	-	count
+1 head cauliflower, cut into florets	ready	cauliflower	1	head	-	-	-	count
+1 bunch cilantro	ready	cilantro	1	bunch	-	-	-	count
+2 ears corn, husked	ready	corn	2	ear	-	-	-	count
+6 cloves garlic	ready	garlic	6	clove	-	-	-	count
+1 large onion, diced	ready	onion	1	each	-	-	-	count
+2 medium carrots, peeled	ready	carrots	2	each	-	-	-	count
+1 (9-inch) unbaked pie crust	ready	unbaked pie crust|pie crust	1	each	-	-	-	count
+2 bay leaves	ready	bay leaves|bay	2	each	-	-	D	count
+3 chicken breasts	ready	chicken breasts	3	each	-	-	-	count
+6 garlic cloves, smashed	ready	garlic	6	clove	-	-	-	count
+4 lemon wedges	ready	lemon	4	wedge	-	-	-	count
+2 thyme sprigs	ready	thyme	2	sprig	-	-	-	count
+2 cinnamon sticks	ready	cinnamon	2	stick	-	-	-	count
+1 garlic bulb	ready	garlic	1	bulb	-	-	-	count
+4 bacon slices	ready	bacon	4	slice	-	-	-	count
+2 celery stalks	ready	celery	2	stalk	-	-	-	count
+3 vanilla bean pods	ready	vanilla bean	3	pod	-	-	K	count
+4 kaffir lime leaves	ready	kaffir lime	4	leaf	-	-	DK	count
+3 links Italian sausage	ready	Italian sausage	3	link	-	-	-	count
+1 ball fresh mozzarella	ready	fresh mozzarella	1	ball	-	-	-	count
+1 tube refrigerated biscuit dough	ready	refrigerated biscuit dough	1	tube	-	-	-	count
+2 sheets puff pastry, thawed	ready	puff pastry	2	sheet	-	-	-	count
+4 strips lemon zest	ready	lemon zest	4	strip	-	-	-	count
+1 loaf ciabatta	ready	ciabatta	1	loaf	-	-	-	count
+2 cubes chicken bouillon	ready	chicken bouillon	2	cube	-	-	-	count
+1 packet taco seasoning	ready	taco seasoning	1	packet	-	-	-	count
+1 envelope unflavored gelatin	ready	unflavored gelatin	1	envelope	-	-	-	count
+1 tin sardines	ready	sardines	1	tin	-	-	-	count
+8 ounces cream cheese	ready	cream cheese	8	oz	-	-	-	ozfloz
+12 fl. oz. lager	ready	lager	12	fl_oz	-	-	-	ozfloz
+16 fluid ounces chicken broth	ready	chicken broth	16	fl_oz	-	-	-	ozfloz
+4 oz. vodka	ready	vodka	4	oz	-	-	-	ozfloz
+6 fl oz (180 ml) orange juice	ready	orange juice	6	fl_oz	-	-	-	ozfloz
+10 oz (283 g) frozen spinach	ready	frozen spinach	10	oz	-	-	-	ozfloz
+2 ozs feta	ready	feta	2	oz	-	-	-	ozfloz
+3 fl.oz milk	ready	milk	3	fl_oz	-	-	-	ozfloz
+1 oz (2 tbsp) butter	ready	butter	1	oz	-	-	-	ozfloz
+8 fl oz heavy cream	ready	heavy cream	8	fl_oz	-	-	-	ozfloz
+1 fluid oz bitters	ready	bitters	1	fl_oz	-	-	-	ozfloz
+1 ounce (2 tablespoons) dark rum	ready	dark rum	1	oz	-	-	-	ozfloz
+1 lb 8 oz potatoes	ready	potatoes	24	oz	-	-	-	compound
+2 cups plus 2 tablespoons flour	ready	flour	34	tbsp	-	-	-	compound
+1 tbsp + 1 tsp sugar	ready	sugar	4	tsp	-	-	K	compound
+1/4 cup plus 2 tbsp milk	ready	milk	6	tbsp	-	-	-	compound
+1/2 cup + 2 tbsp sugar	ready	sugar	10	tbsp	-	-	K	compound
+2 lbs 4 oz pork shoulder	ready	pork shoulder	36	oz	-	-	-	compound
+1 cup / 240 ml water	ready	water	1	cup	-	-	-	restate
+1 pound (450 g) ground beef	ready	ground beef	1	lb	-	-	-	restate
+2 cups (about 10 oz) frozen corn	ready	frozen corn	2	cup	-	-	-	restate
+3 tbsp (45 g) butter	ready	butter	3	tbsp	-	-	-	restate
+1 kg (2.2 lb) beef chuck	ready	beef chuck	1	kg	-	-	-	restate
+250 ml (1 cup) cream	ready	cream	250	ml	-	-	-	restate
+1 1/2 cups (360 ml) milk, warmed	ready	milk	3/2	cup	-	-	-	restate
+113 g (1/2 cup) butter	ready	butter	113	g	-	-	-	restate
+1 stick (1/2 cup) butter	ready	butter	1	stick	-	-	-	restate
+1 1/2 sticks butter	ready	butter	3/2	stick	-	-	-	restate
+3/4 stick butter, melted	ready	butter	3/4	stick	-	-	-	restate
+6 cups (1.5 L) vegetable broth	ready	vegetable broth	6	cup	-	-	-	restate
+2 cups (1 pint) strawberries	ready	strawberries	2	cup	-	-	-	restate
+1 cup (5 oz) all-purpose flour	ready	all-purpose flour	1	cup	-	-	-	restate
+1 gallon (16 cups) water	ready	water	1	gallon	-	-	-	restate
+1 tablespoon (3 teaspoons) cumin	ready	cumin	1	tbsp	-	-	-	restate
+1 cup (250 g) mascarpone	ready	mascarpone	1	cup	-	-	-	restate
+1 cup sugar (200g)	ready	sugar	1	cup	-	-	-	restate
+1 cup walnuts (4 oz)	ready	walnuts	1	cup	-	-	-	restate
+8 oz (1 cup) ricotta	ready	ricotta	8	oz	-	-	-	restate
+1/4 oz (1 packet) active dry yeast	ready	active dry yeast	1/4	oz	-	-	-	restate
+2 1/4 tsp (1 envelope) yeast	ready	yeast	9/4	tsp	-	-	-	restate
+500g (1lb 2oz) pasta	ready	pasta	500	g	-	-	-	restate
+3 medium potatoes (about 1 lb)	ready	potatoes	3	each	-	-	-	restate
+2 large onions (about 1 1/2 lb), sliced	ready	onions	2	each	-	-	-	restate
+1 cup (about 2 medium) diced onion	ready	diced onion|onion	1	cup	-	-	-	restate
+flour, 2 cups	ready	flour	2	cup	-	-	-	labelfirst
+Butter – 100 g	ready	Butter	100	g	-	-	-	labelfirst
+Eggs: 3	ready	Eggs	3	each	-	-	-	labelfirst
+7-Up soda, 1 can	ready	7-Up soda	1	can	-	-	-	labelfirst
+about 2 cups cooked rice	ready	rice	2	cup	-	-	-	approx
+~1 tsp salt	ready	salt	1	tsp	-	-	-	approx
+approximately 3 lbs pork shoulder	ready	pork shoulder	3	lb	-	-	-	approx
+roughly 1/2 cup parsley, chopped	ready	parsley	1/2	cup	-	-	-	approx
+Salt and pepper to taste	ready	salt and pepper	-	-	-	-	-	unstated
+Olive oil, for drizzling	ready	Olive oil	-	-	-	-	-	unstated
+Lemon wedges, for serving	ready	Lemon wedges|lemon	-	-	-	-	-	unstated
+Chopped chives, to garnish	ready	Chopped chives|chives	-	-	-	-	-	unstated
+Cooking spray, as needed	ready	Cooking spray	-	-	-	-	-	unstated
+flour, for dusting	ready	flour	-	-	-	-	-	unstated
+Freshly ground black pepper	needs_review	Freshly ground black pepper|black pepper	-	-	-	-	-	unstated
+1 tsp salt, plus more to taste	ready	salt	1	tsp	-	-	-	unstated
+Vegetable oil for frying	ready	Vegetable oil	-	-	-	-	-	unstated
+salt	needs_review	salt	-	-	-	-	-	unstated
+1/4 cup raisins (optional)	ready	raisins	1/4	cup	-	-	-	optional
+optional: 1 tsp chili flakes	ready	chili flakes	1	tsp	-	-	-	optional
+2 tbsp capers, optional	ready	capers	2	tbsp	-	-	-	optional
+2 cups cooked brown rice	ready	brown rice	2	cup	-	-	-	form
+1 lb uncooked spaghetti	ready	spaghetti	1	lb	-	-	-	form
+3 cups shredded cooked chicken	ready	shredded chicken|chicken	3	cup	-	-	-	form
+1 cup raw cashews	ready	cashews	1	cup	-	-	-	form
+1 cup raw sugar	ready	raw sugar	1	cup	-	-	D	form
+1/4 cup raw honey	ready	raw honey	1/4	cup	-	-	D	form
+1 lb raw shrimp	ready	shrimp	1	lb	-	-	-	form
+1 cup uncooked white rice	ready	white rice	1	cup	-	-	-	form
+1 cup 2% milk	ready	2% milk	1	cup	-	-	-	qualifier
+1 cup low-fat buttermilk	ready	low-fat buttermilk	1	cup	-	-	-	qualifier
+2 tbsp extra virgin olive oil	ready	extra virgin olive oil	2	tbsp	-	-	-	qualifier
+1 lb boneless skinless chicken breasts	ready	boneless skinless chicken breasts	1	lb	-	-	-	qualifier
+1 cup unsweetened almond milk	ready	unsweetened almond milk	1	cup	-	-	-	qualifier
+1/2 cup whole wheat flour	ready	whole wheat flour	1/2	cup	-	-	-	qualifier
+1 tbsp low-sodium soy sauce	ready	low-sodium soy sauce	1	tbsp	-	-	-	qualifier
+1 cup nonfat Greek yogurt	ready	nonfat Greek yogurt	1	cup	-	-	-	qualifier
+8 oz fresh mozzarella	ready	fresh mozzarella	8	oz	-	-	D	qualifier
+1 cup light brown sugar, packed	ready	light brown sugar	1	cup	-	-	-	qualifier
+1 cup salted butter	ready	salted butter	1	cup	-	-	-	qualifier
+1/2 cup dark chocolate chips	ready	dark chocolate chips	1/2	cup	-	-	-	qualifier
+1 cup old-fashioned rolled oats	ready	old-fashioned rolled oats	1	cup	-	-	-	qualifier
+2 cups whole milk ricotta	ready	whole milk ricotta	2	cup	-	-	-	qualifier
+1 cup sharp cheddar, grated	ready	sharp cheddar	1	cup	-	-	-	qualifier
+1 lb small red potatoes	ready	red potatoes	1	lb	-	-	-	qualifier
+2 large egg yolks	ready	egg yolks	2	each	-	-	-	qualifier
+1 cup baby spinach	ready	baby spinach	1	cup	-	-	-	qualifier
+1 lb. 93% lean ground turkey	ready	93% lean ground turkey	1	lb	-	-	-	qualifier
+1 cup 1% milk	ready	1% milk	1	cup	-	-	-	qualifier
+1/4 cup 100% pure maple syrup	ready	100% pure maple syrup|pure maple syrup	1/4	cup	-	-	-	qualifier
+1 cup 0% Greek yogurt	ready	0% Greek yogurt	1	cup	-	-	-	qualifier
+2 tbsp smoked paprika	ready	smoked paprika	2	tbsp	-	-	-	qualifier
+1 cup frozen peas (no need to thaw)	ready	frozen peas	1	cup	-	-	-	qualifier
+1 cup canned pumpkin	ready	canned pumpkin	1	cup	-	-	-	qualifier
+2 cups frozen mixed vegetables	ready	frozen mixed vegetables	2	cup	-	-	-	qualifier
+1/2 cup dried cranberries	ready	dried cranberries	1/2	cup	-	-	-	qualifier
+1 tbsp dried oregano	ready	dried oregano	1	tbsp	-	-	-	qualifier
+2 cups fresh spinach	ready	fresh spinach|spinach	2	cup	-	-	-	qualifier
+1 cup jarred roasted red peppers	ready	jarred roasted red peppers|roasted red peppers	1	cup	-	-	-	qualifier
+1 cup store-bought pesto	ready	store-bought pesto|pesto	1	cup	-	-	-	qualifier
+8 oz thick-cut bacon	ready	thick-cut bacon	8	oz	-	-	-	qualifier
+1 cup heavy whipping cream	ready	heavy whipping cream	1	cup	-	-	-	qualifier
+2 tbsp toasted sesame oil	ready	toasted sesame oil	2	tbsp	-	-	-	qualifier
+1 cup self-rising flour	ready	self-rising flour	1	cup	-	-	-	qualifier
+1 cup unbleached all-purpose flour	ready	unbleached all-purpose flour	1	cup	-	-	-	qualifier
+1 tsp ground ginger	ready	ground ginger	1	tsp	-	-	-	qualifier
+1 tbsp grated fresh ginger	ready	grated fresh ginger|fresh ginger|ginger	1	tbsp	-	-	-	qualifier
+1 cup cherry tomatoes, halved	ready	cherry tomatoes	1	cup	-	-	-	qualifier
+1 lb frozen shrimp, thawed	ready	frozen shrimp	1	lb	-	-	-	qualifier
+1 cup 7-Up	ready	7-Up	1	cup	-	-	K	digits
+2 tbsp V8 juice	ready	V8 juice	2	tbsp	-	-	-	digits
+1 tsp Chinese 5 spice	ready	Chinese 5 spice	1	tsp	-	-	K	digits
+For the dressing:	unsupported	-	-	-	-	-	-	nonfood
+FILLING	unsupported	-	-	-	-	-	K	nonfood
+Preheat the oven to 350°F.	unsupported	-	-	-	-	-	-	nonfood
+https://example.com/recipe	unsupported	-	-	-	-	-	-	nonfood
+Equipment: 9x13 baking dish	unsupported	-	-	-	-	-	-	nonfood
+Makes 12 muffins	unsupported	-	-	-	-	-	-	nonfood
+Serves 4	unsupported	-	-	-	-	-	-	nonfood
+Prep time: 15 minutes	unsupported	-	-	-	-	-	-	nonfood
+Calories: 320	unsupported	-	-	-	-	-	-	nonfood
+Topping	unsupported	-	-	-	-	-	K	nonfood
+Step 3: Add the onions	unsupported	-	-	-	-	-	-	nonfood
+Note: you can use frozen peas	unsupported	-	-	-	-	-	-	nonfood
+Ingredients	unsupported	-	-	-	-	-	-	nonfood
+1 hour	unsupported	-	-	-	-	-	D	nonfood
+Total: 45 minutes	unsupported	-	-	-	-	-	-	nonfood
+Yield: 2 loaves	unsupported	-	-	-	-	-	-	nonfood
+Per serving: 250 calories	unsupported	-	-	-	-	-	-	nonfood
+Fiber 4g	unsupported	-	-	-	-	-	-	nonfood
+Garnish:	unsupported	-	-	-	-	-	-	nonfood
+Cook the pasta according to package directions.	unsupported	-	-	-	-	-	-	nonfood
+Optional toppings:	unsupported	-	-	-	-	-	-	nonfood
+Watch the video below	unsupported	-	-	-	-	-	-	nonfood
+Servings: 6	unsupported	-	-	-	-	-	-	nonfood
+Cook time: 1 hour 20 minutes	unsupported	-	-	-	-	-	-	nonfood
+Makes about 2 cups	unsupported	-	-	-	-	-	-	nonfood
+Serving size: 2 cookies	unsupported	-	-	-	-	-	-	nonfood
+Saturated fat: 3 g	unsupported	-	-	-	-	-	-	nonfood
+Cholesterol 25 mg	unsupported	-	-	-	-	-	-	nonfood
+One-Pot Pasta	unsupported	-	-	-	-	-	D	nonfood
+1 egg, beaten	ready	egg	1	each	-	-	-	misc
+2 cups water, divided	ready	water	2	cup	-	-	-	misc
+1/2 lemon, juiced	ready	lemon	1/2	each	-	-	-	misc
+12 oz. bacon, cut into 1-inch pieces	ready	bacon	12	oz	-	-	-	misc
+2 lbs. potatoes, cut into 2-inch chunks	ready	potatoes	2	lb	-	-	-	misc
+1 cup water (110°F)	ready	water	1	cup	-	-	-	misc
+1 9-inch pie crust	ready	pie crust	1	each	-	-	-	misc
+1 cup sugar + more for sprinkling	ready	sugar	1	cup	-	-	-	misc
+1 tsp. baking soda	ready	baking soda	1	tsp	-	-	-	misc
+1 T butter	ready	butter	1	tbsp	-	-	D	misc
+1 t salt	ready	salt	1	tsp	-	-	D	misc
+2 C flour	ready	flour	2	cup	-	-	-	misc
+1 lg egg	ready	egg	1	each	-	-	-	misc
+3 med. tomatoes	ready	tomatoes	3	each	-	-	-	misc
+1 qt chicken stock	ready	chicken stock	1	quart	-	-	-	misc
+1 pt heavy cream	ready	heavy cream	1	pint	-	-	-	misc
+1 gal whole milk	ready	whole milk	1	gallon	-	-	-	misc
+2 L water	ready	water	2	l	-	-	-	misc
+500 mL coconut water	ready	coconut water	500	ml	-	-	-	misc
+1 dl cream	ready	cream	1	dl	-	-	-	misc
+100 gr sugar	ready	sugar	100	g	-	-	-	misc
+2 Tbs. honey	ready	honey	2	tbsp	-	-	-	misc
+3 tsps sugar	ready	sugar	3	tsp	-	-	-	misc
+1 lb. each ground beef and ground pork	needs_review	-	1	lb	-	-	-	misc
+2 eggs + 1 yolk	needs_review	-	2	each	-	-	-	misc
+3 eggs, at room temperature	ready	eggs	3	each	-	-	-	misc
+1 cup of milk	ready	milk	1	cup	-	-	-	misc
+2 cups of all purpose flour	ready	all purpose flour	2	cup	-	-	-	misc
+a handful of fresh basil leaves	ready	fresh basil leaves|basil leaves|basil	1	handful	-	-	-	misc
+a splash of vinegar	ready	vinegar	1	splash	-	-	-	misc
+a knob of butter	ready	butter	1	knob	-	-	-	misc
+1 small bunch parsley	ready	parsley	1	bunch	-	-	-	misc
+2 heaping tablespoons cocoa powder	ready	cocoa powder	2	tbsp	-	-	-	misc
+1 level tsp baking powder	ready	baking powder	1	tsp	-	-	-	misc
+1 scant cup sugar	ready	sugar	1	cup	-	-	-	misc
+1/2 c. packed brown sugar	ready	packed brown sugar|brown sugar	1/2	cup	-	-	-	misc
+1 pound cake	ready	pound cake	1	each	-	-	D	misc
+2 tbsp gram flour	ready	gram flour	2	tbsp	-	-	-	misc
+1 cup crème fraîche	ready	crème fraîche	1	cup	-	-	-	misc
+2 jalapeños, seeded	ready	jalapeños	2	each	-	-	-	misc
+1,5 kg flour	needs_review	flour	-	kg	-	-	-	misc
+1,000 g flour	needs_review	flour	-	g	-	-	-	misc
+0 g sugar	needs_review	sugar	-	g	-	-	-	misc
+1 inch ginger, grated	ready	ginger	1	inch	-	-	-	misc
+2 drops almond extract	ready	almond extract	2	drop	-	-	-	misc
+1 dash hot sauce	ready	hot sauce	1	dash	-	-	-	misc
+1 1/2 lb beef, cut into 1 1/2-inch cubes	ready	beef	3/2	lb	-	-	-	misc
+2 lbs chicken wings, tips removed	ready	chicken wings	2	lb	-	-	-	misc
+1 cup milk, warmed to 110 degrees	ready	milk	1	cup	-	-	-	misc
+6 tbsp butter, cut into 6 pieces	ready	butter	6	tbsp	-	-	-	misc
+1 lb pasta, such as rigatoni	ready	pasta	1	lb	-	-	-	misc
+1/2 cup chopped fresh cilantro, plus more for garnish	ready	chopped fresh cilantro|fresh cilantro|cilantro	1/2	cup	-	-	-	misc
+1 onion, halved and sliced 1/4 inch thick	ready	onion	1	each	-	-	-	misc
+2 tsp kosher salt (such as Diamond Crystal; use half for table salt)	ready	kosher salt	2	tsp	-	-	-	misc
+1 cup rice, rinsed until water runs clear (about 3 times)	ready	rice	1	cup	-	-	-	misc
+1 lb carrots (about 6 medium)	ready	carrots	1	lb	-	-	-	misc
+1 cup cooked lentils (from 1/2 cup dry)	needs_review	lentils	1	cup	-	-	DK	remark-amount
+3 cups cooked pasta (about 6 oz dry)	needs_review	pasta	3	cup	-	-	DK	remark-amount
+Three-bean salad	needs_review	Three-bean salad	-	-	-	-	K	numword
+1 cup cooked chickpeas (or one 15-oz can, drained)	needs_review	chickpeas	1	cup	-	-	D	remark-amount
+1 lb ground beef (or 2 cups cooked lentils)	needs_review	-	1	lb	-	ground beef;cooked lentils||ground beef;lentils	D	alt
+2 cups milk, or as needed	ready	milk	2	cup	-	-	-	misc
+1 lb fresh or frozen cranberries	ready	cranberries	1	lb	-	-	D	sourcing
+3 cups chicken or turkey stock	needs_review	-	3	cup	-	chicken stock;turkey stock	-	alt
+1/2 tsp each salt and pepper	needs_review	-	1/2	tsp	-	-	-	misc
+1 tbsp each chopped parsley and dill	needs_review	-	1	tbsp	-	-	-	misc
+2 cups mixed berries (strawberries, blueberries, raspberries)	ready	mixed berries	2	cup	-	-	-	nested
+1 bunch kale (about 8 oz), stems removed	ready	kale	1	bunch	-	-	-	restate
+4 boneless pork chops (1-inch thick)	ready	boneless pork chops	4	each	-	-	-	count
+2 (6 oz) boneless skinless chicken breasts	ready	boneless skinless chicken breasts	2	each	6 oz	-	D	package
+1 (15.25 oz) can corn, drained	ready	corn	1	can	61/4 oz	-	-	package
+1 (10.75 oz) can condensed cream of mushroom soup	ready	condensed cream of mushroom soup	1	can	43/4 oz	-	-	package
+2 (3 oz) packages ramen noodles	ready	ramen noodles	2	package	3 oz	-	-	package
+1 (6-inch) piece daikon	ready	daikon	1	piece	-	-	-	count
+2 dozen eggs	ready	eggs	24	each	-	-	-	b2-numword
+1/2 dozen eggs	ready	eggs	6	each	-	-	-	b2-numword
+1 large egg white	ready	egg white	1	each	-	-	-	b2-count
+1 cup flour, plus 2 tablespoons for dusting	ready	flour	18	tbsp	-	-	D	b2-compound
+1/3 c + 1 Tbsp oil	ready	oil	19/3	tbsp	-	-	-	b2-compound
+1/3 cup plus 1 teaspoon sugar	ready	sugar	17	tsp	-	-	-	b2-compound
+2 tbsp. + 2 tsp. honey	ready	honey	8	tsp	-	-	-	b2-compound
+1 kg 200 g potatoes	ready	potatoes	1200	g	-	-	-	b2-compound
+1 cup + 1 tbsp (130 g) flour	ready	flour	17	tbsp	-	-	-	b2-compound
+1 quart (4 cups) chicken stock	ready	chicken stock	1	quart	-	-	-	b2-restate
+1 cup (half a pint) heavy cream	ready	heavy cream	1	cup	-	-	-	b2-restate
+1 lb. (16 oz.) spaghetti	ready	spaghetti	1	lb	-	-	-	b2-restate
+2 Tbsp. (1 oz.) butter	ready	butter	2	tbsp	-	-	-	b2-restate
+1 cup chopped onion (1 medium)	ready	chopped onion|onion	1	cup	-	-	-	b2-restate
+1 medium onion (1 cup chopped)	ready	onion	1	each	-	-	-	b2-restate
+3 cloves garlic (1 tbsp minced)	ready	garlic	3	clove	-	-	-	b2-restate
+2 lbs (about 4) chicken breasts	ready	chicken breasts	2	lb	-	-	-	b2-restate
+4 chicken breasts (about 2 lbs)	ready	chicken breasts	4	each	-	-	-	b2-restate
+450g/1lb minced beef	ready	minced beef	450	g	-	-	-	b2-restate
+2 lb (900 g) bone-in chicken thighs	ready	bone-in chicken thighs	2	lb	-	-	-	b2-restate
+1 oz. (28 g) chocolate	ready	chocolate	1	oz	-	-	-	b2-restate
+1/2 to 3/4 cup milk	needs_review	milk	1/2..3/4	cup	-	-	-	b2-range
+2 to 2 1/2 lbs chicken	needs_review	chicken	2..5/2	lb	-	-	-	b2-range
+1 ⅓ – 1 ½ cups water	needs_review	water	4/3..3/2	cup	-	-	-	b2-range
+2 1/2-3 cups broth	needs_review	broth	5/2..3	cup	-	-	-	b2-range
+2—3 tbsp lemon juice	needs_review	lemon juice	2..3	tbsp	-	-	-	b2-range
+½ - 1 tsp chili powder	needs_review	chili powder	1/2..1	tsp	-	-	-	b2-range
+1/2 of a lemon	ready	lemon	1/2	each	-	-	-	b2-fraction
+1 and 1/2 cups sugar	ready	sugar	3/2	cup	-	-	-	b2-fraction
+3 3/4 cups flour	ready	flour	15/4	cup	-	-	-	b2-fraction
+1 1/2 inch piece ginger	ready	ginger	1	piece	-	-	D	b2-fraction
+1 lb 80/20 ground beef	ready	80/20 ground beef	1	lb	-	-	K	b2-digits
+1 lb 85% lean ground beef	ready	85% lean ground beef	1	lb	-	-	-	b2-qualifier
+1 cup 2 percent milk	ready	2 percent milk	1	cup	-	-	-	b2-qualifier
+1 cup Thousand Island dressing	ready	Thousand Island dressing	1	cup	-	-	-	b2-digits
+1 tsp five-spice powder	ready	five-spice powder	1	tsp	-	-	-	b2-digits
+2 tsp five spice powder	ready	five spice powder	2	tsp	-	-	K	b2-digits
+Five-spice powder	needs_review	Five-spice powder	-	-	-	-	K	b2-digits
+2 tbsp A1 sauce	ready	A1 sauce	2	tbsp	-	-	-	b2-digits
+1/2 cup 10X sugar	ready	10X sugar	1/2	cup	-	-	K	b2-digits
+1 cup 7 grain cereal	ready	7 grain cereal	1	cup	-	-	K	b2-digits
+1 cup 00 pizza flour	ready	00 pizza flour	1	cup	-	-	K	b2-digits
+1\u00a0cup sugar	ready	sugar	1	cup	-	-	-	b2-unicode
+2\u2009tbsp oil	ready	oil	2	tbsp	-	-	-	b2-unicode
+1 1/2\tcups milk	ready	milk	3/2	cup	-	-	-	b2-unicode
+2 15-oz cans black beans	ready	black beans	2	can	15 oz	-	-	b2-package
+2 15 oz cans black beans	ready	black beans	2	can	15 oz	-	-	b2-package
+2 14.5 oz cans diced tomatoes	ready	diced tomatoes	2	can	29/2 oz	-	-	b2-package
+3 6-ounce cans tomato paste	ready	tomato paste	3	can	6 oz	-	-	b2-package
+1 1-lb loaf bread	ready	bread	1	loaf	1 lb	-	-	b2-package
+2 7-oz containers Greek yogurt	ready	Greek yogurt	2	container	7 oz	-	-	b2-package
+1 12 oz bag chocolate chips	ready	chocolate chips	1	bag	12 oz	-	-	b2-package
+One (8-ounce) package cream cheese	ready	cream cheese	1	package	8 oz	-	-	b2-package
+1 pkg (8 oz) cream cheese	ready	cream cheese	1	package	8 oz	-	-	b2-package
+1 8-oz. pkg. cream cheese	ready	cream cheese	1	package	8 oz	-	-	b2-package
+2 pkgs (3 oz each) gelatin	ready	gelatin	2	package	3 oz	-	-	b2-package
+1 (15 oz.) can black beans, rinsed	ready	black beans	1	can	15 oz	-	-	b2-package
+1 can black beans (15 ounces)	ready	black beans	1	can	15 oz	-	-	b2-package
+1 lg. can (28 oz.) tomatoes	ready	tomatoes	1	can	28 oz	-	-	b2-package
+1 small can (4 oz) green chiles	ready	green chiles	1	can	4 oz	-	-	b2-package
+2 cans (10 3/4 oz each) condensed soup	ready	condensed soup	2	can	43/4 oz	-	-	b2-package
+1 (6.5 oz) jar artichoke hearts	ready	artichoke hearts	1	jar	13/2 oz	-	-	b2-package
+1 (1 oz) packet ranch seasoning	ready	ranch seasoning	1	packet	1 oz	-	-	b2-package
+1 bag (12 oz) cranberries	ready	cranberries	1	bag	12 oz	-	-	b2-package
+1 box (1 lb) spaghetti	ready	spaghetti	1	box	1 lb	-	-	b2-package
+1 bottle (750 ml) wine	ready	wine	1	bottle	750 ml	-	-	b2-package
+1 (14 fl. oz.) can coconut milk	ready	coconut milk	1	can	14 fl_oz	-	-	b2-package
+1 can (13.5 oz) coconut milk	ready	coconut milk	1	can	27/2 oz	-	-	b2-package
+1 x 400 g can chickpeas	ready	chickpeas	1	can	400 g	-	-	b2-package
+12 oz. beer	ready	beer	12	oz	-	-	-	b2-ozfloz
+2 fl. ounces lime juice	ready	lime juice	2	fl_oz	-	-	-	b2-ozfloz
+1.5 oz tequila	ready	tequila	3/2	oz	-	-	-	b2-ozfloz
+1 1/2 fl oz gin	ready	gin	3/2	fl_oz	-	-	-	b2-ozfloz
+1/2 cup red or white wine	needs_review	-	1/2	cup	-	red wine;white wine	-	b2-alt
+1 red or yellow bell pepper	needs_review	-	1	each	-	red bell pepper;yellow bell pepper	-	b2-alt
+1 lb shrimp, fresh or frozen	ready	shrimp	1	lb	-	-	-	b2-sourcing
+1 cup brown or white rice	needs_review	-	1	cup	-	brown rice;white rice	-	b2-alt
+1 cup sweet or dry vermouth	needs_review	-	1	cup	-	sweet vermouth;dry vermouth	-	b2-alt
+4 hamburger or hot dog buns	needs_review	-	4	each	-	hamburger buns;hot dog buns	-	b2-alt
+1 lb bacon or pancetta	needs_review	-	1	lb	-	bacon;pancetta	-	b2-alt
+1 tsp salt (or 1/2 tsp table salt)	needs_review	-	1	tsp	-	salt;table salt	D	b2-alt
+1 cup sugar (or to taste)	ready	sugar	1	cup	-	-	-	b2-sourcing
+1/2 cup oil (such as canola)	ready	oil	1/2	cup	-	-	-	b2-sourcing
+1 cup salsa (mild or hot)	needs_review	-	1	cup	-	mild salsa;hot salsa	D	b2-alt
+2 tbsp butter and/or oil	needs_review	-	2	tbsp	-	butter;oil	D	b2-alt
+2 tbsp honey (or agave)	needs_review	-	2	tbsp	-	honey;agave	D	b2-alt
+1 tbsp fresh thyme (or 1 tsp dried)	needs_review	-	1	tbsp	-	fresh thyme;dried thyme	D	b2-alt
+1/2 cup chopped nuts (pecans or walnuts)	needs_review	-	1/2	cup	-	pecans;walnuts	D	b2-alt
+2 tbsp lemon or lime juice	needs_review	-	2	tbsp	-	lemon juice;lime juice	-	b2-alt
+1 cup cilantro or flat-leaf parsley	needs_review	-	1	cup	-	cilantro;flat-leaf parsley	-	b2-alt
+1 cup ricotta or cottage cheese	needs_review	-	1	cup	-	ricotta;cottage cheese	-	b2-alt
+1 tbsp sambal oelek or sriracha	needs_review	-	1	tbsp	-	sambal oelek;sriracha	-	b2-alt
+2 cups penne or rigatoni	needs_review	-	2	cup	-	penne;rigatoni	-	b2-alt
+1 lb tilapia or other mild fish	needs_review	-	1	lb	-	tilapia;other mild fish||tilapia;mild fish	-	b2-alt
+1 cup feta or goat cheese	needs_review	-	1	cup	-	feta;goat cheese	-	b2-alt
+For garnish:	unsupported	-	-	-	-	-	-	b2-nonfood
+Special equipment: stand mixer	unsupported	-	-	-	-	-	-	b2-nonfood
+1. Preheat oven to 400 degrees	unsupported	-	-	-	-	-	-	b2-nonfood
+2) Mix flour and sugar	unsupported	-	-	-	-	-	-	b2-nonfood
+Tip: use room-temperature eggs	unsupported	-	-	-	-	-	-	b2-nonfood
+Recipe adapted from Example Kitchen	unsupported	-	-	-	-	-	-	b2-nonfood
+Nutrition Facts	unsupported	-	-	-	-	-	-	b2-nonfood
+Protein 12 g	unsupported	-	-	-	-	-	-	b2-nonfood
+Carbs: 30g	unsupported	-	-	-	-	-	-	b2-nonfood
+Net carbs: 5 grams	unsupported	-	-	-	-	-	K	b2-nonfood
+Calories 450 kcal	unsupported	-	-	-	-	-	-	b2-nonfood
+Servings 8	unsupported	-	-	-	-	-	-	b2-nonfood
+Makes 24 cookies	unsupported	-	-	-	-	-	-	b2-nonfood
+Yield: 1 9-inch pie	unsupported	-	-	-	-	-	-	b2-nonfood
+Active time: 30 min	unsupported	-	-	-	-	-	-	b2-nonfood
+Course: dinner	unsupported	-	-	-	-	-	-	b2-nonfood
+Cuisine: Italian	unsupported	-	-	-	-	-	-	b2-nonfood
+Print recipe	unsupported	-	-	-	-	-	-	b2-nonfood
+Jump to recipe	unsupported	-	-	-	-	-	-	b2-nonfood
+WW Points: 4	unsupported	-	-	-	-	-	K	b2-nonfood
+SmartPoints: 7	unsupported	-	-	-	-	-	K	b2-nonfood
+2 baking sheets	unsupported	-	-	-	-	-	D	b2-nonfood
+1 9x13-inch baking pan	unsupported	-	-	-	-	-	D	b2-nonfood
+Parchment paper	unsupported	-	-	-	-	-	D	b2-nonfood
+Sugar 10g	unsupported	-	-	-	-	-	D	b2-nonfood
+Total Carbohydrate 22 grams	unsupported	-	-	-	-	-	K	b2-nonfood
+Potassium: 400 milligrams	unsupported	-	-	-	-	-	K	b2-nonfood
+Vitamin C: 15 mg	unsupported	-	-	-	-	-	-	b2-nonfood
+Servings: 4 people	unsupported	-	-	-	-	-	-	b2-nonfood
+1 large egg, beaten	ready	egg	1	each	-	-	-	b2-size
+2 extra-large eggs	ready	eggs	2	each	-	-	-	b2-size
+1 jumbo onion	ready	onion	1	each	-	-	-	b2-size
+3 small zucchini	ready	zucchini	3	each	-	-	-	b2-size
+2 lbs medium potatoes	ready	potatoes	2	lb	-	-	K	b2-size
+1 cup small curd cottage cheese	ready	small curd cottage cheese	1	cup	-	-	-	b2-size
+1 cup mini marshmallows	ready	mini marshmallows	1	cup	-	-	D	b2-size
+1 cup baby carrots	ready	baby carrots	1	cup	-	-	-	b2-size
+2 large russet potatoes	ready	russet potatoes	2	each	-	-	-	b2-size
+1 medium head cabbage	ready	cabbage	1	head	-	-	-	b2-size
+1 small handful parsley	ready	parsley	1	handful	-	-	-	b2-size
+1 big pinch salt	ready	salt	1	pinch	-	-	-	b2-size
+1 cup unsalted roasted peanuts	ready	unsalted roasted peanuts	1	cup	-	-	-	b2-qualifier
+2 cups low-sodium chicken broth	ready	low-sodium chicken broth	2	cup	-	-	-	b2-qualifier
+1 cup reduced-fat sour cream	ready	reduced-fat sour cream	1	cup	-	-	-	b2-qualifier
+1 lb extra-lean ground beef	ready	extra-lean ground beef	1	lb	-	-	-	b2-qualifier
+1 cup gluten-free flour	ready	gluten-free flour	1	cup	-	-	-	b2-qualifier
+1 cup sugar-free maple syrup	ready	sugar-free maple syrup	1	cup	-	-	-	b2-qualifier
+2 tbsp light mayonnaise	ready	light mayonnaise	2	tbsp	-	-	-	b2-qualifier
+1 cup lite coconut milk	ready	lite coconut milk	1	cup	-	-	-	b2-qualifier
+1 cup instant rice	ready	instant rice	1	cup	-	-	-	b2-qualifier
+1 cup quick-cooking oats	ready	quick-cooking oats	1	cup	-	-	-	b2-qualifier
+1 tbsp prepared horseradish	ready	prepared horseradish	1	tbsp	-	-	-	b2-qualifier
+1/4 cup dry sherry	ready	dry sherry	1/4	cup	-	-	-	b2-qualifier
+1 cup dry white wine	ready	dry white wine	1	cup	-	-	-	b2-qualifier
+1/2 cup dry breadcrumbs	ready	dry breadcrumbs	1/2	cup	-	-	-	b2-qualifier
+1 tbsp dry mustard	ready	dry mustard	1	tbsp	-	-	-	b2-qualifier
+2 cups dried black beans	ready	dried black beans	2	cup	-	-	-	b2-qualifier
+1 cup dried apricots	ready	dried apricots	1	cup	-	-	-	b2-qualifier
+1 cup leftover turkey	ready	leftover turkey|turkey	1	cup	-	-	-	b2-qualifier
+1 cup organic cane sugar	ready	organic cane sugar|cane sugar	1	cup	-	-	-	b2-qualifier
+1 cup fresh orange juice	ready	fresh orange juice|orange juice	1	cup	-	-	-	b2-qualifier
+1 package frozen puff pastry	ready	frozen puff pastry	1	package	-	-	-	b2-qualifier
+1 cup homemade chicken stock	ready	homemade chicken stock|chicken stock	1	cup	-	-	-	b2-qualifier
+1 cup canned coconut milk	ready	canned coconut milk	1	cup	-	-	D	b2-qualifier
+1 cup evaporated milk	ready	evaporated milk	1	cup	-	-	-	b2-qualifier
+1 cup sweetened condensed milk	ready	sweetened condensed milk	1	cup	-	-	-	b2-qualifier
+2 tbsp powdered sugar	ready	powdered sugar	2	tbsp	-	-	-	b2-qualifier
+1 cup roasted red peppers	ready	roasted red peppers	1	cup	-	-	-	b2-qualifier
+1 cup sun-dried tomatoes	ready	sun-dried tomatoes	1	cup	-	-	-	b2-qualifier
+1 cup cooked and shredded chicken	ready	shredded chicken|chicken	1	cup	-	-	D	b2-form
+2 cups uncooked long-grain rice	ready	long-grain rice	2	cup	-	-	-	b2-form
+1 lb raw almonds	ready	almonds	1	lb	-	-	-	b2-form
+1/2 cup raw pumpkin seeds	ready	pumpkin seeds	1/2	cup	-	-	-	b2-form
+a half-gallon milk	ready	milk	1/2	gallon	-	-	K	b2-K1
+a quarter-teaspoon salt	ready	salt	1/4	tsp	-	-	K	b2-K1
+two-thirds cup sugar	ready	sugar	2/3	cup	-	-	-	b2-numword
+one-quarter cup oil	ready	oil	1/4	cup	-	-	-	b2-numword
+a 3-pound whole chicken	ready	whole chicken	1	each	3 lb	-	D	b2-package
+Juice of 1 lemon	ready	lemon juice|lemon	1	each	-	-	DK	b2-misc
+1 lemon, zested and juiced	ready	lemon	1	each	-	-	-	b2-misc
+1 cup broth, chicken or vegetable	needs_review	-	1	cup	-	chicken broth;vegetable broth	-	b2-alt
+1 cup peanut butter, creamy or chunky	needs_review	-	1	cup	-	creamy peanut butter;chunky peanut butter	D	b2-alt
+1 can coconut milk, full-fat	ready	coconut milk	1	can	-	-	-	b2-misc
+2 eggs (or 1/2 cup egg substitute)	needs_review	-	2	each	-	eggs;egg substitute	D	b2-alt
+1 cup milk (any kind)	ready	milk	1	cup	-	-	-	b2-misc
+3 tablespoons butter, divided (2 tbsp + 1 tbsp)	ready	butter	3	tbsp	-	-	D	b2-misc
+1 (14 oz) can chickpeas, or 1 1/2 cups cooked	needs_review	chickpeas	1	can	14 oz	-	D	b2-misc
+1 cup chopped tomatoes (2 medium)	ready	chopped tomatoes|tomatoes	1	cup	-	-	-	b2-restate
+2 cups shredded mozzarella (8 oz)	ready	shredded mozzarella	2	cup	-	-	-	b2-restate
+4 oz cream cheese (half of an 8-oz package)	ready	cream cheese	4	oz	-	-	-	b2-restate
+1/2 (8 oz) package cream cheese	ready	cream cheese	1/2	package	8 oz	-	-	b2-package
+1 (8 oz) package cream cheese, plus 2 oz	needs_review	cream cheese	1	package	8 oz	-	-	b2-package
+3 eggs plus 1 egg yolk	needs_review	-	3	each	-	-	-	b2-misc
+1 cup sugar, divided (1/2 cup for the batter, 1/2 cup for topping)	ready	sugar	1	cup	-	-	D	b2-misc
+1\u00bd\u00a0cups milk	ready	milk	3/2	cup	-	-	-	b2-unicode
+2 jalapen\u0303os	ready	jalapeños	2	each	-	-	-	b2-unicode
+1 cup flour\u200b	ready	flour	1	cup	-	-	-	b2-unicode
+Protein: 20 g	unsupported	-	-	-	-	-	-	b3-nutrition
+Iron: 2 mg	unsupported	-	-	-	-	-	-	b3-nutrition
+Calcium: 100 mg	unsupported	-	-	-	-	-	-	b3-nutrition
+Sugars: 5 g	unsupported	-	-	-	-	-	-	b3-nutrition
+Dietary Fiber: 3 g	unsupported	-	-	-	-	-	-	b3-nutrition
+Trans Fat: 0 g	unsupported	-	-	-	-	-	-	b3-nutrition
+Potassium 400mg	unsupported	-	-	-	-	-	-	b3-nutrition
+Carbohydrates: 30 g	unsupported	-	-	-	-	-	-	b3-nutrition
+Vitamin A: 10%	unsupported	-	-	-	-	-	-	b3-nutrition
+Total Sugars 12g	unsupported	-	-	-	-	-	-	b3-nutrition
+Added Sugars: 4 g	unsupported	-	-	-	-	-	-	b3-nutrition
+Monounsaturated Fat: 6 g	unsupported	-	-	-	-	-	-	b3-nutrition
+Polyunsaturated fat 2 g	unsupported	-	-	-	-	-	-	b3-nutrition
+Vitamin D: 2 mcg	unsupported	-	-	-	-	-	-	b3-nutrition
+Magnesium: 40 mg	unsupported	-	-	-	-	-	-	b3-nutrition
+Zinc 1 mg	unsupported	-	-	-	-	-	-	b3-nutrition
+Caffeine: 95 mg	unsupported	-	-	-	-	-	-	b3-nutrition
+Salt: 1.2 g	unsupported	-	-	-	-	-	D	b3-nutrition
+Energy: 1200 kJ	unsupported	-	-	-	-	-	-	b3-nutrition
+Fat 10 g	unsupported	-	-	-	-	-	-	b3-nutrition
+1/2cup sugar	ready	sugar	1/2	cup	-	-	-	b3-glued
+2cups flour	ready	flour	2	cup	-	-	-	b3-glued
+1 1/2cups milk	ready	milk	3/2	cup	-	-	-	b3-glued
+1/2c sugar	ready	sugar	1/2	cup	-	-	-	b3-glued
+250g butter	ready	butter	250	g	-	-	-	b3-glued
+2tbsp honey	ready	honey	2	tbsp	-	-	-	b3-glued
+11⁄2 cups flour	needs_review	flour	-	cup	-	-	D	b3-glued
+1 / 2 cup sugar	ready	sugar	1/2	cup	-	-	D	b3-glued
+1/2/3 cup sugar	needs_review	sugar	-	cup	-	-	D	b3-glued
+2 tbsp. 1 tsp. salt	ready	salt	7	tsp	-	-	D	b3-compound
+1 lb. 2 oz. (510 g) flour	ready	flour	18	oz	-	-	-	b3-compound
+8 oz. (2 sticks) butter	ready	butter	8	oz	-	-	-	b3-restate
+2 cups (16 fl oz) milk	ready	milk	2	cup	-	-	-	b3-restate
+2 cups (16 oz) milk	ready	milk	2	cup	-	-	-	b3-restate
+1 pint (2 cups) blueberries	ready	blueberries	1	pint	-	-	-	b3-restate
+1 pint cherry tomatoes	ready	cherry tomatoes	1	pint	-	-	-	b3-restate
+1 quart strawberries	ready	strawberries	1	quart	-	-	-	b3-restate
+2 cups (1/2 lb) cheese	ready	cheese	2	cup	-	-	-	b3-restate
+1 tbsp. (15 ml) olive oil	ready	olive oil	1	tbsp	-	-	-	b3-restate
+15 mL (1 tbsp) olive oil	ready	olive oil	15	ml	-	-	-	b3-restate
+5 ml vanilla	ready	vanilla	5	ml	-	-	-	b3-restate
+1 Tbsp + 1 tsp (20 ml) lemon juice	ready	lemon juice	4	tsp	-	-	-	b3-restate
+100g/3.5oz butter	ready	butter	100	g	-	-	-	b3-restate
+75g (⅓ cup) sugar	ready	sugar	75	g	-	-	-	b3-restate
+1¼ cups (300ml) milk	ready	milk	5/4	cup	-	-	-	b3-restate
+2½ tbsp. honey	ready	honey	5/2	tbsp	-	-	-	b3-restate
+¾ lb. (340 g) fettuccine	ready	fettuccine	3/4	lb	-	-	-	b3-restate
+1/2 pound (8 ounces) mushrooms	ready	mushrooms	1/2	lb	-	-	-	b3-restate
+1 1/2 pounds (680 grams) beef	ready	beef	3/2	lb	-	-	-	b3-restate
+2.5 kg turkey	ready	turkey	5/2	kg	-	-	-	b3-restate
+0.5 l water	ready	water	1/2	l	-	-	-	b3-restate
+1 lb (0.45 kg) potatoes	ready	potatoes	1	lb	-	-	-	b3-restate
+3 large eggs (150 g)	ready	eggs	3	each	-	-	-	b3-restate
+2 egg whites (60 g)	ready	egg whites	2	each	-	-	-	b3-restate
+1 cup (100 g) walnut halves	ready	walnut halves	1	cup	-	-	-	b3-restate
+1/2 tsp (2.5 ml) salt	ready	salt	1/2	tsp	-	-	-	b3-restate
+1 tsp (5 g) salt	ready	salt	1	tsp	-	-	-	b3-restate
+1 stick (4 oz) butter	ready	butter	1	stick	-	-	-	b3-restate
+1 lb (4 sticks) butter	ready	butter	1	lb	-	-	-	b3-restate
+2 tbsp (1/4 stick) butter	ready	butter	2	tbsp	-	-	-	b3-restate
+1 envelope (1 tbsp) unflavored gelatin	ready	unflavored gelatin	1	envelope	1 tbsp	-	-	b3-package
+1 package (3.4 oz) instant pudding mix	ready	instant pudding mix	1	package	17/5 oz	-	-	b3-package
+1 can (12 oz) soda	ready	soda	1	can	12 oz	-	-	b3-package
+2 cans tuna	ready	tuna	2	can	-	-	-	b3-count
+1 can of beans	ready	beans	1	can	-	-	-	b3-count
+3 heads garlic	ready	garlic	3	head	-	-	-	b3-count
+2 heads of lettuce	ready	lettuce	2	head	-	-	-	b3-count
+1 piece of ginger	ready	ginger	1	piece	-	-	-	b3-count
+3 pieces of chicken	ready	chicken	3	piece	-	-	-	b3-count
+2 fillets of salmon	ready	salmon	2	fillet	-	-	-	b3-count
+2 sprigs of mint	ready	mint	2	sprig	-	-	-	b3-count
+1 pinch of saffron threads	ready	saffron threads	1	pinch	-	-	-	b3-count
+2 cubes of sugar	ready	sugar	2	cube	-	-	-	b3-count
+1 bar dark chocolate	ready	dark chocolate	1	block	-	-	D	b3-count
+2 bars cream cheese	ready	cream cheese	2	block	-	-	-	b3-count
+1 tub sour cream	ready	sour cream	1	container	-	-	-	b3-count
+1 bottle hot sauce	ready	hot sauce	1	bottle	-	-	-	b3-count
+1 sleeve saltine crackers	needs_review	saltine crackers	1	-	-	-	D	b3-count
+1 stick cinnamon	ready	cinnamon	1	stick	-	-	-	b3-count
+1 knob ginger	ready	ginger	1	knob	-	-	-	b3-count
+4 chicken drumsticks	ready	chicken drumsticks	4	each	-	-	-	b3-count
+2 leeks, white parts only	ready	leeks	2	each	-	-	-	b3-count
+1 lb pound cake, cubed	ready	pound cake	1	lb	-	-	-	b3-unitname
+1 pint vanilla ice cream	ready	vanilla ice cream	1	pint	-	-	-	b3-unitname
+1 cup graham cracker crumbs	ready	graham cracker crumbs	1	cup	-	-	-	b3-unitname
+1 cup milk/cream	needs_review	-	1	cup	-	milk;cream	-	b3-alt
+2 tbsp butter/margarine	needs_review	-	2	tbsp	-	butter;margarine	-	b3-alt
+1 cup chicken/vegetable stock	needs_review	-	1	cup	-	chicken stock;vegetable stock	-	b3-alt
+1 tbsp lemon/lime juice	needs_review	-	1	tbsp	-	lemon juice;lime juice	-	b3-alt
+1 cup broth or water	needs_review	-	1	cup	-	broth;water	-	b3-alt
+1 cup spinach or more	ready	spinach	1	cup	-	-	-	b3-alt
+1 cup water or as needed	ready	water	1	cup	-	-	-	b3-alt
+1 tsp salt or less	ready	salt	1	tsp	-	-	-	b3-alt
+salt, or to taste	ready	salt	-	-	-	-	-	b3-alt
+1-2 tbsp honey or maple syrup	needs_review	-	1..2	tbsp	-	honey;maple syrup	-	b3-alt
+butter or oil, for greasing	needs_review	-	-	-	-	butter;oil	-	b3-alt
+1 lb fettuccine or linguine	needs_review	-	1	lb	-	fettuccine;linguine	-	b3-alt
+1 tbsp cornstarch (or arrowroot)	needs_review	-	1	tbsp	-	cornstarch;arrowroot	D	b3-alt
+1 egg or 2 egg whites	needs_review	-	1	each	-	egg;egg whites	D	b3-alt
+1 cup Greek yogurt or sour cream, plus more for serving	needs_review	-	1	cup	-	Greek yogurt;sour cream	-	b3-alt
+28 oz can tomatoes	ready	tomatoes	1	can	28 oz	-	DK	b3-K2
+15-oz can black beans	ready	black beans	1	can	15 oz	-	DK	b3-K2
+12 oz bag frozen peas	ready	frozen peas	1	bag	12 oz	-	DK	b3-K2
+8-ounce package cream cheese	ready	cream cheese	1	package	8 oz	-	DK	b3-K2
+16 oz. (1 lb.) bag frozen corn	ready	frozen corn	1	bag	16 oz	-	DK	b3-K2
+400 g can chickpeas	ready	chickpeas	1	can	400 g	-	DK	b3-K2
+8 oz water	ready	water	8	oz	-	-	-	b3-ozfloz
+16 oz milk	ready	milk	16	oz	-	-	-	b3-ozfloz
+4 ounces heavy cream	ready	heavy cream	4	oz	-	-	-	b3-ozfloz
+2 oz (60 ml) espresso	ready	espresso	2	oz	-	-	-	b3-ozfloz
+4 fl. oz bourbon	ready	bourbon	4	fl_oz	-	-	-	b3-ozfloz
+4 fluid oz. rum	ready	rum	4	fl_oz	-	-	-	b3-ozfloz
+4 fl.oz. cream	ready	cream	4	fl_oz	-	-	-	b3-ozfloz
+4 floz stock	ready	stock	4	fl_oz	-	-	-	b3-ozfloz
+4 fl-oz juice	ready	juice	4	fl_oz	-	-	-	b3-ozfloz
+2x 400g tins tomatoes	ready	tomatoes	2	tin	400 g	-	-	b3-x
+1x can chickpeas	ready	chickpeas	1	can	-	-	-	b3-x
+2 x 15 oz cans beans	ready	beans	2	can	15 oz	-	-	b3-x
+- 1 cup sugar	ready	sugar	1	cup	-	-	-	b3-marker
+• 2 eggs	ready	eggs	2	each	-	-	-	b3-marker
+* 1 tsp salt	ready	salt	1	tsp	-	-	-	b3-marker
+1. 2 cups flour	ready	flour	2	cup	-	-	-	b3-marker
+1) 1/2 cup milk	ready	milk	1/2	cup	-	-	-	b3-marker
+10. 1 tsp vanilla	ready	vanilla	1	tsp	-	-	-	b3-marker
+a) 1 cup rice	ready	rice	1	cup	-	-	-	b3-marker
+▢ 1 cup sugar	ready	sugar	1	cup	-	-	-	b3-marker
+☐ 2 tbsp butter	ready	butter	2	tbsp	-	-	-	b3-marker
+✓ 1 egg	ready	egg	1	each	-	-	-	b3-marker
+1 2 eggs	needs_review	eggs	-	each	-	-	D	b3-marker
+Salad:	unsupported	-	-	-	-	-	-	b3-nonfood
+To serve:	unsupported	-	-	-	-	-	-	b3-nonfood
+Instructions	unsupported	-	-	-	-	-	-	b3-nonfood
+Directions:	unsupported	-	-	-	-	-	-	b3-nonfood
+Method	unsupported	-	-	-	-	-	-	b3-nonfood
+Notes	unsupported	-	-	-	-	-	-	b3-nonfood
+Advertisement	unsupported	-	-	-	-	-	-	b3-nonfood
+Add to shopping list	unsupported	-	-	-	-	-	-	b3-nonfood
+See recipe card below	unsupported	-	-	-	-	-	-	b3-nonfood
+5 from 3 votes	unsupported	-	-	-	-	-	-	b3-nonfood
+4.8 stars (120 reviews)	unsupported	-	-	-	-	-	-	b3-nonfood
+Servings: 4-6	unsupported	-	-	-	-	-	-	b3-nonfood
+Prep 10 mins	unsupported	-	-	-	-	-	-	b3-nonfood
+Cook 20 mins	unsupported	-	-	-	-	-	-	b3-nonfood
+Total 30 mins	unsupported	-	-	-	-	-	-	b3-nonfood
+Serves: 6 to 8	unsupported	-	-	-	-	-	-	b3-nonfood
+Makes: 1 loaf	unsupported	-	-	-	-	-	-	b3-nonfood
+Yields 3 dozen	unsupported	-	-	-	-	-	-	b3-nonfood
+Bake 25 minutes	unsupported	-	-	-	-	-	-	b3-nonfood
+Chill for 2 hours	unsupported	-	-	-	-	-	-	b3-nonfood
+350°F oven	unsupported	-	-	-	-	-	-	b3-nonfood
+1 recipe pie dough (see below)	needs_review	pie dough	1	-	-	-	D	b3-nonfood
+1 cup pecans, walnuts, or almonds	needs_review	-	1	cup	-	pecans;walnuts;almonds	-	b4-alt3
+1/2 cup raisins, cranberries or cherries	needs_review	-	1/2	cup	-	raisins;cranberries;cherries	-	b4-alt3
+2 cups spinach, kale, or chard	needs_review	-	2	cup	-	spinach;kale;chard	-	b4-alt3
+1 tsp thyme, rosemary, or oregano	needs_review	-	1	tsp	-	thyme;rosemary;oregano	-	b4-alt3
+2 tbsp butter, ghee, or oil	needs_review	-	2	tbsp	-	butter;ghee;oil	K	b4-alt3
+1 lb chicken, pork, or tofu	needs_review	-	1	lb	-	chicken;pork;tofu	-	b4-alt3
+1 cup pecans or walnuts or almonds	needs_review	-	1	cup	-	pecans;walnuts;almonds	-	b4-alt3
+1 cup milk, cream, or half-and-half	needs_review	-	1	cup	-	milk;cream;half-and-half	-	b4-alt3
+1 cup cooked farro (from 1/2 cup uncooked)	needs_review	farro	1	cup	-	-	DK	remark-amount
+1 lb large shrimp	ready	shrimp	1	lb	-	-	K	b4-size
+1 lb jumbo sea scallops	ready	sea scallops	1	lb	-	-	K	b4-size
+between 1 and 2 tbsp sugar	needs_review	sugar	1..2	tbsp	-	-	K	b4-range
+2 bacon strips	ready	bacon	2	strip	-	-	K	b4-count
+2 lettuce heads	ready	lettuce	2	head	-	-	K	b4-count
+1x cup milk	ready	milk	1	cup	-	-	-	b4-x
+3x eggs	ready	eggs	3	each	-	-	D	b4-x
+2x cans chickpeas	ready	chickpeas	2	can	-	-	-	b4-x
+1 x can chickpeas	ready	chickpeas	1	can	-	-	-	b4-x

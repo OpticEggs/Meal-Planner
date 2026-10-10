@@ -1,0 +1,10 @@
+pkg-typecheck exit=0 seconds=3
+pkg-test exit=0 seconds=9
+pkg-bench-1 exit=0 seconds=1
+pkg-bench-2 exit=0 seconds=0
+bench-deterministic exit=0 seconds=0
+root-typecheck exit=0 seconds=10
+root-parser-tests exit=0 seconds=3
+root-u2c-integration exit=0 seconds=8
+root-vitest-excludes-package exit=0 seconds=1
+next-build exit=0 seconds=5

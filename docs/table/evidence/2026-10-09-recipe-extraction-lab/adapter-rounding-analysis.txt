@@ -1,0 +1,19 @@
+{
+  "cases": 4680,
+  "bridgesDiffer": 181,
+  "perPortionZeroA": 0,
+  "perPortionZeroB": 0,
+  "worstRelativeTotalErrorBridgeB": {
+    "rel": 0.0144,
+    "what": "1/32 over 11 servings → 0.0028/portion, total 0.0308 vs exact 0.03125"
+  }
+}
+pesto 1/3 cup, 4 servings: {
+  A: { value: '0.0833', rounded: true },
+  B: { value: '0.0833', exact: false },
+  totalB: '0.3332'
+}
+1/8 over 12: { value: '0.0104', rounded: true } { value: '0.0104', exact: false }
+1/8 over 100: { value: '0.0013', rounded: true } { value: '0.0013', exact: false }
+1/3 over 100: { value: '0.0033', rounded: true } { value: '0.0033', exact: false }
+1/16 over 100: { value: '0.0006', rounded: true } { value: '0.0006', exact: false }

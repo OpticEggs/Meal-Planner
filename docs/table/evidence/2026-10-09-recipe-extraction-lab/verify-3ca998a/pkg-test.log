@@ -1,0 +1,935 @@
+
+ RUN  v5.0.3 /home/user/Meal-Planner/packages/recipe-extraction
+
+ ✓ tests/contract/pages.test.ts > extractRecipePage over the page fixtures > every fixture and mutation validates with engine legacy-table-import-2 708ms
+ ✓ tests/parity/ingredient-line.test.ts > ingredient-line parity (frozen copy vs live Table module) > the corpus has the promised sizes 2ms
+ ✓ tests/parity/ingredient-line.test.ts > ingredient-line parity (frozen copy vs live Table module) > parseIngredientLine is deep-equal over the Table test literals 66ms
+ ✓ tests/parity/ingredient-line.test.ts > ingredient-line parity (frozen copy vs live Table module) > parseIngredientLine is deep-equal over the Table property sweep 620ms
+ ✓ tests/contract/engines.test.ts > engine registry > has exactly the two Phase 1 engines and the faithful one is the default 3ms
+ ✓ tests/contract/engines.test.ts > engine registry > refuses unknown engine ids clearly, including prototype keys 2ms
+ ✓ tests/contract/engines.test.ts > engine registry > labels every reason code and falls back for unknown codes 4ms
+ ✓ tests/contract/engines.test.ts > legacy-table-import-2 over the parity corpus > every output validates (including non-string inputs) 1026ms
+ ✓ tests/contract/pages.test.ts > extractRecipePage over the page fixtures > every fixture and mutation validates with engine legacy-table-import-2+suggestion 488ms
+ ✓ tests/contract/engines.test.ts > legacy-table-import-2 over the parity corpus > is deterministic: the same line twice gives identical JSON text 280ms
+ ✓ tests/parity/ingredient-line.test.ts > ingredient-line parity (frozen copy vs live Table module) > parseIngredientLine is deep-equal over the hostile lines 35ms
+ ✓ tests/parity/ingredient-line.test.ts > ingredient-line parity (frozen copy vs live Table module) > parseIngredientLine is deep-equal over the seeded random lines 906ms
+ ✓ tests/contract/pages.test.ts > extractRecipePage over the page fixtures > is deterministic: the same page twice gives identical JSON text 68ms
+ ✓ tests/contract/pages.test.ts > extractRecipePage over the page fixtures > carries every legacy candidate field and reads each ingredient line once 483ms
+ ✓ tests/contract/pages.test.ts > extractRecipePage over the page fixtures > classifies every legacy problem seen in the mutations (never unclassified) 53ms
+ ✓ tests/contract/pages.test.ts > extractRecipePage over the page fixtures > validates and normalizes the caller's addresses; the final one resolves relative links 1ms
+ ✓ tests/parity/ingredient-line.test.ts > ingredient-line parity (frozen copy vs live Table module) > parseIngredientLine is deep-equal for non-string inputs 1ms
+ ✓ tests/parity/ingredient-line.test.ts > ingredient-line parity (frozen copy vs live Table module) > splitNote is deep-equal over the corpus 296ms
+ ✓ tests/contract/engines.test.ts > legacy-table-import-2+suggestion over the parity corpus > every output validates (including non-string inputs) 840ms
+ ✓ tests/contract/engines.test.ts > legacy-table-import-2+suggestion over the parity corpus > is deterministic: the same line twice gives identical JSON text 285ms
+ ✓ tests/parity/ingredient-line.test.ts > ingredient-line parity (frozen copy vs live Table module) > exports the same constants and unit table 5ms
+ ✓ tests/parity/ingredient-line.test.ts > ingredient-line parity (frozen copy vs live Table module) > the parity corpus exercises every legacy outcome 603ms
+ ✓ tests/contract/engines.test.ts > legacy-table-import-2 is a faithful translation > restates legacy's control/bidi character class exactly 7ms
+ ✓ tests/contract/engines.test.ts > legacy-table-import-2 is a faithful translation > maps every legacy reason in the corpus to a stable code (never unclassified) 617ms
+ ✓ tests/parity/pages.test.ts > page parity (frozen copy vs live Table module) > reads every fixture of both fixture directories 2ms
+ ✓ tests/parity/pages.test.ts > page parity (frozen copy vs live Table module) > extractRecipes and pageMeta are deep-equal over the fixtures × every base URL 61ms
+ ✓ tests/parity/pages.test.ts > page parity (frozen copy vs live Table module) > extractRecipes and pageMeta are deep-equal over the seeded mutations × every base URL 1141ms
+ ✓ tests/parity/decimal.test.ts > legacy decimal D parity with decimal.js (precision 40, ROUND_HALF_UP) > constructs and prints plain decimal text identically 28ms
+ ✓ tests/parity/decimal.test.ts > legacy decimal D parity with decimal.js (precision 40, ROUND_HALF_UP) > div, then toFixed and toDecimalPlaces(4), are identical (40 significant digits, half-up) 508ms
+ ✓ tests/parity/pages.test.ts > page parity (frozen copy vs live Table module) > the mutations reach the scanner's limits and failure paths 59ms
+ ✓ tests/parity/pages.test.ts > page parity (frozen copy vs live Table module) > non-string page input behaves the same 1ms
+ ✓ tests/parity/pages.test.ts > page parity (frozen copy vs live Table module) > text helpers are deep-equal over ingredient lines and page snippets 176ms
+ ✓ tests/parity/pages.test.ts > page parity (frozen copy vs live Table module) > validateLinkUrl, checkImportUrl and the link helpers are deep-equal over hostile URLs 72ms
+ ✓ tests/parity/decimal.test.ts > legacy decimal D parity with decimal.js (precision 40, ROUND_HALF_UP) > the parser's exact-fraction and decimalOf shapes match 341ms
+ ✓ tests/parity/decimal.test.ts > legacy decimal D parity with decimal.js (precision 40, ROUND_HALF_UP) > plus, lte, gt and eq agree 306ms
+ ✓ tests/parity/decimal.test.ts > legacy decimal D parity with decimal.js (precision 40, ROUND_HALF_UP) > toDecimalPlaces rounds ties half-up 1ms
+ ✓ tests/parity/decimal.test.ts > legacy decimal D parity with decimal.js (precision 40, ROUND_HALF_UP) > refuses what decimal.js refuses 2ms
+ ✓ tests/contract/engines.test.ts > legacy-table-import-2 is a faithful translation > keeps every legacy field: status, name, quantity (exactly), unit, note, form 1240ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > price annotations > "1 Tbsp olive oil ($0.16)" is parsed; the price is not a quantity 5ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > price annotations > "1 yellow onion, diced ($0.42)" is parsed; the price is not a quantity 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > price annotations > "1 tsp smoked paprika ($.10)" is parsed; the price is not a quantity 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > price annotations > "2 cups long grain rice ($1.23*)" is parsed; the price is not a quantity 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > price annotations > "1/2 tsp salt ( $0.02 )" is parsed; the price is not a quantity 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > price annotations > "($0.50) 2 eggs" is parsed; the price is not a quantity 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > price annotations > "1 cup milk ($0.25) ($0.25)" is parsed; the price is not a quantity 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > price annotations > "1 cup milk ($0.25 each)": only a price-only parenthetical is removed 3ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > price annotations > "1 cup milk (about $1)": only a price-only parenthetical is removed 2ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > price annotations > "1 cup milk $0.25": only a price-only parenthetical is removed 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > price annotations > "1 (15 oz) can beans ($0.89)": only a price-only parenthetical is removed 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > name and note > "1 large onion, diced" → name "onion", note "large; diced" (parsed) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > name and note > "2 cups flour (packed)" → name "flour", note "packed" (parsed) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > name and note > "1 cup walnuts, chopped, toasted" → name "walnuts", note "chopped, toasted" (parsed) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > name and note > "2 medium carrots" → name "carrots", note "medium" (parsed) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > name and note > "3 small potatoes" → name "potatoes", note "small" (parsed) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > name and note > "3 extra large eggs" → name "eggs", note "extra large" (parsed) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > name and note > "2 Extra-Large eggs (room temperature)" → name "eggs", note "extra-large; room temperature" (parsed) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > name and note > "1 lb chicken thighs (boneless, skinless), cubed" → name "chicken thighs", note "boneless, skinless; cubed" (parsed) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > name and note > "1 large onion (yellow), diced" → name "onion", note "large; yellow; diced" (parsed) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > name and note > "2 cups flour" → name "flour", note null (parsed) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > name and note > "2 large" → name "large", note null (parsed) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > name and note > "1 cup largest berries" → name "largest berries", note null (parsed) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > name and note > "2 cups broth," → name "broth", note null (parsed) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > name and note > review lines are split too, and raw is untouched 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > name and note > splitNote keeps text when nothing would be left of the name 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "⅓ cup sugar" → 0.3333 cup "sugar" (⅓ rounded to 0.3333) 4ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "⅔ cup milk" → 0.6667 cup "milk" (⅔ rounded to 0.6667) 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1/3 cup sugar" → 0.3333 cup "sugar" (1/3 rounded to 0.3333) 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 1/3 cups flour" → 1.3333 cup "flour" (1 1/3 rounded to 1.3333) 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1⅓ cups flour" → 1.3333 cup "flour" (1⅓ rounded to 1.3333) 6ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1/6 tsp pepper" → 0.1667 tsp "pepper" (1/6 rounded to 0.1667) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "⅚ cup broth" → 0.8333 cup "broth" (⅚ rounded to 0.8333) 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "2/12 cup broth" → 0.1667 cup "broth" (2/12 rounded to 0.1667) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1/7 cup oats" → 0.1429 cup "oats" (1/7 rounded to 0.1429) 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1/3 cup chopped parsley ($0.30)" → 0.3333 cup "chopped parsley" (1/3 rounded to 0.3333) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "2 quarts water" → 8 cup "water" (1 quart = 4 cups) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 qt. stock" → 4 cup "stock" (1 quart = 4 cups) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 pint cream" → 2 cup "cream" (1 pint = 2 cups) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1/2 gallon milk" → 8 cup "milk" (1 gallon = 16 cups) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1/3 quart broth" → 1.3333 cup "broth" (rounded to 1.3333; 1 quart = 4 cups) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 (15 oz) can black beans" → 15 oz "black beans" (1 can × 15 oz) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 (15 oz.) can black beans, drained ($0.89)" → 15 oz "black beans" (1 can × 15 oz) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "2 (14.5-ounce) cans diced tomatoes" → 29 oz "diced tomatoes" (2 cans × 14.5 oz) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "2 (14.5 oz) cans diced tomatoes ($1.78*)" → 29 oz "diced tomatoes" (2 cans × 14.5 oz) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 can (15 oz) black beans" → 15 oz "black beans" (1 can × 15 oz) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 can (14.5 oz) diced tomatoes" → 14.5 oz "diced tomatoes" (1 can × 14.5 oz) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "2 cans (14.5 oz each) tomatoes" → 29 oz "tomatoes" (2 cans × 14.5 oz) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 15-oz can chickpeas" → 15 oz "chickpeas" (1 can × 15 oz) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "2 28 ounce cans crushed tomatoes" → 56 oz "crushed tomatoes" (2 cans × 28 oz) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 12 fl oz bottle beer" → 12 fl_oz "beer" (1 bottle × 12 fl oz) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 (12 fl. oz) bottle seltzer" → 12 fl_oz "seltzer" (1 bottle × 12 fl oz) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 (400 g) tin chickpeas" → 400 g "chickpeas" (1 tin × 400 g) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 (1 lb) bag frozen peas" → 1 lb "frozen peas" (1 bag × 1 lb) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "2 (500 ml) cartons stock" → 1000 ml "stock" (2 cartons × 500 ml) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 (1.5 L) bottle water" → 1.5 l "water" (1 bottle × 1.5 l) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "3 (0.25 oz) packets yeast" → 0.75 oz "yeast" (3 packets × 0.25 oz) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 pkg (8 oz) cream cheese, softened" → 8 oz "cream cheese" (1 package × 8 oz) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "2 (6-ounce) salmon fillets" → 12 oz "salmon fillets" (2 × 6 oz) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "½ (15 oz) can beans" → 7.5 oz "beans" (½ can × 15 oz) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1/3 (15 oz) can beans" → 5 oz "beans" (1/3 can × 15 oz) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 (2/3 oz) packet gelatin" → 0.6667 oz "gelatin" (rounded to 0.6667; 1 packet × 2/3 oz) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "3 cloves garlic, minced" → 3 each "garlic (clove)" (counted as cloves) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 clove garlic" → 1 each "garlic (clove)" (counted as cloves) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "2 cloves of garlic" → 2 each "garlic (clove)" (counted as cloves) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 can black beans" → 1 each "black beans (can)" (counted as cans) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "2 cans tomatoes" → 2 each "tomatoes (can)" (counted as cans) 2ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 bunch cilantro" → 1 each "cilantro (bunch)" (counted as bunches) 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 head lettuce" → 1 each "lettuce (head)" (counted as heads) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "2 stalks celery" → 2 each "celery (stalk)" (counted as stalks) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "3 sprigs thyme" → 3 each "thyme (sprig)" (counted as sprigs) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "2 slices bread" → 2 each "bread (slice)" (counted as slices) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "4 pieces chicken" → 4 each "chicken (piece)" (counted as pieces) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 stick butter" → 1 each "butter (stick)" (counted as sticks) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "2 ears corn" → 2 each "corn (ear)" (counted as ears) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "3 leaves basil" → 3 each "basil (leaf)" (counted as leaves) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 loaf bread" → 1 each "bread (loaf)" (counted as loaves) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 package tofu" → 1 each "tofu (package)" (counted as packages) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 jar salsa" → 1 each "salsa (jar)" (counted as jars) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 bag spinach" → 1 each "spinach (bag)" (counted as bags) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 box pasta" → 1 each "pasta (box)" (counted as boxes) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "2 fillets cod" → 2 each "cod (fillet)" (counted as fillets) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 block tofu" → 1 each "tofu (block)" (counted as blocks) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "⅓ bunch parsley" → 0.3333 each "parsley (bunch)" (⅓ rounded to 0.3333; counted as bunches) 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "2-3 cups broth" → 3 cup "broth" (range: used the larger amount) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "2 to 3 cups broth" → 3 cup "broth" (range: used the larger amount) 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "2 – 3 tbsp oil" → 3 tbsp "oil" (range: used the larger amount) 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1/2-1 cup water" → 1 cup "water" (range: used the larger amount) 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "3-2 tbsp oil" → 3 tbsp "oil" (range: used the larger amount) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 or 2 eggs" → 2 each "eggs" (range: used the larger amount) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "2-3 cloves garlic" → 3 each "garlic (clove)" (range: used the larger amount; counted as cloves) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1-2 quarts water" → 8 cup "water" (range: used the larger amount; 1 quart = 4 cups) 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "⅓-⅔ cup sugar" → 0.6667 cup "sugar" (⅔ rounded to 0.6667; range: used the larger amount) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 cup milk or cream" → 1 cup "milk" (alternatives: used the first (milk)) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "2 tbsp butter or 1 tbsp oil" → 2 tbsp "butter" (alternatives: used the first (butter)) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 cup whole milk or cream" → 1 cup "whole milk" (alternatives: used the first (whole milk)) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 cup (240 ml) milk" → 1 cup "milk" (kept the first amount; dropped (240 ml)) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 lb (450 g) chicken" → 1 lb "chicken" (kept the first amount; dropped (450 g)) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "2 (about 1 lb) potatoes" → 2 each "potatoes" (kept the first amount; dropped (about 1 lb)) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 pint (2 cups) cream" → 2 cup "cream" (1 pint = 2 cups; kept the first amount; dropped (2 cups)) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 tsp vanilla (optional)" → 1 tsp "vanilla" (used the stated amount) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 tsp salt, or to taste" → 1 tsp "salt" (used the stated amount) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 tsp salt to taste" → 1 tsp "salt" (used the stated amount) 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 cup broth, or water" → 1 cup "broth" (used the stated amount) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > "1 can tomatoes, or fresh" → 1 each "tomatoes (can)" (counted as cans) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > carries the form 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: use > never touches the parsed fields of a review line 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: leave out > "salt to taste" → leave out (no fixed amount: leave it out of grocery amounts) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: leave out > "Salt and pepper, to taste" → leave out (no fixed amount: leave it out of grocery amounts) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: leave out > "fresh parsley, for serving" → leave out (no fixed amount: leave it out of grocery amounts) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: leave out > "lime wedges, for garnish" → leave out (no fixed amount: leave it out of grocery amounts) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: leave out > "water as needed" → leave out (no fixed amount: leave it out of grocery amounts) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: leave out > "flour, for dusting" → leave out (no fixed amount: leave it out of grocery amounts) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: leave out > "oil for frying" → leave out (no fixed amount: leave it out of grocery amounts) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: leave out > "chili flakes (optional)" → leave out (no fixed amount: leave it out of grocery amounts) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: leave out > "a pinch of salt" → leave out (a pinch: no fixed amount; leave it out of grocery amounts) 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: leave out > "Pinch of saffron" → leave out (a pinch: no fixed amount; leave it out of grocery amounts) 1ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: leave out > "1 pinch salt" → leave out (a pinch: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: leave out > "2 pinches salt" → leave out (a pinch: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: leave out > "1 dash hot sauce" → leave out (a dash: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: leave out > "a few drops vanilla" → leave out (a drop: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: leave out > "2-3 drops food coloring" → leave out (a drop: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: leave out > "a splash of milk" → leave out (a splash: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: leave out > "2 splashes milk" → leave out (a splash: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: leave out > "1 handful spinach" → leave out (a handful: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: leave out > "a small handful of herbs" → leave out (a handful: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: leave out > "a sprinkle of sesame seeds" → leave out (a sprinkle: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: leave out > "2 sprinkles salt" → leave out (a sprinkle: no fixed amount; leave it out of grocery amounts) 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "salt" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "one egg" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "Juice of 1 lemon" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "optional: 1 cup nuts" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "1 cup plus 2 tbsp flour" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "1 cup flour, plus 2 tbsp" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "1 onion, cut into 8 wedges" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "1 lb 4 oz beef" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "1 cup 2% milk" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "1 cup ½ and ½" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "1 cup chicken or vegetable broth" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "2 tbsp butter or olive oil" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "1 inch ginger" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "1 knob butter" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "2 scoops protein powder" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "1/0 cup water" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "0/4 cup water" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "1 3/2 cup water" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "0 cups flour" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "20000 g sugar" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "1,5 cups milk" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "1,000 g flour" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "1. Preheat the oven" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "2eggs" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "1 cup" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "1 (15 oz) can" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "-1 cup water" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "1 (15 oz) can beans (2 cups)" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "   " → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "⅓ cup flour (" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "1 (" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "1 ..." → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "2 8 oz steaks" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "1 15-oz can, crushed tomatoes" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > suggestions: none when unclear > "1/30000 cup salt" → no suggestion 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > parsed lines never carry a suggestion > a name needs at least one letter 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > parsed lines never carry a suggestion > "2 cups flour" 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > parsed lines never carry a suggestion > "1/2 cup sugar" 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > parsed lines never carry a suggestion > "1½ cups water" 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > parsed lines never carry a suggestion > "200g flour" 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > parsed lines never carry a suggestion > "8 fl oz milk" 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > parsed lines never carry a suggestion > "2 eggs" 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > parsed lines never carry a suggestion > "3 large eggs" 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > parsed lines never carry a suggestion > "1 onion, diced" 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > parsed lines never carry a suggestion > "1 Tbsp olive oil ($0.16)" 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > parsed lines never carry a suggestion > "1/1024 tsp salt" 0ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > property-style sweep > every line keeps the contract and every proposal satisfies the invariants 621ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > property-style sweep > a proposal's quantity is an exact decimal or carries a rounding note 2ms
+ ✓ tests/legacy/ingredient-suggest.test.ts > hostile input > never throws, stays bounded and keeps the invariants 15ms
+ ✓ tests/legacy/extract-details.test.ts > WordPress / Yoast @graph page > reads the Recipe node with its linked Person, WebSite and ImageObject nodes 15ms
+ ✓ tests/legacy/extract-details.test.ts > WordPress / Yoast @graph page > gives the same result without a base URL (all links are absolute) 3ms
+ ✓ tests/legacy/extract-details.test.ts > microdata fallback > reads a microdata-only page: nested items skipped, author name nested, scope ends with the Recipe element 3ms
+ ✓ tests/legacy/extract-details.test.ts > microdata fallback > is used only when JSON-LD gave no Recipe 3ms
+ ✓ tests/legacy/extract-details.test.ts > microdata fallback > finds the Recipe element by itemtype="https://schema.org/Recipe" 1ms
+ ✓ tests/legacy/extract-details.test.ts > microdata fallback > finds the Recipe element by itemtype="http://schema.org/Recipe" 1ms
+ ✓ tests/legacy/extract-details.test.ts > microdata fallback > finds the Recipe element by itemtype='HTTP://SCHEMA.ORG/RECIPE' 1ms
+ ✓ tests/legacy/extract-details.test.ts > microdata fallback > finds the Recipe element by itemtype="https://schema.org/Recipe/" 0ms
+ ✓ tests/legacy/extract-details.test.ts > microdata fallback > finds the Recipe element by itemtype="https://schema.org/Thing https://schema.org/Recipe" 1ms
+ ✓ tests/legacy/extract-details.test.ts > microdata fallback > finds the Recipe element by ITEMTYPE=https://schema.org/recipe 0ms
+ ✓ tests/legacy/extract-details.test.ts > microdata fallback > ignores itemtype="https://schema.org/RecipeCollection" 0ms
+ ✓ tests/legacy/extract-details.test.ts > microdata fallback > ignores itemtype="https://example.com/schema.org/Recipe" 0ms
+ ✓ tests/legacy/extract-details.test.ts > microdata fallback > ignores data-itemtype="https://schema.org/Recipe" 0ms
+ ✓ tests/legacy/extract-details.test.ts > microdata fallback > ignores itemtype="schema.org/Recipe" 0ms
+ ✓ tests/legacy/extract-details.test.ts > microdata fallback > reads attributes, nested same-name tags, void elements and li steps 1ms
+ ✓ tests/legacy/extract-details.test.ts > microdata fallback > an unclosed property element has no text; a script inside the recipe is not read 0ms
+ ✓ tests/legacy/extract-details.test.ts > microdata fallback > caps itemprop elements and reports it 30ms
+ ✓ tests/legacy/extract-details.test.ts > microdata fallback > reads at most 512 KiB from the Recipe element 1ms
+ ✓ tests/legacy/extract-details.test.ts > microdata fallback > hostile text comes back plain 1ms
+ ✓ tests/legacy/extract-details.test.ts > microdata fallback > stays linear and bounded on hostile microdata 444ms
+ ✓ tests/legacy/extract-details.test.ts > Open Graph page meta > an Open Graph-only page has no candidates but a title, site name and image 1ms
+ ✓ tests/legacy/extract-details.test.ts > Open Graph page meta > fills a recipe's missing image and site name, never replacing stated ones 1ms
+ ✓ tests/legacy/extract-details.test.ts > Open Graph page meta > reads property or name, any attribute order and case; the first value wins 0ms
+ ✓ tests/legacy/extract-details.test.ts > Open Graph page meta > ignores meta-like text inside comments and scripts, and tags with no content 0ms
+ ✓ tests/legacy/extract-details.test.ts > Open Graph page meta > cleans text and validates the image link 1ms
+ ✓ tests/legacy/extract-details.test.ts > Open Graph page meta > reads at most 500 meta tags 3ms
+ ✓ tests/legacy/extract-details.test.ts > Open Graph page meta > is linear on hostile markup and tolerates non-string input 56ms
+ ✓ tests/legacy/extract-details.test.ts > method steps (recipeInstructions) > splits a string on newlines, <br>, <li>, </p> 3ms
+ ✓ tests/legacy/extract-details.test.ts > method steps (recipeInstructions) > reads arrays of strings, HowToStep text before name, and a step's own list 1ms
+ ✓ tests/legacy/extract-details.test.ts > method steps (recipeInstructions) > keeps HowToSection names as the section, including untyped name + list nodes 0ms
+ ✓ tests/legacy/extract-details.test.ts > method steps (recipeInstructions) > walks at most 3 levels of nesting 5ms
+ ✓ tests/legacy/extract-details.test.ts > method steps (recipeInstructions) > caps steps at 60 and each step at 1000 characters 2ms
+ ✓ tests/legacy/extract-details.test.ts > method steps (recipeInstructions) > ignores junk and strips markup 1ms
+ ✓ tests/legacy/extract-details.test.ts > method steps (recipeInstructions) > counts against the shared node budget 28ms
+ ✓ tests/legacy/extract-details.test.ts > method steps (recipeInstructions) > hasInstructions follows the steps found 1ms
+ ✓ tests/legacy/extract-details.test.ts > images > reads strings, ImageObjects and arrays; deduplicates; keeps document order without widths 1ms
+ ✓ tests/legacy/extract-details.test.ts > images > orders by width (numbers, numeric strings, QuantitativeValue) when every width is known, and keeps at most 5 1ms
+ ✓ tests/legacy/extract-details.test.ts > images > resolves {"@id"} references to ImageObject nodes in the same block, one hop only 1ms
+ ✓ tests/legacy/extract-details.test.ts > images > resolves relative links against the page and drops unsafe ones 1ms
+ ✓ tests/legacy/extract-details.test.ts > author, site name, category, cuisine, description > author resolves an @id to a Person (or Organization) node; other targets and misses are dropped 1ms
+ ✓ tests/legacy/extract-details.test.ts > author, site name, category, cuisine, description > site name: publisher (inline or @id), then WebSite, then Organization, then og:site_name 1ms
+ ✓ tests/legacy/extract-details.test.ts > author, site name, category, cuisine, description > recipeCategory / recipeCuisine "Dinner" → "Dinner" 0ms
+ ✓ tests/legacy/extract-details.test.ts > author, site name, category, cuisine, description > recipeCategory / recipeCuisine ["Dinner","Lunch"] → "Dinner" 0ms
+ ✓ tests/legacy/extract-details.test.ts > author, site name, category, cuisine, description > recipeCategory / recipeCuisine ["",null,3,"  ","Second"] → "Second" 0ms
+ ✓ tests/legacy/extract-details.test.ts > author, site name, category, cuisine, description > recipeCategory / recipeCuisine "Breakfast, Brunch" → "Breakfast" 0ms
+ ✓ tests/legacy/extract-details.test.ts > author, site name, category, cuisine, description > recipeCategory / recipeCuisine "<b>Bold</b> &amp; Co" → "Bold & Co" 0ms
+ ✓ tests/legacy/extract-details.test.ts > author, site name, category, cuisine, description > recipeCategory / recipeCuisine {"name":"obj"} → null 0ms
+ ✓ tests/legacy/extract-details.test.ts > author, site name, category, cuisine, description > recipeCategory / recipeCuisine [] → null 0ms
+ ✓ tests/legacy/extract-details.test.ts > author, site name, category, cuisine, description > recipeCategory / recipeCuisine undefined → null 0ms
+ ✓ tests/legacy/extract-details.test.ts > author, site name, category, cuisine, description > caps category, cuisine and description 0ms
+ ✓ tests/legacy/extract-details.test.ts > stats > counts JSON-LD blocks and Recipe nodes read 0ms
+ ✓ bench/__tests__/report-cli.test.ts > canonical JSON > sorts keys at every level, keeps array order, omits undefined 3ms
+ ✓ bench/__tests__/report-cli.test.ts > report determinism > two runs give identical JSON text, without timing, timestamps or absolute paths 260ms
+ ✓ bench/__tests__/report-cli.test.ts > report determinism > the JSON written to --out-json is the deterministic text; the Markdown carries timing in its own section 70ms
+ ✓ bench/__tests__/report-cli.test.ts > report determinism > mismatch rows are strings and appear in the Markdown table 22ms
+ ✓ bench/__tests__/report-cli.test.ts > command line > parses options 2ms
+ ✓ bench/__tests__/report-cli.test.ts > command line > --help prints usage 0ms
+ ✓ bench/__tests__/report-cli.test.ts > command line > --engine selects engines; --split restricts cases but keeps per-split figures 36ms
+ ✓ bench/__tests__/report-cli.test.ts > command line > --case scores one case and prints its details 15ms
+ ✓ bench/__tests__/report-cli.test.ts > command line > --case with a page id scores that page 17ms
+ ✓ bench/__tests__/report-cli.test.ts > command line > an unknown --case id is a usage error 10ms
+ ✓ bench/__tests__/report-cli.test.ts > command line > --pages with --engine runs pages once per requested engine 81ms
+ ✓ bench/__tests__/report-cli.test.ts > command line > refuses clearly when the build has no engines 10ms
+ ✓ bench/__tests__/report-cli.test.ts > command line > --print-freeze prints the record computed from the files and writes nothing 2ms
+ ✓ bench/__tests__/report-cli.test.ts > engine lookup through the package API > lists the registered engines 0ms
+ ✓ bench/__tests__/report-cli.test.ts > engine lookup through the package API > returns extractRecipePage 0ms
+ ✓ tests/purity/purity.test.ts > static purity of src/ > scans every source file 3ms
+ ✓ tests/purity/purity.test.ts > static purity of src/ > src/contract.ts is pure 89ms
+ ✓ tests/purity/purity.test.ts > static purity of src/ > src/index.ts is pure 18ms
+ ✓ tests/hostile/hostile.test.ts > hostile ingredient lines > 100k digits: no throw, bounded, valid (both engines) 7ms
+ ✓ tests/hostile/hostile.test.ts > hostile ingredient lines > 100k characters of words: no throw, bounded, valid (both engines) 11ms
+ ✓ tests/hostile/hostile.test.ts > hostile ingredient lines > 100k spaces before the unit: no throw, bounded, valid (both engines) 4ms
+ ✓ tests/hostile/hostile.test.ts > hostile ingredient lines > 10k nested parentheses: no throw, bounded, valid (both engines) 2ms
+ ✓ tests/hostile/hostile.test.ts > hostile ingredient lines > 10k unbalanced parentheses: no throw, bounded, valid (both engines) 2ms
+ ✓ tests/hostile/hostile.test.ts > hostile ingredient lines > 10k vulgar fractions: no throw, bounded, valid (both engines) 1ms
+ ✓ tests/hostile/hostile.test.ts > hostile ingredient lines > 10k vulgar fractions after an amount: no throw, bounded, valid (both engines) 1ms
+ ✓ tests/hostile/hostile.test.ts > hostile ingredient lines > 10k fraction slashes: no throw, bounded, valid (both engines) 1ms
+ ✓ tests/hostile/hostile.test.ts > hostile ingredient lines > 10k ors: no throw, bounded, valid (both engines) 10ms
+ ✓ tests/hostile/hostile.test.ts > hostile ingredient lines > 10k prices: no throw, bounded, valid (both engines) 20ms
+ ✓ tests/hostile/hostile.test.ts > hostile ingredient lines > 10k bidi controls: no throw, bounded, valid (both engines) 8ms
+ ✓ tests/hostile/hostile.test.ts > hostile ingredient lines > 10k NUL characters: no throw, bounded, valid (both engines) 2ms
+ ✓ tests/hostile/hostile.test.ts > hostile ingredient lines > 50k surrogate pairs: no throw, bounded, valid (both engines) 9ms
+ ✓ tests/hostile/hostile.test.ts > hostile ingredient lines > lone surrogates: no throw, bounded, valid (both engines) 2ms
+ ✓ tests/hostile/hostile.test.ts > hostile ingredient lines > nested mixed brackets: no throw, bounded, valid (both engines) 1ms
+ ✓ tests/hostile/hostile.test.ts > hostile pages > one character over the limit: no throw, bounded, valid 6ms
+ ✓ tests/hostile/hostile.test.ts > hostile pages > ~8 MiB of script tags: no throw, bounded, valid 43ms
+ ✓ tests/purity/purity.test.ts > static purity of src/ > src/ingredient/engines.ts is pure 6ms
+ ✓ tests/purity/purity.test.ts > static purity of src/ > src/ingredient/legacy.ts is pure 25ms
+ ✓ tests/purity/purity.test.ts > static purity of src/ > src/legacy/decimal.ts is pure 23ms
+ ✓ tests/purity/purity.test.ts > static purity of src/ > src/legacy/ingredient-line.ts is pure 97ms
+ ✓ tests/hostile/hostile.test.ts > hostile pages > ~8 MiB of JSON-LD script tags: no throw, bounded, valid 87ms
+ ✓ tests/hostile/hostile.test.ts > hostile pages > ~8 MiB of unterminated script tags: no throw, bounded, valid 26ms
+ ✓ tests/purity/purity.test.ts > static purity of src/ > src/legacy/jsonld.ts is pure 122ms
+ ✓ tests/hostile/hostile.test.ts > hostile pages > deeply nested JSON-LD (100k levels): no throw, bounded, valid 1ms
+ ✓ tests/hostile/hostile.test.ts > hostile pages > deeply nested objects (in budget): no throw, bounded, valid 1ms
+ ✓ tests/hostile/hostile.test.ts > hostile pages > an over-large JSON-LD block: no throw, bounded, valid 2ms
+ ✓ tests/hostile/hostile.test.ts > hostile pages > more than 20 recipes: no throw, bounded, valid 4ms
+ ✓ tests/hostile/hostile.test.ts > hostile pages > more than 10k JSON-LD nodes: no throw, bounded, valid 26ms
+ ✓ tests/hostile/hostile.test.ts > hostile pages > huge microdata: 100k itemprops: no throw, bounded, valid 85ms
+ ✓ tests/purity/purity.test.ts > static purity of src/ > src/legacy/link.ts is pure 8ms
+ ✓ tests/purity/purity.test.ts > static purity of src/ > src/legacy/units.ts is pure 3ms
+ ✓ tests/purity/purity.test.ts > static purity of src/ > src/page/extract.ts is pure 17ms
+ ✓ tests/purity/purity.test.ts > static purity of src/ > src/rational.ts is pure 22ms
+ ✓ tests/purity/purity.test.ts > static purity of src/ > src/units.ts is pure 2ms
+ ✓ tests/purity/purity.test.ts > static purity of src/ > src/validate.ts is pure 32ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags import fs from "node:fs"; 50ms
+ ✓ tests/hostile/hostile.test.ts > hostile pages > huge microdata: 50k nested divs: no throw, bounded, valid 41ms
+ ✓ tests/hostile/hostile.test.ts > hostile pages > ~8 MiB of meta tags: no throw, bounded, valid 42ms
+ ✓ tests/hostile/hostile.test.ts > hostile pages > ~8 MiB of unclosed comments and tags: no throw, bounded, valid 41ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags import x from "lodash"; 0ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags import { parseIngredientLine } from "@/server/integrations/recipe-import/ingredient-line"; 0ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags export * from "fs"; 0ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags import type { X } from "node:net"; 0ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags const t = Date.now(); 0ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags const d = new Date(); 0ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags const r = Math.random(); 0ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags fetch("https://example.com/"); 0ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags globalThis.fetch("https://example.com/"); 0ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags const re = /https?:\/\//; fetch("x"); 0ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags const s = "//"; console.log(s); 0ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags const k = process.env.KEY; 0ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags const { env } = process; 0ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags const fs = require("fs"); 2ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags const m = await import("./x"); 1ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags eval("1"); 0ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags const f = new Function("return 1"); 0ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags const w = new WebSocket("wss://example.com/"); 0ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags const x = new XMLHttpRequest(); 0ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags const u = import.meta.url; 5ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags const n = "node:net"; 0ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > flags const f = fetch; 0ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > conservatively flags the words in code even as property names 0ms
+ ✓ tests/purity/purity.test.ts > the scanner fails when it should > ignores the forbidden words inside comments, and a parameter named node 2ms
+ ✓ tests/purity/purity.test.ts > bin import allow-list > bin/recipe-lab.ts imports only node:fs, node:path, node:url, node:process and relative modules 27ms
+ ✓ tests/purity/purity.test.ts > bin import allow-list > flags import http from "node:http"; 0ms
+ ✓ tests/purity/purity.test.ts > bin import allow-list > flags import { request } from "undici"; 0ms
+ ✓ tests/purity/purity.test.ts > bin import allow-list > flags import net from "net"; 0ms
+ ✓ tests/purity/purity.test.ts > bin import allow-list > flags const m = await import("node:net"); 0ms
+ ✓ tests/purity/purity.test.ts > bin import allow-list > flags const n = require("net"); 0ms
+ ✓ tests/purity/purity.test.ts > bin import allow-list > flags await fetch("https://example.com/"); 0ms
+ ✓ tests/purity/purity.test.ts > runtime: the CLI makes no network or DNS call > the recorders really intercept (so a zero count means something) 2ms
+ ✓ tests/purity/purity.test.ts > runtime: the CLI makes no network or DNS call > line, page, engines and validate run with every network entry point blocked 16ms
+ ✓ tests/hostile/hostile.test.ts > hostile pages > entity soup: no throw, bounded, valid 11ms
+ ✓ tests/hostile/hostile.test.ts > hostile pages > refuses an over-limit page quickly without reading it 0ms
+ ✓ tests/hostile/hostile.test.ts > hostile pages > hostile addresses never throw 1ms
+ ✓ tests/contract/engines.test.ts > legacy-table-import-2 is a faithful translation > deviates from legacy only by input_truncated, and only when legacy cut the line 2ms
+ ✓ tests/contract/engines.test.ts > legacy-table-import-2+suggestion > applies the legacy suggestion exactly as proposed (0.3333 stays 3333/10000) 1ms
+ ✓ tests/contract/engines.test.ts > legacy-table-import-2+suggestion > agrees with the legacy suggestion over the whole corpus 1950ms
+ ✓ tests/contract/engines.test.ts > legacy-table-import-2+suggestion > a proposal the contract cannot carry keeps neither amount nor unit, and says unclassified 1ms
+ ✓ bench/__tests__/invariants.test.ts > host rules > only reserved example names are allowed 3ms
+ ✓ bench/__tests__/invariants.test.ts > host rules > only bare schema.org vocabulary identifiers are exempt 0ms
+ ✓ bench/__tests__/invariants.test.ts > host rules > finds absolute, JSON-escaped and protocol-relative URLs 1ms
+ ✓ bench/__tests__/invariants.test.ts > fixture invariants > hold on the real fixtures 11ms
+ ✓ bench/__tests__/invariants.test.ts > fixture invariants > a copy passes too (the checks do not depend on the location) 11ms
+ ✓ bench/__tests__/invariants.test.ts > fixture invariants > fail on a file missing from the manifest 17ms
+ ✓ bench/__tests__/invariants.test.ts > fixture invariants > fail on a manifest entry whose file is gone 9ms
+ ✓ bench/__tests__/invariants.test.ts > fixture invariants > fail on a manifest entry without the rights text 9ms
+ ✓ bench/__tests__/invariants.test.ts > fixture invariants > fail on a non-reserved host in a page 13ms
+ ✓ bench/__tests__/invariants.test.ts > fixture invariants > fail on localhost 8ms
+ ✓ bench/__tests__/invariants.test.ts > fixture invariants > fail on an IP address 8ms
+ ✓ bench/__tests__/mutation-controls.test.ts > control engines produce contract-shaped readings > oracle 15ms
+ ✓ bench/__tests__/mutation-controls.test.ts > control engines produce contract-shaped readings > dropAmount 8ms
+ ✓ bench/__tests__/mutation-controls.test.ts > control engines produce contract-shaped readings > ozSwap 13ms
+ ✓ bench/__tests__/mutation-controls.test.ts > control engines produce contract-shaped readings > suppressAmbiguity 8ms
+ ✓ bench/__tests__/mutation-controls.test.ts > control engines produce contract-shaped readings > inventAmount 13ms
+ ✓ bench/__tests__/mutation-controls.test.ts > control engines produce contract-shaped readings > allNeedsReview 9ms
+ ✓ bench/__tests__/mutation-controls.test.ts > control engines produce contract-shaped readings > nameIsRawInput 5ms
+ ✓ bench/__tests__/mutation-controls.test.ts > control engines produce contract-shaped readings > roundedThird 10ms
+ ✓ bench/__tests__/mutation-controls.test.ts > control engines produce contract-shaped readings > the oracle's readings satisfy the §2.1 status rules 9ms
+ ✓ bench/__tests__/mutation-controls.test.ts > oracle > scores 100% with zero false certainty, fabrication and cross-dimension, on every split 1ms
+ ✓ bench/__tests__/mutation-controls.test.ts > oracle > per-category figures cover every category and also score 100% 1ms
+ ✓ bench/__tests__/mutation-controls.test.ts > saboteurs are detected > drop-amount (ready, quantity null) → high false certainty 27ms
+ ✓ bench/__tests__/invariants.test.ts > fixture invariants > fail on a protocol-relative non-reserved host 11ms
+ ✓ bench/__tests__/invariants.test.ts > fixture invariants > fail on a schema.org content link (not a vocabulary identifier) 8ms
+ ✓ bench/__tests__/invariants.test.ts > fixture invariants > fail on a non-reserved host inside a JSONL label 10ms
+ ✓ bench/__tests__/invariants.test.ts > fixture invariants > fail on a file over 1 MiB 18ms
+ ✓ bench/__tests__/invariants.test.ts > fixture invariants > fail on a binary/image file type 12ms
+ ✓ bench/__tests__/invariants.test.ts > fixture invariants > fail on a case without provenance 13ms
+ ✓ bench/__tests__/invariants.test.ts > fixture invariants > fail on a page label without provenance source 9ms
+ ✓ bench/__tests__/invariants.test.ts > fixture invariants > fail on a changed holdout file (freeze) 8ms
+ ✓ bench/__tests__/invariants.test.ts > fixture invariants > fail on a symbolic link 9ms
+ ✓ tests/parity/benchmark-corpus.test.ts > benchmark corpus parity (frozen legacy vs live Table) > covers every benchmark line and page 2ms
+ ✓ tests/parity/benchmark-corpus.test.ts > benchmark corpus parity (frozen legacy vs live Table) > parseIngredientLine is deep-equal on every benchmark line 33ms
+ ✓ tests/parity/benchmark-corpus.test.ts > benchmark corpus parity (frozen legacy vs live Table) > extractRecipes is deep-equal on every benchmark page with its final URL 26ms
+ ✓ tests/parity/benchmark-corpus.test.ts > benchmark corpus parity (frozen legacy vs live Table) > every engine's reading of every benchmark line satisfies the contract 33ms
+ ✓ tests/parity/benchmark-corpus.test.ts > benchmark corpus parity (frozen legacy vs live Table) > every benchmark page extraction satisfies the contract 15ms
+ ✓ bench/__tests__/mutation-controls.test.ts > saboteurs are detected > oz ↔ fl_oz swap → cross-dimension (dev and holdout) 24ms
+ ✓ bench/__tests__/mutation-controls.test.ts > saboteurs are detected > suppressed ambiguity (needs_review labels returned ready) → high false certainty 18ms
+ ✓ bench/__tests__/mutation-controls.test.ts > saboteurs are detected > invent amount (1 each where the label has none) → fabricated quantity 19ms
+ ✓ bench/__tests__/mutation-controls.test.ts > saboteurs are detected > all needs_review → review rate 100% and zero false certainty 20ms
+ ✓ bench/__tests__/mutation-controls.test.ts > saboteurs are detected > name = raw input → name match falls 12ms
+ ✓ bench/__tests__/mutation-controls.test.ts > saboteurs are detected > rounded third (1/3 → 3333/10000) → quantity mismatch on exactly the third/sixth cases 14ms
+ ✓ bench/__tests__/mutation-controls.test.ts > page scoring controls > an oracle extractor scores 100% (detection, counts, every field, lists, diagnostics, retention) 7ms
+ ✓ bench/__tests__/mutation-controls.test.ts > page scoring controls > an extractor that finds nothing loses recall and every field 1ms
+ ✓ bench/__tests__/mutation-controls.test.ts > page scoring controls > image order, undecoded entities and a wrong site name are each caught 4ms
+ ✓ bench/__tests__/mutation-controls.test.ts > page scoring controls > an extractor that throws is reported, not fatal; a retention other than not_decided is flagged 4ms
+ ✓ tests/legacy/jsonld.test.ts > extractRecipes fixtures > plain Recipe: fields, durations, servings, presence flags and a cleaned source URL 6ms
+ ✓ tests/legacy/jsonld.test.ts > extractRecipes fixtures > @graph with WebPage + Recipe, case-varied script tag, non-JSON-LD scripts ignored 2ms
+ ✓ tests/legacy/jsonld.test.ts > extractRecipes fixtures > @type arrays, full schema.org IRIs, single-quoted type and mainEntity nesting 1ms
+ ✓ tests/legacy/jsonld.test.ts > extractRecipes fixtures > multiple Recipe nodes are all returned; non-serving yields give no servings 1ms
+ ✓ tests/legacy/jsonld.test.ts > extractRecipes fixtures > unrelated JSON-LD only (and a wrong-case type) yields nothing 1ms
+ ✓ tests/legacy/jsonld.test.ts > extractRecipes fixtures > malformed JSON is a problem and the next block (comment-wrapped) still counts 1ms
+ ✓ tests/legacy/jsonld.test.ts > extractRecipes fixtures > hostile deep nesting is refused before JSON.parse; later blocks survive 1ms
+ ✓ tests/legacy/jsonld.test.ts > extractRecipes fixtures > script, event-handler and prompt-injection text comes back as inert plain text 3ms
+ ✓ tests/legacy/jsonld.test.ts > extractRecipes fixtures > HTML entities: named, numeric, hex, fractions; invalid code points replaced; single decode 1ms
+ ✓ tests/legacy/jsonld.test.ts > extractRecipes fixtures > a string recipeIngredient (legacy `ingredients`) splits on <br> and newlines; bad durations are null 1ms
+ ✓ tests/legacy/jsonld.test.ts > extractRecipes scanner edge cases > finds the type among other attributes, odd spacing, case and parameters 5ms
+ ✓ tests/legacy/jsonld.test.ts > extractRecipes scanner edge cases > a literal </script> inside JSON ends the block, as in a browser 0ms
+ ✓ tests/legacy/jsonld.test.ts > extractRecipes scanner edge cases > an unterminated script tag is read to the end of the page 0ms
+ ✓ tests/legacy/jsonld.test.ts > extractRecipes scanner edge cases > caps blocks, block size, candidates and nodes 6ms
+ ✓ tests/legacy/jsonld.test.ts > extractRecipes scanner edge cases > does not descend into arbitrary properties (only @graph and mainEntity) 0ms
+ ✓ tests/legacy/jsonld.test.ts > extractRecipes scanner edge cases > caps strings at 500 characters and ingredients at 100 1ms
+ ✓ tests/legacy/jsonld.test.ts > extractRecipes scanner edge cases > non-string fields never leak structure 1ms
+ ✓ tests/legacy/jsonld.test.ts > extractRecipes scanner edge cases > source URL: relative resolved against baseUrl, cleaned; non-http(s) and local hosts dropped 1ms
+ ✓ tests/legacy/jsonld.test.ts > extractRecipes scanner edge cases > presence flags look for real content 1ms
+ ✓ tests/legacy/jsonld.test.ts > extractRecipes scanner edge cases > is linear on hostile markup 28ms
+ ✓ tests/legacy/jsonld.test.ts > extractRecipes scanner edge cases > tolerates non-string input 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > "PT15M" → 15 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > "PT1H" → 60 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > "PT1H30M" → 90 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > "pt45m" → 45 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > "P0DT0H10M" → 10 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > "P1DT2H" → 1560 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > "PT90S" → 2 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > "PT30S" → 1 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > "PT0M" → 0 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > "PT" → null 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > "P" → null 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > "" → null 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > "1 hour" → null 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > "PT1.5H" → null 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > "P1W" → null 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > "PT-5M" → null 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > "PT1H30" → null 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > "PT99999H" → null 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > " PT20M " → 20 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > 15 → null 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > null → null 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > "PT11111111111111111111111111111111111111111111111111M" → null 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > recipeYield "4" → servings 4 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > recipeYield "4 servings" → servings 4 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > recipeYield "Serves 6" → servings 6 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > recipeYield "Servings: 2" → servings 2 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > recipeYield "1 serving" → servings 1 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > recipeYield ["4","4 servings"] → servings 4 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > recipeYield 4 → servings 4 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > recipeYield ["4","6"] → servings null 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > recipeYield "4-6" → servings null 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > recipeYield "4 to 6 servings" → servings null 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > recipeYield "12 cookies" → servings null 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > recipeYield "Makes 1 loaf" → servings null 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > recipeYield 4.5 → servings null 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > recipeYield "0" → servings null 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > recipeYield "500" → servings null 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > recipeYield "about 4" → servings null 0ms
+ ✓ tests/legacy/jsonld.test.ts > durations and text cleaning > cleanText strips tags twice around entity decoding and collapses whitespace 0ms
+ ✓ bench/__tests__/stats.test.ts > Wilson 95% interval > matches reference values (z = 1.959964), rounded to 4 places 3ms
+ ✓ bench/__tests__/stats.test.ts > Wilson 95% interval > a zero denominator has no rate and no interval 1ms
+ ✓ bench/__tests__/stats.test.ts > Wilson 95% interval > rates are rounded deterministically and stay inside [0, 1] 67ms
+ ✓ bench/__tests__/stats.test.ts > Wilson 95% interval > refuses impossible proportions 1ms
+ ✓ bench/__tests__/stats.test.ts > Wilson 95% interval > formats percentages 0ms
+ ✓ bench/__tests__/freeze.test.ts > holdout freeze > FREEZE.json matches the holdout files 7ms
+ ✓ bench/__tests__/freeze.test.ts > holdout freeze > records the frozen date, the rule and the counts 1ms
+ ✓ bench/__tests__/freeze.test.ts > holdout freeze > the ingredient hash is the SHA-256 of the file bytes; the page-label hash is of the canonical holdout subset 1ms
+ ✓ bench/__tests__/freeze.test.ts > holdout freeze > detects an edited holdout case 8ms
+ ✓ bench/__tests__/freeze.test.ts > holdout freeze > detects an added or removed holdout case (count) 10ms
+ ✓ bench/__tests__/freeze.test.ts > holdout freeze > detects an edited holdout page label but ignores dev page labels 6ms
+ ✓ bench/__tests__/freeze.test.ts > holdout freeze > is insensitive to labels.json formatting (canonical JSON) 4ms
+ ✓ bench/__tests__/freeze.test.ts > holdout freeze > detects an edited, added or removed holdout page file 4ms
+ ✓ bench/__tests__/freeze.test.ts > holdout freeze > a re-freeze records new hashes (the documented way to change the holdout) 7ms
+ ✓ bench/__tests__/freeze.test.ts > holdout freeze > reports an unreadable freeze file 3ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > the real dev and holdout files load and meet the corpus minimums 18ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > dev holds the owner's pesto line exactly as the CONTRACT §8 example, and the plan examples 4ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > the holdout has at least three pesto-family lines that are not the pesto line 2ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > accepts the valid base case 2ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: missing expect field 1ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: unknown expect field 1ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: unknown case field 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: missing rationale field 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: id pattern 1ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: id prefix for the file's split 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: split matches the file 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: unknown category 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: duplicate category 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: empty categories 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: input type 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: status enum 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: quantity syntax 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: quantity zero 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: quantity zero denominator 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: range order 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: range equal ends 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: unit in UNIT_REGISTRY 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: package size is mass or volume 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: package size quantity 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: package size shape 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: equivalent unit 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: form enum 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: note non-empty 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: alternatives ≥ 2 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: alternatives unique 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: optional boolean 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: amountUnstated enum 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: ready needs a name 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: ready has no range 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: ready quantity needs a unit 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: ready without quantity needs amountUnstated 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: ready has no alternatives 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: unsupported has null name/quantity/unit/package 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: a choice of ingredients has name null 1ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: amountUnstated only without an amount 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: accept keys 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: accept.name shape 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: accept.alternatives shape 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: severity enum 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: seasoningClass enum 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: provenance kind 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: provenance source 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: provenance present 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects: rationale non-empty 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects file-level problems: invalid JSON, blank lines, missing final newline, duplicate ids and inputs 0ms
+ ✓ bench/__tests__/labels.test.ts > ingredient label files > rejects the same input in dev and holdout 1ms
+ ✓ bench/__tests__/labels.test.ts > page label file > the real labels load (≥ 10 pages, ≥ 3 holdout) and every file exists 2ms
+ ✓ bench/__tests__/labels.test.ts > page label file > rejects: id pattern 2ms
+ ✓ bench/__tests__/labels.test.ts > page label file > rejects: file pattern 1ms
+ ✓ bench/__tests__/labels.test.ts > page label file > rejects: absolute requested URL 1ms
+ ✓ bench/__tests__/labels.test.ts > page label file > rejects: candidate count 1ms
+ ✓ bench/__tests__/labels.test.ts > page label file > rejects: isRecipe consistent 1ms
+ ✓ bench/__tests__/labels.test.ts > page label file > rejects: servings range 1ms
+ ✓ bench/__tests__/labels.test.ts > page label file > rejects: minutes 1ms
+ ✓ bench/__tests__/labels.test.ts > page label file > rejects: image URLs absolute 1ms
+ ✓ bench/__tests__/labels.test.ts > page label file > rejects: structure enum 1ms
+ ✓ bench/__tests__/labels.test.ts > page label file > rejects: candidate fields 1ms
+ ✓ bench/__tests__/labels.test.ts > page label file > rejects: accept keys 1ms
+ ✓ bench/__tests__/labels.test.ts > page label file > rejects: diagnostic codes 1ms
+ ✓ bench/__tests__/labels.test.ts > page label file > rejects: provenance 0ms
+ ✓ bench/__tests__/labels.test.ts > page label file > rejects duplicate page ids 1ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "2 cups flour" → 2 cup "flour" 6ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "1/2 cup sugar" → 0.5 cup "sugar" 2ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "3/4 tsp salt" → 0.75 tsp "salt" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "½ cup milk" → 0.5 cup "milk" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "⅛ tsp cayenne" → 0.125 tsp "cayenne" 1ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "¾ cup oats" → 0.75 cup "oats" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "1½ cups water" → 1.5 cup "water" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "1 ½ cups water" → 1.5 cup "water" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "1 1/2 cups rice" → 1.5 cup "rice" 1ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "2 1/4 cups flour" → 2.25 cup "flour" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "1⁄2 cup broth" → 0.5 cup "broth" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "5/8 cup cream" → 0.625 cup "cream" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "0.5 cup oil" → 0.5 cup "oil" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > ".5 cup oil" → 0.5 cup "oil" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "1.25 lb beef" → 1.25 lb "beef" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "1.50 lb beef" → 1.5 lb "beef" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "2 T butter" → 2 tbsp "butter" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "2 Tbsp butter" → 2 tbsp "butter" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "2 TBSP butter" → 2 tbsp "butter" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "1 tbsp. honey" → 1 tbsp "honey" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "2 tablespoons honey" → 2 tbsp "honey" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "1 t salt" → 1 tsp "salt" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "1 tsp salt" → 1 tsp "salt" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "1 teaspoon salt" → 1 tsp "salt" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "1 c milk" → 1 cup "milk" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "1 C milk" → 1 cup "milk" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "2 Cups Flour" → 2 cup "Flour" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "2 lbs chicken thighs" → 2 lb "chicken thighs" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "1 pound ground turkey" → 1 lb "ground turkey" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "8 oz cheddar" → 8 oz "cheddar" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "8 ounces cheddar" → 8 oz "cheddar" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "8 fl oz milk" → 8 fl_oz "milk" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "8 fl. oz. cream" → 8 fl_oz "cream" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "8 fluid ounces cream" → 8 fl_oz "cream" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "200g flour" → 200 g "flour" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "200 grams flour" → 200 g "flour" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "1.5kg potatoes" → 1.5 kg "potatoes" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "500 ml stock" → 500 ml "stock" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "500 mL stock" → 500 ml "stock" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "1 L water" → 1 l "water" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "1 litre water" → 1 l "water" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "2 eggs" → 2 each "eggs" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "3 large eggs" → 3 each "eggs" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "1 onion, diced" → 1 each "onion" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "4 each tortillas" → 4 each "tortillas" 3ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "2 cups of flour" → 2 cup "flour" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "- 2 cups flour" → 2 cup "flour" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "• 1 cup rice" → 1 cup "rice" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "  2   cups   flour  " → 2 cup "flour" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine parsed lines > "10000 g sugar" → 10000 g "sugar" 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "salt" → review (/no quantity/) 1ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "salt to taste" → review (/no fixed quantity/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "Salt and pepper, to taste" → review (/no fixed quantity/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "fresh parsley, for serving" → review (/no fixed quantity/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "water as needed" → review (/no fixed quantity/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 tsp vanilla (optional)" → review (/no fixed quantity/) 1ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "optional: 1 cup nuts" → review (/no fixed quantity/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "one egg" → review (/no quantity/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "a pinch of salt" → review (/no quantity/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "2-3 cups broth" → review (/range/) 1ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "2 to 3 cups broth" → review (/range/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "2 – 3 tbsp oil" → review (/range/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1/2-1 cup water" → review (/range/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 or 2 eggs" → review (/alternatives/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 cup milk or cream" → review (/alternatives/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "3 cloves garlic" → review (/unit not supported: cloves/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 clove garlic" → review (/unit not supported: clove/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 can black beans" → review (/unit not supported: can/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "2 cans tomatoes" → review (/unit not supported: cans/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 bunch cilantro" → review (/unit not supported: bunch/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 pinch salt" → review (/unit not supported: pinch/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 dash hot sauce" → review (/unit not supported: dash/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 handful spinach" → review (/unit not supported: handful/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 package tofu" → review (/unit not supported: package/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 jar salsa" → review (/unit not supported: jar/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "2 slices bread" → review (/unit not supported: slices/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "3 sprigs thyme" → review (/unit not supported: sprigs/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 head lettuce" → review (/unit not supported: head/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "2 stalks celery" → review (/unit not supported: stalks/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "4 pieces chicken" → review (/unit not supported: pieces/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 stick butter" → review (/unit not supported: stick/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 bag spinach" → review (/unit not supported: bag/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 box pasta" → review (/unit not supported: box/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "2 quarts water" → review (/unit not supported: quarts/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 (15 oz) can black beans" → review (/parenthetical/) 1ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 can (14.5 oz) diced tomatoes" → review (/parenthetical/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 lb 4 oz beef" → review (/more than one quantity/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 cup 2% milk" → review (/more than one quantity/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 cup ½ and ½" → review (/more than one quantity/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1/3 cup sugar" → review (/not exact as a decimal/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "⅓ cup sugar" → review (/not exact as a decimal/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "⅔ cup milk" → review (/not exact as a decimal/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 1/3 cups flour" → review (/not exact as a decimal/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1⅓ cups flour" → review (/not exact as a decimal/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1/6 tsp pepper" → review (/not exact as a decimal/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "⅚ cup broth" → review (/not exact as a decimal/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "2/12 cup broth" → review (/not exact as a decimal/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1/0 cup water" → review (/invalid fraction/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "0/4 cup water" → review (/invalid fraction/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 3/2 cup water" → review (/invalid fraction/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "0 cups flour" → review (/non-positive/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "0.0 cups flour" → review (/non-positive/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "20000 g sugar" → review (/implausible/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "123456789012 g sugar" → review (/implausible/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1,5 cups milk" → review (/unrecognized number/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1,000 g flour" → review (/unrecognized number/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1. Preheat the oven" → review (/unrecognized quantity/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "2eggs" → review (/unrecognized quantity/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "1 cup" → review (/no ingredient name/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "" → review (/empty line/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "   " → review (/empty line/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > "-1 cup water" → review (/no quantity/) 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > keeps the unit word in the name when the unit is unsupported 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine review lines > an unsupported unit alongside another reason drops the quantity too 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine form and robustness > "3 cups cooked rice" → form cooked 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine form and robustness > "2 cups rice, cooked" → form cooked 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine form and robustness > "1 lb pre-cooked shrimp" → form cooked 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine form and robustness > "1 lb raw shrimp" → form raw 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine form and robustness > "1 cup uncooked rice" → form raw 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine form and robustness > "1 cup Uncooked rice" → form raw 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine form and robustness > "1 cup rice" → form null 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine form and robustness > "2 cups strawberries" → form null 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine form and robustness > "1 cup precooked rice" → form null 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine form and robustness > quantities are exact decimal strings, never floats 0ms
+ ✓ tests/legacy/ingredient-line.test.ts > parseIngredientLine form and robustness > never throws on hostile input and stays fast 11ms
+ ✓ bench/__tests__/compare.test.ts > §9 normalization > names: NFKC, lowercase, collapsed whitespace, edge punctuation trimmed; empty is null 3ms
+ ✓ bench/__tests__/compare.test.ts > §9 normalization > notes: a sorted token bag ignoring ( ) , ; : 4ms
+ ✓ bench/__tests__/compare.test.ts > §9 normalization > alternatives: a set of normalized names 0ms
+ ✓ bench/__tests__/compare.test.ts > §9 normalization > page ingredient lines: whitespace canonicalized (a decoded &nbsp; equals a space), nothing else 1ms
+ ✓ bench/__tests__/compare.test.ts > per-field comparison > the label's own reading matches on every field 37ms
+ ✓ bench/__tests__/compare.test.ts > per-field comparison > quantities compare as exact rationals; display text is ignored; non-canonical strings never match 1ms
+ ✓ bench/__tests__/compare.test.ts > per-field comparison > ranges compare both ends; an exact reading of a range label is wrong 0ms
+ ✓ bench/__tests__/compare.test.ts > per-field comparison > oz vs fl_oz: unit mismatch and cross-dimension; package sizes too 0ms
+ ✓ bench/__tests__/compare.test.ts > per-field comparison > accept values count as accepted, never strict 1ms
+ ✓ bench/__tests__/compare.test.ts > per-field comparison > false certainty: suppressed ambiguity uses the case severity; wrong name is medium; note-only is separate 1ms
+ ✓ bench/__tests__/compare.test.ts > per-field comparison > fabricated quantity: an amount where the label has none 0ms
+ ✓ bench/__tests__/compare.test.ts > per-field comparison > a malformed reading is a mismatch, not a crash 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 accepts valid lines > ready with package size 3ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 accepts valid lines > needs_review with a range, alternatives and an equivalent 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 accepts valid lines > unsupported 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 accepts valid lines > ready without an amount that says why 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > missing key 1ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > unknown top-level key 1ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > raw not a string 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > normalized not a string 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > normalized over 500 characters 1ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > unknown status 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > empty name 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > name not a string 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > unreduced fraction 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > leading zero 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > signed numerator 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > decimal numerator 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > zero denominator 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > zero quantity 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > quantity above 10 000 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > denominator above 1 000 000 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > numeric numerator 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > empty display 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > unknown quantity kind 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > extra key in a quantity 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > quantity not an object 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > range with min = max 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > range with min > max 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > range with an invalid end 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > range missing max 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > unit not in the registry 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > prototype key as unit 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > unit dimension mismatch (oz is mass) 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > unit source not a string 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > unit missing source 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > package size in a count unit 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > package size as a range 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > package size missing unit 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > equivalents not an array 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > equivalent in an imprecise unit 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > unknown form 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > empty note 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > alternatives not an array 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > a single alternative 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > an empty alternative 1ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > optional not boolean 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > approximate not boolean 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > unknown amountUnstated 2ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > reasons not an array 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > unknown reason code 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > prototype key as reason 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > duplicate reason 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > evidence missing spans 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > evidence extra key 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > unknown span field 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > span past the normalized text 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > reversed span 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > non-integer span 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > negative span 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > ready with a review reason 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > ready without a name 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > ready with a range 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > ready with a quantity but no unit 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > ready without quantity or amountUnstated 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > ready with alternatives 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > needs_review without a review reason 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > needs_review with an unsupported reason 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > ready with an unsupported reason 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > unsupported without an unsupported reason 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > unsupported with a name 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > unsupported with a quantity 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > unsupported with a unit 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > unsupported with a package size 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > a non-plain value 0 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > a non-plain value 1 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > a non-plain value 2 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > a non-plain value 3 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > a non-plain value 4 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > a non-plain value 5 0ms
+ ✓ tests/contract/validator.test.ts > validateParsedIngredientV1 rejects > a non-plain value 6 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > accepts a valid page result 1ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: missing key 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: unknown top-level key 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: wrong schema version 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: empty extractor version 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: engines missing ingredient 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: engine id empty 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: requested URL not http(s) 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: final host not the final URL's host 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: final host without a final URL 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: page image not http(s) 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: page image role unknown 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: page title not text 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: retention decided 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: candidates not an array 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: candidate with an unknown key 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: candidate structure unknown 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: candidate title not text 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: servings 0 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: servings 101 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: servings 2.5 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: negative minutes 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: times with an unknown key 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: declared URL not http(s) 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: hasInstructions not boolean 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: hasNutrition not boolean 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: ingredient line not text 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: fewer readings than lines 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: an invalid reading inside a candidate 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: a reading of another line 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: empty instruction text 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: instruction section not text 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: image candidate javascript: 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: image candidate role unknown 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: negative block count 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: recipe node count not an integer 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: microdata flag not boolean 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: unknown diagnostic code 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: diagnostic detail not text 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects: diagnostic with an extra key 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects a non-object 0 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects a non-object 1 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects a non-object 2 0ms
+ ✓ tests/contract/validator.test.ts > validateRecipeExtractionV1 > rejects a non-object 3 0ms
+ ✓ tests/unit/page-diagnostics.test.ts > legacy problem texts > "more than 5000 script tags; the rest were ignored" → script_tags_limit 2ms
+ ✓ tests/unit/page-diagnostics.test.ts > legacy problem texts > "more than 20 JSON-LD blocks; the rest were ignored" → jsonld_blocks_limit 0ms
+ ✓ tests/unit/page-diagnostics.test.ts > legacy problem texts > "JSON-LD block 3 is larger than 524288 characters; skipped" → jsonld_block_too_large 0ms
+ ✓ tests/unit/page-diagnostics.test.ts > legacy problem texts > "JSON-LD block 1 is nested deeper than 64; skipped" → jsonld_too_deep 0ms
+ ✓ tests/unit/page-diagnostics.test.ts > legacy problem texts > "JSON-LD block 2 is not valid JSON; skipped" → jsonld_invalid_json 0ms
+ ✓ tests/unit/page-diagnostics.test.ts > legacy problem texts > "more than 10000 JSON-LD nodes; the rest were ignored" → nodes_limit 0ms
+ ✓ tests/unit/page-diagnostics.test.ts > legacy problem texts > "more than 20 recipes; the rest were ignored" → recipes_limit 0ms
+ ✓ tests/unit/page-diagnostics.test.ts > legacy problem texts > "ingredients beyond 100 were ignored" → ingredients_limit 0ms
+ ✓ tests/unit/page-diagnostics.test.ts > legacy problem texts > "instruction steps beyond 60 were ignored" → steps_limit 1ms
+ ✓ tests/unit/page-diagnostics.test.ts > legacy problem texts > "more than 200000 tags scanned for microdata; stopped" → microdata_tags_limit 0ms
+ ✓ tests/unit/page-diagnostics.test.ts > legacy problem texts > "microdata recipe text beyond 524288 characters was ignored" → microdata_truncated 0ms
+ ✓ tests/unit/page-diagnostics.test.ts > legacy problem texts > "more than 2000 microdata properties; the rest were ignored" → microdata_props_limit 0ms
+ ✓ tests/unit/page-diagnostics.test.ts > legacy problem texts > "microdata is too large or too deeply nested to read fully; the rest was ignored" → microdata_too_large 0ms
+ ✓ tests/unit/page-diagnostics.test.ts > legacy problem texts > "no page text" → input_not_text 0ms
+ ✓ tests/unit/page-diagnostics.test.ts > legacy problem texts > "a brand-new problem" → unclassified 0ms
+ ✓ tests/unit/page-diagnostics.test.ts > legacy problem texts > real limit problems arrive with the legacy text as detail 15ms
+ ✓ tests/unit/page-diagnostics.test.ts > derived diagnostics > no structured data at all 1ms
+ ✓ tests/unit/page-diagnostics.test.ts > derived diagnostics > structured data without a recipe 0ms
+ ✓ tests/unit/page-diagnostics.test.ts > derived diagnostics > a recipe without ingredients 0ms
+ ✓ tests/unit/page-diagnostics.test.ts > derived diagnostics > one usable recipe: nothing to report 0ms
+ ✓ tests/unit/page-diagnostics.test.ts > derived diagnostics > several recipes with ingredients 1ms
+ ✓ tests/unit/page-diagnostics.test.ts > derived diagnostics > microdata 4ms
+ ✓ tests/unit/page-diagnostics.test.ts > derived diagnostics > not text, and too large: nothing is read 1ms
+ ✓ tests/unit/page-diagnostics.test.ts > derived diagnostics > the Open Graph image is the hero when the recipe names none; later images are other 1ms
+ ✓ tests/unit/page-diagnostics.test.ts > derived diagnostics > throws only for an unknown engine id 1ms
+ ✓ tests/unit/cli.test.ts > recipe-lab > line prints the v1 reading as JSON 9ms
+ ✓ tests/unit/cli.test.ts > recipe-lab > page reads a local file with the given addresses 7ms
+ ✓ tests/unit/cli.test.ts > recipe-lab > engines lists both engines and the default 0ms
+ ✓ tests/unit/cli.test.ts > recipe-lab > validate reports problems with exit code 1, and 0 when valid 6ms
+ ✓ tests/unit/cli.test.ts > recipe-lab > refuses a URL as a file: https://www.example.com/recipe 1ms
+ ✓ tests/unit/cli.test.ts > recipe-lab > refuses a URL as a file: http://x 0ms
+ ✓ tests/unit/cli.test.ts > recipe-lab > refuses a URL as a file: file:///etc/passwd 0ms
+ ✓ tests/unit/cli.test.ts > recipe-lab > refuses a URL as a file: FTP://example.com/a 0ms
+ ✓ tests/unit/cli.test.ts > recipe-lab > refuses a URL as a file: s3+x.y://bucket/key 0ms
+ ✓ tests/unit/cli.test.ts > recipe-lab > refuses files over the limit, directories and missing files 1ms
+ ✓ tests/unit/cli.test.ts > recipe-lab > usage errors exit 2 1ms
+ ↓ tests/unit/cli.test.ts > recipe-lab > bench says so when the benchmark module is not in this build
+ ✓ tests/legacy/url.test.ts > validateLinkUrl normalization > cleans the stored URL: trims, lowercases scheme and host, drops default port, fragment and tracking 3ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl normalization > dedupes tracking, scheme, www, trailing-slash, fragment and param-order variants of one page 2ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl normalization > keeps different pages apart 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl normalization > root path keeps its slash and an emptied query disappears 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl normalization > preserves the encoding of kept params in the stored URL; the key re-encodes them consistently 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl normalization > labels known sources 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl normalization > accepts an IDN host in its punycode form 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals >  → invalid_url 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals >     → invalid_url 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > example.com/recipe → invalid_url 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > not a url → invalid_url 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > javascript:alert(1) → unsupported_scheme 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > JaVaScRiPt:alert(1) → unsupported_scheme 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > data:text/html,<script>alert(1)</script> → unsupported_scheme 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > file:///etc/passwd → unsupported_scheme 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > ftp://example.com/x → unsupported_scheme 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > blob:https://example.com/uuid → unsupported_scheme 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > ws://example.com/ → unsupported_scheme 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > http://user:pass@example.com/ → credentials_in_url 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > https://user@example.com/ → credentials_in_url 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > https://:pw@example.com/ → credentials_in_url 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > http://localhost/ → invalid_host 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > http://localhost:3000/admin → invalid_host 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > http://intranet/ → invalid_host 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > http://printer.local/ → invalid_host 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > http://app.localhost/ → invalid_host 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > http://db.internal/ → invalid_host 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > http://router.home.arpa/ → invalid_host 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > http://1.0.0.127.in-addr.arpa/ → invalid_host 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > http://nas.lan/ → invalid_host 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > http://127.0.0.1/ → invalid_host 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > http://2130706433/ → invalid_host 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > http://0x7f.1/ → invalid_host 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > http://0177.0.0.1/ → invalid_host 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > http://8.8.8.8/ → invalid_host 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > http://[::1]/ → invalid_host 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > http://[::ffff:127.0.0.1]/ → invalid_host 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > http://[2606:4700::1111]/ → invalid_host 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > http://exa_mple.com/ → invalid_host 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > http://-bad.example.com/ → invalid_host 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > http://example.123/ → invalid_url 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > https://a..example.com/ → invalid_host 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > refuses over-long links before and after cleaning 0ms
+ ✓ tests/legacy/url.test.ts > validateLinkUrl refusals > never throws on hostile input 4ms
+ ✓ tests/legacy/url.test.ts > checkImportUrl > requires https on the default port 0ms
+ ✓ tests/unit/units-and-api.test.ts > unit helpers > look up canonical codes only (own keys) 3ms
+ ✓ tests/unit/units-and-api.test.ts > unit helpers > build contract units 1ms
+ ✓ tests/unit/units-and-api.test.ts > public API > exports the contract, rational helpers (also by name), engines, page extraction and validators 1ms
+ ✓ tests/unit/units-and-api.test.ts > public API > parseIngredientV1 uses the default engine unless told otherwise 9ms
+ ✓ tests/characterization/pesto.test.ts > pesto: recorded baseline (legacy-table-import-2) > needs review: the or-rule and the thirds rule fire, the name keeps the amount, nothing is invented 7ms
+ ✓ tests/characterization/pesto.test.ts > pesto: recorded baseline (legacy-table-import-2) > the +suggestion engine has no suggestion to apply: same fields, no legacy_suggestion_applied 2ms
+ ✓ tests/characterization/pesto.test.ts > pesto: Phase 2 target (default engine) > legacy-table-import-2 reads it as 1/3 cup pesto, note "homemade or store-bought" 7ms
+ ✓ tests/unit/rational.test.ts > exact rationals > reduces and compares exactly 3ms
+ ✓ tests/unit/rational.test.ts > exact rationals > reads decimals and label text exactly 2ms
+ ✓ tests/unit/rational.test.ts > exact rationals > formats without pretending a third is a decimal 0ms
+ ✓ tests/unit/rational.test.ts > exact rationals > rounds only in toDecimal, and says so 1ms
+ ✓ tests/unit/rational.test.ts > exact rationals > enforces contract bounds and canonical strings 1ms
+ ✓ tests/parity/provenance.test.ts > frozen legacy copies: provenance > records every vendored file at the baseline commit 2ms
+ ✓ tests/parity/provenance.test.ts > frozen legacy copies: provenance > the live Table file src/server/integrations/recipe-import/url.ts still matches the pinned baseline 1ms
+ ✓ tests/parity/provenance.test.ts > frozen legacy copies: provenance > the live Table file src/server/integrations/recipe-import/jsonld.ts still matches the pinned baseline 0ms
+ ✓ tests/parity/provenance.test.ts > frozen legacy copies: provenance > the live Table file src/server/integrations/recipe-import/ingredient-line.ts still matches the pinned baseline 0ms
+ ✓ tests/parity/provenance.test.ts > frozen legacy copies: provenance > the live Table file src/domain/units.ts still matches the pinned baseline 0ms
+ ✓ tests/parity/provenance.test.ts > frozen legacy copies: provenance > the live Table file src/domain/units.ts still matches the pinned baseline 0ms
+ ✓ tests/parity/provenance.test.ts > frozen legacy copies: provenance > the frozen copy link.ts matches its recorded hash 0ms
+ ✓ tests/parity/provenance.test.ts > frozen legacy copies: provenance > the frozen copy jsonld.ts matches its recorded hash 0ms
+ ✓ tests/parity/provenance.test.ts > frozen legacy copies: provenance > the frozen copy ingredient-line.ts matches its recorded hash 1ms
+ ✓ tests/parity/provenance.test.ts > frozen legacy copies: provenance > the frozen copy units.ts matches its recorded hash 0ms
+ ✓ tests/parity/provenance.test.ts > frozen legacy copies: provenance > the frozen copy decimal.ts matches its recorded hash 0ms
+ ✓ tests/parity/provenance.test.ts > frozen legacy copies: provenance > undoing the recorded edits of link.ts gives the baseline byte for byte 0ms
+ ✓ tests/parity/provenance.test.ts > frozen legacy copies: provenance > undoing the recorded edits of jsonld.ts gives the baseline byte for byte 0ms
+ ✓ tests/parity/provenance.test.ts > frozen legacy copies: provenance > undoing the recorded edits of ingredient-line.ts gives the baseline byte for byte 0ms
+ ✓ tests/contract/fixture-urls.test.ts > page fixture URLs are links Table accepts > final, image and declared URLs pass validateLinkUrl 3ms
+ ✓ tests/contract/fixture-urls.test.ts > page fixture URLs are links Table accepts > requested URLs pass too, except the one recorded holdout exception 1ms
+
+ Test Files  28 passed (28)
+      Tests  921 passed | 1 expected fail | 1 skipped (923)
+   Start at  19:01:05
+   Duration  8.29s (tests 83%, transform 9%, import 7%, worker 1%)
+
+    Isolate  28 workers spawned · ~128ms startup each (spawn + environment, per file)
+             at least ~1.07s faster with isolate: false — reuses workers across files instead of one per file
+
