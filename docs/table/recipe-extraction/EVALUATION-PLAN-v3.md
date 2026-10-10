@@ -164,4 +164,9 @@ It needs a separately authorized Phase 3.
    A1's number agreement) and A6 (a size in brackets after the food on a container line is the packageSize), after
    candidate review R1 round 2. The required regression harness now accepts a safe abstention on non-ingredient labels
    (C8, which G2 does not count as an error). Neither changes a G2 threshold or the scorer.
+6. **2026-10-10, at the candidate freeze, before any holdout-v3 line** — the repair loop ended by the predeclared
+   stopping rule (PHASE-2B-PLAN §6.4). The final pre-freeze review (R1 round 4, `fc37ce7`) is recorded as known risk, not
+   repaired. On its fresh, adversarially targeted probes: unknown measure words 22/75 read as a count (S4), equipment
+   9/119 read as food (S1+S8), overlap foods 1/82, valid foods 0/240 HIGH. This plan is not edited again before the
+   holdout-v3 scoring run; its hash is pinned in the freeze record and the report.
 

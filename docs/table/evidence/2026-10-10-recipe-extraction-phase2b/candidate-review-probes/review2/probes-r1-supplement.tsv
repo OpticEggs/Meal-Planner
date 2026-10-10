@@ -1,0 +1,124 @@
+# input	status	name(|accepted...)	qty	unit	pkg	alts(;)(||accepted set)	flags (D=debatable label, S=status-only label)	group
+1 baking stone	unsupported	-	-	-	-	-	-	S-equipment
+1 stockpot	unsupported	-	-	-	-	-	-	S-equipment
+1 large saucepan	unsupported	-	-	-	-	-	-	S-equipment
+1 pair of tongs	unsupported	-	-	-	-	-	-	S-equipment
+1 ice cream maker	unsupported	-	-	-	-	-	-	S-equipment
+1 waffle iron	unsupported	-	-	-	-	-	-	S-equipment
+1 immersion blender	unsupported	-	-	-	-	-	-	S-equipment
+1 box grater	unsupported	-	-	-	-	-	-	S-equipment
+1 grill pan	unsupported	-	-	-	-	-	-	S-equipment
+1 meat mallet	unsupported	-	-	-	-	-	-	S-equipment
+1 mortar and pestle	unsupported	-	-	-	-	-	-	S-equipment
+1 microplane	unsupported	-	-	-	-	-	-	S-equipment
+1 salad spinner	unsupported	-	-	-	-	-	-	S-equipment
+1 bench scraper	unsupported	-	-	-	-	-	-	S-equipment
+1 pastry cutter	unsupported	-	-	-	-	-	-	S-equipment
+1 kitchen torch	unsupported	-	-	-	-	-	-	S-equipment
+6 canning jars with lids	unsupported	-	-	-	-	-	-	S-equipment
+1 heavy-bottomed pot	unsupported	-	-	-	-	-	-	S-equipment
+1 sheet of wax paper	unsupported	-	-	-	-	-	-	S-equipment
+1 roll plastic wrap	unsupported	-	-	-	-	-	-	S-equipment
+2 pieces kitchen string	unsupported	-	-	-	-	-	-	S-equipment
+12 cupcake wrappers	unsupported	-	-	-	-	-	-	S-equipment
+1 package paper towels	unsupported	-	-	-	-	-	-	S-equipment
+1 bag ice pop molds	unsupported	-	-	-	-	-	-	S-equipment
+1 tart ring	unsupported	-	-	-	-	-	-	S-equipment
+1 baking steel	unsupported	-	-	-	-	-	-	S-equipment
+2 large mixing bowls	unsupported	-	-	-	-	-	-	S-equipment
+1 rubber spatula	unsupported	-	-	-	-	-	-	S-equipment
+1 offset spatula	unsupported	-	-	-	-	-	-	S-equipment
+1 vegetable peeler	unsupported	-	-	-	-	-	-	S-equipment
+1 garlic press	unsupported	-	-	-	-	-	-	S-equipment
+1 citrus juicer	unsupported	-	-	-	-	-	-	S-equipment
+1 deep-fry thermometer	unsupported	-	-	-	-	-	-	S-equipment
+1 nonstick skillet	unsupported	-	-	-	-	-	-	S-equipment
+4 small glass jars	unsupported	-	-	-	-	-	-	S-equipment
+1 trussing needle	unsupported	-	-	-	-	-	-	S-equipment
+2 oven mitts	unsupported	-	-	-	-	-	-	S-equipment
+1 kitchen timer	unsupported	-	-	-	-	-	-	S-equipment
+1 sushi mat	unsupported	-	-	-	-	-	-	S-equipment
+1 potato masher	unsupported	-	-	-	-	-	-	S-equipment
+4 rib eye steaks	ready	rib eye steaks	4	each	-	-	-	S-countnoun-compound
+2 T-bone steaks	ready	T-bone steaks	2	each	-	-	-	S-countnoun-compound
+2 t-bone steaks	ready	t-bone steaks	2	each	-	-	-	S-countnoun-compound
+4 strip loin steaks	ready	strip loin steaks	4	each	-	-	-	S-countnoun-compound
+6 stick pretzels	ready	stick pretzels	6	each	-	-	D	S-countnoun-compound
+2 piece chicken nuggets	ready	chicken nuggets	2	piece	-	-	D	S-countnoun-compound
+1 head cheese	ready	head cheese	1	each	-	-	D	S-countnoun-compound
+2 sheet pans of roasted vegetables	unsupported	-	-	-	-	-	D	S-countnoun-compound
+1 sheet cake	ready	sheet cake	1	each	-	-	D	S-countnoun-compound
+3 cube rolls	ready	cube rolls	3	each	-	-	D	S-countnoun-compound
+2 slice cheesecake	ready	cheesecake	2	slice	-	-	D	S-countnoun-compound
+4 leaf lettuce leaves	ready	leaf lettuce	4	leaf	-	-	-	S-countnoun-compound
+2 wedge salads	ready	wedge salads	2	each	-	-	-	S-countnoun-compound
+4 link sausages	ready	link sausages	4	each	-	-	D	S-countnoun-compound
+2 ear corn	ready	corn	2	ear	-	-	-	S-countnoun-compound
+1 coffee cup plain flour	needs_review	-	-	-	-	-	S	S-unknown
+1 wine glass red wine	needs_review	-	-	-	-	-	S	S-unknown
+2 soup spoons sugar	needs_review	-	-	-	-	-	S	S-unknown
+1 bowl cooked rice	needs_review	-	-	-	-	-	S	S-unknown
+2 fistfuls spinach	needs_review	-	-	-	-	-	S	S-unknown
+1 pottle cream	needs_review	-	-	-	-	-	S	S-unknown
+1 hunk Parmesan	needs_review	-	-	-	-	-	S	S-unknown
+1 chunk fresh ginger	needs_review	-	-	-	-	-	S	S-unknown
+a splosh of milk	needs_review	-	-	-	-	-	S	S-unknown
+a slug of vinegar	needs_review	-	-	-	-	-	S	S-unknown
+a lug of olive oil	needs_review	-	-	-	-	-	S	S-unknown
+1 slab tofu	needs_review	-	-	-	-	-	S	S-unknown
+1 tub-full yogurt	needs_review	-	-	-	-	-	S	S-unknown
+3 dashes of	needs_review	-	-	-	-	-	S	S-unknown
+1 can-ful water	needs_review	-	-	-	-	-	S	S-unknown
+2 sprinklings of cinnamon	needs_review	-	-	-	-	-	S	S-unknown
+1 stone potatoes	needs_review	-	-	-	-	-	S	S-unknown
+1 crate oranges	needs_review	-	-	-	-	-	S	S-unknown
+1 carafe white wine	needs_review	-	-	-	-	-	S	S-unknown
+1 bucket ice	needs_review	-	-	-	-	-	S	S-unknown
+1 ramekin of sugar	needs_review	-	-	-	-	-	S	S-unknown
+1 saucer milk	needs_review	-	-	-	-	-	S	S-unknown
+1 wedge brie	ready	brie	1	wedge	-	-	-	S-unknown
+1 nub butter	needs_review	-	-	-	-	-	S	S-unknown
+1 tbsp fresh thyme leaves or dried	needs_review	-	1	tbsp	-	fresh thyme leaves;dried thyme leaves	D	S-fresh-or-dried
+2 tsp fresh rosemary or dried	needs_review	-	2	tsp	-	fresh rosemary;dried rosemary	-	S-fresh-or-dried
+1/4 cup fresh basil or dried	needs_review	-	1/4	cup	-	fresh basil;dried basil	-	S-fresh-or-dried
+1 tbsp fresh sage or dried	needs_review	-	1	tbsp	-	fresh sage;dried sage	-	S-fresh-or-dried
+2 cups fresh cherries or frozen	needs_review	-	2	cup	-	fresh cherries;frozen cherries	-	S-fresh-or-dried
+1 lb fresh green beans or frozen	needs_review	-	1	lb	-	fresh green beans;frozen green beans	-	S-fresh-or-dried
+1 cup whole milk or skim	needs_review	-	1	cup	-	whole milk;skim milk	-	S-fresh-or-dried
+1 tbsp dried dill or fresh	needs_review	-	1	tbsp	-	dried dill;fresh dill	-	S-fresh-or-dried
+1 tbsp fresh parsley (or dried)	needs_review	-	1	tbsp	-	fresh parsley;dried parsley	D	S-fresh-or-dried
+1/2 cup raisins and cranberries	needs_review	-	-	-	-	-	S	S-and
+1 cup diced onion and celery	needs_review	-	-	-	-	-	S	S-and
+2 tbsp butter and oil	needs_review	-	-	-	-	-	S	S-and
+1 cup chopped carrots and parsnips	needs_review	-	-	-	-	-	S	S-and
+4 cups broccoli and cauliflower florets	needs_review	-	-	-	-	-	S	S-and
+1 lb shrimp and scallops	needs_review	-	-	-	-	-	S	S-and
+2 cups spinach and kale	needs_review	-	-	-	-	-	S	S-and
+1/4 cup sesame and flax seeds	needs_review	-	-	-	-	-	S	S-and
+1 cup sliced peppers and onions	needs_review	-	-	-	-	-	S	S-and
+1 cup peas and carrots	ready	peas and carrots	1	cup	-	-	D	S-and
+1 jar salt and pepper seasoning	ready	salt and pepper seasoning	1	jar	-	-	-	S-and
+2 cups bread and butter pickles	ready	bread and butter pickles	2	cup	-	-	-	S-and
+1 tbsp herbes de Provence	ready	herbes de Provence	1	tbsp	-	-	-	S-and
+2 tbsp lime juice (juice of 1 lime)	needs_review	lime juice	2	tbsp	-	-	-	S-remark
+1/4 cup lemon juice (from about 2 lemons)	needs_review	lemon juice	1/4	cup	-	-	-	S-remark
+3 tbsp orange juice (1 orange)	needs_review	orange juice	3	tbsp	-	-	-	S-remark
+1 cup chopped onion (1 medium onion)	needs_review	chopped onion|onion	1	cup	-	-	-	S-remark
+2 cups diced tomatoes (about 3 tomatoes)	needs_review	diced tomatoes|tomatoes	2	cup	-	-	-	S-remark
+1 tbsp minced garlic (3 cloves)	needs_review	minced garlic|garlic	1	tbsp	-	-	D	S-remark
+1 cup mashed banana (2 ripe bananas)	needs_review	mashed banana|banana	1	cup	-	-	-	S-remark
+2 tsp lemon zest (from 1 lemon)	needs_review	lemon zest	2	tsp	-	-	-	S-remark
+1 cup shredded zucchini (about 1 medium)	needs_review	shredded zucchini|zucchini	1	cup	-	-	-	S-remark
+1 cup flour (about 130 g)	ready	flour	1	cup	-	-	-	S-remark
+Carb 30g	unsupported	-	-	-	-	-	-	S-nutrition-abbrev
+Chol. 5mg	unsupported	-	-	-	-	-	-	S-nutrition-abbrev
+Sod. 300mg	unsupported	-	-	-	-	-	-	S-nutrition-abbrev
+Prot 20 g	unsupported	-	-	-	-	-	-	S-nutrition-abbrev
+Sat Fat 2g	unsupported	-	-	-	-	-	-	S-nutrition-abbrev
+Tot. Carb. 45 g	unsupported	-	-	-	-	-	-	S-nutrition-abbrev
+Carbs 12g	unsupported	-	-	-	-	-	-	S-nutrition-abbrev
+Cal 210	unsupported	-	-	-	-	-	-	S-nutrition-abbrev
+Calories 210 kcal	unsupported	-	-	-	-	-	-	S-nutrition-abbrev
+Fiber: 3g	unsupported	-	-	-	-	-	-	S-nutrition-abbrev
+Sugar alcohols 4 g	unsupported	-	-	-	-	-	-	S-nutrition-abbrev
+Sodium: 410mg (18%)	unsupported	-	-	-	-	-	-	S-nutrition-abbrev

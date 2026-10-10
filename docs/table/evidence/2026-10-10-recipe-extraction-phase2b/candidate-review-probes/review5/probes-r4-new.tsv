@@ -1,0 +1,588 @@
+# input	status	name(|accepted...)	qty	unit	pkg	alts(;)(||accepted set)	flags (D=debatable, S=status-only)	group
+2 Hachiya persimmons, very soft	ready	Hachiya persimmons	2	each	-	-	-	P-counted4
+4 feijoas, halved	ready	feijoas	4	each	-	-	-	P-counted4
+3 Seville oranges	ready	Seville oranges	3	each	-	-	-	P-counted4
+8 key limes	ready	key limes	8	each	-	-	-	P-counted4
+4 sudachi	ready	sudachi	4	each	-	-	-	P-counted4
+1 ripe soursop	ready	ripe soursop	1	each	-	-	-	P-counted4
+4 tamarillos	ready	tamarillos	4	each	-	-	-	P-counted4
+6 loquats, pitted	ready	loquats	6	each	-	-	-	P-counted4
+2 white sapotes	ready	white sapotes	2	each	-	-	-	P-counted4
+3 pawpaws	ready	pawpaws	3	each	-	-	-	P-counted4
+1 breadfruit	ready	breadfruit	1	each	-	-	-	P-counted4
+1 red kuri squash	ready	red kuri squash	1	each	-	-	-	P-counted4
+4 pattypan squash	ready	pattypan squash	4	each	-	-	-	P-counted4
+6 sunburst squash	ready	sunburst squash	6	each	-	-	-	P-counted4
+2 bitter melons	ready	bitter melons	2	each	-	-	-	P-counted4
+1 winter melon	ready	winter melon	1	each	-	-	-	P-counted4
+4 Chinese eggplants	ready	Chinese eggplants	4	each	-	-	-	P-counted4
+6 Thai eggplants, quartered	ready	Thai eggplants	6	each	-	-	-	P-counted4
+6 padrón peppers	ready	padrón peppers	6	each	-	-	-	P-counted4
+3 aji amarillo peppers	ready	aji amarillo peppers	3	each	-	-	-	P-counted4
+2 rocoto peppers	ready	rocoto peppers	2	each	-	-	-	P-counted4
+10 cascabel chiles	ready	cascabel chiles	10	each	-	-	-	P-counted4
+6 chiles de árbol	ready	chiles de árbol	6	each	-	-	-	P-counted4
+2 morita chiles	ready	morita chiles	2	each	-	-	-	P-counted4
+4 mulato chiles, stemmed and seeded	ready	mulato chiles	4	each	-	-	-	P-counted4
+2 burdock roots	ready	burdock roots	2	each	-	-	-	P-counted4
+4 parsley roots	ready	parsley roots	4	each	-	-	-	P-counted4
+6 eddoes	ready	eddoes	6	each	-	-	-	P-counted4
+2 boniatos	ready	boniatos	2	each	-	-	-	P-counted4
+4 Japanese sweet potatoes	ready	Japanese sweet potatoes	4	each	-	-	-	P-counted4
+3 purple yams	ready	purple yams	3	each	-	-	-	P-counted4
+4 sunchokes, scrubbed	ready	sunchokes	4	each	-	-	-	P-counted4
+4 Vidalia onions	ready	Vidalia onions	4	each	-	-	-	P-counted4
+3 banana shallots	ready	banana shallots	3	each	-	-	-	P-counted4
+2 leeks, white and light green parts only	ready	leeks	2	each	-	-	-	P-counted4
+12 Castelvetrano olives	ready	Castelvetrano olives	12	each	-	-	-	P-counted4
+8 Cerignola olives	ready	Cerignola olives	8	each	-	-	-	P-counted4
+6 caperberries	ready	caperberries	6	each	-	-	-	P-counted4
+4 pickled walnuts	ready	pickled walnuts	4	each	-	-	-	P-counted4
+6 Brazil nuts	ready	Brazil nuts	6	each	-	-	-	P-counted4
+4 duck eggs	ready	duck eggs	4	each	-	-	-	P-counted4
+12 quail eggs	ready	quail eggs	12	each	-	-	-	P-counted4
+2 goose eggs	ready	goose eggs	2	each	-	-	-	P-counted4
+6 razor clams	ready	razor clams	6	each	-	-	-	P-counted4
+4 langoustines	ready	langoustines	4	each	-	-	-	P-counted4
+2 Maine lobsters	ready	Maine lobsters	2	each	-	-	-	P-counted4
+6 blue crabs	ready	blue crabs	6	each	-	-	-	P-counted4
+4 Jonah crab claws	ready	Jonah crab claws	4	each	-	-	-	P-counted4
+2 rainbow trout	ready	rainbow trout	2	each	-	-	-	P-counted4
+8 smelts	ready	smelts	8	each	-	-	-	P-counted4
+4 sand dabs	ready	sand dabs	4	each	-	-	-	P-counted4
+2 dorades	ready	dorades	2	each	-	-	-	P-counted4
+1 sea bream, scaled and gutted	ready	sea bream	1	each	-	-	-	P-counted4
+6 cod cheeks	ready	cod cheeks	6	each	-	-	-	P-counted4
+2 halibut cheeks	ready	halibut cheeks	2	each	-	-	-	P-counted4
+4 monkfish medallions	ready	monkfish medallions	4	each	-	-	-	P-counted4
+6 frog legs	ready	frog legs	6	each	-	-	-	P-counted4
+2 bison rib-eye steaks	ready	bison rib-eye steaks	2	each	-	-	-	P-counted4
+4 elk medallions	ready	elk medallions	4	each	-	-	-	P-counted4
+2 venison chops	ready	venison chops	2	each	-	-	-	P-counted4
+1 wild boar shoulder	ready	wild boar shoulder	1	each	-	-	-	P-counted4
+4 mutton chops	ready	mutton chops	4	each	-	-	-	P-counted4
+2 turkey necks	ready	turkey necks	2	each	-	-	-	P-counted4
+4 lamb riblets	ready	lamb riblets	4	each	-	-	-	P-counted4
+1 veal breast	ready	veal breast	1	each	-	-	-	P-counted4
+2 beef cheeks	ready	beef cheeks	2	each	-	-	-	P-counted4
+1 gammon joint	ready	gammon joint	1	each	-	-	-	P-counted4
+1 bacon joint	ready	bacon joint	1	each	-	-	-	P-counted4
+1 beef topside joint	ready	beef topside joint	1	each	-	-	-	P-counted4
+1 rolled pork loin joint	ready	rolled pork loin joint	1	each	-	-	-	P-counted4
+1 whole guinea fowl	ready	whole guinea fowl	1	each	-	-	-	P-counted4
+2 poussins	ready	poussins	2	each	-	-	-	P-counted4
+1 capon	ready	capon	1	each	-	-	-	P-counted4
+1 suckling pig	ready	suckling pig	1	each	-	-	-	P-counted4
+4 cooking apples	ready	cooking apples	4	each	-	-	-	P-counted4
+6 Parker House rolls	ready	Parker House rolls	6	each	-	-	-	P-counted4
+4 Hawaiian sweet rolls	ready	Hawaiian sweet rolls	4	each	-	-	-	P-counted4
+8 brioche slider buns	ready	brioche slider buns	8	each	-	-	-	P-counted4
+6 bialys	ready	bialys	6	each	-	-	-	P-counted4
+4 conchas	ready	conchas	4	each	-	-	-	P-counted4
+2 teleras	ready	teleras	2	each	-	-	-	P-counted4
+6 malasadas	ready	malasadas	6	each	-	-	-	P-counted4
+4 kolaches	ready	kolaches	4	each	-	-	-	P-counted4
+6 pączki	ready	pączki	6	each	-	-	-	P-counted4
+2 khachapuri	ready	khachapuri	2	each	-	-	-	P-counted4
+4 bureks	ready	bureks	4	each	-	-	-	P-counted4
+6 simit	ready	simit	6	each	-	-	-	P-counted4
+2 lahmacun	ready	lahmacun	2	each	-	-	-	P-counted4
+4 manakish	ready	manakish	4	each	-	-	-	P-counted4
+6 fatayer	ready	fatayer	6	each	-	-	-	P-counted4
+8 kibbeh	ready	kibbeh	8	each	-	-	-	P-counted4
+6 sopes	ready	sopes	6	each	-	-	-	P-counted4
+4 gorditas	ready	gorditas	4	each	-	-	-	P-counted4
+3 pupusas	ready	pupusas	3	each	-	-	-	P-counted4
+2 arepas	ready	arepas	2	each	-	-	-	P-counted4
+6 tostones	ready	tostones	6	each	-	-	-	P-counted4
+2 bammies	ready	bammies	2	each	-	-	-	P-counted4
+2 roti canai	ready	roti canai	2	each	-	-	-	P-counted4
+4 parathas	ready	parathas	4	each	-	-	-	P-counted4
+6 idlis	ready	idlis	6	each	-	-	-	P-counted4
+4 dosas	ready	dosas	4	each	-	-	-	P-counted4
+6 pakoras	ready	pakoras	6	each	-	-	-	P-counted4
+4 onion bhajis	ready	onion bhajis	4	each	-	-	-	P-counted4
+6 kachoris	ready	kachoris	6	each	-	-	-	P-counted4
+8 gulab jamun	ready	gulab jamun	8	each	-	-	-	P-counted4
+6 besan ladoos	ready	besan ladoos	6	each	-	-	-	P-counted4
+4 dorayaki	ready	dorayaki	4	each	-	-	-	P-counted4
+2 taiyaki	ready	taiyaki	2	each	-	-	-	P-counted4
+4 onigiri	ready	onigiri	4	each	-	-	-	P-counted4
+6 siopao	ready	siopao	6	each	-	-	-	P-counted4
+12 lumpia	ready	lumpia	12	each	-	-	-	P-counted4
+6 coxinhas	ready	coxinhas	6	each	-	-	-	P-counted4
+20 pelmeni	ready	pelmeni	20	each	-	-	-	P-counted4
+12 vareniki	ready	vareniki	12	each	-	-	-	P-counted4
+6 spanakopita triangles	ready	spanakopita triangles	6	each	-	-	-	P-counted4
+4 Eggo waffles	ready	Eggo waffles	4	each	-	-	-	P-counted4
+2 Hot Pockets	ready	Hot Pockets	2	each	-	-	-	P-counted4
+4 Uncrustables	ready	Uncrustables	4	each	-	-	-	P-counted4
+8 Hostess cupcakes	ready	Hostess cupcakes	8	each	-	-	-	P-counted4
+4 Kind bars	ready	Kind bars	4	each	-	-	-	P-counted4
+6 Babybel cheeses	ready	Babybel cheeses	6	each	-	-	-	P-counted4
+4 day-old croissants	ready	day-old croissants	4	each	-	-	-	P-counted4
+2 slightly stale baguettes	ready	slightly stale baguettes	2	each	-	-	-	P-counted4
+6 farm-fresh eggs	ready	farm-fresh eggs	6	each	-	-	-	P-counted4
+4 grass-fed beef patties	ready	grass-fed beef patties	4	each	-	-	-	P-counted4
+4 unwaxed lemons	ready	unwaxed lemons	4	each	-	-	-	P-counted4
+2 store-bought pie crusts	ready	store-bought pie crusts	2	each	-	-	-	P-counted4
+4 homemade tortillas	ready	homemade tortillas	4	each	-	-	-	P-counted4
+2 supermarket rotisserie chickens	ready	supermarket rotisserie chickens	2	each	-	-	-	P-counted4
+6 bakery rolls	ready	bakery rolls	6	each	-	-	-	P-counted4
+3 locally grown peaches	ready	locally grown peaches	3	each	-	-	-	P-counted4
+2 extremely ripe avocados	ready	extremely ripe avocados	2	each	-	-	-	P-counted4
+3 rock-hard pears	ready	rock-hard pears	3	each	-	-	-	P-counted4
+4 freshly baked baguettes	ready	freshly baked baguettes	4	each	-	-	-	P-counted4
+2 bunches mizuna	ready	mizuna	2	bunch	-	-	-	P-counted4
+1 head radicchio di Treviso	ready	radicchio di Treviso	1	head	-	-	-	P-counted4
+2 heads puntarelle	ready	puntarelle	2	head	-	-	-	P-counted4
+3 heads escarole	ready	escarole	3	head	-	-	-	P-counted4
+4 heads baby bok choy	ready	baby bok choy	4	head	-	-	-	P-counted4
+2 bunches garlic chives	ready	garlic chives	2	bunch	-	-	-	P-counted4
+6 sprigs lemon verbena	ready	lemon verbena	6	sprig	-	-	-	P-counted4
+3 stalks Chinese celery	ready	Chinese celery	3	stalk	-	-	-	P-counted4
+2 ears Silver Queen corn	ready	Silver Queen corn	2	ear	-	-	-	P-counted4
+1 bulb elephant garlic	ready	elephant garlic	1	bulb	-	-	-	P-counted4
+6 cloves black garlic	ready	black garlic	6	clove	-	-	-	P-counted4
+4 pods black cardamom	ready	black cardamom	4	pod	-	-	-	P-counted4
+2 links boudin blanc	ready	boudin blanc	2	link	-	-	-	P-counted4
+4 links chorizo verde	ready	chorizo verde	4	link	-	-	-	P-counted4
+2 slices brioche	ready	brioche	2	slice	-	-	-	P-counted4
+8 strips thick-cut bacon	ready	thick-cut bacon	8	strip	-	-	-	P-counted4
+4 fillets Arctic char	ready	Arctic char	4	fillet	-	-	-	P-counted4
+1 stick unsalted European-style butter	ready	unsalted European-style butter	1	stick	-	-	-	P-counted4
+2 wedges Brie de Meaux	ready	Brie de Meaux	2	wedge	-	-	-	P-counted4
+1 block halloumi	ready	halloumi	1	block	-	-	-	P-counted4
+1 loaf seeded rye	ready	seeded rye	1	loaf	-	-	-	P-counted4
+1 ball fresh pizza dough	ready	fresh pizza dough	1	ball	-	-	-	P-counted4
+2 pieces candied ginger	ready	candied ginger	2	piece	-	-	-	P-counted4
+2 pieces dried kelp	ready	dried kelp	2	piece	-	-	-	P-counted4
+3 cubes frozen pesto	ready	frozen pesto	3	cube	-	-	-	P-counted4
+1 cube vegetable bouillon	ready	vegetable bouillon	1	cube	-	-	-	P-counted4
+2 cans hominy	ready	hominy	2	can	-	-	-	P-counted4
+1 can mackerel in tomato sauce	ready	mackerel in tomato sauce|mackerel	1	can	-	-	-	P-counted4
+1 jar ajvar	ready	ajvar	1	jar	-	-	-	P-counted4
+1 jar lingonberry jam	ready	lingonberry jam	1	jar	-	-	-	P-counted4
+1 bottle pomegranate molasses	ready	pomegranate molasses	1	bottle	-	-	-	P-counted4
+1 tube wasabi paste	ready	wasabi paste	1	tube	-	-	-	P-counted4
+1 bag frozen edamame	ready	frozen edamame	1	bag	-	-	-	P-counted4
+1 bag masa harina	ready	masa harina	1	bag	-	-	-	P-counted4
+1 packet dashi powder	ready	dashi powder	1	packet	-	-	-	P-counted4
+1 envelope ranch seasoning	ready	ranch seasoning	1	envelope	-	-	-	P-counted4
+1 carton bone broth	ready	bone broth	1	carton	-	-	-	P-counted4
+1 container labneh	ready	labneh	1	container	-	-	-	P-counted4
+1 tin smoked mussels	ready	smoked mussels	1	tin	-	-	-	P-counted4
+1 bottle barrel-aged stout	ready	barrel-aged stout	1	bottle	-	-	-	P-counted4
+1 bottle cask-strength bourbon	ready	cask-strength bourbon	1	bottle	-	-	-	P-counted4
+2 brick-oven pizzas	ready	brick-oven pizzas	2	each	-	-	-	P-counted4
+6 oven-roasted chicken thighs	ready	oven-roasted chicken thighs	6	each	-	-	-	P-counted4
+4 kettle-boiled bagels	ready	kettle-boiled bagels	4	each	-	-	-	P-counted4
+4 griddle-baked flatbreads	ready	griddle-baked flatbreads	4	each	-	-	-	P-counted4
+2 wood-fired pizzas	ready	wood-fired pizzas	2	each	-	-	-	P-counted4
+4 stone-baked flatbreads	ready	stone-baked flatbreads	4	each	-	-	-	P-counted4
+6 pan-seared scallops	ready	pan-seared scallops	6	each	-	-	-	P-counted4
+1 cup cooked freekeh	ready	freekeh|cooked freekeh	1	cup	-	-	-	P-measured4
+1 tsp ground sumac	ready	ground sumac	1	tsp	-	-	-	P-measured4
+200 g halloumi, sliced	ready	halloumi	200	g	-	-	-	P-measured4
+1 lb ground bison	ready	ground bison	1	lb	-	-	-	P-measured4
+8 oz guanciale, cut into lardons	ready	guanciale	8	oz	-	-	-	P-measured4
+2 tsp za'atar	ready	za'atar	2	tsp	-	-	-	P-measured4
+1 tbsp black garlic paste	ready	black garlic paste	1	tbsp	-	-	-	P-measured4
+3 tbsp white miso	ready	white miso	3	tbsp	-	-	-	P-measured4
+1 cup cooked wild rice	ready	wild rice|cooked wild rice	1	cup	-	-	-	P-measured4
+500 g fresh tagliatelle	ready	fresh tagliatelle	500	g	-	-	-	P-measured4
+2 cups chopped collard greens	ready	chopped collard greens|collard greens	2	cup	-	-	-	P-measured4
+2 tsp ras el hanout	ready	ras el hanout	2	tsp	-	-	-	P-measured4
+1 tbsp berbere	ready	berbere	1	tbsp	-	-	-	P-measured4
+1/2 cup nutritional yeast	ready	nutritional yeast	1/2	cup	-	-	-	P-measured4
+1 cup fresh ricotta	ready	fresh ricotta	1	cup	-	-	-	P-measured4
+250 ml oat milk	ready	oat milk	250	ml	-	-	-	P-measured4
+1 l dashi	ready	dashi	1	l	-	-	-	P-measured4
+2 tbsp yuzu juice	ready	yuzu juice	2	tbsp	-	-	-	P-measured4
+1/4 cup calamansi juice	ready	calamansi juice	1/4	cup	-	-	-	P-measured4
+100 g lardo, thinly sliced	ready	lardo	100	g	-	-	-	P-measured4
+2 lb Yukon Gold potatoes	ready	Yukon Gold potatoes	2	lb	-	-	-	P-measured4
+12 oz soba noodles	ready	soba noodles	12	oz	-	-	-	P-measured4
+1 cup sprouted lentils	ready	sprouted lentils	1	cup	-	-	-	P-measured4
+1 tbsp black sesame paste	ready	black sesame paste	1	tbsp	-	-	-	P-measured4
+2 tbsp doenjang	ready	doenjang	2	tbsp	-	-	-	P-measured4
+1/2 tsp MSG	ready	MSG	1/2	tsp	-	-	-	P-measured4
+2 tbsp tamari	ready	tamari	2	tbsp	-	-	-	P-measured4
+1 cup sake	ready	sake	1	cup	-	-	-	P-measured4
+1 tbsp Chinkiang vinegar	ready	Chinkiang vinegar	1	tbsp	-	-	-	P-measured4
+2 tsp kecap manis	ready	kecap manis	2	tsp	-	-	-	P-measured4
+1 tsp shrimp paste	ready	shrimp paste	1	tsp	-	-	-	P-measured4
+1/2 cup grated paneer	ready	grated paneer|paneer	1/2	cup	-	-	-	P-measured4
+1/3 cup kefir	ready	kefir	1/3	cup	-	-	-	P-measured4
+200 g smoked trout	ready	smoked trout	200	g	-	-	-	P-measured4
+1 lb mussels, debearded	ready	mussels	1	lb	-	-	-	P-measured4
+300 g squid rings	ready	squid rings	300	g	-	-	-	P-measured4
+2 lb oxtails	ready	oxtails	2	lb	-	-	-	P-measured4
+1.5 kg pork belly	ready	pork belly	1.5	kg	-	-	-	P-measured4
+750 g lamb shoulder	ready	lamb shoulder	750	g	-	-	-	P-measured4
+8 oz chicken livers	ready	chicken livers	8	oz	-	-	-	P-measured4
+1 cup pearl couscous	ready	pearl couscous	1	cup	-	-	-	P-measured4
+2 cups cooked farro	ready	farro|cooked farro	2	cup	-	-	-	P-measured4
+1/2 cup buckwheat groats	ready	buckwheat groats	1/2	cup	-	-	-	P-measured4
+2 cups spelt flour	ready	spelt flour	2	cup	-	-	-	P-measured4
+1/4 cup tapioca starch	ready	tapioca starch	1/4	cup	-	-	-	P-measured4
+1 tbsp arrowroot	ready	arrowroot	1	tbsp	-	-	-	P-measured4
+1/4 cup chopped piloncillo	ready	chopped piloncillo|piloncillo	1/4	cup	-	-	-	P-measured4
+100 g dark muscovado sugar	ready	dark muscovado sugar	100	g	-	-	-	P-measured4
+2 tbsp date syrup	ready	date syrup	2	tbsp	-	-	-	P-measured4
+1/4 cup sorghum syrup	ready	sorghum syrup	1/4	cup	-	-	-	P-measured4
+1 tbsp verjuice	ready	verjuice	1	tbsp	-	-	-	P-measured4
+2 lb stone crab claws	ready	stone crab claws	2	lb	-	-	-	P-measured4
+1 tsp Kitchen Bouquet	ready	Kitchen Bouquet	1	tsp	-	-	-	P-measured4
+1/2 cup Kalamata olives, pitted	ready	Kalamata olives	1/2	cup	-	-	-	P-measured4
+3 cups baby arugula	ready	baby arugula	3	cup	-	-	-	P-measured4
+1 cup frozen sour cherries	ready	frozen sour cherries	1	cup	-	-	-	P-measured4
+1/2 tsp ground mace	ready	ground mace	1/2	tsp	-	-	-	P-measured4
+1 tsp smoked salt	ready	smoked salt	1	tsp	-	-	-	P-measured4
+1 bag kettle-cooked potato chips	ready	kettle-cooked potato chips	1	bag	-	-	-	O-overlap4
+1 bag kettle crisps	ready	kettle crisps	1	bag	-	-	-	O-overlap4
+2 griddle scones	ready	griddle scones	2	each	-	-	-	O-overlap4
+2 Dutch baby pancakes	ready	Dutch baby pancakes	2	each	-	-	-	O-overlap4
+4 tray bakes	ready	tray bakes	4	each	-	-	-	O-overlap4
+2 turkey pot pies	ready	turkey pot pies	2	each	-	-	-	O-overlap4
+4 fried hand pies	ready	fried hand pies	4	each	-	-	-	O-overlap4
+2 mug muffins	ready	mug muffins	2	each	-	-	-	O-overlap4
+8 pan biscuits	ready	pan biscuits	8	each	-	-	-	O-overlap4
+6 muffin-tin quiches	ready	muffin-tin quiches	6	each	-	-	-	O-overlap4
+4 waffle cones	ready	waffle cones	4	each	-	-	-	O-overlap4
+6 sugar cones	ready	sugar cones	6	each	-	-	-	O-overlap4
+12 mini phyllo shells	ready	mini phyllo shells	12	each	-	-	-	O-overlap4
+4 sourdough bread bowls	ready	sourdough bread bowls	4	each	-	-	-	O-overlap4
+6 rock cakes	ready	rock cakes	6	each	-	-	-	O-overlap4
+2 rock lobsters	ready	rock lobsters	2	each	-	-	-	O-overlap4
+1 sheet brick pastry	ready	brick pastry	1	sheet	-	-	-	O-overlap4
+8 potsticker dumplings	ready	potsticker dumplings	8	each	-	-	-	O-overlap4
+4 pots de crème	ready	pots de crème	4	each	-	-	-	O-overlap4
+6 pan de bono	ready	pan de bono	6	each	-	-	-	O-overlap4
+4 eggs en cocotte	ready	eggs en cocotte	4	each	-	-	-	O-overlap4
+2 soufflé omelettes	ready	soufflé omelettes	2	each	-	-	-	O-overlap4
+2 Irish coffees	ready	Irish coffees	2	each	-	-	-	O-overlap4
+4 espresso martinis	ready	espresso martinis	4	each	-	-	-	O-overlap4
+1 bottle Kitchen Bouquet	ready	Kitchen Bouquet	1	bottle	-	-	-	O-overlap4
+12 thumbprint cookies	ready	thumbprint cookies	12	each	-	-	-	O-overlap4
+1 finger lime	ready	finger lime	1	each	-	-	-	O-overlap4
+1 pork knuckle	ready	pork knuckle	1	each	-	-	-	O-overlap4
+4 wing flats	ready	wing flats	4	each	-	-	-	O-overlap4
+1 brisket point	ready	brisket point	1	each	-	-	-	O-overlap4
+2 tri-tip roasts	ready	tri-tip roasts	2	each	-	-	-	O-overlap4
+1 picanha	ready	picanha	1	each	-	-	-	O-overlap4
+2 coulotte steaks	ready	coulotte steaks	2	each	-	-	-	O-overlap4
+1 top sirloin cap	ready	top sirloin cap	1	each	-	-	-	O-overlap4
+4 Denver steaks	ready	Denver steaks	4	each	-	-	-	O-overlap4
+4 cowboy steaks	ready	cowboy steaks	4	each	-	-	-	O-overlap4
+2 tomahawk ribeyes	ready	tomahawk ribeyes	2	each	-	-	-	O-overlap4
+4 Wagyu sliders	ready	Wagyu sliders	4	each	-	-	-	O-overlap4
+8 drop donuts	ready	drop donuts	8	each	-	-	-	O-overlap4
+2 toaster strudels	ready	toaster strudels	2	each	-	-	-	O-overlap4
+4 blender muffins	ready	blender muffins	4	each	-	-	-	O-overlap4
+6 air-fryer chicken wings	ready	air-fryer chicken wings	6	each	-	-	-	O-overlap4
+6 sous-vide egg bites	ready	sous-vide egg bites	6	each	-	-	-	O-overlap4
+2 bags microwave popcorn	ready	microwave popcorn	2	bag	-	-	-	O-overlap4
+4 freezer waffles	ready	freezer waffles	4	each	-	-	-	O-overlap4
+1 jar fridge pickles	ready	fridge pickles	1	jar	-	-	-	O-overlap4
+1 jar refrigerator pickles	ready	refrigerator pickles	1	jar	-	-	-	O-overlap4
+12 icebox cookies	ready	icebox cookies	12	each	-	-	-	O-overlap4
+1 icebox cake	ready	icebox cake	1	each	-	-	-	O-overlap4
+2 skillet pizzas	ready	skillet pizzas	2	each	-	-	-	O-overlap4
+4 griddle burgers	ready	griddle burgers	4	each	-	-	-	O-overlap4
+1 pot cheese	ready	pot cheese	1	each	-	-	D	O-overlap4
+1 cup pot cheese	ready	pot cheese	1	cup	-	-	-	O-overlap4
+2 lamb joints	ready	lamb joints	2	each	-	-	-	O-overlap4
+1 salmon side	ready	salmon side	1	each	-	-	-	O-overlap4
+4 pork cheeks	ready	pork cheeks	4	each	-	-	-	O-overlap4
+2 lamb rumps	ready	lamb rumps	2	each	-	-	-	O-overlap4
+1 pork collar	ready	pork collar	1	each	-	-	-	O-overlap4
+1 venison haunch	ready	venison haunch	1	each	-	-	-	O-overlap4
+1 meatball grinder	ready	meatball grinder	1	each	-	-	D	O-overlap4
+6 string hoppers	ready	string hoppers	6	each	-	-	-	O-overlap4
+2 plate lunches	ready	plate lunches	2	each	-	-	-	O-overlap4
+1 jar pot-set yogurt	ready	pot-set yogurt	1	jar	-	-	-	O-overlap4
+4 shot-glass desserts	ready	shot-glass desserts	4	each	-	-	-	O-overlap4
+2 kettle corn bags	ready	kettle corn bags	2	each	-	-	D	O-overlap4
+1 hot pot soup base	ready	hot pot soup base	1	each	-	-	-	O-overlap4
+1 packet hot pot seasoning	ready	hot pot seasoning	1	packet	-	-	-	O-overlap4
+2 platter-size pizzas	ready	platter-size pizzas	2	each	-	-	-	O-overlap4
+6 tin-roof brownies	ready	tin-roof brownies	6	each	-	-	-	O-overlap4
+4 ice pops	ready	ice pops	4	each	-	-	-	O-overlap4
+6 lollipop lamb chops	ready	lollipop lamb chops	6	each	-	-	-	O-overlap4
+2 crown roasts	ready	crown roasts	2	each	-	-	-	O-overlap4
+6 Scotch eggs	ready	Scotch eggs	6	each	-	-	-	O-overlap4
+4 cottage pies	ready	cottage pies	4	each	-	-	-	O-overlap4
+2 bowl cakes	ready	bowl cakes	2	each	-	-	D	O-overlap4
+6 sheet-pan nachos	ready	sheet-pan nachos	6	each	-	-	D	O-overlap4
+1 bucket fried chicken	needs_review	-	-	-	-	-	S	U-unknown4
+1 Ninja Creami	unsupported	-	-	-	-	-	-	E-brand4
+1 Instant Vortex air fryer	unsupported	-	-	-	-	-	-	E-brand4
+1 Cosori air fryer	unsupported	-	-	-	-	-	-	E-brand4
+1 Blendtec blender	unsupported	-	-	-	-	-	-	E-brand4
+1 Lodge cast-iron skillet	unsupported	-	-	-	-	-	-	E-brand4
+1 Staub braiser	unsupported	-	-	-	-	-	-	E-brand4
+1 Le Creuset tagine	unsupported	-	-	-	-	-	-	E-brand4
+1 Emile Henry tagine	unsupported	-	-	-	-	-	-	E-brand4
+1 Emile Henry pie dish	unsupported	-	-	-	-	-	-	E-brand4
+1 Nordic Ware Bundt pan	unsupported	-	-	-	-	-	-	E-brand4
+1 Hamilton Beach toaster	unsupported	-	-	-	-	-	-	E-brand4
+1 Smeg kettle	unsupported	-	-	-	-	-	-	E-brand4
+1 Bodum French press	unsupported	-	-	-	-	-	-	E-brand4
+1 Hario V60	unsupported	-	-	-	-	-	-	E-brand4
+1 Keurig	unsupported	-	-	-	-	-	-	E-brand4
+1 Traeger grill	unsupported	-	-	-	-	-	-	E-brand4
+1 Weber Smokey Mountain	unsupported	-	-	-	-	-	-	E-brand4
+1 Blackstone griddle	unsupported	-	-	-	-	-	-	E-brand4
+1 Masterbuilt turkey fryer	unsupported	-	-	-	-	-	-	E-brand4
+1 Presto FryDaddy	unsupported	-	-	-	-	-	-	E-brand4
+1 Whirley Pop popcorn popper	unsupported	-	-	-	-	-	-	E-brand4
+1 Pyrex casserole	unsupported	-	-	-	-	-	-	E-brand4
+1 Corningware casserole dish	unsupported	-	-	-	-	-	-	E-brand4
+1 Anova sous vide	unsupported	-	-	-	-	-	-	E-brand4
+1 Joule sous vide circulator	unsupported	-	-	-	-	-	-	E-brand4
+1 OXO salad spinner	unsupported	-	-	-	-	-	-	E-brand4
+1 Zyliss garlic press	unsupported	-	-	-	-	-	-	E-brand4
+1 Microplane zester	unsupported	-	-	-	-	-	-	E-brand4
+1 Silpat baking mat	unsupported	-	-	-	-	-	-	E-brand4
+1 Mauviel copper saucepan	unsupported	-	-	-	-	-	-	E-brand4
+1 Wüsthof paring knife	unsupported	-	-	-	-	-	-	E-brand4
+1 Benriner mandoline	unsupported	-	-	-	-	-	-	E-brand4
+1 Thermapen thermometer	unsupported	-	-	-	-	-	-	E-brand4
+1 Cuisinart hand mixer	unsupported	-	-	-	-	-	-	E-brand4
+1 Hamilton Beach Hot Pot	unsupported	-	-	-	-	-	-	E-brand4
+1 Chefman egg cooker	unsupported	-	-	-	-	-	-	E-brand4
+1 Yeti tumbler	unsupported	-	-	-	-	-	-	E-brand4
+1 Brita pitcher	unsupported	-	-	-	-	-	-	E-brand4
+1 Igloo cooler	unsupported	-	-	-	-	-	-	E-brand4
+1 Yeti cooler	unsupported	-	-	-	-	-	-	E-brand4
+1 Le Creuset pâté terrine	unsupported	-	-	-	-	-	-	E-brand4
+1 cow creamer	unsupported	-	-	-	-	-	-	E-foodword4
+1 ceramic pie bird	unsupported	-	-	-	-	-	-	E-foodword4
+1 honey dipper	unsupported	-	-	-	-	-	-	E-foodword4
+1 turkey fryer	unsupported	-	-	-	-	-	-	E-foodword4
+1 vertical chicken roaster	unsupported	-	-	-	-	-	-	E-foodword4
+1 pig roaster	unsupported	-	-	-	-	-	-	E-foodword4
+1 tamale steamer	unsupported	-	-	-	-	-	-	E-foodword4
+1 bag cherry wood chunks	unsupported	-	-	-	-	-	-	E-foodword4
+1 bag apple wood chunks	unsupported	-	-	-	-	-	-	E-foodword4
+1 bag charcoal briquettes	unsupported	-	-	-	-	-	-	E-foodword4
+1 bag hardwood pellets	unsupported	-	-	-	-	-	-	E-foodword4
+1 cedar plank	unsupported	-	-	-	-	-	-	E-foodword4
+2 alder planks	unsupported	-	-	-	-	-	-	E-foodword4
+1 bag oak wood chips	unsupported	-	-	-	-	-	-	E-foodword4
+1 bag maple wood chips	unsupported	-	-	-	-	-	-	E-foodword4
+1 butter churn	unsupported	-	-	-	-	-	-	E-foodword4
+1 egg poacher	unsupported	-	-	-	-	-	-	E-foodword4
+1 pie crust shield	unsupported	-	-	-	-	-	-	E-foodword4
+1 pie server	unsupported	-	-	-	-	-	-	E-foodword4
+1 cookie stamp	unsupported	-	-	-	-	-	-	E-foodword4
+1 doughnut pan	unsupported	-	-	-	-	-	-	E-foodword4
+1 popover pan	unsupported	-	-	-	-	-	-	E-foodword4
+1 muffin top pan	unsupported	-	-	-	-	-	-	E-foodword4
+1 taco holder	unsupported	-	-	-	-	-	-	E-foodword4
+1 corn stripper	unsupported	-	-	-	-	-	-	E-foodword4
+1 garlic keeper	unsupported	-	-	-	-	-	-	E-foodword4
+1 bread bin	unsupported	-	-	-	-	-	-	E-foodword4
+1 dough whisk	unsupported	-	-	-	-	-	-	E-foodword4
+1 ravioli stamp	unsupported	-	-	-	-	-	-	E-foodword4
+1 gnocchi board	unsupported	-	-	-	-	-	-	E-foodword4
+1 onigiri mold	unsupported	-	-	-	-	-	-	E-foodword4
+1 rice paddle	unsupported	-	-	-	-	-	-	E-foodword4
+1 tamagoyaki pan	unsupported	-	-	-	-	-	-	E-foodword4
+1 takoyaki pan	unsupported	-	-	-	-	-	-	E-foodword4
+1 tortilla warmer	unsupported	-	-	-	-	-	-	E-foodword4
+1 bean pot	unsupported	-	-	-	-	-	-	E-foodword4
+1 crepe spreader	unsupported	-	-	-	-	-	-	E-foodword4
+1 churro maker	unsupported	-	-	-	-	-	-	E-foodword4
+1 snow cone machine	unsupported	-	-	-	-	-	-	E-foodword4
+1 cream whipper	unsupported	-	-	-	-	-	-	E-foodword4
+1 soda siphon	unsupported	-	-	-	-	-	-	E-foodword4
+1 milk frother	unsupported	-	-	-	-	-	-	E-foodword4
+1 tea cozy	unsupported	-	-	-	-	-	-	E-foodword4
+1 burr grinder	unsupported	-	-	-	-	-	-	E-foodword4
+1 gooseneck kettle	unsupported	-	-	-	-	-	-	E-foodword4
+1 espresso tamper	unsupported	-	-	-	-	-	-	E-foodword4
+1 knock box	unsupported	-	-	-	-	-	-	E-foodword4
+1 bar spoon	unsupported	-	-	-	-	-	-	E-foodword4
+1 muddler	unsupported	-	-	-	-	-	-	E-foodword4
+1 wine key	unsupported	-	-	-	-	-	-	E-foodword4
+1 jar opener	unsupported	-	-	-	-	-	-	E-foodword4
+1 lid lifter	unsupported	-	-	-	-	-	-	E-foodword4
+1 spoon rest	unsupported	-	-	-	-	-	-	E-foodword4
+4 kitchen sponges	unsupported	-	-	-	-	-	-	E-foodword4
+1 roll Bounty paper towels	unsupported	-	-	-	-	-	-	E-household4
+1 box Hefty slider bags	unsupported	-	-	-	-	-	-	E-household4
+1 roll Reynolds parchment paper	unsupported	-	-	-	-	-	-	E-household4
+1 box Glad ForceFlex trash bags	unsupported	-	-	-	-	-	-	E-household4
+1 package Solo cups	unsupported	-	-	-	-	-	-	E-household4
+1 pack Dixie cups	unsupported	-	-	-	-	-	-	E-household4
+1 box birthday candles	unsupported	-	-	-	-	-	-	E-household4
+1 package cupcake toppers	unsupported	-	-	-	-	-	-	E-household4
+1 box bamboo skewers	unsupported	-	-	-	-	-	-	E-household4
+1 box Ziploc freezer bags	unsupported	-	-	-	-	-	-	E-household4
+1 package coffee filters	unsupported	-	-	-	-	-	-	E-household4
+1 package cheesecloth	unsupported	-	-	-	-	-	-	E-household4
+1 pack chopsticks	unsupported	-	-	-	-	-	-	E-household4
+1 box dishwasher pods	unsupported	-	-	-	-	-	-	E-household4
+1 box Cascade pods	unsupported	-	-	-	-	-	-	E-household4
+1 bag Tide pods	unsupported	-	-	-	-	-	-	E-household4
+1 bottle dish soap	unsupported	-	-	-	-	-	-	E-household4
+1 bottle hand soap	unsupported	-	-	-	-	-	-	E-household4
+1 roll butcher paper	unsupported	-	-	-	-	-	-	E-household4
+1 Large Mixing Bowl	unsupported	-	-	-	-	-	-	E-titlecase4
+2 Pastry Brushes	unsupported	-	-	-	-	-	-	E-titlecase4
+1 Honey Dipper	unsupported	-	-	-	-	-	-	E-titlecase4
+1 Turkey Fryer	unsupported	-	-	-	-	-	-	E-titlecase4
+1 Cedar Plank	unsupported	-	-	-	-	-	-	E-titlecase4
+1 split prosecco	needs_review	-	-	-	-	-	S	U-unknown4
+2 splits cava	needs_review	-	-	-	-	-	S	U-unknown4
+1 cone piloncillo	needs_review	-	-	-	-	-	S	U-unknown4
+2 cones piloncillo	needs_review	-	-	-	-	-	S	U-unknown4
+1 cone jaggery	needs_review	-	-	-	-	-	S	U-unknown4
+2 discs Mexican chocolate	needs_review	-	-	-	-	-	S	U-unknown4
+1 disk Ibarra chocolate	needs_review	-	-	-	-	-	S	U-unknown4
+3 stems lemongrass	needs_review	-	-	-	-	-	S	U-unknown4
+4 stems mint	needs_review	-	-	-	-	-	S	U-unknown4
+2 fronds dill	needs_review	-	-	-	-	-	S	U-unknown4
+1 frond fennel	needs_review	-	-	-	-	-	S	U-unknown4
+2 cobs sweetcorn	needs_review	-	-	-	-	-	S	U-unknown4
+1 cob corn	needs_review	-	-	-	-	-	S	U-unknown4
+20 threads saffron	needs_review	-	-	-	-	-	S	U-unknown4
+2 strands saffron	needs_review	-	-	-	-	-	S	U-unknown4
+1 lobe foie gras	needs_review	-	-	-	-	-	S	U-unknown4
+1 heel sourdough	needs_review	-	-	-	-	-	S	U-unknown4
+2 pumps vanilla syrup	needs_review	-	-	-	-	-	S	U-unknown4
+3 pumps caramel sauce	needs_review	-	-	-	-	-	S	U-unknown4
+1 spray avocado oil	needs_review	-	-	-	-	-	S	U-unknown4
+2 sprays cooking oil	needs_review	-	-	-	-	-	S	U-unknown4
+1 dropper vanilla extract	needs_review	-	-	-	-	-	S	U-unknown4
+1 eyedropper lemon extract	needs_review	-	-	-	-	-	S	U-unknown4
+2 K-cups hazelnut coffee	needs_review	-	-	-	-	-	S	U-unknown4
+1 capsule espresso	needs_review	-	-	-	-	-	S	U-unknown4
+1 tallboy lager	needs_review	-	-	-	-	-	S	U-unknown4
+1 crowler IPA	needs_review	-	-	-	-	-	S	U-unknown4
+1 schooner lager	needs_review	-	-	-	-	-	S	U-unknown4
+1 tankard ale	needs_review	-	-	-	-	-	S	U-unknown4
+1 stein Oktoberfest beer	needs_review	-	-	-	-	-	S	U-unknown4
+1 goblet red wine	needs_review	-	-	-	-	-	S	U-unknown4
+1 coupe champagne	needs_review	-	-	-	-	-	S	U-unknown4
+1 thermos coffee	needs_review	-	-	-	-	-	S	U-unknown4
+1 urn coffee	needs_review	-	-	-	-	-	S	U-unknown4
+1 vial rosewater	needs_review	-	-	-	-	-	S	U-unknown4
+1 jeroboam champagne	needs_review	-	-	-	-	-	S	U-unknown4
+1 magnum rosé	needs_review	-	-	-	-	-	S	U-unknown4
+1 order fries	needs_review	-	-	-	-	-	S	U-unknown4
+1 basket onion rings	needs_review	-	-	-	-	-	S	U-unknown4
+1 side coleslaw	needs_review	-	-	-	-	-	S	U-unknown4
+1 plate nachos	needs_review	-	-	-	-	-	S	U-unknown4
+1 skosh cinnamon	needs_review	-	-	-	-	-	S	U-unknown4
+1 smidgeon nutmeg	needs_review	-	-	-	-	-	S	U-unknown4
+1 hint orange zest	needs_review	-	-	-	-	-	S	U-unknown4
+1 touch cayenne	needs_review	-	-	-	-	-	S	U-unknown4
+1 whiff smoked paprika	needs_review	-	-	-	-	-	S	U-unknown4
+1 swoosh balsamic glaze	needs_review	-	-	-	-	-	S	U-unknown4
+1 squiggle mayo	needs_review	-	-	-	-	-	S	U-unknown4
+1 zigzag sriracha mayo	needs_review	-	-	-	-	-	S	U-unknown4
+1 ribbon caramel	needs_review	-	-	-	-	-	S	U-unknown4
+1 film olive oil	needs_review	-	-	-	-	-	S	U-unknown4
+1 veil powdered sugar	needs_review	-	-	-	-	-	S	U-unknown4
+1 blanket shredded cheese	needs_review	-	-	-	-	-	S	U-unknown4
+1 mound mashed potatoes	needs_review	-	-	-	-	-	S	U-unknown4
+1 heap rice	needs_review	-	-	-	-	-	S	U-unknown4
+1 pile fries	needs_review	-	-	-	-	-	S	U-unknown4
+1 stack pancakes	needs_review	-	-	-	-	-	S	U-unknown4
+1 bite dark chocolate	needs_review	-	-	-	-	-	S	U-unknown4
+1 blade mace	needs_review	-	-	-	-	-	S	U-unknown4
+2 blades mace	needs_review	-	-	-	-	-	S	U-unknown4
+1 scraping nutmeg	needs_review	-	-	-	-	-	S	U-unknown4
+1 grating lemon zest	needs_review	-	-	-	-	-	S	U-unknown4
+1 spattering hot sauce	needs_review	-	-	-	-	-	S	U-unknown4
+1 Pump Vanilla Syrup	needs_review	-	-	-	-	-	S	U-unknown4
+2 Blades Mace	needs_review	-	-	-	-	-	S	U-unknown4
+1 Cone Piloncillo	needs_review	-	-	-	-	-	S	U-unknown4
+1 Split Prosecco	needs_review	-	-	-	-	-	S	U-unknown4
+1 Solo cup beer	needs_review	-	-	-	-	-	S	U-unknown4
+1 shot glass tequila	needs_review	-	-	-	-	-	S	U-unknown4
+1 juice glass orange juice	needs_review	-	-	-	-	-	S	U-unknown4
+1 demitasse espresso	needs_review	-	-	-	-	-	S	U-unknown4
+1 hamper apples	needs_review	-	-	-	-	-	S	U-unknown4
+1 tetra pak coconut water	needs_review	-	-	-	-	-	S	U-unknown4
+1 tray lasagna	needs_review	-	-	-	-	-	S	U-unknown4
+chicken drumsticks x 6	ready	chicken drumsticks	6	each	-	-	-	A-mult4
+avocados x 2	ready	avocados	2	each	-	-	-	A-mult4
+shallots x3	ready	shallots	3	each	-	-	-	A-mult4
+corn tortillas ×8	ready	corn tortillas	8	each	-	-	-	A-mult4
+4x chicken breasts	ready	chicken breasts	4	each	-	-	-	A-mult4
+2x red onions	ready	red onions	2	each	-	-	-	A-mult4
+1x bunch coriander	ready	coriander	1	bunch	-	-	-	A-mult4
+2 x 200 g packs halloumi	ready	halloumi	2	package	200 g	-	-	A-mult4
+3 x 160 g tins tuna	ready	tuna	3	tin	160 g	-	-	A-mult4
+limes x 4, juiced	ready	limes	4	each	-	-	-	A-mult4
+slices of sourdough x 4	ready	sourdough	4	slice	-	-	D	A-mult4
+cans of chickpeas x 2	ready	chickpeas	2	can	-	-	D	A-mult4
+6 sprinkle cupcakes	ready	sprinkle cupcakes	6	each	-	-	-	A5-imprecise4
+10 drop sugar biscuits	ready	drop sugar biscuits	10	each	-	-	-	A5-imprecise4
+1 can coconut milk (13.5 oz, unsweetened)	ready	coconut milk	1	can	13.5 oz	-	-	A6-package4
+1 jar roasted red peppers (12 oz, drained)	ready	roasted red peppers	1	jar	12 oz	-	-	A6-package4
+1 bag baby kale (5 oz)	ready	baby kale	1	bag	5 oz	-	-	A6-package4
+2 cans black beans (15 oz each, rinsed)	ready	black beans	2	can	15 oz	-	-	A6-package4
+1 box lasagna noodles (16 oz)	ready	lasagna noodles	1	box	16 oz	-	-	A6-package4
+1 carton vegetable broth (32 fl oz)	ready	vegetable broth	1	carton	32 fl_oz	-	-	A6-package4
+1 bottle rosé (750 ml, chilled)	ready	rosé	1	bottle	750 ml	-	-	A6-package4
+1 tin anchovies (2 oz, oil reserved)	ready	anchovies	1	tin	2 oz	-	-	A6-package4
+1 package goat cheese (4 oz, crumbled)	ready	goat cheese	1	package	4 oz	-	-	A6-package4
+1 jar marinara (24 oz)	ready	marinara	1	jar	24 oz	-	-	A6-package4
+1 cup Greek or Icelandic yogurt	needs_review	-	1	cup	-	Greek yogurt;Icelandic yogurt	-	B-choice4
+1/2 cup pecans or walnuts	needs_review	-	1/2	cup	-	pecans;walnuts	-	B-choice4
+1 lb cremini or shiitake mushrooms	needs_review	-	1	lb	-	cremini mushrooms;shiitake mushrooms	-	B-choice4
+2 Yukon Gold or russet potatoes	needs_review	-	2	each	-	Yukon Gold potatoes;russet potatoes	-	B-choice4
+4 cups vegetable or chicken stock	needs_review	-	4	cup	-	vegetable stock;chicken stock	-	B-choice4
+1 bunch cilantro or parsley	needs_review	-	1	bunch	-	cilantro;parsley	-	B-choice4
+2 tsp Aleppo or Urfa pepper	needs_review	-	2	tsp	-	Aleppo pepper;Urfa pepper	-	B-choice4
+6 corn or flour tortillas	needs_review	-	6	each	-	corn tortillas;flour tortillas	-	B-choice4
+1 can cannellini or great northern beans	needs_review	-	1	can	-	cannellini beans;great northern beans	-	B-choice4
+2 tbsp sherry or rice vinegar	needs_review	-	2	tbsp	-	sherry vinegar;rice vinegar	-	B-choice4
+1 cup arborio or carnaroli rice	needs_review	-	1	cup	-	arborio rice;carnaroli rice	-	B-choice4
+2 tbsp oil and vinegar	needs_review	-	-	-	-	-	SD	B-and4
+2 cups cherries and apricots	needs_review	-	-	-	-	-	S	B-and4
+1 lb squid and shrimp	needs_review	-	-	-	-	-	S	B-and4
+3 tbsp ghee and oil	needs_review	-	-	-	-	-	S	B-and4
+1 cup raisins and currants	needs_review	-	-	-	-	-	S	B-and4
+1 cup chopped dill and parsley	needs_review	-	-	-	-	-	S	B-and4
+2 green and red chiles	ready	green and red chiles	2	each	-	-	-	B-and4
+4 black and white cookies	ready	black and white cookies	4	each	-	-	-	B-and4
+1 bag salt and vinegar crisps	ready	salt and vinegar crisps	1	bag	-	-	-	B-and4
+1 jar sweet and spicy pickles	ready	sweet and spicy pickles	1	jar	-	-	-	B-and4
+2 cups fruit and nut granola	ready	fruit and nut granola	2	cup	-	-	-	B-and4
+1 cup mashed banana (2 large bananas)	ready	mashed banana|banana	1	cup	-	-	-	A-remark4
+1 cup grated zucchini (1 medium zucchini)	ready	grated zucchini|zucchini	1	cup	-	-	-	A-remark4
+2 cups sliced leeks (about 2 leeks)	ready	sliced leeks|leeks	2	cup	-	-	-	A-remark4
+3 tbsp orange juice (from 1 orange)	needs_review	-	-	-	-	-	S	A-remark4
+1 tsp lime zest (1 lime)	needs_review	-	-	-	-	-	S	A-remark4
+2 cups cooked quinoa (2/3 cup dry)	needs_review	-	-	-	-	-	S	A-remark4
+1/4 cup lemon juice (about 2 lemons)	needs_review	-	-	-	-	-	S	A-remark4
+Makes about 24 cookies	unsupported	-	-	-	-	-	-	D-misc4
+For the glaze	unsupported	-	-	-	-	-	-	D-misc4
+See notes below	unsupported	-	-	-	-	-	-	D-misc4
+Nutrition per serving	unsupported	-	-	-	-	-	-	D-misc4
+Preheat the grill to medium-high	unsupported	-	-	-	-	-	-	D-misc4
+Let the dough rest overnight	unsupported	-	-	-	-	-	-	D-misc4
+Store leftovers in an airtight container	unsupported	-	-	-	-	-	-	D-misc4
+Pin it for later!	unsupported	-	-	-	-	-	-	D-misc4
+Watch the video	unsupported	-	-	-	-	-	-	D-misc4
+Total: 1 hour 15 minutes	unsupported	-	-	-	-	-	-	D-misc4
+6 flakes Maldon salt	needs_review	-	-	-	-	-	SD	U-unknown4
+2 nests fresh tagliatelle	needs_review	-	-	-	-	-	SD	U-unknown4
+4 vol-au-vent cases	ready	vol-au-vent cases	4	each	-	-	-	O-overlap4
+12 tartlet cases	ready	tartlet cases	12	each	-	-	-	O-overlap4
+1 jar barrel pickles	ready	barrel pickles	1	jar	-	-	-	O-overlap4
+6 beef kebab skewers	ready	beef kebab skewers	6	each	-	-	D	O-overlap4
+6 tea cakes	ready	tea cakes	6	each	-	-	-	O-overlap4
+4 beer brats	ready	beer brats	4	each	-	-	-	O-overlap4
+4 knot rolls	ready	knot rolls	4	each	-	-	-	O-overlap4
+6 cloverleaf rolls	ready	cloverleaf rolls	6	each	-	-	-	O-overlap4
+2 pull-apart breads	ready	pull-apart breads	2	each	-	-	-	O-overlap4
+6 accordion potatoes	ready	accordion potatoes	6	each	-	-	-	O-overlap4
+4 foil-packet dinners	ready	foil-packet dinners	4	each	-	-	-	O-overlap4
+6 spoon sweets	ready	spoon sweets	6	each	-	-	-	O-overlap4
