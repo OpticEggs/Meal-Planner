@@ -297,7 +297,7 @@ describe("command line: --split holdout2, --print-freeze-v2 and the outcomes sec
     expect(splitsFor("dev")).toEqual(["dev"]);
   });
 
-  it("a default run never loads or scores holdout-v2", async () => {
+  it("a default run never runs an engine on, scores or reports holdout-v2 (the fixture invariants still read the file for its integrity and freeze checks — final-head review N-1)", async () => {
     const { d } = deps();
     let seen = 0;
     const counting: RunDeps = {
