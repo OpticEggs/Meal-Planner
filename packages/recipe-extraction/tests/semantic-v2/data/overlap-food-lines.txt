@@ -1,0 +1,287 @@
+# Valid foods whose names overlap equipment or measure words (owner rule 3, round 2): R1's listed regressions and the
+# implementation worker's own lines, one per line; not copied from any page. Never `unsupported`.
+1 leg of lamb
+1 boneless leg of lamb
+1 rack of lamb
+2 racks of lamb
+1 rack of lamb, frenched
+12 finger sandwiches
+3 stone crab claws
+2 slab pies
+1 chicken pot pie
+4 bread bowls
+4 tortilla bowls
+12 wonton cups
+6 lettuce cups
+8 phyllo cups
+2 rolls, split
+1 lb short plate
+4 Italian grinders
+2 pot roasts
+1 beef pot roast
+1 pan pizza
+2 deep-dish pan pizzas
+1 skillet cornbread
+1 sheet-pan dinner
+2 cup noodles
+6 tea bags
+2 green tea bags
+10 rice paper wrappers
+1 pie crust
+2 refrigerated pie crusts
+12 tart shells
+1 pound cake
+2 pound cakes
+1 sheet cake
+2 sheet cakes
+8 drop biscuits
+12 drop cookies
+1 bag stick pretzels
+12 link sausages
+4 cube steaks
+2 strip steaks
+4 wedge salads
+1 Dutch baby
+4 mason jar salads
+6 popsicles
+6 muffin tops
+4 pudding cups
+2 jelly rolls
+1 bundt cake
+24 ladyfingers
+12 cake pops
+4 sprinkle donuts
+6 pot stickers
+24 potstickers
+2 pan dulce
+6 conchas
+1 spoon bread
+1 skillet cookie
+2 tin roof sundaes
+1 bag kettle corn
+1 bag kettle chips
+12 pinwheels
+24 pinwheel cookies
+6 cheese straws
+1 bag cheese straws
+12 shrimp cocktail
+1 head cheese
+2 heads garlic
+1 heart of romaine
+2 hearts of romaine
+1 can hearts of palm
+4 ears corn
+2 corn on the cob
+6 corn cobs
+1 bulb fennel
+1 bunch radishes
+2 cloves garlic
+6 button mushrooms
+1 wheel brie
+1 cheese wheel
+1 box wagon wheels
+1 log goat cheese
+4 egg rolls
+12 spring rolls
+6 summer rolls
+2 Swiss rolls
+6 cinnamon rolls
+12 dinner rolls
+8 crescent rolls
+6 kaiser rolls
+4 sushi rolls
+2 California rolls
+6 sausage rolls
+4 lobster rolls
+2 cabbage rolls
+1 tube cookie dough
+1 tube polenta
+1 tube tomato paste
+1 box mac and cheese
+6 juice boxes
+4 bottles beer
+1 bottle wine
+2 cans tuna
+1 tin sardines
+1 jar pickles
+1 bag ice
+6 Hot Pockets
+4 pita pockets
+2 club sandwiches
+4 submarine sandwiches
+2 hoagies
+3 hero sandwiches
+1 torpedo roll
+4 sliders
+2 banana boats
+12 bird's nest cookies
+12 taco shells
+1 box jumbo shells
+8 sugar cones
+6 waffle cones
+12 ice cream cones
+4 snow cones
+1 pan of brownies
+1 tray of lasagna
+1 casserole
+2 Cornish hens
+1 crown roast
+1 crown roast of pork
+1 standing rib roast
+4 lamb loin chops
+2 pork rib chops
+1 slab bacon
+2 slabs ribs
+1 brick cream cheese
+1 block cheddar
+1 bar cream cheese
+2 bars dark chocolate
+4 granola bars
+12 candy canes
+6 lollipops
+1 jello mold
+1 fruit basket
+1 charcuterie board
+6 deviled eggs
+4 scotch eggs
+2 bird's eye chilies
+1 bag fish sticks
+12 fish fingers
+8 chicken fingers
+6 chicken drumsticks
+12 chicken wings
+4 chicken legs
+2 turkey legs
+1 turkey crown
+2 chicken quarters
+1 bag tater tots
+1 box fish fillets
+6 shrimp skewers
+4 beef kebabs
+2 chicken kebabs
+8 satay sticks
+12 cocktail sausages
+24 cocktail shrimp
+6 cocktail onions
+12 cocktail franks
+1 jar cocktail cherries
+2 tbsp gram flour
+1 cup pound cake crumbs
+1 cup cup noodles broth
+1 lb jumbo lump crab
+6 pepper rings
+2 onion rings
+1 bag onion rings
+1 cup apple rings
+4 pineapple rings
+1 can pineapple chunks
+1 bag pita chips
+1 box cereal bars
+2 ice cream sandwiches
+12 cupcakes
+6 muffins
+4 English muffins
+1 angel food cake
+1 sponge cake
+2 layer cakes
+1 tube cake
+1 sheet pan of roasted vegetables
+2 rib roasts
+4 ribeye roasts
+1 sirloin tip roast
+2 London broils
+4 tomahawk steaks
+2 T-bone steaks
+4 porterhouse steaks
+6 chicken cutlets
+1 chicken crown
+8 chicken lollipops
+12 wing flats
+12 drumettes
+4 pork belly strips
+6 bacon strips
+4 beef strips
+2 flank steaks
+1 hanger steak
+6 fish tacos
+4 fish sticks
+2 fish fillets
+6 crab cakes
+4 crab claws
+2 lobster tails
+1 shrimp ring
+1 veggie tray
+1 fruit tray
+1 cheese tray
+1 deli platter
+1 cookie tray
+1 sheet of nori
+4 sheets lasagna
+2 sheets phyllo
+6 lasagna sheets
+4 rice paper sheets
+2 jars marinara
+1 pot of coffee
+1 pot of chili
+1 bowl of popcorn
+1 cup of tea
+2 mugs hot chocolate
+1 glass of milk
+1 pitcher of lemonade
+1 jug apple cider
+1 keg beer
+1 growler IPA
+4 cups yogurt
+6 yogurt cups
+4 fruit cups
+6 applesauce cups
+12 peanut butter cups
+6 Jell-O cups
+4 pudding pops
+6 ice pops
+12 freezer pops
+4 fudge pops
+2 cake pops
+12 donut holes
+6 muffin bottoms
+4 brownie bites
+12 bagel bites
+6 pizza rolls
+8 egg bites
+4 hash brown patties
+6 sausage patties
+4 veggie patties
+2 waffle fries
+1 bag curly fries
+1 bag shoestring fries
+1 box Rice-A-Roni
+1 box Hamburger Helper
+1 box Pop-Tarts
+6 Toaster Strudels
+1 box Eggo waffles
+4 Lunchables
+1 box Cheez-Its
+1 bag Goldfish
+1 bag Doritos
+1 bag Fritos
+1 bag Cheetos
+2 Kit Kat bars
+4 Snickers bars
+1 Hershey bar
+12 Hershey's Kisses
+1 bag Skittles
+1 bag Starburst
+1 box Junior Mints
+1 bag Twizzlers
+2 Twinkies
+4 Ding Dongs
+6 Oreo cookies
+1 sleeve Chips Ahoy
+1 box Wheat Thins
+1 box Teddy Grahams
+1 bag Funyuns
+1 can Pringles
+2 cans Red Bull
+6 cans Coke
+4 bottles Gatorade
+1 bottle Snapple
