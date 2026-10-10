@@ -41,4 +41,15 @@ describe("exposed regression corpus 2B", () => {
     expect(mismatches({ ...base, expect: { ...base.expect, alternatives: ["a"], acceptAlternatives: [["a", "b"]] } }, reading)).toEqual([]);
     expect(mismatches({ ...base, expect: { ...base.expect, alternatives: ["a", "c"] } }, reading)).toHaveLength(1);
   });
+  it("comparator: an unsupported label accepts a safe abstention (review, no amount/unit/package/options) and nothing else", () => {
+    const unsupported: RegressionCase = {
+      id: "t", input: "1 comal", origin: { kind: "test", ref: "t" }, family: "D", firm: true, alsoIn: [],
+      expect: { status: "unsupported", name: null, acceptNames: [], quantity: null, unit: null, packageSize: null, alternatives: [], acceptAlternatives: [] },
+    };
+    const reading = getEngine("legacy-table-import-2").parse("2 cups flour") as ParsedIngredientV1;
+    const abstain = { ...reading, status: "needs_review", name: "comal", quantity: null, unit: null, packageSize: null, alternatives: [] } as ParsedIngredientV1;
+    expect(mismatches(unsupported, abstain)).toEqual([]);
+    expect(mismatches(unsupported, { ...abstain, quantity: reading.quantity } as ParsedIngredientV1).length).toBeGreaterThan(0); // S1 risk
+    expect(mismatches(unsupported, { ...abstain, status: "ready" } as ParsedIngredientV1).length).toBeGreaterThan(0); // S8
+  });
 });

@@ -94,10 +94,21 @@ function samePackage(label: string | null, got: unknown): boolean {
 }
 const altSet = (xs: unknown): string => JSON.stringify([...new Set((Array.isArray(xs) ? xs : []).map(norm).filter((x) => x !== null))].sort());
 
-/** Field-by-field mismatches of one reading against one regression label ([] = match). */
+/**
+ * A safe abstention on a non-ingredient line: the label is `unsupported`, the engine says `needs_review` and offers no
+ * amount, unit, package or options. Under G2 this is class C8 ("unsupported reviewed"), not an acceptance error, and
+ * it carries no S code (EVALUATION-PLAN-v3 §4–§6); the required harness accepts it, as the acceptance rules do.
+ */
+export function safeAbstention(c: RegressionCase, got: ParsedIngredientV1): boolean {
+  return c.expect.status === "unsupported" && got.status === "needs_review" && (got.quantity ?? null) === null && (got.unit ?? null) === null
+    && (got.packageSize ?? null) === null && (!Array.isArray(got.alternatives) || got.alternatives.length === 0);
+}
+
+/** Field-by-field mismatches of one reading against one regression label ([] = match or safe abstention). */
 export function mismatches(c: RegressionCase, got: ParsedIngredientV1): string[] {
   const e = c.expect;
   const out: string[] = [];
+  if (safeAbstention(c, got)) return out;
   const show = (v: unknown) => JSON.stringify(v);
   if (got.status !== e.status) out.push(`status: want ${e.status}, got ${got.status}`);
   if (e.name !== "*") {
