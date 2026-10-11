@@ -62,6 +62,7 @@ const B7U = "tests/unit/fdc-normalize.test.ts";
 const B7I = "tests/integration/b7.nutrition.test.ts";
 const MP = "tests/integration/member-photo.test.ts";
 const CF = "tests/integration/cf-meal-lists.test.ts";
+const CFR = "tests/integration/cf-reference-recipes.test.ts";
 
 /** expect: regexes over failing test full names; at least one must fail by assertion. */
 const MUTATIONS = [
@@ -380,6 +381,12 @@ MUTATIONS.push(
   { name: "CF_calendar_dinners_in_list", file: "src/server/groceries/recompute.ts", suite: CF, pattern: "CF-S1", expect: [/CF-S1/],
     edits: [["(isList ? { weekId: week.id, weekStart: \"\", acceptedChoiceRevision: 0, assignments: [], events: [], allocations: [] } : await loadPlanState(c, week))",
       "(isList ? await loadPlanState(c, (await weekById(c, householdId, (await c.query(\"SELECT id FROM weeks WHERE household_id=$1 AND kind='calendar' ORDER BY week_start LIMIT 1\", [householdId])).rows[0].id))!) : await loadPlanState(c, week))"]] },
+  // Q6 at import: a line kept as Needs a quantity must reach the saved recipe, never silently vanish.
+  { name: "CF_needs_quantity_dropped_at_confirm", file: "src/server/commands/imports.ts", suite: CFR, pattern: "CF-B1", expect: [/CF-B1/],
+    edits: [["        unquantified.push({ componentKey: place(current), name: l.decision.name, note: l.parsed.note ?? null, raw: l.raw });", "        void 0;"]] },
+  // Q6 on edit: a new version keeps the previous version's Needs-a-quantity items.
+  { name: "CF_needs_quantity_lost_on_edit", file: "src/server/commands/library.ts", suite: CFR, pattern: "CF-B4", expect: [/CF-B4/],
+    edits: [["    } else if (recipeId && versionNo > 1) {\n      unquantified = (", "    } else if (false && recipeId && versionNo > 1) {\n      unquantified = ("]] },
   // Q6: an unanswered "Needs a quantity" item must never read as nothing to buy.
   { name: "CF_needs_quantity_counts_as_zero", file: "src/domain/groceries/projection.ts", suite: CF, pattern: "CF-N1", expect: [/CF-N1/],
     edits: [["    if (askQty.has(key)) toSend = null;\n", "\n"]] },
