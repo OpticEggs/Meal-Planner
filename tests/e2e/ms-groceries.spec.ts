@@ -6,7 +6,7 @@
 import { expect, test, type Browser } from "@playwright/test";
 import { spawn, type ChildProcess } from "node:child_process";
 import { TEST_ENV } from "../../playwright.config";
-import { member, q, retailerCalls, seed } from "./helpers";
+import { member, q, retailerCalls, seed, weekGroceries } from "./helpers";
 
 const count = async (t: string) => (await q<{ n: number }>(`SELECT count(*)::int AS n FROM ${t}`))[0].n;
 const plan = async (weekId: string) => ({
@@ -20,7 +20,7 @@ test("GR-01/02/08: Jon switches to another store; Alex sees it live, the Send bu
   const jon = await member(browser, "jon");
   const alex = await member(browser, "alex");
   await alex.context.grantPermissions(["clipboard-read", "clipboard-write"]);
-  for (const m of [jon, alex]) await m.page.getByRole("link", { name: "Groceries" }).first().click();
+  for (const m of [jon, alex]) await weekGroceries(m.page);
   await expect(alex.page.getByTestId("destination-current")).toContainText("Simulated retailer cart");
   await expect(alex.page.getByTestId("send")).toBeVisible();
   const before = await plan(fx.weekId);
@@ -47,16 +47,15 @@ test("GR-01/02/08: Jon switches to another store; Alex sees it live, the Send bu
   await alex.context.close();
 });
 
-test("E2E-03: Where to shop and the list fit 320 px at 200% text, in light and dark", async ({ browser }) => {
+test("E2E-03: Where to shop and the list fit 320 px at 200% text (the one dark theme)", async ({ browser }) => {
   await seed();
-  for (const scheme of ["light", "dark"] as const) {
+  {
     const jon = await member(browser, "jon", { viewport: { width: 320, height: 640 } });
-    await jon.page.emulateMedia({ colorScheme: scheme });
     await jon.page.addStyleTag({ content: "html { font-size: 200% !important; }" });
-    await jon.page.getByRole("link", { name: "Groceries" }).first().click();
+    await weekGroceries(jon.page);
     await expect(jon.page.getByTestId("where-to-shop")).toBeVisible();
     await jon.page.getByTestId("shopping-list-toggle").click();
-    expect(await jon.page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth), scheme).toBeLessThanOrEqual(0);
+    expect(await jon.page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
     await jon.context.close();
   }
 });
@@ -93,7 +92,7 @@ test.describe("Instacart shopping list (fixture fake)", () => {
     const fx = await seed();
     await start();
     const jon = await member(browser, "jon");
-    await jon.page.getByRole("link", { name: "Groceries" }).first().click();
+    await weekGroceries(jon.page);
     const where = jon.page.getByTestId("where-to-shop");
     await where.getByRole("radio", { name: /Instacart shopping list/ }).check();
     await where.getByTestId("destination-save").click();

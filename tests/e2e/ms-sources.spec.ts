@@ -4,12 +4,12 @@
  * synthetic fixtures (TABLE_RECIPE_FETCH_FIXTURES) — nothing is fetched from the internet.
  */
 import { expect, test, type Page } from "@playwright/test";
-import { member, q, seed } from "./helpers";
+import { member, q, seed, viaMore } from "./helpers";
 
 const count = async (t: string) => (await q<{ n: number }>(`SELECT count(*)::int AS n FROM ${t}`))[0].n;
 
 async function savedLinksTab(p: Page) {
-  await p.getByRole("link", { name: "Our Recipes" }).click();
+  await p.getByRole("link", { name: "Recipes", exact: true }).click();
   await p.getByRole("tab", { name: "Saved links" }).click();
 }
 
@@ -88,7 +88,7 @@ test("BB-01/02: the Budget Bytes lane links to the official index, lists only wh
   const jon = await member(browser, "jon");
   const alex = await member(browser, "alex");
   for (const m of [jon, alex]) {
-    await m.page.getByRole("link", { name: "Explore" }).click();
+    await viaMore(m.page, "Explore and Budget Bytes");
     await m.page.getByTestId("explore-source").selectOption("budget_bytes");
   }
   const lane = jon.page.getByTestId("budget-bytes-lane");

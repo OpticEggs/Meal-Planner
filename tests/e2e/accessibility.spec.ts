@@ -4,7 +4,7 @@
  */
 import { expect, test, type Page } from "@playwright/test";
 import { NIGHT } from "../fixtures/household";
-import { background, foreground, member, nightTitle, previewReplace, protectedRows, q, seed } from "./helpers";
+import { background, foreground, member, nightTitle, previewReplace, protectedRows, q, seed, weekGroceries } from "./helpers";
 
 /** What has focus right now, described well enough to assert on. */
 async function focused(page: Page) {
@@ -284,7 +284,7 @@ test("B14 grocery review during a dinner change: the reviewer keeps focus, sees 
   await seed();
   const alex = await member(browser, "alex", { init: recordAnnouncements });
   const jon = await member(browser, "jon");
-  await alex.page.getByRole("link", { name: "Groceries" }).click();
+  await weekGroceries(alex.page);
   await alex.page.getByTestId("approve-all").click();
   await expect(alex.page.getByTestId("readiness")).toContainText("Groceries ready to send.");
   const input = alex.page.locator("#an-groceries");

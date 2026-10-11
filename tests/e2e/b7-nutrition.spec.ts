@@ -12,7 +12,7 @@ import { spawn, type ChildProcess } from "node:child_process";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { TEST_ENV } from "../../playwright.config";
-import { member, q, seed } from "./helpers";
+import { member, q, seed, viaMore } from "./helpers";
 
 const MAIN_PORT = Number(new URL(TEST_ENV.BETTER_AUTH_URL).port);
 const PORT2 = MAIN_PORT + 1;
@@ -21,7 +21,7 @@ const CHICKEN_SR = "Chicken, broiler or fryers, breast, skinless, boneless, meat
 const CHICKEN_FOUNDATION = "Chicken, breast, boneless, skinless, raw — Foundation";
 
 async function household(page: Page) {
-  await page.getByRole("link", { name: "Household" }).click();
+  await viaMore(page, "Household");
   await expect(page.getByTestId("ingredient-nutrition")).toBeVisible();
 }
 const finder = (page: Page, name: string) => page.getByRole("button", { name: `Find nutrition… for ${name}` });

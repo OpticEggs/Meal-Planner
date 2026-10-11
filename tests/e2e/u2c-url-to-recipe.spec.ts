@@ -6,7 +6,7 @@
  * default (nothing of a page's own method or photo is kept).
  */
 import { expect, test } from "@playwright/test";
-import { member, q, seed } from "./helpers";
+import { member, q, seed, viaMore } from "./helpers";
 
 const count = async (t: string) => (await q<{ n: number }>(`SELECT count(*)::int AS n FROM ${t}`))[0].n;
 
@@ -14,7 +14,7 @@ test("U2C-E1: paste a link on Our Recipes → review with source and suggestions
   await seed();
   const jon = await member(browser, "jon");
   const p = jon.page;
-  await p.getByRole("link", { name: "Our Recipes" }).click();
+  await p.getByRole("link", { name: "Recipes", exact: true }).click();
   await p.getByRole("textbox", { name: "Add a recipe from a link" }).fill("https://wprm.example.com/skillet-taco-rice/?utm_source=feed");
   await p.getByTestId("add-from-link-submit").click();
   const review = p.getByRole("dialog", { name: "Review the import" });
@@ -47,7 +47,7 @@ test("U2C-E2: a page that can't be read says why, keeps the link, and offers pas
   await seed();
   const jon = await member(browser, "jon");
   const p = jon.page;
-  await p.getByRole("link", { name: "Our Recipes" }).click();
+  await p.getByRole("link", { name: "Recipes", exact: true }).click();
   await p.getByRole("textbox", { name: "Add a recipe from a link" }).fill("https://gone.example.com/recipe");
   await p.getByTestId("add-from-link-submit").click();
   const dialog = p.getByRole("dialog", { name: "Import ingredients" });
@@ -68,7 +68,7 @@ test("U2C-E3: Budget Bytes lane — search opens Budget Bytes; a pasted link is 
   await seed();
   const jon = await member(browser, "jon");
   const p = jon.page;
-  await p.getByRole("link", { name: "Explore" }).click();
+  await viaMore(p, "Explore and Budget Bytes");
   await p.getByTestId("explore-source").selectOption("budget_bytes");
   const lane = p.getByTestId("budget-bytes-lane");
   await expect(lane.getByRole("searchbox", { name: /Search Budget Bytes/ })).toBeVisible();

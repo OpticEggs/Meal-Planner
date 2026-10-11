@@ -16,7 +16,7 @@
 import { expect, test, type Browser, type Page } from "@playwright/test";
 import { randomUUID } from "node:crypto";
 import { NIGHT } from "../fixtures/household";
-import { member, q, seed } from "./helpers";
+import { member, q, seed, viaMore, weekGroceries } from "./helpers";
 import type { Fixture } from "../fixtures/household";
 
 const VIEWPORT = { width: 320, height: 640 };
@@ -372,7 +372,7 @@ for (const scale of SCALES) {
       const fx = await seed();
       const longId = await insertRecipe(fx, LONG_RECIPE);
       const { page, context } = await scaledMember(browser, "jon", scale);
-      await page.getByRole("link", { name: "Explore" }).click();
+      await viaMore(page, "Explore and Budget Bytes");
       await expect(page.getByTestId("recipe-card").first()).toBeVisible();
       await page.getByRole("button", { name: `Sounds good: ${LONG_RECIPE}` }).click();
       await expect(page.locator('section[aria-label="Explore"] [role="status"]')).toContainText("Saved");
@@ -381,7 +381,7 @@ for (const scale of SCALES) {
       await expect(page.getByTestId("unknown-group")).toBeVisible();
       await sweep(page, scale, "Explore sorted, with an unknown group");
 
-      await page.getByRole("link", { name: "Our Recipes" }).click();
+      await page.getByRole("link", { name: "Recipes", exact: true }).click();
       await expect(page.getByTestId("recipe-row").first()).toBeVisible();
       await page.getByRole("button", { name: `Favorite ${LONG_RECIPE}` }).click();
       await expect(page.getByRole("button", { name: `Favorite ${LONG_RECIPE}` })).toHaveAttribute("aria-pressed", "true");
@@ -401,10 +401,22 @@ for (const scale of SCALES) {
       await context.close();
     });
 
+    test(`More and Selected meals (${scale}%)`, async ({ browser }) => {
+      await seed();
+      const { page, context } = await scaledMember(browser, "jon", scale);
+      await go(page, "/more");
+      await expect(page.getByRole("heading", { name: "More", exact: true })).toBeVisible();
+      await sweep(page, scale, "More");
+      await page.getByTestId("nav-selected").click();
+      await expect(page.getByRole("heading", { name: "Selected meals" })).toBeVisible();
+      await sweep(page, scale, "Selected meals");
+      await context.close();
+    });
+
     test(`recipe editor dialog, plain state (${scale}%)`, async ({ browser }) => {
       await seed();
       const { page, context } = await scaledMember(browser, "jon", scale);
-      await page.getByRole("link", { name: "Our Recipes" }).click();
+      await page.getByRole("link", { name: "Recipes", exact: true }).click();
       await page.getByTestId("new-recipe").click();
       await expect(page.getByRole("dialog", { name: "New recipe" })).toBeVisible();
       await sweep(page, scale, "New recipe dialog");
@@ -415,7 +427,7 @@ for (const scale of SCALES) {
       const fx = await seed();
       await insertProduct(fx, "broccoli", LONG_PRODUCT);
       const { page, context } = await scaledMember(browser, "alex", scale);
-      await page.getByRole("link", { name: "Groceries" }).click();
+      await weekGroceries(page);
       await expect(page.getByTestId("line-broccoli")).toBeVisible();
 
       await page.getByRole("button", { name: "Change product for Broccoli" }).click();
@@ -489,7 +501,7 @@ for (const scale of SCALES) {
       const fx = await seed();
       await q("INSERT INTO fake_retailer_script(household_id, behavior) VALUES ($1,'accept_then_timeout')", [fx.householdId]);
       const { page, context } = await scaledMember(browser, "alex", scale);
-      await page.getByRole("link", { name: "Groceries" }).click();
+      await weekGroceries(page);
       await page.getByTestId("approve-all").click();
       await expect(page.getByTestId("send")).toBeEnabled();
       await page.getByTestId("send").click();
@@ -510,7 +522,7 @@ for (const scale of SCALES) {
       const fx = await seed();
       await q("INSERT INTO exclusions(household_id, member_id, term, created_by) VALUES ($1,$2,$3,$4)", [fx.householdId, fx.members.alex, LONG_TERM, fx.members.alex]);
       const { page, context } = await scaledMember(browser, "jon", scale);
-      await page.getByRole("link", { name: "Household" }).click();
+      await viaMore(page, "Household");
       await expect(page.getByTestId("settings")).toBeVisible();
       const anchors = [null, '[data-testid="targets"] input', '[data-testid="exclusions"] button:not([disabled])', '[data-testid="ingredient-review"] input', '[data-testid="staples"] button:not([disabled])'];
       await sweep(page, scale, "Household", anchors);
@@ -535,7 +547,7 @@ for (const scale of SCALES) {
       await go(page, "/household");
       await form.getByLabel("Budget ($)").fill("80");
       const alex = await member(browser, "alex");
-      await alex.page.getByRole("link", { name: "Household" }).click();
+      await viaMore(alex.page, "Household");
       await alex.page.getByTestId("settings").getByLabel("Store (label)").fill("Alex’s neighbourhood market on the long road out of town");
       await alex.page.getByTestId("settings").getByRole("button", { name: "Save household inputs" }).click();
       await expect(page.getByTestId("settings-conflict")).toBeVisible();
@@ -556,7 +568,7 @@ for (const scale of SCALES) {
       await insertProduct(fx, "greek_yogurt", LONG_YOGURT, "32", "oz");
       expect(LONG_STAPLE.length).toBeLessThanOrEqual(80);
       const { page, context } = await scaledMember(browser, "jon", scale);
-      await page.getByRole("link", { name: "Household" }).click();
+      await viaMore(page, "Household");
       await page.getByTestId("add-staple").click();
       const add = page.getByRole("dialog", { name: "Add a usual item" });
       await expect(add).toBeVisible();
@@ -577,7 +589,7 @@ for (const scale of SCALES) {
       await sweep(page, scale, "Edit usual item dialog");
       // Alex saves the same staple meanwhile: Jon's dialog shows the conflict.
       const alex = await member(browser, "alex");
-      await alex.page.getByRole("link", { name: "Household" }).click();
+      await viaMore(alex.page, "Household");
       await alex.page.getByRole("button", { name: `Edit ${LONG_STAPLE}` }).click();
       const aed = alex.page.getByRole("dialog", { name: `Edit ${LONG_STAPLE}` });
       await aed.getByLabel("Usual amount").fill("2");

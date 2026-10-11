@@ -4,14 +4,14 @@
  * complete order, needs an explicit acknowledgement, and is refused when the list changes while open.
  */
 import { expect, test } from "@playwright/test";
-import { member, q, seed } from "./helpers";
+import { member, q, seed, weekGroceries } from "./helpers";
 
 const calls = () => q<any>("SELECT request_body FROM fake_retailer_calls ORDER BY id");
 
 async function groceries(browser: any, who: "jon" | "alex") {
   const m = await member(browser, who);
   await m.context.grantPermissions(["clipboard-read", "clipboard-write"]);
-  await m.page.getByRole("link", { name: "Groceries" }).first().click();
+  await weekGroceries(m.page);
   await expect(m.page.getByTestId("groceries")).toBeVisible();
   return m;
 }

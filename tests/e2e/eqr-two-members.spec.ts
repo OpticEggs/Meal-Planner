@@ -9,7 +9,7 @@
  */
 import { expect, test, type Page } from "@playwright/test";
 import { randomUUID } from "node:crypto";
-import { member, q, seed } from "./helpers";
+import { member, q, seed, weekGroceries } from "./helpers";
 
 async function api(page: Page, name: string, payload: unknown) {
   return page.evaluate(async ({ name, payload, id }) => {
@@ -81,7 +81,7 @@ test("EQR-E2: Alex's 'Have enough' for exactly 3 does not cover Jon's later 3.00
     expect(a.status, JSON.stringify(a.body)).toBe(200);
   };
   await onNight(fx.assignments.fri, bowls.body.result.versionId);
-  await alex.page.getByRole("link", { name: "Groceries" }).click();
+  await weekGroceries(alex.page);
   const cuc = alex.page.getByTestId("line-cucumber");
   await expect(cuc).toBeVisible();
   // Alex's screen must show today's line (3 to buy) before she vouches for it — not the week before Jon's change.

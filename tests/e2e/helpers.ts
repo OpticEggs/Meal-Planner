@@ -18,11 +18,15 @@ export async function seed(opts?: Parameters<typeof seedFixture>[1]): Promise<Fi
   return seedFixture(DB(), opts);
 }
 
-/** A genuinely separate member: its own browser context (cookies/storage) and its own sign-in. */
+/**
+ * A genuinely separate member: its own browser context (cookies/storage) and its own sign-in.
+ * Signing in lands on Recipes (Q4); `start` is the screen the test begins on — the dinner calendar ("/")
+ * unless a test asks otherwise, because most flows here exercise the calendar week.
+ */
 export async function member(
   browser: Browser,
   who: "jon" | "alex" | "other",
-  opts: { viewport?: { width: number; height: number }; reducedMotion?: "reduce" | "no-preference"; init?: () => void } = {},
+  opts: { viewport?: { width: number; height: number }; reducedMotion?: "reduce" | "no-preference"; init?: () => void; start?: string } = {},
 ) {
   const context = await browser.newContext({
     ...(opts.viewport ? { viewport: opts.viewport } : {}),
@@ -34,9 +38,44 @@ export async function member(
   await page.getByLabel("Email").fill(USERS[who].email);
   await page.getByLabel("Password").fill(USERS[who].password);
   await page.getByRole("button", { name: "Sign in" }).click();
+  await expect(page).toHaveURL(/\/recipes$/);
   await expect(page.getByTestId("me")).toHaveText(USERS[who].name);
+  const start = opts.start ?? "/";
+  if (start !== "/recipes") {
+    await page.goto(start);
+    await expect(page.getByTestId("me")).toHaveText(USERS[who].name);
+  }
   await expect(page.getByTestId("currency")).toHaveAttribute("data-currency", "current");
   return { context, page };
+}
+
+/** Q4: what More lists. */
+export type MoreEntry = "Dinner calendar" | "Explore and Budget Bytes" | "Saved links" | "Household";
+
+/** A screen under More, reached the way a member does: the More tab, then the entry (client-side, so the browsed week is kept). */
+export async function viaMore(page: Page, entry: MoreEntry) {
+  await page.getByTestId("nav-more").click();
+  await expect(page.getByRole("heading", { name: "More", exact: true })).toBeVisible();
+  await page.getByRole("link", { name: entry, exact: true }).click();
+  const path = { "Dinner calendar": /\/$/, "Explore and Budget Bytes": /\/explore$/, "Saved links": /\/recipes\?tab=links$/, Household: /\/household$/ }[entry];
+  await expect(page).toHaveURL(path);
+}
+
+/** The dinner calendar (Week), via More. */
+export async function openWeek(page: Page) {
+  await viaMore(page, "Dinner calendar");
+  await expect(page.getByTestId("week-title")).toBeVisible();
+}
+
+/**
+ * The calendar week's grocery list (/week/groceries): from the Week screen by its "Groceries for this week"
+ * link, going to the Week screen through More first when needed. Client-side throughout, so the week being
+ * browsed is the week whose groceries open — as the old Groceries tab did.
+ */
+export async function weekGroceries(page: Page) {
+  if (new URL(page.url()).pathname !== "/") await openWeek(page);
+  await page.getByTestId("week-groceries-link").click();
+  await expect(page).toHaveURL(/\/week\/groceries$/);
 }
 
 export async function retailerCalls(): Promise<number> {

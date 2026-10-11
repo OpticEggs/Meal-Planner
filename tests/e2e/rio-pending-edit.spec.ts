@@ -13,7 +13,7 @@ const PESTO_LINE = "1/3 cup pesto (homemade (or store-bought))";
 async function openReview(browser: any) {
   await seed();
   const m = await member(browser, "jon", { viewport: { width: 390, height: 844 } });
-  await m.page.getByRole("link", { name: "Our Recipes" }).click();
+  await m.page.getByRole("link", { name: "Recipes", exact: true }).click();
   await m.page.getByRole("textbox", { name: "Add a recipe from a link" }).fill(PESTO);
   await m.page.getByTestId("add-from-link-submit").click();
   const review = m.page.getByRole("dialog", { name: "Review the import" });
@@ -136,7 +136,7 @@ test("RIO-03e: Save review for later is held too; once applied it is kept, survi
   await expect.poll(async () => (await draftLines()).revision).toBe(before + 1);
   expect((await draftLines()).lines[1].decision).toMatchObject({ use: true, name: "pesto", quantity: "1/2", unit: "cup" });
   await page.reload();
-  await page.getByRole("link", { name: "Our Recipes" }).click();
+  await page.getByRole("link", { name: "Recipes", exact: true }).click();
   await page.getByRole("tab", { name: "Saved links" }).click();
   await page.getByRole("button", { name: /^Continue import review:/ }).click();
   const again = page.getByRole("dialog", { name: "Review the import" });
@@ -150,7 +150,7 @@ test("RIO-03e: Save review for later is held too; once applied it is kept, survi
 test("RIO-03f: rows regrouping around an unapplied change keep it; after Use or Cancel the focus stays on that row", async ({ browser }) => {
   await seed();
   const m = await member(browser, "jon", { viewport: { width: 390, height: 844 } });
-  await m.page.getByRole("link", { name: "Our Recipes" }).click();
+  await m.page.getByRole("link", { name: "Recipes", exact: true }).click();
   await m.page.getByRole("textbox", { name: "Add a recipe from a link" }).fill(PESTO);
   await m.page.getByTestId("add-from-link-submit").click();
   const review = m.page.getByRole("dialog", { name: "Review the import" });
@@ -193,7 +193,7 @@ test("RIO-03g: the other member saves the review meanwhile — nothing stale is 
   await pesto.getByRole("textbox", { name: "Amount for the whole recipe, line 2" }).fill("1/2"); // Jon: not applied yet
   // Alex opens the same review in her own browser, changes the peas and saves the review for later.
   const alex = await member(browser, "alex", { viewport: { width: 390, height: 844 } });
-  await alex.page.getByRole("link", { name: "Our Recipes" }).click();
+  await alex.page.getByRole("link", { name: "Recipes", exact: true }).click();
   await alex.page.getByRole("tab", { name: "Saved links" }).click();
   await alex.page.getByRole("button", { name: /^Continue import review:/ }).click();
   const theirs = alex.page.getByRole("dialog", { name: "Review the import" });

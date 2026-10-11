@@ -3,7 +3,7 @@
  * see the remembered product; nothing is approved for purchase by that decision.
  */
 import { expect, test } from "@playwright/test";
-import { member, q, seed } from "./helpers";
+import { member, q, seed, openWeek, weekGroceries } from "./helpers";
 
 test("B12: Alex makes a different yogurt the usual; Jon sees it live; the purchase still needs its own approval", async ({ browser }) => {
   await seed();
@@ -14,11 +14,11 @@ test("B12: Alex makes a different yogurt the usual; Jon sees it live; the purcha
   await f.getByPlaceholder(/Also need/).fill("Plain Greek yogurt");
   await f.getByRole("button", { name: "Add", exact: true }).click();
   await expect(f.getByRole("status")).toContainText("Added");
-  await jon.page.getByRole("link", { name: "Groceries" }).click();
+  await weekGroceries(jon.page);
   await expect(jon.page.getByTestId("staple-greek_yogurt")).toContainText("Your usual: Plain Greek yogurt 32 oz tub");
 
   // Alex adds another product for this pickup, then explicitly makes it the usual.
-  await alex.page.getByRole("link", { name: "Groceries" }).click();
+  await weekGroceries(alex.page);
   const yog = alex.page.getByTestId("line-greek_yogurt");
   // (Since B15 the product form is a dialog rather than inline in the line.)
   await yog.getByRole("button", { name: "Change product for Plain Greek yogurt" }).click();
@@ -43,7 +43,7 @@ test("B12: Alex makes a different yogurt the usual; Jon sees it live; the purcha
   const st = (await q<any>("SELECT s.product_revision, p.name FROM household_staples s JOIN products p ON p.id=s.product_id WHERE s.ingredient_key='greek_yogurt'"))[0];
   expect(st).toEqual({ product_revision: 2, name: "Fage Total 35 oz" });
   // The Week page's one-tap chip names the remembered product for screen readers.
-  await jon.page.getByRole("link", { name: "Week" }).click();
+  await openWeek(jon.page);
   await expect(jon.page.getByTestId("alsoneed-week").getByRole("button", { name: "Plain Greek yogurt — your usual (Fage Total 35 oz)" })).toBeVisible();
   await jon.context.close();
   await alex.context.close();

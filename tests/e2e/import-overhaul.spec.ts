@@ -15,7 +15,7 @@ const PHOTO = fileURLToPath(new URL("../fixtures/import-site/pesto-hero.jpg", im
 test("IO-E1: the reported line reads cleanly; only uncertain lines ask; seasonings left out; own photo added and removed", async ({ browser }) => {
   await seed();
   const { context, page: p } = await member(browser, "jon", { viewport: { width: 390, height: 844 } });
-  await p.getByRole("link", { name: "Our Recipes" }).click();
+  await p.getByRole("link", { name: "Recipes", exact: true }).click();
   await p.getByRole("textbox", { name: "Add a recipe from a link" }).fill(PESTO);
   await p.getByTestId("add-from-link-submit").click();
   const review = p.getByRole("dialog", { name: "Review the import" });
