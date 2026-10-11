@@ -1,9 +1,45 @@
 # Table — Catalog-first meal selection: plan for owner approval
 
-_Prepared 2026-10-11 on `main` = `99c837b` (verified app code `8ae5497`). **This is a plan only.** No UI or
-schema has changed for it. Implementation starts only after the owner approves the interaction and
-design, with any of the decisions in §6 changed. Screen mock-ups are published alongside this plan (see the
-delivery message); they are drawings, not screenshots of the app._
+_Prepared 2026-10-11 on `main` = `99c837b` (verified app code `8ae5497`). **Approved 2026-10-11 with owner
+amendments** — §0 reconciles them and **takes precedence over §3, §4 and §6 where they differ**. Screen mock-ups were
+published with the plan; they are drawings, not screenshots of the app._
+
+## 0. Owner decisions and amendments (2026-10-11) — reconciled
+
+Decisions: Q1 = A **conditionally** (below); Q2, Q3, Q4, Q5, Q8 as recommended; Q6 and Q7 replaced.
+
+**Q1/Q7 — grocery scope.** The primary list holds requirements from explicitly selected meals only; calendar dinners
+never contribute to it; the calendar and all its data stay as they are under More.
+
+The recommendation in §3 (a list riding the cycle of a dated calendar week) **cannot meet this**: one cycle per week
+(`grocery_cycles.week_id UNIQUE`) means that week's adopted dinners would land in the same cycle as the selections, and
+excluding them would leave the calendar week without its own grocery list. So the reconciled model gives each meal
+list **its own undated bookkeeping week row and therefore its own grocery cycle**:
+- `weeks.kind` = `calendar` (every existing row) | `meal_list`; `weeks.week_start` becomes nullable with the check
+  `kind = 'calendar' ⇔ week_start IS NOT NULL`. A meal-list week has **no date at all**, so the list stays the same
+  across week boundaries until a member presses Start a new list (a new undated week and cycle; the old one stays as
+  history with its purchases).
+- Calendar lookups find weeks by `week_start` (`findWeek`), which a NULL never matches; plan commands additionally
+  refuse a non-calendar week, and a database trigger refuses any cooking event, assignment, proposal or preview on a
+  meal-list week. **Testable scope:** a meal-list cycle's demand is exactly its active selected meals (plus requests
+  added to that list); a calendar cycle's demand is exactly its accepted dinners — they cannot meet.
+- All purchasing stays cycle-scoped and unchanged: commands take the list's `weekId`; approvals keep binding to line
+  fingerprints; batches, orders and receipts stay append-only in the list's own cycle; a stale review still makes zero
+  retailer calls. Nothing about fingerprints, history or stale-send checks is relaxed.
+- No conflict remains. This removes the one-list-per-calendar-week limitation in §9. Rollback: an earlier release
+  never finds an undated week; if it recomputes all cycles it computes a meal-list cycle without selections (approvals
+  there go stale — the safe direction); the rehearsal proves it neither crashes nor shows the list.
+
+**Q6 — missing quantities.** An ingredient line without an amount can be kept on the recipe as **Needs a quantity**
+(stored on the immutable version, carried forward by edits, never given an invented amount). When such a recipe is a
+selected meal, the list shows the item under **Needs a quantity** until a member gives an amount (for that meal's
+planned servings; changing servings asks again) or marks **Don't buy**. While any item is unresolved its grocery line
+has an unknown amount to buy, the list is not ready, and Send is blocked (the existing readiness rules); a partial
+transfer still names it as left out.
+
+**Visual / import.** Dark photo-first gallery approved; truthful photo kind on every tile; adding a member photo is one
+step from the tile/detail; missing-photo tiles are fully usable; nothing depends on hover. The import-review backdrop
+loss is a required fix: work is kept unless the member explicitly discards it.
 
 ## 1. What changes for the household
 
@@ -146,8 +182,8 @@ exists only inside `RecipeEditor`.
 | Q3 | Theme | **Dark always** (black ground, photography forward). The light theme is retired, not offered. |
 | Q4 | Navigation | Recipes · Selected · Groceries · More. Signing in lands on Recipes. The calendar, Household, Saved links and Budget Bytes live under More. |
 | Q5 | Group headings in imported ingredient lists | Recognise them and save them as recipe components. |
-| Q6 | Lines with no amount (toppings, tortillas) | "Keep without an amount (not bought)", shown on the recipe and as a reminder on the selected meal. |
-| Q7 | Calendar dinners already in the list's shopping cycle | Shown read-only in Selected Meals under "From the dinner calendar", so the totals are explained. |
+| Q6 | Lines with no amount (toppings, tortillas) | ~~"Keep without an amount (not bought)"~~ — **replaced by §0: Needs a quantity, then an amount or Don't buy; the list is not ready until resolved.** |
+| Q7 | Calendar dinners already in the list's shopping cycle | ~~Shown read-only~~ — **replaced by §0: calendar dinners never enter the list's cycle.** |
 | Q8 | Desktop layout | The 560 px column cap is lifted for Recipes (gallery of 3 to 5 columns). Other screens keep a readable column. |
 
 ## 7. Screens (see the mock-ups)
@@ -198,7 +234,6 @@ switches, the Extraction Lab, parser engines, automatic menus, pantry inventory,
 retailers, generic polish.
 
 ## 9. Known limitations (stated now)
-- One shopping list per internal week container. A second confirmed order in the same week remains B13.
 - Purchases from a closed list do not reduce a new list. What is at home is recorded with Have enough / Have
   some on the new list, as today across weeks.
 - JSON-LD pages usually flatten ingredient groups. Group headings appear only where the page's data or a
