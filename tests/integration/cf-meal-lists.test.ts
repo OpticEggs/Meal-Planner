@@ -43,6 +43,10 @@ describe("CF-S scope: selected meals and calendar dinners never share a grocery 
     const lines = await q<any>("SELECT r.line FROM requirement_lines r JOIN grocery_cycles g ON g.id=r.cycle_id WHERE g.week_id=$1", [weekId]);
     expect(lines.length).toBeGreaterThan(0);
     for (const { line: l } of lines) for (const s of l.meal?.sources ?? []) expect(s).toMatchObject({ selectedMealId, eventId: null, cookNight: null });
+    // A purchasing input change recomputes EVERY cycle: the calendar week still gets no selected meal, the list no dinner.
+    ok(await addProductCommand(jon, op(), { weekId, ingredientKey: "rice", name: "Rice, 2 lb", packageQty: "907", packageUnit: "g", priceMinor: 299 }));
+    for (const { line: l } of await q<any>("SELECT r.line FROM requirement_lines r JOIN grocery_cycles g ON g.id=r.cycle_id WHERE g.week_id=$1", [weekId]))
+      for (const s of l.meal?.sources ?? []) expect(s).toMatchObject({ selectedMealId, eventId: null, cookNight: null });
     // Calendar lines never name a selected meal.
     const cal = await q<any>("SELECT r.line FROM requirement_lines r JOIN grocery_cycles g ON g.id=r.cycle_id WHERE g.week_id=$1", [fx.weekId]);
     for (const { line: l } of cal) for (const s of l.meal?.sources ?? []) expect(s.selectedMealId).toBeUndefined();

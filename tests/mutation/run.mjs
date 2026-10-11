@@ -61,6 +61,7 @@ const B5D = "tests/integration/b5.kroger-dispatch.test.ts";
 const B7U = "tests/unit/fdc-normalize.test.ts";
 const B7I = "tests/integration/b7.nutrition.test.ts";
 const MP = "tests/integration/member-photo.test.ts";
+const CF = "tests/integration/cf-meal-lists.test.ts";
 
 /** expect: regexes over failing test full names; at least one must fail by assertion. */
 const MUTATIONS = [
@@ -372,6 +373,25 @@ MUTATIONS.push(
   // AUD-01: lineage carries the source's amount even where the member changed it.
   { name: "LA_lineage_ignores_amount_change", file: "src/server/audit/legacy-quantities.ts", suite: LA, pattern: "LA-05", expect: [/LA-05/],
     edits: [["evidence = storedAs(r.quantity, src.amount, src.servings)\n", "evidence = true\n"]] },
+  // Catalog-first (D140–D143): calendar dinners and selected meals never share a grocery list.
+  { name: "CF_selections_leak_into_calendar", file: "src/server/groceries/recompute.ts", suite: CF, pattern: "CF-S1", expect: [/CF-S1/],
+    edits: [["const selections = isList ? await loadSelections(c, householdId, weekId) : [];",
+      "const selections = isList ? await loadSelections(c, householdId, weekId) : await loadSelections(c, householdId, (await c.query(\"SELECT week_id FROM meal_lists WHERE household_id=$1 AND status='open'\", [householdId])).rows[0]?.week_id ?? weekId);"]] },
+  { name: "CF_calendar_dinners_in_list", file: "src/server/groceries/recompute.ts", suite: CF, pattern: "CF-S1", expect: [/CF-S1/],
+    edits: [["(isList ? { weekId: week.id, weekStart: \"\", acceptedChoiceRevision: 0, assignments: [], events: [], allocations: [] } : await loadPlanState(c, week))",
+      "(isList ? await loadPlanState(c, (await weekById(c, householdId, (await c.query(\"SELECT id FROM weeks WHERE household_id=$1 AND kind='calendar' ORDER BY week_start LIMIT 1\", [householdId])).rows[0].id))!) : await loadPlanState(c, week))"]] },
+  // Q6: an unanswered "Needs a quantity" item must never read as nothing to buy.
+  { name: "CF_needs_quantity_counts_as_zero", file: "src/domain/groceries/projection.ts", suite: CF, pattern: "CF-N1", expect: [/CF-N1/],
+    edits: [["    if (askQty.has(key)) toSend = null;\n", "\n"]] },
+  // Q6: an amount given for some servings is never reused (or rescaled) for others.
+  { name: "CF_amount_kept_across_servings", file: "src/domain/groceries/projection.ts", suite: CF, pattern: "CF-N2", expect: [/CF-N2/],
+    edits: [["d.quantity && d.unit && d.forServings === sel.servings)", "d.quantity && d.unit)"]] },
+  // Concurrency: a change made against an older view is refused with what is there now.
+  { name: "CF_stale_selection_accepted", file: "src/server/commands/meal-lists.ts", suite: CF, pattern: "CF-C1", expect: [/CF-C1/],
+    edits: [["if (s.status !== \"active\" || s.revision !== expectedRevision) {", "if (s.status !== \"active\") {"]] },
+  // A selected meal is bound to the version the member saw.
+  { name: "CF_add_takes_newer_version", file: "src/server/commands/meal-lists.ts", suite: CF, pattern: "CF-C4", expect: [/CF-C4/],
+    edits: [["if (p.versionId !== recipe.current_version_id) {", "if (false) {"]] },
   // AUD-01: an exact row takes its source's evidence instead of its own exact amount.
   { name: "LA_exact_row_inherits_source", file: "src/server/audit/legacy-quantities.ts", suite: LA, pattern: "LA-05", expect: [/LA-05/],
     edits: [["if (r.quantity_basis === \"exact\" && r.exact_amount && r.exact_servings) {", "if (false) {"]] },
