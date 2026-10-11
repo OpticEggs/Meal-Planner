@@ -5,6 +5,7 @@ import { loadHousehold, loadIngredients, loadPlanState, loadRecipeVersions, load
 import { localDate } from "@/domain/dates";
 import { nowInstant } from "../env";
 import { retailer } from "../integrations/retailer";
+import { loadSelections } from "../queries/meal-lists";
 
 export async function ensureCycle(c: Db, householdId: string, weekId: string): Promise<string> {
   // A new cycle starts with the household's preferred way of shopping.
@@ -37,7 +38,10 @@ export async function projectionInput(
   const week = await weekById(c, householdId, weekId);
   if (!week) throw new Error("week not found");
   const cycleId = await ensureCycleRead(c, householdId, weekId);
-  const state = override?.state ?? (await loadPlanState(c, week));
+  // Scope (D140): a calendar week's demand is its accepted dinners; a meal list's is its selected meals. Never both.
+  const isList = week.kind === "meal_list";
+  const state = override?.state ?? (isList ? { weekId: week.id, weekStart: "", acceptedChoiceRevision: 0, assignments: [], events: [], allocations: [] } : await loadPlanState(c, week));
+  const selections = isList ? await loadSelections(c, householdId, weekId) : [];
   const rvIds = [...new Set(state.events.map((e) => e.recipeVersionId))];
   const recipes = override?.recipes ?? (await loadRecipeVersions(c, householdId, rvIds));
   const ingredients = await loadIngredients(c, householdId);
@@ -162,6 +166,7 @@ export async function projectionInput(
     cycleId: cycleId ?? "",
     input: {
       events,
+      selections,
       ingredients,
       requests: (reqs.rows as Record<string, unknown>[]).map((r) => ({
         id: r.id as string, ingredientKey: r.ingredient_key as string | null, text: r.text as string, kind: r.kind as "usual" | "extra",
@@ -211,6 +216,7 @@ export async function recomputeProjection(c: Db, householdId: string, weekId: st
         reviewFingerprint: result.reviewFingerprint, payloadHash: result.payloadHash, payload: result.payload, ready: result.ready,
         readyBlockers: result.readyBlockers, dinnerIngredientCost: result.dinnerIngredientCost, pickupSpending: result.pickupSpending,
         outstandingPurchase: result.outstandingPurchase, budget: result.budget, householdSeasonings: result.householdSeasonings,
+        needsQuantity: result.needsQuantity, notBuying: result.notBuying,
       },
     ],
   );

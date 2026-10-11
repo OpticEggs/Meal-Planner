@@ -19,12 +19,22 @@ import { disconnectKrogerCommand, setKrogerLocationCommand } from "./kroger";
 import { archiveLinkCommand, saveLinkCommand } from "./sources";
 import { prepareInstacartListCommand, setShoppingDestinationCommand } from "./destinations";
 import { setRecipePhotoCommand } from "./photos";
+import {
+  addSelectedMealCommand, answerMissingQuantityCommand, removeSelectedMealCommand, setSelectedMealServingsCommand, startNewMealListCommand, useRecipeVersionCommand,
+} from "./meal-lists";
 import { confirmImportDraftCommand, discardImportDraftCommand, pasteIngredientsCommand, updateImportDraftCommand } from "./imports";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Handler = (actor: Actor, operationId: string, payload: any) => Promise<CommandReceipt>;
 
 export const COMMANDS: Record<string, Handler> = {
+  // Day-free selected meals (catalog-first, D140–D143).
+  AddSelectedMeal: addSelectedMealCommand,
+  SetSelectedMealServings: setSelectedMealServingsCommand,
+  RemoveSelectedMeal: removeSelectedMealCommand,
+  UseRecipeVersion: useRecipeVersionCommand,
+  AnswerMissingQuantity: answerMissingQuantityCommand,
+  StartNewMealList: startNewMealListCommand,
   GenerateProposal: generateProposalCommand,
   AdoptWeekProposal: adoptWeekProposalCommand,
   CreatePreview: createPreviewCommand,

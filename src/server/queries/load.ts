@@ -132,6 +132,8 @@ export async function loadRecipeVersions(c: Db, householdId: string, ids: string
 
 export interface WeekRow {
   id: string;
+  /** 'meal_list' weeks are undated bookkeeping for a day-free list (weekStart is then null; calendar code never sees them). */
+  kind: "calendar" | "meal_list";
   weekStart: string;
   acceptedChoiceRevision: number;
   adoptedBy: string | null;
@@ -139,17 +141,17 @@ export interface WeekRow {
 }
 
 export async function findWeek(c: Db, householdId: string, weekStart: string): Promise<WeekRow | null> {
-  const r = await c.query("SELECT * FROM weeks WHERE household_id=$1 AND week_start=$2", [householdId, weekStart]);
+  const r = await c.query("SELECT * FROM weeks WHERE household_id=$1 AND week_start=$2 AND kind='calendar'", [householdId, weekStart]);
   if (!r.rowCount) return null;
   const w = r.rows[0];
-  return { id: w.id, weekStart: w.week_start, acceptedChoiceRevision: w.accepted_choice_revision, adoptedBy: w.adopted_by, adoptedAt: w.adopted_at?.toISOString?.() ?? null };
+  return { id: w.id, kind: w.kind ?? "calendar", weekStart: w.week_start, acceptedChoiceRevision: w.accepted_choice_revision, adoptedBy: w.adopted_by, adoptedAt: w.adopted_at?.toISOString?.() ?? null };
 }
 
 export async function weekById(c: Db, householdId: string, weekId: string): Promise<WeekRow | null> {
   const r = await c.query("SELECT * FROM weeks WHERE household_id=$1 AND id=$2", [householdId, weekId]);
   if (!r.rowCount) return null;
   const w = r.rows[0];
-  return { id: w.id, weekStart: w.week_start, acceptedChoiceRevision: w.accepted_choice_revision, adoptedBy: w.adopted_by, adoptedAt: w.adopted_at?.toISOString?.() ?? null };
+  return { id: w.id, kind: w.kind ?? "calendar", weekStart: w.week_start, acceptedChoiceRevision: w.accepted_choice_revision, adoptedBy: w.adopted_by, adoptedAt: w.adopted_at?.toISOString?.() ?? null };
 }
 
 export async function loadPlanState(c: Db, week: WeekRow): Promise<PlanState> {

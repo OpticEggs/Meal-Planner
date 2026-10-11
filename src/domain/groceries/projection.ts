@@ -1,6 +1,6 @@
 import { isHouseholdSeasoning } from "./seasonings";
 import { hashOf } from "../hash";
-import { normalizeUnit } from "../units";
+import { baseUnit, normalizeUnit } from "../units";
 import { Q, convertQ, packagesForQ } from "../exact";
 import { eventDemand } from "../recipes/plate";
 import { dayName } from "../dates";
@@ -16,6 +16,15 @@ const SHOWN_PLACES = 3;
  *  - confirmed-order and transfer history are counted, never rewritten
  *  - unknown prices stay unknown, never zero
  */
+
+/** A meal selected in the day-free list (CATALOG-FIRST-PLAN §0): a recipe version at planned servings, plus the
+ *  members' answers for the recipe's "Needs a quantity" items. It has no night and no cooking event. */
+export interface SelectedMealInput {
+  id: string;
+  recipe: RecipeVersion;
+  servings: number;
+  decisions: { itemId: string; decision: "amount" | "dont_buy"; quantity: string | null; unit: string | null; forServings: number | null; memberName?: string }[];
+}
 
 export interface ProjectionEventInput {
   event: CookingEvent;
@@ -107,6 +116,8 @@ export interface ApprovalInput {
 
 export interface ProjectionInput {
   events: ProjectionEventInput[];
+  /** Day-free selected meals (a meal list's cycle only; a calendar cycle has none). */
+  selections?: SelectedMealInput[];
   ingredients: Map<string, Ingredient>;
   requests: RequestInput[];
   availability: AvailabilityInput[]; // latest per ingredient
@@ -148,7 +159,9 @@ export interface RequirementLine {
    *  because requirement lines stored before migration 015 do not carry them. */
   meal: {
     quantity: string; unit: string; rational?: string; exact?: boolean;
-    sources: { eventId: string; cookNight: string; recipeTitle: string; quantity: string; unit: string; rational?: string; exact?: boolean }[];
+    /** A calendar dinner has an event and a night; a selected meal has `selectedMealId` and no night; `stated` marks
+     *  an amount a member gave for a "Needs a quantity" item. */
+    sources: { eventId: string | null; cookNight: string | null; selectedMealId?: string; stated?: boolean; recipeTitle: string; quantity: string; unit: string; rational?: string; exact?: boolean }[];
   } | null;
   mealUnitConflict: string[] | null;
   requests: { id: string; kind: "usual" | "extra"; packages: number | null; text: string; contributors: { memberId: string; name: string; taps: number }[]; productId?: string | null }[];
@@ -206,6 +219,22 @@ export interface ProjectionResult {
   budget: { status: "unset" | "within" | "over" | "unknown"; scope: string | null; limitMinor: number | null; firm: boolean };
   /** Salt and black pepper the planned dinners use: left off the list (the household has them). */
   householdSeasonings: { key: string; name: string; recipes: string[] }[];
+  /** Selected meals' ingredients without an amount and without an answer yet — the list is not ready while any remain. */
+  needsQuantity: NeedsQuantityItem[];
+  /** Items a member marked Don't buy (kept visible, never counted). */
+  notBuying: { selectedMealId: string; itemId: string; ingredientKey: string; name: string; recipeTitle: string; by: string | null }[];
+}
+
+export interface NeedsQuantityItem {
+  selectedMealId: string;
+  itemId: string;
+  ingredientKey: string;
+  name: string;
+  note: string | null;
+  recipeTitle: string;
+  servings: number;
+  /** An earlier answer given for a different number of servings (asked again, never rescaled). */
+  earlier: { quantity: string; unit: string; forServings: number } | null;
 }
 
 function costFrom(values: (number | null)[], currency: string): CostView {
@@ -217,7 +246,7 @@ function costFrom(values: (number | null)[], currency: string): CostView {
 export function computeProjection(input: ProjectionInput): ProjectionResult {
   const destination: Destination = input.destination ?? "retailer_cart";
   // 1. Meal demand from accepted, scheduled cooking events.
-  type MealSource = { eventId: string; cookNight: string; recipeTitle: string; quantity: string; unit: string; rational: string; exact: boolean };
+  type MealSource = RequirementLine["meal"] extends infer M ? (M extends { sources: (infer S)[] } ? S : never) : never;
   const meal = new Map<string, { byUnit: Map<string, Q>; exact: boolean; anyExact: boolean; sources: MealSource[] }>();
   // Ordinary salt and black pepper: never bought (the household has them); recipes keep them.
   const seasonings = new Map<string, { key: string; name: string; recipes: string[] }>();
@@ -225,23 +254,64 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
     if (event.status !== "scheduled" || !event.cookNight) continue;
     const { lines } = eventDemand(recipe, allocations);
     for (const l of lines) {
-      const ingName = input.ingredients.get(l.ingredientKey)?.name ?? l.ingredientKey.replace(/_/g, " ");
-      if (isHouseholdSeasoning(ingName, l.unit)) {
-        const sz = seasonings.get(l.ingredientKey) ?? { key: l.ingredientKey, name: ingName, recipes: [] };
-        if (!sz.recipes.includes(recipe.title)) sz.recipes.push(recipe.title);
-        seasonings.set(l.ingredientKey, sz);
+      if (isSeasoning(l.ingredientKey, l.unit, recipe.title)) continue;
+      addMeal(l.ingredientKey, l.unit, l.exact, l.fromExactRows, l.anyExactRows, { eventId: event.id, cookNight: event.cookNight, recipeTitle: recipe.title });
+    }
+  }
+  function addMeal(key: string, unit: string, q: Q, exact: boolean, anyExact: boolean, src: Pick<MealSource, "eventId" | "cookNight" | "recipeTitle" | "selectedMealId" | "stated">) {
+    const m = meal.get(key) ?? { byUnit: new Map<string, Q>(), exact: true, anyExact: false, sources: [] as MealSource[] };
+    m.byUnit.set(unit, (m.byUnit.get(unit) ?? Q.zero).plus(q));
+    m.exact = m.exact && exact;
+    m.anyExact = m.anyExact || anyExact;
+    m.sources.push({ ...src, quantity: q.toDecimal(3), unit, rational: q.toString(), exact });
+    meal.set(key, m);
+  }
+  function isSeasoning(key: string, unit: string, title: string): boolean {
+    const ingName = input.ingredients.get(key)?.name ?? key.replace(/_/g, " ");
+    if (!isHouseholdSeasoning(ingName, unit)) return false;
+    const sz = seasonings.get(key) ?? { key, name: ingName, recipes: [] };
+    if (!sz.recipes.includes(title)) sz.recipes.push(title);
+    seasonings.set(key, sz);
+    return true;
+  }
+
+  // 1b. Day-free selected meals: every component at the planned servings, through the same exact demand.
+  //     "Needs a quantity" items count only with a member's amount for the servings planned now; Don't buy is listed.
+  const needsQuantity: NeedsQuantityItem[] = [];
+  const notBuying: ProjectionResult["notBuying"] = [];
+  const askQty = new Map<string, string[]>();
+  for (const sel of input.selections ?? []) {
+    const keysOf = new Set([...sel.recipe.components.map((c) => c.key), ...sel.recipe.ingredients.map((i) => i.componentKey)]);
+    const plate = Object.fromEntries([...keysOf].map((k) => [k, String(sel.servings)]));
+    const { lines: dl } = eventDemand(sel.recipe, [{ cookingEventId: sel.id, memberId: "", kind: "dinner", night: "", componentPortions: plate }]);
+    for (const l of dl) {
+      if (isSeasoning(l.ingredientKey, l.unit, sel.recipe.title)) continue;
+      addMeal(l.ingredientKey, l.unit, l.exact, l.fromExactRows, l.anyExactRows, { eventId: null, cookNight: null, selectedMealId: sel.id, recipeTitle: sel.recipe.title });
+    }
+    for (const item of sel.recipe.unquantified ?? []) {
+      const d = sel.decisions.find((x) => x.itemId === item.id);
+      if (d?.decision === "dont_buy") {
+        notBuying.push({ selectedMealId: sel.id, itemId: item.id, ingredientKey: item.ingredientKey, name: item.name, recipeTitle: sel.recipe.title, by: d.memberName ?? null });
         continue;
       }
-      const m = meal.get(l.ingredientKey) ?? { byUnit: new Map<string, Q>(), exact: true, anyExact: false, sources: [] as MealSource[] };
-      m.byUnit.set(l.unit, (m.byUnit.get(l.unit) ?? Q.zero).plus(l.exact));
-      m.exact = m.exact && l.fromExactRows;
-      m.anyExact = m.anyExact || l.anyExactRows;
-      m.sources.push({ eventId: event.id, cookNight: event.cookNight, recipeTitle: recipe.title, quantity: l.exact.toDecimal(3), unit: l.unit, rational: l.exact.toString(), exact: l.fromExactRows });
-      meal.set(l.ingredientKey, m);
+      if (d?.decision === "amount" && d.quantity && d.unit && d.forServings === sel.servings) {
+        const bu = baseUnit(d.unit);
+        const q = convertQ(Q.of(d.quantity), d.unit, bu) ?? Q.of(d.quantity);
+        addMeal(item.ingredientKey, convertQ(Q.of(d.quantity), d.unit, bu) ? bu : d.unit, q, true, true, {
+          eventId: null, cookNight: null, selectedMealId: sel.id, stated: true, recipeTitle: sel.recipe.title,
+        });
+        continue;
+      }
+      const earlier = d?.decision === "amount" && d.quantity && d.unit && d.forServings !== null ? { quantity: d.quantity, unit: d.unit, forServings: d.forServings } : null;
+      needsQuantity.push({ selectedMealId: sel.id, itemId: item.id, ingredientKey: item.ingredientKey, name: item.name, note: item.note, recipeTitle: sel.recipe.title, servings: sel.servings, earlier });
+      const msg = earlier
+        ? `Needs a quantity for ${sel.recipe.title}: an amount was given for ${earlier.forServings} servings, now ${sel.servings} are planned`
+        : `Needs a quantity for ${sel.recipe.title} (the recipe gives no amount)`;
+      askQty.set(item.ingredientKey, [...(askQty.get(item.ingredientKey) ?? []), msg]);
     }
   }
 
-  const keys = new Set<string>([...meal.keys()]);
+  const keys = new Set<string>([...meal.keys(), ...askQty.keys()]);
   for (const r of input.requests) keys.add(r.ingredientKey ?? `text:${r.id}`);
   if (input.order) for (const ol of input.order.lines) if (ol.ingredientKey) keys.add(ol.ingredientKey);
   for (const b of input.batches) for (const l of b.lines) keys.add(l.ingredientKey);
@@ -252,7 +322,7 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
     const ingredientKey = key.startsWith("text:") ? null : key;
     const ing = ingredientKey ? input.ingredients.get(ingredientKey) : undefined;
     const reqs = input.requests.filter((r) => (r.ingredientKey ?? `text:${r.id}`) === key);
-    const unresolved: string[] = [];
+    const unresolved: string[] = [...(askQty.get(key) ?? [])];
     const m = meal.get(key);
     let mealQty: Q | null = null;
     let mealUnit: string | null = null;
@@ -431,7 +501,8 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
     // availability, never proof that goods arrive in time.
     if (coveredByOrder > 0 && m && order) {
       const today = input.today ?? "";
-      const upcoming = [...new Set(m.sources.map((x) => x.cookNight))].filter((n) => n >= today).sort();
+      // Selected meals have no night: they are needed by pickup by definition, so only dated dinners are checked.
+      const upcoming = [...new Set(m.sources.map((x) => x.cookNight).filter((n): n is string => n !== null))].filter((n) => n >= today).sort();
       const pickup = order.pickupDate;
       const early = pickup === null ? upcoming : upcoming.filter((n) => n < pickup);
       if (early.length) {
@@ -449,6 +520,8 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
       const short = pkgP.mul(packagesNeeded).minus(coveredP).minus(sentP);
       toSend = packagesForQ(Q.max(short, 0), pkgP);
     } else toSend = Math.max(0, packagesNeeded - coveredByOrder - sent - uncertain);
+    // An item that still needs a quantity makes the amount to buy unknown — never zero (the list is then not ready).
+    if (askQty.has(key)) toSend = null;
 
     const fingerprint = hashOf({
       key,
@@ -582,5 +655,7 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
     outstandingPurchase,
     budget: { status: budgetStatus, scope: input.budget.scope, limitMinor: input.budget.limitMinor, firm: input.budget.firm },
     householdSeasonings: [...seasonings.values()].sort((a, b) => a.key.localeCompare(b.key)),
+    needsQuantity,
+    notBuying,
   };
 }

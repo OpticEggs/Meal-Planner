@@ -15,6 +15,7 @@ import { partialReview } from "@/domain/groceries/partial-handoff";
 import { buildShoppingList } from "@/domain/groceries/shopping-list";
 import { instacartPreview } from "../groceries/instacart-list";
 import { instacartCapabilities } from "../integrations/instacart/config";
+import { mealListView, openMealList } from "./meal-lists";
 import {
   findWeek,
   loadExclusions,
@@ -57,7 +58,13 @@ export async function householdSnapshot(actor: Actor, weekStartParam?: string | 
     const ingredients = await loadIngredients(c, actor.householdId);
     const nutrition = await loadNutrition(c, actor.householdId);
     const week = await findWeek(c, actor.householdId, weekStart);
+    // The day-free list both members share, with the grocery list of its own cycle (selected meals only, D140).
+    const openList = await openMealList(c, actor.householdId);
+    const mealList = openList
+      ? { ...(await mealListView(c, actor.householdId, openList)), groceries: await groceriesFor(c, actor.householdId, openList.week_id, 0) }
+      : null;
     const base = {
+      mealList,
       seq: h.updateSeq,
       household: { id: h.id, name: h.name, timezone: h.timezone, fixture: h.fixture },
       me: { memberId: actor.memberId, displayName: actor.displayName },

@@ -40,7 +40,8 @@ async function context(c: Db, householdId: string, state: PlanState, extraRecipe
 }
 
 async function lockedWeekForUpdate(c: Db, householdId: string, weekId: string): Promise<WeekRow> {
-  const r = await c.query("SELECT id FROM weeks WHERE id=$1 AND household_id=$2 FOR UPDATE", [weekId, householdId]);
+  // Calendar weeks only: a meal list's undated week never takes cooking events, proposals or previews (D140).
+  const r = await c.query("SELECT id FROM weeks WHERE id=$1 AND household_id=$2 AND kind='calendar' FOR UPDATE", [weekId, householdId]);
   if (!r.rowCount) throw new Reject("not_found", "Week not found");
   return (await weekById(c, householdId, weekId))!;
 }
