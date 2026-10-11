@@ -106,6 +106,7 @@ export async function loadRecipeVersions(c: Db, householdId: string, ids: string
   const vids = vr.rows.map((v) => v.id);
   const comps = await c.query("SELECT * FROM recipe_components WHERE recipe_version_id = ANY($1::uuid[]) ORDER BY sort, key", [vids]);
   const ings = await c.query("SELECT * FROM recipe_ingredients WHERE recipe_version_id = ANY($1::uuid[]) ORDER BY sort, ingredient_key", [vids]);
+  const unq = await c.query("SELECT * FROM recipe_unquantified_items WHERE recipe_version_id = ANY($1::uuid[]) ORDER BY position", [vids]);
   const out = new Map<string, RecipeVersion>();
   for (const v of vr.rows) {
     out.set(v.id, {
@@ -121,6 +122,9 @@ export async function loadRecipeVersions(c: Db, householdId: string, ids: string
           rowId: x.id, componentKey: x.component_key, ingredientKey: x.ingredient_key, quantity: x.quantity, unit: x.unit, form: x.form, note: x.note,
           ...(x.quantity_basis === "exact" ? { exactAmount: x.exact_amount, exactServings: x.exact_servings } : {}),
         })),
+      unquantified: unq.rows
+        .filter((x) => x.recipe_version_id === v.id)
+        .map((x) => ({ id: x.id, componentKey: x.component_key, ingredientKey: x.ingredient_key, name: x.name, note: x.note ?? null })),
     });
   }
   return out;

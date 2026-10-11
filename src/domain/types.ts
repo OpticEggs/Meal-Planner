@@ -54,6 +54,17 @@ export interface RecipeVersion {
   estimate: boolean;
   components: RecipeComponent[];
   ingredients: RecipeIngredient[];
+  /** Ingredients the recipe names without an amount ("Needs a quantity", migration 017). Never given an
+   *  invented amount: a selected meal asks a member for one, or for Don't buy. Absent = none. */
+  unquantified?: UnquantifiedItem[];
+}
+
+export interface UnquantifiedItem {
+  id: string;
+  componentKey: string;
+  ingredientKey: string;
+  name: string;
+  note: string | null;
 }
 
 export interface Ingredient {

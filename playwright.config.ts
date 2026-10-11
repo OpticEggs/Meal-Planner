@@ -1,7 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 import { fileURLToPath } from "node:url";
 
-const PORT = 3100;
+// TABLE_E2E_PORT lets parallel development worktrees run their own server; verification uses 3100.
+const PORT = Number(process.env.TABLE_E2E_PORT ?? 3100);
 export const TEST_ENV = {
   TABLE_ENV: "test",
   NODE_ENV: "production" as const,
