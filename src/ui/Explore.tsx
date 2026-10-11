@@ -101,7 +101,8 @@ export function ExploreScreen() {
           {source === "budget_bytes" && <div className="section-label">Budget Bytes recipes in Our Recipes</div>}
         </>
       )}
-      {importing && <ImportReviewDialog bookmark={importing.b} initial={importing.result} onClose={() => { const el = importing.el; setImporting(null); focusFirst(el, () => document.querySelector<HTMLElement>('[data-testid="explore-source"]')); }} />}
+      {importing && <ImportReviewDialog bookmark={importing.b} initial={importing.result} onClose={() => setImporting(null)}
+        returnFocus={() => { const el = importing.el; focusFirst(el, () => document.querySelector<HTMLElement>('[data-testid="explore-source"]')); }} />}
       {msg && <p role="status" className="small">{msg}</p>}
       {!library && <p className="muted">Loading…</p>}
       <ul className="recipes" data-testid="explore-results">

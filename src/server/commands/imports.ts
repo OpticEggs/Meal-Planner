@@ -4,7 +4,11 @@ import { bookmarkInHousehold } from "./sources";
 import { validateLinkUrl } from "../integrations/recipe-import/url";
 import { writeRecipeVersion } from "./library";
 import { parseIngredientLine } from "../integrations/recipe-import/ingredient-line";
-import { draftProblems, initialDecision, perPortion, decisionProblem, type DraftLine, type LineDecision, type ParsedLine } from "@/domain/recipes/import";
+import {
+  draftProblems, hasNoAmount, headingName, initialDecision, isHeading, isHeadingLine, isLeftOut, needsQuantity, perPortion, decisionProblem,
+  type DraftLine, type LineDecision, type ParsedLine,
+} from "@/domain/recipes/import";
+import { slug } from "@/domain/recipes/rebase";
 import { normalizeUnit } from "@/domain/units";
 import { formatAmount, parseAmount } from "@/domain/quantity";
 import { NOTHING_KEPT, type ContentUse } from "../integrations/recipe-import/content-policy";
@@ -28,7 +32,8 @@ function draftLines(raws: string[]): DraftLine[] {
       quantity: parsed.quantity, unit: parsed.unit, name: parsed.name, form: parsed.form, status: parsed.status, reasons: parsed.reasons,
       note: parsed.note ?? null, range: parsed.range, alternatives: parsed.alternatives,
     };
-    return { raw: String(raw).slice(0, 500), parsed: p, decision: initialDecision(p) };
+    const text = String(raw).slice(0, 500);
+    return { raw: text, parsed: p, decision: initialDecision(p, text) };
   });
 }
 
@@ -178,6 +183,16 @@ export function updateImportDraftCommand(actor: Actor, operationId: string, p: D
         if (problem) throw new Reject("invalid", `Line ${x.index + 1} ${problem}.`, { field: `line-${x.index}` });
         // Canonical exact text: "2/4" → "1/2", "1½" → "1 1/2"; a typed decimal stays a decimal.
         dec.quantity = formatAmount(parseAmount(typed)!, /\./.test(typed));
+      } else if (x.decision && x.decision.use === false && x.decision.kind === "heading") {
+        // Q5: only a line that reads as a group heading can be one.
+        if (!isHeadingLine(lines[x.index].raw, lines[x.index].parsed)) throw new Reject("invalid", `Line ${x.index + 1} isn't a group heading.`, { field: `line-${x.index}` });
+        dec = { use: false, kind: "heading" };
+      } else if (x.decision && x.decision.use === false && x.decision.kind === "needs_quantity") {
+        // Q6: only a line that states no amount at all; a vague amount or a range is decided with an amount instead.
+        if (!hasNoAmount(lines[x.index].parsed)) throw new Reject("invalid", `Line ${x.index + 1} gives an amount; use it with the amount you'll use, or leave it out.`, { field: `line-${x.index}` });
+        dec = { use: false, kind: "needs_quantity", name: String(x.decision.name ?? "").trim().slice(0, 80) };
+        const problem = decisionProblem(dec);
+        if (problem) throw new Reject("invalid", `Line ${x.index + 1} ${problem}.`, { field: `line-${x.index}` });
       } else if (x.decision && x.decision.use === false) dec = { use: false };
       lines[x.index] = { ...lines[x.index], decision: dec };
     }
@@ -218,8 +233,44 @@ export function confirmImportDraftCommand(actor: Actor, operationId: string, p: 
     // The recipe's source is the page its details came from (after any redirect), not just the link saved.
     const read = d.fetched_url ? validateLinkUrl(d.fetched_url) : null;
     const source = read?.ok ? { url: read.url, label: read.sourceLabel } : { url: b.url, label: b.source_label };
-    const used = lines.filter((l) => l.decision?.use) as (DraftLine & { decision: Extract<LineDecision, { use: true }> })[];
-    const left = lines.filter((l) => l.decision && !l.decision.use).map((l) => l.raw);
+    // Q5: a heading starts a component; lines before the first heading belong to "Main". Without headings the recipe
+    // has the single "main" component, exactly as before.
+    const components: { key: string; name: string }[] = [];
+    const rows: { componentKey: string; line: DraftLine & { decision: Extract<LineDecision, { use: true }> } }[] = [];
+    const unquantified: { componentKey: string; name: string; note: string | null; raw: string }[] = [];
+    let current = { key: "main", name: "Main" };
+    const reserved = new Set<string>(["main"]); // every key given to a group, so two groups never share one
+    const placed = new Set<string>();
+    const names = new Set<string>(["main"]);
+    const keyFor = (name: string) => {
+      const base = (slug(name) || "group").slice(0, 52);
+      let key = base;
+      for (let n = 2; reserved.has(key); n++) key = `${base}_${n}`;
+      reserved.add(key);
+      return key;
+    };
+    // A group appears on the recipe once something is placed in it (an empty heading makes no component).
+    const place = (cmp: { key: string; name: string }) => {
+      if (!placed.has(cmp.key)) {
+        placed.add(cmp.key);
+        components.push(cmp);
+      }
+      return cmp.key;
+    };
+    for (const l of lines) {
+      if (isHeading(l.decision)) {
+        let name = headingName(l.raw) || "Group";
+        // Two groups with the same name ("Sauce:" twice) stay two groups, named apart as the editor requires.
+        for (let n = 2; names.has(name.toLowerCase()); n++) name = `${headingName(l.raw) || "Group"} ${n}`;
+        names.add(name.toLowerCase());
+        current = { key: keyFor(name), name };
+      } else if (l.decision?.use) {
+        rows.push({ componentKey: place(current), line: l as DraftLine & { decision: Extract<LineDecision, { use: true }> } });
+      } else if (needsQuantity(l.decision)) {
+        unquantified.push({ componentKey: place(current), name: l.decision.name, note: l.parsed.note ?? null, raw: l.raw });
+      }
+    }
+    const left = lines.filter((l) => isLeftOut(l.decision)).map((l) => l.raw);
     const outcome = await writeRecipeVersion(
       c, actor,
       {
@@ -229,15 +280,18 @@ export function confirmImportDraftCommand(actor: Actor, operationId: string, p: 
         instructions: d.household_instructions,
         sourceLabel: source.label,
         summary: left.length ? `Not counted in groceries: ${left.join("; ")}`.slice(0, 1000) : null,
-        components: [{ key: "main", name: "Main" }],
-        ingredients: used.map((l) => ({
-          componentKey: "main", ingredientName: l.decision.name, quantity: perPortion(l.decision.quantity, d.servings).value,
+        components,
+        ingredients: rows.map(({ componentKey, line: l }) => ({
+          componentKey, ingredientName: l.decision.name, quantity: perPortion(l.decision.quantity, d.servings).value,
           unit: l.decision.unit, form: l.decision.form, note: `From: ${l.raw}`.slice(0, 200),
           // EQ: the exact whole-recipe amount and its servings travel with the row (migration 015).
           exactAmount: l.decision.quantity, exactServings: d.servings,
         })),
       },
-      { provenance: "imported", sourceUrl: source.url, importDraftId: d.id, imageId: d.image_id ?? null, sourceAuthor: d.source_author ?? null, sourceSiteName: d.site_name ?? null },
+      {
+        provenance: "imported", sourceUrl: source.url, importDraftId: d.id, imageId: d.image_id ?? null, sourceAuthor: d.source_author ?? null, sourceSiteName: d.site_name ?? null,
+        unquantified,
+      },
     );
     const { recipeId, versionId } = outcome.result as { recipeId: string; versionId: string };
     await c.query("UPDATE recipe_import_drafts SET status='confirmed', confirmed_version_id=$2, revision=revision+1, updated_by=$3, updated_at=now() WHERE id=$1", [d.id, versionId, actor.memberId]);

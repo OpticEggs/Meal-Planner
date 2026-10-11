@@ -51,10 +51,13 @@ describe("import overhaul", () => {
     expect(use("½ tsp freshly ground black pepper")).toEqual({ use: false });
     expect(byRaw["1 tsp kosher salt"].parsed.status).toBe("omitted");
     for (const raw of ["2-3 cloves garlic, minced", "fresh basil, for serving"]) {
-      expect(byRaw[raw].decision, raw).toBeNull();
       expect(byRaw[raw].parsed.status, raw).toBe("requires_review");
       expect(byRaw[raw].parsed.name, raw).not.toBe(raw);
     }
+    // The range still waits for a person. CF Q6 (owner, 2026-10-11): a line with no amount at all starts as
+    // "Needs a quantity" — kept on the recipe, never given an invented amount (was: undecided).
+    expect(byRaw["2-3 cloves garlic, minced"].decision).toBeNull();
+    expect(byRaw["fresh basil, for serving"].decision).toEqual({ use: false, kind: "needs_quantity", name: "fresh basil" });
     expect(byRaw["2-3 cloves garlic, minced"].parsed).toMatchObject({ name: "garlic (clove)", range: ["2", "3"], unit: "each" });
   });
 

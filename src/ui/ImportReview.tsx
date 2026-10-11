@@ -1,11 +1,13 @@
 "use client";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { useStore } from "./store";
-import { ModalSheet } from "./a11y";
+import { ConfirmBox, ModalSheet } from "./a11y";
 import { FormAlert } from "./forms";
 import { KNOWN_UNITS } from "@/domain/units";
 import { displayAmount, parseAmount } from "@/domain/quantity";
-import { draftProblems, titleFromUrl, type DraftLine, type LineDecision } from "@/domain/recipes/import";
+import {
+  draftProblems, hasNoAmount, headingName, isHeading, isHeadingLine, isLeftOut, needsQuantity, titleFromUrl, type DraftLine, type LineDecision,
+} from "@/domain/recipes/import";
 import { RecipeHero } from "./Tile";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -28,24 +30,34 @@ export const amountText = (quantity: string, unit: string) => {
   return `${shown}${u ? ` ${u}` : ""}`;
 };
 
+/** How the review's parts tell the sheet about unsaved work (CF: backdrop, Escape and Close never lose it). */
+type Report = { setDirty: (dirty: boolean) => void; setSaver?: (s: { run: () => Promise<boolean> } | null) => void };
+
 /**
  * Import review (2026-10-09 overhaul). Nothing here makes a recipe until "Save recipe". Every line the
  * reader understood is already in as Use and shown as one clean row (amount · name); the few lines whose
  * amount or ingredient is genuinely uncertain open at the top with a small editor; salt and pepper are left
  * out as household seasonings. Any row opens the same editor, which shows the original source line.
+ * Catalog-first (2026-10-11): group headings show as headings (Q5); a line with no amount at all is kept as
+ * "Needs a quantity" (Q6); an edited review is never lost to a click outside, Escape or Close (the shared guard).
  */
-export function ImportReviewDialog({ bookmark, onClose, initial }: { bookmark: any; onClose: () => void; initial?: any }) {
+export function ImportReviewDialog({ bookmark, onClose, initial, returnFocus }: { bookmark: any; onClose: () => void; initial?: any; returnFocus?: () => void }) {
   const { library } = useStore();
   const live = library?.bookmarks?.find((b: any) => b.id === bookmark.id) ?? bookmark;
   const label = live.draft?.title ?? live.title ?? live.sourceLabel ?? live.domain;
+  const [dirty, setDirty] = useState(false);
+  const [saver, setSaver] = useState<{ run: () => Promise<boolean> } | null>(null);
+  const report = useRef<Report>({ setDirty, setSaver }).current;
   return (
-    <ModalSheet title={live.draft ? "Review the import" : "Import ingredients"} subtitle={label} closeLabel="Close import" onClose={onClose} returnFocus={() => undefined} testId="import-dialog">
+    <ModalSheet title={live.draft ? "Review the import" : "Import ingredients"} subtitle={label} closeLabel="Close import" onClose={onClose}
+      returnFocus={returnFocus ?? (() => undefined)} testId="import-dialog"
+      guard={{ dirty: dirty && !live.recipeId, saveForLater: saver?.run }}>
       {live.recipeId ? (
         <p role="status">Imported — the recipe is in Our Recipes.</p>
       ) : live.draft ? (
-        <DraftReview b={live} onDone={onClose} />
+        <DraftReview b={live} onDone={onClose} report={report} />
       ) : (
-        <StartImport b={live} initial={initial?.kind === "draft" ? null : initial} />
+        <StartImport b={live} initial={initial?.kind === "draft" ? null : initial} report={report} />
       )}
     </ModalSheet>
   );
@@ -53,13 +65,18 @@ export function ImportReviewDialog({ bookmark, onClose, initial }: { bookmark: a
 
 const SOCIAL = /^Posts on this site can't be imported/;
 
-function StartImport({ b, initial }: { b: any; initial?: any }) {
+function StartImport({ b, initial, report }: { b: any; initial?: any; report: Report }) {
   const { command, loadLibrary } = useStore();
   const [result, setResult] = useState<any>(initial ?? null);
   const [busy, setBusy] = useState(false);
   const [paste, setPaste] = useState("");
-  const [title, setTitle] = useState(b.title ?? (b.url ? titleFromUrl(b.url) : null) ?? "");
+  const [startTitle] = useState<string>(b.title ?? (b.url ? titleFromUrl(b.url) : null) ?? "");
+  const [title, setTitle] = useState(startTitle);
   const [error, setError] = useState<string | null>(null);
+  // Pasted lines or a changed name are work: closing asks first.
+  const dirty = paste.trim() !== "" || title !== startTitle;
+  useEffect(() => report.setDirty(dirty), [dirty, report]);
+  useEffect(() => () => report.setDirty(false), [report]);
   const read = async (candidate?: number) => {
     setBusy(true);
     setError(null);
@@ -109,11 +126,17 @@ function StartImport({ b, initial }: { b: any; initial?: any }) {
   );
 }
 
-function DraftReview({ b, onDone }: { b: any; onDone: () => void }) {
+/** What the review holds that a save would store: compared with what was last loaded or saved. */
+const snapshot = (e: Edit) => JSON.stringify([e.title, e.servings, e.effort, e.instructions, e.lines.map((l) => l.decision)]);
+
+function DraftReview({ b, onDone, report }: { b: any; onDone: () => void; report: Report }) {
   const { command } = useStore();
   const d = b.draft;
   const [edit, setEdit] = useState<Edit>(() => fromDraft(d));
+  const [saved, setSaved] = useState<string>(() => snapshot(fromDraft(d)));
   const [base, setBase] = useState<number>(d.revision);
+  const [askDiscard, setAskDiscard] = useState(false);
+  const discardRef = useRef<HTMLButtonElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [problems, setProblems] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
@@ -155,9 +178,16 @@ function DraftReview({ b, onDone }: { b: any; onDone: () => void }) {
   const setDecision = (i: number, dec: LineDecision | null) => setEdit((e) => ({ ...e, lines: e.lines.map((l, k) => (k === i ? { ...l, decision: dec } : l)) }));
   const indexed = edit.lines.map((l, i) => ({ l, i }));
   const check = indexed.filter(({ l }) => !l.decision);
+  // The recipe as it will be saved, in the page's order: group headings (Q5), rows with an amount, and rows that
+  // need a quantity (Q6).
+  const kept = indexed.filter(({ l }) => l.decision?.use || isHeading(l.decision) || needsQuantity(l.decision));
   const using = indexed.filter(({ l }) => l.decision?.use);
-  const left = indexed.filter(({ l }) => l.decision && !l.decision.use);
+  const unquantified = indexed.filter(({ l }) => needsQuantity(l.decision));
+  const left = indexed.filter(({ l }) => isLeftOut(l.decision));
+  const dirty = snapshot(edit) !== saved || pendingList.length > 0;
+  useEffect(() => report.setDirty(dirty), [dirty, report]);
   const save = async (): Promise<number | null> => {
+    const at = snapshot(edit);
     const r = await command("UpdateImportDraft", {
       draftId: d.id, expectedRevision: base, title: edit.title, servings, effortMinutes: /^\d+$/.test(edit.effort) ? Number(edit.effort) : null,
       householdInstructions: edit.instructions, decisions: edit.lines.map((l, index) => ({ index, decision: l.decision })),
@@ -168,8 +198,26 @@ function DraftReview({ b, onDone }: { b: any; onDone: () => void }) {
     }
     own.current = r.result.revision;
     setBase(r.result.revision);
+    setSaved(at);
     return r.result.revision;
   };
+  // "Save for later" from the close confirmation: the same save as the button below; a row holding a change not
+  // applied yet is shown instead (it can't be saved, and is never dropped).
+  const saveForLater = useRef<() => Promise<boolean>>(async () => false);
+  saveForLater.current = async () => {
+    if (holdForPending()) return false;
+    setBusy(true);
+    const rev = await save();
+    setBusy(false);
+    return rev !== null;
+  };
+  useEffect(() => {
+    report.setSaver?.({ run: () => saveForLater.current() });
+    return () => {
+      report.setSaver?.(null);
+      report.setDirty(false);
+    };
+  }, [report]);
   const site = d.siteName ?? b.sourceLabel ?? b.domain;
   return (
     <div className="review" data-testid="import-review">
@@ -178,7 +226,7 @@ function DraftReview({ b, onDone }: { b: any; onDone: () => void }) {
       {changedElsewhere && (
         <div className="warnbox" role="status" data-testid="import-changed">
           The other member changed this import. Your edits are still here, but saving them is refused until you load the current version.
-          <button type="button" className="btn line small" onClick={() => { setEdit(fromDraft(d)); setBase(d.revision); setError(null); }}>Load the current version</button>
+          <button type="button" className="btn line small" onClick={() => { setEdit(fromDraft(d)); setSaved(snapshot(fromDraft(d))); setBase(d.revision); setError(null); }}>Load the current version</button>
         </div>
       )}
       <div className="review-title">
@@ -193,6 +241,7 @@ function DraftReview({ b, onDone }: { b: any; onDone: () => void }) {
 
       <p className="progress" data-testid="draft-progress" aria-live="off">
         <span><strong>{using.length}</strong> ready</span>
+        {unquantified.length > 0 && <span><strong>{unquantified.length}</strong> need{unquantified.length === 1 ? "s" : ""} a quantity</span>}
         {check.length > 0 && <span className="todo"><strong>{check.length}</strong> to check</span>}
         {left.length > 0 && <span><strong>{left.length}</strong> left out</span>}
       </p>
@@ -208,7 +257,15 @@ function DraftReview({ b, onDone }: { b: any; onDone: () => void }) {
       <section aria-labelledby="ing-h" className="group">
         <h3 id="ing-h" className="group-title">Ingredients</h3>
         <ol className="rows" data-testid="draft-lines">
-          {using.map(({ l, i }) => <LineRow key={i} i={i} line={l} onChange={(dec) => setDecision(i, dec)} onPending={onPending} reveal={reveal?.i === i ? reveal.tick : 0} settled={settled === i} onSettled={onSettled} />)}
+          {kept.map(({ l, i }) => isHeading(l.decision) ? (
+            <li key={i} className="row-heading" data-testid="draft-heading" data-raw={l.raw}>
+              <h4>{headingName(l.raw)}</h4>
+              <button type="button" className="btn quiet small" aria-label={`This is an ingredient, not a group heading: ${l.raw}`}
+                onClick={() => { setDecision(i, null); setSettled(i); }}>This is an ingredient</button>
+            </li>
+          ) : (
+            <LineRow key={i} i={i} line={l} onChange={(dec) => setDecision(i, dec)} onPending={onPending} reveal={reveal?.i === i ? reveal.tick : 0} settled={settled === i} onSettled={onSettled} />
+          ))}
         </ol>
       </section>
       {left.length > 0 && (
@@ -251,11 +308,24 @@ function DraftReview({ b, onDone }: { b: any; onDone: () => void }) {
       </div>
       <div className="row between review-secondary">
           <button type="button" className="btn quiet" disabled={busy || changedElsewhere} onClick={async () => { if (holdForPending()) return; setBusy(true); await save(); setBusy(false); }}>Save review for later</button>
-          <button type="button" className="btn quiet danger-text" disabled={busy} onClick={async () => {
-            const r = await command("DiscardImportDraft", { draftId: d.id, expectedRevision: base });
-            if (r.status !== "accepted") setError(r.message);
-          }}>Discard import</button>
+          <button type="button" ref={discardRef} className="btn quiet danger-text" disabled={busy} onClick={() => setAskDiscard(true)}>Discard import</button>
       </div>
+      {askDiscard && (
+        // Discarding the import throws the review away: it asks first ("Keep the import" focused).
+        <ConfirmBox testId="discard-import-confirm" text="Discard this import? The review and your decisions are removed; the link stays saved."
+          actions={[
+            { label: "Keep the import", onClick: () => { setAskDiscard(false); setTimeout(() => discardRef.current?.focus(), 0); } },
+            {
+              label: "Discard import", tone: "danger", disabled: busy, onClick: async () => {
+                setBusy(true);
+                const r = await command("DiscardImportDraft", { draftId: d.id, expectedRevision: base });
+                setBusy(false);
+                setAskDiscard(false);
+                if (r.status !== "accepted") setError(r.message);
+              },
+            },
+          ]} />
+      )}
     </div>
   );
 }
@@ -263,6 +333,7 @@ function DraftReview({ b, onDone }: { b: any; onDone: () => void }) {
 /** Why a line is where it is, in a few words. */
 function lineStatus(line: DraftLine): string | null {
   const p = line.parsed;
+  if (needsQuantity(line.decision)) return "Needs a quantity — you'll give an amount when shopping";
   if (line.decision && !line.decision.use) return p.status === "omitted" ? "Household seasoning — you have it" : "Left out by you";
   if (line.decision) return null;
   if (p.alternatives?.length) return "Which one will you use?";
@@ -283,14 +354,19 @@ function LineRow({ i, line, onChange, onPending, reveal, settled, onSettled, ope
   const dec = line.decision;
   const p = line.parsed;
   const use = dec?.use ? dec : null;
+  const unq = needsQuantity(dec) ? dec : null;
   const status = lineStatus(line);
-  const name = use?.name ?? (p.name || p.alternatives?.[0] || "");
+  const name = use?.name ?? unq?.name ?? (p.name || p.alternatives?.[0] || "");
   const summary = use ? `${amountText(use.quantity, use.unit)} ${use.name}` : name || line.raw;
-  const draft = use ?? { use: true as const, name: p.name ?? "", quantity: p.quantity ?? "", unit: p.unit ?? "", form: (p.form ?? "raw") as "raw" | "cooked" };
+  const draft = use ?? { use: true as const, name: unq?.name ?? p.name ?? "", quantity: p.quantity ?? "", unit: p.unit ?? "", form: (p.form ?? "raw") as "raw" | "cooked" };
   const [form, setForm] = useState(draft);
   useEffect(() => setForm(draft), [JSON.stringify(dec)]); // eslint-disable-line react-hooks/exhaustive-deps
   const amountOk = !!parseAmount(form.quantity) && KNOWN_UNITS.includes(form.unit) && form.name.trim().length > 0;
-  const kind = !dec ? "check" : dec.use ? "use" : "out";
+  const kind = !dec ? "check" : dec.use ? "use" : unq ? "needs_quantity" : "out";
+  // Q6: a line that names no amount at all may be kept as "Needs a quantity" (asked when shopping); Q5: a line that
+  // reads like a group heading may be one.
+  const canNeedQuantity = hasNoAmount(p) && !unq;
+  const canBeHeading = !dec && isHeadingLine(line.raw, p);
   // A change is pending when what the editor holds differs from what is decided (an undecided line counts
   // only once something was typed into it).
   const dirty = (["quantity", "unit", "name", "form"] as const).some((k) => String(form[k] ?? "").trim() !== String(draft[k] ?? "").trim());
@@ -317,7 +393,7 @@ function LineRow({ i, line, onChange, onPending, reveal, settled, onSettled, ope
           ) : (
             <span className="line1"><span className="nm">{summary}</span></span>
           )}
-          {use && p.note ? <span className="note">{p.note}</span> : null}
+          {(use || unq) && p.note ? <span className="note">{p.note}</span> : null}
           {dirty && !open ? <span className="why check">Change not applied yet</span> : status ? <span className={`why ${kind}`}>{status}</span> : null}
         </span>
         <span className="chev" aria-hidden="true">{open ? "▴" : "▾"}</span>
@@ -346,6 +422,15 @@ function LineRow({ i, line, onChange, onPending, reveal, settled, onSettled, ope
           {!amountOk && form.quantity && !parseAmount(form.quantity) && <p className="field-error small">Use a number or fraction, like 2, 1/3 or 1 1/2.</p>}
           <div className="row">
             <button ref={applyRef} type="button" className="btn primary small" disabled={!amountOk} onClick={() => { onChange({ ...form, use: true, quantity: form.quantity.trim() }); setOpen(false); onSettled(i); }} aria-label={`Use line ${i + 1}: ${line.raw}`}>Use</button>
+            {canNeedQuantity && (
+              <button type="button" className="btn line small" disabled={!form.name.trim()}
+                onClick={() => { onChange({ use: false, kind: "needs_quantity", name: form.name.trim() }); setOpen(false); onSettled(i); }}
+                aria-label={`Needs a quantity, line ${i + 1}: ${line.raw}`}>Needs a quantity</button>
+            )}
+            {canBeHeading && (
+              <button type="button" className="btn line small" onClick={() => { onChange({ use: false, kind: "heading" }); setOpen(false); }}
+                aria-label={`Group heading, line ${i + 1}: ${line.raw}`}>Group heading</button>
+            )}
             <button type="button" className="btn line small" onClick={() => { onChange({ use: false }); setOpen(false); onSettled(i); }} aria-label={`Leave out line ${i + 1}: ${line.raw}`}>Leave out</button>
             <button type="button" className="btn quiet small" onClick={() => { setForm(draft); setOpen(false); onSettled(i); }} aria-label={`Cancel changes to line ${i + 1}`}>Cancel</button>
           </div>

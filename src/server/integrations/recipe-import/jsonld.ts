@@ -350,7 +350,15 @@ function yieldOf(node: Obj): { text: string | null; servings: number | null } {
   const v = node.recipeYield ?? node.yield;
   const entries = (Array.isArray(v) ? v : [v]).slice(0, 10).map((x) => cleanText(x)).filter((x): x is string => x !== null);
   if (entries.length === 0) return { text: null, servings: null };
-  const text = entries.find((e) => !/^\d+$/.test(e)) ?? entries[0];
+  // Every distinct value the page states, in its order ("4 · 6 servings" when they disagree), so the member sees
+  // all of them. A bare number repeated by a worded entry ("4", "4 servings") says nothing new and is dropped.
+  const distinct = entries.filter((e, i) => entries.findIndex((x) => x.toLowerCase() === e.toLowerCase()) === i);
+  const countOf = (e: string) => {
+    const m = SERVING.exec(e);
+    return m ? Number(m[1]) : null;
+  };
+  const shown = distinct.filter((e) => !(/^\d+$/.test(e) && distinct.some((x) => x !== e && !/^\d+$/.test(x) && countOf(x) === Number(e))));
+  const text = shown.join(" · ");
   // Unambiguous: every entry with a digit is a plain serving count, and they all name the same integer.
   const counts = new Set<number>();
   let unclear = false;

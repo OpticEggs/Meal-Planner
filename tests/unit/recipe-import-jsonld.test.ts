@@ -123,6 +123,19 @@ describe("extractRecipes fixtures", () => {
     expect([c.prepMinutes, c.cookMinutes, c.totalMinutes]).toEqual([null, null, null]);
     expect(c.servings).toBeNull();
   });
+
+  // CF-C (2026-10-11): every distinct stated yield is kept for display ("4 · 6 servings"); servings logic unchanged
+  // (conflicting values give no servings, so the member chooses). Was: only the first worded value.
+  it("CF-C: yield text keeps every distinct stated value; a bare number repeated by a worded one is not repeated", () => {
+    const y = (v: unknown) => one(ld(JSON.stringify({ "@type": "Recipe", name: "Y", recipeYield: v })));
+    expect([y(["4", "6 servings"]).yield, y(["4", "6 servings"]).servings]).toEqual(["4 · 6 servings", null]);
+    expect([y(["8", "8 servings"]).yield, y(["8", "8 servings"]).servings]).toEqual(["8 servings", 8]);
+    expect([y(["4", "4 servings", "4 servings"]).yield, y(["4", "4 servings"]).servings]).toEqual(["4 servings", 4]);
+    expect([y(["6 servings", "4"]).yield, y(["6 servings", "4"]).servings]).toEqual(["6 servings · 4", null]);
+    expect([y(["12 pancakes", "4 servings"]).yield, y(["12 pancakes", "4 servings"]).servings]).toEqual(["12 pancakes · 4 servings", null]);
+    expect([y("6").yield, y("6").servings]).toEqual(["6", 6]);
+    expect([y(["2", "3"]).yield, y(["2", "3"]).servings]).toEqual(["2 · 3", null]);
+  });
 });
 
 describe("extractRecipes scanner edge cases", () => {

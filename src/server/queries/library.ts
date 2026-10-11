@@ -111,6 +111,8 @@ export async function librarySnapshot(actor: Actor) {
           sourceLabel: rv.sourceLabel, sourceUrl: rv.sourceUrl ?? null, sourceDomain: domainOf(rv.sourceUrl), estimate: rv.estimate, components: rv.components,
           sourceAuthor: rv.sourceAuthor ?? null, sourceSiteName: rv.sourceSiteName ?? null, imageId: rv.imageId ?? null,
           ingredients: rv.ingredients.map((i) => ({ ...i, name: ingredients.get(i.ingredientKey)?.name ?? i.ingredientKey })),
+          // CF Q6: ingredients the recipe names without an amount ("Needs a quantity"), under their component.
+          unquantified: rv.unquantified ?? [],
         },
         versions: versionsQ.rows.filter((v) => v.recipe_id === r.id).map((v) => ({ id: v.id, versionNo: v.version_no, title: v.title, createdAt: v.created_at.toISOString(), by: v.display_name })),
         preferences: Object.fromEntries(prefs.filter((p) => p.recipe_id === r.id).map((p) => [p.member_id, p.value])),

@@ -63,18 +63,57 @@ export function nightFallback(night: string | null): HTMLElement | null {
   );
 }
 
+/** What a sheet holding a member's work tells the modal system (CF / D57, moved here from RecipeEditor). */
+export interface CloseGuard {
+  /** True while the sheet holds work that closing would lose. */
+  dirty: boolean;
+  /** Offered as "Save for later": resolves true when the work was saved (the sheet then closes), false to stay open
+   *  (the sheet shows its own error, or the row that holds the work). */
+  saveForLater?: () => Promise<boolean>;
+}
+
+/**
+ * A short confirmation inside a sheet (role alertdialog). Its first action takes focus when it appears; the caller
+ * decides where focus goes when it is dismissed. Used for "Discard your unsaved changes?" and similar questions.
+ */
+export function ConfirmBox({ text, actions, testId }: {
+  text: string; testId?: string;
+  actions: { label: string; onClick: () => void; tone?: "line" | "primary" | "danger"; disabled?: boolean; testId?: string }[];
+}) {
+  const id = useId();
+  const first = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    first.current?.focus();
+  }, []);
+  return (
+    <div className="warnbox" role="alertdialog" aria-labelledby={id} data-testid={testId}>
+      <p id={id}>{text}</p>
+      <div className="row">
+        {actions.map((a, i) => (
+          <button key={a.label} type="button" ref={i === 0 ? first : undefined} className={`btn small ${a.tone ?? "line"}`} disabled={a.disabled} onClick={a.onClick} data-testid={a.testId}>
+            {a.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /**
  * A dismissible modal sheet.
  *  - rendered outside `.app`, which is made `inert` while the sheet is open: background controls
  *    cannot be focused, clicked or reached by a screen reader;
  *  - focus moves inside on open (`[data-autofocus]`, else the first control) and Tab / Shift+Tab
  *    wrap inside it;
- *  - Escape, the Close button and the backdrop all close it. Closing only closes: nothing in the
- *    sheet is applied or saved by closing;
+ *  - Escape, the Close button and the backdrop (click or tap) all ask to close it. Closing only closes: nothing in
+ *    the sheet is applied or saved by closing;
+ *  - a sheet that reports unsaved work (`guard.dirty`) routes all three through ONE confirmation instead: "Keep
+ *    editing" (focused; Escape, the backdrop or Close again also keep editing, and focus returns to where it was),
+ *    "Save for later" when the sheet offers it, and "Discard changes". Work is kept unless the member discards it;
  *  - on close, `returnFocus` puts focus back on the control that opened it (or a survivor).
  */
 export function ModalSheet({
-  title, subtitle, onClose, returnFocus, closeLabel, testId, children,
+  title, subtitle, onClose, returnFocus, closeLabel, testId, guard, children,
 }: {
   title: string;
   subtitle?: string;
@@ -82,6 +121,7 @@ export function ModalSheet({
   returnFocus: () => void;
   closeLabel: string;
   testId?: string;
+  guard?: CloseGuard;
   children: React.ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -89,8 +129,61 @@ export function ModalSheet({
   const titleId = useId();
   const onCloseRef = useRef(onClose);
   const returnRef = useRef(returnFocus);
+  const guardRef = useRef(guard);
   onCloseRef.current = onClose;
   returnRef.current = returnFocus;
+  guardRef.current = guard;
+  const [confirming, setConfirming] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const confirmingRef = useRef(false);
+  confirmingRef.current = confirming;
+  const savingRef = useRef(false);
+  savingRef.current = saving;
+  // Where focus was inside the sheet before the confirmation (a backdrop press must not lose it).
+  const lastInside = useRef<HTMLElement | null>(null);
+  const beforeConfirm = useRef<HTMLElement | null>(null);
+
+  const restoreFocus = (back: HTMLElement | null) => {
+    const dialog = ref.current;
+    if (!dialog) return;
+    focusFirst(back && back !== document.body && back !== dialog ? back : null, dialog.querySelector<HTMLElement>("[data-autofocus]"), tabbables(dialog)[0], dialog);
+  };
+  const keepEditing = () => {
+    setConfirming(false);
+    const back = beforeConfirm.current;
+    setTimeout(() => restoreFocus(back), 0);
+  };
+  // Every way of closing comes here.
+  const requestClose = () => {
+    if (savingRef.current) return; // "Save for later" is in flight: its answer decides
+    if (confirmingRef.current) return keepEditing();
+    if (guardRef.current?.dirty) {
+      const active = document.activeElement as HTMLElement | null;
+      beforeConfirm.current = active && ref.current?.contains(active) && active !== ref.current ? active : lastInside.current;
+      setConfirming(true);
+      return;
+    }
+    onCloseRef.current();
+  };
+  const requestCloseRef = useRef(requestClose);
+  requestCloseRef.current = requestClose;
+  const saveForLater = async () => {
+    const save = guardRef.current?.saveForLater;
+    if (!save) return;
+    setSaving(true);
+    savingRef.current = true;
+    const ok = await save().catch(() => false);
+    savingRef.current = false;
+    setSaving(false);
+    if (ok) return onCloseRef.current();
+    // Not saved: stay open with the work as it was; the sheet shows why. Focus stays inside the sheet.
+    setConfirming(false);
+    const back = beforeConfirm.current;
+    setTimeout(() => {
+      const dialog = ref.current;
+      if (dialog && (!dialog.contains(document.activeElement) || document.activeElement === dialog)) restoreFocus(back);
+    }, 0);
+  };
 
   useEffect(() => {
     const dialog = ref.current!;
@@ -101,13 +194,14 @@ export function ModalSheet({
     // Anything that lands focus outside the sheet (a portal, the address bar returning) is pulled back.
     const onFocusIn = (e: FocusEvent) => {
       if (!dialog.contains(e.target as Node)) focusFirst(tabbables(dialog)[0], dialog);
+      else if (e.target !== dialog) lastInside.current = e.target as HTMLElement;
     };
     // Keys are handled at the document while the sheet is open: if the focused control was just
     // removed (a cancelled draft), focus is on <body> and Escape / Tab must still work.
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
-        onCloseRef.current();
+        requestCloseRef.current();
         return;
       }
       if (e.key !== "Tab") return;
@@ -165,18 +259,32 @@ export function ModalSheet({
   if (typeof document === "undefined") return null;
   return createPortal(
     <div className="modal-layer">
-      <div className="modal-backdrop" aria-hidden="true" onClick={() => onCloseRef.current()} />
+      {/* A press on the backdrop never moves focus (mouse or touch); the click or tap asks to close. */}
+      <div className="modal-backdrop" aria-hidden="true" data-testid="modal-backdrop" onMouseDown={(e) => e.preventDefault()} onClick={() => requestCloseRef.current()} />
       <div ref={ref} className="sheet-modal" role="dialog" aria-modal="true" aria-labelledby={titleId} tabIndex={-1} data-testid={testId}>
         <div className="sheet-head" ref={headRef}>
           <div>
             <h2 id={titleId} className="sheet-title">{title}</h2>
             {subtitle && <p className="faint small sheet-sub">{subtitle}</p>}
           </div>
-          <button type="button" className="btn line small" onClick={() => onCloseRef.current()} aria-label={closeLabel} data-testid="close-sheet">
+          <button type="button" className="btn line small" onClick={() => requestCloseRef.current()} aria-label={closeLabel} data-testid="close-sheet">
             Close
           </button>
         </div>
-        <div className="sheet-body">{children}</div>
+        <div className="sheet-body">
+          {confirming && (
+            <ConfirmBox
+              testId="discard-confirm"
+              text={guard?.saveForLater ? "You have changes that aren't saved. Keep editing, save them for later, or discard them?" : "Discard your unsaved changes?"}
+              actions={[
+                { label: "Keep editing", onClick: keepEditing, disabled: saving },
+                ...(guard?.saveForLater ? [{ label: saving ? "Saving…" : "Save for later", onClick: () => void saveForLater(), disabled: saving, testId: "confirm-save-later" }] : []),
+                { label: "Discard changes", onClick: () => onCloseRef.current(), tone: "danger" as const, disabled: saving },
+              ]}
+            />
+          )}
+          {children}
+        </div>
       </div>
     </div>,
     document.body,

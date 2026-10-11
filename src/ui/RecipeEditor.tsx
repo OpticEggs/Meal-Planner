@@ -11,7 +11,7 @@ import { FIELD_LABEL, display, editorInit, editorReducer, isDirty, type EditorAc
  * B17 — recipe entry and editing as a dialog on the one modal system. Every row's controls are
  * named by their position and content; errors are attached to their fields; adding a row moves
  * focus into it and removing one moves focus to a survivor. Closing with unsaved changes asks
- * first ("Keep editing" focused). A version saved by the other member while this is open is
+ * first ("Keep editing" focused) — the modal system's shared guard (a11y.tsx). A version saved by the other member while this is open is
  * brought into the draft field by field (src/domain/recipes/rebase.ts): what the member did not
  * change takes the new content (hidden fields included) and is shown in full; a field both
  * changed is a conflict with both full contents shown, decided explicitly before Save.
@@ -59,17 +59,16 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
   );
   const { f, base, seen: seenVersion, pending, rebased } = st;
   const [label] = useState<string>(live?.version.title ?? "");
-  const beforeConfirm = useRef<HTMLElement | null>(null);
   const [errors, setErrors] = useState<Errors>({});
   const [formError, setFormError] = useState<string | null>(null);
-  const [confirmDiscard, setConfirmDiscard] = useState(false);
   const [busy, setBusy] = useState(false);
   const [focusId, setFocusId] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
-  const keepRef = useRef<HTMLButtonElement>(null);
   const dirty = isDirty(st);
   const currentVersion: number | null = live?.version.versionNo ?? null;
   const conflict = pending.length > 0;
+  // CF Q6: ingredients the recipe names without an amount. Not edited here; the server carries them to the new version.
+  const unquantified: { componentKey: string; name: string }[] = live?.version.unquantified ?? [];
 
   // A newer version arrived: bring the draft up to it (never silently reverting what the member
   // did not touch), and hold Save while any field both changed is undecided. The reducer ignores
@@ -107,28 +106,6 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
     else document.getElementById("re-title")?.focus();
     setFocusId(null);
   }, [focusId, f, pending]);
-  useEffect(() => {
-    if (confirmDiscard) keepRef.current?.focus();
-  }, [confirmDiscard]);
-
-  // Every way of closing goes through here: unsaved work is never dropped without asking.
-  function requestClose() {
-    if (confirmDiscard) return keepEditing(); // Escape again = keep editing
-    if (dirty) {
-      beforeConfirm.current = document.activeElement as HTMLElement | null;
-      return setConfirmDiscard(true);
-    }
-    onClose();
-  }
-  // Leaving the confirmation puts focus back where it was (its own button is about to vanish).
-  function keepEditing() {
-    setConfirmDiscard(false);
-    const back = beforeConfirm.current;
-    setTimeout(() => {
-      if (back && back.isConnected && back !== document.body) back.focus();
-      else document.getElementById("re-title")?.focus();
-    }, 0);
-  }
   function startOver() {
     dispatch({ type: "startOver", cur: fieldsOf(live?.version), version: currentVersion });
     setErrors({});
@@ -223,16 +200,9 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
 
   return (
     <ModalSheet title={recipeId ? `Edit ${label} — new version` : "New recipe"} subtitle={recipeId ? `Editing version ${seenVersion ?? "?"}` : undefined}
-      closeLabel={recipeId ? "Close the recipe editor" : "Close the new recipe"} onClose={requestClose} returnFocus={returnFocus} testId="recipe-editor">
-      {confirmDiscard && (
-        <div className="warnbox" role="alertdialog" aria-labelledby="re-discard-h" data-testid="discard-confirm">
-          <p id="re-discard-h">Discard your unsaved changes?</p>
-          <div className="row">
-            <button type="button" ref={keepRef} className="btn line small" onClick={keepEditing}>Keep editing</button>
-            <button type="button" className="btn danger small" onClick={onClose}>Discard changes</button>
-          </div>
-        </div>
-      )}
+      closeLabel={recipeId ? "Close the recipe editor" : "Close the new recipe"} onClose={onClose} returnFocus={returnFocus} testId="recipe-editor"
+      // Every way of closing (Escape, Close, the backdrop) asks first while there are unsaved changes (D57).
+      guard={{ dirty }}>
       {rebased.length > 0 && (
         <div className="warnbox stack" data-testid="recipe-rebased" style={{ overflowWrap: "anywhere", minWidth: 0 }}>
           {rebased.map((r) => (
@@ -287,7 +257,9 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
         <fieldset className="stack">
           <legend>Components</legend>
           {f.components.map((c, i) => {
-            const usedBy = f.rows.filter((r) => r.componentKey === c.key && (r.ingredientName.trim() || r.quantity.trim())).length;
+            // Items that need a quantity belong to their component too: it can't be removed from under them.
+            const usedBy = f.rows.filter((r) => r.componentKey === c.key && (r.ingredientName.trim() || r.quantity.trim())).length
+              + unquantified.filter((u) => u.componentKey === c.key).length;
             return (
               <div key={c.id} className="row">
                 <span className="stack grow">
@@ -332,6 +304,12 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
           })}
           <FieldError id="re-rows" errors={errors} />
           <button type="button" id="re-add-row" className="link small" onClick={addRow}>add ingredient</button>
+          {unquantified.length > 0 && (
+            // CF Q6: kept on every new version exactly as they are; an amount is asked for when shopping.
+            <p className="small muted" data-testid="editor-unquantified">
+              Needs a quantity when shopping: {unquantified.map((u) => `${u.name}${f.components.length > 1 ? ` (${compLabel(u.componentKey)})` : ""}`).join(", ")}. These stay on the recipe as they are.
+            </p>
+          )}
         </fieldset>
 
         <label htmlFor="re-steps">Steps</label>

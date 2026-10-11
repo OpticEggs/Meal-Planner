@@ -39,13 +39,18 @@ test("IO-E1: the reported line reads cleanly; only uncertain lines ask; seasonin
   }
   await expect(review.locator('[data-testid="draft-line"][data-raw="1 red bell pepper, sliced"]')).toHaveAttribute("data-state", "use");
 
-  // Only the two uncertain lines are open, at the top, with what the recipe said.
+  // Only the uncertain line is open, at the top, with what the recipe said. CF Q6 (2026-10-11): the line with no
+  // amount at all (basil) is kept as "Needs a quantity" instead of waiting — no amount is invented (was: 2 open lines).
   const check = review.getByTestId("draft-check");
-  await expect(check.getByTestId("draft-line")).toHaveCount(2);
+  await expect(check.getByTestId("draft-line")).toHaveCount(1);
   await expect(check).toContainText("The recipe says 2–3");
   await expect(check).toContainText("From the recipe 2-3 cloves garlic, minced");
+  const basil = review.getByTestId("draft-lines").locator('[data-testid="draft-line"][data-raw="fresh basil, for serving"]');
+  await expect(basil).toHaveAttribute("data-state", "needs_quantity");
+  await expect(basil).toContainText("Needs a quantity — you'll give an amount when shopping");
+  await expect(review.getByTestId("draft-progress")).toContainText("1 needs a quantity");
   await expect(review.getByTestId("import-confirm")).toBeDisabled();
-  await expect(review.getByTestId("draft-problems")).toContainText("2 ingredient lines need a quick check");
+  await expect(review.getByTestId("draft-problems")).toContainText("1 ingredient line needs a quick check");
   await expect(review.getByText(/suggestion/i)).toHaveCount(0);
 
   await useLine(review, "2-3 cloves garlic, minced", "3");
