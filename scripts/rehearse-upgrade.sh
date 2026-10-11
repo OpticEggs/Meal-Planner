@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Upgrade rehearsal for migrations 015/016 (EQ/EQR, 2026-10-10) on DISPOSABLE LOCAL databases only — never a household
+# Upgrade rehearsal for migrations 015/016 (EQ/EQR, 2026-10-10) and 017 (catalog-first meal lists, 2026-10-11) on DISPOSABLE LOCAL databases only — never a household
 # database, never Neon. Usage: scripts/rehearse-upgrade.sh [previous-release-commit] [--old-suite]
 #
 #  1. A database is migrated and POPULATED by the previous release's own code (imported and manual recipes, a
@@ -11,6 +11,7 @@
 #     fingerprints and approvals must be unchanged; this release may change a line's review identity (and so the
 #     approval bound to it) only where an exact recipe row is behind the line — listed explicitly (EQR, D138).
 #  4. This release saves an exact recipe; the previous release still reads and projects the database (rollback).
+#     4b. This release opens a meal list; the previous release still runs; this release restores the list.
 #  5. Export/restore: this release's export round-trips; the previous release's export (taken before the
 #     upgrade) restores into the new schema as legacy rows.
 #  6. With --old-suite, the previous release's whole vitest suite runs against a database carrying the new schema.
@@ -95,6 +96,28 @@ in_new env DATABASE_URL="$DB" npx tsx scripts/rehearsal/data.mts basis > "$OUT/4
 if in_prev env DATABASE_URL="$DB" TABLE_FIXED_NOW=2026-10-12T19:00:00Z TABLE_RETAILER=simulated TABLE_ENV=test npx tsx "$NEW/scripts/rehearsal/snapshot.mts" > "$OUT/4-projection-prev-after-exact.json" 2> "$OUT/4-prev.log"; then
   pass "4 after this release saved an exact recipe ($(tr -d '\n ' < "$OUT/4-basis.json")), $PREV_SHA still recomputes every week"
 else fail "4 $PREV_SHA cannot run on the upgraded database (4-prev.log)"; fi
+
+# 4b. Catalog-first rollback (migration 017): this release opens a meal list (undated week, its own cycle) with
+#     selected meals, a "Needs a quantity" item and an approval; the previous release must still read and recompute
+#     every week without crashing and without the list reaching a calendar week; this release then restores it.
+if [ -f "$NEW/scripts/rehearsal/meal-list.mts" ]; then
+  if in_new env DATABASE_URL="$DB" MODE=populate TABLE_FIXED_NOW=2026-10-12T19:00:00Z TABLE_RETAILER=simulated TABLE_ENV=test npx tsx scripts/rehearsal/meal-list.mts > "$OUT/4b-list-new.json" 2> "$OUT/4b-list-new.log"; then
+    pass "4b this release opened a meal list: $(node -e 'const j=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")); console.log(`${j.listLines} list lines, ${j.listLinesNamingSelectedMeals} naming selected meals, ${j.needsQuantityUnknown} unknown (needs a quantity), approvals ${JSON.stringify(j.approvals)}, undated week ${JSON.stringify(j.lists.map(l=>[l.kind,l.week_start]))}`)' "$OUT/4b-list-new.json")"
+  else fail "4b this release could not open a meal list (4b-list-new.log)"; fi
+  if in_prev env DATABASE_URL="$DB" TABLE_FIXED_NOW=2026-10-12T19:00:00Z TABLE_RETAILER=simulated TABLE_ENV=test npx tsx "$NEW/scripts/rehearsal/snapshot.mts" > "$OUT/4b-projection-prev-with-list.json" 2> "$OUT/4b-prev.log" \
+     && in_prev env DATABASE_URL="$DB" TABLE_FIXED_NOW=2026-10-12T19:00:00Z TABLE_RETAILER=simulated TABLE_ENV=test npx tsx "$NEW/scripts/rehearsal/member-snapshot.mts" > "$OUT/4b-member-snapshot-prev.json" 2>> "$OUT/4b-prev.log"; then
+    pass "4b $PREV_SHA recomputes every week and loads a member's snapshot with an open meal list present (it shows: $(tr -d '\n ' < "$OUT/4b-member-snapshot-prev.json"))"
+  else fail "4b $PREV_SHA fails with a meal list present (4b-prev.log)"; fi
+  in_new env DATABASE_URL="$DB" npx tsx scripts/rehearsal/meal-list.mts > "$OUT/4b-list-after-prev.json"
+  if node -e 'const j=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")); process.exit(j.calendarLinesNamingSelectedMeals===0 && j.listLinesNamingSelectedMeals===0 && j.approvals.every(a=>a.state!=="active") ? 0 : 1)' "$OUT/4b-list-after-prev.json"; then
+    pass "4b while $PREV_SHA ran, the list's stored lines lost their selected meals (it does not know them) and its approval went stale — the safe direction; no calendar line names a selected meal"
+  else fail "4b unexpected list state after $PREV_SHA recomputed (4b-list-after-prev.json)"; fi
+  in_new env DATABASE_URL="$DB" TABLE_FIXED_NOW=2026-10-12T19:00:00Z TABLE_RETAILER=simulated TABLE_ENV=test npx tsx scripts/rehearsal/snapshot.mts > /dev/null
+  in_new env DATABASE_URL="$DB" npx tsx scripts/rehearsal/meal-list.mts > "$OUT/4b-list-restored.json"
+  if node -e 'const f=require("fs"); const a=JSON.parse(f.readFileSync(process.argv[1],"utf8")); const b=JSON.parse(f.readFileSync(process.argv[2],"utf8")); process.exit(b.listLinesNamingSelectedMeals===a.listLinesNamingSelectedMeals && b.listLines===a.listLines && b.needsQuantityUnknown===1 && b.calendarLinesNamingSelectedMeals===0 && !b.approvals.some(x=>x.state==="active") ? 0 : 1)' "$OUT/4b-list-new.json" "$OUT/4b-list-restored.json"; then
+    pass "4b back on this release, one recompute restores the list exactly ($(node -e 'const j=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")); console.log(`${j.listLines} lines, ${j.listLinesNamingSelectedMeals} from selected meals`)' "$OUT/4b-list-restored.json")); the stale approval is not revived (approve again)"
+  else fail "4b the list did not come back as it was (4b-list-restored.json)"; fi
+fi
 
 # 5. Export/restore.
 in_new env DATABASE_URL="$DB" npx tsx scripts/rehearsal/data.mts export "$HH" > "$OUT/5-export-new.json"

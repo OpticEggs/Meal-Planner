@@ -47,9 +47,23 @@ export function useCatalogScroll(ready: boolean) {
       if (y > 0) window.scrollTo(0, y);
     } catch { /* storage unavailable: start at the top */ }
   }, [ready]);
-  useEffect(() => () => {
-    try { sessionStorage.setItem(SCROLL_KEY, String(window.scrollY)); } catch { /* ignore */ }
-  }, []);
+  // Remember the place as the reader scrolls (not on leaving: by then navigation may already have moved the page).
+  useEffect(() => {
+    if (!ready) return;
+    let t: ReturnType<typeof setTimeout> | null = null;
+    const save = () => {
+      if (t) return;
+      t = setTimeout(() => {
+        t = null;
+        try { sessionStorage.setItem(SCROLL_KEY, String(window.scrollY)); } catch { /* ignore */ }
+      }, 100);
+    };
+    window.addEventListener("scroll", save, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", save);
+      if (t) clearTimeout(t);
+    };
+  }, [ready]);
 }
 
 export function RecipeGallery({ list, sounds }: { list: any[]; sounds?: boolean }) {
@@ -76,7 +90,6 @@ export function RecipeGallery({ list, sounds }: { list: any[]; sounds?: boolean 
               {r.interest ? ` · Sounds good (${r.interest.display_name ?? r.interest.by ?? ""})` : ""}
             </div>
             <div className="row gallery-actions">
-              {pk.kind === "none" && <Link className="link small" href={`/recipes/${r.recipeId}#photo`} aria-label={`Add a photo of ${title}`}>Add a photo</Link>}
               {sounds && r.interest && <button className="btn line small" aria-label={`Clear the idea ${title}`} onClick={() => command("ArchiveInterest", { interestId: r.interest.id })}>Clear idea</button>}
               <button className={`icon-btn fav ${fav ? "on" : ""}`} aria-label={`Favorite ${title}`} aria-pressed={fav}
                 onClick={() => command("SetFavorite", { recipeId: r.recipeId, favorite: !fav })}>

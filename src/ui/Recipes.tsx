@@ -9,6 +9,8 @@ import { PlaceholderTile, RecipeHero, SourceLine } from "./Tile";
 import { amountText } from "./ImportReview";
 import { AddFromLinkForm, SaveLinkForm, SavedLinksList } from "./SavedLinks";
 import { ImportReviewDialog } from "./ImportReview";
+import { RecipeGallery, matchesSearch, useCatalogScroll } from "./Catalog";
+import { SelectControl, defaultServings } from "./MealList";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -26,15 +28,20 @@ export function RecipesScreen({ initialFilter = "all" }: { initialFilter?: (type
   const [importing, setImporting] = useState<{ b: any; el: HTMLElement; result?: any } | null>(null);
   const [creating, setCreating] = useState<HTMLElement | null>(null);
   const tabs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const [search, setSearch] = useState("");
+  const [quick, setQuick] = useState(false);
+  const { snapshot } = useStore();
   useEffect(() => {
     void loadLibrary();
   }, [loadLibrary]);
+  useCatalogScroll(!!library);
   if (!library) return <p className="muted">Loading…</p>;
-  const list = library.recipes.filter((r: any) =>
-    filter === "favorites" ? r.favoriteOf.includes(me.memberId) : filter === "sounds_good" ? !!r.interest : !r.archived,
-  );
+  const list = library.recipes
+    .filter((r: any) => (filter === "favorites" ? r.favoriteOf.includes(me.memberId) : filter === "sounds_good" ? !!r.interest : !r.archived))
+    .filter((r: any) => matchesSearch(r, search) && (!quick || (r.version.effortMinutes != null && r.version.effortMinutes <= 30)));
+  const selectedCount = snapshot?.mealList?.meals?.length ?? 0;
   return (
-    <section aria-label="Our recipes" className="recipes-screen">
+    <section aria-label="Our recipes" className="recipes-screen wide-page">
       <div className="screen-head">
         <h2 className="page-title">Our Recipes</h2>
         <button className="btn line small" aria-haspopup="dialog" onClick={(e) => setCreating(e.currentTarget)} data-testid="new-recipe">New recipe</button>
@@ -58,6 +65,13 @@ export function RecipesScreen({ initialFilter = "all" }: { initialFilter?: (type
           ))}
         </div>
       </div>
+      {filter !== "links" && (
+        <div className="catalog-tools">
+          <label className="sr-only" htmlFor="recipe-search">Search recipes</label>
+          <input id="recipe-search" type="search" placeholder="Search recipes or ingredients" value={search} onChange={(e) => setSearch(e.target.value)} />
+          <button type="button" className={`btn line small ${quick ? "on" : ""}`} aria-pressed={quick} onClick={() => setQuick(!quick)}>30 min or less</button>
+        </div>
+      )}
       {creating && (
         <RecipeEditorDialog recipeId={null} onClose={() => setCreating(null)}
           returnFocus={() => focusFirst(creating, () => document.querySelector<HTMLElement>('[data-testid="new-recipe"]'))} />
@@ -78,30 +92,24 @@ export function RecipesScreen({ initialFilter = "all" }: { initialFilter?: (type
         </div>
       ) : (<>
       {filter === "sounds_good" && <p className="faint small">Shared near-term ideas. Saving one does not schedule it.</p>}
-      {list.length === 0 && <p className="small muted">{filter === "favorites" ? "No favorites yet." : filter === "sounds_good" ? "No saved ideas yet." : "No recipes yet."}</p>}
-      <ul className="recipes" data-testid="recipe-list">
-        {list.map((r: any) => (
-          <li key={r.recipeId} className="recipe" data-testid="recipe-row" data-title={r.version.title}>
-            <PlaceholderTile title={r.version.title} imageId={r.photo?.imageId ?? r.version.imageId} />
-            <div className="grow">
-              <Link href={`/recipes/${r.recipeId}`} className="recipe-link"><strong>{r.version.title}</strong></Link>
-              <div className="faint small">
-                {[r.version.effortMinutes ? `${r.version.effortMinutes} min` : null, r.version.provenance === "fixture" ? "test recipe" : r.version.provenance === "imported" ? `imported${r.version.sourceSiteName ? ` from ${r.version.sourceSiteName}` : ""}` : "ours"].filter(Boolean).join(" · ")}
-                {r.interest ? ` · Sounds good (${r.interest.display_name ?? r.interest.by ?? ""})` : ""}
-                {r.preferences[me.memberId] ? ` · you: ${PREFS.find((p) => p.v === r.preferences[me.memberId])?.label}` : ""}
-              </div>
-            </div>
-            {r.interest && <button className="btn line small" aria-label={`Clear the idea ${r.version.title}`} onClick={() => command("ArchiveInterest", { interestId: r.interest.id })}>Clear idea</button>}
-            <button className={`icon-btn fav ${r.favoriteOf.includes(me.memberId) ? "on" : ""}`} aria-label={`Favorite ${r.version.title}`} aria-pressed={r.favoriteOf.includes(me.memberId)} onClick={() => command("SetFavorite", { recipeId: r.recipeId, favorite: !r.favoriteOf.includes(me.memberId) })}>
-              <span aria-hidden="true">{r.favoriteOf.includes(me.memberId) ? "★" : "☆"}</span>
-            </button>
-          </li>
-        ))}
-      </ul>
+      {list.length === 0 && !search && !quick && <p className="small muted">{filter === "favorites" ? "No favorites yet." : filter === "sounds_good" ? "No saved ideas yet." : "No recipes yet."}</p>}
+      {list.length === 0 && (search || quick) && <p className="small muted">No recipes match. Clear the search or the filter.</p>}
+      <RecipeGallery list={list} sounds={filter === "sounds_good"} />
       </>)}
       </div>
+      {selectedCount > 0 && (
+        <Link className="selection-bar" href="/groceries" data-testid="selection-bar">
+          <span>{selectedCount} selected</span><span>Review groceries →</span>
+        </Link>
+      )}
     </section>
   );
+}
+
+/** The servings the recipe's amounts were reviewed for, when its exact rows agree; null when not known (legacy rows). */
+function reviewedServings(v: any): number | null {
+  const s = new Set<number>((v.ingredients ?? []).map((i: any) => i.exactServings).filter((x: any) => typeof x === "number"));
+  return s.size === 1 ? defaultServings(v) : null;
 }
 
 export function RecipeDetail({ recipeId }: { recipeId: string }) {
@@ -124,7 +132,13 @@ export function RecipeDetail({ recipeId }: { recipeId: string }) {
         href={r.photo?.kind === "source" ? v.sourceUrl : null} />
       <h2 className="page-title recipe-title" data-testid="recipe-title">{v.title}</h2>
       <SourceLine v={v} />
-      <PhotoControls r={r} />
+      {!r.archived && (
+        <div className="card stack" data-testid="add-to-selected">
+          <div className="section-label" style={{ margin: 0 }}>Selected meals</div>
+          <SelectControl recipe={r} />
+        </div>
+      )}
+      <div id="photo"><PhotoControls r={r} /></div>
       <p className="faint small">
         Version {v.versionNo} · {v.provenance === "fixture" ? "test fixture" : v.provenance}{v.sourceLabel ? ` · ${v.sourceLabel}` : ""}{v.estimate ? " · amounts/times are estimates" : ""}
       </p>
@@ -134,6 +148,7 @@ export function RecipeDetail({ recipeId }: { recipeId: string }) {
         <div><span>Effort</span><strong>{v.effortLevel ?? "unknown"}</strong></div>
         <div><span>Ingredients</span><strong>{new Set(v.ingredients.map((i: any) => i.ingredientKey)).size}</strong></div>
         <div><span>Leftovers</span><strong>{v.leftoverFriendly ? "leftover-friendly" : "not marked"}</strong></div>
+        <div><span>Servings</span><strong data-testid="recipe-servings">{reviewedServings(v) ?? "unknown"}</strong></div>
       </div>
       <div className="seg" role="group" aria-label="Your feedback">
         {PREFS.map((p) => (
@@ -155,10 +170,13 @@ export function RecipeDetail({ recipeId }: { recipeId: string }) {
       </div>
       {editing && <RecipeEditorDialog recipeId={recipeId} onClose={() => setEditing(null)} returnFocus={() => focusFirst(editing, () => document.querySelector<HTMLElement>('[data-testid="recipe-title"]'))} />}
       <div className="stats">
-        <div className="stat"><span>Calories / plate</span><strong>{nutrient(v && r.nutritionPerPlate.calories)}</strong></div>
-        <div className="stat"><span>Protein / plate</span><strong>{nutrient(r.nutritionPerPlate.proteinG, " g")}</strong></div>
-        <div className="stat"><span>Serving cost</span><strong>{r.servingCost.complete ? money(r.servingCost.knownMinor) : "unknown"}</strong></div>
+        <div className="stat"><span>Calories / serving</span><strong>{nutrient(v && r.nutritionPerPlate.calories)}</strong></div>
+        <div className="stat"><span>Protein / serving</span><strong>{nutrient(r.nutritionPerPlate.proteinG, " g")}</strong></div>
+        <div className="stat"><span>Cost / serving</span><strong>{r.servingCost.complete ? money(r.servingCost.knownMinor) : "unknown"}</strong></div>
       </div>
+      <p className="faint small" data-testid="per-serving-basis">
+        Per serving = one portion of each part of the recipe{reviewedServings(v) ? `, as reviewed (${reviewedServings(v)} servings)` : ""}. Nutrition comes only from ingredient data a member confirmed — never from the source page — and cost from recorded package prices (not a store checkout). Unknown stays unknown.
+      </p>
       {r.nutritionPerPlate.synthetic && <p className="faint small">Nutrition uses synthetic test values.</p>}
       {r.constraint.status !== "ok" && <p className="warnbox">{r.constraint.reasons.join("; ")}</p>}
       <div className="section-label">Ingredients (per portion of each component)</div>

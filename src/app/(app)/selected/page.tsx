@@ -1,9 +1,5 @@
-/** Placeholder (Q4 navigation): the selected-meals screen replaces this. */
+import { SelectedMealsScreen } from "@/ui/MealList";
+
 export default function Page() {
-  return (
-    <section aria-labelledby="selected-title">
-      <h2 className="page-title" id="selected-title">Selected meals</h2>
-      <p className="muted">Nothing selected yet.</p>
-    </section>
-  );
+  return <SelectedMealsScreen />;
 }

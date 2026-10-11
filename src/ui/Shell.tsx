@@ -27,7 +27,8 @@ const TABS = [
  * integrator wires it to the list; until then it returns null and no badge is shown (nor for zero).
  */
 function useSelectedCount(): number | null {
-  return null;
+  const { snapshot } = useStore();
+  return snapshot?.mealList?.meals?.length ?? null;
 }
 
 /** Original line icons. Decorative: each tab's name is its text label. */
@@ -83,7 +84,9 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const { snapshot, currency, me, error } = useStore();
   const retailer = snapshot?.retailer;
   useChangeAnnouncer();
-  const outstanding = (snapshot?.groceries?.lines ?? []).filter((l: any) => OUTSTANDING.has(l.status)).length;
+  // The Groceries tab is the selected-meals list (catalog-first): its lines that need someone (an item that still needs
+  // a quantity is one of them). The calendar week's pickup list is under More → Dinner calendar.
+  const outstanding = (snapshot?.mealList?.groceries?.lines ?? []).filter((l: any) => OUTSTANDING.has(l.status)).length;
   const selected = useSelectedCount();
   return (
     <>
