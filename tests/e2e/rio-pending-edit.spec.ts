@@ -164,8 +164,9 @@ test("RIO-03f: rows regrouping around an unapplied change keep it; after Use or 
   await garlic.getByRole("button", { name: /^Use line 5/ }).click();
   const moved = review.getByTestId("draft-lines").locator(`[data-raw="${GARLIC}"]`);
   await expect(moved.locator(".row-main")).toBeFocused();
-  // Basil is left out and moves to "Not added to groceries"; focus follows it too.
-  await row(review, BASIL).locator(".row-main").focus();
+  // Basil is left out and moves to "Not added to groceries"; focus follows it too. (CF Q6, 2026-10-11: basil names
+  // no amount, so it starts as "Needs a quantity" with its row closed — opened here; was: open in "Needs a quick check".)
+  await row(review, BASIL).locator(".row-main").click();
   await row(review, BASIL).getByRole("button", { name: /^Leave out line 12/ }).click();
   await expect(review.getByTestId("draft-left-out").locator(`[data-raw="${BASIL}"] .row-main`)).toBeFocused();
   // Through both regroupings the pesto row kept its typed change, and it still holds Save.

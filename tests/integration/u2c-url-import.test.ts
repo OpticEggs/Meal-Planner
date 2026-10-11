@@ -195,7 +195,8 @@ describe("human review of uncertain lines (U-10)", () => {
     const pesto: any = await addRecipeFromLink(jon, { url: "https://pesto.example.com/weeknight-pesto-pasta/", operationId: op() }, deps(OFF));
     const refused: any = await imports.confirmImportDraftCommand(jon, op(), { draftId: pesto.draftId, expectedRevision: 1 });
     expect(refused).toMatchObject({ status: "rejected", code: "incomplete" });
-    expect(refused.details.problems.join(" ")).toMatch(/2 ingredient lines need a quick check/);
+    // CF Q6 (2026-10-11): the no-amount basil line now starts as "Needs a quantity"; the range still blocks (was 2 lines).
+    expect(refused.details.problems.join(" ")).toMatch(/1 ingredient line needs a quick check/);
     expect(await count("recipe_versions WHERE provenance='imported'")).toBe(0);
   });
 });

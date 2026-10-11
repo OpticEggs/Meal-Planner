@@ -158,6 +158,9 @@ export async function writeRecipeVersion(
   origin: {
     provenance: "manual" | "imported"; sourceUrl?: string | null; importDraftId?: string | null;
     imageId?: string | null; sourceAuthor?: string | null; sourceSiteName?: string | null;
+    /** SERVER-INTERNAL (a confirmed import, CF Q6): ingredients the recipe names without an amount. Never accepted
+     *  from a client. A later version (an edit) carries the base version's items forward unchanged instead. */
+    unquantified?: { componentKey: string; name: string; note: string | null; raw: string | null }[];
   } = { provenance: "manual" },
 ): Promise<HandlerOutcome> {
   {
@@ -238,7 +241,32 @@ export async function writeRecipeVersion(
       recipeId = randomUUID();
       await c.query("INSERT INTO recipes(id, household_id, created_by) VALUES ($1,$2,$3)", [recipeId, actor.householdId, actor.memberId]);
     }
-    for (const ing of ings) {
+    // CF Q6 "Needs a quantity": an import states them; an edit carries the version it was made from forward, row for
+    // row (new rows, same content) — an edit never silently drops one, and never gives one an amount.
+    let unquantified: { componentKey: string; ingredientKey: string; name: string; note: string | null; raw: string | null }[] = [];
+    if (origin.unquantified) {
+      unquantified = origin.unquantified.map((u) => {
+        const name = String(u.name ?? "").trim().slice(0, 80);
+        const ingredientKey = slug(name);
+        if (!ingredientKey) throw new Reject("invalid", "An ingredient that needs a quantity has no name");
+        return { componentKey: slug(u.componentKey), ingredientKey, name, note: u.note ? String(u.note).slice(0, 200) : null, raw: u.raw ? String(u.raw).slice(0, 500) : null };
+      });
+    } else if (recipeId && versionNo > 1) {
+      unquantified = (
+        await c.query(
+          `SELECT u.component_key, u.ingredient_key, u.name, u.note, u.raw FROM recipe_unquantified_items u
+             JOIN recipe_versions v ON v.id = u.recipe_version_id
+            WHERE v.recipe_id = $1 AND v.household_id = $2 AND v.version_no = $3 ORDER BY u.position`,
+          [recipeId, actor.householdId, versionNo - 1],
+        )
+      ).rows.map((u) => ({ componentKey: u.component_key, ingredientKey: u.ingredient_key, name: u.name, note: u.note, raw: u.raw }));
+    }
+    for (const u of unquantified) {
+      if (!compKeys.has(u.componentKey)) {
+        throw new Reject("invalid", `${u.name} (needs a quantity) belongs to a component this version no longer has. Keep that component; nothing was saved.`);
+      }
+    }
+    for (const ing of [...ings, ...unquantified]) {
       // New ingredients from manual entry: allergen information is NOT known until reviewed.
       await c.query(
         "INSERT INTO ingredients(household_id, key, name, allergen_info_known) VALUES ($1,$2,$3,false) ON CONFLICT (household_id, key) DO NOTHING",
@@ -277,6 +305,13 @@ export async function writeRecipeVersion(
         `INSERT INTO recipe_ingredients(recipe_version_id, component_key, ingredient_key, quantity, unit, form, note, sort, quantity_basis, exact_amount, exact_servings, source_row_id)
          VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
         [vid, ing.componentKey, ing.ingredientKey, ing.quantity, ing.unit, ing.form, ing.note, ing.sort, b.basis, b.basis === "exact" ? b.amount : null, b.basis === "exact" ? b.servings : null, ing.sourceRowId ?? null],
+      );
+    }
+    for (const [position, u] of unquantified.entries()) {
+      await c.query(
+        `INSERT INTO recipe_unquantified_items(household_id, recipe_version_id, position, component_key, ingredient_key, name, note, raw)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
+        [actor.householdId, vid, position, u.componentKey, u.ingredientKey, u.name, u.note, u.raw],
       );
     }
     await c.query("UPDATE recipes SET current_version_id=$2 WHERE id=$1", [recipeId, vid]);

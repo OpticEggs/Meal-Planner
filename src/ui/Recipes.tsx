@@ -62,7 +62,8 @@ export function RecipesScreen() {
         <RecipeEditorDialog recipeId={null} onClose={() => setCreating(null)}
           returnFocus={() => focusFirst(creating, () => document.querySelector<HTMLElement>('[data-testid="new-recipe"]'))} />
       )}
-      {importing && <ImportReviewDialog bookmark={importing.b} initial={importing.result} onClose={() => { const el = importing.el; setImporting(null); focusFirst(el, () => document.querySelector<HTMLElement>("#add-link-url")); }} />}
+      {importing && <ImportReviewDialog bookmark={importing.b} initial={importing.result} onClose={() => setImporting(null)}
+        returnFocus={() => { const el = importing.el; focusFirst(el, () => document.querySelector<HTMLElement>("#add-link-url")); }} />}
       <div role="tabpanel" id="recipe-panel" aria-labelledby={`rtab-${filter}`}>
       {filter === "links" ? (
         <div className="stack">
@@ -168,6 +169,10 @@ export function RecipeDetail({ recipeId }: { recipeId: string }) {
             <ul className="amounts small">
               {v.ingredients.filter((i: any) => i.componentKey === c.key).map((i: any, k: number) => (
                 <li key={k}><span>{i.name}</span><span className="muted">{amountText(String(i.quantity), i.unit)}</span></li>
+              ))}
+              {/* CF Q6: named by the recipe without an amount — never given one here; asked when shopping. */}
+              {(v.unquantified ?? []).filter((u: any) => u.componentKey === c.key).map((u: any) => (
+                <li key={u.id} data-testid="recipe-unquantified"><span>{u.name}{u.note ? `, ${u.note}` : ""}</span><span className="muted">Needs a quantity (asked when shopping)</span></li>
               ))}
             </ul>
           </li>

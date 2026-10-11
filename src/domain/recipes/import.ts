@@ -27,7 +27,44 @@ export interface ParsedLine {
 
 export type LineDecision =
   | { use: true; name: string; quantity: string; unit: string; form: "raw" | "cooked" }
-  | { use: false };
+  | { use: false; kind?: undefined }
+  /** CF Q5: a group heading ("For the pickled onions:", "Toppings:") — starts a recipe component; never an
+   *  ingredient, never bought. A member can say "This is an ingredient" (the line becomes undecided). */
+  | { use: false; kind: "heading" }
+  /** CF Q6: an ingredient the recipe names with no amount at all ("Flour tortillas, for serving"). Kept on the
+   *  recipe as "Needs a quantity" — never given an invented amount, never silently left out. */
+  | { use: false; kind: "needs_quantity"; name: string };
+
+/** A line left out of the recipe by the member (or a household seasoning) — not a heading, not Needs a quantity. */
+export const isLeftOut = (d: LineDecision | null | undefined): boolean => !!d && !d.use && !d.kind;
+export const isHeading = (d: LineDecision | null | undefined): boolean => !!d && !d.use && d.kind === "heading";
+export const needsQuantity = (d: LineDecision | null | undefined): d is Extract<LineDecision, { kind: "needs_quantity" }> =>
+  !!d && !d.use && d.kind === "needs_quantity";
+
+/** The line states no amount at all (not a vague one, not a range, not an unreadable one). */
+export function hasNoAmount(p: ParsedLine): boolean {
+  return p.status === "requires_review" && !p.quantity && !p.range && (p.reasons ?? []).some((r) => r.startsWith("No amount given"));
+}
+
+const HEADING_FOR = /^for\s+(?:the\s+)?\S/i;
+const DIGIT = /[\d¼½¾⅐-⅞]/;
+/** A group heading: no amount anywhere in the text, and it ends with ":" or reads "For the …". */
+export function isHeadingLine(raw: string, p: ParsedLine): boolean {
+  const t = String(raw ?? "").replace(/^[\s•·*#\-–]+/, "").replace(/[*_]+$/, "").trim();
+  if (!t || t.length > 80 || p.status === "omitted" || p.quantity || p.range) return false;
+  if (DIGIT.test(t)) return false;
+  if (!/\p{L}/u.test(t)) return false;
+  return /:$/.test(t) ? t.length > 1 : /^for the\s+\S/i.test(t);
+}
+
+/** "For the pickled onions:" → "Pickled onions"; "TOPPINGS:" → "Toppings". */
+export function headingName(raw: string): string {
+  let t = String(raw ?? "").replace(/^[\s•·*#\-–]+/, "").replace(/[*_]+$/, "").trim().replace(/:+$/, "").trim();
+  if (HEADING_FOR.test(t)) t = t.replace(/^for\s+(?:the\s+)?/i, "");
+  t = t.replace(/\s+/g, " ").trim();
+  if (t === t.toUpperCase()) t = t.toLowerCase();
+  return (t.charAt(0).toUpperCase() + t.slice(1)).slice(0, 60);
+}
 
 export interface DraftLine {
   raw: string;
@@ -35,9 +72,14 @@ export interface DraftLine {
   decision: LineDecision | null;
 }
 
-/** A cleanly read line starts as Use; a household seasoning starts left out; an uncertain line is undecided. */
-export function initialDecision(p: ParsedLine): LineDecision | null {
+/** A cleanly read line starts as Use; a household seasoning starts left out; a group heading is a heading; a line
+ *  with no amount at all starts as Needs a quantity; an uncertain line (vague, range, unreadable) is undecided. */
+export function initialDecision(p: ParsedLine, raw?: string): LineDecision | null {
   if (p.status === "omitted") return { use: false };
+  if (raw !== undefined && isHeadingLine(raw, p)) return { use: false, kind: "heading" };
+  // A digit anywhere in the line ("Sauce: 1 cup cream") means an amount may be there that the reader missed: a
+  // person looks at it instead.
+  if (hasNoAmount(p) && p.name && !p.alternatives?.length && !DIGIT.test(raw ?? p.name)) return { use: false, kind: "needs_quantity", name: p.name };
   if (p.status !== "parsed" || !p.quantity || !p.unit || !p.name) return null;
   const d: LineDecision = { use: true, name: p.name, quantity: p.quantity, unit: p.unit, form: p.form ?? "raw" };
   return decisionProblem(d) ? null : d;
@@ -45,6 +87,7 @@ export function initialDecision(p: ParsedLine): LineDecision | null {
 
 /** A decision to use a line must carry a positive exact amount (a fraction is fine) and a unit Table converts. */
 export function decisionProblem(d: LineDecision): string | null {
+  if (needsQuantity(d)) return String(d.name ?? "").trim() ? null : "needs an ingredient name";
   if (!d.use) return null;
   if (!String(d.name ?? "").trim()) return "needs an ingredient name";
   if (!parseAmount(String(d.quantity ?? ""))) return "needs an amount (for example 2, 1/3 or 1 1/2)";
@@ -69,6 +112,7 @@ export function draftProblems(d: DraftForReview): string[] {
     const p = l.decision ? decisionProblem(l.decision) : null;
     if (p) out.push(`Line ${i + 1} (${l.raw}) ${p}.`);
   });
+  // Only rows with an amount count: Needs-a-quantity items alone are not a recipe Table can shop for.
   if (!d.lines.some((l) => l.decision?.use)) out.push("Use at least one ingredient.");
   return out;
 }

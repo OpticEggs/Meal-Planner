@@ -102,7 +102,10 @@ for (const v of VIEWS) {
     if (await garlic.count()) {
       await garlic.getByRole("textbox", { name: /Amount for the whole recipe/ }).fill("3");
       await garlic.getByRole("button", { name: /^Use line/ }).click();
-      await review.locator('[data-testid="draft-line"][data-raw="fresh basil, for serving"]').getByRole("button", { name: /^Leave out line/ }).click();
+      // CF Q6: basil (no amount) starts as "Needs a quantity" with its row closed; open it to leave it out.
+      const basil = review.locator('[data-testid="draft-line"][data-raw="fresh basil, for serving"]');
+      if ((await basil.locator(".row-main").getAttribute("aria-expanded")) !== "true") await basil.locator(".row-main").click();
+      await basil.getByRole("button", { name: /^Leave out line/ }).click();
       await shot(page, "5b-import-review-ready", false);
     }
     const confirm = review.getByTestId("import-confirm");

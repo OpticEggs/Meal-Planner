@@ -19,3 +19,8 @@ test can prove they are **never requested**; every word is invented.
 Import-overhaul additions (2026-10-09): `pesto.html` (lines with an ordinary third, nested parentheses, a mixed
 number, a range, a package size, quarts-style units, household seasonings and a bell pepper) and `pesto-hero.jpg`, a
 **generated illustration** made by `make-pesto-hero.py` (Pillow drawing; not a photograph, not copied from anywhere).
+
+Catalog-first reference recipes (2026-10-11): `cf-brisket-tacos.html` (served as the Pioneer Woman brisket tacos
+address) and `cf-garlic-chicken-pasta.html` (served as the Key to My Lime garlic chicken pasta address) are synthetic
+pages shaped like those recipes' public structure — invented wording, synthetic method text, no photographs. The Budget
+Bytes one-pot chicken and rice address points at `bb-target.html` only so a test can prove it is **never requested**.

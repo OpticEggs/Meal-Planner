@@ -69,6 +69,12 @@
     ],
     "pesto.example.com": [
       "93.184.215.14"
+    ],
+    "www.thepioneerwoman.com": [
+      "93.184.215.14"
+    ],
+    "keytomylime.com": [
+      "93.184.215.14"
     ]
   },
   "pages": {
@@ -268,6 +274,27 @@
         "content-type": "image/jpeg"
       },
       "file": "pesto-hero.jpg"
+    },
+    "https://www.thepioneerwoman.com/food-cooking/recipes/a42389030/brisket-tacos-recipe/": {
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8"
+      },
+      "file": "cf-brisket-tacos.html"
+    },
+    "https://keytomylime.com/garlic-chicken-pasta-recipe/": {
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8"
+      },
+      "file": "cf-garlic-chicken-pasta.html"
+    },
+    "https://www.budgetbytes.com/one-pot-chicken-and-rice/": {
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8"
+      },
+      "file": "bb-target.html"
     }
   }
 }
