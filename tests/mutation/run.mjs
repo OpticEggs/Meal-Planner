@@ -232,10 +232,11 @@ MUTATIONS.push(
   { name: "MS_instacart_stale_list_requested", file: "src/server/commands/destinations.ts", suite: MSD, pattern: "IC-03", expect: [/IC-03/],
     edits: [["    if (preview.fingerprint !== p.listFingerprint) throw", "    if (false) throw"]] },
   // Visual update: the contrast check reads the shipped tokens; a too-light or too-dark text token must fail it.
-  { name: "UI_light_text_too_faint", file: "src/app/globals.css", suite: THEME, pattern: "theme contrast", expect: [/theme contrast — light/],
-    edits: [["--muted: #5a4e44; --faint: #685c51;", "--muted: #5a4e44; --faint: #9a8f84;"]] }, // re-targeted 2026-10-09 (new palette)
-  { name: "UI_dark_text_too_faint", file: "src/app/globals.css", suite: THEME, pattern: "theme contrast", expect: [/theme contrast — dark/],
-    edits: [["--muted: #cfc2b4; --faint: #ada092;", "--muted: #cfc2b4; --faint: #6f655b;"]] }, // re-targeted 2026-10-09 (new palette)
+  // Re-targeted 2026-10-11 (Q3: one dark palette; the light theme is retired): faint and muted text too dim on the ground.
+  { name: "UI_faint_text_too_faint", file: "src/app/globals.css", suite: THEME, pattern: "theme contrast", expect: [/theme contrast — the one dark palette/],
+    edits: [["--muted: #c9bfb4; --faint: #a89d91;", "--muted: #c9bfb4; --faint: #5f564d;"]] },
+  { name: "UI_muted_text_too_faint", file: "src/app/globals.css", suite: THEME, pattern: "theme contrast", expect: [/theme contrast — the one dark palette/],
+    edits: [["--muted: #c9bfb4; --faint: #a89d91;", "--muted: #5f564d; --faint: #a89d91;"]] },
   { name: "B9_reset_keeps_sessions", file: "src/server/provision.ts", suite: B9R, pattern: "B9", expect: [/ends that member's sessions/],
     edits: [["  await ctx.internalAdapter.deleteUserSessions(userId);", "  // (mutated) sessions kept"]] },
   { name: "B9_reset_any_account", file: "src/server/provision.ts", suite: B9R, pattern: "B9", expect: [/non-member account/],
@@ -307,7 +308,8 @@ MUTATIONS.push(
   { name: "IO_nested_note_left_in_name", file: "src/server/integrations/recipe-import/ingredient-line.ts", suite: PARSE, pattern: "pesto", expect: [/pesto/],
     edits: [["      if (depth === 0) start = i;\n      depth++;", "      if (depth === 0) start = i;\n      depth = 1;"]] },
   { name: "IO_seasoning_bought", file: "src/domain/groceries/projection.ts", suite: SEASON, pattern: "groceries leave", expect: [/salt and black pepper make no grocery line/],
-    edits: [["        seasonings.set(l.ingredientKey, sz);\n        continue;", "        seasonings.set(l.ingredientKey, sz);"]] },
+    // Re-anchored 2026-10-11 (the check moved into isSeasoning, shared by dinners and selected meals): listed AND bought.
+    edits: [["    seasonings.set(key, sz);\n    return true;", "    seasonings.set(key, sz);\n    return false;"]] },
   { name: "IO_bell_pepper_is_seasoning", file: "src/domain/groceries/seasonings.ts", suite: SEASON, pattern: "isHouseholdSeasoning", expect: [/not a household seasoning/],
     // Re-anchored 2026-10-09 (RIO-02): the line now also admits NEUTRAL words; the injected defect is unchanged.
     edits: [["  if (!words.every((w) => QUALIFIERS.has(w) || NEUTRAL.has(w))) return false;", "  if (!words.some((w) => QUALIFIERS.has(w) || NEUTRAL.has(w))) return false;"]] },
