@@ -9,6 +9,7 @@ import {
   type GroceryDialog,
 } from "./GroceryDialogs";
 import { InstacartPanel, ShoppingListCard, WhereToShop, destinationLabel } from "./WhereToShop";
+import { NeedsQuantity } from "./NeedsQuantity";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -77,7 +78,9 @@ function diffLines(before: any[], after: any[]): string[] {
   return out;
 }
 
-export function GroceriesScreen() {
+/** `checklist` (catalog-first): the selected-meals list as a readable shopping checklist, purchasing below it.
+ *  `full`: the calendar week's pickup list as before. Both use the same lines, dialogs and commands. */
+export function GroceriesScreen({ variant = "full" }: { variant?: "full" | "checklist" } = {}) {
   const { snapshot, command, writesAllowed, lastChange } = useStore();
   const [msg, setMsg] = useState<string | null>(null);
   const reviewBase = useRef<{ rev: number; lines: any[] } | null>(null);
@@ -98,6 +101,13 @@ export function GroceriesScreen() {
   }, [g, lastChange]);
 
   if (!snapshot) return <p className="muted">Loading…</p>;
+  if (!g && variant === "checklist")
+    return (
+      <section aria-label="Groceries" data-testid="groceries">
+        <h2 className="page-title">Groceries</h2>
+        <p className="muted" data-testid="groceries-empty">Nothing selected yet. Add meals from Recipes with +; their ingredients are combined here.</p>
+      </section>
+    );
   if (!g)
     return (
       <section aria-label="Groceries">
@@ -121,18 +131,8 @@ export function GroceriesScreen() {
     setMsg(r.status === "accepted" ? `Transfer ${r.dispatch?.status ?? "recorded"}${snapshot.retailer.live ? "" : " — simulated; nothing was sent to a store"}.` : r.message);
   }
 
-  return (
-    <section aria-label="Groceries" data-testid="groceries" data-projection-revision={g.projectionRevision}>
-      <h2 className="page-title">Groceries</h2>
-      {delta && (
-        // Not a live region: the announcer says once that approved lines need review again; this
-        // is the readable detail, and it never takes focus from what the member is doing.
-        <div className="warnbox" role="group" aria-label="Changed since you started reviewing" data-testid="grocery-delta">
-          {delta.text && <strong>{delta.text}. </strong>}
-          {delta.lines.join(" ")}
-          <button className="btn line small" onClick={() => { setDelta(null); focusFirst(document.querySelector<HTMLElement>('[data-testid="readiness"]')); }}>Got it</button>
-        </div>
-      )}
+  const purchase = (
+    <>
       {g.where && <WhereToShop />}
       {/* Pickup estimate (visual update): a large figure only when every package has a price; an
           incomplete estimate stays visibly incomplete and says which lines lack a price. */}
@@ -182,6 +182,60 @@ export function GroceriesScreen() {
       </div>}
       {storeCart && !snapshot.retailer.ready && <p className="warn small">{snapshot.retailer.reason}</p>}
       {storeCart && g.shoppingList && <ShoppingListCard />}
+    </>
+  );
+  const deltaBox = delta && (
+    // Not a live region: the announcer says once that approved lines need review again; this
+    // is the readable detail, and it never takes focus from what the member is doing.
+    <div className="warnbox" role="group" aria-label="Changed since you started reviewing" data-testid="grocery-delta">
+      {delta.text && <strong>{delta.text}. </strong>}
+      {delta.lines.join(" ")}
+      <button className="btn line small" onClick={() => { setDelta(null); focusFirst(document.querySelector<HTMLElement>('[data-testid="readiness"]')); }}>Got it</button>
+    </div>
+  );
+  const dialogs = dialog && <DialogFor d={dialog.d} onClose={() => setDialog(null)} returnFocus={() => focusFirst(dialog.opener) ?? groceryFallback(dialog.d)} />;
+  const seasoningsNote = (s.householdSeasonings ?? []).length > 0 && (
+    <p className="small muted seasonings" data-testid="household-seasonings">
+      Not on the list: {s.householdSeasonings.map((x: any) => x.name).join(", ")} — household seasonings you already have.
+    </p>
+  );
+
+  if (variant === "checklist") {
+    const toBuy = g.lines.filter((l: any) => l.toSend !== 0);
+    const haveIt = g.lines.filter((l: any) => l.toSend === 0);
+    const mealCount = snapshot.mealList?.meals?.length ?? 0;
+    return (
+      <section aria-label="Groceries" data-testid="groceries" data-scope="list" data-projection-revision={g.projectionRevision}>
+        <h2 className="page-title">Groceries</h2>
+        <p className="muted" style={{ marginTop: 0 }}>For {mealCount} selected meal{mealCount === 1 ? "" : "s"}. Amounts are combined before they are rounded to packages.</p>
+        {deltaBox}
+        <NeedsQuantity />
+        <h3 className="section-label" id="to-buy-h">To buy ({toBuy.length})</h3>
+        {toBuy.length ? <ul className="lines checklist" aria-labelledby="to-buy-h">{toBuy.map((l: any) => <Line key={l.key} l={l} open={open} compact />)}</ul>
+          : <p className="muted small">Nothing left to buy.</p>}
+        {haveIt.length > 0 && (
+          <>
+            <h3 className="section-label" id="have-it-h">Have it or already bought ({haveIt.length})</h3>
+            <ul className="lines checklist" aria-labelledby="have-it-h">{haveIt.map((l: any) => <Line key={l.key} l={l} open={open} compact />)}</ul>
+          </>
+        )}
+        {seasoningsNote}
+        <div className="section-label">Also need</div>
+        <AlsoNeed from="groceries" />
+        <h3 className="section-label">Buy it</h3>
+        {purchase}
+        <Transfers open={open} />
+        <Order open={open} />
+        {dialogs}
+      </section>
+    );
+  }
+
+  return (
+    <section aria-label="Groceries" data-testid="groceries" data-projection-revision={g.projectionRevision}>
+      <h2 className="page-title">Groceries</h2>
+      {deltaBox}
+      {variant === "full" && purchase}
       <div className="section-label">Also need</div>
       <AlsoNeed from="groceries" />
       <div className="section-label">This week’s list</div>
@@ -191,14 +245,10 @@ export function GroceriesScreen() {
       <ul className="lines">
         {g.lines.map((l: any) => <Line key={l.key} l={l} open={open} />)}
       </ul>
-      {(s.householdSeasonings ?? []).length > 0 && (
-        <p className="small muted seasonings" data-testid="household-seasonings">
-          Not on the list: {s.householdSeasonings.map((x: any) => x.name).join(", ")} — household seasonings you already have.
-        </p>
-      )}
+      {seasoningsNote}
       <Transfers open={open} />
       <Order open={open} />
-      {dialog && <DialogFor d={dialog.d} onClose={() => setDialog(null)} returnFocus={() => focusFirst(dialog.opener) ?? groceryFallback(dialog.d)} />}
+      {dialogs}
     </section>
   );
 }
@@ -218,6 +268,15 @@ function DialogFor({ d, onClose, returnFocus }: { d: GroceryDialog; onClose: () 
   }
 }
 
+/** What to buy in one line (checklist): the combined amount and the packages it rounds to, or why it isn't known. */
+function buyText(l: any): string {
+  const amount = l.meal ? qty(l.meal.quantity, l.meal.unit) : null;
+  if (l.toSend === null) return `${amount ? `${amount} → ` : ""}amount to buy not known yet`;
+  if (l.toSend === 0) return `${amount ? `${amount} → ` : ""}nothing to buy`;
+  const pkg = l.product ? ` × ${l.product.name}` : " package(s)";
+  return `${amount ? `${amount} → ` : ""}${l.toSend}${pkg}`;
+}
+
 /** The line's state in words, for the line heading: status, unresolved, product issue. */
 function lineState(l: any): string {
   return [STATUS[l.status] ?? l.status, l.productIssue ? ISSUE[l.productIssue] : null, l.unresolved.length ? "Unresolved" : null, l.approval?.valid ? `approved ×${l.approval.packages}` : null]
@@ -225,7 +284,7 @@ function lineState(l: any): string {
     .join(", ");
 }
 
-function Line({ l, open }: { l: any; open: Opener }) {
+function Line({ l, open, compact = false }: { l: any; open: Opener; compact?: boolean }) {
   const { snapshot, command, writesAllowed, announce } = useStore();
   const [some, setSome] = useState("");
   const [msg, setMsg] = useState<{ text: string; field?: string } | null>(null);
@@ -246,11 +305,105 @@ function Line({ l, open }: { l: any; open: Opener }) {
           {l.unresolved.length > 0 && <span className="badge con-unknown">Unresolved</span>}
         </span>
       </div>
-      <div className="small">
+      {compact ? (
+        <>
+          <div className="small">
+            <div className="line-buy" data-testid={`buy-${l.key}`}>{buyText(l)}</div>
         {l.meal && (
           <div>
             Dinners: {qty(l.meal.quantity, l.meal.unit)} —{" "}
-            {l.meal.sources.map((s: any) => `${s.recipeTitle.replace("Fixture: ", "")} (${s.cookNight.slice(5)})`).join(", ")}
+            {l.meal.sources.map((s: any) => `${s.recipeTitle.replace("Fixture: ", "")}${s.cookNight ? ` (${s.cookNight.slice(5)})` : ""}${s.stated ? " (amount you gave)" : ""}`).join(", ")}
+          </div>
+        )}
+        {l.unresolved.map((u: string) => <div key={u} className="warn">{u}</div>)}
+        {l.availability && <div className="faint">{l.availability.memberName}: {{ enough: "Have enough", some: `Have some${l.availability.quantity ? ` (${l.availability.quantity} ${l.availability.unit})` : ""}`, need: "Need" }[l.availability.state as string]}</div>}
+          </div>
+      {l.ingredientKey && l.meal && (
+        <div className="row small">
+          <input className="tiny" placeholder="amt" value={some} onChange={(e) => setSome(e.target.value)} aria-label={`Amount of ${l.name} on hand (${l.meal.unit})`}
+            aria-invalid={msg?.field === "some" ? true : undefined} aria-describedby={msg?.field === "some" ? msgId : undefined} />
+          <div className="seg" role="group" aria-label={`Availability for ${l.name}`}>
+            <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "enough", reviewed: { quantity: l.meal.quantity, unit: l.meal.unit, fingerprint: l.fingerprint } })} aria-label={`Have enough ${l.name}`}>Have enough</button>
+            <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "some", quantity: some || null, unit: some ? l.meal.unit : null }, "some")} aria-label={`Have some ${l.name}`}>Have some</button>
+            <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "need" })} aria-label={`Need ${l.name}`}>Need</button>
+          </div>
+        </div>
+      )}
+      {!l.ingredientKey && (
+        <div className="row small">
+          <select aria-label={`Match "${l.name}" to an item`} onChange={(e) => e.target.value && run("MapRequest", { requestId: l.requests[0].id, ingredientKey: e.target.value })} defaultValue="">
+            <option value="">Match to an item…</option>
+            {snapshot.ingredients.map((i: any) => <option key={i.key} value={i.key}>{i.name}</option>)}
+          </select>
+        </div>
+      )}
+          <details className="small line-more">
+            <summary>Product &amp; purchase</summary>
+            <div className="small">
+        {l.requests.map((r: any) => (
+          <div key={r.id}>
+            {r.kind === "usual" ? "Usual amount" : `Extra ×${r.packages ?? 1}`} — requested by {r.contributors.map((c: any) => `${c.name}${c.taps > 1 ? ` ×${c.taps}` : ""}`).join(", ")}
+            <button className="link small" aria-label={`Remove ${r.kind === "usual" ? "usual" : "extra"} request for ${l.name}`} aria-haspopup="dialog" onClick={(e) => open({ kind: "remove-request", key: l.key, requestId: r.id }, e)}>remove</button>
+          </div>
+        ))}
+        {l.product ? (
+          <div>
+            {l.product.name} · {l.packagesNeeded ?? "?"} pkg needed{l.estimate ? " (variable weight — estimate)" : ""} · {l.price ? `${money(l.price.amountMinor)} each (${l.price.source}${l.product.fixture ? ", fixture" : ""})` : "price unknown"}
+          </div>
+        ) : null}
+        {staple && (
+          <div data-testid={`staple-${l.key}`}>
+            Your usual: {staple.productName ?? "no product remembered"}
+            {staple.productAvailable === false ? " (not available from this store)" : ""}
+            {staple.usualPackages > 1 ? ` ×${staple.usualPackages}` : ""}
+            {staple.updatedBy ? ` · last set by ${staple.updatedBy}` : ""}
+            {l.product && staple.productId !== l.product.id && (
+              <>
+                {" "}
+                <button
+                  className="link small"
+                  disabled={!writesAllowed}
+                  aria-label={`Make ${l.product.name} your usual ${staple.name}`}
+                  data-testid={`make-usual-${l.key}`}
+                  onClick={async () => {
+                    const r = await command("ApproveStapleProduct", { ingredientKey: l.ingredientKey, productId: l.product.id, expectedRevision: staple.productRevision });
+                    setMsg(r.status === "accepted" ? null : { text: r.message });
+                    if (r.status === "accepted") announce(`${l.product.name} is now your usual ${staple.name}. Future one-tap requests use it; nothing was approved for purchase.`);
+                  }}
+                >
+                  Make this our usual
+                </button>
+              </>
+            )}
+          </div>
+        )}
+        {(l.ordered > 0 || l.sent > 0 || l.uncertain > 0) && (
+          <div>History: {l.sent > 0 ? `${l.sent} sent to cart · ` : ""}{l.uncertain > 0 ? `${l.uncertain} uncertain · ` : ""}{l.ordered > 0 ? `${l.ordered} ordered · ` : ""}{l.received > 0 ? `${l.received} received · ` : ""}{l.missing > 0 ? `${l.missing} missing` : ""}</div>
+        )}
+        {l.toSend !== null && l.toSend > 0 && <div data-testid={`tosend-${l.key}`}>To send: {l.toSend} package(s){snapshot.groceries.order ? " — Not sent yet" : ""}</div>}
+        {l.leftAfterMeal && <div>About {qty(l.leftAfterMeal.quantity, l.leftAfterMeal.unit)} left after dinners. <button className="link small" aria-label={`Keep an extra ${l.name}`} onClick={() => run("CaptureHouseholdNeed", { weekId, text: l.name, ingredientKey: l.ingredientKey, kind: "extra", packages: 1, from: "groceries" })}>Keep an extra</button></div>}
+            </div>
+      {l.ingredientKey && (
+        <div className="row small">
+          <button className="link small" aria-haspopup="dialog" aria-label={`${l.product ? "Change product" : "Choose a product"} for ${l.name}`} data-testid={`product-${l.key}`} onClick={(e) => open({ kind: "product", key: l.key }, e)}>
+            {l.product ? "change product…" : "choose product…"}
+          </button>
+          {l.toSend > 0 && l.product && l.price && l.unresolved.length === 0 && (
+            l.approval?.valid
+              ? <span className="badge">Approved ×{l.approval.packages}</span>
+              : <button className="btn line small" disabled={!writesAllowed} onClick={() => run("ApprovePurchaseLines", { weekId, lines: [{ key: l.key, fingerprint: l.fingerprint, packages: l.toSend }] })} aria-label={`Approve ${l.toSend} package${l.toSend === 1 ? "" : "s"} of ${l.name}`}>Approve ×{l.toSend}</button>
+          )}
+        </div>
+      )}
+          </details>
+        </>
+      ) : (
+        <>
+          <div className="small">
+        {l.meal && (
+          <div>
+            Dinners: {qty(l.meal.quantity, l.meal.unit)} —{" "}
+            {l.meal.sources.map((s: any) => `${s.recipeTitle.replace("Fixture: ", "")}${s.cookNight ? ` (${s.cookNight.slice(5)})` : ""}${s.stated ? " (amount you gave)" : ""}`).join(", ")}
           </div>
         )}
         {l.requests.map((r: any) => (
@@ -297,7 +450,7 @@ function Line({ l, open }: { l: any; open: Opener }) {
         {l.leftAfterMeal && <div>About {qty(l.leftAfterMeal.quantity, l.leftAfterMeal.unit)} left after dinners. <button className="link small" aria-label={`Keep an extra ${l.name}`} onClick={() => run("CaptureHouseholdNeed", { weekId, text: l.name, ingredientKey: l.ingredientKey, kind: "extra", packages: 1, from: "groceries" })}>Keep an extra</button></div>}
         {l.unresolved.map((u: string) => <div key={u} className="warn">{u}</div>)}
         {l.availability && <div className="faint">{l.availability.memberName}: {{ enough: "Have enough", some: `Have some${l.availability.quantity ? ` (${l.availability.quantity} ${l.availability.unit})` : ""}`, need: "Need" }[l.availability.state as string]}</div>}
-      </div>
+          </div>
       {l.ingredientKey && l.meal && (
         <div className="row small">
           <input className="tiny" placeholder="amt" value={some} onChange={(e) => setSome(e.target.value)} aria-label={`Amount of ${l.name} on hand (${l.meal.unit})`}
@@ -328,6 +481,8 @@ function Line({ l, open }: { l: any; open: Opener }) {
               : <button className="btn line small" disabled={!writesAllowed} onClick={() => run("ApprovePurchaseLines", { weekId, lines: [{ key: l.key, fingerprint: l.fingerprint, packages: l.toSend }] })} aria-label={`Approve ${l.toSend} package${l.toSend === 1 ? "" : "s"} of ${l.name}`}>Approve ×{l.toSend}</button>
           )}
         </div>
+      )}
+        </>
       )}
       {msg && <p role="alert" className="warnbox" id={msgId}>{msg.text}</p>}
     </li>

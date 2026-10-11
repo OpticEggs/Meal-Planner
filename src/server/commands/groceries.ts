@@ -78,7 +78,8 @@ export function captureHouseholdNeedCommand(actor: Actor, operationId: string, p
     let dest = start;
     let destCycle = startCycle;
     let routed = false;
-    for (let i = 0; i < 8; i++) {
+    // A meal list has no dates and no "next pickup": what is added to it stays on it (D140).
+    for (let i = 0; i < 8 && start.kind === "calendar"; i++) {
       const confirmed = await c.query("SELECT 1 FROM orders WHERE cycle_id=$1", [destCycle]);
       if (!confirmed.rowCount) break;
       // Before creating a next-pickup duplicate, check whether it is already expected.

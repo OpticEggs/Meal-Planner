@@ -31,11 +31,19 @@ interface Store {
 }
 
 const Ctx = createContext<Store | null>(null);
+/** A grocery scope (catalog-first): inside it, `snapshot.week` and `snapshot.groceries` are those of the shown list —
+ *  the open meal list's undated week, or a calendar week — so the same screens and dialogs serve both. */
+const ScopeCtx = createContext<Snapshot | null>(null);
 
 export function useStore(): Store {
   const s = useContext(Ctx);
+  const scoped = useContext(ScopeCtx);
   if (!s) throw new Error("HouseholdProvider missing");
-  return s;
+  return scoped ? { ...s, snapshot: scoped } : s;
+}
+
+export function SnapshotScope({ snapshot, children }: { snapshot: Snapshot; children: React.ReactNode }) {
+  return <ScopeCtx.Provider value={snapshot}>{children}</ScopeCtx.Provider>;
 }
 
 const POLL_MS = 15_000; // foreground fallback when the event stream is unavailable
