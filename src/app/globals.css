@@ -316,13 +316,9 @@ ol.steps > li::before { content: counter(step); font-family: var(--font-display)
 .gallery-media .tile, .gallery-media .tile.large { width: 100%; height: 100%; border-radius: 0; }
 .gallery-media .tile.art .tile-initial { font-size: clamp(2rem, 9vw, 3.4rem); }
 .photo-kind { position: absolute; left: 8px; bottom: 8px; font-size: 0.72rem; line-height: 1.2; padding: 3px 8px; border-radius: 999px;
-  background: color-mix(in srgb, var(--bg) 82%, transparent); color: var(--text); max-width: calc(100% - 16px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  background: color-mix(in srgb, var(--bg) 82%, transparent); color: var(--text); max-width: calc(100% - 16px); pointer-events: none; }
 .photo-kind.pk-none { color: var(--muted); }
 .gallery-plus { position: absolute; right: 8px; top: 8px; }
-.gallery-hover { position: absolute; inset: auto 0 0 0; padding: 28px 10px 34px; font-size: 0.78rem; color: var(--text);
-  background: linear-gradient(transparent, color-mix(in srgb, var(--bg) 92%, transparent)); opacity: 0; transition: opacity 140ms; pointer-events: none; }
-@media (hover: hover) and (pointer: fine) { .gallery-tile:hover .gallery-hover, .gallery-tile:focus-within .gallery-hover { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .gallery-hover { transition: none; } }
 .gallery-title { font-family: var(--font-display); font-size: 1.02rem; line-height: 1.25; color: var(--text); text-decoration: none; }
 .gallery-title:hover { text-decoration: underline; }
 .gallery-meta { line-height: 1.3; }

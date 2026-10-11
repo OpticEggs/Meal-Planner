@@ -197,8 +197,9 @@ test("B14 names and states: each night's controls are distinct; plan status, sta
   // Accepted-plan status is under its own heading.
   await expect(p.getByRole("heading", { name: "Accepted plan status" })).toHaveCount(1);
   await expect(p.getByTestId("status-sentence")).toContainText("Every dinner is covered.");
-  // Outstanding grocery work is part of the Groceries link's name, not only a colored count.
-  await expect(p.getByRole("link", { name: /^Groceries, \d+ lines? needs? attention$/ })).toHaveCount(1);
+  // Outstanding grocery work is part of the week's grocery link name, not only a colored count (Q4: the Groceries tab
+  // is the selected-meals list; this week's pickup list is linked from the Week screen).
+  await expect(p.getByRole("link", { name: /^Groceries for this week, \d+ lines? needs? attention$/ })).toHaveCount(1);
 
   // A stale preview is identified by name and text (not color), and announced once.
   await previewReplace(p, NIGHT.fri, "Fixture: Chicken penne");
@@ -299,7 +300,8 @@ test("B14 grocery review during a dinner change: the reviewer keeps focus, sees 
   await expect.poll(async () => (await announced(alex.page)).join(" | ")).toMatch(/Jon: Friday.*approved grocery lines? needs? review again/);
   await alex.page.waitForTimeout(1500);
   expect(await announced(alex.page)).toHaveLength(1);
-  await expect(alex.page.getByRole("link", { name: /^Groceries, \d+ lines? needs? attention$/ })).toHaveCount(1);
+  // The pickup list itself still says what needs someone (the Groceries tab now counts the selected-meals list).
+  await expect(alex.page.getByTestId("readiness")).toContainText("Not ready yet");
   await alex.context.close();
   await jon.context.close();
 });

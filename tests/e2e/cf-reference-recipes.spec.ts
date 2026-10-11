@@ -12,7 +12,7 @@ const KTML = "https://keytomylime.com/garlic-chicken-pasta-recipe/";
 const TOPPINGS = ["Flour tortillas, for serving", "Fresh cilantro, for serving", "Lime wedges, for serving", "Crumbled cotija, for serving"];
 
 async function addLink(page: Page, url: string) {
-  await page.getByRole("link", { name: "Our Recipes" }).click();
+  await page.getByTestId("nav-recipes").click();
   await page.getByRole("textbox", { name: "Add a recipe from a link" }).fill(url);
   await page.getByTestId("add-from-link-submit").click();
 }

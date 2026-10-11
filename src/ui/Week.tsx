@@ -24,7 +24,15 @@ export function WeekScreen() {
         <button className="chip-btn" onClick={() => setWeekStart(clock.nextWeekStart)} aria-label="Next week">Next<span aria-hidden="true"> ›</span></button>
       </nav>
       {/* Q4: the calendar's own grocery list lives at /week/groceries; the Groceries tab is the selected-meals list. */}
-      <p className="week-links"><Link href="/week/groceries" data-testid="week-groceries-link">Groceries for this week</Link></p>
+      <p className="week-links">{(() => {
+        // B14: outstanding grocery work is part of the link's name, not only a count (this week's own pickup list).
+        const n = (snapshot.groceries?.lines ?? []).filter((l: any) => ["needs_review", "not_sent_yet", "uncertain", "missing"].includes(l.status)).length;
+        return (
+          <Link href="/week/groceries" data-testid="week-groceries-link" aria-label={n ? `Groceries for this week, ${n} ${n === 1 ? "line needs" : "lines need"} attention` : undefined}>
+            Groceries for this week{n ? <span className="muted"> · {n} need attention</span> : null}
+          </Link>
+        );
+      })()}</p>
       {snapshot.week?.adopted ? <AdoptedWeek /> : <ProposalView />}
     </div>
   );

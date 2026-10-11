@@ -11,7 +11,7 @@ import { SelectControl } from "./MealList";
 /**
  * Photo-first catalog (catalog-first, Q3/Q8). Every tile says what its picture is: the household's own photo, a source
  * photo kept under a recorded permission, or no photo (an illustration, never presented as a photograph). Essential
- * details are visible without hover; hover only enlarges them on desktop. + adds the meal to Selected Meals.
+ * details are always visible under the title (nothing depends on hover). + adds the meal to Selected Meals.
  */
 
 const SCROLL_KEY = "table.catalog.scroll";
@@ -82,11 +82,10 @@ export function RecipeGallery({ list, sounds }: { list: any[]; sounds?: boolean 
               </Link>
               <span className={`photo-kind pk-${pk.kind}`} data-testid="photo-kind">{pk.label}</span>
               <div className="gallery-plus"><SelectControl recipe={r} compact /></div>
-              <div className="gallery-hover" aria-hidden="true">{meta(r).join(" · ")}</div>
             </div>
             <Link href={`/recipes/${r.recipeId}`} className="recipe-link gallery-title"><strong>{title}</strong></Link>
             <div className="faint small gallery-meta">
-              {meta(r).slice(0, 2).join(" · ")} · {provenance(r)}
+              {meta(r).join(" · ")} · {provenance(r)}
               {r.interest ? ` · Sounds good (${r.interest.display_name ?? r.interest.by ?? ""})` : ""}
             </div>
             <div className="row gallery-actions">
