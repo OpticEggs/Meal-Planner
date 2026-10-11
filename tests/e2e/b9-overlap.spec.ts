@@ -5,7 +5,7 @@
  */
 import { expect, test } from "@playwright/test";
 import { spawn, type ChildProcess } from "node:child_process";
-import { member, q, retailerCalls, seed } from "./helpers";
+import { member, q, retailerCalls, seed, weekGroceries } from "./helpers";
 import { TEST_ENV } from "../../playwright.config";
 
 const PORT_B = 3102;
@@ -29,7 +29,7 @@ test("B9: a server process starting during another's in-flight send does not mar
   await q("INSERT INTO fake_retailer_script(household_id, behavior, barrier) VALUES ($1,'delay_until_barrier','deploy-overlap')", [fx.householdId]);
   await q("INSERT INTO test_barriers(name) VALUES ('deploy-overlap')");
   const alex = await member(browser, "alex"); // served by the first process (Playwright's server)
-  await alex.page.getByRole("link", { name: "Groceries" }).click();
+  await weekGroceries(alex.page);
   await alex.page.getByTestId("approve-all").click();
   await expect(alex.page.getByTestId("send")).toBeEnabled();
   await alex.page.getByTestId("send").click();

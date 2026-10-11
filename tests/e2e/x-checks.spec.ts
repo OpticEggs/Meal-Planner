@@ -4,7 +4,7 @@
 import { expect, test } from "@playwright/test";
 import { spawn, type ChildProcess } from "node:child_process";
 import { NIGHT, USERS } from "../fixtures/household";
-import { member, nightTitle, previewReplace, q, retailerCalls, seed } from "./helpers";
+import { member, nightTitle, previewReplace, q, retailerCalls, seed, viaMore, weekGroceries } from "./helpers";
 import { TEST_ENV } from "../../playwright.config";
 
 test("X01: unauthenticated and other-household sessions cannot read or write this household", async ({ browser, request }) => {
@@ -47,7 +47,7 @@ test("X01: unauthenticated and other-household sessions cannot read or write thi
 test("X10: discovery — focus-stable search, real sorts with an unknown group, opening the selected recipe, persisted notes", async ({ browser }) => {
   await seed();
   const jon = await member(browser, "jon");
-  await jon.page.getByRole("link", { name: "Explore" }).click();
+  await viaMore(jon.page, "Explore and Budget Bytes");
   const search = jon.page.getByTestId("explore-search");
   await search.click();
   await jon.page.keyboard.type("chicken rice", { delay: 30 });
@@ -76,7 +76,7 @@ test("X11: narrow mobile layout, keyboard operation, text scaling, distinct iden
   await seed();
   for (const width of [320, 390]) {
     const jon = await member(browser, "jon", { viewport: { width, height: 800 } });
-    for (const path of ["/", "/groceries", "/explore", "/recipes", "/household"]) {
+    for (const path of ["/", "/groceries", "/week/groceries", "/explore", "/recipes", "/household", "/more", "/selected"]) {
       await jon.page.goto(path);
       await expect(jon.page.getByTestId("currency")).toHaveAttribute("data-currency", "current");
       const overflow = await jon.page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
@@ -180,7 +180,7 @@ test.describe("process restart", () => {
     await q("INSERT INTO test_barriers(name) VALUES ('never')");
     await startServer();
     const alex = await member(browser, "alex");
-    await alex.page.getByRole("link", { name: "Groceries" }).click();
+    await weekGroceries(alex.page);
     await alex.page.getByTestId("approve-all").click();
     await expect(alex.page.getByTestId("send")).toBeEnabled();
     await alex.page.getByTestId("send").click();

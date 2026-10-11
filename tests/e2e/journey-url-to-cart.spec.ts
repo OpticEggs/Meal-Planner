@@ -19,7 +19,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { TEST_ENV } from "../../playwright.config";
 import { NIGHT } from "../fixtures/household";
-import { leaveOutLine, member, previewReplace, q, seed, useLine } from "./helpers";
+import { leaveOutLine, member, previewReplace, q, seed, useLine, openWeek, viaMore, weekGroceries } from "./helpers";
 
 const PORT = 3105;
 const BASE = `http://127.0.0.1:${PORT}`;
@@ -101,7 +101,7 @@ test("JOURNEY: link → recipe → Saturday → groceries → Kroger products �
   const p = jon.page;
 
   // 1. Connect the household's Kroger account (sign-in answered locally) and choose the store.
-  await p.getByRole("link", { name: "Household" }).first().click();
+  await viaMore(p, "Household");
   await p.getByRole("button", { name: "Connect Kroger account" }).click();
   // Back on the same origin the member signed in on (not the server's bind address), still signed in.
   await expect(p).toHaveURL(`${BASE}/household?kroger=connected`);
@@ -112,7 +112,7 @@ test("JOURNEY: link → recipe → Saturday → groceries → Kroger products �
   await expect(p.getByTestId("kroger-cart-readiness")).not.toContainText("not ready");
 
   // 2. Paste a recipe link; the review shows what was read; accept the suggestions, leave water out; create.
-  await p.getByRole("link", { name: "Our Recipes" }).click();
+  await p.getByRole("link", { name: "Recipes", exact: true }).click();
   await p.getByRole("textbox", { name: "Add a recipe from a link" }).fill(WPRM);
   await p.getByTestId("add-from-link-submit").click();
   const review = p.getByRole("dialog", { name: "Review the import" });
@@ -138,7 +138,7 @@ test("JOURNEY: link → recipe → Saturday → groceries → Kroger products �
   ]);
 
   // 3. Swap Saturday's tacos for it deliberately (Change sheet → preview → apply).
-  await p.getByRole("link", { name: "Week" }).first().click();
+  await openWeek(p);
   const before = await acceptedRevision(fx.weekId);
   await previewReplace(p, NIGHT.sat, "Skillet Taco Rice");
   await p.getByTestId("apply").click();
@@ -146,7 +146,7 @@ test("JOURNEY: link → recipe → Saturday → groceries → Kroger products �
   const accepted = await acceptedRevision(fx.weekId);
 
   // 4. Groceries: consolidated lines; match Kroger products. A weight-sold product can't be chosen.
-  await p.getByRole("link", { name: "Groceries" }).first().click();
+  await weekGroceries(p);
   await expect(p.getByTestId("line-long_grain_rice")).toBeVisible();
   // "15.5 oz" doesn't say weight or fluid, so Table asks; the member reads the can and enters it.
   await chooseKroger(p, "black_beans", "Black beans (canned)", "0004000000005", ["15.5", "oz"]);
@@ -162,7 +162,7 @@ test("JOURNEY: link → recipe → Saturday → groceries → Kroger products �
   await p.keyboard.press("Escape");
 
   // 5. Alex says there's enough salsa at home before anything is approved.
-  await alex.page.getByRole("link", { name: "Groceries" }).first().click();
+  await weekGroceries(alex.page);
   await alex.page.getByRole("button", { name: "Have enough salsa" }).click();
   await expect(p.getByTestId("line-salsa")).not.toContainText("Approve");
 

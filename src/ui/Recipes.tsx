@@ -20,9 +20,9 @@ const PREFS = [
   { v: "not_for_me", label: "Not for me" },
 ] as const;
 
-export function RecipesScreen() {
+export function RecipesScreen({ initialFilter = "all" }: { initialFilter?: (typeof FILTERS)[number] }) {
   const { library, loadLibrary, me, command } = useStore();
-  const [filter, setFilter] = useState<(typeof FILTERS)[number]>("all");
+  const [filter, setFilter] = useState<(typeof FILTERS)[number]>(initialFilter);
   const [importing, setImporting] = useState<{ b: any; el: HTMLElement; result?: any } | null>(null);
   const [creating, setCreating] = useState<HTMLElement | null>(null);
   const tabs = useRef<Record<string, HTMLButtonElement | null>>({});

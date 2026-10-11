@@ -4,7 +4,7 @@
  * outcomes are checked in the database.
  */
 import { expect, test, type Page } from "@playwright/test";
-import { member, q, seed } from "./helpers";
+import { member, q, seed, openWeek, viaMore } from "./helpers";
 
 async function focused(page: Page) {
   return page.evaluate(() => {
@@ -34,7 +34,7 @@ test("B17 new recipe: a dialog with focus inside, per-row names, attached errors
   const jon = await member(browser, "jon", { init: recordAnnouncements });
   const p = jon.page;
   noNativeDialogs(p);
-  await p.getByRole("link", { name: "Our Recipes" }).click();
+  await p.getByRole("link", { name: "Recipes", exact: true }).click();
   const before = await recipeCount();
   const opener = p.getByTestId("new-recipe");
   await opener.focus();
@@ -153,7 +153,7 @@ test("B17 recipe lists: filter tabs are a real tablist; each row's controls are 
   await seed();
   const jon = await member(browser, "jon");
   const p = jon.page;
-  await p.getByRole("link", { name: "Our Recipes" }).click();
+  await p.getByRole("link", { name: "Recipes", exact: true }).click();
   const all = p.getByRole("tab", { name: "All" });
   await all.focus();
   await p.keyboard.press("ArrowRight");
@@ -183,13 +183,13 @@ test("B17 Explore and deferred dinners: distinct names, results reported, a plac
   const fx = await seed();
   const jon = await member(browser, "jon");
   const p = jon.page;
-  await p.getByRole("link", { name: "Explore" }).click();
+  await viaMore(p, "Explore and Budget Bytes");
   const save = p.getByRole("button", { name: "Sounds good: Fixture: Pesto pasta" });
   await save.click();
   await expect(p.getByRole("button", { name: "In Sounds good: Fixture: Pesto pasta" })).toBeDisabled();
   await expect(p.getByRole("status").filter({ hasText: "Saved Fixture: Pesto pasta to Sounds good." })).toHaveCount(1);
   // Defer Friday's dinner with a backup, then place it back by keyboard.
-  await p.getByRole("link", { name: "Week" }).click();
+  await openWeek(p);
   await p.getByTestId("change-2026-10-16").click();
   const sheet = p.getByRole("dialog", { name: "Change Friday dinner" });
   await sheet.getByRole("tab", { name: "Backup" }).click();
@@ -212,7 +212,7 @@ for (const width of [320, 390]) {
     await seed();
     const jon = await member(browser, "jon", { viewport: { width, height: 640 }, reducedMotion: "reduce" });
     const p = jon.page;
-    await p.getByRole("link", { name: "Our Recipes" }).click();
+    await p.getByRole("link", { name: "Recipes", exact: true }).click();
     await p.addStyleTag({ content: "html { font-size: 150% !important; }" });
     await p.getByTestId("new-recipe").click();
     const dialog = p.getByRole("dialog", { name: "New recipe" });

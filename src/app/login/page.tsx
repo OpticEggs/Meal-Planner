@@ -14,7 +14,7 @@ export default function LoginPage() {
     const r = await authClient.signIn.email({ email, password });
     setBusy(false);
     if (r.error) setError(r.error.message ?? "Sign-in failed");
-    else window.location.assign("/");
+    else window.location.assign("/recipes"); // Q4: signing in lands on Recipes
   }
   return (
     <main className="app login">

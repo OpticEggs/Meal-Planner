@@ -13,7 +13,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { TEST_ENV } from "../../playwright.config";
-import { member, q, seed } from "./helpers";
+import { member, q, seed, weekGroceries } from "./helpers";
 
 const PORT = 3104;
 const BASE = `http://127.0.0.1:${PORT}`;
@@ -60,7 +60,7 @@ function krogerCalls() {
 
 async function groceries(browser: Browser, who: "jon" | "alex", opts: Parameters<typeof member>[2] = {}) {
   const m = await member(browser, who, opts);
-  await m.page.getByRole("link", { name: "Groceries" }).first().click();
+  await weekGroceries(m.page);
   await expect(m.page.getByTestId("groceries")).toBeVisible();
   return m;
 }

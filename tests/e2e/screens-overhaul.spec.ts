@@ -9,7 +9,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { TEST_ENV } from "../../playwright.config";
-import { member, seed } from "./helpers";
+import { member, seed, weekGroceries } from "./helpers";
 
 const PORT = 3106;
 const BASE = `http://127.0.0.1:${PORT}`;
@@ -39,9 +39,9 @@ async function start() {
 }
 
 const VIEWS = [
-  { name: "390-light", viewport: { width: 390, height: 844 }, scheme: "light" as const, text: 1 },
-  { name: "390-dark", viewport: { width: 390, height: 844 }, scheme: "dark" as const, text: 1 },
-  { name: "320-light-200", viewport: { width: 320, height: 640 }, scheme: "light" as const, text: 2 },
+  // Q3 (2026-10-11): dark is the only theme, so the views differ by width and text size only.
+  { name: "390-dark", viewport: { width: 390, height: 844 }, text: 1 },
+  { name: "320-dark-200", viewport: { width: 320, height: 640 }, text: 2 },
 ];
 
 for (const v of VIEWS) {
@@ -49,7 +49,6 @@ for (const v of VIEWS) {
     await seed();
     await start();
     const { context, page } = await member(browser, "jon", { viewport: v.viewport, reducedMotion: "reduce" });
-    await page.emulateMedia({ colorScheme: v.scheme });
     if (v.text !== 1) await page.addStyleTag({ content: `html { font-size: ${v.text * 100}% !important; }` });
     await context.route((u) => u.hostname !== "127.0.0.1", (r) => r.abort());
     const shot = async (p: Page, name: string, full = true) => {
@@ -66,7 +65,7 @@ for (const v of VIEWS) {
 
     await expect(page.getByTestId("status-sentence")).toBeVisible();
     await shot(page, "1-week");
-    await page.getByRole("link", { name: "Groceries" }).first().click();
+    await weekGroceries(page);
     await expect(page.getByTestId("still-to-buy")).toBeVisible();
     await shot(page, "2-groceries");
     await page.getByRole("link", { name: /Recipes/ }).first().click();

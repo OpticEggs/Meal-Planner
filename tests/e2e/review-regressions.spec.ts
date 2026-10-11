@@ -4,7 +4,7 @@
  */
 import { expect, test } from "@playwright/test";
 import { NIGHT } from "../fixtures/household";
-import { member, q, seed } from "./helpers";
+import { member, q, seed, openWeek, weekGroceries } from "./helpers";
 
 const NEXT = "2026-10-19";
 
@@ -38,10 +38,10 @@ test("R-F07-UI: Also need works before next week's dinners are chosen, and both 
   await f.getByRole("button", { name: "Add" }).click();
   await expect(f.getByRole("status")).toContainText("Added");
   await alex.page.getByRole("button", { name: "Next week" }).click();
-  await alex.page.getByRole("link", { name: "Groceries" }).click();
+  await weekGroceries(alex.page);
   await expect(alex.page.getByTestId("line-greek_yogurt")).toContainText("Usual amount — requested by Jon");
   // The staple is remembered and offered as a one-tap chip.
-  await alex.page.getByRole("link", { name: "Week" }).click();
+  await openWeek(alex.page);
   // (Scoped to the Week page's chips: since B14 the grocery-line controls carry the item name too.)
   await expect(alex.page.getByTestId("alsoneed-week").getByRole("button", { name: "Plain Greek yogurt" })).toBeVisible();
   await jon.context.close();
@@ -51,7 +51,7 @@ test("R-F07-UI: Also need works before next week's dinners are chosen, and both 
 test("R-F06-UI: Have enough records the amount shown on screen", async ({ browser }) => {
   const fx = await seed();
   const alex = await member(browser, "alex");
-  await alex.page.getByRole("link", { name: "Groceries" }).click();
+  await weekGroceries(alex.page);
   const shown = (await q("SELECT r.line FROM requirement_lines r JOIN grocery_cycles g ON g.id=r.cycle_id WHERE g.week_id=$1 AND r.ingredient_key='rice'", [fx.weekId]))[0].line.meal;
   await alex.page.getByTestId("line-rice").getByRole("button", { name: "Have enough" }).click();
   await expect(alex.page.getByTestId("line-rice")).toContainText("Alex: Have enough");

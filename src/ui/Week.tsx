@@ -23,6 +23,8 @@ export function WeekScreen() {
         <button className="chip-btn" onClick={() => setWeekStart(clock.currentWeekStart)} aria-current={clock.weekStart === clock.currentWeekStart ? "true" : undefined}>This week</button>
         <button className="chip-btn" onClick={() => setWeekStart(clock.nextWeekStart)} aria-label="Next week">Next<span aria-hidden="true"> ›</span></button>
       </nav>
+      {/* Q4: the calendar's own grocery list lives at /week/groceries; the Groceries tab is the selected-meals list. */}
+      <p className="week-links"><Link href="/week/groceries" data-testid="week-groceries-link">Groceries for this week</Link></p>
       {snapshot.week?.adopted ? <AdoptedWeek /> : <ProposalView />}
     </div>
   );
@@ -167,7 +169,7 @@ function AdoptedWeek() {
           <div className="section-label" style={{ margin: 0 }}>Still to do</div>
           <ul className="small" style={{ margin: 0, paddingLeft: "1.2em" }}>
             {unresolved.length > 0 && <li>{unresolved.map((n: any) => n.dayName).join(", ")}: {unresolved.length > 1 ? "need" : "needs"} a decision (use Change below)</li>}
-            {outstanding > 0 && <li><Link href="/groceries" style={{ display: "inline-block" }}>{outstanding} grocery {outstanding === 1 ? "line needs" : "lines need"} someone</Link></li>}
+            {outstanding > 0 && <li><Link href="/week/groceries" style={{ display: "inline-block" }}>{outstanding} grocery {outstanding === 1 ? "line needs" : "lines need"} someone</Link></li>}
           </ul>
         </div>
       )}

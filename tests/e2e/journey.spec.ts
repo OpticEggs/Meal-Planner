@@ -3,7 +3,7 @@
  */
 import { expect, test } from "@playwright/test";
 import { NIGHT } from "../fixtures/household";
-import { member, nightTitle, previewReplace, protectedRows, q, retailerCalls, seed } from "./helpers";
+import { member, nightTitle, previewReplace, protectedRows, q, retailerCalls, seed, openWeek, viaMore, weekGroceries } from "./helpers";
 
 const NEXT_WEEK = "2026-10-19";
 
@@ -36,7 +36,7 @@ test("T03: Sounds good, preferences, favorites and notes persist without changin
   const alex = await member(browser, "alex");
   const jon = await member(browser, "jon");
   const before = await protectedRows(fx.weekId);
-  await alex.page.getByRole("link", { name: "Explore" }).click();
+  await viaMore(alex.page, "Explore and Budget Bytes");
   const chili = alex.page.locator('[data-testid="recipe-card"][data-title="Fixture: Turkey chili"]');
   await chili.getByRole("button", { name: "Sounds good" }).click();
   await expect(chili.getByRole("button", { name: "In Sounds good" })).toBeVisible();
@@ -89,7 +89,7 @@ test("T05: dinners covered while a price is unknown — meals chosen, groceries 
   await expect(jon.page.getByTestId("status-sentence")).toContainText("Every dinner is covered.");
   await expect(jon.page.getByTestId("status-sentence")).toContainText("Grocery review remains.");
   await expect(jon.page.getByTestId("pickup-estimate")).toContainText("1 unpriced");
-  await jon.page.getByRole("link", { name: "Groceries" }).click();
+  await weekGroceries(jon.page);
   await expect(jon.page.getByTestId("readiness")).toContainText("Not ready yet");
   await expect(jon.page.getByTestId("line-cheese")).toContainText("price unknown");
   await expect(jon.page.getByTestId("send")).toBeDisabled();
@@ -148,7 +148,7 @@ test("T13: Jon's Friday change reaches Alex's open grocery review as a delta; un
   const fx = await seed();
   const alex = await member(browser, "alex");
   const jon = await member(browser, "jon");
-  await alex.page.getByRole("link", { name: "Groceries" }).click();
+  await weekGroceries(alex.page);
   await alex.page.getByTestId("approve-all").click();
   await expect(alex.page.getByTestId("readiness")).toContainText("Groceries ready to send.");
   const old = (await q("SELECT projection_summary FROM grocery_cycles WHERE week_id=$1", [fx.weekId]))[0].projection_summary;
@@ -175,7 +175,7 @@ test("T14/T20: simulated send, order confirmed with different contents, then a F
   const fx = await seed();
   const alex = await member(browser, "alex");
   const jon = await member(browser, "jon");
-  await alex.page.getByRole("link", { name: "Groceries" }).click();
+  await weekGroceries(alex.page);
   await alex.page.getByTestId("approve-all").click();
   await alex.page.getByTestId("send").click();
   await expect(alex.page.getByTestId("grocery-msg")).toContainText("simulated; nothing was sent to a store");
@@ -212,7 +212,7 @@ test("T16: an uncertain transfer is shown as uncertain with a cart check, and is
   const fx = await seed();
   await q("INSERT INTO fake_retailer_script(household_id, behavior) VALUES ($1,'accept_then_timeout')", [fx.householdId]);
   const alex = await member(browser, "alex");
-  await alex.page.getByRole("link", { name: "Groceries" }).click();
+  await weekGroceries(alex.page);
   await alex.page.getByTestId("approve-all").click();
   await alex.page.getByTestId("send").click();
   await expect(alex.page.getByTestId("batch")).toHaveAttribute("data-status", "uncertain");
@@ -235,7 +235,7 @@ test("T18: repeated staple taps from Week, Groceries and Cook merge with names; 
   };
   await add(jon.page, "alsoneed-week");
   await add(jon.page, "alsoneed-week");
-  await alex.page.getByRole("link", { name: "Groceries" }).click();
+  await weekGroceries(alex.page);
   await add(alex.page, "alsoneed-groceries");
   await expect(alex.page.getByTestId("line-greek_yogurt")).toContainText("Usual amount — requested by Jon ×2, Alex");
   await expect(alex.page.getByTestId("line-greek_yogurt")).toContainText("Chicken shawarma bowls");
@@ -255,7 +255,7 @@ test("T21: editing a recipe in the library keeps the accepted dinner on its pinn
   await jon.page.getByTestId("recipe-editor").getByLabel("Title").fill("Salmon rice bowls (our version)");
   await jon.page.getByRole("button", { name: "Save new version" }).click();
   await expect(jon.page.getByTestId("recipe-title")).toHaveText("Salmon rice bowls (our version)");
-  await jon.page.getByRole("link", { name: "Week" }).click();
+  await openWeek(jon.page);
   await expect(jon.page.getByTestId(`night-title-${NIGHT.fri}`)).toHaveText("Fixture: Salmon rice bowls");
   expect((await q("SELECT recipe_version_id FROM cooking_events WHERE id=$1", [fx.events.salmon]))[0].recipe_version_id).toBe(fx.recipes.salmon.versionId);
   await jon.context.close();

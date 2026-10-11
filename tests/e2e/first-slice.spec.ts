@@ -4,15 +4,13 @@
  */
 import { expect, test } from "@playwright/test";
 import { NIGHT } from "../fixtures/household";
-import {
-  background, foreground, holdHousehold, member, nightTitle, previewReplace, protectedRows, q, retailerCalls, seed, waitForLockWaiters,
-} from "./helpers";
+import { background, foreground, holdHousehold, member, nightTitle, previewReplace, protectedRows, q, retailerCalls, seed, waitForLockWaiters, weekGroceries } from "./helpers";
 
 test("T01: Jon previews Friday while Alex reviews groceries, then cancels — nothing accepted changes", async ({ browser }) => {
   const fx = await seed();
   const jon = await member(browser, "jon");
   const alex = await member(browser, "alex");
-  await alex.page.getByRole("link", { name: "Groceries" }).click();
+  await weekGroceries(alex.page);
   await expect(alex.page.getByTestId("line-salmon")).toBeVisible();
   const alexLinesBefore = await alex.page.getByTestId("groceries").getAttribute("data-projection-revision");
   const before = await protectedRows(fx.weekId);

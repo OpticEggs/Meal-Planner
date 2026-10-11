@@ -4,7 +4,7 @@
  * document.activeElement after real key presses; outcomes are checked in the database.
  */
 import { expect, test, type Page } from "@playwright/test";
-import { member, q, seed } from "./helpers";
+import { member, q, seed, viaMore } from "./helpers";
 
 async function focused(page: Page) {
   return page.evaluate(() => {
@@ -35,7 +35,7 @@ let householdId = "";
 const settingsRow = async () =>
   (await q<any>("SELECT revision, budget_limit_minor, cooking_sessions, store_label, max_new_recipes FROM household_settings WHERE household_id=$1", [householdId]))[0];
 async function toHousehold(page: Page) {
-  await page.getByRole("link", { name: "Household" }).click();
+  await viaMore(page, "Household");
   await expect(page.getByTestId("settings")).toBeVisible();
 }
 

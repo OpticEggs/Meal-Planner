@@ -5,7 +5,7 @@
  */
 import { expect, test, type Page } from "@playwright/test";
 import { randomUUID } from "node:crypto";
-import { member, q, retailerCalls, seed } from "./helpers";
+import { member, q, retailerCalls, seed, openWeek, viaMore, weekGroceries } from "./helpers";
 
 async function focused(page: Page) {
   return page.evaluate(() => {
@@ -58,7 +58,7 @@ test("B15 product dialog: keyboard, trapped focus, Escape saves nothing, field e
   const alex = await member(browser, "alex", { init: recordAnnouncements });
   const p = alex.page;
   noNativeDialogs(p);
-  await p.getByRole("link", { name: "Groceries" }).click();
+  await weekGroceries(p);
   await p.getByTestId("approve-all").click();
   await expect(p.getByTestId("line-broccoli")).toContainText("Approved");
   const productsBefore = (await q("SELECT count(*)::int n FROM products"))[0];
@@ -108,7 +108,7 @@ test("B15 order confirmation is two deliberate steps; Escape and Back save nothi
   const alex = await member(browser, "alex");
   const p = alex.page;
   noNativeDialogs(p);
-  await p.getByRole("link", { name: "Groceries" }).click();
+  await weekGroceries(p);
   await p.getByTestId("approve-all").click();
   await p.getByTestId("send").click();
   await expect(p.getByTestId("batch")).toHaveAttribute("data-status", "acknowledged");
@@ -163,7 +163,7 @@ test("B15 receipts: substitute, 'does it work', and corrections are labelled dia
   const alex = await member(browser, "alex");
   const p = alex.page;
   noNativeDialogs(p);
-  await p.getByRole("link", { name: "Groceries" }).click();
+  await weekGroceries(p);
   await p.getByTestId("approve-all").click();
   await p.getByTestId("send").click();
   await expect(p.getByTestId("batch")).toHaveAttribute("data-status", "acknowledged");
@@ -226,7 +226,7 @@ test("B15 uncertain transfer: the cart check needs a deliberate choice, Escape r
   await q("INSERT INTO fake_retailer_script(household_id, behavior) VALUES ($1,'accept_then_timeout')", [fx.householdId]);
   const alex = await member(browser, "alex");
   const p = alex.page;
-  await p.getByRole("link", { name: "Groceries" }).click();
+  await weekGroceries(p);
   await p.getByTestId("approve-all").click();
   await p.getByTestId("send").click();
   await expect(p.getByTestId("batch")).toHaveAttribute("data-status", "uncertain");
@@ -260,7 +260,7 @@ test("B15 removing a request needs confirmation, and the safe choice has focus",
   await seed();
   const alex = await member(browser, "alex");
   const p = alex.page;
-  await p.getByRole("link", { name: "Groceries" }).click();
+  await weekGroceries(p);
   const f = p.getByTestId("alsoneed-groceries");
   await f.getByPlaceholder(/Also need/).fill("Plain Greek yogurt");
   await f.getByRole("button", { name: "Add", exact: true }).click();
@@ -296,7 +296,7 @@ test("B15 unavailable and unresolved lines are named as such to a screen reader"
   const kroger = await product(fx.householdId, "greek_yogurt", "Kroger Greek yogurt 32 oz", { retailer: "kroger", qty: "32", unit: "oz" });
   const alex = await member(browser, "alex");
   const p = alex.page;
-  await p.getByRole("link", { name: "Groceries" }).click();
+  await weekGroceries(p);
   const f = p.getByTestId("alsoneed-groceries");
   await f.getByPlaceholder(/Also need/).fill("Plain Greek yogurt");
   await f.getByRole("button", { name: "Add", exact: true }).click();
@@ -323,7 +323,7 @@ for (const width of [320, 390]) {
     await seed();
     const alex = await member(browser, "alex", { viewport: { width, height: 640 }, reducedMotion: "reduce" });
     const p = alex.page;
-    await p.getByRole("link", { name: "Groceries" }).click();
+    await weekGroceries(p);
     await p.addStyleTag({ content: "html { font-size: 150% !important; }" });
     await p.getByRole("button", { name: "Change product for Broccoli" }).click();
     const dialog = p.getByRole("dialog", { name: "Product for Broccoli" });
@@ -349,14 +349,14 @@ for (const width of [320, 390]) {
     await p.keyboard.press("Escape");
     // Every nav tab stays on screen and hittable at this width and text size (the Groceries tab
     // carries an outstanding-work count).
-    for (const id of ["nav-week", "nav-explore", "nav-recipes", "nav-groceries", "nav-household"]) {
+    for (const id of ["nav-recipes", "nav-selected", "nav-groceries", "nav-more"]) {
       const ok = await p.getByTestId(id).evaluate((a) => {
         const r = a.getBoundingClientRect();
         return r.left >= 0 && r.right <= innerWidth + 0.5 && a.contains(document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2));
       });
       expect(ok, id).toBe(true);
     }
-    await p.getByRole("link", { name: "Household" }).click();
+    await viaMore(p, "Household");
     await p.getByTestId("add-staple").click();
     const add = p.getByRole("dialog", { name: "Add a usual item" });
     const ab = await add.evaluate((d) => ({ sw: d.scrollWidth, cw: d.clientWidth, right: d.getBoundingClientRect().right, vw: innerWidth }));
@@ -378,7 +378,7 @@ for (const order of ["Jon changes first", "Alex changes first"] as const) {
     const jon = await member(browser, "jon");
     const alex = await member(browser, "alex", { init: recordAnnouncements });
     for (const m of [jon, alex]) {
-      await m.page.getByRole("link", { name: "Groceries" }).click();
+      await weekGroceries(m.page);
       await m.page.getByRole("button", { name: "Change product for Broccoli" }).click();
     }
     const [first, second] = order === "Jon changes first" ? [jon, alex] : [alex, jon];
@@ -434,13 +434,13 @@ for (const order of ["Jon saves first", "Alex saves first"] as const) {
     const jon = await member(browser, "jon");
     const alex = await member(browser, "alex");
     // Jon makes yogurt a usual item from Household.
-    await jon.page.getByRole("link", { name: "Household" }).click();
+    await viaMore(jon.page, "Household");
     await jon.page.getByTestId("add-staple").click();
     const add = jon.page.getByRole("dialog", { name: "Add a usual item" });
     await add.getByLabel("Item").selectOption({ label: "Plain Greek yogurt" });
     await add.getByRole("button", { name: "Add usual item" }).click();
     await expect(add).toHaveCount(0);
-    await alex.page.getByRole("link", { name: "Household" }).click();
+    await viaMore(alex.page, "Household");
     await expect(alex.page.getByTestId("staple-row-greek_yogurt")).toBeVisible();
     for (const m of [jon, alex]) await m.page.getByRole("button", { name: "Edit Plain Greek yogurt" }).click();
     const [first, second] = order === "Jon saves first" ? [jon, alex] : [alex, jon];
@@ -476,7 +476,7 @@ test("B16 Household: add, rename, change amount and product, remove and restore 
   const alex = await member(browser, "alex");
   const p = jon.page;
   noNativeDialogs(p);
-  await p.getByRole("link", { name: "Household" }).click();
+  await viaMore(p, "Household");
   // Add by keyboard.
   await p.getByTestId("add-staple").focus();
   await p.keyboard.press("Enter");
@@ -496,7 +496,7 @@ test("B16 Household: add, rename, change amount and product, remove and restore 
   await expect(row).toContainText("Product: Plain Greek yogurt 32 oz tub — available from the active store");
   await expect(row).toContainText("Last changed by Jon (created)");
   // Alex sees it and its one-tap chip.
-  await alex.page.getByRole("link", { name: "Household" }).click();
+  await viaMore(alex.page, "Household");
   await expect(alex.page.getByTestId("staple-row-greek_yogurt")).toContainText("Breakfast yogurt");
 
   // Measured amount: 64 oz of the 32 oz tub.
@@ -534,10 +534,10 @@ test("B16 Household: add, rename, change amount and product, remove and restore 
   await p.reload();
 
   // Remove: confirmation with Keep as the default; then remove; the chip goes, the list stays.
-  await p.getByRole("link", { name: "Week" }).click();
+  await openWeek(p);
   await expect(p.getByTestId("alsoneed-week").getByRole("button", { name: /^Breakfast yogurt( ×\d+)? — your usual/ })).toBeVisible();
   await p.getByTestId("alsoneed-week").getByRole("button", { name: /^Breakfast yogurt( ×\d+)? — your usual/ }).click();
-  await p.getByRole("link", { name: "Household" }).click();
+  await viaMore(p, "Household");
   await row.getByRole("button", { name: "Remove Breakfast yogurt from usual items" }).click();
   const rm = p.getByRole("dialog", { name: "Remove Breakfast yogurt from usual items?" });
   expect((await focused(p)).name).toBe("Keep it");
@@ -546,10 +546,10 @@ test("B16 Household: add, rename, change amount and product, remove and restore 
   await expect(p.getByTestId("removed-staples")).toContainText("Breakfast yogurt — removed by Jon");
   await expect.poll(async () => (await focused(p)).name).toBe("Restore Breakfast yogurt to usual items");
   expect(await q<any>("SELECT state FROM household_requests WHERE ingredient_key='greek_yogurt'")).toEqual([{ state: "active" }]);
-  await p.getByRole("link", { name: "Week" }).click();
+  await openWeek(p);
   await expect(p.getByTestId("alsoneed-week")).toBeVisible(); // (wait for the Week page before asserting absence)
   await expect(p.getByTestId("alsoneed-week").getByRole("button", { name: /^Breakfast yogurt/ })).toHaveCount(0);
-  await p.getByTestId("nav-household").click();
+  await viaMore(p, "Household");
   await p.getByRole("button", { name: "Restore Breakfast yogurt to usual items" }).click();
   await expect(p.getByTestId("staple-row-greek_yogurt")).toContainText("Last changed by Jon (restored)");
   await expect(alex.page.getByTestId("staple-row-greek_yogurt")).toContainText("Last changed by Jon (restored)");
