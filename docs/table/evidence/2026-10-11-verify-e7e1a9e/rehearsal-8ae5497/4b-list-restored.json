@@ -1,0 +1,21 @@
+{
+ "lists": [
+  {
+   "id": "b5a9c136-8cdd-4f43-88b3-1c97f83b81c9",
+   "week_id": "ce626e7c-31f4-4c83-b991-e2f00236ea2f",
+   "status": "open",
+   "week_start": null,
+   "kind": "meal_list"
+  }
+ ],
+ "listLines": 4,
+ "listLinesNamingSelectedMeals": 3,
+ "needsQuantityUnknown": 1,
+ "approvals": [
+  {
+   "ingredient_key": "salmon",
+   "state": "stale"
+  }
+ ],
+ "calendarLinesNamingSelectedMeals": 0
+}

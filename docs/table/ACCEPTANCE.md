@@ -833,3 +833,47 @@ assertion changed.
 4. The app is byte-for-byte the same as `72cf615` outside `src/server/audit/` (which the app does not load), so the
    pilot-upgrade checklist in `DEPLOYMENT.md` §0 is unchanged; deploying `8ae5497` instead of `72cf615` changes
    nothing a member sees. Nothing was deployed.
+
+## Catalog-first meal selection — added 2026-10-11
+
+Owner-approved plan `docs/table/CATALOG-FIRST-PLAN.md` (`8cdb6e1`) with the owner's amendments (§0, reconciled before
+building). Code on branch `claude/catalog-first-wip`, verified at `e7e1a9e` — `docs/table/evidence/2026-10-11-verify-e7e1a9e/summary.md`: PASS — typecheck; vitest 1217/1217; Playwright 170/170 (Chromium); mutation self-test PASS; 131 mutations killed, 0 survived, 0 error (the run on `534e6f1` failed only by 3 stale mutation anchors and is kept). Upgrade/rollback
+rehearsal: `docs/table/evidence/2026-10-11-verify-e7e1a9e/rehearsal-8ae5497/`: steps 1–5 and 4b PASS; step 6 FAIL (1 of 1178: `8ae5497`'s export test does not know the new tables — a stated rollback limitation). Decisions D140–D147. **`main` is unchanged (`8cdb6e1`)**: merging and deploying wait for the
+owner's approval of `docs/table/DEPLOYMENT-CATALOG-FIRST.md`.
+
+| Stopping condition (owner) | Where it is shown | Status |
+|---|---|---|
+| Import or appropriately fall back on the three reference recipes | CF-A1/A2 (Budget Bytes: never requested, refusal in words, paste fallback with source link and no photo), CF-B1–B5 (brisket tacos: red/yellow onion distinct, toppings Need a quantity, 8½ h kept, headings → components, edits and export keep items), CF-C1 (garlic pasta: every yield shown, servings required, page nutrition unused, garlic/oil summed); e2e cf-reference-recipes. Offline synthetic fixtures under the real host names; no site was contacted | PASS |
+| Browse a photo-first catalog | gallery with photo kind on every tile, search, 30-minute filter, scroll kept on return (CF-E1, CF-E3 on a 390 px touch phone), dark palette (theme-contrast), b18 text-scaling sweeps at 150%/200% | PASS |
+| Select meals without dates | CF-S1–S3 (undated list week, calendar facts refused there, list stable until Start a new list), CF-E1 | PASS |
+| Adjust servings | CF-Q2 (exact scaling, package boundary), CF-C1 (concurrent change refused with what changed), CF-E1 | PASS |
+| Produce the correct consolidated groceries | CF-Q1 (3 cups + 2 cups of milk with an 8-cup package → 1 package; Have enough for 5 cups → 0), CF-Q2, CF-Q3 (shared ingredients combine, red/yellow onion separate, seasonings never bought), CF-P1 (stale approval → zero retailer calls), CF-E1 (shared rice line names both meals) | PASS |
+| Resolve missing quantities | CF-N1–N3, CF-E2 (amount for the planned servings; servings change asks again; Don't buy listed; list not ready while unanswered) | PASS |
+| Preserve both members' choices safely | CF-C1–C4, CF-E1 (two browsers, live refresh), rehearsal 4b (earlier release with an open list; restored after) | PASS |
+| Required defect: import review lost edits on an outside click | CF-G1–G7: backdrop click (mouse), tap (touch), Escape and Close all ask when edited; Keep editing keeps every value; Save for later persists; Discard leaves the server draft as it was; untouched closes | FIXED |
+
+**Tests changed deliberately** (no assertion about quantities, purchasing or the calendar weakened):
+- Navigation (Q4): every e2e spec that reached Week, Explore, Household or the calendar's groceries through the old
+  tabs now goes through More or `/week/groceries`; "Our Recipes" link clicks use the Recipes tab; `member()` asserts
+  the Recipes landing, then starts on `/` unless told otherwise (helpers `viaMore`, `openWeek`, `weekGroceries`).
+- Theme (Q3): screenshot specs run one theme; the contrast test checks the single dark palette.
+- B14 (accessibility): outstanding calendar grocery work is asserted on the Week screen's "Groceries for this week, N
+  lines need attention" link (the Groceries tab now counts the selected-meals list).
+- Q6 at import: "fresh basil, for serving" now starts as Needs a quantity (IO-01, U-10, IO-E1, RIO-03f,
+  screens-overhaul open its row before Leave out).
+
+**Limitations:**
+1. Chromium only (desktop and a 390 px touch phone); Safari/iPhone/VoiceOver remain the B8 device run.
+2. A closed list's purchases do not reduce a new list (each list is its own cycle); what is at home is recorded with
+   Have enough / Have some on the new list.
+3. JSON-LD pages usually flatten ingredient groups: headings appear only when the page data or a member's paste
+   contains them.
+4. Rollback: an earlier release never shows a meal list and, if it recomputes every grocery cycle, stores the list's
+   lines without its meals and marks approvals there stale (the safe direction); one recompute by this release
+   restores the lines, and stale approvals must be given again (rehearsal 4b).
+5. An export taken after this upgrade restores only into this release or later.
+   After going back to `8ae5497`, an export made by that release leaves out meal lists, selected meals and
+   Needs-a-quantity items (its export does not know the new tables; rehearsal step 6: its own export test is the one
+   test of its 1178 that fails on the new schema).
+6. No live site, Kroger, Instacart, FoodData Central, Render or Neon request was made; no household data was read or
+   written; nothing was deployed; the Extraction Lab branch was not touched.

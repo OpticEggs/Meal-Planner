@@ -1,0 +1,42 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /tmp/tmp.OxgwEKTrKA/prev
+
+ ❯ tests/integration/b16.staple-management.test.ts (20 tests | 1 failed) 18962ms
+   ❯ B15/B16 review regressions (5)
+     × the household export covers every household table (staples included) and restores them 765ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/b16.staple-management.test.ts > B15/B16 review regressions > the household export covers every household table (staples included) and restores them
+AssertionError: expected [ 'meal_lists', …(3) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "meal_lists",
++   "recipe_unquantified_items",
++   "selected_meal_quantity_decisions",
++   "selected_meals",
++ ]
+
+ ❯ tests/integration/b16.staple-management.test.ts:377:51
+    375|     const tables = (await q<any>("SELECT DISTINCT table_name FROM info…
+    376|     const covered = new Set([...EXPORT_TABLES.map((s) => s.table), ...…
+    377|     expect(tables.filter((t) => !covered.has(t))).toEqual([]);
+       |                                                   ^
+    378|     expect((await addStapleCommand(jon, op(), { ingredientKey: YOGURT,…
+    379|     const c = new pg.Client({ connectionString: process.env.DATABASE_U…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 57 passed (58)
+      Tests  1 failed | 1177 passed (1178)
+   Start at  00:25:38
+   Duration  369.33s (tests 94%, import 5%, transform 1%)
+

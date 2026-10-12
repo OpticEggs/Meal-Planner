@@ -1,0 +1,56 @@
+{
+  "when": "2026-10-11T21:58:16.129Z",
+  "head": "5cfad54254bee8004e9284715d77a88eee36f7f8",
+  "restored": true,
+  "pass": true,
+  "results": [
+    {
+      "name": "CF_selections_leak_into_calendar",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: CF-S1 a list's undated cycle holds only its selections; the calendar week and its list are untouched"
+    },
+    {
+      "name": "CF_calendar_dinners_in_list",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: CF-S1 a list's undated cycle holds only its selections; the calendar week and its list are untouched"
+    },
+    {
+      "name": "CF_needs_quantity_counts_as_zero",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: CF-N1 an unanswered item leaves the amount to buy unknown and the list not ready"
+    },
+    {
+      "name": "CF_amount_kept_across_servings",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: CF-N2 an amount counts for the servings it was given for; a servings change asks again (never rescaled)"
+    },
+    {
+      "name": "CF_stale_selection_accepted",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: CF-C1 two members change the same meal: the second sees what changed, nothing is merged silently"
+    },
+    {
+      "name": "CF_add_takes_newer_version",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: CF-C4 a selected meal stays on its version until a member switches; adding from a stale view is refused"
+    }
+  ]
+}

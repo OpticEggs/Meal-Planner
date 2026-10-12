@@ -1,7 +1,7 @@
 # Table — Catalog-first meal selection: plan for owner approval
 
 _Prepared 2026-10-11 on `main` = `99c837b` (verified app code `8ae5497`). **Approved 2026-10-11 with owner
-amendments** — §0 reconciles them and **takes precedence over §3, §4 and §6 where they differ**. Screen mock-ups were
+amendments; implemented and verified at `e7e1a9e` on branch `claude/catalog-first-wip` (ACCEPTANCE "Catalog-first meal selection")** — §0 reconciles them and **takes precedence over §3, §4 and §6 where they differ**. Screen mock-ups were
 published with the plan; they are drawings, not screenshots of the app._
 
 ## 0. Owner decisions and amendments (2026-10-11) — reconciled

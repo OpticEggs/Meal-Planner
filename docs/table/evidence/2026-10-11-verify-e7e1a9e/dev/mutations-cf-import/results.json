@@ -1,0 +1,24 @@
+{
+  "when": "2026-10-11T23:07:47.428Z",
+  "head": "38c4cfcd58d953a30ea0ce47e5d9b174fa7e8b45",
+  "restored": true,
+  "pass": true,
+  "results": [
+    {
+      "name": "CF_needs_quantity_dropped_at_confirm",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: CF-B1: read from the page — onions distinct, toppings Need a quantity (no amount invented), the long time kept"
+    },
+    {
+      "name": "CF_needs_quantity_lost_on_edit",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/1 failed by assertion: CF-B4: an edit carries the Needs-a-quantity items forward unchanged (new rows, same content); their component can't be removed"
+    }
+  ]
+}

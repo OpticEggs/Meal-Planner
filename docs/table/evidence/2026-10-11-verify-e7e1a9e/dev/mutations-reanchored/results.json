@@ -1,0 +1,32 @@
+{
+  "when": "2026-10-11T23:37:52.328Z",
+  "head": "534e6f12853e0ccbb99bfbd85dc077746b66485d",
+  "restored": true,
+  "pass": true,
+  "results": [
+    {
+      "name": "UI_faint_text_too_faint",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/3 failed by assertion: text pairs meet 4.5:1 and the focus outline meets 3:1"
+    },
+    {
+      "name": "UI_muted_text_too_faint",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "1/3 failed by assertion: text pairs meet 4.5:1 and the focus outline meets 3:1"
+    },
+    {
+      "name": "IO_seasoning_bought",
+      "control": false,
+      "classification": "KILLED",
+      "expectedClassification": "KILLED",
+      "ok": true,
+      "detail": "2/2 failed by assertion: salt and black pepper make no grocery line and no payload; the bell pepper does; both are named as left out"
+    }
+  ]
+}
