@@ -915,3 +915,24 @@ Kept on purpose, beyond the previews: the Saved links filter (More links to it),
 label), an imported recipe's attribution line, and feedback, notes, history and versions below the instructions (the
 "…" button jumps there). Not added: a cost total for the selected servings (no new calculation; the estimate is per
 serving). Known limitation: at 320 px with 200% text the longer tab names break across lines (as before).
+
+## Scope correction: recipe overview and recipe websites (D152) — added 2026-10-13
+
+Applied to the same presentation pass on `claude/photo-first`; measured at `634800f`: `scripts/verify-all.sh` →
+`docs/table/evidence/2026-10-13-verify-634800f/` — typecheck, vitest 1220/1220, build, 132/132 mutations PASS; Playwright 172/173: one
+intermittent failure in the Groceries confirm-order step, outside this change (a click during a background refresh is
+ignored; root cause in its README, 8/8 on re-run, backlog B46). D152 screenshots in `screens-d152/`.
+
+| Check | Evidence |
+|---|---|
+| The overview has the photo (when there is one), title, original yield, servings selector, ingredients for the servings shown, and Open recipe website with the source line | U2C-E1, CF-E1, PF-2 |
+| No instructions, nutrition, cost, reheating, history or versions on the recipe page; the original yield never changes with servings | PF-2, PF-3, U2C-E1 |
+| A selected meal links the same recipe website (new tab) | U2C-E1 |
+| Missing nutrition and prices: nothing shown and nothing blocks; the meal is still added | PF-3 |
+| Stored instructions are not deleted (still on the recipe version) | PF-3, U2C-E1 (imported: none kept, as before) |
+| Catalog tiles: time and yield only, no calories or cost | PF-1, CF-E1 |
+| Notes and feedback: available behind a closed section, still saved per member | T03, B17, b18 text-scaling |
+
+Not changed: the import (URL reading with pasted ingredients as the fallback, source-fetching and image safeguards),
+groceries, Kroger matching, purchasing, the calendar and its Cook pages. **The Kroger path is not complete**: real
+product search and cart behaviour have not been verified or authorized (B5(b), B6 remain open).

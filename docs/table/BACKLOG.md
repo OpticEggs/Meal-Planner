@@ -8,6 +8,14 @@ Order now: **B25** (done: URL-to-recipe, permitted content, Kroger mapping) → 
 **B5(b)** Kroger products (K1–K5) → **B6** cart (K6/K7, modality) → B8 devices → B24 (R2, Instacart). Manual recipe
 entry and typed ingredient lines are fallbacks; no further visual polish is queued.
 
+**Scope from 2026-10-13 (owner, D152): Table is a shared recipe catalog and grocery-preparation tool** — the household
+cooks from each recipe's original website. Workflow: save a recipe URL → review ingredients and original yield → catalog →
+select meals and servings → consolidate groceries → review Kroger products → add them to the cart explicitly. **Out of
+active scope** (do not start; existing data is kept): instruction extraction/formatting/retention, cooking mode, timers,
+reheating, cooking history, new nutrition or cost-data projects (B7(b) and further cost work included). Import problems
+are fixed narrowly for the household's ~20 recipes; no Extraction Lab restart, no universal site support. The Kroger path
+(B5(b), B6) is not complete until real product and cart behaviour is separately verified and authorized.
+
 | ID | Outcome | Allowed scope | Depends on | Tests | Done when |
 |---|---|---|---|---|---|
 | B1 | ~~Repository destination~~ — done 2026-10-08: pushed to `https://github.com/OpticEggs/Meal-Planner` (`main`). | — | — | — | — | — |
@@ -38,6 +46,7 @@ entry and typed ingredient lines are fallbacks; no further visual polish is queu
 | B25 | ~~URL → recipe → Kroger product (credential-independent part)~~ — done 2026-10-08 (`184d99f`): one-step add-from-link, extraction of usable details (JSON-LD with `@id`, microdata, Open Graph), content kept only under a recorded permission (off), permitted photos, attribution and method link, suggestions for uncertain lines, failure reasons, live reader tested on local TLS; Budget Bytes lane search + add-from-link; Kroger search / bulk match / `ChooseKrogerProduct` (fake transport). DECISIONS D93–D101; ACCEPTANCE "URL to cart". | — | — | — | — | — |
 | B26 | **Live page reading** (R1) and **content permission** (C1 or C2), then one owner-chosen real page imported on the deployed app | env + host | OWNER-INPUTS R1, C1/C2; B9(c) | redacted read log | A real recipe page becomes a reviewed recipe on the deployed app |
 | B28 | ~~Import overhaul and mobile redesign~~ — done 2026-10-09 (`dfb34cc`, `8e6bd6e`): exact amounts, review defaults without suggestions, household seasonings, member photos, publisher photos only by grant, redesigned Recipes/recipe/import/Week/Groceries (DECISIONS D112–D117). | — | — | — | — |
+| B46 | **A tap during a background refresh is ignored** (found 2026-10-13, verify-all on `634800f`). `refresh()` in `src/ui/store.tsx` sets `currency` to "refreshing" for every refresh — the 15 s poll, event-stream invalidations, focus — and every write button is disabled while `writesAllowed` is false, so a click that lands in that window (tens of ms) does nothing and says nothing. Seen once in `b18-text-scaling` (Groceries confirm order, 150%); 8/8 on re-run. Options for the owner: keep writes allowed during a refresh of an already-current snapshot (the server's revision binding still rejects stale writes), or announce why the tap was ignored. | `src/ui/store.tsx`, a regression test | owner choice | e2e: click during a forced refresh | A tap during a background refresh either acts or says why it did not. |
 | B44 | ~~Catalog-first on the pilot~~ — done 2026-10-12/13 by the owner: `main` fast-forwarded to `02d8277`, `e7e1a9e` deployed, migration 017 applied, pilot check passed (DEPLOYMENT-CATALOG-FIRST.md "Pilot result"). Calendar/list separation not yet seen on household data (no calendar dinners). | — | — | — | — |
 | B45 | Device check of the catalog-first screens (gallery, + on touch, Selected Meals, checklist Groceries, Needs a quantity, import close guard on iPhone Safari/VoiceOver) — part of B8 | none (testing) | B44 | DEVICE-CHECKLIST | — |
 | B43 | Only if `dbc105d` was ever deployed and recipes were edited there: a read-only check for versions whose exact bases were inferred by number (no `source_row_id`, version > 1) — and any correction as a new version (D135). | — | owner | — | — |
