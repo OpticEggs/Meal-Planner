@@ -15,24 +15,24 @@
   /* Namespaced --ui-*: globals.css already has --card, --muted … with other meanings (old screens keep them). */
   /* Dark only (Q3). shadcn new-york neutral, dark values. */
   --ui-radius: 0.625rem;
-  --ui-background: oklch(0.145 0 0);
+  --ui-background: #0a0a0a;
   --ui-foreground: oklch(0.985 0 0);
-  --ui-card: oklch(0.205 0 0);
+  --ui-card: #171717;
   --ui-card-foreground: oklch(0.985 0 0);
-  --ui-popover: oklch(0.205 0 0);
+  --ui-popover: #171717;
   --ui-popover-foreground: oklch(0.985 0 0);
   --ui-primary: oklch(0.922 0 0);
   --ui-primary-foreground: oklch(0.205 0 0);
-  --ui-secondary: oklch(0.269 0 0);
+  --ui-secondary: #262626;
   --ui-secondary-foreground: oklch(0.985 0 0);
-  --ui-muted: oklch(0.269 0 0);
-  --ui-muted-foreground: oklch(0.708 0 0);
-  --ui-accent: oklch(0.269 0 0);
+  --ui-muted: #262626;
+  --ui-muted-foreground: #a3a3a3;
+  --ui-accent: #262626;
   --ui-accent-foreground: oklch(0.985 0 0);
   --ui-destructive: oklch(0.704 0.191 22.216);
   --ui-border: oklch(1 0 0 / 10%);
   --ui-input: oklch(1 0 0 / 15%);
-  --ui-ring: oklch(0.556 0 0);
+  --ui-ring: #737373;
   /* S2: the one warm accent — selection, +, the selected mark. */
   --ui-brand: #e99a6f;
   --ui-brand-foreground: #241509;

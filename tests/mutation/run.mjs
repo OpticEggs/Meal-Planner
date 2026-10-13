@@ -234,9 +234,9 @@ MUTATIONS.push(
   // Visual update: the contrast check reads the shipped tokens; a too-light or too-dark text token must fail it.
   // Re-targeted 2026-10-11 (Q3: one dark palette; the light theme is retired): faint and muted text too dim on the ground.
   { name: "UI_faint_text_too_faint", file: "src/app/globals.css", suite: THEME, pattern: "theme contrast", expect: [/theme contrast — the one dark palette/],
-    edits: [["--muted: #c9bfb4; --faint: #a89d91;", "--muted: #c9bfb4; --faint: #5f564d;"]] },
+    edits: [["--muted: #a3a3a3; --faint: #8f8f8f;", "--muted: #a3a3a3; --faint: #4a4a4a;"]] },
   { name: "UI_muted_text_too_faint", file: "src/app/globals.css", suite: THEME, pattern: "theme contrast", expect: [/theme contrast — the one dark palette/],
-    edits: [["--muted: #c9bfb4; --faint: #a89d91;", "--muted: #5f564d; --faint: #a89d91;"]] },
+    edits: [["--muted: #a3a3a3; --faint: #8f8f8f;", "--muted: #4a4a4a; --faint: #8f8f8f;"]] },
   { name: "B9_reset_keeps_sessions", file: "src/server/provision.ts", suite: B9R, pattern: "B9", expect: [/ends that member's sessions/],
     edits: [["  await ctx.internalAdapter.deleteUserSessions(userId);", "  // (mutated) sessions kept"]] },
   { name: "B9_reset_any_account", file: "src/server/provision.ts", suite: B9R, pattern: "B9", expect: [/non-member account/],

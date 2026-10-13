@@ -70,7 +70,7 @@ export function RecipesScreen({ initialFilter = "all" }: { initialFilter?: (type
           <div className="catalog-tools">
             <label className="sr-only" htmlFor="recipe-search">Search recipes</label>
             <Input id="recipe-search" type="search" placeholder="Search recipes or ingredients" value={search} onChange={(e) => setSearch(e.target.value)} />
-            <Button type="button" variant={quick ? "brand" : "outline"} size="sm" aria-pressed={quick} onClick={() => setQuick(!quick)}>30 min or less</Button>
+            <Button type="button" variant={quick ? "default" : "outline"} size="sm" aria-pressed={quick} onClick={() => setQuick(!quick)}>30 min or less</Button>
           </div>
         )}
       </div>
@@ -154,7 +154,7 @@ export function RecipeDetail({ recipeId }: { recipeId: string }) {
       </div>
       <div className="seg" role="group" aria-label="Your feedback">
         {PREFS.map((p) => (
-          <Button key={p.v} size="sm" variant={r.preferences[me.memberId] === p.v ? "brand" : "outline"} aria-pressed={r.preferences[me.memberId] === p.v} aria-label={`${p.label} (your feedback)`}
+          <Button key={p.v} size="sm" variant={r.preferences[me.memberId] === p.v ? "default" : "outline"} aria-pressed={r.preferences[me.memberId] === p.v} aria-label={`${p.label} (your feedback)`}
             onClick={() => command("SetRecipePreference", { recipeId, value: r.preferences[me.memberId] === p.v ? null : p.v })}>
             {p.label}
           </Button>
