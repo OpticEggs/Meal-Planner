@@ -1,0 +1,371 @@
+# Page snapshot
+
+```yaml
+- generic:
+  - generic:
+    - banner:
+      - generic:
+        - generic:
+          - heading [level=1]: Table
+          - paragraph:
+            - text: Signed in as
+            - strong: Jon
+            - text: · test household
+        - generic: Simulated retailer
+      - generic: Checking for newer decisions…
+    - main:
+      - region:
+        - heading [level=2]: Groceries
+        - generic:
+          - group:
+            - generic: Where to shop
+            - paragraph:
+              - text: "Now:"
+              - strong: Simulated retailer cart
+            - generic:
+              - radio [checked]
+              - generic:
+                - strong: Simulated retailer cart
+                - text: "The simulated retailer: transfers are recorded here and never reach a store."
+            - generic:
+              - radio
+              - generic:
+                - strong: Instacart shopping list
+                - text: A link to a shopping list on Instacart, where you pick the store, products and checkout. Not a cart transfer and not an order. Not set up here — it needs Instacart developer access. You can still choose it and copy the list.
+            - generic:
+              - radio
+              - generic:
+                - strong: Another store — copy the list
+                - text: Copy or download the list and shop anywhere. Copying doesn't order or record anything.
+        - generic:
+          - generic: Pickup estimate
+          - paragraph: $66.14
+          - paragraph: For the packages in this purchase, at simulated store prices.
+          - group:
+            - generic: How this is estimated
+          - generic:
+            - generic:
+              - generic: Dinner ingredients
+              - strong: $41.74
+              - emphasis: value used by planned dinners
+            - generic:
+              - generic: Still to buy
+              - strong: $0.00
+              - emphasis: after what is sent, ordered or received
+            - generic:
+              - generic: Budget
+              - strong: No budget set
+        - group:
+          - strong: Not ready yet
+          - list:
+            - listitem: Nothing left to send
+        - alert: Transfer acknowledged — simulated; nothing was sent to a store.
+        - generic:
+          - button [disabled]: Approve 0 reviewable
+          - button [disabled]: Send to Simulated retailer
+        - generic:
+          - button:
+            - strong: Grocery list
+            - generic: (0 to buy) — copy or download
+        - generic: Also need
+        - generic:
+          - generic: Also need
+          - combobox
+          - button: Add
+          - button: Extra
+        - generic: This week’s list
+        - list:
+          - listitem:
+            - generic:
+              - heading [level=3]: Black beans (canned)
+              - generic:
+                - generic: Sent to cart
+            - generic:
+              - generic: "Dinners: 1 can — Black bean tacos (10-17)"
+              - generic: Black beans 15 oz can · 1 pkg needed · $1.09 each (fixture, fixture)
+              - generic: "History: 1 sent to cart ·"
+            - generic:
+              - textbox:
+                - /placeholder: amt
+              - group:
+                - button: Have enough
+                - button: Have some
+                - button: Need
+            - generic:
+              - button: change product…
+          - listitem:
+            - generic:
+              - heading [level=3]: Broccoli
+              - generic:
+                - generic: Sent to cart
+            - generic:
+              - generic: "Dinners: 24.7 oz (700 g) — Sheet-pan chicken and rice (10-14), Tofu veggie stir-fry (10-12)"
+              - generic: Broccoli crowns 1 lb · 2 pkg needed · $2.49 each (fixture, fixture)
+              - generic: "History: 2 sent to cart ·"
+            - generic:
+              - textbox:
+                - /placeholder: amt
+              - group:
+                - button: Have enough
+                - button: Have some
+                - button: Need
+            - generic:
+              - button: change product…
+          - listitem:
+            - generic:
+              - heading [level=3]: Cheddar cheese
+              - generic:
+                - generic: Sent to cart
+            - generic:
+              - generic: "Dinners: 56.7 g — Black bean tacos (10-17)"
+              - generic: Cheddar 8 oz block · 1 pkg needed · $3.49 each (fixture, fixture)
+              - generic: "History: 1 sent to cart ·"
+            - generic:
+              - textbox:
+                - /placeholder: amt
+              - group:
+                - button: Have enough
+                - button: Have some
+                - button: Need
+            - generic:
+              - button: change product…
+          - listitem:
+            - generic:
+              - heading [level=3]: Chicken thighs
+              - generic:
+                - generic: Sent to cart
+            - generic:
+              - generic: "Dinners: 43.0 oz (1219 g) — Sheet-pan chicken and rice (10-14), Chicken shawarma bowls (10-18)"
+              - generic: Chicken thighs tray (about 1.5 lb) · 2 pkg needed (variable weight — estimate) · $7.49 each (fixture, fixture)
+              - generic: "History: 2 sent to cart ·"
+            - generic:
+              - textbox:
+                - /placeholder: amt
+              - group:
+                - button: Have enough
+                - button: Have some
+                - button: Need
+            - generic:
+              - button: change product…
+          - listitem:
+            - generic:
+              - heading [level=3]: Cucumber
+              - generic:
+                - generic: Sent to cart
+            - generic:
+              - generic: "Dinners: 2 — Chicken shawarma bowls (10-18), Salmon rice bowls (10-16)"
+              - generic: Cucumber · 2 pkg needed · $0.79 each (fixture, fixture)
+              - generic: "History: 2 sent to cart ·"
+            - generic:
+              - textbox:
+                - /placeholder: amt
+              - group:
+                - button: Have enough
+                - button: Have some
+                - button: Need
+            - generic:
+              - button: change product…
+          - listitem:
+            - generic:
+              - heading [level=3]: Plain Greek yogurt
+              - generic:
+                - generic: Sent to cart
+            - generic:
+              - generic: "Dinners: 8.0 oz (227 g) — Chicken shawarma bowls (10-18)"
+              - generic: Plain Greek yogurt 32 oz tub · 1 pkg needed · $5.49 each (fixture, fixture)
+              - generic: "History: 1 sent to cart ·"
+            - generic:
+              - textbox:
+                - /placeholder: amt
+              - group:
+                - button: Have enough
+                - button: Have some
+                - button: Need
+            - generic:
+              - button: change product…
+          - listitem:
+            - generic:
+              - heading [level=3]: Olive oil
+              - generic:
+                - generic: Sent to cart
+            - generic:
+              - generic: "Dinners: 2.5 fl oz — Sheet-pan chicken and rice (10-14)"
+              - generic: Olive oil 500 ml · 1 pkg needed · $8.99 each (fixture, fixture)
+              - generic: "History: 1 sent to cart ·"
+            - generic:
+              - textbox:
+                - /placeholder: amt
+              - group:
+                - button: Have enough
+                - button: Have some
+                - button: Need
+            - generic:
+              - button: change product…
+          - listitem:
+            - generic:
+              - heading [level=3]: Pita bread
+              - generic:
+                - generic: Sent to cart
+            - generic:
+              - generic: "Dinners: 2 — Chicken shawarma bowls (10-18)"
+              - generic: Pita 6 ct · 1 pkg needed · $2.49 each (fixture, fixture)
+              - generic: "History: 1 sent to cart ·"
+            - generic:
+              - textbox:
+                - /placeholder: amt
+              - group:
+                - button: Have enough
+                - button: Have some
+                - button: Need
+            - generic:
+              - button: change product…
+          - listitem:
+            - generic:
+              - heading [level=3]: Jasmine rice
+              - generic:
+                - generic: Sent to cart
+            - generic:
+              - generic: "Dinners: 23.8 oz (675 g) — Sheet-pan chicken and rice (10-14), Tofu veggie stir-fry (10-12), Salmon rice bowls (10-16)"
+              - generic: Jasmine rice 2 lb bag · 1 pkg needed · $3.99 each (fixture, fixture)
+              - generic: "History: 1 sent to cart ·"
+            - generic:
+              - textbox:
+                - /placeholder: amt
+              - group:
+                - button: Have enough
+                - button: Have some
+                - button: Need
+            - generic:
+              - button: change product…
+          - listitem:
+            - generic:
+              - heading [level=3]: Salmon fillet
+              - generic:
+                - generic: Sent to cart
+            - generic:
+              - generic: "Dinners: 12.0 oz (340 g) — Salmon rice bowls (10-16)"
+              - generic:
+                - text: Usual amount — requested by Alex
+                - button: remove
+              - generic: Salmon fillets 12 oz · 1 pkg needed · $10.99 each (fixture, fixture)
+              - generic: "History: 1 sent to cart ·"
+              - generic:
+                - text: About 0 g left after dinners.
+                - button: Keep an extra
+            - generic:
+              - textbox:
+                - /placeholder: amt
+              - group:
+                - button: Have enough
+                - button: Have some
+                - button: Need
+            - generic:
+              - button: change product…
+          - listitem:
+            - generic:
+              - heading [level=3]: Soy sauce
+              - generic:
+                - generic: Sent to cart
+            - generic:
+              - generic: "Dinners: 29.57 ml — Tofu veggie stir-fry (10-12)"
+              - generic: Soy sauce 10 fl oz · 1 pkg needed · $2.79 each (fixture, fixture)
+              - generic: "History: 1 sent to cart ·"
+            - generic:
+              - textbox:
+                - /placeholder: amt
+              - group:
+                - button: Have enough
+                - button: Have some
+                - button: Need
+            - generic:
+              - button: change product…
+          - listitem:
+            - generic:
+              - heading [level=3]: Firm tofu
+              - generic:
+                - generic: Sent to cart
+            - generic:
+              - generic: "Dinners: 8.5 oz (240 g) — Tofu veggie stir-fry (10-12)"
+              - generic: Firm tofu 14 oz · 1 pkg needed · $2.29 each (fixture, fixture)
+              - generic: "History: 1 sent to cart ·"
+            - generic:
+              - textbox:
+                - /placeholder: amt
+              - group:
+                - button: Have enough
+                - button: Have some
+                - button: Need
+            - generic:
+              - button: change product…
+          - listitem:
+            - generic:
+              - heading [level=3]: Corn tortillas
+              - generic:
+                - generic: Sent to cart
+            - generic:
+              - generic: "Dinners: 6 — Black bean tacos (10-17)"
+              - generic: Corn tortillas 10 ct · 1 pkg needed · $2.99 each (fixture, fixture)
+              - generic: "History: 1 sent to cart ·"
+            - generic:
+              - textbox:
+                - /placeholder: amt
+              - group:
+                - button: Have enough
+                - button: Have some
+                - button: Need
+            - generic:
+              - button: change product…
+        - group:
+          - heading [level=3]: Cart transfers (simulated — nothing reached a store)
+          - list:
+            - listitem:
+              - strong: "Transfer 1: Sent to cart — the store acknowledged the transfer"
+              - text: · approved by Jon · black_beans ×1, broccoli ×2, cheese ×1, chicken_thigh ×2, cucumber ×2, greek_yogurt ×1, olive_oil ×1, pita ×1, rice ×1, salmon ×1, soy_sauce ×1, tofu ×1, tortillas ×1
+              - generic: Approved — not sent yet → Sending to the cart… → Sent to cart — the store acknowledged the transfer (batch-level acknowledgment; not an order confirmation)
+          - paragraph: Checkout and pickup time are chosen at the store’s site. Table does not remove cart items or place orders.
+        - generic:
+          - heading [level=3]: After checkout
+          - button: Confirm order contents…
+    - navigation:
+      - link:
+        - /url: /recipes
+        - text: Recipes
+      - link:
+        - /url: /selected
+        - text: Selected
+      - link:
+        - /url: /groceries
+        - text: Groceries
+      - link:
+        - /url: /more
+        - text: More
+  - status: The retailer acknowledged the transfer (batch-level)..
+  - alert
+  - dialog "Confirm order contents" [active] [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - heading "Confirm order contents" [level=2] [ref=e5]
+        - paragraph [ref=e6]: What the store confirmed after checkout
+      - button "Close order confirmation without saving" [ref=e7] [cursor=pointer]: Close
+    - generic [ref=e9]:
+      - heading "Check before recording" [level=3] [ref=e10]
+      - list [ref=e11]:
+        - listitem [ref=e12]: Black beans (canned) ×1
+        - listitem [ref=e13]: Broccoli ×2
+        - listitem [ref=e14]: Cheddar cheese ×1
+        - listitem [ref=e15]: Chicken thighs ×2
+        - listitem [ref=e16]: Cucumber ×2
+        - listitem [ref=e17]: Plain Greek yogurt ×1
+        - listitem [ref=e18]: Olive oil ×1
+        - listitem [ref=e19]: Pita bread ×1
+        - listitem [ref=e20]: Jasmine rice ×1
+        - listitem [ref=e21]: Salmon fillet ×1
+        - listitem [ref=e22]: Soy sauce ×1
+        - listitem [ref=e23]: Firm tofu ×1
+        - listitem [ref=e24]: Corn tortillas ×1
+        - listitem [ref=e25]: Paper towels ×1
+      - paragraph [ref=e26]: Pickup 10/14/2026, 5:30:00 PM. A confirmed order can’t be edited afterwards; differences at pickup are recorded as receipts.
+      - generic [ref=e27]:
+        - button "Back to edit" [ref=e28] [cursor=pointer]
+        - button "Yes, record this order" [disabled] [ref=e29]
+```

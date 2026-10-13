@@ -30,6 +30,19 @@ Root cause (from the run's trace; `failure/`):
 Confirmation: the same test re-run 8 times on 634800f (`--repeat-each=4`, 150% and 200%) — 8/8 passed. The full
 browser suite also passed 173/173 on the same code on the worktree's own cluster before commit.
 
+## Artifact availability and later finding (added after the B46 correction)
+
+This run stays recorded as **FAIL**. Its original Playwright failure artifacts — the failure screenshot, error context
+and trace written to `test-results/` — were overwritten by later local runs (the 8 re-runs above and the screenshot
+capture) before they were copied, and are **not available**. What survives from this run: `playwright.log` and
+`playwright.json` here (the failure message and call log), and two images extracted from the trace before it was
+overwritten (`failure/frames-around-click.png`, `failure/after-click-100ms.jpeg`). The logs of the 8 re-runs were not
+kept either; only their result (8/8 passed) is recorded.
+
+The cause has since been reproduced deterministically and corrected (D153, `8e48816`): see
+`docs/table/evidence/2026-10-13-verify-8e48816/`. The deterministic run showed the button was disabled before its
+handler could run (0 click events reached it).
+
 ## Screenshots of D152 (`screens-d152/`)
 
 390×844 unless noted, from a local production build against the disposable **test** database (fixture household).

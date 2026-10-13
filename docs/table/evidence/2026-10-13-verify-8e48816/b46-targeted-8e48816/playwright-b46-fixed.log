@@ -1,0 +1,12 @@
+
+Running 4 tests using 1 worker
+
+B46_DIAG {"phase":"pressed during refresh","buttonAtTap":{"disabled":false,"ariaDisabled":"true"},"clickEventsReachingButton":1,"confirmOrderRequests":0,"ordersPersisted":0,"notRecordedNoteShown":true}
+B46_DIAG {"phase":"after retry","confirmOrderRequests":1,"ordersPersisted":1,"snapshotRequests":4}
+  ✓  1 [chromium] › tests/e2e/b46-refresh-window.spec.ts:94:1 › B46-1: pressed during a refresh → not recorded, said so, values kept; after the refresh one retry records it once (5.6s)
+B46_DIAG {"phase":"pressed offline","clickEventsReachingButton":1,"confirmOrderRequests":0,"ordersPersisted":0,"notRecordedNoteShown":true}
+  ✓  2 [chromium] › tests/e2e/b46-refresh-window.spec.ts:149:1 › B46-2: pressed while offline → not recorded and said so; back online, nothing is sent until the member presses again (4.1s)
+  ✓  3 [chromium] › tests/e2e/b46-refresh-window.spec.ts:178:1 › B46-3: a stale screen (another member already confirmed) is still refused by the server — one order, values kept (5.7s)
+  ✓  4 [chromium] › tests/e2e/b46-refresh-window.spec.ts:209:1 › B46-4: a double press while current records once (4.4s)
+
+  4 passed (24.7s)

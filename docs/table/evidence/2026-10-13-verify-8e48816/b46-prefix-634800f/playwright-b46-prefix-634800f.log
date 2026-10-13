@@ -1,0 +1,89 @@
+
+Running 4 tests using 1 worker
+
+B46_DIAG {"phase":"pressed during refresh","buttonAtTap":{"disabled":true,"ariaDisabled":null},"clickEventsReachingButton":0,"confirmOrderRequests":0,"ordersPersisted":0,"notRecordedNoteShown":false}
+  ✘  1 [chromium] › tests/e2e/b46-refresh-window.spec.ts:94:1 › B46-1: pressed during a refresh → not recorded, said so, values kept; after the refresh one retry records it once (20.5s)
+B46_DIAG {"phase":"pressed offline","clickEventsReachingButton":0,"confirmOrderRequests":0,"ordersPersisted":0,"notRecordedNoteShown":false}
+  ✘  2 [chromium] › tests/e2e/b46-refresh-window.spec.ts:149:1 › B46-2: pressed while offline → not recorded and said so; back online, nothing is sent until the member presses again (16.8s)
+  ✓  3 [chromium] › tests/e2e/b46-refresh-window.spec.ts:178:1 › B46-3: a stale screen (another member already confirmed) is still refused by the server — one order, values kept (6.3s)
+  ✓  4 [chromium] › tests/e2e/b46-refresh-window.spec.ts:209:1 › B46-4: a double press while current records once (4.4s)
+
+
+  1) [chromium] › tests/e2e/b46-refresh-window.spec.ts:94:1 › B46-1: pressed during a refresh → not recorded, said so, values kept; after the refresh one retry records it once 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('dialog', { name: 'Confirm order contents' }).getByTestId('confirm-order-not-recorded')
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByRole('dialog', { name: 'Confirm order contents' }).getByTestId('confirm-order-not-recorded')[22m
+
+
+      115 |
+      116 |   // Not recorded, and the dialog says so; nothing was sent; the dialog and everything typed are still there.
+    > 117 |   await expect(note).toBeVisible();
+          |                      ^
+      118 |   await expect(note).toContainText("Not recorded — nothing was sent.");
+      119 |   await expect(note).toContainText("checking for the latest changes");
+      120 |   expect(await clicks()).toBe(1); // the press reached the handler: it decided, it was not swallowed
+        at /home/user/table-shadcn/tests/e2e/b46-refresh-window.spec.ts:117:22
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b46-refresh-window-B46-1-p-6e080-h-one-retry-records-it-once-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b46-refresh-window-B46-1-p-6e080-h-one-retry-records-it-once-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b46-refresh-window-B46-1-p-6e080-h-one-retry-records-it-once-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b46-refresh-window-B46-1-p-6e080-h-one-retry-records-it-once-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › tests/e2e/b46-refresh-window.spec.ts:149:1 › B46-2: pressed while offline → not recorded and said so; back online, nothing is sent until the member presses again 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoContainText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByRole('dialog', { name: 'Confirm order contents' }).getByTestId('confirm-order-not-recorded')
+    Expected substring: [32m"Not recorded — nothing was sent."[39m
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toContainText" with timeout 10000ms[22m
+    [2m  - waiting for getByRole('dialog', { name: 'Confirm order contents' }).getByTestId('confirm-order-not-recorded')[22m
+
+
+      162 |   const shown = await note.waitFor({ state: "visible", timeout: 3000 }).then(() => true, () => false);
+      163 |   await diag(info, { phase: "pressed offline", clickEventsReachingButton: await clicks(), confirmOrderRequests: sent(), ordersPersisted: await orders(), notRecordedNoteShown: shown });
+    > 164 |   await expect(note).toContainText("Not recorded — nothing was sent.");
+          |                      ^
+      165 |   await expect(note).toContainText("can’t reach Table");
+      166 |   expect(sent()).toBe(0);
+      167 |
+        at /home/user/table-shadcn/tests/e2e/b46-refresh-window.spec.ts:164:22
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/b46-refresh-window-B46-2-p-77de4-il-the-member-presses-again-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/b46-refresh-window-B46-2-p-77de4-il-the-member-presses-again-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/b46-refresh-window-B46-2-p-77de4-il-the-member-presses-again-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/b46-refresh-window-B46-2-p-77de4-il-the-member-presses-again-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [chromium] › tests/e2e/b46-refresh-window.spec.ts:94:1 › B46-1: pressed during a refresh → not recorded, said so, values kept; after the refresh one retry records it once 
+    [chromium] › tests/e2e/b46-refresh-window.spec.ts:149:1 › B46-2: pressed while offline → not recorded and said so; back online, nothing is sent until the member presses again 
+  2 passed (58.7s)

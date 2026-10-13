@@ -936,3 +936,18 @@ ignored; root cause in its README, 8/8 on re-run, backlog B46). D152 screenshots
 Not changed: the import (URL reading with pasted ingredients as the fallback, source-fetching and image safeguards),
 groceries, Kroger matching, purchasing, the calendar and its Cook pages. **The Kroger path is not complete**: real
 product search and cart behaviour have not been verified or authorized (B5(b), B6 remain open).
+
+## B46: order confirmation during a refresh (D153) — added 2026-10-13
+
+`tests/e2e/b46-refresh-window.spec.ts` holds the snapshot response, so the press deliberately lands while the screen is
+refreshing (no sleeps, no repeated runs). Measured on the pre-fix build (`634800f`): B46-1 and B46-2 FAIL — the button
+was `disabled` at the tap, 0 click events reached it, 0 ConfirmOrder requests, 0 orders, no message. Verified at
+`8e48816`: `scripts/verify-all.sh` → `docs/table/evidence/2026-10-13-verify-8e48816/`.
+
+| Check | Evidence |
+|---|---|
+| Press during a refresh: the handler runs, refuses, "Not recorded — nothing was sent"; 0 requests, 0 orders; dialog and typed values (extra line, pickup time) kept | B46-1 |
+| Refresh completes: the note says the screen is up to date; still 0 requests (nothing queued); one retry → exactly 1 request, 1 order with the typed values; 0 retailer calls | B46-1 |
+| Offline: refused and said so; back online nothing is sent until the member presses again | B46-2 |
+| Stale screen (another member already confirmed): the server refuses (`already_confirmed`), 1 order, values kept on the edit step | B46-3 |
+| Double press while current: 1 request, 1 order | B46-4 |
