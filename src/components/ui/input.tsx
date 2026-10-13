@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
  * layout (tiny quantity fields, flex rows), so it is not set here.
  */
 export const fieldClass =
-  "min-h-11 min-w-0 rounded-md border border-input bg-input/30 px-3 py-2 text-base text-foreground transition-colors placeholder:text-muted-foreground hover:border-ring focus:bg-input/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive"
+  "min-h-11 min-w-0 rounded-md border border-input bg-input/30 px-[12px] py-[8px] text-base text-foreground transition-colors placeholder:text-muted-foreground hover:border-ring focus:bg-input/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive"
 
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   return <input type={type} data-slot="input" className={cn(fieldClass, className)} {...props} />

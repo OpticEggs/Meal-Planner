@@ -7,7 +7,6 @@ import { AlsoNeed } from "./AlsoNeed";
 import { budgetText, costView, dateLabel, effortText, money, nutrient, preferenceText } from "./format";
 import { RecipeHero, PlaceholderTile } from "./Tile";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Input } from "@/components/ui/input";
 
@@ -225,8 +224,8 @@ function NextDinner({ night }: { night: any }) {
             : ""}
         {night.coverage.status === "unresolved" ? ` Unresolved: ${night.coverage.reason}` : ""}
       </p>
-      {night.kind === "cook" && <Link className={cn(buttonVariants({ variant: "default", size: "lg" }), "w-full")} href={`/cook/${night.night}`} data-testid="cook-link">Cook</Link>}
-      {night.kind === "leftover" && <Link className={cn(buttonVariants({ variant: "default", size: "lg" }), "w-full")} href={`/cook/${night.night}`} data-testid="reheat-link">Reheat and serve</Link>}
+      {night.kind === "cook" && <Link className={buttonVariants({ variant: "default", size: "lg" })} href={`/cook/${night.night}`} data-testid="cook-link">Cook</Link>}
+      {night.kind === "leftover" && <Link className={buttonVariants({ variant: "default", size: "lg" })} href={`/cook/${night.night}`} data-testid="reheat-link">Reheat and serve</Link>}
     </div>
   );
 }

@@ -6,13 +6,14 @@ import { Slot } from "radix-ui"
 /*
  * shadcn/ui Button (new-york), adapted for Table (SHADCN-PLAN P2):
  *  - labels wrap instead of overflowing (B18: 320 px at 200% text) and heights are minimums, so a target is never
- *    smaller than 44 px (38 px for `sm`, still above WCAG 2.5.8's 24 px);
+ *    smaller than 44 px (38 px for `sm`, still above WCAG 2.5.8's 24 px); padding is in px, not rem, so large text
+ *    widens a button by its label only (rem padding doubled at 200% and starved the Week row's title column);
  *  - focus shows the app's tested 3 px outline (theme-contrast.test.ts), not a ring;
  *  - a disabled button keeps pointer events so it is never reported as covered by what is under it;
  *  - `brand` is S2's one warm accent (selection and +); `default` is the near-white primary.
  */
 const buttonVariants = cva(
-  "ui-btn inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium text-center whitespace-normal [overflow-wrap:anywhere] no-underline cursor-pointer transition-colors disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "ui-btn inline-flex items-center justify-center gap-[8px] rounded-md text-sm font-medium text-center whitespace-normal no-underline cursor-pointer transition-colors disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
@@ -26,9 +27,9 @@ const buttonVariants = cva(
         link: "bg-transparent text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "min-h-11 px-4 py-2",
-        sm: "min-h-9.5 gap-1.5 px-3 py-1.5 text-[0.86rem]",
-        lg: "min-h-13.5 px-6 py-3 text-base",
+        default: "min-h-11 px-[16px] py-[8px]",
+        sm: "min-h-9.5 gap-[6px] px-[12px] py-[6px] text-[0.86rem]",
+        lg: "min-h-13.5 px-[24px] py-[12px] text-base",
         icon: "size-11",
         "icon-sm": "size-9.5",
       },
