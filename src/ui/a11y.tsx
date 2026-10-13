@@ -1,4 +1,5 @@
 "use client";
+import { Dialog as DialogPrimitive } from "radix-ui";
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useStore } from "./store";
@@ -100,17 +101,19 @@ export function ConfirmBox({ text, actions, testId }: {
 }
 
 /**
- * A dismissible modal sheet.
- *  - rendered outside `.app`, which is made `inert` while the sheet is open: background controls
- *    cannot be focused, clicked or reached by a screen reader;
- *  - focus moves inside on open (`[data-autofocus]`, else the first control) and Tab / Shift+Tab
- *    wrap inside it;
+ * A dismissible modal sheet, on Radix Dialog (shadcn/ui P1, SHADCN-PLAN §3).
+ *  - Radix supplies the dialog semantics, the focus trap and hiding the rest of the page from assistive technology
+ *    (live regions excepted); `.app` is ALSO made `inert`, so background controls cannot be focused or clicked;
+ *  - focus moves inside on open (`[data-autofocus]`, else the first control); Tab / Shift+Tab wrap inside it,
+ *    a radio group counting as one stop;
  *  - Escape, the Close button and the backdrop (click or tap) all ask to close it. Closing only closes: nothing in
  *    the sheet is applied or saved by closing;
  *  - a sheet that reports unsaved work (`guard.dirty`) routes all three through ONE confirmation instead: "Keep
  *    editing" (focused; Escape, the backdrop or Close again also keep editing, and focus returns to where it was),
- *    "Save for later" when the sheet offers it, and "Discard changes". Work is kept unless the member discards it;
- *  - on close, `returnFocus` puts focus back on the control that opened it (or a survivor).
+ *    "Save for later" when the sheet offers it, and "Discard changes". Work is kept unless the member discards it
+ *    (D57/D144);
+ *  - on close, `returnFocus` puts focus back on the control that opened it (or a survivor) — Radix's own focus
+ *    return is turned off so there is exactly one.
  */
 export function ModalSheet({
   title, subtitle, onClose, returnFocus, closeLabel, testId, guard, children,
@@ -126,7 +129,6 @@ export function ModalSheet({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const headRef = useRef<HTMLDivElement>(null);
-  const titleId = useId();
   const onCloseRef = useRef(onClose);
   const returnRef = useRef(returnFocus);
   const guardRef = useRef(guard);
@@ -146,7 +148,7 @@ export function ModalSheet({
   const restoreFocus = (back: HTMLElement | null) => {
     const dialog = ref.current;
     if (!dialog) return;
-    focusFirst(back && back !== document.body && back !== dialog ? back : null, dialog.querySelector<HTMLElement>("[data-autofocus]"), tabbables(dialog)[0], dialog);
+    focusFirst(back && back !== document.body && back !== dialog && dialog.contains(back) ? back : null, dialog.querySelector<HTMLElement>("[data-autofocus]"), tabbables(dialog)[0], dialog);
   };
   const keepEditing = () => {
     setConfirming(false);
@@ -186,25 +188,18 @@ export function ModalSheet({
   };
 
   useEffect(() => {
-    const dialog = ref.current!;
     const app = document.querySelector<HTMLElement>(".app");
     app?.setAttribute("inert", "");
     document.documentElement.classList.add("modal-open");
-    focusFirst(dialog.querySelector<HTMLElement>("[data-autofocus]"), tabbables(dialog)[0], dialog);
-    // Anything that lands focus outside the sheet (a portal, the address bar returning) is pulled back.
     const onFocusIn = (e: FocusEvent) => {
-      if (!dialog.contains(e.target as Node)) focusFirst(tabbables(dialog)[0], dialog);
-      else if (e.target !== dialog) lastInside.current = e.target as HTMLElement;
+      const dialog = ref.current;
+      if (dialog && dialog.contains(e.target as Node) && e.target !== dialog) lastInside.current = e.target as HTMLElement;
     };
-    // Keys are handled at the document while the sheet is open: if the focused control was just
-    // removed (a cancelled draft), focus is on <body> and Escape / Tab must still work.
+    // Tab wraps with radio groups as one stop (Radix's own wrap sees each radio). Keys are handled at the document:
+    // if the focused control was just removed (a cancelled draft), focus is on <body> and Tab must still work.
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        requestCloseRef.current();
-        return;
-      }
-      if (e.key !== "Tab") return;
+      const dialog = ref.current;
+      if (!dialog || e.key !== "Tab" || e.defaultPrevented) return;
       const stops = tabStops(dialog, !e.shiftKey);
       if (!stops.length) {
         e.preventDefault();
@@ -224,10 +219,10 @@ export function ModalSheet({
       }
     };
     document.addEventListener("focusin", onFocusIn);
-    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("keydown", onKeyDown, true);
     return () => {
       document.removeEventListener("focusin", onFocusIn);
-      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("keydown", onKeyDown, true);
       app?.removeAttribute("inert");
       document.documentElement.classList.remove("modal-open");
       returnRef.current();
@@ -256,38 +251,59 @@ export function ModalSheet({
     };
   }, []);
 
-  if (typeof document === "undefined") return null;
-  return createPortal(
-    <div className="modal-layer">
-      {/* A press on the backdrop never moves focus (mouse or touch); the click or tap asks to close. */}
-      <div className="modal-backdrop" aria-hidden="true" data-testid="modal-backdrop" onMouseDown={(e) => e.preventDefault()} onClick={() => requestCloseRef.current()} />
-      <div ref={ref} className="sheet-modal" role="dialog" aria-modal="true" aria-labelledby={titleId} tabIndex={-1} data-testid={testId}>
-        <div className="sheet-head" ref={headRef}>
-          <div>
-            <h2 id={titleId} className="sheet-title">{title}</h2>
-            {subtitle && <p className="faint small sheet-sub">{subtitle}</p>}
-          </div>
-          <button type="button" className="btn line small" onClick={() => requestCloseRef.current()} aria-label={closeLabel} data-testid="close-sheet">
-            Close
-          </button>
+  return (
+    <DialogPrimitive.Root open onOpenChange={(open) => { if (!open) requestCloseRef.current(); }}>
+      <DialogPrimitive.Portal>
+        <div className="modal-layer">
+          {/* A press on the backdrop never moves focus (mouse or touch); the click or tap asks to close. */}
+          <DialogPrimitive.Overlay className="modal-backdrop" data-testid="modal-backdrop" onMouseDown={(e) => e.preventDefault()} onClick={() => requestCloseRef.current()} />
+          <DialogPrimitive.Content
+            ref={ref}
+            className="sheet-modal"
+            data-testid={testId}
+            tabIndex={-1}
+            aria-describedby={undefined}
+            onOpenAutoFocus={(e) => {
+              e.preventDefault();
+              const dialog = ref.current;
+              if (dialog) focusFirst(dialog.querySelector<HTMLElement>("[data-autofocus]"), tabbables(dialog)[0], dialog);
+            }}
+            onCloseAutoFocus={(e) => e.preventDefault()}
+            // Outside presses are handled by the backdrop's click (so a drag that ends outside never closes).
+            onPointerDownOutside={(e) => e.preventDefault()}
+            onInteractOutside={(e) => e.preventDefault()}
+            onEscapeKeyDown={(e) => {
+              e.preventDefault();
+              requestCloseRef.current();
+            }}
+          >
+            <div className="sheet-head" ref={headRef}>
+              <div>
+                <DialogPrimitive.Title className="sheet-title">{title}</DialogPrimitive.Title>
+                {subtitle && <p className="faint small sheet-sub">{subtitle}</p>}
+              </div>
+              <button type="button" className="btn line small" onClick={() => requestCloseRef.current()} aria-label={closeLabel} data-testid="close-sheet">
+                Close
+              </button>
+            </div>
+            <div className="sheet-body">
+              {confirming && (
+                <ConfirmBox
+                  testId="discard-confirm"
+                  text={guard?.saveForLater ? "You have changes that aren't saved. Keep editing, save them for later, or discard them?" : "Discard your unsaved changes?"}
+                  actions={[
+                    { label: "Keep editing", onClick: keepEditing, disabled: saving },
+                    ...(guard?.saveForLater ? [{ label: saving ? "Saving…" : "Save for later", onClick: () => void saveForLater(), disabled: saving, testId: "confirm-save-later" }] : []),
+                    { label: "Discard changes", onClick: () => onCloseRef.current(), tone: "danger" as const, disabled: saving },
+                  ]}
+                />
+              )}
+              {children}
+            </div>
+          </DialogPrimitive.Content>
         </div>
-        <div className="sheet-body">
-          {confirming && (
-            <ConfirmBox
-              testId="discard-confirm"
-              text={guard?.saveForLater ? "You have changes that aren't saved. Keep editing, save them for later, or discard them?" : "Discard your unsaved changes?"}
-              actions={[
-                { label: "Keep editing", onClick: keepEditing, disabled: saving },
-                ...(guard?.saveForLater ? [{ label: saving ? "Saving…" : "Save for later", onClick: () => void saveForLater(), disabled: saving, testId: "confirm-save-later" }] : []),
-                { label: "Discard changes", onClick: () => onCloseRef.current(), tone: "danger" as const, disabled: saving },
-              ]}
-            />
-          )}
-          {children}
-        </div>
-      </div>
-    </div>,
-    document.body,
+      </DialogPrimitive.Portal>
+    </DialogPrimitive.Root>
   );
 }
 
