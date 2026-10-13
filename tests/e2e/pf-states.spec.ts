@@ -27,6 +27,13 @@ test("PF-1 catalog on a touch phone: photos or 'No photo yet', honest meta, tap 
   await expect(tile(page, CHILI).locator(".gallery-meta")).toContainText("50 min");
   await expect(tile(page, CHILI).locator(".gallery-meta")).toContainText("calories not known yet");
   await expect(tile(page, STIRFRY).locator(".gallery-meta")).toContainText(/est\. \$\d+\.\d\d\/serving/);
+  // Touch: the whole tile opens the recipe (one link, its title; the photo area is part of its tap target).
+  await expect(tile(page, CHILI).getByRole("link")).toHaveCount(1);
+  await expect(tile(page, CHILI).getByRole("link")).toHaveAccessibleName(CHILI);
+  await tile(page, CHILI).tap({ position: { x: 40, y: 60 } });
+  await expect(page.getByTestId("recipe-title")).toHaveText(CHILI);
+  await page.goBack();
+  await expect(tile(page, SALMON)).toBeVisible();
   // Touch: tap + on a tile → the meal is selected with its servings; tapping ✓N opens Selected Meals.
   await tile(page, SALMON).getByRole("button", { name: `Add ${SALMON} to Selected Meals (2 servings)` }).tap();
   const mark = tile(page, SALMON).getByTestId("selected-mark");

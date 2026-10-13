@@ -293,7 +293,7 @@ export function RecipeDetail({ recipeId }: { recipeId: string }) {
             )}
           </div>
           {v.sourceUrl && (
-            <a className="pf-original" href={v.sourceUrl} target="_blank" rel="noopener noreferrer nofollow" data-testid="recipe-source"
+            <a className="pf-original" href={v.sourceUrl} target="_blank" rel="noopener noreferrer nofollow" data-testid="recipe-original"
               aria-label={`Open original — ${v.sourceSiteName ?? v.sourceLabel ?? v.sourceDomain ?? "source page"} (new tab)`}>Open original <ExternalIcon /></a>
           )}
         </div>

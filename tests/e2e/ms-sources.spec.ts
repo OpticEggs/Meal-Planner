@@ -77,7 +77,8 @@ test("URL-12: Jon reads a recipe page, decides the unclear lines, and only then 
   await expect(review).toBeHidden();
   await p.getByRole("tab", { name: "All" }).click();
   const row = p.locator('[data-testid="recipe-row"][data-title="Weeknight Bean Chili"]');
-  await expect(row).toContainText("imported");
+  await row.getByRole("link", { name: "Weeknight Bean Chili" }).click(); // the recipe links its source (D151: not on the tile)
+  await expect(p.getByRole("link", { name: /^Open original/ })).toHaveAttribute("href", "https://recipes.example.com/chili");
   const v = (await q<any>("SELECT source_url, provenance FROM recipe_versions WHERE title='Weeknight Bean Chili'"))[0];
   expect(v).toEqual({ source_url: "https://recipes.example.com/chili", provenance: "imported" });
   await jon.context.close();

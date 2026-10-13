@@ -43,13 +43,13 @@ test("T03: Sounds good, preferences, favorites and notes persist without changin
   await chili.getByRole("link").click();
   await expect(alex.page.getByTestId("recipe-title")).toHaveText("Fixture: Turkey chili"); // opens the selected recipe
   await alex.page.getByRole("button", { name: "Not for me" }).click();
-  await alex.page.getByRole("button", { name: "☆ Favorite" }).click();
+  await alex.page.getByRole("button", { name: "Favorite Fixture: Turkey chili" }).click();
   await alex.page.getByLabel("New note").fill("Too spicy last time");
   await alex.page.getByRole("button", { name: "Save note" }).click();
   await expect(alex.page.getByTestId("notes")).toContainText("Too spicy last time");
   await alex.page.reload();
   await expect(alex.page.getByRole("button", { name: "Not for me" })).toHaveAttribute("aria-pressed", "true");
-  await expect(alex.page.getByRole("button", { name: "★ Favorite" })).toBeVisible();
+  await expect(alex.page.getByRole("button", { name: "Favorite Fixture: Turkey chili" })).toHaveAttribute("aria-pressed", "true");
   // Jon sees the shared interest and Alex's preference, but his own feedback stays unknown.
   await jon.page.goto(`/recipes/${fx.recipes.chili.recipeId}`);
   await expect(jon.page.getByText("Alex: Not for me")).toBeVisible();

@@ -419,6 +419,7 @@ for (const scale of SCALES) {
       await seed();
       const { page, context } = await scaledMember(browser, "jon", scale);
       await page.getByRole("link", { name: "Recipes", exact: true }).click();
+      await page.getByTestId("add-recipe").click(); // D151: + opens Add
       await page.getByTestId("new-recipe").click();
       await expect(page.getByRole("dialog", { name: "New recipe" })).toBeVisible();
       await sweep(page, scale, "New recipe dialog");

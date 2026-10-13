@@ -98,7 +98,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
         </div>
         {/* Not a live region: routine refetches flip this every poll. Going offline and coming
             back are announced once by the announcer instead. */}
-        <div data-testid="currency" data-currency={currency} className={`currency ${currency}`}>
+        <div data-testid="currency" data-currency={currency} className={`currency ${currency}${photoFirst && currency !== "offline" ? " sr-only" : ""}`}>
           {currency === "current" ? "Up to date" : currency === "refreshing" ? "Checking for newer decisions…" : `Offline — showing last synced view; changes are paused${error ? ` (${error})` : ""}`}
         </div>
       </header>

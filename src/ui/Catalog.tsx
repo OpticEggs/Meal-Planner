@@ -85,19 +85,15 @@ export function RecipeGallery({ list, sounds }: { list: any[]; sounds?: boolean 
         const imageId = r.photo?.imageId ?? r.version.imageId ?? null;
         return (
           <li key={r.recipeId} className={`pf-tile ${imageId ? "has-photo" : "no-photo"}`} data-testid="recipe-row" data-title={title} data-photo={pk.kind}>
-            {/* Named by the title; the time, calories and cost line is its description. */}
-            <Link href={`/recipes/${r.recipeId}`} className="recipe-link pf-tile-link" aria-label={title} aria-describedby={`meta-${r.recipeId}`}>
-              {imageId ? (
-                <img className="pf-tile-img" src={`/api/recipe-images/${imageId}`} alt="" loading="lazy" decoding="async" data-testid="recipe-photo" />
-              ) : (
-                <span className="pf-nophoto" data-testid="photo-kind">No photo yet</span>
-              )}
-              <span className="pf-tile-text">
-                <strong className="pf-tile-title">{title}</strong>
-                <span className="pf-tile-meta gallery-meta" id={`meta-${r.recipeId}`}>{meta(r)}</span>
-                {sounds && r.interest && <span className="pf-tile-meta">Sounds good ({r.interest.display_name ?? r.interest.by ?? ""})</span>}
-              </span>
-            </Link>
+            {imageId && <img className="pf-tile-img" src={`/api/recipe-images/${imageId}`} alt="" loading="lazy" decoding="async" data-testid="recipe-photo" />}
+            {!imageId && <span className="pf-nophoto" data-testid="photo-kind">No photo yet</span>}
+            <div className="pf-tile-text">
+              {/* Named by the title; the time, calories and cost line is its description. Its tap area stretches over the
+                  whole tile (CSS ::after), so a finger can tap the photo while keyboard and screen readers meet one link. */}
+              <Link href={`/recipes/${r.recipeId}`} className="recipe-link pf-tile-title" aria-describedby={`meta-${r.recipeId}`}>{title}</Link>
+              <span className="pf-tile-meta gallery-meta" id={`meta-${r.recipeId}`}>{meta(r)}</span>
+              {sounds && r.interest && <span className="pf-tile-meta">Sounds good ({r.interest.display_name ?? r.interest.by ?? ""})</span>}
+            </div>
             <div className="pf-tile-select"><SelectControl recipe={r} compact /></div>
             {sounds && r.interest && (
               <div className="pf-tile-actions">
