@@ -397,6 +397,7 @@ for (const scale of SCALES) {
 
       await go(page, `/recipes/${longId}`);
       await expect(page.getByTestId("recipe-title")).toHaveText(LONG_RECIPE);
+      await page.getByText("Notes and feedback").click(); // D152: folded on the overview
       await page.getByRole("button", { name: "Save note" }).click();
       await expect(page.locator("#new-note-error")).toBeVisible();
       await sweep(page, scale, "Recipe detail (with a note error)");

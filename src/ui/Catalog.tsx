@@ -2,7 +2,6 @@
 import Link from "next/link";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { useStore } from "./store";
-import { money } from "./format";
 import { SelectControl } from "./MealList";
 import { Button } from "@/components/ui/button";
 
@@ -11,9 +10,8 @@ import { Button } from "@/components/ui/button";
 /**
  * Photo-first catalog (owner-approved preview, 2026-10-13; D151). Food photography fills the tile edge to edge; a recipe
  * without a photo says "No photo yet" on a plain tile — never an illustration that could pass for food. Under the title:
- * cooking time, calories and the ingredient-cost estimate per serving when each is complete; otherwise the tile says
- * what is not known yet (unknown is never zero). + adds the meal to Selected Meals; a selected meal shows ✓ and its
- * servings and opens Selected Meals.
+ * cooking time and the original yield when known (D152); nothing is required to save or select a recipe. + adds the
+ * meal to Selected Meals; a selected meal shows ✓ and its servings and opens Selected Meals.
  */
 
 const SCROLL_KEY = "table.catalog.scroll";
@@ -33,16 +31,16 @@ export function timeText(minutes: number | null | undefined, estimate?: boolean)
   return estimate ? `${t} (estimate)` : t;
 }
 
+/** The original yield, when the recipe's amounts were reviewed for one (exact rows agreeing); else null. */
+function yieldOf(r: any): number | null {
+  const s = new Set<number>((r.version.ingredients ?? []).map((i: any) => i.exactServings).filter((x: any) => typeof x === "number"));
+  return s.size === 1 ? [...s][0] : null;
+}
+
+/** Under the title: cooking time and the original yield, each only when known (D152: nothing else is required). */
 function meta(r: any): string {
-  const out: string[] = [];
-  out.push(timeText(r.version.effortMinutes) ?? "time unknown");
-  const kcal = r.nutritionPerPlate?.calories?.value;
-  const cost = r.servingCost?.complete ? r.servingCost.knownMinor : null;
-  if (kcal != null) out.push(`${Math.round(Number(kcal))} kcal`);
-  if (cost != null) out.push(`est. ${money(cost)}/serving`);
-  const unknown = [kcal == null && "calories", cost == null && "cost"].filter(Boolean);
-  if (unknown.length) out.push(`${unknown.join(" and ")} not known yet`);
-  return out.join(" · ");
+  const y = yieldOf(r);
+  return [timeText(r.version.effortMinutes), y ? `makes ${y}` : null].filter(Boolean).join(" · ");
 }
 
 /** Keeps the reader's place: remembered when a recipe is opened, restored once the gallery is back (per tab only). */
@@ -90,8 +88,8 @@ export function RecipeGallery({ list, sounds }: { list: any[]; sounds?: boolean 
             <div className="pf-tile-text">
               {/* Named by the title; the time, calories and cost line is its description. Its tap area stretches over the
                   whole tile (CSS ::after), so a finger can tap the photo while keyboard and screen readers meet one link. */}
-              <Link href={`/recipes/${r.recipeId}`} className="recipe-link pf-tile-title" aria-describedby={`meta-${r.recipeId}`}>{title}</Link>
-              <span className="pf-tile-meta gallery-meta" id={`meta-${r.recipeId}`}>{meta(r)}</span>
+              <Link href={`/recipes/${r.recipeId}`} className="recipe-link pf-tile-title" aria-describedby={meta(r) ? `meta-${r.recipeId}` : undefined}>{title}</Link>
+              {meta(r) && <span className="pf-tile-meta gallery-meta" id={`meta-${r.recipeId}`}>{meta(r)}</span>}
               {sounds && r.interest && <span className="pf-tile-meta">Sounds good ({r.interest.display_name ?? r.interest.by ?? ""})</span>}
             </div>
             <div className="pf-tile-select"><SelectControl recipe={r} compact /></div>

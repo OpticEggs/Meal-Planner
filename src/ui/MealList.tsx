@@ -177,6 +177,10 @@ function MealCard({ m, needs }: { m: any; needs: any[] }) {
       </Link>
       <div className="stack meal-body">
         <h3 className="meal-title"><Link href={`/recipes/${m.recipeId}`}>{m.title}</Link></h3>
+        {m.sourceUrl && (
+          <a className="meal-website" href={m.sourceUrl} target="_blank" rel="noopener noreferrer nofollow" data-testid="meal-original"
+            aria-label={`Open recipe website for ${m.title} (new tab)`}>Open recipe website ↗</a>
+        )}
         <div className="row between">
           <ServingsStepper value={m.servings} label={`Servings of ${m.title}`} disabled={!writesAllowed}
             onChange={(n) => run("SetSelectedMealServings", { selectedMealId: m.id, expectedRevision: m.revision, servings: n }, `${m.title}: ${n} servings`)} />

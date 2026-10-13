@@ -37,8 +37,15 @@ test("U2C-E1: paste a link on Our Recipes → review with source and suggestions
   await p.getByRole("tab", { name: "All" }).click();
   await p.locator('[data-testid="recipe-row"][data-title="Skillet Taco Rice"]').getByRole("link", { name: "Skillet Taco Rice" }).click();
   await expect(p.getByTestId("recipe-source")).toContainText("From Example Kitchen · by Sam Example");
-  await expect(p.getByRole("link", { name: /Open original — Example Kitchen/ })).toHaveAttribute("href", "https://wprm.example.com/skillet-taco-rice/");
-  await expect(p.getByTestId("method-link")).toContainText("The method is on the original page.");
+  // D152: the overview — original yield, the recipe's website (cooking happens there), ingredients; no method on the page.
+  await expect(p.getByTestId("recipe-yield")).toHaveText("Makes 4");
+  await expect(p.getByRole("link", { name: /Open recipe website — Example Kitchen/ })).toHaveAttribute("href", "https://wprm.example.com/skillet-taco-rice/");
+  await expect(p.getByRole("heading", { name: "Instructions" })).toHaveCount(0);
+  // Selected, the meal links the same website.
+  await p.getByTestId("add-to-selected").getByRole("button", { name: "Add Skillet Taco Rice to Selected Meals" }).click();
+  await expect(p.getByTestId("add-to-selected")).toContainText("In your meals · 4 servings");
+  await p.getByTestId("nav-selected").click();
+  await expect(p.getByRole("link", { name: "Open recipe website for Skillet Taco Rice (new tab)" })).toHaveAttribute("href", "https://wprm.example.com/skillet-taco-rice/");
   const v = (await q<any>("SELECT source_url, source_author, source_site_name, image_id, instructions FROM recipe_versions WHERE title='Skillet Taco Rice'"))[0];
   expect(v).toEqual({ source_url: "https://wprm.example.com/skillet-taco-rice/", source_author: "Sam Example", source_site_name: "Example Kitchen", image_id: null, instructions: "" });
   await jon.context.close();

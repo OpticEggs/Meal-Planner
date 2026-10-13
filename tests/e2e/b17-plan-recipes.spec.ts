@@ -171,6 +171,7 @@ test("B17 recipe lists: filter tabs are a real tablist; each row's controls are 
   await fav.click();
   await expect(fav).toHaveAttribute("aria-pressed", "true");
   // Notes: an empty note is an attached error, not a silent no-op.
+  await p.getByText("Notes and feedback").click(); // D152: folded on the overview
   await p.getByRole("button", { name: "Save note" }).click();
   await expect(p.getByLabel("New note")).toHaveAccessibleDescription("Write the note first");
   expect((await focused(p)).id).toBe("new-note");

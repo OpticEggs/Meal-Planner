@@ -75,7 +75,7 @@ test("IO-E1: the reported line reads cleanly; only uncertain lines ask; seasonin
   // Amounts for the servings shown (the reviewed 4 by default): ⅓ cup ÷ 4 × 4, exact, as a kitchen fraction.
   await expect(p.getByText("Ingredients for 4")).toBeVisible();
   await expect(p.getByTestId("recipe-ingredients")).toContainText("⅓ cup");
-  await expect(p.getByRole("link", { name: /Open original — Garden Table Kitchen/ })).toHaveAttribute("href", PESTO);
+  await expect(p.getByRole("link", { name: /Open recipe website — Garden Table Kitchen/ })).toHaveAttribute("href", PESTO);
 
   // The member's own photo: no publisher permission needed; credited to the member; removable.
   await p.getByTestId("photo-input").setInputFiles(PHOTO);

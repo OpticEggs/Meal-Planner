@@ -2,13 +2,12 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useStore } from "./store";
-import { money } from "./format";
 import { focusFirst, tabKeyTarget } from "./a11y";
 import { RecipeEditorDialog } from "./RecipeEditor";
 import { amountText } from "./ImportReview";
 import { AddFromLinkForm, SaveLinkForm, SavedLinksList } from "./SavedLinks";
 import { ImportReviewDialog } from "./ImportReview";
-import { RecipeGallery, matchesSearch, timeText, useCatalogScroll } from "./Catalog";
+import { RecipeGallery, matchesSearch, useCatalogScroll } from "./Catalog";
 import { SelectControl, defaultServings } from "./MealList";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -136,86 +135,6 @@ function reviewedServings(v: any): number | null {
   return s.size === 1 ? defaultServings(v) : null;
 }
 
-const NUTRIENTS = [
-  { key: "calories", label: "Calories", unit: "kcal", word: "calories" },
-  { key: "proteinG", label: "Protein", unit: "g", word: "protein" },
-  { key: "carbsG", label: "Carbs", unit: "g", word: "carbs" },
-  { key: "fatG", label: "Fat", unit: "g", word: "fat" },
-] as const;
-
-/** Display rounding only: whole kcal; grams to one decimal below 10, else whole. */
-function shown(v: string, unit: string): string {
-  const n = Number(v);
-  return unit === "kcal" || n >= 10 ? String(Math.round(n)) : String(Math.round(n * 10) / 10);
-}
-
-/** Per-serving nutrition, each nutrient on its own: complete → its value; partly known → "N accounted for —
- *  incomplete" with the ingredients that have no value; nothing known → "Not available". Unknown is never zero. */
-function NutritionPanel({ r }: { r: any }) {
-  const v = r.version;
-  const name = (k: string) => v.ingredients.find((i: any) => i.ingredientKey === k)?.name ?? k;
-  const used = new Set(v.ingredients.map((i: any) => i.ingredientKey)).size;
-  const rows = NUTRIENTS.map((n) => {
-    const x = r.nutritionPerPlate?.[n.key];
-    const missing: string[] = x?.missing ?? [];
-    const state = !x ? "none" : x.value !== null ? "complete" : missing.length >= used ? "none" : "incomplete";
-    return { ...n, x, missing, state };
-  });
-  const incomplete = rows.filter((n) => n.state === "incomplete");
-  // Missing ingredients, said once when the incomplete nutrients share them, else per nutrient.
-  const sameMissing = incomplete.length > 0 && incomplete.every((n) => n.missing.join("|") === incomplete[0].missing.join("|"));
-  const formMismatch: string[] = r.nutritionPerPlate?.calories?.formMismatch ?? [];
-  return (
-    <section className="pf-section" aria-labelledby="nut-h" data-testid="recipe-nutrition">
-      <h3 id="nut-h" className="pf-label">Nutrition per serving</h3>
-      <dl className="pf-nutrients">
-        {rows.map((n) => (
-          <div key={n.key} data-testid={`nutrient-${n.key}`} data-state={n.state}>
-            <dt>{n.label}</dt>
-            {n.state === "complete" && <dd>{shown(n.x.value, n.unit)}{n.unit === "g" ? " g" : ""}</dd>}
-            {n.state === "incomplete" && <dd className="partial">{shown(n.x.knownPart, n.unit)} {n.unit}<span> accounted for — incomplete</span></dd>}
-            {n.state === "none" && <dd className="na">Not available</dd>}
-          </div>
-        ))}
-      </dl>
-      {incomplete.length > 0 && (sameMissing ? (
-        <p className="pf-fine" data-testid="nutrition-missing">
-          Incomplete — no {incomplete.map((n) => n.word).join(", ")} value is recorded for {incomplete[0].missing.map(name).join(", ")}.
-        </p>
-      ) : (
-        <ul className="pf-fine-list" data-testid="nutrition-missing">
-          {incomplete.map((n) => <li key={n.key}>{n.label}: no value recorded for {n.missing.map(name).join(", ")}</li>)}
-        </ul>
-      ))}
-      {formMismatch.length > 0 && <p className="pf-fine">Values recorded for another form (raw or cooked) don&apos;t apply to {formMismatch.map(name).join(", ")}.</p>}
-      <p className="pf-fine" data-testid="per-serving-basis">
-        A serving is one portion of each part of the recipe. Calculated from the nutrition values recorded for each ingredient — never from the source page.
-        {r.nutritionPerPlate?.synthetic ? " Includes synthetic test values." : ""}
-      </p>
-    </section>
-  );
-}
-
-/** The ingredient-cost estimate for one serving, from recorded package prices; visibly incomplete when a price is
- *  missing, and never a checkout total. */
-function CostPanel({ r }: { r: any }) {
-  const c = r.servingCost;
-  return (
-    <section className="pf-section" aria-labelledby="cost-h" data-testid="recipe-cost">
-      <h3 id="cost-h" className="pf-label">Ingredient cost estimate</h3>
-      {c?.complete ? (
-        <p className="pf-cost"><strong>{money(c.knownMinor)}</strong> a serving</p>
-      ) : c && c.knownMinor > 0 ? (
-        <p className="pf-cost partial"><strong>{money(c.knownMinor)}</strong> a serving accounted for — incomplete</p>
-      ) : (
-        <p className="pf-cost na">Not available</p>
-      )}
-      {c && !c.complete && c.missing.length > 0 && <p className="pf-fine" data-testid="cost-missing">No recorded price for {c.missing.join(", ")}.</p>}
-      <p className="pf-fine">Estimated from recorded package prices for one serving; not a checkout total.</p>
-    </section>
-  );
-}
-
 /** Ingredients for the servings shown beside them (exact per-serving amounts × servings, displayed as kitchen
  *  fractions); a named ingredient without an amount says so. Grouped by part when the recipe has several. */
 function IngredientsPanel({ v, servings }: { v: any; servings: number }) {
@@ -243,6 +162,10 @@ function IngredientsPanel({ v, servings }: { v: any; servings: number }) {
   );
 }
 
+/** Recipe overview (owner scope, 2026-10-13; D152): what choosing and shopping need — the photo when there is one, the
+ *  title, the original yield, the servings to buy for, the ingredients for those servings, and the recipe's own website
+ *  (cooking happens there). Editing and the photo are quiet; notes and feedback are folded away. Instructions, nutrition,
+ *  cost and cooking history stay stored but are not shown here. */
 export function RecipeDetail({ recipeId }: { recipeId: string }) {
   const { library, loadLibrary, me, command, announce } = useStore();
   const [note, setNote] = useState("");
@@ -261,8 +184,8 @@ export function RecipeDetail({ recipeId }: { recipeId: string }) {
   const imageId = r.photo?.imageId ?? null;
   const credit = r.photo ? (r.photo.kind === "member" ? r.photo.label : `Photo: ${r.photo.label}`) : null;
   const yieldN = reviewedServings(v);
-  const facts = [timeText(v.effortMinutes, v.estimate) ?? "time unknown", yieldN ? `makes ${yieldN}` : null].filter(Boolean).join(" · ");
   const n = servings ?? defaultServings(v);
+  const site = v.sourceSiteName ?? v.sourceLabel ?? v.sourceDomain;
   return (
     <article className="pf-detail" data-testid="recipe-detail">
       <figure className={`pf-hero ${imageId ? "has-photo" : "no-photo"}`} data-testid="recipe-hero">
@@ -272,7 +195,7 @@ export function RecipeDetail({ recipeId }: { recipeId: string }) {
           <div className="pf-hero-actions">
             <button type="button" className={`pf-round ${fav ? "on" : ""}`} aria-label={`Favorite ${v.title}`} aria-pressed={fav}
               onClick={() => command("SetFavorite", { recipeId, favorite: !fav })}><span><StarIcon filled={fav} /></span></button>
-            <a href="#recipe-more" className="pf-round" aria-label="More: edit recipe, photo, notes and history"><span><MoreIcon /></span></a>
+            <a href="#recipe-more" className="pf-round" aria-label="More: edit recipe, photo, notes and feedback"><span><MoreIcon /></span></a>
           </div>
         </div>
         {imageId && credit && (
@@ -283,74 +206,54 @@ export function RecipeDetail({ recipeId }: { recipeId: string }) {
       </figure>
       <div className="pf-body">
         <h2 className="pf-recipe-title" data-testid="recipe-title">{v.title}</h2>
-        <div className="pf-facts">
-          <div>
-            <p data-testid="recipe-make-stats">{facts}</p>
-            {v.sourceUrl && (
-              <p className="pf-source" data-testid="recipe-source">
-                From {v.sourceSiteName ?? v.sourceLabel ?? v.sourceDomain}{v.sourceAuthor ? ` · by ${v.sourceAuthor}` : ""}
-              </p>
-            )}
-          </div>
-          {v.sourceUrl && (
-            <a className="pf-original" href={v.sourceUrl} target="_blank" rel="noopener noreferrer nofollow" data-testid="recipe-original"
-              aria-label={`Open original — ${v.sourceSiteName ?? v.sourceLabel ?? v.sourceDomain ?? "source page"} (new tab)`}>Open original <ExternalIcon /></a>
-          )}
-        </div>
+        <p className="pf-yield" data-testid="recipe-yield">{yieldN ? `Makes ${yieldN}` : "Original yield not recorded"}</p>
+        {v.sourceUrl && (
+          <>
+            <a className="pf-website" href={v.sourceUrl} target="_blank" rel="noopener noreferrer nofollow" data-testid="recipe-original"
+              aria-label={`Open recipe website — ${site ?? "source page"} (new tab)`}>Open recipe website <ExternalIcon /></a>
+            <p className="pf-source" data-testid="recipe-source">From {site}{v.sourceAuthor ? ` · by ${v.sourceAuthor}` : ""}</p>
+          </>
+        )}
         {!r.archived && <div className="pf-select" data-testid="add-to-selected"><SelectControl recipe={r} onServings={onServings} /></div>}
-        <NutritionPanel r={r} />
-        <CostPanel r={r} />
         {r.constraint.status !== "ok" && <p className="warnbox">{r.constraint.reasons.join("; ")}</p>}
         <IngredientsPanel v={v} servings={n} />
-        <section className="pf-section" aria-labelledby="steps-h">
-          <h3 id="steps-h" className="pf-label">Instructions</h3>
-          <Steps text={v.instructions} sourceUrl={v.sourceUrl} />
-          {v.reheatInstructions && (<><h3 className="pf-label">Reheat</h3><Steps text={v.reheatInstructions} /></>)}
-        </section>
         <div id="recipe-more" className="pf-more" tabIndex={-1}>
           <div className="pf-quiet-actions">
             <button type="button" className="pf-textlink" aria-haspopup="dialog" onClick={(e) => setEditing(e.currentTarget)} data-testid="edit-recipe">Edit recipe</button>
             <PhotoControls r={r} />
           </div>
           {editing && <RecipeEditorDialog recipeId={recipeId} onClose={() => setEditing(null)} returnFocus={() => focusFirst(editing, () => document.querySelector<HTMLElement>('[data-testid="recipe-title"]'))} />}
-          <h3 className="pf-label">Your take</h3>
-          <div className="pf-chips" role="group" aria-label="Your feedback">
-            {PREFS.map((p) => (
-              <button key={p.v} type="button" className="pf-toggle" aria-pressed={r.preferences[me.memberId] === p.v} aria-label={`${p.label} (your feedback)`}
-                onClick={() => command("SetRecipePreference", { recipeId, value: r.preferences[me.memberId] === p.v ? null : p.v })}>{p.label}</button>
-            ))}
-            <button type="button" className="pf-toggle" disabled={!!r.interest} onClick={() => command("SaveInterest", { recipeId })}>{r.interest ? "In Sounds good" : "Sounds good"}</button>
-          </div>
-          <p className="pf-fine">{library.members.map((m: any) => `${m.displayName}: ${PREFS.find((p) => p.v === r.preferences[m.id])?.label ?? "unknown"}`).join(" · ")}</p>
-          <h3 className="pf-label">Notes</h3>
-          <ul className="pf-fine-list" data-testid="notes">{r.notes.map((x: any) => <li key={x.id}>{x.body} <span className="faint">— {x.by}</span></li>)}</ul>
-          <form className="pf-note-form" noValidate onSubmit={async (e) => {
-            e.preventDefault();
-            if (!note.trim()) {
-              setMsg("Write the note first");
-              document.getElementById("new-note")?.focus();
-              return;
-            }
-            const x = await command("AddRecipeNote", { recipeId, body: note });
-            if (x.status === "accepted") {
-              setNote("");
-              setMsg(null);
-              announce("Note saved.");
-            } else setMsg(x.message);
-          }}>
-            <Input id="new-note" aria-label="New note" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Add a note"
-              aria-invalid={msg ? true : undefined} aria-describedby={msg ? "new-note-error" : undefined} />
-            <Button variant="outline" size="sm">Save note</Button>
-          </form>
-          {msg && <p className="field-error" id="new-note-error" role="alert">{msg}</p>}
-          <h3 className="pf-label">Cooking history (recorded explicitly)</h3>
-          <ul className="pf-fine-list">{r.cooked.length ? r.cooked.map((c: any, i: number) => <li key={i}>{c.on} — {c.by}</li>) : <li className="faint">Nothing recorded.</li>}</ul>
-          <h3 className="pf-label">Versions</h3>
-          <ul className="pf-fine-list">{r.versions.map((x: any) => <li key={x.id}>v{x.versionNo} {x.title} {x.by ? `— ${x.by}` : ""}</li>)}</ul>
-          <p className="pf-fine">
-            Version {v.versionNo} · {v.provenance === "fixture" ? "test fixture" : v.provenance}{v.sourceLabel ? ` · ${v.sourceLabel}` : ""}{v.estimate ? " · amounts/times are estimates" : ""}.
-            Editing creates a new version; dinners already accepted keep the version they were chosen with.
-          </p>
+          <details className="pf-extra" data-testid="notes-and-feedback">
+            <summary>Notes and feedback</summary>
+            <div className="pf-chips" role="group" aria-label="Your feedback">
+              {PREFS.map((p) => (
+                <button key={p.v} type="button" className="pf-toggle" aria-pressed={r.preferences[me.memberId] === p.v} aria-label={`${p.label} (your feedback)`}
+                  onClick={() => command("SetRecipePreference", { recipeId, value: r.preferences[me.memberId] === p.v ? null : p.v })}>{p.label}</button>
+              ))}
+              <button type="button" className="pf-toggle" disabled={!!r.interest} onClick={() => command("SaveInterest", { recipeId })}>{r.interest ? "In Sounds good" : "Sounds good"}</button>
+            </div>
+            <p className="pf-fine">{library.members.map((m: any) => `${m.displayName}: ${PREFS.find((p) => p.v === r.preferences[m.id])?.label ?? "unknown"}`).join(" · ")}</p>
+            <ul className="pf-fine-list" data-testid="notes">{r.notes.map((x: any) => <li key={x.id}>{x.body} <span className="faint">— {x.by}</span></li>)}</ul>
+            <form className="pf-note-form" noValidate onSubmit={async (e) => {
+              e.preventDefault();
+              if (!note.trim()) {
+                setMsg("Write the note first");
+                document.getElementById("new-note")?.focus();
+                return;
+              }
+              const x = await command("AddRecipeNote", { recipeId, body: note });
+              if (x.status === "accepted") {
+                setNote("");
+                setMsg(null);
+                announce("Note saved.");
+              } else setMsg(x.message);
+            }}>
+              <Input id="new-note" aria-label="New note" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Add a note"
+                aria-invalid={msg ? true : undefined} aria-describedby={msg ? "new-note-error" : undefined} />
+              <Button variant="outline" size="sm">Save note</Button>
+            </form>
+            {msg && <p className="field-error" id="new-note-error" role="alert">{msg}</p>}
+          </details>
         </div>
       </div>
     </article>

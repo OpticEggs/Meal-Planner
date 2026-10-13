@@ -44,8 +44,9 @@ test("CF-A-E: Budget Bytes — refused before reading, says why, paste (4 servin
   expect(v).toEqual({ source_url: BB, image_id: null, instructions: "" });
   expect(await q("SELECT 1 FROM recipe_import_drafts WHERE method <> 'user_pasted'")).toEqual([]); // the page was never read
   await openRecipe(page, "One pot chicken and rice");
-  await expect(page.getByRole("link", { name: /Open original — Budget Bytes/ })).toHaveAttribute("href", BB);
-  await expect(page.getByTestId("method-link").getByRole("link", { name: /Open the method/ })).toHaveAttribute("href", BB);
+  // D152: cooking happens on the recipe's website — the overview links it prominently (no method on the page).
+  await expect(page.getByRole("link", { name: /Open recipe website — Budget Bytes/ })).toHaveAttribute("href", BB);
+  await expect(page.getByTestId("recipe-yield")).toHaveText("Makes 4");
   await expect(page.getByTestId("recipe-hero").getByTestId("hero-no-photo")).toHaveText("No photo yet"); // no photo, no illustration
   await expect(page.getByRole("button", { name: "Add a photo" })).toBeVisible();
   await context.close();
@@ -81,7 +82,8 @@ test("CF-B-E1: Brisket tacos from the page — onions distinct, toppings Need a 
   await expect(items).toHaveCount(4);
   await expect(items.first()).toContainText("Flour tortillas, for serving");
   await expect(items.first()).toContainText("Needs a quantity (asked when shopping)");
-  await expect(page.getByTestId("recipe-make-stats")).toContainText("8 h 30 min"); // 510 min, as the recipe states it
+  await page.getByRole("link", { name: "Back to recipes" }).click();
+  await expect(page.locator('[data-testid="recipe-row"][data-title="Brisket Tacos"] .gallery-meta')).toContainText("8 h 30 min"); // 510 min, as stated
   await context.close();
 });
 

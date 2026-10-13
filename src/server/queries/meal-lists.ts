@@ -72,6 +72,7 @@ export async function mealListView(c: Db, householdId: string, list: { id: strin
         updatedBy: x.updated_by_name as string,
         updatedAt: (x.updated_at as Date).toISOString(),
         imageId: v.memberPhotoId ?? v.imageId ?? null,
+        sourceUrl: v.sourceUrl ?? null,
         photoKind: v.memberPhotoId ? ("member" as const) : v.imageId ? ("source" as const) : null,
         unquantified: (v.unquantified ?? []).map((u) => ({ id: u.id, name: u.name, note: u.note })),
       };
