@@ -127,7 +127,9 @@ export function ModalSheet({
   guard?: CloseGuard;
   children: React.ReactNode;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
+  // Radix mounts the portal's content one commit after this component: effects that need the element wait for it.
+  const [dialogEl, setDialogEl] = useState<HTMLDivElement | null>(null);
   const headRef = useRef<HTMLDivElement>(null);
   const onCloseRef = useRef(onClose);
   const returnRef = useRef(returnFocus);
@@ -233,7 +235,7 @@ export function ModalSheet({
   // height is the sheet's scroll padding, so Tab never lands a control underneath it. A title bar
   // that large text made too tall for the screen scrolls with the sheet instead of sticking.
   useEffect(() => {
-    const dialog = ref.current;
+    const dialog = dialogEl;
     const head = headRef.current;
     if (!dialog || !head) return;
     const measure = () => {
@@ -249,7 +251,7 @@ export function ModalSheet({
       ro.disconnect();
       window.removeEventListener("resize", measure);
     };
-  }, []);
+  }, [dialogEl]);
 
   return (
     <DialogPrimitive.Root open onOpenChange={(open) => { if (!open) requestCloseRef.current(); }}>
@@ -258,8 +260,12 @@ export function ModalSheet({
           {/* A press on the backdrop never moves focus (mouse or touch); the click or tap asks to close. */}
           <DialogPrimitive.Overlay className="modal-backdrop" data-testid="modal-backdrop" onMouseDown={(e) => e.preventDefault()} onClick={() => requestCloseRef.current()} />
           <DialogPrimitive.Content
-            ref={ref}
+            ref={(el) => {
+              ref.current = el;
+              setDialogEl(el);
+            }}
             className="sheet-modal"
+            aria-modal="true"
             data-testid={testId}
             tabIndex={-1}
             aria-describedby={undefined}
