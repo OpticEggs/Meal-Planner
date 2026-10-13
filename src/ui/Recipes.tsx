@@ -46,8 +46,8 @@ export function RecipesScreen({ initialFilter = "all" }: { initialFilter?: (type
         <h2 className="page-title">Our Recipes</h2>
         <button className="btn line small" aria-haspopup="dialog" onClick={(e) => setCreating(e.currentTarget)} data-testid="new-recipe">New recipe</button>
       </div>
-      <div className="add-link card"><AddFromLinkForm onOpen={(b, el, result) => setImporting({ b, el, result })} /></div>
-      <div className="row">
+      <AddFromLinkForm compact onOpen={(b, el, result) => setImporting({ b, el, result })} />
+      <div className="catalog-bar">
         <div className="tabs" role="tablist" aria-label="Show recipes">
           {FILTERS.map((f) => (
             <button key={f} role="tab" id={`rtab-${f}`} aria-selected={filter === f} aria-controls="recipe-panel" tabIndex={filter === f ? 0 : -1}
@@ -64,14 +64,14 @@ export function RecipesScreen({ initialFilter = "all" }: { initialFilter?: (type
             </button>
           ))}
         </div>
+        {filter !== "links" && (
+          <div className="catalog-tools">
+            <label className="sr-only" htmlFor="recipe-search">Search recipes</label>
+            <input id="recipe-search" type="search" placeholder="Search recipes or ingredients" value={search} onChange={(e) => setSearch(e.target.value)} />
+            <button type="button" className={`btn line small ${quick ? "on" : ""}`} aria-pressed={quick} onClick={() => setQuick(!quick)}>30 min or less</button>
+          </div>
+        )}
       </div>
-      {filter !== "links" && (
-        <div className="catalog-tools">
-          <label className="sr-only" htmlFor="recipe-search">Search recipes</label>
-          <input id="recipe-search" type="search" placeholder="Search recipes or ingredients" value={search} onChange={(e) => setSearch(e.target.value)} />
-          <button type="button" className={`btn line small ${quick ? "on" : ""}`} aria-pressed={quick} onClick={() => setQuick(!quick)}>30 min or less</button>
-        </div>
-      )}
       {creating && (
         <RecipeEditorDialog recipeId={null} onClose={() => setCreating(null)}
           returnFocus={() => focusFirst(creating, () => document.querySelector<HTMLElement>('[data-testid="new-recipe"]'))} />

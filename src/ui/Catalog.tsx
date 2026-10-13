@@ -82,19 +82,23 @@ export function RecipeGallery({ list, sounds }: { list: any[]; sounds?: boolean 
               </Link>
               <span className={`photo-kind pk-${pk.kind}`} data-testid="photo-kind">{pk.label}</span>
               <div className="gallery-plus"><SelectControl recipe={r} compact /></div>
+              <div className="gallery-fav">
+                <button className={`icon-btn fav ${fav ? "on" : ""}`} aria-label={`Favorite ${title}`} aria-pressed={fav}
+                  onClick={() => command("SetFavorite", { recipeId: r.recipeId, favorite: !fav })}>
+                  <span aria-hidden="true">{fav ? "★" : "☆"}</span>
+                </button>
+              </div>
             </div>
             <Link href={`/recipes/${r.recipeId}`} className="recipe-link gallery-title"><strong>{title}</strong></Link>
             <div className="faint small gallery-meta">
               {meta(r).join(" · ")} · {provenance(r)}
               {r.interest ? ` · Sounds good (${r.interest.display_name ?? r.interest.by ?? ""})` : ""}
             </div>
-            <div className="row gallery-actions">
-              {sounds && r.interest && <button className="btn line small" aria-label={`Clear the idea ${title}`} onClick={() => command("ArchiveInterest", { interestId: r.interest.id })}>Clear idea</button>}
-              <button className={`icon-btn fav ${fav ? "on" : ""}`} aria-label={`Favorite ${title}`} aria-pressed={fav}
-                onClick={() => command("SetFavorite", { recipeId: r.recipeId, favorite: !fav })}>
-                <span aria-hidden="true">{fav ? "★" : "☆"}</span>
-              </button>
-            </div>
+            {sounds && r.interest && (
+              <div className="row gallery-actions">
+                <button className="btn line small" aria-label={`Clear the idea ${title}`} onClick={() => command("ArchiveInterest", { interestId: r.interest.id })}>Clear idea</button>
+              </div>
+            )}
           </li>
         );
       })}

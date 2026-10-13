@@ -30,7 +30,7 @@ function savedBy(b: any): string {
  * page's structured recipe data (when page reading is on), then opens the review. Whatever stops the
  * read, the link stays saved and the review offers to paste the ingredients instead.
  */
-export function AddFromLinkForm({ onOpen }: { onOpen: (b: any, el: HTMLElement, result?: any) => void }) {
+export function AddFromLinkForm({ onOpen, compact = false }: { onOpen: (b: any, el: HTMLElement, result?: any) => void; compact?: boolean }) {
   const { loadLibrary, announce } = useStore();
   const [url, setUrl] = useState("");
   const [errors, setErrors] = useState<Errors>({});
@@ -39,7 +39,7 @@ export function AddFromLinkForm({ onOpen }: { onOpen: (b: any, el: HTMLElement, 
   const urlRef = useRef<HTMLInputElement>(null);
   const urlId = "add-link-url";
   return (
-    <form className="stack" aria-label="Add a recipe from a link" data-testid="add-from-link"
+    <form className={compact ? "stack add-link-compact" : "stack"} aria-label="Add a recipe from a link" data-testid="add-from-link"
       onSubmit={async (e) => {
         e.preventDefault();
         setDone(null);
@@ -70,13 +70,13 @@ export function AddFromLinkForm({ onOpen }: { onOpen: (b: any, el: HTMLElement, 
         const b = (lib ?? undefined)?.bookmarks?.find((x: any) => x.id === r.bookmarkId) ?? { id: r.bookmarkId, url, sourceLabel: "", saves: [] };
         onOpen(b, urlRef.current ?? (e.currentTarget as HTMLElement), r);
       }}>
-      <label htmlFor={urlId}><strong>Add a recipe from a link</strong></label>
+      <label htmlFor={urlId} className={compact ? "sr-only" : undefined}><strong>Add a recipe from a link</strong></label>
       <div className="row link-row">
         <input ref={urlRef} className="grow" type="url" inputMode="url" autoComplete="off" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Paste a recipe page link: https://…" {...fieldProps(urlId, errors)} />
-        <button className="btn primary" type="submit" disabled={busy} data-testid="add-from-link-submit">{busy ? "Reading…" : "Add recipe"}</button>
+        <button className={compact ? "btn line" : "btn primary"} type="submit" disabled={busy} data-testid="add-from-link-submit">{busy ? "Reading…" : "Add recipe"}</button>
       </div>
       <FieldError id={urlId} errors={errors} />
-      <span className="faint small">Table reads the page&apos;s recipe details for you to check. Nothing becomes a recipe until you confirm it.</span>
+      {!compact && <span className="faint small">Table reads the page&apos;s recipe details for you to check. Nothing becomes a recipe until you confirm it.</span>}
       {done && <p role="status" className="small" data-testid="add-from-link-done">{done.message} <Link href={`/recipes/${done.recipeId}`}>Open the recipe</Link></p>}
     </form>
   );

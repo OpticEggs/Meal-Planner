@@ -5,21 +5,23 @@ import { initial } from "./format";
 /**
  * Recipe pictures (2026-10-09 overhaul). A photo is shown only when Table may show it: the member's own
  * photo, or a source photo kept under a recorded per-site permission; it is served by Table to the
- * household's members only. Every other recipe gets a designed illustration — a warm plate on a tinted
- * table, coloured from the title — so a list never looks broken or empty. Pictures are decorative: the
+ * household's members only. Every other recipe gets a quiet dark illustration — a faint plate and the title's
+ * initial — so a list never looks broken or empty, and never looks like a photograph. Pictures are decorative: the
  * title is always beside them.
  */
 
+// Dark, quiet placeholders for the dark theme (2026-10-13): [ground, garnish, ink]. A real photo is the bright thing on
+// the page; an illustration never competes with it and is never mistaken for one.
 const PALETTES: [string, string, string][] = [
-  ["#E9C9A8", "#C9773F", "#7A3E1D"], // terracotta
-  ["#D9DFC3", "#7E9256", "#3E4F28"], // olive
-  ["#F0D9A6", "#D19A3A", "#7B5212"], // saffron
-  ["#E7CFC7", "#B4614F", "#6B2F24"], // paprika
-  ["#D6E0DA", "#6F9585", "#2F4E43"], // sage
-  ["#E9D7C0", "#A8794F", "#5A3B1E"], // walnut
+  ["#1f1914", "#8a5a3a", "#d9b99c"], // terracotta
+  ["#1a1c16", "#6e7f4c", "#c6cfae"], // olive
+  ["#1f1b12", "#a07a2c", "#dcc590"], // saffron
+  ["#1f1816", "#93503f", "#dbbcb2"], // paprika
+  ["#161b19", "#5e8476", "#bfd0c8"], // sage
+  ["#1d1915", "#86643f", "#d3c1aa"], // walnut
 ];
 
-/** The illustration's darkest colour, for the initial drawn over it. */
+/** The illustration's ink colour, for the initial drawn over it. */
 const artInk = (title: string) => PALETTES[hash(title || "Table") % PALETTES.length][2];
 
 function hash(s: string) {
@@ -45,11 +47,11 @@ export function RecipeArt({ title, className, wide = false }: { title: string; c
       <svg className={className} viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false" data-testid="recipe-art">
         <rect width="160" height="100" fill={bg} />
         <path d="M0 78 Q40 70 80 80 T160 76 V100 H0 Z" fill={mid} opacity="0.12" />
-        <circle cx="104" cy="50" r="36" fill="#FFFFFF" opacity="0.5" />
-        <circle cx="104" cy="50" r="30" fill="#FFFDF8" opacity="0.95" />
-        <circle cx="104" cy="50" r="23" fill={mid} opacity="0.2" />
+        <circle cx="104" cy="50" r="36" fill="#FFFFFF" opacity="0.035" />
+        <circle cx="104" cy="50" r="30" fill="#FFFFFF" opacity="0.045" />
+        <circle cx="104" cy="50" r="23" fill={mid} opacity="0.16" />
         {dots.map((d, k) => <circle key={k} cx={d.x} cy={d.y} r={d.s} fill={k % 2 ? mid : deep} opacity="0.8" />)}
-        <circle cx="38" cy="34" r="15" fill="#FFFDF8" opacity="0.9" />
+        <circle cx="38" cy="34" r="15" fill="#FFFFFF" opacity="0.045" />
         <circle cx="38" cy="34" r="10" fill={deep} opacity="0.18" />
         <path d="M30 70 q8 -10 16 0 q-8 6 -16 0z" fill={deep} opacity="0.45" />
         <path d="M44 76 q7 -9 14 0 q-7 5 -14 0z" fill={mid} opacity="0.55" />
@@ -61,10 +63,10 @@ export function RecipeArt({ title, className, wide = false }: { title: string; c
   return (
     <svg className={className} viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false" data-testid="recipe-art">
       <rect width="100" height="100" fill={bg} />
-      <circle cx="50" cy="50" r="38" fill="#FFFFFF" opacity="0.55" />
-      <circle cx="50" cy="50" r="31" fill="#FFFDF8" opacity="0.9" />
-      <circle cx="50" cy="50" r="24" fill={mid} opacity="0.18" />
-      {dots.map((d, k) => <circle key={k} cx={d.x} cy={d.y} r={d.s} fill={k % 2 ? mid : deep} opacity="0.75" />)}
+      <circle cx="50" cy="50" r="38" fill="#FFFFFF" opacity="0.03" />
+      <circle cx="50" cy="50" r="31" fill="#FFFFFF" opacity="0.04" />
+      <circle cx="50" cy="50" r="24" fill={mid} opacity="0.14" />
+      {dots.map((d, k) => <circle key={k} cx={d.x} cy={d.y} r={d.s} fill={k % 2 ? mid : deep} opacity="0.45" />)}
     </svg>
   );
 }
