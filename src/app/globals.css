@@ -12,7 +12,7 @@
   --shadow: none; --shadow-lift: 0 10px 30px rgba(0, 0, 0, 0.5);
   --radius: 20px; --radius-sm: 14px; --nav-h: 68px;
   --font-display: "Fraunces Variable", "Iowan Old Style", "New York", Georgia, serif;
-  --font-body: -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-body: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; /* S3: Geist */
   color-scheme: dark;
 }
 * { box-sizing: border-box; }

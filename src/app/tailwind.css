@@ -1,0 +1,67 @@
+/*
+ * shadcn/ui foundation (SHADCN-PLAN P0, owner-approved S1–S3): Tailwind v4 theme + utilities, the "new-york" neutral
+ * dark tokens, and one warm brand accent. Preflight is deliberately NOT imported yet: unmigrated screens are still
+ * styled by globals.css, which a reset would disturb. Preflight is switched on in P4 when the old CSS is gone.
+ */
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Namespaced --ui-*: globals.css already has --card, --muted … with other meanings (old screens keep them). */
+  /* Dark only (Q3). shadcn new-york neutral, dark values. */
+  --ui-radius: 0.625rem;
+  --ui-background: oklch(0.145 0 0);
+  --ui-foreground: oklch(0.985 0 0);
+  --ui-card: oklch(0.205 0 0);
+  --ui-card-foreground: oklch(0.985 0 0);
+  --ui-popover: oklch(0.205 0 0);
+  --ui-popover-foreground: oklch(0.985 0 0);
+  --ui-primary: oklch(0.922 0 0);
+  --ui-primary-foreground: oklch(0.205 0 0);
+  --ui-secondary: oklch(0.269 0 0);
+  --ui-secondary-foreground: oklch(0.985 0 0);
+  --ui-muted: oklch(0.269 0 0);
+  --ui-muted-foreground: oklch(0.708 0 0);
+  --ui-accent: oklch(0.269 0 0);
+  --ui-accent-foreground: oklch(0.985 0 0);
+  --ui-destructive: oklch(0.704 0.191 22.216);
+  --ui-border: oklch(1 0 0 / 10%);
+  --ui-input: oklch(1 0 0 / 15%);
+  --ui-ring: oklch(0.556 0 0);
+  /* S2: the one warm accent — selection, +, the selected mark. */
+  --ui-brand: #e99a6f;
+  --ui-brand-foreground: #241509;
+}
+
+@theme inline {
+  --color-background: var(--ui-background);
+  --color-foreground: var(--ui-foreground);
+  --color-card: var(--ui-card);
+  --color-card-foreground: var(--ui-card-foreground);
+  --color-popover: var(--ui-popover);
+  --color-popover-foreground: var(--ui-popover-foreground);
+  --color-primary: var(--ui-primary);
+  --color-primary-foreground: var(--ui-primary-foreground);
+  --color-secondary: var(--ui-secondary);
+  --color-secondary-foreground: var(--ui-secondary-foreground);
+  --color-muted: var(--ui-muted);
+  --color-muted-foreground: var(--ui-muted-foreground);
+  --color-accent: var(--ui-accent);
+  --color-accent-foreground: var(--ui-accent-foreground);
+  --color-destructive: var(--ui-destructive);
+  --color-border: var(--ui-border);
+  --color-input: var(--ui-input);
+  --color-ring: var(--ui-ring);
+  --color-brand: var(--ui-brand);
+  --color-brand-foreground: var(--ui-brand-foreground);
+  --radius-sm: calc(var(--ui-radius) - 4px);
+  --radius-md: calc(var(--ui-radius) - 2px);
+  --radius-lg: var(--ui-radius);
+  --radius-xl: calc(var(--ui-radius) + 4px);
+  /* S3: Geist for text, Fraunces for page and recipe titles. */
+  --font-sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
+}
