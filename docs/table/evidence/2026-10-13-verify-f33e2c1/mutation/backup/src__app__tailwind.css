@@ -1,0 +1,70 @@
+/*
+ * shadcn/ui foundation (SHADCN-PLAN, owner-approved S1–S3): Tailwind v4 preflight, theme and utilities, the
+ * "new-york" dark tokens (the same neutral values as globals.css) and one warm brand accent.
+ */
+/* Layer order: preflight (base) < the app's screen layout in globals.css (`app`) < components < utilities. */
+@layer theme, base, app, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css" layer(utilities);
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Namespaced --ui-*: globals.css already has --card, --muted … with other meanings (old screens keep them). */
+  /* Dark only (Q3). shadcn new-york neutral, dark values, in hex so tests/unit/theme-contrast.test.ts checks them;
+     the shared ones equal globals.css's tokens (one palette). */
+  --ui-radius: 0.625rem;
+  --ui-background: #0a0a0a;
+  --ui-foreground: #fafafa;
+  --ui-card: #171717;
+  --ui-card-foreground: #fafafa;
+  --ui-popover: #171717;
+  --ui-popover-foreground: #fafafa;
+  --ui-primary: #e5e5e5;
+  --ui-primary-foreground: #171717;
+  --ui-secondary: #262626;
+  --ui-secondary-foreground: #fafafa;
+  --ui-muted: #262626;
+  --ui-muted-foreground: #a3a3a3;
+  --ui-accent: #262626;
+  --ui-accent-foreground: #fafafa;
+  --ui-destructive: #f2a08f; /* = globals.css --bad */
+  --ui-border: rgba(255, 255, 255, 0.1);
+  --ui-input: rgba(255, 255, 255, 0.15);
+  --ui-ring: #737373;
+  /* S2: the one warm accent — selection, +, the selected mark. */
+  --ui-brand: #e99a6f;
+  --ui-brand-foreground: #241509;
+}
+
+@theme inline {
+  --color-background: var(--ui-background);
+  --color-foreground: var(--ui-foreground);
+  --color-card: var(--ui-card);
+  --color-card-foreground: var(--ui-card-foreground);
+  --color-popover: var(--ui-popover);
+  --color-popover-foreground: var(--ui-popover-foreground);
+  --color-primary: var(--ui-primary);
+  --color-primary-foreground: var(--ui-primary-foreground);
+  --color-secondary: var(--ui-secondary);
+  --color-secondary-foreground: var(--ui-secondary-foreground);
+  --color-muted: var(--ui-muted);
+  --color-muted-foreground: var(--ui-muted-foreground);
+  --color-accent: var(--ui-accent);
+  --color-accent-foreground: var(--ui-accent-foreground);
+  --color-destructive: var(--ui-destructive);
+  --color-border: var(--ui-border);
+  --color-input: var(--ui-input);
+  --color-ring: var(--ui-ring);
+  --color-brand: var(--ui-brand);
+  --color-brand-foreground: var(--ui-brand-foreground);
+  --radius-sm: calc(var(--ui-radius) - 4px);
+  --radius-md: calc(var(--ui-radius) - 2px);
+  --radius-lg: var(--ui-radius);
+  --radius-xl: calc(var(--ui-radius) + 4px);
+  /* S3: Geist for text, Fraunces for page and recipe titles. */
+  --font-sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
+}

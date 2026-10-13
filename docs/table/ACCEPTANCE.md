@@ -894,3 +894,24 @@ Owner-approved plan `docs/table/SHADCN-PLAN.md` (S1–S5 as recommended); delive
 component plumbing only — no command, query, schema or migration change; accessible names and test ids unchanged, so
 every existing browser spec kept its meaning. Added: theme-contrast checks for the component tokens and the one-palette
 pin, mutation `UI_component_text_too_faint`. Decisions D148–D150; deviations from the plan listed in its §7.
+
+## Photo-first catalog and recipe (D151) — added 2026-10-13
+
+Owner-approved previews (catalog and recipe screenshots, 2026-10-13), implemented as one presentation-only pass on
+`claude/photo-first`; verified at `f33e2c1`: `scripts/verify-all.sh` → `docs/table/evidence/2026-10-13-verify-f33e2c1/` (counts in its README;
+side-by-side screenshots of the approved previews and the running implementation in `screens-compare/`).
+
+| Check | Evidence |
+|---|---|
+| Add an unselected recipe with chosen servings; a selected one updates the same selection (one row, 3 → 4), never a duplicate; removal stays on Selected | PF-2, CF-E2 |
+| Touch: tap + selects with its servings; ✓N (≥44 px) opens Selected; tapping the photo opens the recipe | PF-1, CF-E3 |
+| Per-nutrient completeness: complete / "N accounted for — incomplete" naming the ingredient / Not available, never zero; no member confirmation claimed | PF-3 |
+| Cost estimate incomplete when a price is missing, the ingredient named, never $0.00, never a checkout total | PF-3 |
+| Ingredients follow the servings shown; cooking time and instructions never change with servings | PF-2 |
+| No photo: "No photo yet", no illustration | PF-1, import-overhaul, cf-reference-recipes |
+| Enlarged text (320 px at 150/200%): no sideways scroll, no clipped text, targets ≥24 px and uncovered | b18-text-scaling |
+
+Kept on purpose, beyond the previews: the Saved links filter (More links to it), the tab bar's counts (under each
+label), an imported recipe's attribution line, and feedback, notes, history and versions below the instructions (the
+"…" button jumps there). Not added: a cost total for the selected servings (no new calculation; the estimate is per
+serving). Known limitation: at 320 px with 200% text the longer tab names break across lines (as before).
