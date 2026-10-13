@@ -1,11 +1,11 @@
 /*
- * shadcn/ui foundation (SHADCN-PLAN P0, owner-approved S1–S3): Tailwind v4 theme + utilities, the "new-york" neutral
- * dark tokens, and one warm brand accent. Preflight is deliberately NOT imported yet: unmigrated screens are still
- * styled by globals.css, which a reset would disturb. Preflight is switched on in P4 when the old CSS is gone.
+ * shadcn/ui foundation (SHADCN-PLAN, owner-approved S1–S3): Tailwind v4 preflight, theme and utilities, the
+ * "new-york" dark tokens (the same neutral values as globals.css) and one warm brand accent.
  */
-/* Layer order: the hand-written globals.css (`legacy`) sits below components and utilities until P4 removes it. */
-@layer theme, base, legacy, components, utilities;
+/* Layer order: preflight (base) < the app's screen layout in globals.css (`app`) < components < utilities. */
+@layer theme, base, app, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
 @import "tailwindcss/utilities.css" layer(utilities);
 @import "tw-animate-css";
 
@@ -13,25 +13,26 @@
 
 :root {
   /* Namespaced --ui-*: globals.css already has --card, --muted … with other meanings (old screens keep them). */
-  /* Dark only (Q3). shadcn new-york neutral, dark values. */
+  /* Dark only (Q3). shadcn new-york neutral, dark values, in hex so tests/unit/theme-contrast.test.ts checks them;
+     the shared ones equal globals.css's tokens (one palette). */
   --ui-radius: 0.625rem;
   --ui-background: #0a0a0a;
-  --ui-foreground: oklch(0.985 0 0);
+  --ui-foreground: #fafafa;
   --ui-card: #171717;
-  --ui-card-foreground: oklch(0.985 0 0);
+  --ui-card-foreground: #fafafa;
   --ui-popover: #171717;
-  --ui-popover-foreground: oklch(0.985 0 0);
-  --ui-primary: oklch(0.922 0 0);
-  --ui-primary-foreground: oklch(0.205 0 0);
+  --ui-popover-foreground: #fafafa;
+  --ui-primary: #e5e5e5;
+  --ui-primary-foreground: #171717;
   --ui-secondary: #262626;
-  --ui-secondary-foreground: oklch(0.985 0 0);
+  --ui-secondary-foreground: #fafafa;
   --ui-muted: #262626;
   --ui-muted-foreground: #a3a3a3;
   --ui-accent: #262626;
-  --ui-accent-foreground: oklch(0.985 0 0);
-  --ui-destructive: oklch(0.704 0.191 22.216);
-  --ui-border: oklch(1 0 0 / 10%);
-  --ui-input: oklch(1 0 0 / 15%);
+  --ui-accent-foreground: #fafafa;
+  --ui-destructive: #f2a08f; /* = globals.css --bad */
+  --ui-border: rgba(255, 255, 255, 0.1);
+  --ui-input: rgba(255, 255, 255, 0.15);
   --ui-ring: #737373;
   /* S2: the one warm accent — selection, +, the selected mark. */
   --ui-brand: #e99a6f;

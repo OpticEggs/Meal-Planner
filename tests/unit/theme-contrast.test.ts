@@ -8,6 +8,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 const css = readFileSync(path.resolve(__dirname, "../../src/app/globals.css"), "utf8");
+const tw = readFileSync(path.resolve(__dirname, "../../src/app/tailwind.css"), "utf8");
 const layout = readFileSync(path.resolve(__dirname, "../../src/app/layout.tsx"), "utf8");
 function tokens(block: string): Record<string, string> {
   return Object.fromEntries([...block.matchAll(/--([a-z0-9-]+):\s*(#[0-9a-fA-F]{6})/g)].map((m) => [m[1], m[2]]));
@@ -61,4 +62,35 @@ it("dark is the only scheme: no light palette, no prefers-color-scheme switch, o
   expect((css.match(/:root\s*\{/g) ?? []).length).toBe(1);
   expect(layout).not.toMatch(/prefers-color-scheme/);
   expect(layout).toMatch(/themeColor:\s*"#[0-9a-fA-F]{6}"/);
+});
+
+// shadcn/ui components (SHADCN-PLAN P4) read the --ui-* tokens in tailwind.css: the same contract, and one palette.
+describe("theme contrast — the shadcn component tokens", () => {
+  const twStart = tw.indexOf(":root {");
+  const ui = Object.fromEntries(Object.entries(tokens(tw.slice(twStart, tw.indexOf("}", twStart)))).filter(([k]) => k.startsWith("ui-")).map(([k, v]) => [k.slice(3), v]));
+  it("every colour the components use is a checkable hex token", () => {
+    for (const k of ["background", "foreground", "card", "card-foreground", "popover", "popover-foreground", "primary", "primary-foreground", "secondary", "secondary-foreground", "muted", "muted-foreground", "accent", "accent-foreground", "destructive", "ring", "brand", "brand-foreground"]) {
+      expect(ui[k], k).toMatch(/^#[0-9a-fA-F]{6}$/);
+    }
+  });
+  it("component text pairs meet 4.5:1", () => {
+    const pairs: [string, string[]][] = [
+      ["foreground", ["background", "card", "secondary", "muted", "accent"]],
+      ["card-foreground", ["card"]],
+      ["popover-foreground", ["popover"]],
+      ["muted-foreground", ["background", "card", "muted"]],
+      ["primary-foreground", ["primary"]],
+      ["secondary-foreground", ["secondary"]],
+      ["accent-foreground", ["accent"]],
+      ["brand-foreground", ["brand"]],
+      ["destructive", ["background", "card"]],
+    ];
+    const failures: string[] = [];
+    for (const [fg, bgs] of pairs) for (const bg of bgs) if (ratio(ui[fg], ui[bg]) < 4.5) failures.push(`${fg} on ${bg}: ${ratio(ui[fg], ui[bg]).toFixed(2)}`);
+    expect(failures).toEqual([]);
+  });
+  it("is the app's palette: shared roles have the same values", () => {
+    const same: [string, string][] = [["background", "bg"], ["card", "card"], ["foreground", "text"], ["muted-foreground", "muted"], ["secondary", "card-2"], ["brand", "accent-fill"], ["brand-foreground", "on-accent"], ["destructive", "bad"]];
+    for (const [u, g] of same) expect(ui[u].toLowerCase(), `--ui-${u} = --${g}`).toBe(t[g].toLowerCase());
+  });
 });

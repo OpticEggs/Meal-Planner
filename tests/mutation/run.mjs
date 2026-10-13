@@ -237,6 +237,8 @@ MUTATIONS.push(
     edits: [["--muted: #a3a3a3; --faint: #8f8f8f;", "--muted: #a3a3a3; --faint: #4a4a4a;"]] },
   { name: "UI_muted_text_too_faint", file: "src/app/globals.css", suite: THEME, pattern: "theme contrast", expect: [/theme contrast — the one dark palette/],
     edits: [["--muted: #a3a3a3; --faint: #8f8f8f;", "--muted: #4a4a4a; --faint: #8f8f8f;"]] },
+  { name: "UI_component_text_too_faint", file: "src/app/tailwind.css", suite: THEME, pattern: "theme contrast", expect: [/theme contrast — the shadcn component tokens/],
+    edits: [["--ui-primary-foreground: #171717;", "--ui-primary-foreground: #bdbdbd;"]] },
   { name: "B9_reset_keeps_sessions", file: "src/server/provision.ts", suite: B9R, pattern: "B9", expect: [/ends that member's sessions/],
     edits: [["  await ctx.internalAdapter.deleteUserSessions(userId);", "  // (mutated) sessions kept"]] },
   { name: "B9_reset_any_account", file: "src/server/provision.ts", suite: B9R, pattern: "B9", expect: [/non-member account/],

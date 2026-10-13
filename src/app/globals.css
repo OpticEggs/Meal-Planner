@@ -1,7 +1,7 @@
-/* shadcn P2: the hand-written styles live in the `legacy` layer, below Tailwind's utilities (tailwind.css declares the
-   order), so a migrated shadcn component's classes win over the element rules here while unmigrated screens look the
-   same. Removed in P4. */
-@layer legacy {
+/* The app's own screen layout, in the `app` cascade layer: above Tailwind's preflight (base), below shadcn component
+   classes and utilities (tailwind.css declares the order), so a component's classes always win over the element rules
+   here. */
+@layer app {
 /* Table — dark, photo-first design (Q3, 2026-10-11: dark always; the light theme is retired, not offered). A
    near-black, slightly warm neutral ground lets food photography carry the colour; terracotta accents, a serif
    display face (Fraunces, OFL) for titles and the system face for everything you read. One palette; components
@@ -30,6 +30,12 @@ html[data-header="static"] .top { position: relative; }
 html, body { margin: 0; background: var(--page); color: var(--text); font-family: var(--font-body); font-size: 100%; line-height: 1.5; -webkit-font-smoothing: antialiased; }
 button, input, select, textarea { font: inherit; color: inherit; }
 a { color: var(--text); text-underline-offset: 0.18em; text-decoration-color: var(--faint); }
+/* Preflight resets these; the app keeps a readable baseline (classes below still set their own). Links in text are
+   underlined (WCAG 1.4.1), headings keep their hierarchy, bullet lists keep bullets. */
+a { text-decoration: underline; }
+h1, h2, h3, h4, h5, h6 { font-weight: 650; line-height: 1.25; }
+h1 { font-size: 2em; } h2 { font-size: 1.5em; } h3 { font-size: 1.17em; } h4 { font-size: 1em; }
+ul, ol { padding-left: 1.25em; margin-block: 0.5em; } ul { list-style: disc; } ol { list-style: decimal; }
 :focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -103,16 +109,6 @@ input:focus, select:focus, textarea:focus { background: var(--card); border-colo
 textarea { line-height: 1.5; }
 input[type="checkbox"], input[type="radio"] { width: auto; min-height: auto; accent-color: var(--accent-fill); }
 input.tiny { width: 5.5em; }
-.btn { border: 0; border-radius: 999px; padding: 10px 18px; font-weight: 650; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; transition: transform 80ms, background 120ms; }
-.btn:active:not(:disabled) { transform: scale(0.98); }
-.btn.primary { background: var(--accent-fill); color: var(--on-accent); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08); }
-.btn.line { background: var(--card); border: 1px solid var(--line-strong); color: var(--text); }
-.btn.quiet { background: transparent; color: var(--amber); padding-inline: 8px; }
-.btn.small { padding: 6px 13px; font-size: 0.86rem; min-height: 38px; }
-.btn.full { width: 100%; }
-.btn.big { min-height: 54px; font-size: 1.05rem; }
-.btn:disabled { opacity: 0.45; cursor: not-allowed; }
-.btn.danger { background: transparent; border: 1px solid var(--bad); color: var(--bad); }
 .danger-text { color: var(--bad) !important; }
 .icon-btn { width: 44px; height: 44px; flex: none; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--muted); display: grid; place-items: center; cursor: pointer; font-size: 1.15rem; }
 .icon-btn.fav.on { color: var(--amber); border-color: var(--amber); background: var(--accent-soft); }
@@ -385,4 +381,4 @@ ol.steps > li::before { content: counter(step); font-family: var(--font-display)
 .selection-bar { width: fit-content; max-width: 100%; margin: 12px 0 0 auto; border-radius: 999px; padding: 10px 18px; gap: 14px; font-size: 0.95rem; }
 .catalog-bar .catalog-tools input[type="search"] { flex: 1 1 140px; }
 .catalog-bar .catalog-tools .ui-btn { flex: none; }
-} /* @layer legacy */
+} /* @layer app */
