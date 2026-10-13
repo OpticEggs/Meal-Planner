@@ -1,0 +1,65 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner:
+      - generic [ref=e3]: Up to date
+    - main [ref=e4]:
+      - article [ref=e5]:
+        - figure [ref=e6]:
+          - generic: No photo yet
+          - generic [ref=e7]:
+            - link "Back to recipes" [ref=e8] [cursor=pointer]:
+              - /url: /recipes
+              - img [ref=e10]
+            - generic [ref=e12]:
+              - 'button "Favorite Fixture: Turkey chili" [ref=e13] [cursor=pointer]':
+                - img [ref=e15]
+              - 'link "More: edit recipe, photo, notes and feedback" [ref=e17] [cursor=pointer]':
+                - /url: "#recipe-more"
+                - img [ref=e19]
+        - generic [ref=e23]:
+          - 'heading "Fixture: Turkey chili" [level=2] [ref=e24]'
+          - paragraph [ref=e25]: Original yield not recorded
+          - generic [ref=e27]:
+            - 'group "Servings of Fixture: Turkey chili" [ref=e28]':
+              - 'button "Fewer servings (Servings of Fixture: Turkey chili)" [ref=e29] [cursor=pointer]':
+                - generic [ref=e30]: −
+              - status [ref=e31]: "2"
+              - generic [ref=e32]: servings
+              - 'button "More servings (Servings of Fixture: Turkey chili)" [ref=e33] [cursor=pointer]':
+                - generic [ref=e34]: +
+            - 'button "Add Fixture: Turkey chili to Selected Meals" [ref=e35] [cursor=pointer]': Add to meals
+          - region "Ingredients for 2" [ref=e36]:
+            - heading "Ingredients for 2" [level=3] [ref=e37]
+            - list [ref=e38]:
+              - listitem [ref=e39]:
+                - list [ref=e40]:
+                  - listitem [ref=e41]:
+                    - generic [ref=e42]: Ground turkey
+                    - generic [ref=e43]: 8 oz
+                  - listitem [ref=e44]:
+                    - generic [ref=e45]: Kidney beans (canned)
+                    - generic [ref=e46]: 1 can
+                  - listitem [ref=e47]:
+                    - generic [ref=e48]: Tomato sauce
+                    - generic [ref=e49]: 1 cup
+          - generic [ref=e50]:
+            - generic [ref=e51]:
+              - button "Edit recipe" [ref=e52] [cursor=pointer]
+              - button "Add a photo" [ref=e54] [cursor=pointer]
+            - group [ref=e55]:
+              - generic "Notes and feedback" [ref=e56] [cursor=pointer]
+    - navigation "Main" [ref=e57]:
+      - link "Recipes" [ref=e58] [cursor=pointer]:
+        - /url: /recipes
+      - link "Selected" [ref=e59] [cursor=pointer]:
+        - /url: /selected
+      - link "Groceries" [ref=e60] [cursor=pointer]:
+        - /url: /groceries
+      - link "More" [ref=e61] [cursor=pointer]:
+        - /url: /more
+  - status [ref=e62]
+  - alert [ref=e63]
+```

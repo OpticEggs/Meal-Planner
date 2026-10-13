@@ -1,0 +1,160 @@
+
+Running 4 tests using 1 worker
+
+  ✘  1 [chromium] › tests/e2e/pilot-fixes.spec.ts:28:1 › PM-1: … opens a sheet in place — no jump, focus back on …; Edit keeps its discard guard; Add a photo opens the picker (1.0m)
+  ✘  2 [chromium] › tests/e2e/pilot-fixes.spec.ts:94:1 › PM-2: checklist rows — name, total, Have it; a missing amount stays in view; a package not chosen is said quietly; no status badges (13.7s)
+  ✘  3 [chromium] › tests/e2e/pilot-fixes.spec.ts:145:1 › PM-3: Have it binds to the exact requirement, moves the row and keeps focus, reaches the other member; partial amounts under Details (15.0s)
+  ✘  4 [chromium] › tests/e2e/pilot-fixes.spec.ts:196:1 › PM-4: approvals and sending from the checklist are unchanged; a send for a list that changed is refused with no retailer call (1.0m)
+
+
+  1) [chromium] › tests/e2e/pilot-fixes.spec.ts:28:1 › PM-1: … opens a sheet in place — no jump, focus back on …; Edit keeps its discard guard; Add a photo opens the picker 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.boundingBox: Test ended.
+    Call log:
+    [2m  - waiting for getByTestId('recipe-more')[22m
+
+
+      37 |   const y0 = await scrollY(p);
+      38 |   expect(y0).toBe(10);
+    > 39 |   expect((await more.boundingBox())!.y).toBeGreaterThanOrEqual(0);
+         |                      ^
+      40 |
+      41 |   // Open: a dialog, not navigation — no #fragment, the page stays where it was.
+      42 |   await tapMore();
+        at /home/user/table-shadcn/tests/e2e/pilot-fixes.spec.ts:39:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/pilot-fixes-PM-1-…-opens-a-81b96-dd-a-photo-opens-the-picker-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/pilot-fixes-PM-1-…-opens-a-81b96-dd-a-photo-opens-the-picker-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/pilot-fixes-PM-1-…-opens-a-81b96-dd-a-photo-opens-the-picker-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/pilot-fixes-PM-1-…-opens-a-81b96-dd-a-photo-opens-the-picker-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › tests/e2e/pilot-fixes.spec.ts:94:1 › PM-2: checklist rows — name, total, Have it; a missing amount stays in view; a package not chosen is said quietly; no status badges 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator:  getByTestId('buy-salmon')
+    Expected: [32m"12.0 oz (340 g)"[39m
+    Received: [31m"12.0 oz (340 g)[7m → amount to buy not known yet[27m"[39m
+    Timeout:  10000ms
+
+    Call log:
+    [2m  - Expect "toHaveText" with timeout 10000ms[22m
+    [2m  - waiting for getByTestId('buy-salmon')[22m
+    [2m    14 × locator resolved to <div class="line-buy" data-testid="buy-salmon">12.0 oz (340 g) → amount to buy not known yet</div>[22m
+    [2m       - unexpected value "12.0 oz (340 g) → amount to buy not known yet"[22m
+
+
+      113 |   const salmon = p.getByTestId("line-salmon");
+      114 |   await expect(salmon.getByRole("heading", { name: "Salmon fillet" })).toBeVisible();
+    > 115 |   await expect(p.getByTestId("buy-salmon")).toHaveText("12.0 oz (340 g)");
+          |                                             ^
+      116 |   await expect(salmon.getByRole("button", { name: "Have it: Salmon fillet" })).toBeVisible();
+      117 |   await expect(p.getByTestId("package-note-salmon")).toHaveText("Recipe amount known · store package not chosen yet");
+      118 |   await expect(p.getByTestId("amount-problem-salmon")).toHaveCount(0);
+        at /home/user/table-shadcn/tests/e2e/pilot-fixes.spec.ts:115:45
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/pilot-fixes-PM-2-checklist-2fad9-id-quietly-no-status-badges-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/pilot-fixes-PM-2-checklist-2fad9-id-quietly-no-status-badges-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/pilot-fixes-PM-2-checklist-2fad9-id-quietly-no-status-badges-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/pilot-fixes-PM-2-checklist-2fad9-id-quietly-no-status-badges-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chromium] › tests/e2e/pilot-fixes.spec.ts:145:1 › PM-3: Have it binds to the exact requirement, moves the row and keeps focus, reaches the other member; partial amounts under Details 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator:  getByTestId('buy-rice')
+    Expected: [32m"10.6 oz (300 g)"[39m
+    Received: [31m"10.6 oz (300 g)[7m → 1 × Jasmine rice 2 lb bag[27m"[39m
+    Timeout:  10000ms
+
+    Call log:
+    [2m  - Expect "toHaveText" with timeout 10000ms[22m
+    [2m  - waiting for getByTestId('buy-rice')[22m
+    [2m    14 × locator resolved to <div class="line-buy" data-testid="buy-rice">10.6 oz (300 g) → 1 × Jasmine rice 2 lb bag</div>[22m
+    [2m       - unexpected value "10.6 oz (300 g) → 1 × Jasmine rice 2 lb bag"[22m
+
+
+      156 |   await settled(p);
+      157 |   // Rice is needed by both meals: one row, its total; the breakdown is under Details.
+    > 158 |   await expect(p.getByTestId("buy-rice")).toHaveText("10.6 oz (300 g)");
+          |                                           ^
+      159 |   await p.getByTestId("line-rice").getByText("Details").click();
+      160 |   await expect(p.getByTestId("sources-rice")).toContainText("Salmon rice bowls");
+      161 |   await expect(p.getByTestId("sources-rice")).toContainText("Sheet-pan chicken and rice");
+        at /home/user/table-shadcn/tests/e2e/pilot-fixes.spec.ts:158:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/pilot-fixes-PM-3-Have-it-b-6fdba-rtial-amounts-under-Details-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/pilot-fixes-PM-3-Have-it-b-6fdba-rtial-amounts-under-Details-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/pilot-fixes-PM-3-Have-it-b-6fdba-rtial-amounts-under-Details-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/pilot-fixes-PM-3-Have-it-b-6fdba-rtial-amounts-under-Details-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/pilot-fixes-PM-3-Have-it-b-6fdba-rtial-amounts-under-Details-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [chromium] › tests/e2e/pilot-fixes.spec.ts:196:1 › PM-4: approvals and sending from the checklist are unchanged; a send for a list that changed is refused with no retailer call 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test ended.
+    Call log:
+    [2m  - waiting for getByTestId('have-rice')[22m
+
+
+      205 |   // What the screen was ready to send, then the list changes (Have it on one line) before it is sent.
+      206 |   const before = (await (await p.request.get("/api/snapshot")).json()).groceries.summary;
+    > 207 |   await p.getByTestId("have-rice").click();
+          |                                    ^
+      208 |   await expect(p.getByTestId("line-rice")).toHaveAttribute("data-to-send", "0");
+      209 |   const calls = await retailerCalls();
+      210 |   const stale = await p.request.post("/api/commands/StartHandoff", { data: { operationId: `StartHandoff-${Date.now()}`, payload: { weekId: (await (await p.request.get("/api/snapshot")).json()).week.id, reviewFingerprint: before.reviewFingerprint, payloadHash: before.payloadHash } } });
+        at /home/user/table-shadcn/tests/e2e/pilot-fixes.spec.ts:207:36
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/pilot-fixes-PM-4-approvals-c7146-fused-with-no-retailer-call-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/pilot-fixes-PM-4-approvals-c7146-fused-with-no-retailer-call-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/pilot-fixes-PM-4-approvals-c7146-fused-with-no-retailer-call-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/pilot-fixes-PM-4-approvals-c7146-fused-with-no-retailer-call-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [chromium] › tests/e2e/pilot-fixes.spec.ts:28:1 › PM-1: … opens a sheet in place — no jump, focus back on …; Edit keeps its discard guard; Add a photo opens the picker 
+    [chromium] › tests/e2e/pilot-fixes.spec.ts:94:1 › PM-2: checklist rows — name, total, Have it; a missing amount stays in view; a package not chosen is said quietly; no status badges 
+    [chromium] › tests/e2e/pilot-fixes.spec.ts:145:1 › PM-3: Have it binds to the exact requirement, moves the row and keeps focus, reaches the other member; partial amounts under Details 
+    [chromium] › tests/e2e/pilot-fixes.spec.ts:196:1 › PM-4: approvals and sending from the checklist are unchanged; a send for a list that changed is refused with no retailer call 

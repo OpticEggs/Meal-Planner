@@ -1,0 +1,211 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - heading "Table" [level=1] [ref=e6]
+          - paragraph [ref=e7]:
+            - text: Signed in as
+            - strong [ref=e8]: Jon
+            - text: · test household
+        - 'generic "Simulated retailer: transfers are recorded locally and never reach a store." [ref=e9]': Simulated retailer
+      - generic [ref=e10]: Up to date
+    - main [ref=e11]:
+      - region "Groceries" [ref=e12]:
+        - heading "Groceries" [level=2] [ref=e13]
+        - paragraph [ref=e14]: For 2 selected meals. Amounts are combined before they are rounded to packages.
+        - generic [ref=e16]:
+          - heading "Needs a quantity (1)" [level=3] [ref=e17]
+          - paragraph [ref=e18]: These recipes name an ingredient without an amount. Give the amount you want for the servings you planned, or mark Don't buy. The list can't be sent until each one is answered.
+          - list "Needs a quantity (1)" [ref=e19]:
+            - listitem [ref=e20]:
+              - generic [ref=e21]:
+                - strong [ref=e22]: flour tortillas
+                - generic [ref=e23]: for Brisket Tacos · 2 servings · for serving
+              - generic [ref=e24]:
+                - generic [ref=e25]: Amount of flour tortillas for Brisket Tacos
+                - textbox "Amount of flour tortillas for Brisket Tacos" [ref=e26]:
+                  - /placeholder: amount
+                - generic [ref=e27]: Unit for flour tortillas
+                - combobox "Unit for flour tortillas" [ref=e28] [cursor=pointer]:
+                  - option "g"
+                  - option "kg"
+                  - option "oz"
+                  - option "lb"
+                  - option "ml"
+                  - option "l"
+                  - option "tsp"
+                  - option "tbsp"
+                  - option "cup"
+                  - option "fl_oz"
+                  - option "each" [selected]
+                - button "Set the amount of flour tortillas for Brisket Tacos" [disabled] [ref=e29]: Set amount
+                - button "Don't buy flour tortillas for Brisket Tacos" [ref=e30] [cursor=pointer]: Don't buy
+        - heading "To buy (5)" [level=3] [ref=e31]
+        - list "To buy (5)" [ref=e32]:
+          - listitem [ref=e33]:
+            - generic [ref=e34]:
+              - 'heading "beef brisket: Needs review, No product chosen, Unresolved" [level=3] [ref=e35]': beef brisket
+              - generic [ref=e36]:
+                - generic [ref=e37]: Needs review
+                - generic [ref=e38]: No product chosen
+                - generic [ref=e39]: Unresolved
+            - generic [ref=e40]:
+              - generic [ref=e41]: 12.0 oz (340 g) → amount to buy not known yet
+              - generic [ref=e42]: "Dinners: 12.0 oz (340 g) — Brisket Tacos"
+              - generic [ref=e43]: No product chosen for this ingredient
+            - generic [ref=e44]:
+              - textbox "Amount of beef brisket on hand (g)" [ref=e45]:
+                - /placeholder: amt
+              - group "Availability for beef brisket" [ref=e46]:
+                - button "Have enough beef brisket" [ref=e47] [cursor=pointer]: Have enough
+                - button "Have some beef brisket" [ref=e48] [cursor=pointer]: Have some
+                - button "Need beef brisket" [ref=e49] [cursor=pointer]: Need
+            - group [ref=e50]:
+              - generic "Product & purchase" [ref=e51] [cursor=pointer]
+          - listitem [ref=e52]:
+            - generic [ref=e53]:
+              - 'heading "Cucumber: Needs review" [level=3] [ref=e54]': Cucumber
+              - generic [ref=e56]: Needs review
+            - generic [ref=e57]:
+              - generic [ref=e58]: 1 → 1 × Cucumber
+              - generic [ref=e59]: "Dinners: 1 — Salmon rice bowls"
+            - generic [ref=e60]:
+              - textbox "Amount of Cucumber on hand (each)" [ref=e61]:
+                - /placeholder: amt
+              - group "Availability for Cucumber" [ref=e62]:
+                - button "Have enough Cucumber" [ref=e63] [cursor=pointer]: Have enough
+                - button "Have some Cucumber" [ref=e64] [cursor=pointer]: Have some
+                - button "Need Cucumber" [ref=e65] [cursor=pointer]: Need
+            - group [ref=e66]:
+              - generic "Product & purchase" [ref=e67] [cursor=pointer]
+          - listitem [ref=e68]:
+            - generic [ref=e69]:
+              - 'heading "flour tortillas: Needs review, No product chosen, Unresolved" [level=3] [ref=e70]': flour tortillas
+              - generic [ref=e71]:
+                - generic [ref=e72]: Needs review
+                - generic [ref=e73]: No product chosen
+                - generic [ref=e74]: Unresolved
+            - generic [ref=e75]:
+              - generic [ref=e76]: amount to buy not known yet
+              - generic [ref=e77]: Needs a quantity for Brisket Tacos (the recipe gives no amount)
+              - generic [ref=e78]: No product chosen for this ingredient
+            - group [ref=e79]:
+              - generic "Product & purchase" [ref=e80] [cursor=pointer]
+          - listitem [ref=e81]:
+            - generic [ref=e82]:
+              - 'heading "Jasmine rice: Needs review" [level=3] [ref=e83]': Jasmine rice
+              - generic [ref=e85]: Needs review
+            - generic [ref=e86]:
+              - generic [ref=e87]: 5.3 oz (150 g) → 1 × Jasmine rice 2 lb bag
+              - generic [ref=e88]: "Dinners: 5.3 oz (150 g) — Salmon rice bowls"
+            - generic [ref=e89]:
+              - textbox "Amount of Jasmine rice on hand (g)" [ref=e90]:
+                - /placeholder: amt
+              - group "Availability for Jasmine rice" [ref=e91]:
+                - button "Have enough Jasmine rice" [ref=e92] [cursor=pointer]: Have enough
+                - button "Have some Jasmine rice" [ref=e93] [cursor=pointer]: Have some
+                - button "Need Jasmine rice" [ref=e94] [cursor=pointer]: Need
+            - group [ref=e95]:
+              - generic "Product & purchase" [ref=e96] [cursor=pointer]
+          - listitem [ref=e97]:
+            - generic [ref=e98]:
+              - 'heading "Salmon fillet: Needs review, No product chosen, Unresolved" [level=3] [ref=e99]': Salmon fillet
+              - generic [ref=e100]:
+                - generic [ref=e101]: Needs review
+                - generic [ref=e102]: No product chosen
+                - generic [ref=e103]: Unresolved
+            - generic [ref=e104]:
+              - generic [ref=e105]: 12.0 oz (340 g) → amount to buy not known yet
+              - generic [ref=e106]: "Dinners: 12.0 oz (340 g) — Salmon rice bowls"
+              - generic [ref=e107]: No product chosen for this ingredient
+            - generic [ref=e108]:
+              - textbox "Amount of Salmon fillet on hand (g)" [ref=e109]:
+                - /placeholder: amt
+              - group "Availability for Salmon fillet" [ref=e110]:
+                - button "Have enough Salmon fillet" [ref=e111] [cursor=pointer]: Have enough
+                - button "Have some Salmon fillet" [ref=e112] [cursor=pointer]: Have some
+                - button "Need Salmon fillet" [ref=e113] [cursor=pointer]: Need
+            - group [ref=e114]:
+              - generic "Product & purchase" [ref=e115] [cursor=pointer]
+        - generic [ref=e116]: Also need
+        - generic [ref=e117]:
+          - generic [ref=e118]: Also need
+          - combobox "Also need" [ref=e119]
+          - button "Add" [ref=e120] [cursor=pointer]
+          - button "Extra" [ref=e121] [cursor=pointer]
+        - heading "Buy it" [level=3] [ref=e122]
+        - group "Where to shop" [ref=e124]:
+          - generic [ref=e125]: Where to shop
+          - paragraph [ref=e126]:
+            - text: "Now:"
+            - strong [ref=e127]: Simulated retailer cart
+          - generic [ref=e128]:
+            - 'radio "Simulated retailer cart The simulated retailer: transfers are recorded here and never reach a store." [checked] [ref=e129]'
+            - generic [ref=e130]:
+              - strong [ref=e131]: Simulated retailer cart
+              - text: "The simulated retailer: transfers are recorded here and never reach a store."
+          - generic [ref=e132]:
+            - radio "Instacart shopping list A link to a shopping list on Instacart, where you pick the store, products and checkout. Not a cart transfer and not an order. Not set up here — it needs Instacart developer access. You can still choose it and copy the list." [ref=e133]
+            - generic [ref=e134]:
+              - strong [ref=e135]: Instacart shopping list
+              - text: A link to a shopping list on Instacart, where you pick the store, products and checkout. Not a cart transfer and not an order. Not set up here — it needs Instacart developer access. You can still choose it and copy the list.
+          - generic [ref=e136]:
+            - radio "Another store — copy the list Copy or download the list and shop anywhere. Copying doesn't order or record anything." [ref=e137]
+            - generic [ref=e138]:
+              - strong [ref=e139]: Another store — copy the list
+              - text: Copy or download the list and shop anywhere. Copying doesn't order or record anything.
+        - generic [ref=e140]:
+          - generic [ref=e141]: Pickup estimate
+          - paragraph [ref=e142]: $4.78 known + 2 unpriced
+          - paragraph [ref=e143]: For the packages in this purchase, at simulated store prices.
+          - group [ref=e144]:
+            - generic "How this is estimated" [ref=e145] [cursor=pointer]
+          - generic [ref=e146]:
+            - generic [ref=e147]:
+              - generic [ref=e148]: Dinner ingredients
+              - strong [ref=e149]: $1.45 known + 2 unpriced
+              - emphasis [ref=e150]: value used by planned dinners
+            - generic [ref=e151]:
+              - generic [ref=e152]: Still to buy
+              - strong [ref=e153]: $4.78 known + 3 unpriced
+              - emphasis [ref=e154]: after what is sent, ordered or received
+            - generic [ref=e155]:
+              - generic [ref=e156]: Budget
+              - strong [ref=e157]: No budget set
+        - group "Grocery readiness" [ref=e158]:
+          - strong [ref=e159]: Not ready yet
+          - list [ref=e160]:
+            - listitem [ref=e161]: "beef brisket: No product chosen for this ingredient"
+            - listitem [ref=e162]: "Cucumber: purchase not approved for 1 package(s)"
+            - listitem [ref=e163]: "flour tortillas: Needs a quantity for Brisket Tacos (the recipe gives no amount)"
+            - listitem [ref=e164]: "Jasmine rice: purchase not approved for 1 package(s)"
+            - listitem [ref=e165]: "Salmon fillet: No product chosen for this ingredient"
+        - generic [ref=e166]:
+          - button "Approve 2 reviewable" [ref=e167] [cursor=pointer]
+          - button "Send to Simulated retailer" [disabled] [ref=e168]
+        - button "Grocery list (5 to buy) — copy or download" [ref=e170] [cursor=pointer]:
+          - strong [ref=e171]: Grocery list
+          - generic [ref=e172]: (5 to buy) — copy or download
+        - generic [ref=e173]:
+          - heading "After checkout" [level=3] [ref=e174]
+          - button "Confirm order contents…" [ref=e175] [cursor=pointer]
+    - navigation "Main" [ref=e176]:
+      - link "Recipes" [ref=e177] [cursor=pointer]:
+        - /url: /recipes
+      - link "Selected, 2 meals" [ref=e178] [cursor=pointer]:
+        - /url: /selected
+        - text: Selected
+        - generic [ref=e179]: "2"
+      - link "Groceries, 5 lines need attention" [active] [ref=e180] [cursor=pointer]:
+        - /url: /groceries
+        - text: Groceries
+        - generic [ref=e181]: "5"
+      - link "More" [ref=e182] [cursor=pointer]:
+        - /url: /more
+  - status [ref=e183]: Brisket Tacos added to Selected Meals, 2 servings
+  - alert [ref=e184]
+```

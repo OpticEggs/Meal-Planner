@@ -951,3 +951,25 @@ was `disabled` at the tap, 0 click events reached it, 0 ConfirmOrder requests, 0
 | Offline: refused and said so; back online nothing is sent until the member presses again | B46-2 |
 | Stale screen (another member already confirmed): the server refuses (`already_confirmed`), 1 order, values kept on the edit step | B46-3 |
 | Double press while current: 1 request, 1 order | B46-4 |
+
+## Household-pilot fixes (D154, D155) and the quantity diagnosis — added 2026-10-13
+
+Branch `claude/pilot-fixes` from `aea3124`; verified at `a2cdff9`: `scripts/verify-all.sh` → `docs/table/evidence/2026-10-13-verify-a2cdff9/`.
+The same spec run against `aea3124`'s code first: all of PM-1..PM-4 FAIL there (`pilot-before-aea3124/`), and on that
+build a tap on "…" changed the URL to `#recipe-more` and scrolled the page from 10 px to 295 px with no menu.
+
+| Check | Evidence |
+|---|---|
+| "…" opens a sheet; no URL fragment; the page does not move on open, Escape, Close or after the editor closes; focus returns to "…" | PM-1 |
+| Edit recipe from the sheet keeps the discard guard (Keep editing / Discard changes); nothing saved on discard | PM-1 |
+| Add a photo from the sheet opens the file picker; the photo is saved; Replace / Remove offered after | PM-1 |
+| Row = name, total required, Have it; no status badges or status words outside Details | PM-2 |
+| "Amount unknown" with its reason in view vs "Recipe amount known · store package not chosen yet" | PM-2 |
+| Readiness still names the problems; Send stays disabled | PM-2 |
+| Have it records "Have enough" bound to the exact requirement (`reviewed_exact` 300 g, `current_requirement`); row moves to Have it with focus kept; the other member sees it; pressed again records Need | PM-3 |
+| Partial amount on hand under Details; the total stays the requirement; "still to buy" shown there | PM-3 |
+| Approve and Send from the checklist; a send for a list that changed is refused `stale_review` with 0 retailer calls and no batch | PM-4 |
+| 320 px at 200% text: no sideways scroll, nothing cut off, Have it ≥ 44 px; the sheet fits | PM-5 |
+
+Quantities (cilantro 736 oz, eggs 6 g, brisket 128 oz): **cause for the household not established** — see
+`docs/table/evidence/2026-10-13-pilot-quantities/README.md`. No quantity or recipe was changed.

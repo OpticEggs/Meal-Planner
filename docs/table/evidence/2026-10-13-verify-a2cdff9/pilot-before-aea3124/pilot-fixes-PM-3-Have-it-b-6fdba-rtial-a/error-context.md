@@ -1,0 +1,196 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - heading "Table" [level=1] [ref=e6]
+          - paragraph [ref=e7]:
+            - text: Signed in as
+            - strong [ref=e8]: Jon
+            - text: · test household
+        - 'generic "Simulated retailer: transfers are recorded locally and never reach a store." [ref=e9]': Simulated retailer
+      - generic [ref=e10]: Up to date
+    - main [ref=e11]:
+      - region "Groceries" [ref=e12]:
+        - heading "Groceries" [level=2] [ref=e13]
+        - paragraph [ref=e14]: For 2 selected meals. Amounts are combined before they are rounded to packages.
+        - heading "To buy (6)" [level=3] [ref=e15]
+        - list "To buy (6)" [ref=e16]:
+          - listitem [ref=e17]:
+            - generic [ref=e18]:
+              - 'heading "Broccoli: Needs review" [level=3] [ref=e19]': Broccoli
+              - generic [ref=e21]: Needs review
+            - generic [ref=e22]:
+              - generic [ref=e23]: 7.1 oz (200 g) → 1 × Broccoli crowns 1 lb
+              - generic [ref=e24]: "Dinners: 7.1 oz (200 g) — Sheet-pan chicken and rice"
+            - generic [ref=e25]:
+              - textbox "Amount of Broccoli on hand (g)" [ref=e26]:
+                - /placeholder: amt
+              - group "Availability for Broccoli" [ref=e27]:
+                - button "Have enough Broccoli" [ref=e28] [cursor=pointer]: Have enough
+                - button "Have some Broccoli" [ref=e29] [cursor=pointer]: Have some
+                - button "Need Broccoli" [ref=e30] [cursor=pointer]: Need
+            - group [ref=e31]:
+              - generic "Product & purchase" [ref=e32] [cursor=pointer]
+          - listitem [ref=e33]:
+            - generic [ref=e34]:
+              - 'heading "Chicken thighs: Needs review" [level=3] [ref=e35]': Chicken thighs
+              - generic [ref=e37]: Needs review
+            - generic [ref=e38]:
+              - generic [ref=e39]: 12.0 oz (340 g) → 1 × Chicken thighs tray (about 1.5 lb)
+              - generic [ref=e40]: "Dinners: 12.0 oz (340 g) — Sheet-pan chicken and rice"
+            - generic [ref=e41]:
+              - textbox "Amount of Chicken thighs on hand (g)" [ref=e42]:
+                - /placeholder: amt
+              - group "Availability for Chicken thighs" [ref=e43]:
+                - button "Have enough Chicken thighs" [ref=e44] [cursor=pointer]: Have enough
+                - button "Have some Chicken thighs" [ref=e45] [cursor=pointer]: Have some
+                - button "Need Chicken thighs" [ref=e46] [cursor=pointer]: Need
+            - group [ref=e47]:
+              - generic "Product & purchase" [ref=e48] [cursor=pointer]
+          - listitem [ref=e49]:
+            - generic [ref=e50]:
+              - 'heading "Cucumber: Needs review" [level=3] [ref=e51]': Cucumber
+              - generic [ref=e53]: Needs review
+            - generic [ref=e54]:
+              - generic [ref=e55]: 1 → 1 × Cucumber
+              - generic [ref=e56]: "Dinners: 1 — Salmon rice bowls"
+            - generic [ref=e57]:
+              - textbox "Amount of Cucumber on hand (each)" [ref=e58]:
+                - /placeholder: amt
+              - group "Availability for Cucumber" [ref=e59]:
+                - button "Have enough Cucumber" [ref=e60] [cursor=pointer]: Have enough
+                - button "Have some Cucumber" [ref=e61] [cursor=pointer]: Have some
+                - button "Need Cucumber" [ref=e62] [cursor=pointer]: Need
+            - group [ref=e63]:
+              - generic "Product & purchase" [ref=e64] [cursor=pointer]
+          - listitem [ref=e65]:
+            - generic [ref=e66]:
+              - 'heading "Olive oil: Needs review" [level=3] [ref=e67]': Olive oil
+              - generic [ref=e69]: Needs review
+            - generic [ref=e70]:
+              - generic [ref=e71]: 29.57 ml → 1 × Olive oil 500 ml
+              - generic [ref=e72]: "Dinners: 29.57 ml — Sheet-pan chicken and rice"
+            - generic [ref=e73]:
+              - textbox "Amount of Olive oil on hand (ml)" [ref=e74]:
+                - /placeholder: amt
+              - group "Availability for Olive oil" [ref=e75]:
+                - button "Have enough Olive oil" [ref=e76] [cursor=pointer]: Have enough
+                - button "Have some Olive oil" [ref=e77] [cursor=pointer]: Have some
+                - button "Need Olive oil" [ref=e78] [cursor=pointer]: Need
+            - group [ref=e79]:
+              - generic "Product & purchase" [ref=e80] [cursor=pointer]
+          - listitem [ref=e81]:
+            - generic [ref=e82]:
+              - 'heading "Jasmine rice: Needs review" [level=3] [ref=e83]': Jasmine rice
+              - generic [ref=e85]: Needs review
+            - generic [ref=e86]:
+              - generic [ref=e87]: 10.6 oz (300 g) → 1 × Jasmine rice 2 lb bag
+              - generic [ref=e88]: "Dinners: 10.6 oz (300 g) — Salmon rice bowls, Sheet-pan chicken and rice"
+            - generic [ref=e89]:
+              - textbox "Amount of Jasmine rice on hand (g)" [ref=e90]:
+                - /placeholder: amt
+              - group "Availability for Jasmine rice" [ref=e91]:
+                - button "Have enough Jasmine rice" [ref=e92] [cursor=pointer]: Have enough
+                - button "Have some Jasmine rice" [ref=e93] [cursor=pointer]: Have some
+                - button "Need Jasmine rice" [ref=e94] [cursor=pointer]: Need
+            - group [ref=e95]:
+              - generic "Product & purchase" [ref=e96] [cursor=pointer]
+          - listitem [ref=e97]:
+            - generic [ref=e98]:
+              - 'heading "Salmon fillet: Needs review" [level=3] [ref=e99]': Salmon fillet
+              - generic [ref=e101]: Needs review
+            - generic [ref=e102]:
+              - generic [ref=e103]: 12.0 oz (340 g) → 1 × Salmon fillets 12 oz
+              - generic [ref=e104]: "Dinners: 12.0 oz (340 g) — Salmon rice bowls"
+            - generic [ref=e105]:
+              - textbox "Amount of Salmon fillet on hand (g)" [ref=e106]:
+                - /placeholder: amt
+              - group "Availability for Salmon fillet" [ref=e107]:
+                - button "Have enough Salmon fillet" [ref=e108] [cursor=pointer]: Have enough
+                - button "Have some Salmon fillet" [ref=e109] [cursor=pointer]: Have some
+                - button "Need Salmon fillet" [ref=e110] [cursor=pointer]: Need
+            - group [ref=e111]:
+              - generic "Product & purchase" [ref=e112] [cursor=pointer]
+        - generic [ref=e113]: Also need
+        - generic [ref=e114]:
+          - generic [ref=e115]: Also need
+          - combobox "Also need" [ref=e116]
+          - button "Add" [ref=e117] [cursor=pointer]
+          - button "Extra" [ref=e118] [cursor=pointer]
+        - heading "Buy it" [level=3] [ref=e119]
+        - group "Where to shop" [ref=e121]:
+          - generic [ref=e122]: Where to shop
+          - paragraph [ref=e123]:
+            - text: "Now:"
+            - strong [ref=e124]: Simulated retailer cart
+          - generic [ref=e125]:
+            - 'radio "Simulated retailer cart The simulated retailer: transfers are recorded here and never reach a store." [checked] [ref=e126]'
+            - generic [ref=e127]:
+              - strong [ref=e128]: Simulated retailer cart
+              - text: "The simulated retailer: transfers are recorded here and never reach a store."
+          - generic [ref=e129]:
+            - radio "Instacart shopping list A link to a shopping list on Instacart, where you pick the store, products and checkout. Not a cart transfer and not an order. Not set up here — it needs Instacart developer access. You can still choose it and copy the list." [ref=e130]
+            - generic [ref=e131]:
+              - strong [ref=e132]: Instacart shopping list
+              - text: A link to a shopping list on Instacart, where you pick the store, products and checkout. Not a cart transfer and not an order. Not set up here — it needs Instacart developer access. You can still choose it and copy the list.
+          - generic [ref=e133]:
+            - radio "Another store — copy the list Copy or download the list and shop anywhere. Copying doesn't order or record anything." [ref=e134]
+            - generic [ref=e135]:
+              - strong [ref=e136]: Another store — copy the list
+              - text: Copy or download the list and shop anywhere. Copying doesn't order or record anything.
+        - generic [ref=e137]:
+          - generic [ref=e138]: Pickup estimate
+          - paragraph [ref=e139]: $34.74
+          - paragraph [ref=e140]: For the packages in this purchase, at simulated store prices.
+          - group [ref=e141]:
+            - generic "How this is estimated" [ref=e142] [cursor=pointer]
+          - generic [ref=e143]:
+            - generic [ref=e144]:
+              - generic [ref=e145]: Dinner ingredients
+              - strong [ref=e146]: $18.48
+              - emphasis [ref=e147]: value used by planned dinners
+            - generic [ref=e148]:
+              - generic [ref=e149]: Still to buy
+              - strong [ref=e150]: $34.74
+              - emphasis [ref=e151]: after what is sent, ordered or received
+            - generic [ref=e152]:
+              - generic [ref=e153]: Budget
+              - strong [ref=e154]: No budget set
+        - group "Grocery readiness" [ref=e155]:
+          - strong [ref=e156]: Not ready yet
+          - list [ref=e157]:
+            - listitem [ref=e158]: "Broccoli: purchase not approved for 1 package(s)"
+            - listitem [ref=e159]: "Chicken thighs: purchase not approved for 1 package(s)"
+            - listitem [ref=e160]: "Cucumber: purchase not approved for 1 package(s)"
+            - listitem [ref=e161]: "Olive oil: purchase not approved for 1 package(s)"
+            - listitem [ref=e162]: "Jasmine rice: purchase not approved for 1 package(s)"
+            - listitem [ref=e163]: "Salmon fillet: purchase not approved for 1 package(s)"
+        - generic [ref=e164]:
+          - button "Approve 6 reviewable" [ref=e165] [cursor=pointer]
+          - button "Send to Simulated retailer" [disabled] [ref=e166]
+        - button "Grocery list (6 to buy) — copy or download" [ref=e168] [cursor=pointer]:
+          - strong [ref=e169]: Grocery list
+          - generic [ref=e170]: (6 to buy) — copy or download
+        - generic [ref=e171]:
+          - heading "After checkout" [level=3] [ref=e172]
+          - button "Confirm order contents…" [ref=e173] [cursor=pointer]
+    - navigation "Main" [ref=e174]:
+      - link "Recipes" [ref=e175] [cursor=pointer]:
+        - /url: /recipes
+      - link "Selected, 2 meals" [ref=e176] [cursor=pointer]:
+        - /url: /selected
+        - text: Selected
+        - generic [ref=e177]: "2"
+      - link "Groceries, 6 lines need attention" [active] [ref=e178] [cursor=pointer]:
+        - /url: /groceries
+        - text: Groceries
+        - generic [ref=e179]: "6"
+      - link "More" [ref=e180] [cursor=pointer]:
+        - /url: /more
+  - status [ref=e181]: "Fixture: Sheet-pan chicken and rice added to Selected Meals, 2 servings"
+  - alert [ref=e182]
+```

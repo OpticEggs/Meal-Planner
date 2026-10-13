@@ -1,0 +1,139 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - heading "Table" [level=1] [ref=e6]
+          - paragraph [ref=e7]:
+            - text: Signed in as
+            - strong [ref=e8]: Jon
+            - text: · test household
+        - 'generic "Simulated retailer: transfers are recorded locally and never reach a store." [ref=e9]': Simulated retailer
+      - generic [ref=e10]: Up to date
+    - main [ref=e11]:
+      - region "Groceries" [ref=e12]:
+        - heading "Groceries" [level=2] [ref=e13]
+        - paragraph [ref=e14]: For 1 selected meal. Amounts are combined before they are rounded to packages.
+        - heading "To buy (3)" [level=3] [ref=e15]
+        - list "To buy (3)" [ref=e16]:
+          - listitem [ref=e17]:
+            - generic [ref=e18]:
+              - 'heading "Cucumber: Approved, approved ×1" [level=3] [ref=e19]': Cucumber
+              - generic [ref=e21]: Approved
+            - generic [ref=e22]:
+              - generic [ref=e23]: 1 → 1 × Cucumber
+              - generic [ref=e24]: "Dinners: 1 — Salmon rice bowls"
+            - generic [ref=e25]:
+              - textbox "Amount of Cucumber on hand (each)" [ref=e26]:
+                - /placeholder: amt
+              - group "Availability for Cucumber" [ref=e27]:
+                - button "Have enough Cucumber" [ref=e28] [cursor=pointer]: Have enough
+                - button "Have some Cucumber" [ref=e29] [cursor=pointer]: Have some
+                - button "Need Cucumber" [ref=e30] [cursor=pointer]: Need
+            - group [ref=e31]:
+              - generic "Product & purchase" [ref=e32] [cursor=pointer]
+          - listitem [ref=e33]:
+            - generic [ref=e34]:
+              - 'heading "Jasmine rice: Approved, approved ×1" [level=3] [ref=e35]': Jasmine rice
+              - generic [ref=e37]: Approved
+            - generic [ref=e38]:
+              - generic [ref=e39]: 5.3 oz (150 g) → 1 × Jasmine rice 2 lb bag
+              - generic [ref=e40]: "Dinners: 5.3 oz (150 g) — Salmon rice bowls"
+            - generic [ref=e41]:
+              - textbox "Amount of Jasmine rice on hand (g)" [ref=e42]:
+                - /placeholder: amt
+              - group "Availability for Jasmine rice" [ref=e43]:
+                - button "Have enough Jasmine rice" [ref=e44] [cursor=pointer]: Have enough
+                - button "Have some Jasmine rice" [ref=e45] [cursor=pointer]: Have some
+                - button "Need Jasmine rice" [ref=e46] [cursor=pointer]: Need
+            - group [ref=e47]:
+              - generic "Product & purchase" [ref=e48] [cursor=pointer]
+          - listitem [ref=e49]:
+            - generic [ref=e50]:
+              - 'heading "Salmon fillet: Approved, approved ×1" [level=3] [ref=e51]': Salmon fillet
+              - generic [ref=e53]: Approved
+            - generic [ref=e54]:
+              - generic [ref=e55]: 12.0 oz (340 g) → 1 × Salmon fillets 12 oz
+              - generic [ref=e56]: "Dinners: 12.0 oz (340 g) — Salmon rice bowls"
+            - generic [ref=e57]:
+              - textbox "Amount of Salmon fillet on hand (g)" [ref=e58]:
+                - /placeholder: amt
+              - group "Availability for Salmon fillet" [ref=e59]:
+                - button "Have enough Salmon fillet" [ref=e60] [cursor=pointer]: Have enough
+                - button "Have some Salmon fillet" [ref=e61] [cursor=pointer]: Have some
+                - button "Need Salmon fillet" [ref=e62] [cursor=pointer]: Need
+            - group [ref=e63]:
+              - generic "Product & purchase" [ref=e64] [cursor=pointer]
+        - generic [ref=e65]: Also need
+        - generic [ref=e66]:
+          - generic [ref=e67]: Also need
+          - combobox "Also need" [ref=e68]
+          - button "Add" [ref=e69] [cursor=pointer]
+          - button "Extra" [ref=e70] [cursor=pointer]
+        - heading "Buy it" [level=3] [ref=e71]
+        - group "Where to shop" [ref=e73]:
+          - generic [ref=e74]: Where to shop
+          - paragraph [ref=e75]:
+            - text: "Now:"
+            - strong [ref=e76]: Simulated retailer cart
+          - generic [ref=e77]:
+            - 'radio "Simulated retailer cart The simulated retailer: transfers are recorded here and never reach a store." [checked] [ref=e78]'
+            - generic [ref=e79]:
+              - strong [ref=e80]: Simulated retailer cart
+              - text: "The simulated retailer: transfers are recorded here and never reach a store."
+          - generic [ref=e81]:
+            - radio "Instacart shopping list A link to a shopping list on Instacart, where you pick the store, products and checkout. Not a cart transfer and not an order. Not set up here — it needs Instacart developer access. You can still choose it and copy the list." [ref=e82]
+            - generic [ref=e83]:
+              - strong [ref=e84]: Instacart shopping list
+              - text: A link to a shopping list on Instacart, where you pick the store, products and checkout. Not a cart transfer and not an order. Not set up here — it needs Instacart developer access. You can still choose it and copy the list.
+          - generic [ref=e85]:
+            - radio "Another store — copy the list Copy or download the list and shop anywhere. Copying doesn't order or record anything." [ref=e86]
+            - generic [ref=e87]:
+              - strong [ref=e88]: Another store — copy the list
+              - text: Copy or download the list and shop anywhere. Copying doesn't order or record anything.
+        - generic [ref=e89]:
+          - generic [ref=e90]: Pickup estimate
+          - paragraph [ref=e91]: $15.77
+          - paragraph [ref=e92]: For the packages in this purchase, at simulated store prices.
+          - group [ref=e93]:
+            - generic "How this is estimated" [ref=e94] [cursor=pointer]
+          - generic [ref=e95]:
+            - generic [ref=e96]:
+              - generic [ref=e97]: Dinner ingredients
+              - strong [ref=e98]: $12.44
+              - emphasis [ref=e99]: value used by planned dinners
+            - generic [ref=e100]:
+              - generic [ref=e101]: Still to buy
+              - strong [ref=e102]: $15.77
+              - emphasis [ref=e103]: after what is sent, ordered or received
+            - generic [ref=e104]:
+              - generic [ref=e105]: Budget
+              - strong [ref=e106]: No budget set
+        - group "Grocery readiness" [ref=e107]:
+          - strong [ref=e108]: Groceries ready to send.
+        - generic [ref=e109]:
+          - button "Approve 0 reviewable" [disabled] [ref=e110]
+          - button "Send to Simulated retailer" [ref=e111] [cursor=pointer]
+        - button "Grocery list (3 to buy) — copy or download" [ref=e113] [cursor=pointer]:
+          - strong [ref=e114]: Grocery list
+          - generic [ref=e115]: (3 to buy) — copy or download
+        - generic [ref=e116]:
+          - heading "After checkout" [level=3] [ref=e117]
+          - button "Confirm order contents…" [ref=e118] [cursor=pointer]
+    - navigation "Main" [ref=e119]:
+      - link "Recipes" [ref=e120] [cursor=pointer]:
+        - /url: /recipes
+      - link "Selected, 1 meal" [ref=e121] [cursor=pointer]:
+        - /url: /selected
+        - text: Selected
+        - generic [ref=e122]: "1"
+      - link "Groceries" [ref=e123] [cursor=pointer]:
+        - /url: /groceries
+      - link "More" [ref=e124] [cursor=pointer]:
+        - /url: /more
+  - status [ref=e125]: "Fixture: Salmon rice bowls added to Selected Meals, 2 servings"
+  - alert [ref=e126]
+```
