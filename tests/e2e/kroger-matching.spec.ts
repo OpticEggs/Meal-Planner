@@ -194,3 +194,44 @@ test("KM-E5: matching several items at once, and the dialogs at 320 px with 200%
   expect(calls.cart).toEqual([]);
   await jon.context.close();
 });
+
+test("KM-E6: from the selected-meals checklist — Match at Kroger, choose once, packages follow the total; Buy it trimmed; no cart request", async ({ browser }) => {
+  await seed();
+  await start();
+  const jon = await member(browser, "jon", { viewport: { width: 390, height: 844 }, start: "/recipes" });
+  const p = jon.page;
+  const tile = p.locator('[data-testid="recipe-row"][data-title="Fixture: Salmon rice bowls"]');
+  await tile.getByRole("button", { name: /^Add / }).click();
+  await expect(tile.getByTestId("selected-mark")).toBeVisible();
+  await p.getByTestId("nav-groceries").click();
+  await expect(p.getByTestId("groceries")).toHaveAttribute("data-scope", "list");
+  // Every line still has the simulated store's product: all of them are offered for matching at Kroger.
+  const lines = await p.locator('[data-testid^="line-"]').count();
+  await expect(p.getByTestId("kroger-match-row")).toContainText(`${lines} items have no Kroger product yet`);
+  await p.getByTestId("kroger-match").click();
+  const dialog = p.getByRole("dialog", { name: "Match products at Kroger" });
+  await dialog.getByTestId("kroger-match-start").click();
+  const rice = dialog.getByRole("region", { name: "Kroger products for Jasmine rice" });
+  await rice.locator('[data-product-id="0003000000001"]').getByRole("button", { name: /Use Synthetic Jasmine Rice 2 lb bag/ }).click();
+  await expect(dialog.getByRole("heading", { name: /Jasmine rice — chose Synthetic Jasmine Rice 2 lb bag/ })).toBeVisible();
+  await p.keyboard.press("Escape");
+  await expect(dialog).toHaveCount(0);
+  await expect(p.getByTestId("kroger-match")).toBeFocused();
+  // The row keeps its total; the chosen Kroger package now decides how many to buy (150 g → one 2 lb bag).
+  await expect(p.getByTestId("buy-rice")).toHaveText("5.3 oz (150 g)");
+  await expect(p.getByTestId("line-rice")).toHaveAttribute("data-to-send", "1");
+  await p.getByTestId("line-rice").getByText("Details").click();
+  await expect(p.getByTestId("details-rice")).toContainText("Synthetic Jasmine Rice 2 lb bag, 2 lb · 1 pkg needed · $3.99 each (kroger)");
+  await expect(p.getByTestId("kroger-match-row")).toContainText(`${lines - 1} ${lines - 1 === 1 ? "item has" : "items have"} no Kroger product yet`);
+  // Buy it, trimmed: readiness and the actions in view; store, estimate and list folded.
+  await expect(p.getByTestId("readiness")).toBeVisible();
+  await expect(p.getByTestId("readiness")).toContainText("Not ready yet");
+  await expect(p.getByTestId("approve-all")).toBeVisible();
+  await expect(p.getByTestId("send")).toBeDisabled();
+  await expect(p.getByTestId("buy-more")).not.toHaveAttribute("open", "");
+  await expect(p.getByTestId("groceries-pickup-estimate")).toBeHidden();
+  await p.getByTestId("buy-more").getByText("Store, estimate and list").click();
+  await expect(p.getByTestId("groceries-pickup-estimate")).toBeVisible();
+  expect(krogerCalls().cart).toEqual([]);
+  await jon.context.close();
+});

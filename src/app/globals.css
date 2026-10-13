@@ -327,6 +327,8 @@ ol.steps > li::before { content: counter(step); font-family: var(--font-display)
 .check-line.is-have .line-name, .check-line.is-have .line-buy { color: var(--muted); }
 .check-sub { margin: 8px 0 2px; }
 .check-sources { margin: 0; padding-left: 18px; }
+.buy-more > summary { cursor: pointer; font-weight: 600; padding: 10px 0; } /* keeps the disclosure marker */
+.buy-more[open] { display: grid; gap: 12px; }
 .warn-card { border-color: var(--warn); }
 .nq-row { display: grid; gap: 4px; }
 

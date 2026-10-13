@@ -138,9 +138,13 @@ export function GroceriesScreen({ variant = "full" }: { variant?: "full" | "chec
     setMsg(r.status === "accepted" ? `Transfer ${r.dispatch?.status ?? "recorded"}${snapshot.retailer.live ? "" : " — simulated; nothing was sent to a store"}.` : r.message);
   }
 
-  const purchase = (
+  const whereEl = (
     <>
       {g.where && <WhereToShop />}
+    </>
+  );
+  const estimateEl = (
+    <>
       {/* Pickup estimate (visual update): a large figure only when every package has a price; an
           incomplete estimate stays visibly incomplete and says which lines lack a price. */}
       <div className="card stack" data-testid="pickup-card">
@@ -166,6 +170,10 @@ export function GroceriesScreen({ variant = "full" }: { variant?: "full" | "chec
           <div><span>Budget</span><strong>{budgetText(s.budget)}</strong></div>
         </div>
       </div>
+    </>
+  );
+  const readinessEl = (
+    <>
       <div className={`card ${s.ready ? "ok" : ""}`} data-testid="readiness" role="group" aria-label="Grocery readiness" tabIndex={-1}>
         {s.ready ? <strong>Groceries ready to send.</strong> : (
           <>
@@ -175,8 +183,16 @@ export function GroceriesScreen({ variant = "full" }: { variant?: "full" | "chec
         )}
       </div>
       {msg && <p role="alert" className="warnbox" data-testid="grocery-msg">{msg}</p>}
+    </>
+  );
+  const nonStoreEl = (
+    <>
       {!storeCart && <ShoppingListCard open />}
       {g.where?.destination === "instacart_list" && <InstacartPanel />}
+    </>
+  );
+  const actionsEl = (
+    <>
       {storeCart && <div className="row">
         <Button variant="outline" disabled={!approvable.length || !writesAllowed} onClick={() => approve(approvable)} data-testid="approve-all">Approve {approvable.length} reviewable</Button>
         <Button variant="default" disabled={!s.ready || !writesAllowed || !snapshot.retailer.ready} onClick={send} data-testid="send">
@@ -188,7 +204,21 @@ export function GroceriesScreen({ variant = "full" }: { variant?: "full" | "chec
         )}
       </div>}
       {storeCart && !snapshot.retailer.ready && <p className="warn small">{snapshot.retailer.reason}</p>}
+    </>
+  );
+  const listEl = (
+    <>
       {storeCart && g.shoppingList && <ShoppingListCard />}
+    </>
+  );
+  const purchase = (
+    <>
+      {whereEl}
+      {estimateEl}
+      {readinessEl}
+      {nonStoreEl}
+      {actionsEl}
+      {listEl}
     </>
   );
   const deltaBox = delta && (
@@ -211,12 +241,22 @@ export function GroceriesScreen({ variant = "full" }: { variant?: "full" | "chec
     const toBuy = g.lines.filter((l: any) => l.toSend !== 0);
     const haveIt = g.lines.filter((l: any) => l.toSend === 0);
     const mealCount = snapshot.mealList?.meals?.length ?? 0;
+    const krogerTodo = storeCart && snapshot.retailer.mode === "kroger"
+      ? g.lines.filter((l: any) => l.ingredientKey && (!l.product || l.product.retailer !== snapshot.retailer.mode)).length : 0;
     return (
       <section aria-label="Groceries" data-testid="groceries" data-scope="list" data-projection-revision={g.projectionRevision}>
         <h2 className="page-title">Groceries</h2>
         <p className="muted" style={{ marginTop: 0 }}>For {mealCount} selected meal{mealCount === 1 ? "" : "s"}. Amounts are combined before they are rounded to packages.</p>
         {deltaBox}
         <NeedsQuantity />
+        {krogerTodo > 0 && (
+          // Kroger finds the products: one search for every item without a Kroger product; the member picks each once,
+          // it is remembered, and packages then follow from the totals. Shown only when the store is Kroger.
+          <div className="row small" data-testid="kroger-match-row">
+            <Button variant="outline" size="sm" aria-haspopup="dialog" data-testid="kroger-match" onClick={(e) => open({ kind: "kroger-match" }, e)}>Match products at Kroger…</Button>
+            <span className="faint">{krogerTodo} {krogerTodo === 1 ? "item has" : "items have"} no Kroger product yet</span>
+          </div>
+        )}
         <h3 className="section-label" id="to-buy-h">To buy ({toBuy.length})</h3>
         {toBuy.length ? <ul className="lines checklist" aria-labelledby="to-buy-h">{toBuy.map((l: any) => <ChecklistLine key={l.key} l={l} open={open} onOwnChange={(v) => { ownChange.current = v; }} />)}</ul>
           : <p className="muted small">Nothing left to buy.</p>}
@@ -230,7 +270,17 @@ export function GroceriesScreen({ variant = "full" }: { variant?: "full" | "chec
         <div className="section-label">Also need</div>
         <AlsoNeed from="groceries" />
         <h3 className="section-label">Buy it</h3>
-        {purchase}
+        {/* Trimmed for the checklist: whether it can go, and the two actions; where to shop, the estimate and the
+            copyable list are one tap away. Readiness always stays in view — never "ready" before it is. */}
+        {readinessEl}
+        {nonStoreEl}
+        {actionsEl}
+        <details className="card buy-more" data-testid="buy-more">
+          <summary>Store, estimate and list</summary>
+          {whereEl}
+          {estimateEl}
+          {listEl}
+        </details>
         <Transfers open={open} />
         <Order open={open} />
         {dialogs}
