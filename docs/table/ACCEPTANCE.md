@@ -886,3 +886,11 @@ sign-in lands on Recipes with every saved recipe present; two meals selected wit
 into one line; the import-review outside-tap guard kept and then discarded a draft edit as chosen. Calendar/list
 separation was not observable (no calendar dinners). **Ready for household pilot.** Details, notes and the unchanged
 rollback limitation (rehearsal step 6 FAIL, 1 of 1178): `docs/table/DEPLOYMENT-CATALOG-FIRST.md` → "Pilot result".
+
+## shadcn/ui adoption — added 2026-10-13
+
+Owner-approved plan `docs/table/SHADCN-PLAN.md` (S1–S5 as recommended); delivered on `claude/shadcn`, verified at
+`7f6cb4a`: `scripts/verify-all.sh` → `docs/table/evidence/2026-10-13-verify-7f6cb4a/` (see its README for the counts). Presentation and
+component plumbing only — no command, query, schema or migration change; accessible names and test ids unchanged, so
+every existing browser spec kept its meaning. Added: theme-contrast checks for the component tokens and the one-palette
+pin, mutation `UI_component_text_too_faint`. Decisions D148–D150; deviations from the plan listed in its §7.

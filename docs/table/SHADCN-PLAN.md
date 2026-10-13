@@ -1,5 +1,7 @@
 # Table — shadcn/ui adoption: plan for owner approval
 
+_**Delivered 2026-10-13: built on `claude/shadcn`, verified at `7f6cb4a` — see §7.** Approved by the owner with S1–S5 as recommended._
+
 _Prepared 2026-10-13 on `main` = `982296f` (live: `e7e1a9e`). **Plan only — nothing is built.** The owner chose real
 shadcn/ui adoption (Tailwind + Radix components copied into the project) over a CSS-only restyle. Implementation starts
 after the owner approves this plan with any of the decisions in §5 changed._
@@ -66,3 +68,34 @@ worktrees; one integrator merges. Estimated size: the largest UI change so far (
 
 New features, data or schema changes, other retailers, provider activation, Extraction Lab, settings or deploy
 changes. Deployment remains owner-operated; this release needs no migration and no Neon step.
+
+## 7. Delivered (2026-10-13)
+
+Built in phases on `claude/shadcn` (from `9eb3dd1`), each phase run against the browser suite; one full
+`scripts/verify-all.sh` on the final code commit **`7f6cb4a`**: evidence `docs/table/evidence/2026-10-13-verify-7f6cb4a/`.
+
+| Phase | Commits | What was done |
+|---|---|---|
+| P0 | `abc281e` | Tailwind v4 (`@tailwindcss/postcss`), shadcn new-york components in `src/components/ui`, `cn` in `src/lib/utils.ts`, tokens namespaced `--ui-*` (globals.css already had `--card`, `--muted` with other meanings), Geist Sans (bundled `geist` package) |
+| P1 | `bb74f74`, `d1a18c3` | `ModalSheet` on Radix Dialog with the D144 guard, same props and test ids; `aria-modal` set explicitly; the page behind stays `inert` as well as Radix's `aria-hidden` (S5) |
+| P2 | `224b4b5`, `248cc46` | 146 buttons → `Button`/`buttonVariants`, 86 fields → `Input`/`Textarea`/`NativeSelect` by a TypeScript-AST codemod (opening and closing tags together); five dynamic buttons by hand |
+| P3 | `5da2c9e` | S2 palette: shadcn neutral greys, one warm accent for selection and +; segmented tabs, smaller radii, sentence-case labels |
+| P4 | `7f6cb4a` | Tailwind preflight on; the dead `.btn` CSS removed; the contrast test covers the component tokens |
+
+**Deviations from §2–§4, each deliberate:**
+- **Confirmations stay inside the sheet.** The only confirmation (`ConfirmBox`, the D144 guard and Discard import) is an
+  inline `alertdialog` in the open sheet; nesting a second modal (`AlertDialog`) would change the focus contract CF-G1–G7
+  pin. It is restyled with shadcn `Button`s instead.
+- **Tabs keep their own markup.** Both tablists already implement the tab keyboard contract (arrows, Home, End) and
+  tests address their ids; Radix `Tabs` generates its own ids. They take shadcn's segmented style instead.
+- **Selects stay native** (`NativeSelect`, the phone's own picker), as §2 allowed. Radio groups and checkboxes stay
+  native too; `RadioGroup`/`ToggleGroup` were not needed.
+- **`globals.css` is not deleted.** It holds the app's screen layout (gallery, rows, sheets, nav) in an `app` cascade
+  layer: preflight (base) < app < shadcn components < utilities, so a component's classes always win. What it lost:
+  the old button classes and the warm chrome. It keeps a readable baseline that preflight removes (links in text
+  underlined, heading sizes, list bullets).
+- **Spacing in px inside controls.** shadcn's rem padding doubled at 200% text and starved the Week row's title
+  column (12 px wide); buttons and fields use px padding and rem minimum heights, as the old controls did.
+
+**Deploying:** a plain code deploy of `7f6cb4a` — no migration, no Neon step, no setting changes. **Going back:**
+redeploy the previous commit (`9eb3dd1`); no data changed.
