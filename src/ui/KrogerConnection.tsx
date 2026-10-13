@@ -2,6 +2,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useStore } from "./store";
 import { FieldError, FormAlert, fieldProps, focusFirstInvalid, type Errors } from "./forms";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -102,16 +104,16 @@ export function KrogerConnection() {
       <p className="small" data-testid="kroger-cart-readiness">Cart transfer for this household: {s.cartHandoff.ready ? "ready" : `not ready — ${s.cartHandoff.reason}`}</p>
       <div className="row">
         {conn.status === "connected" || conn.status === "needs_reauthorization" ? (
-          <button type="button" className="btn line" onClick={disconnect} disabled={!writesAllowed}>Disconnect Kroger</button>
+          <Button type="button" variant="outline" onClick={disconnect} disabled={!writesAllowed}>Disconnect Kroger</Button>
         ) : null}
         {conn.status !== "connected" && (
-          <button type="button" className="btn line" onClick={connect} disabled={!connectReady || busy || !writesAllowed}>Connect Kroger account</button>
+          <Button type="button" variant="outline" onClick={connect} disabled={!connectReady || busy || !writesAllowed}>Connect Kroger account</Button>
         )}
       </div>
       <form ref={form} onSubmit={saveLocation} noValidate className="row">
         <label htmlFor="kroger-location" className="small">Kroger store id</label>
-        <input {...fieldProps("kroger-location", errors)} value={loc} onChange={(e) => setLoc(e.target.value)} inputMode="text" autoComplete="off" maxLength={8} />
-        <button type="submit" className="btn line" disabled={!writesAllowed}>Save store</button>
+        <Input {...fieldProps("kroger-location", errors)} value={loc} onChange={(e) => setLoc(e.target.value)} inputMode="text" autoComplete="off" maxLength={8} />
+        <Button type="submit" variant="outline" disabled={!writesAllowed}>Save store</Button>
         <FieldError id="kroger-location" errors={errors} />
       </form>
     </div>

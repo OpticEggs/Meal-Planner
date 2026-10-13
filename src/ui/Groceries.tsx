@@ -10,6 +10,9 @@ import {
 } from "./GroceryDialogs";
 import { InstacartPanel, ShoppingListCard, WhereToShop, destinationLabel } from "./WhereToShop";
 import { NeedsQuantity } from "./NeedsQuantity";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { NativeSelect } from "@/components/ui/native-select";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -171,13 +174,13 @@ export function GroceriesScreen({ variant = "full" }: { variant?: "full" | "chec
       {!storeCart && <ShoppingListCard open />}
       {g.where?.destination === "instacart_list" && <InstacartPanel />}
       {storeCart && <div className="row">
-        <button className="btn line" disabled={!approvable.length || !writesAllowed} onClick={() => approve(approvable)} data-testid="approve-all">Approve {approvable.length} reviewable</button>
-        <button className="btn primary" disabled={!s.ready || !writesAllowed || !snapshot.retailer.ready} onClick={send} data-testid="send">
+        <Button variant="outline" disabled={!approvable.length || !writesAllowed} onClick={() => approve(approvable)} data-testid="approve-all">Approve {approvable.length} reviewable</Button>
+        <Button variant="default" disabled={!s.ready || !writesAllowed || !snapshot.retailer.ready} onClick={send} data-testid="send">
           Send to {snapshot.retailer.live ? snapshot.retailer.label : "Simulated retailer"}
-        </button>
+        </Button>
         {g.partial?.eligible.length > 0 && !s.ready && (
-          <button className="btn line" aria-haspopup="dialog" disabled={!writesAllowed || !snapshot.retailer.ready} data-testid="prepare-partial"
-            onClick={(e) => open({ kind: "partial" }, e)}>Prepare supported items…</button>
+          <Button variant="outline" aria-haspopup="dialog" disabled={!writesAllowed || !snapshot.retailer.ready} data-testid="prepare-partial"
+            onClick={(e) => open({ kind: "partial" }, e)}>Prepare supported items…</Button>
         )}
       </div>}
       {storeCart && !snapshot.retailer.ready && <p className="warn small">{snapshot.retailer.reason}</p>}
@@ -190,7 +193,7 @@ export function GroceriesScreen({ variant = "full" }: { variant?: "full" | "chec
     <div className="warnbox" role="group" aria-label="Changed since you started reviewing" data-testid="grocery-delta">
       {delta.text && <strong>{delta.text}. </strong>}
       {delta.lines.join(" ")}
-      <button className="btn line small" onClick={() => { setDelta(null); focusFirst(document.querySelector<HTMLElement>('[data-testid="readiness"]')); }}>Got it</button>
+      <Button variant="outline" size="sm" onClick={() => { setDelta(null); focusFirst(document.querySelector<HTMLElement>('[data-testid="readiness"]')); }}>Got it</Button>
     </div>
   );
   const dialogs = dialog && <DialogFor d={dialog.d} onClose={() => setDialog(null)} returnFocus={() => focusFirst(dialog.opener) ?? groceryFallback(dialog.d)} />;
@@ -240,7 +243,7 @@ export function GroceriesScreen({ variant = "full" }: { variant?: "full" | "chec
       <AlsoNeed from="groceries" />
       <div className="section-label">This week’s list</div>
       {storeCart && snapshot.retailer.mode === "kroger" && g.lines.some((l: any) => l.ingredientKey && (!l.product || l.product.retailer !== snapshot.retailer.mode)) && (
-        <button className="btn line small" aria-haspopup="dialog" data-testid="kroger-match" onClick={(e) => open({ kind: "kroger-match" }, e)}>Match products at Kroger…</button>
+        <Button variant="outline" size="sm" aria-haspopup="dialog" data-testid="kroger-match" onClick={(e) => open({ kind: "kroger-match" }, e)}>Match products at Kroger…</Button>
       )}
       <ul className="lines">
         {g.lines.map((l: any) => <Line key={l.key} l={l} open={open} />)}
@@ -320,21 +323,21 @@ function Line({ l, open, compact = false }: { l: any; open: Opener; compact?: bo
           </div>
       {l.ingredientKey && l.meal && (
         <div className="row small">
-          <input className="tiny" placeholder="amt" value={some} onChange={(e) => setSome(e.target.value)} aria-label={`Amount of ${l.name} on hand (${l.meal.unit})`}
+          <Input className="tiny" placeholder="amt" value={some} onChange={(e) => setSome(e.target.value)} aria-label={`Amount of ${l.name} on hand (${l.meal.unit})`}
             aria-invalid={msg?.field === "some" ? true : undefined} aria-describedby={msg?.field === "some" ? msgId : undefined} />
           <div className="seg" role="group" aria-label={`Availability for ${l.name}`}>
-            <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "enough", reviewed: { quantity: l.meal.quantity, unit: l.meal.unit, fingerprint: l.fingerprint } })} aria-label={`Have enough ${l.name}`}>Have enough</button>
-            <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "some", quantity: some || null, unit: some ? l.meal.unit : null }, "some")} aria-label={`Have some ${l.name}`}>Have some</button>
-            <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "need" })} aria-label={`Need ${l.name}`}>Need</button>
+            <Button variant="outline" size="sm" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "enough", reviewed: { quantity: l.meal.quantity, unit: l.meal.unit, fingerprint: l.fingerprint } })} aria-label={`Have enough ${l.name}`}>Have enough</Button>
+            <Button variant="outline" size="sm" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "some", quantity: some || null, unit: some ? l.meal.unit : null }, "some")} aria-label={`Have some ${l.name}`}>Have some</Button>
+            <Button variant="outline" size="sm" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "need" })} aria-label={`Need ${l.name}`}>Need</Button>
           </div>
         </div>
       )}
       {!l.ingredientKey && (
         <div className="row small">
-          <select aria-label={`Match "${l.name}" to an item`} onChange={(e) => e.target.value && run("MapRequest", { requestId: l.requests[0].id, ingredientKey: e.target.value })} defaultValue="">
+          <NativeSelect aria-label={`Match "${l.name}" to an item`} onChange={(e) => e.target.value && run("MapRequest", { requestId: l.requests[0].id, ingredientKey: e.target.value })} defaultValue="">
             <option value="">Match to an item…</option>
             {snapshot.ingredients.map((i: any) => <option key={i.key} value={i.key}>{i.name}</option>)}
-          </select>
+          </NativeSelect>
         </div>
       )}
           <details className="small line-more">
@@ -391,7 +394,7 @@ function Line({ l, open, compact = false }: { l: any; open: Opener; compact?: bo
           {l.toSend > 0 && l.product && l.price && l.unresolved.length === 0 && (
             l.approval?.valid
               ? <span className="badge">Approved ×{l.approval.packages}</span>
-              : <button className="btn line small" disabled={!writesAllowed} onClick={() => run("ApprovePurchaseLines", { weekId, lines: [{ key: l.key, fingerprint: l.fingerprint, packages: l.toSend }] })} aria-label={`Approve ${l.toSend} package${l.toSend === 1 ? "" : "s"} of ${l.name}`}>Approve ×{l.toSend}</button>
+              : <Button variant="outline" size="sm" disabled={!writesAllowed} onClick={() => run("ApprovePurchaseLines", { weekId, lines: [{ key: l.key, fingerprint: l.fingerprint, packages: l.toSend }] })} aria-label={`Approve ${l.toSend} package${l.toSend === 1 ? "" : "s"} of ${l.name}`}>Approve ×{l.toSend}</Button>
           )}
         </div>
       )}
@@ -453,21 +456,21 @@ function Line({ l, open, compact = false }: { l: any; open: Opener; compact?: bo
           </div>
       {l.ingredientKey && l.meal && (
         <div className="row small">
-          <input className="tiny" placeholder="amt" value={some} onChange={(e) => setSome(e.target.value)} aria-label={`Amount of ${l.name} on hand (${l.meal.unit})`}
+          <Input className="tiny" placeholder="amt" value={some} onChange={(e) => setSome(e.target.value)} aria-label={`Amount of ${l.name} on hand (${l.meal.unit})`}
             aria-invalid={msg?.field === "some" ? true : undefined} aria-describedby={msg?.field === "some" ? msgId : undefined} />
           <div className="seg" role="group" aria-label={`Availability for ${l.name}`}>
-            <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "enough", reviewed: { quantity: l.meal.quantity, unit: l.meal.unit, fingerprint: l.fingerprint } })} aria-label={`Have enough ${l.name}`}>Have enough</button>
-            <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "some", quantity: some || null, unit: some ? l.meal.unit : null }, "some")} aria-label={`Have some ${l.name}`}>Have some</button>
-            <button className="btn line small" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "need" })} aria-label={`Need ${l.name}`}>Need</button>
+            <Button variant="outline" size="sm" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "enough", reviewed: { quantity: l.meal.quantity, unit: l.meal.unit, fingerprint: l.fingerprint } })} aria-label={`Have enough ${l.name}`}>Have enough</Button>
+            <Button variant="outline" size="sm" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "some", quantity: some || null, unit: some ? l.meal.unit : null }, "some")} aria-label={`Have some ${l.name}`}>Have some</Button>
+            <Button variant="outline" size="sm" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "need" })} aria-label={`Need ${l.name}`}>Need</Button>
           </div>
         </div>
       )}
       {!l.ingredientKey && (
         <div className="row small">
-          <select aria-label={`Match "${l.name}" to an item`} onChange={(e) => e.target.value && run("MapRequest", { requestId: l.requests[0].id, ingredientKey: e.target.value })} defaultValue="">
+          <NativeSelect aria-label={`Match "${l.name}" to an item`} onChange={(e) => e.target.value && run("MapRequest", { requestId: l.requests[0].id, ingredientKey: e.target.value })} defaultValue="">
             <option value="">Match to an item…</option>
             {snapshot.ingredients.map((i: any) => <option key={i.key} value={i.key}>{i.name}</option>)}
-          </select>
+          </NativeSelect>
         </div>
       )}
       {l.ingredientKey && (
@@ -478,7 +481,7 @@ function Line({ l, open, compact = false }: { l: any; open: Opener; compact?: bo
           {l.toSend > 0 && l.product && l.price && l.unresolved.length === 0 && (
             l.approval?.valid
               ? <span className="badge">Approved ×{l.approval.packages}</span>
-              : <button className="btn line small" disabled={!writesAllowed} onClick={() => run("ApprovePurchaseLines", { weekId, lines: [{ key: l.key, fingerprint: l.fingerprint, packages: l.toSend }] })} aria-label={`Approve ${l.toSend} package${l.toSend === 1 ? "" : "s"} of ${l.name}`}>Approve ×{l.toSend}</button>
+              : <Button variant="outline" size="sm" disabled={!writesAllowed} onClick={() => run("ApprovePurchaseLines", { weekId, lines: [{ key: l.key, fingerprint: l.fingerprint, packages: l.toSend }] })} aria-label={`Approve ${l.toSend} package${l.toSend === 1 ? "" : "s"} of ${l.name}`}>Approve ×{l.toSend}</Button>
           )}
         </div>
       )}
@@ -507,7 +510,7 @@ function Transfers({ open }: { open: Opener }) {
             {b.status === "uncertain" && (
               <div className="row">
                 <span className="warn">Outcome unknown. Check the cart; Table will not resend automatically.</span>
-                <button className="btn line small" aria-haspopup="dialog" aria-label={`Check the cart for transfer ${i + 1}`} onClick={(e) => open({ kind: "cart-check", batchId: b.id }, e)}>Check the cart…</button>
+                <Button variant="outline" size="sm" aria-haspopup="dialog" aria-label={`Check the cart for transfer ${i + 1}`} onClick={(e) => open({ kind: "cart-check", batchId: b.id }, e)}>Check the cart…</Button>
               </div>
             )}
           </li>
@@ -546,7 +549,7 @@ function Order({ open }: { open: Opener }) {
                         {r.state === "substituted" && !r.correctedBy && (r.validation ? ` — ${r.validation.suitable ? `works (${r.validation.quantity} ${r.validation.unit})` : "does not work"}` : (
                           <>
                             {" — not yet judged "}
-                            <button className="btn line small" aria-haspopup="dialog" aria-label={`Does ${r.substituteText} work for ${l.name}?`} onClick={(e) => open({ kind: "validate", receiptId: r.id }, e)}>Does it work?…</button>
+                            <Button variant="outline" size="sm" aria-haspopup="dialog" aria-label={`Does ${r.substituteText} work for ${l.name}?`} onClick={(e) => open({ kind: "validate", receiptId: r.id }, e)}>Does it work?…</Button>
                           </>
                         ))}
                         {!r.correctedBy && (
@@ -558,9 +561,9 @@ function Order({ open }: { open: Opener }) {
                 )}
                 {got < l.packages && (
                   <span className="row">
-                    <button className="btn line small" aria-label={`Received ${l.name}`} onClick={() => record("received")}>Received</button>
-                    <button className="btn line small" aria-label={`Missing ${l.name}`} onClick={() => record("missing")}>Missing</button>
-                    <button className="btn line small" aria-haspopup="dialog" aria-label={`Substituted ${l.name}…`} onClick={(e) => open({ kind: "substitute", orderLineId: l.id }, e)}>Substituted…</button>
+                    <Button variant="outline" size="sm" aria-label={`Received ${l.name}`} onClick={() => record("received")}>Received</Button>
+                    <Button variant="outline" size="sm" aria-label={`Missing ${l.name}`} onClick={() => record("missing")}>Missing</Button>
+                    <Button variant="outline" size="sm" aria-haspopup="dialog" aria-label={`Substituted ${l.name}…`} onClick={(e) => open({ kind: "substitute", orderLineId: l.id }, e)}>Substituted…</Button>
                   </span>
                 )}
               </li>
@@ -573,7 +576,7 @@ function Order({ open }: { open: Opener }) {
   return (
     <div className="card stack" data-testid="after-checkout">
       <h3 className="section-label">After checkout</h3>
-      <button className="btn line" aria-haspopup="dialog" onClick={(e) => open({ kind: "confirm-order" }, e)}>Confirm order contents…</button>
+      <Button variant="outline" aria-haspopup="dialog" onClick={(e) => open({ kind: "confirm-order" }, e)}>Confirm order contents…</Button>
     </div>
   );
 }

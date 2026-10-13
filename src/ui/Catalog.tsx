@@ -5,6 +5,7 @@ import { useStore } from "./store";
 import { money } from "./format";
 import { PlaceholderTile } from "./Tile";
 import { SelectControl } from "./MealList";
+import { Button } from "@/components/ui/button";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -96,7 +97,7 @@ export function RecipeGallery({ list, sounds }: { list: any[]; sounds?: boolean 
             </div>
             {sounds && r.interest && (
               <div className="row gallery-actions">
-                <button className="btn line small" aria-label={`Clear the idea ${title}`} onClick={() => command("ArchiveInterest", { interestId: r.interest.id })}>Clear idea</button>
+                <Button variant="outline" size="sm" aria-label={`Clear the idea ${title}`} onClick={() => command("ArchiveInterest", { interestId: r.interest.id })}>Clear idea</Button>
               </div>
             )}
           </li>

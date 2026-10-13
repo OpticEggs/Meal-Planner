@@ -8,6 +8,9 @@ import { AddFromLinkForm, BUDGET_BYTES_INDEX, SaveLinkForm, SavedLinksList } fro
 import { budgetBytesSearchUrl } from "@/domain/recipes/import";
 import { ImportReviewDialog } from "./ImportReview";
 import { focusFirst } from "./a11y";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { NativeSelect } from "@/components/ui/native-select";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -66,16 +69,16 @@ export function ExploreScreen() {
       <div className="card stack">
         <label>
           Search recipes, cuisines and ingredients
-          <input data-testid="explore-search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="e.g. chicken rice" type="search" />
+          <Input data-testid="explore-search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="e.g. chicken rice" type="search" />
         </label>
         <div className="grid4">
-          <label>Cuisine<select value={cuisine} onChange={(e) => setCuisine(e.target.value)}><option value="">Any</option>{cuisines.map((c) => <option key={c}>{c}</option>)}</select></label>
-          <label>Effort<select value={effort} onChange={(e) => setEffort(e.target.value)}><option value="">Any</option><option>easy</option><option>medium</option><option>involved</option></select></label>
-          <label>Includes ingredient<input value={ingredient} onChange={(e) => setIngredient(e.target.value)} /></label>
-          <label>Source<select data-testid="explore-source" value={source} onChange={(e) => setSource(e.target.value as typeof source)}>
+          <label>Cuisine<NativeSelect value={cuisine} onChange={(e) => setCuisine(e.target.value)}><option value="">Any</option>{cuisines.map((c) => <option key={c}>{c}</option>)}</NativeSelect></label>
+          <label>Effort<NativeSelect value={effort} onChange={(e) => setEffort(e.target.value)}><option value="">Any</option><option>easy</option><option>medium</option><option>involved</option></NativeSelect></label>
+          <label>Includes ingredient<Input value={ingredient} onChange={(e) => setIngredient(e.target.value)} /></label>
+          <label>Source<NativeSelect data-testid="explore-source" value={source} onChange={(e) => setSource(e.target.value as typeof source)}>
             <option value="">Any (our recipes)</option><option value="budget_bytes">Budget Bytes</option><option value="links">Saved links (any site)</option>
-          </select></label>
-          <label>Sort by<select data-testid="explore-sort" value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>{SORTS.map((s) => <option key={s.key} value={s.key}>{s.label}</option>)}</select></label>
+          </NativeSelect></label>
+          <label>Sort by<NativeSelect data-testid="explore-sort" value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>{SORTS.map((s) => <option key={s.key} value={s.key}>{s.label}</option>)}</NativeSelect></label>
         </div>
         <label className="row small"><input type="checkbox" checked={passOnly} onChange={(e) => setPassOnly(e.target.checked)} /> Only recipes that pass our exclusions</label>
         <p className="faint small">Costs use recorded package prices (simulated store); additional basket cost compares adding one dinner for both of you to the current accepted week. Nutrition is per default plate from explicit ingredient data.</p>
@@ -85,10 +88,10 @@ export function ExploreScreen() {
           <h2 className="h3" style={{ margin: 0 }}>Budget Bytes</h2>
           <p className="small" style={{ margin: 0 }}>Find a recipe on Budget Bytes, then paste its link below. Budget Bytes asks for permission before its recipes are reused, so Table keeps only the link and the ingredient lines you paste — not its method, photos or posted prices (those are from when each recipe was published, not your store today).</p>
           <form className="row" style={{ flexWrap: "nowrap" }} onSubmit={(e) => { e.preventDefault(); if (bbTerm.trim()) window.open(budgetBytesSearchUrl(bbTerm), "_blank", "noopener,noreferrer"); }} data-testid="bb-search">
-            <input className="grow" type="search" aria-label="Search Budget Bytes (opens the Budget Bytes site)" placeholder="e.g. chicken, lentils, meal prep" value={bbTerm} onChange={(e) => setBbTerm(e.target.value)} />
-            <button className="btn line small" disabled={!bbTerm.trim()}>Search on Budget Bytes ↗</button>
+            <Input className="grow" type="search" aria-label="Search Budget Bytes (opens the Budget Bytes site)" placeholder="e.g. chicken, lentils, meal prep" value={bbTerm} onChange={(e) => setBbTerm(e.target.value)} />
+            <Button variant="outline" size="sm" disabled={!bbTerm.trim()}>Search on Budget Bytes ↗</Button>
           </form>
-          <a className="btn line" href={BUDGET_BYTES_INDEX} target="_blank" rel="noopener noreferrer" data-testid="browse-budget-bytes">Browse Budget Bytes ↗</a>
+          <a className={buttonVariants({ variant: "outline" })} href={BUDGET_BYTES_INDEX} target="_blank" rel="noopener noreferrer" data-testid="browse-budget-bytes">Browse Budget Bytes ↗</a>
           <AddFromLinkForm onOpen={(b, el, result) => setImporting({ b, el, result })} />
           <SaveLinkForm idPrefix="bb-save-link" source="Budget Bytes" />
         </div>
@@ -132,7 +135,7 @@ function RecipeCard({ r, onSave }: { r: any; onSave: () => void }) {
           {r.constraint.status !== "ok" && <span className="warn"> · {r.constraint.status === "violated" ? "conflicts with an exclusion" : "ingredient info unknown"}</span>}
         </div>
       </div>
-      <button className="btn line small" onClick={onSave} disabled={!!r.interest} aria-label={`${r.interest ? "In Sounds good" : "Sounds good"}: ${r.version.title}`}>{r.interest ? "In Sounds good" : "Sounds good"}</button>
+      <Button variant="outline" size="sm" onClick={onSave} disabled={!!r.interest} aria-label={`${r.interest ? "In Sounds good" : "Sounds good"}: ${r.version.title}`}>{r.interest ? "In Sounds good" : "Sounds good"}</Button>
     </li>
   );
 }

@@ -3,6 +3,8 @@
  * dark tokens, and one warm brand accent. Preflight is deliberately NOT imported yet: unmigrated screens are still
  * styled by globals.css, which a reset would disturb. Preflight is switched on in P4 when the old CSS is gone.
  */
+/* Layer order: the hand-written globals.css (`legacy`) sits below components and utilities until P4 removes it. */
+@layer theme, base, legacy, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities);
 @import "tw-animate-css";

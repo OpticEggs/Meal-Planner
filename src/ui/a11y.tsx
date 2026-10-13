@@ -3,6 +3,7 @@ import { Dialog as DialogPrimitive } from "radix-ui";
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useStore } from "./store";
+import { Button } from "@/components/ui/button";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -91,9 +92,9 @@ export function ConfirmBox({ text, actions, testId }: {
       <p id={id}>{text}</p>
       <div className="row">
         {actions.map((a, i) => (
-          <button key={a.label} type="button" ref={i === 0 ? first : undefined} className={`btn small ${a.tone ?? "line"}`} disabled={a.disabled} onClick={a.onClick} data-testid={a.testId}>
+          <Button key={a.label} type="button" ref={i === 0 ? first : undefined} size="sm" variant={a.tone === "danger" ? "destructive" : a.tone === "primary" ? "default" : "outline"} disabled={a.disabled} onClick={a.onClick} data-testid={a.testId}>
             {a.label}
-          </button>
+          </Button>
         ))}
       </div>
     </div>
@@ -288,9 +289,9 @@ export function ModalSheet({
                 <DialogPrimitive.Title className="sheet-title">{title}</DialogPrimitive.Title>
                 {subtitle && <p className="faint small sheet-sub">{subtitle}</p>}
               </div>
-              <button type="button" className="btn line small" onClick={() => requestCloseRef.current()} aria-label={closeLabel} data-testid="close-sheet">
+              <Button type="button" variant="outline" size="sm" onClick={() => requestCloseRef.current()} aria-label={closeLabel} data-testid="close-sheet">
                 Close
-              </button>
+              </Button>
             </div>
             <div className="sheet-body">
               {confirming && (

@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import { useStore } from "./store";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 /** One fast shared capture. Staple tap = usual amount; "Extra" keeps its own quantity. */
 export function AlsoNeed({ from, ingredientKey, label }: { from: "week" | "groceries" | "cook"; ingredientKey?: string; label?: string }) {
@@ -28,9 +30,9 @@ export function AlsoNeed({ from, ingredientKey, label }: { from: "week" | "groce
   if (ingredientKey) {
     return (
       <span className="row">
-        <button className="btn line small" onClick={() => capture(label ?? ingredientKey, "usual", ingredientKey)}>Also need {label}</button>
+        <Button variant="outline" size="sm" onClick={() => capture(label ?? ingredientKey, "usual", ingredientKey)}>Also need {label}</Button>
         {msg && <span className="faint small" role="status">{msg}</span>}
-        {pendingAnother && <button className="btn line small" onClick={() => capture(pendingAnother.text, "usual", pendingAnother.key, true)}>Add another</button>}
+        {pendingAnother && <Button variant="outline" size="sm" onClick={() => capture(pendingAnother.text, "usual", pendingAnother.key, true)}>Add another</Button>}
       </span>
     );
   }
@@ -44,10 +46,10 @@ export function AlsoNeed({ from, ingredientKey, label }: { from: "week" | "groce
       }}
     >
       <label className="sr-only" htmlFor={`an-${from}`}>Also need</label>
-      <input id={`an-${from}`} placeholder="Also need… (e.g. Greek yogurt)" value={text} onChange={(e) => setText(e.target.value)} list="ingredient-names" />
+      <Input id={`an-${from}`} placeholder="Also need… (e.g. Greek yogurt)" value={text} onChange={(e) => setText(e.target.value)} list="ingredient-names" />
       <datalist id="ingredient-names">{snapshot.ingredients.map((i: any) => <option key={i.key} value={i.name} />)}</datalist>
-      <button className="btn primary small" type="submit">Add</button>
-      <button className="btn line small" type="button" onClick={() => capture(text, "extra")} title="An explicit extra package on top of anything else">Extra</button>
+      <Button variant="default" size="sm" type="submit">Add</Button>
+      <Button variant="outline" size="sm" type="button" onClick={() => capture(text, "extra")} title="An explicit extra package on top of anything else">Extra</Button>
       {snapshot.staples?.some((st: any) => st.active) && (
         <div className="row full-row" role="group" aria-label="Usual items">
           {snapshot.staples.filter((st: any) => st.active).map((st: any) => (
@@ -59,7 +61,7 @@ export function AlsoNeed({ from, ingredientKey, label }: { from: "week" | "groce
         </div>
       )}
       {msg && <p className="faint small full-row" role="status">{msg}</p>}
-      {pendingAnother && <button type="button" className="btn line small" onClick={() => capture(pendingAnother.text, "usual", pendingAnother.key, true)}>Add another</button>}
+      {pendingAnother && <Button type="button" variant="outline" size="sm" onClick={() => capture(pendingAnother.text, "usual", pendingAnother.key, true)}>Add another</Button>}
     </form>
   );
 }

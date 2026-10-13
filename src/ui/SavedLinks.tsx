@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { useStore } from "./store";
 import { FieldError, fieldProps, type Errors } from "./forms";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -72,8 +74,8 @@ export function AddFromLinkForm({ onOpen, compact = false }: { onOpen: (b: any, 
       }}>
       <label htmlFor={urlId} className={compact ? "sr-only" : undefined}><strong>Add a recipe from a link</strong></label>
       <div className="row link-row">
-        <input ref={urlRef} className="grow" type="url" inputMode="url" autoComplete="off" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Paste a recipe page link: https://…" {...fieldProps(urlId, errors)} />
-        <button className={compact ? "btn line" : "btn primary"} type="submit" disabled={busy} data-testid="add-from-link-submit">{busy ? "Reading…" : "Add recipe"}</button>
+        <Input ref={urlRef} className="grow" type="url" inputMode="url" autoComplete="off" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Paste a recipe page link: https://…" {...fieldProps(urlId, errors)} />
+        <Button variant={compact ? "outline" : "default"} type="submit" disabled={busy} data-testid="add-from-link-submit">{busy ? "Reading…" : "Add recipe"}</Button>
       </div>
       <FieldError id={urlId} errors={errors} />
       {!compact && <span className="faint small">Table reads the page&apos;s recipe details for you to check. Nothing becomes a recipe until you confirm it.</span>}
@@ -115,12 +117,12 @@ export function SaveLinkForm({ idPrefix = "save-link", source }: { idPrefix?: st
         }
       }}>
       <label htmlFor={urlId}>Recipe link{source ? ` (${source} or any site)` : ""}</label>
-      <input ref={urlRef} type="url" inputMode="url" autoComplete="off" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://…" {...fieldProps(urlId, errors)} />
+      <Input ref={urlRef} type="url" inputMode="url" autoComplete="off" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://…" {...fieldProps(urlId, errors)} />
       <FieldError id={urlId} errors={errors} />
       <label htmlFor={noteId}>Note (optional)</label>
-      <input type="text" value={note} onChange={(e) => setNote(e.target.value)} maxLength={500} {...fieldProps(noteId, errors)} />
+      <Input type="text" value={note} onChange={(e) => setNote(e.target.value)} maxLength={500} {...fieldProps(noteId, errors)} />
       <div className="row">
-        <button className="btn primary" type="submit" disabled={busy} data-testid={`${idPrefix}-submit`}>Save link</button>
+        <Button variant="default" type="submit" disabled={busy} data-testid={`${idPrefix}-submit`}>Save link</Button>
         <span className="faint small">Saving keeps the link for both of you; it doesn't read the page or add a dinner.</span>
       </div>
     </form>
@@ -144,22 +146,22 @@ export function SavedLinkCard({ b, onImport }: { b: any; onImport?: (b: any, el:
         <p key={i} className="small" style={{ margin: 0 }}><span className="faint">{s.by}:</span> {s.note}</p>
       ))}
       <div className="row small">
-        <a className="btn line small" href={b.url} target="_blank" rel="noopener noreferrer nofollow" aria-label={`Open source: ${label} (opens ${b.domain})`}>Open source ↗</a>
-        {recipe && <Link className="btn line small" href={`/recipes/${recipe.recipeId}`} aria-label={`Open recipe ${recipe.version.title}`}>Open recipe</Link>}
+        <a className={buttonVariants({ variant: "outline", size: "sm" })} href={b.url} target="_blank" rel="noopener noreferrer nofollow" aria-label={`Open source: ${label} (opens ${b.domain})`}>Open source ↗</a>
+        {recipe && <Link className={buttonVariants({ variant: "outline", size: "sm" })} href={`/recipes/${recipe.recipeId}`} aria-label={`Open recipe ${recipe.version.title}`}>Open recipe</Link>}
         {onImport && !b.recipeId && !b.archived && (
-          <button type="button" className="btn line small" aria-haspopup="dialog" aria-label={`${b.draft ? "Continue import review" : "Import ingredients"}: ${label}`}
+          <Button type="button" variant="outline" size="sm" aria-haspopup="dialog" aria-label={`${b.draft ? "Continue import review" : "Import ingredients"}: ${label}`}
             onClick={(e) => onImport(b, e.currentTarget)}>
             {b.draft ? "Continue import review" : "Import ingredients"}
-          </button>
+          </Button>
         )}
-        <button type="button" className="btn line small" aria-label={`${b.archived ? "Restore" : "Archive"} link: ${label}`}
+        <Button type="button" variant="outline" size="sm" aria-label={`${b.archived ? "Restore" : "Archive"} link: ${label}`}
           onClick={async () => {
             const r = await command("ArchiveLink", { bookmarkId: b.id, archived: !b.archived, expectedRevision: b.revision });
             if (r.status === "accepted") announce(b.archived ? "Link restored." : "Link archived. Any recipe imported from it stays.");
             else setMsg(r.message);
           }}>
           {b.archived ? "Restore" : "Archive"}
-        </button>
+        </Button>
       </div>
       {msg && <p role="status" className="small warn">{msg}</p>}
     </li>

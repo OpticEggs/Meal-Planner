@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useStore } from "./store";
 import { FormAlert } from "./forms";
 import { amountText, shoppingListCsv, shoppingListText, type ShoppingList } from "@/domain/groceries/shopping-list-format";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -50,7 +52,7 @@ export function WhereToShop() {
           </label>
         ))}
         {choice === "manual" && (
-          <label className="small">Store name (optional)<input value={store} onChange={(e) => setStore(e.target.value)} maxLength={80} /></label>
+          <label className="small">Store name (optional)<Input value={store} onChange={(e) => setStore(e.target.value)} maxLength={80} /></label>
         )}
       </fieldset>
       <FormAlert message={error} testId="destination-error" />
@@ -58,7 +60,7 @@ export function WhereToShop() {
         <div className="stack">
           <p className="small warn" style={{ margin: 0 }}>Switching changes the grocery review: store packages, prices and purchase approvals apply only to the store cart, so they must be reviewed again. Dinners and requests don&apos;t change.</p>
           <label className="row small"><input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} /> Use this for future weeks too</label>
-          <button type="button" className="btn primary" disabled={!writesAllowed} data-testid="destination-save" onClick={async () => {
+          <Button type="button" variant="default" disabled={!writesAllowed} data-testid="destination-save" onClick={async () => {
             const r = await command("SetShoppingDestination", { weekId: snapshot.week.id, destination: choice, expectedRevision: where.revision, storeLabel: choice === "manual" ? store : null, remember });
             if (r.status === "accepted") {
               setError(null);
@@ -67,7 +69,7 @@ export function WhereToShop() {
               setError(r.message);
               setChoice(where.destination);
             }
-          }}>Switch to {options.find((o) => o.v === choice)!.label}</button>
+          }}>Switch to {options.find((o) => o.v === choice)!.label}</Button>
         </div>
       )}
     </div>
@@ -92,15 +94,15 @@ export function ShoppingListCard({ open = false }: { open?: boolean }) {
       {shown && <div className="stack" id="shopping-list-body">
         <p className="small faint" style={{ margin: 0 }}>A list only: copying or downloading it doesn&apos;t order, send or record anything.</p>
         <div className="row">
-          <button type="button" className="btn line small" data-testid="copy-list" onClick={async () => {
+          <Button type="button" variant="outline" size="sm" data-testid="copy-list" onClick={async () => {
             try {
               await navigator.clipboard.writeText(text());
               announce("Grocery list copied. Nothing was ordered or sent.");
             } catch {
               announce("Copying isn't allowed here; use Download instead.");
             }
-          }}>Copy grocery list</button>
-          <a className="btn line small" data-testid="download-csv" download="table-groceries.csv"
+          }}>Copy grocery list</Button>
+          <a className={buttonVariants({ variant: "outline", size: "sm" })} data-testid="download-csv" download="table-groceries.csv"
             href={`data:text/csv;charset=utf-8,${encodeURIComponent(shoppingListCsv(list))}`}>Download CSV</a>
         </div>
         <ul className="plain small" data-testid="shopping-items">
@@ -157,13 +159,13 @@ export function InstacartPanel() {
         <div className="small" data-testid="instacart-link" data-status={latest.status}>
           <strong>{LINK_WORDS[latest.status] ?? latest.status}</strong>{` · asked by ${latest.by}`}
           {latest.status === "link_prepared" && latest.url && latest.listFingerprint === preview.fingerprint && (
-            <div><a className="btn line small" href={latest.url} target="_blank" rel="noopener noreferrer" data-testid="open-instacart">Open the shopping list on Instacart ↗</a> <span className="faint">Nothing has been ordered.</span></div>
+            <div><a className={buttonVariants({ variant: "outline", size: "sm" })} href={latest.url} target="_blank" rel="noopener noreferrer" data-testid="open-instacart">Open the shopping list on Instacart ↗</a> <span className="faint">Nothing has been ordered.</span></div>
           )}
           {latest.status === "link_prepared" && latest.listFingerprint !== preview.fingerprint && <div className="warn">That link is for an earlier list. Make a new one for the current list.</div>}
           {latest.status === "uncertain" && <div className="warn">Table won&apos;t repeat the request on its own. Check Instacart, or make a new list knowingly — it may create a second list.</div>}
         </div>
       )}
-      <button type="button" className="btn primary" data-testid="make-instacart-list"
+      <Button type="button" variant="default" data-testid="make-instacart-list"
         disabled={busy || !writesAllowed || listCap?.status === "not_configured" || !preview.lines.length}
         onClick={async () => {
           setBusy(true);
@@ -174,15 +176,15 @@ export function InstacartPanel() {
             setError(null);
             announce(r.link?.status === "link_prepared" || r.result?.reused ? "The Instacart shopping list is ready to open. Nothing was ordered." : `Instacart list: ${LINK_WORDS[r.link?.status] ?? "requested"}.`);
           }
-        }}>{latest?.status === "uncertain" ? "Make a new Instacart list" : "Make an Instacart shopping list"}</button>
+        }}>{latest?.status === "uncertain" ? "Make a new Instacart list" : "Make an Instacart shopping list"}</Button>
       {listCap?.status === "not_configured" && <p className="small faint" style={{ margin: 0 }}>Not set up here, so nothing can be sent to Instacart. The list above can still be copied.</p>}
       <form className="stack" aria-label="Instacart retailers near a ZIP code" onSubmit={async (e) => {
         e.preventDefault();
         const r = await fetch(`/api/instacart/retailers?postal_code=${encodeURIComponent(zip)}`, { cache: "no-store" }).then((x) => x.json(), () => ({ kind: "failed" }));
         setBrands(r);
       }}>
-        <label className="small">ZIP code — which grocery brands Instacart lists nearby<input value={zip} onChange={(e) => setZip(e.target.value)} inputMode="numeric" autoComplete="postal-code" maxLength={10} /></label>
-        <button type="submit" className="btn line small" disabled={retailersCap?.status === "not_configured"}>Look up retailers</button>
+        <label className="small">ZIP code — which grocery brands Instacart lists nearby<Input value={zip} onChange={(e) => setZip(e.target.value)} inputMode="numeric" autoComplete="postal-code" maxLength={10} /></label>
+        <Button type="submit" variant="outline" size="sm" disabled={retailersCap?.status === "not_configured"}>Look up retailers</Button>
         {retailersCap?.status === "not_configured" && <span className="small faint">Retailer lookup isn&apos;t set up here; no nearby results are shown.</span>}
         {brands && (
           <div className="small" role="status" data-testid="instacart-brands">

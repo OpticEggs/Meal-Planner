@@ -7,6 +7,9 @@ import { IngredientNutrition, nutritionStatusText } from "./NutritionMatch";
 import { KrogerConnection } from "./KrogerConnection";
 import { ModalSheet, focusFirst } from "./a11y";
 import { FieldError, FormAlert, fieldProps, focusFirstInvalid, isDecimal, isWhole, type Errors } from "./forms";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { NativeSelect } from "@/components/ui/native-select";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -44,9 +47,9 @@ export function HouseholdScreen() {
       <div className="card stack">
         <div className="section-label">Export</div>
         <p className="small">Download recipes, versions, preferences, plans and grocery records as JSON. No passwords, sessions or keys are included.</p>
-        <a className="btn line" href="/api/export" download data-testid="export">Download household export</a>
+        <a className={buttonVariants({ variant: "outline" })} href="/api/export" download data-testid="export">Download household export</a>
       </div>
-      <button className="btn line" onClick={async () => { await authClient.signOut(); window.location.assign("/login"); }}>Sign out {me.displayName}</button>
+      <Button variant="outline" onClick={async () => { await authClient.signOut(); window.location.assign("/login"); }}>Sign out {me.displayName}</Button>
     </section>
   );
 }
@@ -197,7 +200,7 @@ function Settings() {
             ))}
           </ul>
           <div className="row">
-            <button type="button" className="btn line small" onClick={() => {
+            <Button type="button" variant="outline" size="sm" onClick={() => {
               setF((prev) => {
                 const merged: any = { ...prev };
                 for (const { key } of SFIELDS) if (prev[key] === base.form[key]) merged[key] = current[key];
@@ -207,26 +210,26 @@ function Settings() {
               setFormError(null);
               setChangedBy(null);
               setTimeout(() => focusFirst(saveRef.current, formRef.current), 0);
-            }}>I’ve reviewed the current settings</button>
+            }}>I’ve reviewed the current settings</Button>
           </div>
         </div>
       )}
       <FormAlert message={formError} testId="settings-error" />
       <span className="stack">
         <label htmlFor="set-store">Store (label)</label>
-        <input {...fieldProps("set-store", errors)} value={f.storeLabel} onChange={(e) => edit({ storeLabel: e.target.value })} />
+        <Input {...fieldProps("set-store", errors)} value={f.storeLabel} onChange={(e) => edit({ storeLabel: e.target.value })} />
         <FieldError id="set-store" errors={errors} />
       </span>
       <div className="grid4">
         <span className="stack">
           <label htmlFor="set-scope">Budget applies to</label>
-          <select id="set-scope" value={f.budgetScope} onChange={(e) => edit({ budgetScope: e.target.value })}>
+          <NativeSelect id="set-scope" value={f.budgetScope} onChange={(e) => edit({ budgetScope: e.target.value })}>
             <option value="">not set</option><option value="pickup">pickup spending</option><option value="dinner_ingredients">dinner ingredient cost</option>
-          </select>
+          </NativeSelect>
         </span>
         <span className="stack">
           <label htmlFor="set-budget">Budget ($)</label>
-          <input {...fieldProps("set-budget", errors)} value={f.budgetLimit} onChange={(e) => edit({ budgetLimit: e.target.value })} inputMode="decimal" />
+          <Input {...fieldProps("set-budget", errors)} value={f.budgetLimit} onChange={(e) => edit({ budgetLimit: e.target.value })} inputMode="decimal" />
           <FieldError id="set-budget" errors={errors} />
         </span>
         <label className="row"><input type="checkbox" id="set-firm" checked={f.budgetFirm} onChange={(e) => edit({ budgetFirm: e.target.checked })} /> Firm limit</label>
@@ -234,30 +237,30 @@ function Settings() {
       <div className="grid4">
         <span className="stack">
           <label htmlFor="set-sessions">Cooking sessions / week</label>
-          <input {...fieldProps("set-sessions", errors)} value={f.cookingSessions} onChange={(e) => edit({ cookingSessions: e.target.value })} inputMode="numeric" />
+          <Input {...fieldProps("set-sessions", errors)} value={f.cookingSessions} onChange={(e) => edit({ cookingSessions: e.target.value })} inputMode="numeric" />
           <FieldError id="set-sessions" errors={errors} />
         </span>
         <span className="stack">
           <label htmlFor="set-variety">Variety</label>
-          <select id="set-variety" value={f.variety} onChange={(e) => edit({ variety: e.target.value })}><option value="">not set</option><option>familiar</option><option>balanced</option><option>adventurous</option></select>
+          <NativeSelect id="set-variety" value={f.variety} onChange={(e) => edit({ variety: e.target.value })}><option value="">not set</option><option>familiar</option><option>balanced</option><option>adventurous</option></NativeSelect>
         </span>
         <span className="stack">
           <label htmlFor="set-maxnew">Max new recipes</label>
-          <input {...fieldProps("set-maxnew", errors)} value={f.maxNewRecipes} onChange={(e) => edit({ maxNewRecipes: e.target.value })} inputMode="numeric" />
+          <Input {...fieldProps("set-maxnew", errors)} value={f.maxNewRecipes} onChange={(e) => edit({ maxNewRecipes: e.target.value })} inputMode="numeric" />
           <FieldError id="set-maxnew" errors={errors} />
         </span>
         <span className="stack">
           <label htmlFor="set-effort">Max effort</label>
-          <select id="set-effort" value={f.maxEffort} onChange={(e) => edit({ maxEffort: e.target.value })}><option value="">not set</option><option>easy</option><option>medium</option><option>involved</option></select>
+          <NativeSelect id="set-effort" value={f.maxEffort} onChange={(e) => edit({ maxEffort: e.target.value })}><option value="">not set</option><option>easy</option><option>medium</option><option>involved</option></NativeSelect>
         </span>
       </div>
       <span className="stack">
         <label htmlFor="set-equipment">Equipment (comma separated)</label>
-        <input id="set-equipment" value={f.equipment} onChange={(e) => edit({ equipment: e.target.value })} />
+        <Input id="set-equipment" value={f.equipment} onChange={(e) => edit({ equipment: e.target.value })} />
       </span>
       {saved && !dirty && <p className="small faint" style={{ margin: 0 }}>Saved.</p>}
       <div className="row">
-        <button ref={saveRef} className="btn primary" disabled={conflict || saving}>Save household inputs</button>
+        <Button ref={saveRef} variant="default" disabled={conflict || saving}>Save household inputs</Button>
       </div>
     </form>
   );
@@ -321,13 +324,13 @@ function TargetForm({ scope, current, onSave }: { scope: "dinner" | "daily"; cur
         {TFIELDS.map(({ key, label }) => (
           <span key={key} className="stack">
             <label htmlFor={id(key)}>{prefix} {label}</label>
-            <input {...fieldProps(id(key), errors)} value={f[key]} onChange={(e) => setF({ ...f, [key]: e.target.value })} inputMode="decimal" />
+            <Input {...fieldProps(id(key), errors)} value={f[key]} onChange={(e) => setF({ ...f, [key]: e.target.value })} inputMode="decimal" />
             <FieldError id={id(key)} errors={errors} />
           </span>
         ))}
       </div>
       <div className="row">
-        <button className="btn line small" disabled={saving}>Save {scope === "dinner" ? "dinner" : "whole-day"} targets</button>
+        <Button variant="outline" size="sm" disabled={saving}>Save {scope === "dinner" ? "dinner" : "whole-day"} targets</Button>
       </div>
     </form>
   );
@@ -388,15 +391,15 @@ function Exclusions() {
         <div className="grid4">
           <span className="stack">
             <label htmlFor="excl-term">Exclusion</label>
-            <input {...fieldProps("excl-term", errors)} value={term} onChange={(e) => setTerm(e.target.value)} placeholder="ingredient or tag, e.g. fish" />
+            <Input {...fieldProps("excl-term", errors)} value={term} onChange={(e) => setTerm(e.target.value)} placeholder="ingredient or tag, e.g. fish" />
             <FieldError id="excl-term" errors={errors} />
           </span>
           <span className="stack">
             <label htmlFor="excl-who">Applies to</label>
-            <select id="excl-who" value={who} onChange={(e) => setWho(e.target.value)}><option value="">everyone</option>{snapshot.members.map((m: any) => <option key={m.id} value={m.id}>{m.displayName}</option>)}</select>
+            <NativeSelect id="excl-who" value={who} onChange={(e) => setWho(e.target.value)}><option value="">everyone</option>{snapshot.members.map((m: any) => <option key={m.id} value={m.id}>{m.displayName}</option>)}</NativeSelect>
           </span>
         </div>
-        <div className="row"><button className="btn line small" disabled={busy}>Add exclusion</button></div>
+        <div className="row"><Button variant="outline" size="sm" disabled={busy}>Add exclusion</Button></div>
       </form>
       {dialog && (
         <RemoveExclusionDialog
@@ -423,8 +426,8 @@ function RemoveExclusionDialog({ d, onClose, onRemoved, returnFocus }: { d: Excl
         Table will stop checking dinners against “{d.term}” for {d.who}. Recipes and ingredients that match it could be proposed again, and dinners already planned are no longer flagged for it. Remove it only if it no longer applies.
       </p>
       <div className="row">
-        <button type="button" className="btn line" data-autofocus="" onClick={onClose}>Keep it</button>
-        <button type="button" className="btn danger" disabled={!still || busy} onClick={async () => {
+        <Button type="button" variant="outline" data-autofocus="" onClick={onClose}>Keep it</Button>
+        <Button type="button" variant="destructive" disabled={!still || busy} onClick={async () => {
           setBusy(true);
           const r = await command("RemoveExclusion", { exclusionId: d.id });
           setBusy(false);
@@ -432,7 +435,7 @@ function RemoveExclusionDialog({ d, onClose, onRemoved, returnFocus }: { d: Excl
           onRemoved();
           announce(`Exclusion ${d.term} removed for ${d.who}. Dinners with it can be proposed again.`);
           onClose();
-        }}>Remove exclusion</button>
+        }}>Remove exclusion</Button>
       </div>
     </ModalSheet>
   );
@@ -494,7 +497,7 @@ function IngredientRow({ i, onSave, onReviewed }: { i: any; onSave: (tags: strin
       onReviewed();
     }}>
       <label htmlFor={tagsId}>Tags for {i.name}</label>
-      <input {...fieldProps(tagsId, errors)} value={tags} onChange={(e) => { setTags(e.target.value); setErrors({}); }} placeholder="tags, e.g. tree_nut, dairy" />
+      <Input {...fieldProps(tagsId, errors)} value={tags} onChange={(e) => { setTags(e.target.value); setErrors({}); }} placeholder="tags, e.g. tree_nut, dairy" />
       <FieldError id={tagsId} errors={errors} />
       {!list.length && (
         <label className="row">
@@ -502,7 +505,7 @@ function IngredientRow({ i, onSave, onReviewed }: { i: any; onSave: (tags: strin
         </label>
       )}
       <FormAlert message={formError} />
-      <div className="row"><button className="btn line small" disabled={busy}>Mark {i.name} reviewed</button></div>
+      <div className="row"><Button variant="outline" size="sm" disabled={busy}>Mark {i.name} reviewed</Button></div>
     </form>
   );
 }

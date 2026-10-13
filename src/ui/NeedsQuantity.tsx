@@ -2,6 +2,9 @@
 import { useState } from "react";
 import { useStore } from "./store";
 import { KNOWN_UNITS } from "@/domain/units";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { NativeSelect } from "@/components/ui/native-select";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -81,15 +84,15 @@ function NeedRow({ n }: { n: any }) {
         }}
       >
         <label className="sr-only" htmlFor={`${base}-amt`}>Amount of {n.name} for {n.recipeTitle}</label>
-        <input id={`${base}-amt`} className="tiny" inputMode="decimal" placeholder="amount" value={amount} onChange={(e) => setAmount(e.target.value)}
+        <Input id={`${base}-amt`} className="tiny" inputMode="decimal" placeholder="amount" value={amount} onChange={(e) => setAmount(e.target.value)}
           aria-invalid={err?.field === "quantity" ? true : undefined} aria-describedby={err ? `${base}-err` : undefined} />
         <label className="sr-only" htmlFor={`${base}-unit`}>Unit for {n.name}</label>
-        <select id={`${base}-unit`} value={unit} onChange={(e) => setUnit(e.target.value)} aria-invalid={err?.field === "unit" ? true : undefined}>
+        <NativeSelect id={`${base}-unit`} value={unit} onChange={(e) => setUnit(e.target.value)} aria-invalid={err?.field === "unit" ? true : undefined}>
           {KNOWN_UNITS.map((u) => <option key={u} value={u}>{u}</option>)}
-        </select>
-        <button className="btn line small" type="submit" disabled={!writesAllowed || !amount.trim()} aria-label={`Set the amount of ${n.name} for ${n.recipeTitle}`}>Set amount</button>
-        <button className="btn line small" type="button" disabled={!writesAllowed} aria-label={`Don't buy ${n.name} for ${n.recipeTitle}`}
-          onClick={() => void answer({ dontBuy: true }, `${n.name} will not be bought for ${n.recipeTitle}`)}>Don&apos;t buy</button>
+        </NativeSelect>
+        <Button variant="outline" size="sm" type="submit" disabled={!writesAllowed || !amount.trim()} aria-label={`Set the amount of ${n.name} for ${n.recipeTitle}`}>Set amount</Button>
+        <Button variant="outline" size="sm" type="button" disabled={!writesAllowed} aria-label={`Don't buy ${n.name} for ${n.recipeTitle}`}
+          onClick={() => void answer({ dontBuy: true }, `${n.name} will not be bought for ${n.recipeTitle}`)}>Don&apos;t buy</Button>
       </form>
       {err && <p role="alert" className="warnbox small" id={`${base}-err`}>{err.text}</p>}
     </li>

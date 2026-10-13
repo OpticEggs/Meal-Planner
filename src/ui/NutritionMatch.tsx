@@ -4,6 +4,8 @@ import { useStore } from "./store";
 import { ModalSheet, focusFirst } from "./a11y";
 import { FieldError, FormAlert, fieldProps, type Errors } from "./forms";
 import { outcomeSentence } from "@/domain/nutrition/outcomes";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -70,9 +72,9 @@ export function IngredientNutrition() {
             <strong>{i.name}</strong>
             <span data-testid={`nutrition-source-${i.key}`}>{sourceLine(sources.get(i.key))}</span>
             <span>
-              <button type="button" className="btn line small" aria-haspopup="dialog" onClick={(e) => setDialog({ key: i.key, name: i.name, opener: e.currentTarget })}>
+              <Button type="button" variant="outline" size="sm" aria-haspopup="dialog" onClick={(e) => setDialog({ key: i.key, name: i.name, opener: e.currentTarget })}>
                 Find nutrition…<span className="sr-only"> for {i.name}</span>
-              </button>
+              </Button>
             </span>
           </li>
         ))}
@@ -221,7 +223,7 @@ function NutritionDialog({ d, onClose, returnFocus }: { d: Dialog; onClose: () =
             {src.last?.by ?? "The other member"} {src.last?.action === "cleared" ? "cleared" : "changed"} the nutrition for {d.name} while you were looking. It is now: {sourceLine(src).replace(/^Nutrition: /, "")}.
           </p>
           <div className="row">
-            <button type="button" className="btn line small" onClick={() => { setBaseRevision(src.revision); setAlert(null); }}>I’ve reviewed the current source</button>
+            <Button type="button" variant="outline" size="sm" onClick={() => { setBaseRevision(src.revision); setAlert(null); }}>I’ve reviewed the current source</Button>
           </div>
         </div>
       )}
@@ -231,15 +233,15 @@ function NutritionDialog({ d, onClose, returnFocus }: { d: Dialog; onClose: () =
           <p style={{ ...wrap, margin: 0 }}>
             Nutrition lookup is not configured on this server: there is no USDA FoodData Central API key, so Table cannot search for foods. Nothing is searched and nothing changes. {d.name} keeps its current nutrition ({sourceLine(src).replace(/^Nutrition: /, "")}).
           </p>
-          <div className="row"><button type="button" className="btn line" data-autofocus="" onClick={onClose}>Close</button></div>
+          <div className="row"><Button type="button" variant="outline" data-autofocus="" onClick={onClose}>Close</Button></div>
         </div>
       ) : !c ? (
         <>
           <form className="stack" noValidate onSubmit={search} role="search" aria-label={`Search FoodData Central for ${d.name}`}>
             <label htmlFor={qid}>Search FoodData Central</label>
-            <input {...fieldProps(qid, errors)} data-autofocus="" value={query} onChange={(e) => { setQuery(e.target.value); setErrors({}); }} autoComplete="off" />
+            <Input {...fieldProps(qid, errors)} data-autofocus="" value={query} onChange={(e) => { setQuery(e.target.value); setErrors({}); }} autoComplete="off" />
             <FieldError id={qid} errors={errors} />
-            <div className="row"><button className="btn primary small" disabled={busy}>Search</button></div>
+            <div className="row"><Button variant="default" size="sm" disabled={busy}>Search</Button></div>
           </form>
           {results && (
             <div className="stack">
@@ -247,23 +249,23 @@ function NutritionDialog({ d, onClose, returnFocus }: { d: Dialog; onClose: () =
               <ul className="stack" style={{ listStyle: "none", padding: 0, margin: 0 }}>
                 {results.map((r: any) => (
                   <li key={r.fdcId} style={wrap}>
-                    <button type="button" className="btn line small" style={{ textAlign: "left", ...wrap }} disabled={busy} onClick={() => open(r.fdcId)}>
+                    <Button type="button" variant="outline" size="sm" style={{ textAlign: "left", ...wrap }} disabled={busy} onClick={() => open(r.fdcId)}>
                       {r.description} — {r.dataType}{r.brandOwner ? ` (${r.brandOwner})` : ""}
-                    </button>
+                    </Button>
                   </li>
                 ))}
               </ul>
             </div>
           )}
           {src.current && !confirmClear && (
-            <div className="row"><button ref={clearRef} type="button" className="btn line small" onClick={() => { clearAsked.current = true; setConfirmClear(true); }}>Clear {d.name}’s nutrition…</button></div>
+            <div className="row"><Button ref={clearRef} type="button" variant="outline" size="sm" onClick={() => { clearAsked.current = true; setConfirmClear(true); }}>Clear {d.name}’s nutrition…</Button></div>
           )}
           {src.current && confirmClear && (
             <div className="warnbox stack" data-testid="nutrition-clear-confirm">
               <p className="small" style={{ margin: 0 }}>Clear the current values? {d.name}’s nutrition becomes unknown and plates that use it show nutrition as unknown.</p>
               <div className="row">
-                <button ref={keepRef} type="button" className="btn line small" onClick={() => setConfirmClear(false)}>Keep it</button>
-                <button type="button" className="btn danger small" disabled={busy || changedUnderneath} onClick={clear}>Clear nutrition</button>
+                <Button ref={keepRef} type="button" variant="outline" size="sm" onClick={() => setConfirmClear(false)}>Keep it</Button>
+                <Button type="button" variant="destructive" size="sm" disabled={busy || changedUnderneath} onClick={clear}>Clear nutrition</Button>
               </div>
             </div>
           )}
@@ -311,8 +313,8 @@ function NutritionDialog({ d, onClose, returnFocus }: { d: Dialog; onClose: () =
           </fieldset>
           <p className="small faint" style={{ margin: 0 }}>This is nutrition only. It does not review allergens or change exclusions.</p>
           <div className="row">
-            <button type="button" className="btn line small" onClick={() => { focusResults.current = true; setCand(null); setAlert(null); }}>Back to results</button>
-            <button className="btn primary small" disabled={!form || busy || changedUnderneath || !c.basis} data-testid="use-values">Use these values</button>
+            <Button type="button" variant="outline" size="sm" onClick={() => { focusResults.current = true; setCand(null); setAlert(null); }}>Back to results</Button>
+            <Button variant="default" size="sm" disabled={!form || busy || changedUnderneath || !c.basis} data-testid="use-values">Use these values</Button>
           </div>
         </form>
       )}

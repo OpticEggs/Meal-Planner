@@ -9,6 +9,10 @@ import {
   draftProblems, hasNoAmount, headingName, isHeading, isHeadingLine, isLeftOut, needsQuantity, titleFromUrl, type DraftLine, type LineDecision,
 } from "@/domain/recipes/import";
 import { RecipeHero } from "./Tile";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { NativeSelect } from "@/components/ui/native-select";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -97,14 +101,14 @@ function StartImport({ b, initial, report }: { b: any; initial?: any; report: Re
         <section className="stack" aria-labelledby="import-read-h">
           <h3 id="import-read-h" className="h3" style={{ margin: 0 }}>Read the recipe page</h3>
           <p className="small muted" style={{ margin: 0 }}>Table reads the page&apos;s recipe data: ingredients, servings, time and who published it. Nothing becomes a recipe until you save it.</p>
-          <button type="button" className="btn primary" data-autofocus="" disabled={busy} onClick={() => read()} data-testid="import-read">{result || b.status !== "saved" ? "Try reading the page again" : "Read ingredients from the page"}</button>
+          <Button type="button" variant="default" data-autofocus="" disabled={busy} onClick={() => read()} data-testid="import-read">{result || b.status !== "saved" ? "Try reading the page again" : "Read ingredients from the page"}</Button>
         </section>
       )}
       {result?.kind === "choose" && (
         <fieldset className="stack" data-testid="import-choose">
           <legend>This page has more than one recipe. Which one?</legend>
           {result.options.map((o: any) => (
-            <button key={o.index} type="button" className="btn line" onClick={() => read(o.index)}>{o.name} ({o.ingredientCount} ingredients)</button>
+            <Button key={o.index} type="button" variant="outline" onClick={() => read(o.index)}>{o.name} ({o.ingredientCount} ingredients)</Button>
           ))}
         </fieldset>
       )}
@@ -114,13 +118,13 @@ function StartImport({ b, initial, report }: { b: any; initial?: any; report: Re
       <section className="stack" aria-labelledby="import-paste-h">
         <h3 id="import-paste-h" className="h3" style={{ margin: 0 }}>Or paste the ingredient lines</h3>
         <label htmlFor="import-title">Recipe name</label>
-        <input id="import-title" value={title} onChange={(e) => setTitle(e.target.value)} {...(!canRead ? { "data-autofocus": "" } : {})} />
+        <Input id="import-title" value={title} onChange={(e) => setTitle(e.target.value)} {...(!canRead ? { "data-autofocus": "" } : {})} />
         <label htmlFor="import-paste">Ingredients, one per line</label>
-        <textarea id="import-paste" rows={6} value={paste} onChange={(e) => setPaste(e.target.value)} placeholder={"2 cups rice\n1 lb chicken thighs\n1/3 cup pesto"} />
-        <button type="button" className="btn primary" disabled={busy} data-testid="import-paste-start" onClick={async () => {
+        <Textarea id="import-paste" rows={6} value={paste} onChange={(e) => setPaste(e.target.value)} placeholder={"2 cups rice\n1 lb chicken thighs\n1/3 cup pesto"} />
+        <Button type="button" variant="default" disabled={busy} data-testid="import-paste-start" onClick={async () => {
           const r = await command("PasteIngredients", { bookmarkId: b.id, text: paste, title });
           if (r.status !== "accepted") setError(r.message);
-        }}>Start review</button>
+        }}>Start review</Button>
       </section>
     </div>
   );
@@ -226,7 +230,7 @@ function DraftReview({ b, onDone, report }: { b: any; onDone: () => void; report
       {changedElsewhere && (
         <div className="warnbox" role="status" data-testid="import-changed">
           The other member changed this import. Your edits are still here, but saving them is refused until you load the current version.
-          <button type="button" className="btn line small" onClick={() => { setEdit(fromDraft(d)); setSaved(snapshot(fromDraft(d))); setBase(d.revision); setError(null); }}>Load the current version</button>
+          <Button type="button" variant="outline" size="sm" onClick={() => { setEdit(fromDraft(d)); setSaved(snapshot(fromDraft(d))); setBase(d.revision); setError(null); }}>Load the current version</Button>
         </div>
       )}
       <div className="review-title">
@@ -235,8 +239,8 @@ function DraftReview({ b, onDone, report }: { b: any; onDone: () => void; report
       </div>
       <DraftSource b={b} d={d} />
       <div className="facts">
-        <label className="fact"><span>Serves</span><input inputMode="numeric" value={edit.servings} onChange={(e) => setEdit({ ...edit, servings: e.target.value })} data-testid="draft-servings" aria-label="Servings the amounts make" /></label>
-        <label className="fact"><span>Minutes</span><input inputMode="numeric" value={edit.effort} onChange={(e) => setEdit({ ...edit, effort: e.target.value })} aria-label="Time (minutes)" /></label>
+        <label className="fact"><span>Serves</span><Input inputMode="numeric" value={edit.servings} onChange={(e) => setEdit({ ...edit, servings: e.target.value })} data-testid="draft-servings" aria-label="Servings the amounts make" /></label>
+        <label className="fact"><span>Minutes</span><Input inputMode="numeric" value={edit.effort} onChange={(e) => setEdit({ ...edit, effort: e.target.value })} aria-label="Time (minutes)" /></label>
       </div>
 
       <p className="progress" data-testid="draft-progress" aria-live="off">
@@ -260,8 +264,8 @@ function DraftReview({ b, onDone, report }: { b: any; onDone: () => void; report
           {kept.map(({ l, i }) => isHeading(l.decision) ? (
             <li key={i} className="row-heading" data-testid="draft-heading" data-raw={l.raw}>
               <h4>{headingName(l.raw)}</h4>
-              <button type="button" className="btn quiet small" aria-label={`This is an ingredient, not a group heading: ${l.raw}`}
-                onClick={() => { setDecision(i, null); setSettled(i); }}>This is an ingredient</button>
+              <Button type="button" variant="ghost" size="sm" aria-label={`This is an ingredient, not a group heading: ${l.raw}`}
+                onClick={() => { setDecision(i, null); setSettled(i); }}>This is an ingredient</Button>
             </li>
           ) : (
             <LineRow key={i} i={i} line={l} onChange={(dec) => setDecision(i, dec)} onPending={onPending} reveal={reveal?.i === i ? reveal.tick : 0} settled={settled === i} onSettled={onSettled} />
@@ -280,7 +284,7 @@ function DraftReview({ b, onDone, report }: { b: any; onDone: () => void; report
       <details className="method" open={!!d.stepsKept}>
         <summary>{d.stepsKept ? `Method (kept from ${site})` : "Your own notes on how you make it"}</summary>
         <label htmlFor="draft-instructions" className="sr-only">{d.stepsKept ? `Method (kept from ${site}; edit as you like)` : "Your own notes on how you make it (optional)"}</label>
-        <textarea id="draft-instructions" rows={d.stepsKept ? 8 : 3} value={edit.instructions} onChange={(e) => setEdit({ ...edit, instructions: e.target.value })} />
+        <Textarea id="draft-instructions" rows={d.stepsKept ? 8 : 3} value={edit.instructions} onChange={(e) => setEdit({ ...edit, instructions: e.target.value })} />
       </details>
 
       {((held && heldMessages.length > 0) || live.length > 0 || problems.length > 0) && (
@@ -289,7 +293,7 @@ function DraftReview({ b, onDone, report }: { b: any; onDone: () => void; report
         </ul>
       )}
       <div className="review-actions">
-        <button type="button" className="btn primary big" disabled={busy || changedElsewhere || live.length > 0} data-testid="import-confirm" onClick={async () => {
+        <Button type="button" variant="default" size="lg" className="w-full" disabled={busy || changedElsewhere || live.length > 0} data-testid="import-confirm" onClick={async () => {
           if (holdForPending()) return;
           setBusy(true);
           const rev = await save();
@@ -304,11 +308,11 @@ function DraftReview({ b, onDone, report }: { b: any; onDone: () => void; report
             setProblems((r.details as any)?.problems ?? []);
           }
           setBusy(false);
-        }}>Save recipe</button>
+        }}>Save recipe</Button>
       </div>
       <div className="row between review-secondary">
-          <button type="button" className="btn quiet" disabled={busy || changedElsewhere} onClick={async () => { if (holdForPending()) return; setBusy(true); await save(); setBusy(false); }}>Save review for later</button>
-          <button type="button" ref={discardRef} className="btn quiet danger-text" disabled={busy} onClick={() => setAskDiscard(true)}>Discard import</button>
+          <Button type="button" variant="ghost" disabled={busy || changedElsewhere} onClick={async () => { if (holdForPending()) return; setBusy(true); await save(); setBusy(false); }}>Save review for later</Button>
+          <Button type="button" ref={discardRef} variant="ghost-destructive" disabled={busy} onClick={() => setAskDiscard(true)}>Discard import</Button>
       </div>
       {askDiscard && (
         // Discarding the import throws the review away: it asks first ("Keep the import" focused).
@@ -410,29 +414,29 @@ function LineRow({ i, line, onChange, onPending, reveal, settled, onSettled, ope
             </div>
           ) : null}
           <div className="editor-grid">
-            <label className="amount">Amount<input ref={amountRef} inputMode="text" value={form.quantity} placeholder={p.range ? `${p.range[0]}–${p.range[1]}` : "e.g. 1/3"} onChange={(e) => setForm({ ...form, quantity: e.target.value })} aria-label={`Amount for the whole recipe, line ${i + 1}`} /></label>
-            <label className="unit">Unit<select value={form.unit} onChange={(e) => setForm({ ...form, unit: e.target.value })} aria-label={`Unit, line ${i + 1}`}>
+            <label className="amount">Amount<Input ref={amountRef} inputMode="text" value={form.quantity} placeholder={p.range ? `${p.range[0]}–${p.range[1]}` : "e.g. 1/3"} onChange={(e) => setForm({ ...form, quantity: e.target.value })} aria-label={`Amount for the whole recipe, line ${i + 1}`} /></label>
+            <label className="unit">Unit<NativeSelect value={form.unit} onChange={(e) => setForm({ ...form, unit: e.target.value })} aria-label={`Unit, line ${i + 1}`}>
               <option value="">Choose…</option>{KNOWN_UNITS.map((u) => <option key={u} value={u}>{u === "fl_oz" ? "fl oz" : u}</option>)}
-            </select></label>
-            <label className="name">Ingredient<input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} aria-label={`Ingredient name, line ${i + 1}`} /></label>
-            <label className="form">Bought<select value={form.form} onChange={(e) => setForm({ ...form, form: e.target.value as "raw" | "cooked" })} aria-label={`Form, line ${i + 1}`}>
+            </NativeSelect></label>
+            <label className="name">Ingredient<Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} aria-label={`Ingredient name, line ${i + 1}`} /></label>
+            <label className="form">Bought<NativeSelect value={form.form} onChange={(e) => setForm({ ...form, form: e.target.value as "raw" | "cooked" })} aria-label={`Form, line ${i + 1}`}>
               <option value="raw">raw / as bought</option><option value="cooked">cooked</option>
-            </select></label>
+            </NativeSelect></label>
           </div>
           {!amountOk && form.quantity && !parseAmount(form.quantity) && <p className="field-error small">Use a number or fraction, like 2, 1/3 or 1 1/2.</p>}
           <div className="row">
-            <button ref={applyRef} type="button" className="btn primary small" disabled={!amountOk} onClick={() => { onChange({ ...form, use: true, quantity: form.quantity.trim() }); setOpen(false); onSettled(i); }} aria-label={`Use line ${i + 1}: ${line.raw}`}>Use</button>
+            <Button ref={applyRef} type="button" variant="default" size="sm" disabled={!amountOk} onClick={() => { onChange({ ...form, use: true, quantity: form.quantity.trim() }); setOpen(false); onSettled(i); }} aria-label={`Use line ${i + 1}: ${line.raw}`}>Use</Button>
             {canNeedQuantity && (
-              <button type="button" className="btn line small" disabled={!form.name.trim()}
+              <Button type="button" variant="outline" size="sm" disabled={!form.name.trim()}
                 onClick={() => { onChange({ use: false, kind: "needs_quantity", name: form.name.trim() }); setOpen(false); onSettled(i); }}
-                aria-label={`Needs a quantity, line ${i + 1}: ${line.raw}`}>Needs a quantity</button>
+                aria-label={`Needs a quantity, line ${i + 1}: ${line.raw}`}>Needs a quantity</Button>
             )}
             {canBeHeading && (
-              <button type="button" className="btn line small" onClick={() => { onChange({ use: false, kind: "heading" }); setOpen(false); }}
-                aria-label={`Group heading, line ${i + 1}: ${line.raw}`}>Group heading</button>
+              <Button type="button" variant="outline" size="sm" onClick={() => { onChange({ use: false, kind: "heading" }); setOpen(false); }}
+                aria-label={`Group heading, line ${i + 1}: ${line.raw}`}>Group heading</Button>
             )}
-            <button type="button" className="btn line small" onClick={() => { onChange({ use: false }); setOpen(false); onSettled(i); }} aria-label={`Leave out line ${i + 1}: ${line.raw}`}>Leave out</button>
-            <button type="button" className="btn quiet small" onClick={() => { setForm(draft); setOpen(false); onSettled(i); }} aria-label={`Cancel changes to line ${i + 1}`}>Cancel</button>
+            <Button type="button" variant="outline" size="sm" onClick={() => { onChange({ use: false }); setOpen(false); onSettled(i); }} aria-label={`Leave out line ${i + 1}: ${line.raw}`}>Leave out</Button>
+            <Button type="button" variant="ghost" size="sm" onClick={() => { setForm(draft); setOpen(false); onSettled(i); }} aria-label={`Cancel changes to line ${i + 1}`}>Cancel</Button>
           </div>
         </div>
       )}

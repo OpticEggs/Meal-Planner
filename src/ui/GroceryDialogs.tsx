@@ -5,6 +5,9 @@ import { ModalSheet } from "./a11y";
 import { FieldError, FormAlert, fieldProps, focusFirstInvalid, isDecimal, isWhole, type Errors } from "./forms";
 import { money } from "./format";
 import { shoppingListText } from "@/domain/groceries/shopping-list-format";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { NativeSelect } from "@/components/ui/native-select";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -117,9 +120,9 @@ export function ProductDialog({ itemKey, onClose, returnFocus }: Common & { item
         {conflict && (
           <div className="warnbox" data-testid="product-conflict">
             <p>While this was open, this pickup's product changed from <strong>{seen.name ?? "none"}</strong> to <strong>{currentName ?? "none"}</strong>. Nothing you chose or typed here has been saved or lost.</p>
-            <button type="button" className="btn line small" onClick={() => { setSeen({ id: current, name: currentName }); setFormError(null); }}>
+            <Button type="button" variant="outline" size="sm" onClick={() => { setSeen({ id: current, name: currentName }); setFormError(null); }}>
               I've reviewed the current product
-            </button>
+            </Button>
           </div>
         )}
         <FormAlert message={formError} testId="product-error" />
@@ -143,9 +146,9 @@ export function ProductDialog({ itemKey, onClose, returnFocus }: Common & { item
           <FieldError id="pd-choice" errors={errors} />
         </fieldset>
         {approved && <p className="faint small">Choosing a different product withdraws the approval for ×{approved}; the line must be approved again before Send.</p>}
-        <button type="button" className="btn primary" disabled={busy || gone || conflict || !writesAllowed || !choice || choice === current} onClick={choose}>
+        <Button type="button" variant="default" disabled={busy || gone || conflict || !writesAllowed || !choice || choice === current} onClick={choose}>
           Use for this pickup
-        </button>
+        </Button>
         {mode === "kroger" && (
           <KrogerSearch itemKey={itemKey} label={label} expectedProductId={seen.id} disabled={busy || gone || conflict || !writesAllowed}
             onChosen={(name) => { announce(`${name} chosen for this pickup.${approved ? " Its earlier approval no longer applies; approve it again." : ""}`); onClose(); }} />
@@ -153,28 +156,28 @@ export function ProductDialog({ itemKey, onClose, returnFocus }: Common & { item
         {mode !== "kroger" && <form className="stack small" onSubmit={addProduct} noValidate aria-labelledby="pd-add-h">
           <h3 id="pd-add-h" className="section-label">Or record another product (simulated store)</h3>
           <label htmlFor="pd-name">Product name</label>
-          <input {...fieldProps("pd-name", errors)} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />
+          <Input {...fieldProps("pd-name", errors)} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />
           <FieldError id="pd-name" errors={errors} />
           <div className="grid3">
             <span className="stack">
               <label htmlFor="pd-size">Package size</label>
-              <input {...fieldProps("pd-size", errors)} inputMode="decimal" value={f.packageQty} onChange={(e) => setF({ ...f, packageQty: e.target.value })} />
+              <Input {...fieldProps("pd-size", errors)} inputMode="decimal" value={f.packageQty} onChange={(e) => setF({ ...f, packageQty: e.target.value })} />
               <FieldError id="pd-size" errors={errors} />
             </span>
             <span className="stack">
               <label htmlFor="pd-unit">Unit</label>
-              <input {...fieldProps("pd-unit", errors)} list="pd-units" value={f.packageUnit} onChange={(e) => setF({ ...f, packageUnit: e.target.value })} />
+              <Input {...fieldProps("pd-unit", errors)} list="pd-units" value={f.packageUnit} onChange={(e) => setF({ ...f, packageUnit: e.target.value })} />
               <datalist id="pd-units">{UNIT_CHOICES.map((u) => <option key={u} value={u} />)}</datalist>
               <FieldError id="pd-unit" errors={errors} />
             </span>
             <span className="stack">
               <label htmlFor="pd-price">Price ($, optional)</label>
-              <input {...fieldProps("pd-price", errors)} inputMode="decimal" value={f.price} onChange={(e) => setF({ ...f, price: e.target.value })} />
+              <Input {...fieldProps("pd-price", errors)} inputMode="decimal" value={f.price} onChange={(e) => setF({ ...f, price: e.target.value })} />
               <FieldError id="pd-price" errors={errors} />
             </span>
           </div>
           <p className="faint">Recorded for the simulated retailer only; nothing here is a verified store product.</p>
-          <button className="btn line small" disabled={busy || gone || conflict || !writesAllowed}>Save product</button>
+          <Button variant="outline" size="sm" disabled={busy || gone || conflict || !writesAllowed}>Save product</Button>
         </form>}
       </div>
     </ModalSheet>
@@ -202,18 +205,18 @@ export function RemoveRequestDialog({ itemKey, requestId, onClose, returnFocus }
       {changed && (
         <div className="warnbox" data-testid="remove-conflict">
           <p>While this was open, the people asking for it changed: now {who}.</p>
-          <button type="button" className="btn line small" onClick={() => setSeen(ids)}>I've seen who asked</button>
+          <Button type="button" variant="outline" size="sm" onClick={() => setSeen(ids)}>I've seen who asked</Button>
         </div>
       )}
       <FormAlert message={err} />
       <div className="row">
-        <button type="button" className="btn line" data-autofocus="" onClick={onClose}>Keep it</button>
-        <button type="button" className="btn danger" disabled={!r || changed} onClick={async () => {
+        <Button type="button" variant="outline" data-autofocus="" onClick={onClose}>Keep it</Button>
+        <Button type="button" variant="destructive" disabled={!r || changed} onClick={async () => {
           const res = await command("RemoveRequest", { requestId, expectedContributorIds: seen ? seen.split(",") : [] });
           if (res.status !== "accepted") return setErr(res.message);
           announce(`Removed the ${label}.`);
           onClose();
-        }}>Remove request</button>
+        }}>Remove request</Button>
       </div>
     </ModalSheet>
   );
@@ -300,11 +303,11 @@ export function ConfirmOrderDialog({ onClose, returnFocus }: Common) {
               {lines.map((l, i) => (
                 <div key={i} className="row">
                   <span className="stack grow">
-                    <input {...fieldProps(`co-name-${i}`, errors)} value={l.name} aria-label={`Item ${i + 1}`} onChange={(e) => setLines(lines.map((x, j) => (j === i ? { ...x, name: e.target.value } : x)))} />
+                    <Input {...fieldProps(`co-name-${i}`, errors)} value={l.name} aria-label={`Item ${i + 1}`} onChange={(e) => setLines(lines.map((x, j) => (j === i ? { ...x, name: e.target.value } : x)))} />
                     <FieldError id={`co-name-${i}`} errors={errors} />
                   </span>
                   <span className="stack">
-                    <input {...fieldProps(`co-pk-${i}`, errors)} className="tiny" inputMode="numeric" value={l.packages} aria-label={`Packages of ${l.name || `item ${i + 1}`}`}
+                    <Input {...fieldProps(`co-pk-${i}`, errors)} className="tiny" inputMode="numeric" value={l.packages} aria-label={`Packages of ${l.name || `item ${i + 1}`}`}
                       onChange={(e) => setLines(lines.map((x, j) => (j === i ? { ...x, packages: e.target.value } : x)))} />
                     <FieldError id={`co-pk-${i}`} errors={errors} />
                   </span>
@@ -316,8 +319,8 @@ export function ConfirmOrderDialog({ onClose, returnFocus }: Common) {
             </div>
           )}
           <label htmlFor="co-pickup">Pickup time (optional)</label>
-          <input id="co-pickup" type="datetime-local" value={pickup} onChange={(e) => setPickup(e.target.value)} />
-          <button className="btn primary small" disabled={already}>Confirm order…</button>
+          <Input id="co-pickup" type="datetime-local" value={pickup} onChange={(e) => setPickup(e.target.value)} />
+          <Button variant="default" size="sm" disabled={already}>Confirm order…</Button>
         </form>
       ) : (
         <div className="stack small" data-testid="confirm-order-review">
@@ -327,8 +330,8 @@ export function ConfirmOrderDialog({ onClose, returnFocus }: Common) {
           )}
           <p>{pickup ? `Pickup ${new Date(pickup).toLocaleString()}.` : "Pickup time not recorded."} A confirmed order can’t be edited afterwards; differences at pickup are recorded as receipts.</p>
           <div className="row">
-            <button type="button" className="btn line" onClick={() => setStep("edit")}>Back to edit</button>
-            <button type="button" className="btn primary" disabled={busy || already || !writesAllowed} onClick={record}>Yes, record this order</button>
+            <Button type="button" variant="outline" onClick={() => setStep("edit")}>Back to edit</Button>
+            <Button type="button" variant="default" disabled={busy || already || !writesAllowed} onClick={record}>Yes, record this order</Button>
           </div>
         </div>
       )}
@@ -365,12 +368,12 @@ export function SubstituteDialog({ orderLineId, onClose, returnFocus }: Common &
         onClose();
       }}>
         <label htmlFor="sub-text">What arrived instead</label>
-        <input {...fieldProps("sub-text", errors)} data-autofocus="" value={f.text} onChange={(e) => setF({ ...f, text: e.target.value })} />
+        <Input {...fieldProps("sub-text", errors)} data-autofocus="" value={f.text} onChange={(e) => setF({ ...f, text: e.target.value })} />
         <FieldError id="sub-text" errors={errors} />
         <label htmlFor="sub-pk">Packages</label>
-        <input {...fieldProps("sub-pk", errors)} className="tiny" inputMode="numeric" value={f.packages} onChange={(e) => setF({ ...f, packages: e.target.value })} />
+        <Input {...fieldProps("sub-pk", errors)} className="tiny" inputMode="numeric" value={f.packages} onChange={(e) => setF({ ...f, packages: e.target.value })} />
         <FieldError id="sub-pk" errors={errors} />
-        <button className="btn primary small" disabled={!line}>Record substitute</button>
+        <Button variant="default" size="sm" disabled={!line}>Record substitute</Button>
       </form>
     </ModalSheet>
   );
@@ -403,22 +406,22 @@ export function ValidateSubstituteDialog({ receiptId, onClose, returnFocus }: Co
         onClose();
       }}>
         <label htmlFor="val-qty">How much arrived</label>
-        <input {...fieldProps("val-qty", errors)} data-autofocus="" inputMode="decimal" value={f.quantity} onChange={(e) => setF({ ...f, quantity: e.target.value })} />
+        <Input {...fieldProps("val-qty", errors)} data-autofocus="" inputMode="decimal" value={f.quantity} onChange={(e) => setF({ ...f, quantity: e.target.value })} />
         <FieldError id="val-qty" errors={errors} />
         <label htmlFor="val-unit">Unit</label>
-        <select {...fieldProps("val-unit", errors)} value={f.unit} onChange={(e) => setF({ ...f, unit: e.target.value })}>
+        <NativeSelect {...fieldProps("val-unit", errors)} value={f.unit} onChange={(e) => setF({ ...f, unit: e.target.value })}>
           <option value="">Choose…</option>
           {UNIT_CHOICES.map((u) => <option key={u} value={u}>{u}</option>)}
-        </select>
+        </NativeSelect>
         <FieldError id="val-unit" errors={errors} />
         <div className="row">
-          <button className="btn primary small" disabled={decided}>It works</button>
-          <button type="button" className="btn line small" disabled={decided} onClick={async () => {
+          <Button variant="default" size="sm" disabled={decided}>It works</Button>
+          <Button type="button" variant="outline" size="sm" disabled={decided} onClick={async () => {
             const r = await command("ValidateSubstitution", { receiptId, suitable: false, expectedValidationId: seenValidation });
             if (r.status !== "accepted") return setFormError(r.message);
             announce("Recorded: the substitute does not work; the original need stays open.");
             onClose();
-          }}>It doesn’t work</button>
+          }}>It doesn’t work</Button>
         </div>
       </form>
     </ModalSheet>
@@ -464,17 +467,17 @@ export function CorrectReceiptDialog({ receiptId, onClose, returnFocus }: Common
           <FieldError id="cr-state" errors={errors} />
         </fieldset>
         <label htmlFor="cr-pk">Packages</label>
-        <input {...fieldProps("cr-pk", errors)} className="tiny" inputMode="numeric" value={f.packages} onChange={(e) => setF({ ...f, packages: e.target.value })} />
+        <Input {...fieldProps("cr-pk", errors)} className="tiny" inputMode="numeric" value={f.packages} onChange={(e) => setF({ ...f, packages: e.target.value })} />
         <FieldError id="cr-pk" errors={errors} />
         {f.state === "substituted" && (
           <>
             <label htmlFor="cr-text">What arrived instead</label>
-            <input {...fieldProps("cr-text", errors)} value={f.text} onChange={(e) => setF({ ...f, text: e.target.value })} />
+            <Input {...fieldProps("cr-text", errors)} value={f.text} onChange={(e) => setF({ ...f, text: e.target.value })} />
             <FieldError id="cr-text" errors={errors} />
           </>
         )}
         <p className="faint">A correction is added alongside the original record; nothing is overwritten.</p>
-        <button className="btn primary small" disabled={!found || superseded}>Record correction</button>
+        <Button variant="default" size="sm" disabled={!found || superseded}>Record correction</Button>
       </form>
     </ModalSheet>
   );
@@ -501,12 +504,12 @@ export function CartCheckDialog({ batchId, onClose, returnFocus }: Common & { ba
         <label className="option-row"><input type="radio" name="cart" checked={seen === "not_in_cart"} onChange={() => setSeen("not_in_cart")} /> The items are not in the cart</label>
       </fieldset>
       {seen === "not_in_cart" && <p className="warnbox small">These items will become sendable again. If they are actually in the cart, sending again would add them twice — check carefully.</p>}
-      <button type="button" className="btn primary" disabled={!seen || !still} onClick={async () => {
+      <Button type="button" variant="default" disabled={!seen || !still} onClick={async () => {
         const r = await command("ResolveUncertainTransfer", { batchId, observed: seen });
         if (r.status !== "accepted") return setErr(r.message);
         announce(seen === "in_cart" ? "Recorded: the items are in the cart." : "Recorded: the items are not in the cart; they can be sent again after review.");
         onClose();
-      }}>Record what I saw</button>
+      }}>Record what I saw</Button>
     </ModalSheet>
   );
 }
@@ -549,16 +552,16 @@ function ChooseCandidate({ c, itemKey, expectedProductId, disabled, onChosen, id
       {c.choosable && needsSize && (
         <div className="row small">
           <label htmlFor={qtyId}>Package size</label>
-          <input ref={qtyRef} id={qtyId} className="tiny" inputMode="decimal" value={pack.qty} onChange={(e) => setPack({ ...pack, qty: e.target.value })}
+          <Input ref={qtyRef} id={qtyId} className="tiny" inputMode="decimal" value={pack.qty} onChange={(e) => setPack({ ...pack, qty: e.target.value })}
             aria-invalid={error ? true : undefined} aria-describedby={error ? errId : undefined} />
-          <select aria-label="Package unit" value={pack.unit} onChange={(e) => setPack({ ...pack, unit: e.target.value })}>
+          <NativeSelect aria-label="Package unit" value={pack.unit} onChange={(e) => setPack({ ...pack, unit: e.target.value })}>
             {UNIT_CHOICES.map((u) => <option key={u} value={u}>{u}</option>)}
-          </select>
+          </NativeSelect>
         </div>
       )}
       {error && <p className="field-error small" role="alert" id={errId} data-testid="kroger-choose-error">{error}</p>}
       {c.choosable && (
-        <button ref={useRef_} type="button" className="btn line small" disabled={disabled || busy} aria-label={`Use ${c.description ?? c.productId} for this pickup`}
+        <Button ref={useRef_} type="button" variant="outline" size="sm" disabled={disabled || busy} aria-label={`Use ${c.description ?? c.productId} for this pickup`}
           aria-describedby={error && !needsSize ? errId : undefined}
           onClick={async () => {
             if (needsSize && (!isDecimal(pack.qty) || Number(pack.qty) <= 0)) {
@@ -575,7 +578,7 @@ function ChooseCandidate({ c, itemKey, expectedProductId, disabled, onChosen, id
             else fail(r.message, (r.details as any)?.field === "packageQty" || (r.details as any)?.field === "packageUnit" ? "size" : null);
           }}>
           Use this
-        </button>
+        </Button>
       )}
     </li>
   );
@@ -598,8 +601,8 @@ function KrogerSearch({ itemKey, label, expectedProductId, disabled, onChosen }:
     <section className="stack small" aria-labelledby="pd-kroger-h" data-testid="kroger-search">
       <h3 id="pd-kroger-h" className="section-label">Find it at Kroger</h3>
       <form className="row" style={{ flexWrap: "nowrap" }} onSubmit={(e) => { e.preventDefault(); void search(); }}>
-        <input className="grow" aria-label={`Search Kroger for ${label}`} value={term} onChange={(e) => setTerm(e.target.value)} />
-        <button className="btn line small" disabled={busy || term.trim().length < 2}>{busy ? "Searching…" : "Search"}</button>
+        <Input className="grow" aria-label={`Search Kroger for ${label}`} value={term} onChange={(e) => setTerm(e.target.value)} />
+        <Button variant="outline" size="sm" disabled={busy || term.trim().length < 2}>{busy ? "Searching…" : "Search"}</Button>
       </form>
       {result && !result.ok && <p role="status" className="warn" data-testid="kroger-search-refused">{result.reason}</p>}
       {result?.ok && result.candidates.length === 0 && <p role="status" className="faint">No Kroger products found for "{term}" at your store.</p>}
@@ -638,7 +641,7 @@ export function KrogerMatchDialog({ onClose, returnFocus }: Common) {
           <>
             <p className="small">Table searches Kroger at your store for each item below (up to 12 at a time) and shows a few products for each. You choose; nothing is chosen for you and nothing goes into a cart.</p>
             <ul className="small">{lines.map((l: any) => <li key={l.key}>{l.term}</li>)}</ul>
-            <button type="button" className="btn primary" data-autofocus="" disabled={!lines.length} onClick={load} data-testid="kroger-match-start">Search Kroger</button>
+            <Button type="button" variant="default" data-autofocus="" disabled={!lines.length} onClick={load} data-testid="kroger-match-start">Search Kroger</Button>
           </>
         )}
         {result && !result.ok && <p role="status" className="warn" data-testid="kroger-match-refused">{result.reason}</p>}
@@ -695,7 +698,7 @@ export function PartialHandoffDialog({ onClose, returnFocus }: Common) {
         </p>
         {changed && (
           <div className="warnbox" role="status" data-testid="partial-changed">
-            The list changed while this was open. Nothing was sent. <button type="button" className="btn line small" onClick={onClose}>Close and review again</button>
+            The list changed while this was open. Nothing was sent. <Button type="button" variant="outline" size="sm" onClick={onClose}>Close and review again</Button>
           </div>
         )}
         <FormAlert message={error} testId="partial-error" />
@@ -717,20 +720,20 @@ export function PartialHandoffDialog({ onClose, returnFocus }: Common) {
         <section className="stack" aria-labelledby="partial-left-h" data-testid="partial-left-out">
           <h3 id="partial-left-h" className="section-label">Left out ({leftOut.length})</h3>
           <ul className="plain small">{leftOut.map((o: any) => <li key={o.key} data-key={o.key}><strong>{o.name}</strong>{o.toSend ? ` ×${o.toSend}` : ""} — {o.reason}</li>)}</ul>
-          <button type="button" className="btn line small" data-testid="copy-remaining" onClick={async () => {
+          <Button type="button" variant="outline" size="sm" data-testid="copy-remaining" onClick={async () => {
             try {
               await navigator.clipboard.writeText(remainingText());
               announce("List of the items left out copied.");
             } catch {
               announce("Copying isn't allowed here.");
             }
-          }}>Copy the items left out</button>
+          }}>Copy the items left out</Button>
         </section>
         {review.blockers.length === 0 && (
           <>
             <label className="row small"><input type="checkbox" checked={ack} onChange={(e) => setAck(e.target.checked)} data-testid="partial-ack" />
               I understand the {leftOut.length} {leftOut.length === 1 ? "item" : "items"} above are not sent and stay on our list.</label>
-            <button type="button" className="btn primary" data-testid="partial-send" disabled={busy || changed || !writesAllowed || !ack || chosen.length === 0}
+            <Button type="button" variant="default" data-testid="partial-send" disabled={busy || changed || !writesAllowed || !ack || chosen.length === 0}
               onClick={async () => {
                 setBusy(true);
                 const r = await command("StartPartialHandoff", {
@@ -746,7 +749,7 @@ export function PartialHandoffDialog({ onClose, returnFocus }: Common) {
                 onClose();
               }}>
               Send {chosen.length} {chosen.length === 1 ? "item" : "items"} only
-            </button>
+            </Button>
           </>
         )}
       </div>

@@ -6,6 +6,10 @@ import { ModalSheet, focusFirst, nightFallback } from "./a11y";
 import { AlsoNeed } from "./AlsoNeed";
 import { budgetText, costView, dateLabel, effortText, money, nutrient, preferenceText } from "./format";
 import { RecipeHero, PlaceholderTile } from "./Tile";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { NativeSelect } from "@/components/ui/native-select";
+import { Input } from "@/components/ui/input";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -76,12 +80,12 @@ function ProposalView() {
       <div className="card stack">
         <p className="muted small">Table proposes one complete week. Nothing is adopted until one of you chooses <strong>Use this week</strong>. Adopting does not order, cook or record eating anything.</p>
         <div className="grid4">
-          <label>Cooking sessions<select value={opts.cookingSessions} onChange={(e) => setOpts({ ...opts, cookingSessions: e.target.value })}><option value="">Saved/default</option>{[2, 3, 4, 5, 6, 7].map((n) => <option key={n}>{n}</option>)}</select></label>
-          <label>Effort cap<select value={opts.maxEffort} onChange={(e) => setOpts({ ...opts, maxEffort: e.target.value })}><option value="">Saved/none</option><option value="easy">easy</option><option value="medium">medium</option><option value="involved">involved</option></select></label>
-          <label>Variety<select value={opts.variety} onChange={(e) => setOpts({ ...opts, variety: e.target.value })}><option value="">Saved/neutral</option><option value="familiar">familiar</option><option value="balanced">balanced</option><option value="adventurous">adventurous</option></select></label>
-          <label>New recipes (max)<select value={opts.maxNewRecipes} onChange={(e) => setOpts({ ...opts, maxNewRecipes: e.target.value })}><option value="">Saved/no limit</option>{[0, 1, 2, 3].map((n) => <option key={n}>{n}</option>)}</select></label>
+          <label>Cooking sessions<NativeSelect value={opts.cookingSessions} onChange={(e) => setOpts({ ...opts, cookingSessions: e.target.value })}><option value="">Saved/default</option>{[2, 3, 4, 5, 6, 7].map((n) => <option key={n}>{n}</option>)}</NativeSelect></label>
+          <label>Effort cap<NativeSelect value={opts.maxEffort} onChange={(e) => setOpts({ ...opts, maxEffort: e.target.value })}><option value="">Saved/none</option><option value="easy">easy</option><option value="medium">medium</option><option value="involved">involved</option></NativeSelect></label>
+          <label>Variety<NativeSelect value={opts.variety} onChange={(e) => setOpts({ ...opts, variety: e.target.value })}><option value="">Saved/neutral</option><option value="familiar">familiar</option><option value="balanced">balanced</option><option value="adventurous">adventurous</option></NativeSelect></label>
+          <label>New recipes (max)<NativeSelect value={opts.maxNewRecipes} onChange={(e) => setOpts({ ...opts, maxNewRecipes: e.target.value })}><option value="">Saved/no limit</option>{[0, 1, 2, 3].map((n) => <option key={n}>{n}</option>)}</NativeSelect></label>
         </div>
-        <button className="btn line" onClick={() => generate("fresh")} disabled={busy}>{proposal ? "New proposal" : "Propose a week"}</button>
+        <Button variant="outline" onClick={() => generate("fresh")} disabled={busy}>{proposal ? "New proposal" : "Propose a week"}</Button>
       </div>
       {msg && <p role="alert" className="warnbox">{msg}</p>}
       {proposal && (
@@ -109,15 +113,15 @@ function ProposalView() {
             <details className="small"><summary>Not proposed ({proposal.explanation.excluded.length})</summary><ul>{proposal.explanation.excluded.map((x: any) => <li key={x.title}>{x.title}: {x.reason}</li>)}</ul></details>
           )}
           <div className="row">
-            <button className="btn line small" onClick={() => generate("fewer_sessions")} disabled={busy}>Fewer sessions</button>
-            <button className="btn line small" onClick={() => generate("different_dinners")} disabled={busy}>Different dinners</button>
+            <Button variant="outline" size="sm" onClick={() => generate("fewer_sessions")} disabled={busy}>Fewer sessions</Button>
+            <Button variant="outline" size="sm" onClick={() => generate("different_dinners")} disabled={busy}>Different dinners</Button>
           </div>
           {incomplete(proposal) && (
             <p className="warnbox" role="status" data-testid="incomplete-proposal">
               This draft is not a complete week ({proposal.content.nights.filter((n: any) => n.kind === "open").length} night(s) without a dinner). It stays a draft; add recipes or change the controls, then propose again.
             </p>
           )}
-          <button className="btn primary full big" onClick={adopt} disabled={busy || !writesAllowed || proposal.stale || incomplete(proposal)} data-testid="adopt">Use this week</button>
+          <Button variant="default" size="lg" className="w-full" onClick={adopt} disabled={busy || !writesAllowed || proposal.stale || incomplete(proposal)} data-testid="adopt">Use this week</Button>
         </div>
       )}
       <div className="section-label">Also need (this week’s pickup list — no menu required)</div>
@@ -221,8 +225,8 @@ function NextDinner({ night }: { night: any }) {
             : ""}
         {night.coverage.status === "unresolved" ? ` Unresolved: ${night.coverage.reason}` : ""}
       </p>
-      {night.kind === "cook" && <Link className="btn primary full big" href={`/cook/${night.night}`} data-testid="cook-link">Cook</Link>}
-      {night.kind === "leftover" && <Link className="btn primary full big" href={`/cook/${night.night}`} data-testid="reheat-link">Reheat and serve</Link>}
+      {night.kind === "cook" && <Link className={cn(buttonVariants({ variant: "default", size: "lg" }), "w-full")} href={`/cook/${night.night}`} data-testid="cook-link">Cook</Link>}
+      {night.kind === "leftover" && <Link className={cn(buttonVariants({ variant: "default", size: "lg" }), "w-full")} href={`/cook/${night.night}`} data-testid="reheat-link">Reheat and serve</Link>}
     </div>
   );
 }
@@ -271,9 +275,9 @@ function NightRow({ n, open, onOpen, onClose }: { n: any; open: boolean; onOpen:
         {n.constraint.status !== "ok" && <div className="warn small">{n.constraint.reasons.join("; ")} (text match, not allergen certification)</div>}
       </div>
       <div className="col">
-        <button
+        <Button
           ref={opener}
-          className="btn line small"
+          variant="outline" size="sm"
           onClick={onOpen}
           aria-haspopup="dialog"
           aria-expanded={open}
@@ -281,10 +285,10 @@ function NightRow({ n, open, onOpen, onClose }: { n: any; open: boolean; onOpen:
           data-testid={`change-${n.night}`}
         >
           Change
-        </button>
-        <button className="btn line small" onClick={lock} disabled={!writesAllowed} aria-pressed={n.locked} aria-label={`${n.locked ? "Unlock" : "Lock"} ${n.dayName}`} data-testid={`lock-${n.night}`}>
+        </Button>
+        <Button variant="outline" size="sm" onClick={lock} disabled={!writesAllowed} aria-pressed={n.locked} aria-label={`${n.locked ? "Unlock" : "Lock"} ${n.dayName}`} data-testid={`lock-${n.night}`}>
           {n.locked ? "Unlock" : "Lock"}
-        </button>
+        </Button>
       </div>
       {msg && <p role="alert" className="warnbox full-row">{msg}</p>}
       {open && <ChangeSheet n={n} onClose={onClose} returnFocus={() => focusFirst(opener.current) ?? nightFallback(n.night)} />}
@@ -414,8 +418,8 @@ function ChangeSheet({ n, onClose, returnFocus }: { n: any; onClose: () => void;
               </div>
             ))}
             <div className="row">
-              <button type="button" className="btn line small" onClick={() => preview({ type: "set_kind", assignmentId: n.assignmentId, kind: "out" })}>Preview: night out</button>
-              <button type="button" className="btn line small" onClick={() => preview({ type: "set_kind", assignmentId: n.assignmentId, kind: "open" })}>Preview: leave open</button>
+              <Button type="button" variant="outline" size="sm" onClick={() => preview({ type: "set_kind", assignmentId: n.assignmentId, kind: "out" })}>Preview: night out</Button>
+              <Button type="button" variant="outline" size="sm" onClick={() => preview({ type: "set_kind", assignmentId: n.assignmentId, kind: "open" })}>Preview: leave open</Button>
             </div>
           </div>
         )}
@@ -426,12 +430,12 @@ function ChangeSheet({ n, onClose, returnFocus }: { n: any; onClose: () => void;
             ) : (
               <>
                 <label>Move {n.recipe?.title} to
-                  <select value={toNight} onChange={(e) => setToNight(e.target.value)}>
+                  <NativeSelect value={toNight} onChange={(e) => setToNight(e.target.value)}>
                     <option value="">Choose a night</option>
                     {otherNights.map((x: any) => <option key={x.night} value={x.night}>{x.dayName} — {x.kind === "cook" ? x.recipe?.title : x.kind}{x.locked ? " (locked)" : ""}</option>)}
-                  </select>
+                  </NativeSelect>
                 </label>
-                <button type="button" className="btn line" disabled={!toNight} onClick={() => preview({ type: "move", assignmentId: n.assignmentId, toNight })}>Preview move</button>
+                <Button type="button" variant="outline" disabled={!toNight} onClick={() => preview({ type: "move", assignmentId: n.assignmentId, toNight })}>Preview move</Button>
               </>
             )}
           </div>
@@ -442,10 +446,10 @@ function ChangeSheet({ n, onClose, returnFocus }: { n: any; onClose: () => void;
             {n.event ? (
               <>
                 <p className="faint small">Record what is actually left. This is a fact: selected dinners stay as they are; affected nights become unresolved and you decide any recovery. Closing this sheet records nothing.</p>
-                <label>Portions left now<input inputMode="decimal" value={remaining} onChange={(e) => setRemaining(e.target.value)} /></label>
-                <button
+                <label>Portions left now<Input inputMode="decimal" value={remaining} onChange={(e) => setRemaining(e.target.value)} /></label>
+                <Button
                   type="button"
-                  className="btn line"
+                  variant="outline"
                   disabled={!remaining}
                   onClick={async () => {
                     const r = await command("RecordLeftoverShortfall", { eventId: n.event.id, portionsRemaining: remaining });
@@ -453,7 +457,7 @@ function ChangeSheet({ n, onClose, returnFocus }: { n: any; onClose: () => void;
                   }}
                 >
                   Record less left than planned
-                </button>
+                </Button>
               </>
             ) : (
               <p className="faint small">No cooking linked to this night.</p>
@@ -513,9 +517,9 @@ function PlateEditor({ n }: { n: any }) {
                   <div key={cmp.key} className="row between">
                     <span>{cmp.name}</span>
                     <span className="row">
-                      <button className="btn line small" aria-label={`Less ${cmp.name} for ${m.displayName}`} disabled={!writesAllowed || Number(plate.componentPortions[cmp.key]) <= 0} onClick={() => setPortion(m.id, "dinner", cmp.key, String(Math.max(0, Number(plate.componentPortions[cmp.key]) - 0.5)), n.night)}>−</button>
+                      <Button variant="outline" size="sm" aria-label={`Less ${cmp.name} for ${m.displayName}`} disabled={!writesAllowed || Number(plate.componentPortions[cmp.key]) <= 0} onClick={() => setPortion(m.id, "dinner", cmp.key, String(Math.max(0, Number(plate.componentPortions[cmp.key]) - 0.5)), n.night)}>−</Button>
                       <span data-testid={`portion-${m.displayName}-${cmp.key}`}>{plate.componentPortions[cmp.key]}×</span>
-                      <button className="btn line small" aria-label={`More ${cmp.name} for ${m.displayName}`} disabled={!writesAllowed} onClick={() => setPortion(m.id, "dinner", cmp.key, String(Number(plate.componentPortions[cmp.key]) + 0.5), n.night)}>+</button>
+                      <Button variant="outline" size="sm" aria-label={`More ${cmp.name} for ${m.displayName}`} disabled={!writesAllowed} onClick={() => setPortion(m.id, "dinner", cmp.key, String(Number(plate.componentPortions[cmp.key]) + 0.5), n.night)}>+</Button>
                     </span>
                   </div>
                 ))}
@@ -532,15 +536,15 @@ function PlateEditor({ n }: { n: any }) {
               <div className="small">
                 Lunch from this batch: {lunch ? `reserved for ${dateLabel(lunch.night)}` : "none"}{" "}
                 {lunch ? (
-                  <button className="btn line small" disabled={!writesAllowed} onClick={() => setPortion(m.id, "lunch", n.recipe.components[0].key, null, lunch.night)}>Release lunch</button>
+                  <Button variant="outline" size="sm" disabled={!writesAllowed} onClick={() => setPortion(m.id, "lunch", n.recipe.components[0].key, null, lunch.night)}>Release lunch</Button>
                 ) : (
-                  <button className="btn line small" disabled={!writesAllowed || !n.recipe.leftoverFriendly} onClick={async () => {
+                  <Button variant="outline" size="sm" disabled={!writesAllowed || !n.recipe.leftoverFriendly} onClick={async () => {
                     const nextNight = snapshot.week.nights.find((x: any) => x.night > n.night)?.night;
                     if (nextNight) {
                       const r = await command("SetPlate", { eventId: n.event.id, expectedEventRevision: n.event.revision, memberId: m.id, night: nextNight, kind: "lunch", componentPortions: Object.fromEntries(n.recipe.components.map((c: any) => [c.key, "1"])) });
                       setMsg(r.status === "accepted" ? null : r.message);
                     }
-                  }}>Reserve tomorrow’s lunch</button>
+                  }}>Reserve tomorrow’s lunch</Button>
                 )}
               </div>
             )}
@@ -615,9 +619,9 @@ function PreviewCard({ p, onApplied, onCanceled }: { p: any; onApplied: (announc
       {p.consequence.budgetBlock && <p className="warnbox">{p.consequence.budgetBlock}</p>}
       {msg && <p role="alert" className="warnbox" tabIndex={-1} ref={msgRef}>{msg}</p>}
       <div className="row">
-        <button
+        <Button
           type="button"
-          className="btn primary"
+          variant="default"
           data-testid="apply"
           disabled={p.stale || blocked || !writesAllowed}
           aria-label={`Apply ${target} preview`}
@@ -629,10 +633,10 @@ function PreviewCard({ p, onApplied, onCanceled }: { p: any; onApplied: (announc
           }}
         >
           Apply
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
-          className="btn line"
+          variant="outline"
           data-testid="cancel-preview"
           aria-label={`${p.stale ? "Discard" : "Cancel"} ${target} preview`}
           onClick={async () => {
@@ -642,7 +646,7 @@ function PreviewCard({ p, onApplied, onCanceled }: { p: any; onApplied: (announc
           }}
         >
           {p.stale ? "Discard draft" : "Cancel"}
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -672,12 +676,12 @@ function Deferred() {
         <div key={d.id} className="row between">
           <span>{d.recipe?.title}</span>
           <span className="row">
-            <select value={to[d.id] ?? ""} onChange={(e) => setTo({ ...to, [d.id]: e.target.value })} aria-label={`Place ${d.recipe?.title} on a night`}
+            <NativeSelect value={to[d.id] ?? ""} onChange={(e) => setTo({ ...to, [d.id]: e.target.value })} aria-label={`Place ${d.recipe?.title} on a night`}
               aria-invalid={msgs[d.id] ? true : undefined} aria-describedby={msgs[d.id] ? `deferred-msg-${d.id}` : undefined}>
               <option value="">Place on…</option>
               {free.map((n: any) => <option key={n.night} value={n.night}>{n.dayName}</option>)}
-            </select>
-            <button className="btn line small" disabled={!to[d.id]} aria-label={`Preview placing ${d.recipe?.title}`} onClick={async (e) => {
+            </NativeSelect>
+            <Button variant="outline" size="sm" disabled={!to[d.id]} aria-label={`Preview placing ${d.recipe?.title}`} onClick={async (e) => {
               const from = e.currentTarget;
               const r = await command("CreatePreview", { weekId: snapshot.week.id, operation: { type: "place", eventId: d.id, toNight: to[d.id] } });
               if (r.status !== "accepted") setMsgs({ ...msgs, [d.id]: r.message });
@@ -685,7 +689,7 @@ function Deferred() {
                 setMsgs({ ...msgs, [d.id]: "" });
                 setFocusPreview({ id: r.result.previewId, from });
               }
-            }}>Preview</button>
+            }}>Preview</Button>
           </span>
           {msgs[d.id] && <p role="alert" className="field-error full-row" id={`deferred-msg-${d.id}`}>{msgs[d.id]}</p>}
         </div>

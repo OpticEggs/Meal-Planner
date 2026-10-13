@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import { authClient } from "@/ui/auth-client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -23,14 +25,14 @@ export default function LoginPage() {
       <form onSubmit={submit} className="card stack" aria-label="Sign in">
         <label>
           Email
-          <input type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <Input type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </label>
         <label>
           Password
-          <input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <Input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </label>
         {error && <p role="alert" className="bad">{error}</p>}
-        <button className="btn primary full" disabled={busy}>{busy ? "Signing in…" : "Sign in"}</button>
+        <Button variant="default" className="w-full" disabled={busy}>{busy ? "Signing in…" : "Sign in"}</Button>
       </form>
       <p className="faint small">Members are added by the household owner (`npm run member:create`). There is no public sign-up.</p>
     </main>

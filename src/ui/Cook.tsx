@@ -7,6 +7,7 @@ import { ModalSheet, focusFirst } from "./a11y";
 import { FormAlert } from "./forms";
 import { Steps } from "./Recipes";
 import { PlaceholderTile, SourceLine } from "./Tile";
+import { Button } from "@/components/ui/button";
 
 /** Cook / reheat-and-serve. Opening this records nothing; "Mark cooked" is explicit. */
 export function CookScreen({ night }: { night: string }) {
@@ -67,13 +68,13 @@ export function CookScreen({ night }: { night: string }) {
               </button>
             </div>
           ) : (
-            <button className="btn primary full big" data-testid="mark-cooked" disabled={busy || !writesAllowed} onClick={async () => {
+            <Button variant="default" size="lg" className="w-full" data-testid="mark-cooked" disabled={busy || !writesAllowed} onClick={async () => {
               setBusy(true);
               const r = await command("RecordCooked", { eventId: n.event.id });
               setBusy(false);
               // Already recorded (e.g. the other member just did): say so; nothing was added.
               setMsg(r.status === "accepted" ? "Recorded as cooked." : r.message);
-            }}>Mark cooked</button>
+            }}>Mark cooked</Button>
           )}
           {correcting && n.event.cooked && (
             <CorrectCookedDialog recordId={n.event.cooked.recordId} by={n.event.cooked.by} title={n.recipe.title}
@@ -111,15 +112,15 @@ function CorrectCookedDialog({ recordId, by, title, onClose, onCorrected, return
         {by} recorded this dinner as cooked. If it was not cooked, the record is marked as corrected (it stays in the history) and the dinner counts as not cooked yet.
       </p>
       <div className="row">
-        <button type="button" className="btn line" data-autofocus="" onClick={onClose}>Keep the record</button>
-        <button type="button" className="btn danger" disabled={busy} onClick={async () => {
+        <Button type="button" variant="outline" data-autofocus="" onClick={onClose}>Keep the record</Button>
+        <Button type="button" variant="destructive" disabled={busy} onClick={async () => {
           setBusy(true);
           const r = await command("CorrectCookRecord", { cookRecordId: recordId, reason: "not_cooked" });
           setBusy(false);
           if (r?.status !== "accepted") return setFormError(r?.message ?? "Nothing was changed.");
           onCorrected("Corrected: this dinner is not recorded as cooked.");
           onClose();
-        }}>It wasn&apos;t cooked</button>
+        }}>It wasn&apos;t cooked</Button>
       </div>
     </ModalSheet>
   );

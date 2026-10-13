@@ -11,6 +11,8 @@ import { AddFromLinkForm, SaveLinkForm, SavedLinksList } from "./SavedLinks";
 import { ImportReviewDialog } from "./ImportReview";
 import { RecipeGallery, matchesSearch, useCatalogScroll } from "./Catalog";
 import { SelectControl, defaultServings } from "./MealList";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -44,7 +46,7 @@ export function RecipesScreen({ initialFilter = "all" }: { initialFilter?: (type
     <section aria-label="Our recipes" className="recipes-screen wide-page">
       <div className="screen-head">
         <h2 className="page-title">Our Recipes</h2>
-        <button className="btn line small" aria-haspopup="dialog" onClick={(e) => setCreating(e.currentTarget)} data-testid="new-recipe">New recipe</button>
+        <Button variant="outline" size="sm" aria-haspopup="dialog" onClick={(e) => setCreating(e.currentTarget)} data-testid="new-recipe">New recipe</Button>
       </div>
       <AddFromLinkForm compact onOpen={(b, el, result) => setImporting({ b, el, result })} />
       <div className="catalog-bar">
@@ -67,8 +69,8 @@ export function RecipesScreen({ initialFilter = "all" }: { initialFilter?: (type
         {filter !== "links" && (
           <div className="catalog-tools">
             <label className="sr-only" htmlFor="recipe-search">Search recipes</label>
-            <input id="recipe-search" type="search" placeholder="Search recipes or ingredients" value={search} onChange={(e) => setSearch(e.target.value)} />
-            <button type="button" className={`btn line small ${quick ? "on" : ""}`} aria-pressed={quick} onClick={() => setQuick(!quick)}>30 min or less</button>
+            <Input id="recipe-search" type="search" placeholder="Search recipes or ingredients" value={search} onChange={(e) => setSearch(e.target.value)} />
+            <Button type="button" variant={quick ? "brand" : "outline"} size="sm" aria-pressed={quick} onClick={() => setQuick(!quick)}>30 min or less</Button>
           </div>
         )}
       </div>
@@ -152,21 +154,21 @@ export function RecipeDetail({ recipeId }: { recipeId: string }) {
       </div>
       <div className="seg" role="group" aria-label="Your feedback">
         {PREFS.map((p) => (
-          <button key={p.v} className={`btn small ${r.preferences[me.memberId] === p.v ? "primary" : "line"}`} aria-pressed={r.preferences[me.memberId] === p.v} aria-label={`${p.label} (your feedback)`}
+          <Button key={p.v} size="sm" variant={r.preferences[me.memberId] === p.v ? "brand" : "outline"} aria-pressed={r.preferences[me.memberId] === p.v} aria-label={`${p.label} (your feedback)`}
             onClick={() => command("SetRecipePreference", { recipeId, value: r.preferences[me.memberId] === p.v ? null : p.v })}>
             {p.label}
-          </button>
+          </Button>
         ))}
       </div>
       <p className="small">
         {library.members.map((m: any) => `${m.displayName}: ${PREFS.find((p) => p.v === r.preferences[m.id])?.label ?? "unknown"}`).join(" · ")}
       </p>
       <div className="row">
-        <button className="btn line small" aria-pressed={r.favoriteOf.includes(me.memberId)} onClick={() => command("SetFavorite", { recipeId, favorite: !r.favoriteOf.includes(me.memberId) })}>
+        <Button variant="outline" size="sm" aria-pressed={r.favoriteOf.includes(me.memberId)} onClick={() => command("SetFavorite", { recipeId, favorite: !r.favoriteOf.includes(me.memberId) })}>
           {r.favoriteOf.includes(me.memberId) ? "★ Favorite" : "☆ Favorite"}
-        </button>
-        <button className="btn line small" disabled={!!r.interest} onClick={() => command("SaveInterest", { recipeId })}>{r.interest ? "In Sounds good" : "Sounds good"}</button>
-        <button className="btn line small" aria-haspopup="dialog" onClick={(e) => setEditing(e.currentTarget)}>Edit (new version)</button>
+        </Button>
+        <Button variant="outline" size="sm" disabled={!!r.interest} onClick={() => command("SaveInterest", { recipeId })}>{r.interest ? "In Sounds good" : "Sounds good"}</Button>
+        <Button variant="outline" size="sm" aria-haspopup="dialog" onClick={(e) => setEditing(e.currentTarget)}>Edit (new version)</Button>
       </div>
       {editing && <RecipeEditorDialog recipeId={recipeId} onClose={() => setEditing(null)} returnFocus={() => focusFirst(editing, () => document.querySelector<HTMLElement>('[data-testid="recipe-title"]'))} />}
       <div className="stats">
@@ -215,9 +217,9 @@ export function RecipeDetail({ recipeId }: { recipeId: string }) {
           announce("Note saved.");
         } else setMsg(x.message);
       }}>
-        <input id="new-note" aria-label="New note" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Add a note"
+        <Input id="new-note" aria-label="New note" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Add a note"
           aria-invalid={msg ? true : undefined} aria-describedby={msg ? "new-note-error" : undefined} />
-        <button className="btn line small">Save note</button>
+        <Button variant="outline" size="sm">Save note</Button>
       </form>
       {msg && <p className="field-error" id="new-note-error" role="alert">{msg}</p>}
       <div className="section-label">Cooking history (recorded explicitly)</div>
@@ -273,14 +275,14 @@ function PhotoControls({ r }: { r: any }) {
   return (
     <div className="photo-controls">
       {/* A visible button opens the picker; the file input itself is never in the tab order. */}
-      <button type="button" className="btn line small" disabled={busy} onClick={() => file.current?.click()}>{mine ? "Change your photo" : "Add your own photo"}</button>
+      <Button type="button" variant="outline" size="sm" disabled={busy} onClick={() => file.current?.click()}>{mine ? "Change your photo" : "Add your own photo"}</Button>
       <input ref={file} type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden tabIndex={-1} aria-hidden="true" disabled={busy} data-testid="photo-input"
         onChange={(e) => { const f = e.target.files?.[0]; if (f) void upload(f); }} />
       {mine && (
-        <button className="btn quiet small" disabled={busy} onClick={async () => {
+        <Button variant="ghost" size="sm" disabled={busy} onClick={async () => {
           const x = await command("SetRecipePhoto", { recipeId: r.recipeId, imageId: null, expectedRevision: r.photoRevision ?? 0 });
           if (x.status === "accepted") { announce("Photo removed."); await loadLibrary(); } else setErr(x.message);
-        }}>Remove photo</button>
+        }}>Remove photo</Button>
       )}
       {busy && <span className="small muted" role="status">Saving photo…</span>}
       {err && <p className="field-error small" role="alert" data-testid="photo-error">{err}</p>}

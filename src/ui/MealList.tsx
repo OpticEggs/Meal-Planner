@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { SnapshotScope, useStore } from "./store";
 import { GroceriesScreen } from "./Groceries";
 import { PlaceholderTile } from "./Tile";
+import { Button, buttonVariants } from "@/components/ui/button";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -46,9 +47,9 @@ export function ListGroceriesScreen() {
 export function ServingsStepper({ value, onChange, label, disabled }: { value: number; onChange: (n: number) => void; label: string; disabled?: boolean }) {
   return (
     <div className="stepper" role="group" aria-label={label}>
-      <button type="button" className="btn line small" disabled={disabled || value <= 1} aria-label={`Fewer servings (${label})`} onClick={() => onChange(value - 1)}>−</button>
+      <Button type="button" variant="outline" size="sm" disabled={disabled || value <= 1} aria-label={`Fewer servings (${label})`} onClick={() => onChange(value - 1)}>−</Button>
       <output aria-live="off" data-testid="servings-value">{value}</output>
-      <button type="button" className="btn line small" disabled={disabled || value >= MAX} aria-label={`More servings (${label})`} onClick={() => onChange(value + 1)}>+</button>
+      <Button type="button" variant="outline" size="sm" disabled={disabled || value >= MAX} aria-label={`More servings (${label})`} onClick={() => onChange(value + 1)}>+</Button>
     </div>
   );
 }
@@ -77,7 +78,7 @@ export function SelectControl({ recipe, compact }: { recipe: any; compact?: bool
   return (
     <div className={compact ? "select-control compact" : "select-control"} data-testid="select-control">
       {!compact && <ServingsStepper value={servings} onChange={setServings} label={`Servings of ${title}`} disabled={!writesAllowed} />}
-      <button className={compact ? "plus-btn" : "btn primary"} disabled={!writesAllowed} onClick={add} aria-label={`Add ${title} to Selected Meals${compact ? ` (${servings} servings)` : ""}`} data-testid="add-selected">
+      <button className={compact ? "plus-btn" : buttonVariants({ variant: "brand" })} disabled={!writesAllowed} onClick={add} aria-label={`Add ${title} to Selected Meals${compact ? ` (${servings} servings)` : ""}`} data-testid="add-selected">
         {compact ? <span aria-hidden="true">+</span> : "Add to Selected Meals"}
       </button>
       {msg && <p role="alert" className="warnbox small">{msg}</p>}
@@ -131,7 +132,7 @@ export function SelectedMealsScreen() {
           <ul className="plain" aria-label="Selected meals">
             {meals.map((m) => <MealCard key={m.id} m={m} needs={needs.filter((n) => n.selectedMealId === m.id)} />)}
           </ul>
-          <Link className="btn primary" href="/groceries" data-testid="review-groceries">
+          <Link className={buttonVariants({ variant: "default" })} href="/groceries" data-testid="review-groceries">
             Review groceries ({toBuy} item{toBuy === 1 ? "" : "s"}{needs.length ? `, ${needs.length} need a quantity` : ""})
           </Link>
         </>
@@ -201,15 +202,15 @@ function NewList({ list }: { list: any }) {
         <div className="warnbox stack" role="group" aria-label="Start a new list">
           <p style={{ margin: 0 }}>This closes the current list for both of you. It is kept, with anything already sent or ordered; the next meal you add starts a new list.</p>
           <div className="row">
-            <button className="btn line small" autoFocus onClick={() => setConfirm(false)}>Keep this list</button>
-            <button className="btn line small" disabled={!writesAllowed} onClick={async () => {
+            <Button variant="outline" size="sm" autoFocus onClick={() => setConfirm(false)}>Keep this list</Button>
+            <Button variant="outline" size="sm" disabled={!writesAllowed} onClick={async () => {
               const r = await command("StartNewMealList", { listId: list.id, expectedRevision: list.revision });
               if (r.status === "accepted") {
                 setConfirm(false);
                 setMsg(null);
                 announce("A new list has started");
               } else setMsg(r.message);
-            }}>Start a new list</button>
+            }}>Start a new list</Button>
           </div>
         </div>
       )}

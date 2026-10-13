@@ -4,6 +4,10 @@ import { useStore } from "./store";
 import { ModalSheet } from "./a11y";
 import { FieldError, FormAlert, fieldProps, focusFirstInvalid, isDecimal, type Errors } from "./forms";
 import { FIELD_LABEL, display, editorInit, editorReducer, isDirty, type EditorAction, type EditorState, type FieldKey, type RecipeFields } from "@/domain/recipes/rebase";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { NativeSelect } from "@/components/ui/native-select";
+import { Textarea } from "@/components/ui/textarea";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -224,8 +228,8 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
                   <div className="small" style={{ whiteSpace: "pre-line" }}><em>Version {seenVersion} (current):</em> {display(base, k) || "—"}</div>
                   <div className="small" style={{ whiteSpace: "pre-line" }}><em>Yours:</em> {display(f, k) || "—"}</div>
                   <div className="row">
-                    <button type="button" id={`re-decide-${k}`} className="btn line small" onClick={() => decide(k, "theirs")}>Use version {seenVersion}'s {FIELD_LABEL[k]}</button>
-                    <button type="button" className="btn line small" onClick={() => decide(k, "mine")}>Keep my {FIELD_LABEL[k]}</button>
+                    <Button type="button" id={`re-decide-${k}`} variant="outline" size="sm" onClick={() => decide(k, "theirs")}>Use version {seenVersion}'s {FIELD_LABEL[k]}</Button>
+                    <Button type="button" variant="outline" size="sm" onClick={() => decide(k, "mine")}>Keep my {FIELD_LABEL[k]}</Button>
                   </div>
                 </div>
               ))}
@@ -238,18 +242,18 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
       <form ref={formRef} className="stack" noValidate onSubmit={save}>
         <p className="faint small">Structured entry: amounts are per ONE portion of their component, so plates can scale components independently. Text is stored as plain text.</p>
         <label htmlFor="re-title">Title</label>
-        <input {...fieldProps("re-title", errors)} data-autofocus="" value={f.title} onChange={(e) => set({ title: e.target.value })} />
+        <Input {...fieldProps("re-title", errors)} data-autofocus="" value={f.title} onChange={(e) => set({ title: e.target.value })} />
         <FieldError id="re-title" errors={errors} />
         <div className="grid3">
-          <span className="stack"><label htmlFor="re-cuisine">Cuisine</label><input id="re-cuisine" value={f.cuisine} onChange={(e) => set({ cuisine: e.target.value })} /></span>
+          <span className="stack"><label htmlFor="re-cuisine">Cuisine</label><Input id="re-cuisine" value={f.cuisine} onChange={(e) => set({ cuisine: e.target.value })} /></span>
           <span className="stack">
             <label htmlFor="re-minutes">Minutes (estimate)</label>
-            <input {...fieldProps("re-minutes", errors)} inputMode="numeric" value={f.minutes} onChange={(e) => set({ minutes: e.target.value })} />
+            <Input {...fieldProps("re-minutes", errors)} inputMode="numeric" value={f.minutes} onChange={(e) => set({ minutes: e.target.value })} />
             <FieldError id="re-minutes" errors={errors} />
           </span>
           <span className="stack">
             <label htmlFor="re-level">Effort</label>
-            <select id="re-level" value={f.level} onChange={(e) => set({ level: e.target.value })}><option value="">unknown</option><option>easy</option><option>medium</option><option>involved</option></select>
+            <NativeSelect id="re-level" value={f.level} onChange={(e) => set({ level: e.target.value })}><option value="">unknown</option><option>easy</option><option>medium</option><option>involved</option></NativeSelect>
           </span>
         </div>
         <label className="row"><input type="checkbox" checked={f.leftovers} onChange={(e) => set({ leftovers: e.target.checked })} /> Leftover-friendly</label>
@@ -263,7 +267,7 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
             return (
               <div key={c.id} className="row">
                 <span className="stack grow">
-                  <input {...fieldProps(`re-c-${c.id}`, errors)} aria-label={`Component ${i + 1} name`} value={c.name}
+                  <Input {...fieldProps(`re-c-${c.id}`, errors)} aria-label={`Component ${i + 1} name`} value={c.name}
                     onChange={(e) => { const name = e.target.value; edit((d) => ({ ...d, components: d.components.map((x) => (x.id === c.id ? { ...x, name, key: x.key || name.toLowerCase().replace(/\W+/g, "_") } : x)) })); }} />
                   <FieldError id={`re-c-${c.id}`} errors={errors} />
                 </span>
@@ -283,20 +287,20 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
             return (
               <div key={row.id} className="ingredient-row" role="group" aria-label={`${n}${row.ingredientName ? `: ${row.ingredientName}` : ""}`}>
                 <span className="stack grow">
-                  <input {...fieldProps(`re-n-${row.id}`, errors)} aria-label={`${n} name`} value={row.ingredientName} onChange={(e) => setRow(row.id, { ingredientName: e.target.value, ingredientKey: null })} />
+                  <Input {...fieldProps(`re-n-${row.id}`, errors)} aria-label={`${n} name`} value={row.ingredientName} onChange={(e) => setRow(row.id, { ingredientName: e.target.value, ingredientKey: null })} />
                   <FieldError id={`re-n-${row.id}`} errors={errors} />
                 </span>
                 <span className="stack">
-                  <input {...fieldProps(`re-q-${row.id}`, errors)} className="tiny" inputMode="decimal" aria-label={`${n} amount`} value={row.quantity} onChange={(e) => setRow(row.id, { quantity: e.target.value })} />
+                  <Input {...fieldProps(`re-q-${row.id}`, errors)} className="tiny" inputMode="decimal" aria-label={`${n} amount`} value={row.quantity} onChange={(e) => setRow(row.id, { quantity: e.target.value })} />
                   <FieldError id={`re-q-${row.id}`} errors={errors} />
                 </span>
                 <span className="stack">
-                  <input {...fieldProps(`re-u-${row.id}`, errors)} className="tiny" aria-label={`${n} unit`} value={row.unit} onChange={(e) => setRow(row.id, { unit: e.target.value })} />
+                  <Input {...fieldProps(`re-u-${row.id}`, errors)} className="tiny" aria-label={`${n} unit`} value={row.unit} onChange={(e) => setRow(row.id, { unit: e.target.value })} />
                   <FieldError id={`re-u-${row.id}`} errors={errors} />
                 </span>
-                <select aria-label={`${n} component`} value={row.componentKey} onChange={(e) => setRow(row.id, { componentKey: e.target.value })}>
+                <NativeSelect aria-label={`${n} component`} value={row.componentKey} onChange={(e) => setRow(row.id, { componentKey: e.target.value })}>
                   {f.components.map((c) => <option key={c.id} value={c.key}>{c.name || c.key}</option>)}
-                </select>
+                </NativeSelect>
                 <button type="button" id={`re-rm-${row.id}`} className="link small" disabled={f.rows.length < 2}
                   aria-label={`Remove ${n.toLowerCase()}${row.ingredientName ? ` (${row.ingredientName}, ${compLabel(row.componentKey)})` : ""}`} onClick={() => removeRow(i)}>remove</button>
               </div>
@@ -313,11 +317,11 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
         </fieldset>
 
         <label htmlFor="re-steps">Steps</label>
-        <textarea id="re-steps" value={f.instructions} onChange={(e) => set({ instructions: e.target.value })} rows={5} />
+        <Textarea id="re-steps" value={f.instructions} onChange={(e) => set({ instructions: e.target.value })} rows={5} />
         <label htmlFor="re-reheat">Reheat and serve</label>
-        <textarea id="re-reheat" value={f.reheat} onChange={(e) => set({ reheat: e.target.value })} rows={2} />
+        <Textarea id="re-reheat" value={f.reheat} onChange={(e) => set({ reheat: e.target.value })} rows={2} />
         {conflict && <p className="small warn" id="re-save-held">Decide {pending.map((k) => FIELD_LABEL[k]).join(", ")} above before saving.</p>}
-        <button id="re-save" className="btn primary" disabled={busy || conflict || !writesAllowed} aria-describedby={conflict ? "re-save-held" : undefined}>{recipeId ? "Save new version" : "Save recipe"}</button>
+        <Button id="re-save" variant="default" disabled={busy || conflict || !writesAllowed} aria-describedby={conflict ? "re-save-held" : undefined}>{recipeId ? "Save new version" : "Save recipe"}</Button>
       </form>
     </ModalSheet>
   );

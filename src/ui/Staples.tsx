@@ -4,6 +4,9 @@ import { useStore } from "./store";
 import { ModalSheet, focusFirst } from "./a11y";
 import { FieldError, FormAlert, fieldProps, focusFirstInvalid, isDecimal, type Errors } from "./forms";
 import { KNOWN_UNITS, dimensionOf, normalizeUnit } from "@/domain/units";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { NativeSelect } from "@/components/ui/native-select";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -73,14 +76,14 @@ export function Staples() {
             </div>
             <div className="faint small">Last changed by {s.lastChange?.by ?? s.updatedBy ?? "—"}{s.lastChange ? ` (${s.lastChange.kind})` : ""}</div>
             <div className="row">
-              <button className="btn line small" aria-haspopup="dialog" aria-label={`Edit ${s.name}`} disabled={!writesAllowed} onClick={(e) => open({ kind: "edit", key: s.ingredientKey }, e)}>Edit…</button>
-              <button className="btn line small" aria-haspopup="dialog" aria-label={`Change product for ${s.name}`} disabled={!writesAllowed} onClick={(e) => open({ kind: "product", key: s.ingredientKey }, e)}>Product…</button>
-              <button className="btn line small" aria-haspopup="dialog" aria-label={`Remove ${s.name} from usual items`} disabled={!writesAllowed} onClick={(e) => open({ kind: "remove", key: s.ingredientKey }, e)}>Remove…</button>
+              <Button variant="outline" size="sm" aria-haspopup="dialog" aria-label={`Edit ${s.name}`} disabled={!writesAllowed} onClick={(e) => open({ kind: "edit", key: s.ingredientKey }, e)}>Edit…</Button>
+              <Button variant="outline" size="sm" aria-haspopup="dialog" aria-label={`Change product for ${s.name}`} disabled={!writesAllowed} onClick={(e) => open({ kind: "product", key: s.ingredientKey }, e)}>Product…</Button>
+              <Button variant="outline" size="sm" aria-haspopup="dialog" aria-label={`Remove ${s.name} from usual items`} disabled={!writesAllowed} onClick={(e) => open({ kind: "remove", key: s.ingredientKey }, e)}>Remove…</Button>
             </div>
           </li>
         ))}
       </ul>
-      <button className="btn line" aria-haspopup="dialog" data-testid="add-staple" disabled={!writesAllowed} onClick={(e) => open({ kind: "add" }, e)}>Add a usual item…</button>
+      <Button variant="outline" aria-haspopup="dialog" data-testid="add-staple" disabled={!writesAllowed} onClick={(e) => open({ kind: "add" }, e)}>Add a usual item…</Button>
       {removed.length > 0 && (
         <div className="stack" data-testid="removed-staples">
           <h3 className="section-label">Removed usual items</h3>
@@ -89,13 +92,13 @@ export function Staples() {
               <li key={s.ingredientKey} className="staple" data-testid={`staple-row-${s.ingredientKey}`}>
                 <h3>{s.name} <span className="faint small">— removed by {s.lastChange?.by ?? s.updatedBy ?? "someone"}</span></h3>
                 <div className="small">Was: {usualText(s)} · {s.productName ?? "no product"}</div>
-                <button className="btn line small" aria-label={`Restore ${s.name} to usual items`} disabled={!writesAllowed} onClick={async () => {
+                <Button variant="outline" size="sm" aria-label={`Restore ${s.name} to usual items`} disabled={!writesAllowed} onClick={async () => {
                   const r = await command("SetStapleActive", { ingredientKey: s.ingredientKey, expectedRevision: s.detailsRevision, active: true });
                   if (r.status !== "accepted") return setMsg(r.message);
                   setMsg(null);
                   announce(`${s.name} restored to your usual items.`);
                   setTimeout(() => focusFirst(document.querySelector<HTMLElement>(`[data-testid="staple-row-${s.ingredientKey}"] button`)), 0);
-                }}>Restore</button>
+                }}>Restore</Button>
               </li>
             ))}
           </ul>
@@ -133,14 +136,14 @@ function AmountFields({ f, setF, errors, units }: { f: { quantity: string; unit:
     <div className="grid3">
       <span className="stack">
         <label htmlFor="st-qty">Usual amount</label>
-        <input {...fieldProps("st-qty", errors)} inputMode="decimal" value={f.quantity} onChange={(e) => setF({ ...f, quantity: e.target.value })} />
+        <Input {...fieldProps("st-qty", errors)} inputMode="decimal" value={f.quantity} onChange={(e) => setF({ ...f, quantity: e.target.value })} />
         <FieldError id="st-qty" errors={errors} />
       </span>
       <span className="stack">
         <label htmlFor="st-unit">Unit</label>
-        <select {...fieldProps("st-unit", errors)} value={f.unit} onChange={(e) => setF({ ...f, unit: e.target.value })}>
+        <NativeSelect {...fieldProps("st-unit", errors)} value={f.unit} onChange={(e) => setF({ ...f, unit: e.target.value })}>
           {units.map((u) => <option key={u} value={u}>{u === "package" ? "packages" : u}</option>)}
-        </select>
+        </NativeSelect>
         <FieldError id="st-unit" errors={errors} />
       </span>
     </div>
@@ -180,21 +183,21 @@ function AddStapleDialog({ onClose, returnFocus }: C) {
         onClose();
       }}>
         <label htmlFor="st-item">Item</label>
-        <select {...fieldProps("st-item", errors)} data-autofocus="" value={f.item} onChange={(e) => setF({ ...f, item: e.target.value, productId: "", amount: { ...f.amount, unit: "package" } })}>
+        <NativeSelect {...fieldProps("st-item", errors)} data-autofocus="" value={f.item} onChange={(e) => setF({ ...f, item: e.target.value, productId: "", amount: { ...f.amount, unit: "package" } })}>
           <option value="">Choose an item…</option>
           {items.map((i: any) => <option key={i.key} value={i.key}>{i.name}</option>)}
-        </select>
+        </NativeSelect>
         <FieldError id="st-item" errors={errors} />
         <label htmlFor="st-name">Name on the shortcut (optional)</label>
-        <input {...fieldProps("st-name", errors)} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />
+        <Input {...fieldProps("st-name", errors)} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />
         <FieldError id="st-name" errors={errors} />
         <label htmlFor="st-product">Remembered product</label>
-        <select id="st-product" value={f.productId} onChange={(e) => setF({ ...f, productId: e.target.value, amount: { ...f.amount, unit: "package" } })} disabled={!f.item}>
+        <NativeSelect id="st-product" value={f.productId} onChange={(e) => setF({ ...f, productId: e.target.value, amount: { ...f.amount, unit: "package" } })} disabled={!f.item}>
           <option value="">The household’s current choice for this item</option>
           {products.map((p: any) => <option key={p.id} value={p.id} disabled={!p.available}>{p.name}{p.available ? "" : " — not available from this store"}</option>)}
-        </select>
+        </NativeSelect>
         <AmountFields f={f.amount} setF={(amount) => setF({ ...f, amount })} errors={errors} units={units} />
-        <button className="btn primary small">Add usual item</button>
+        <Button variant="default" size="sm">Add usual item</Button>
       </form>
     </ModalSheet>
   );
@@ -208,7 +211,7 @@ function Conflict({ s, onReviewed, what }: { s: any; onReviewed: () => void; wha
         {s.lastChange?.by ?? s.updatedBy ?? "Someone"} changed this usual item while this was open. Now: <strong>{s.name}</strong>, {usualText(s)}, product {s.productName ?? "none"}
         {s.active ? "" : " — removed from usual items"}. {what}
       </p>
-      <button type="button" className="btn line small" onClick={onReviewed} disabled={!s.active}>I’ve reviewed the current values</button>
+      <Button type="button" variant="outline" size="sm" onClick={onReviewed} disabled={!s.active}>I’ve reviewed the current values</Button>
     </div>
   );
 }
@@ -242,11 +245,11 @@ function EditStapleDialog({ itemKey, onClose, returnFocus }: C & { itemKey: stri
         onClose();
       }}>
         <label htmlFor="st-name">Name on the shortcut (optional)</label>
-        <input {...fieldProps("st-name", errors)} data-autofocus="" placeholder={s?.ingredientName} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />
+        <Input {...fieldProps("st-name", errors)} data-autofocus="" placeholder={s?.ingredientName} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />
         <FieldError id="st-name" errors={errors} />
         <AmountFields f={f.amount} setF={(amount) => setF({ ...f, amount })} errors={errors} units={units} />
         {s?.productPackage && <p className="faint">{s.productName} comes in {s.productPackage.quantity} {s.productPackage.unit} packages; a measured amount is rounded up to whole packages.</p>}
-        <button className="btn primary small" disabled={!s || conflict || !s.active}>Save</button>
+        <Button variant="default" size="sm" disabled={!s || conflict || !s.active}>Save</Button>
       </form>
     </ModalSheet>
   );
@@ -276,12 +279,12 @@ function StapleProductDialog({ itemKey, onClose, returnFocus }: C & { itemKey: s
         ))}
       </fieldset>
       <p className="faint small">This only changes what future one-tap requests ask for. It doesn’t approve buying anything or change lists already made.</p>
-      <button type="button" className="btn primary" disabled={!s || !s.active || conflict || !choice || choice === s.productId} onClick={async () => {
+      <Button type="button" variant="default" disabled={!s || !s.active || conflict || !choice || choice === s.productId} onClick={async () => {
         const r = await command("ApproveStapleProduct", { ingredientKey: itemKey, productId: choice, expectedRevision: seen });
         if (r.status !== "accepted") return setFormError(r.message);
         announce(`${products.find((p: any) => p.id === choice)?.name} is now your usual ${label}. Nothing was approved for purchase.`);
         onClose();
-      }}>Make this our usual</button>
+      }}>Make this our usual</Button>
     </ModalSheet>
   );
 }
@@ -299,13 +302,13 @@ function RemoveStapleDialog({ itemKey, onClose, returnFocus }: C & { itemKey: st
       <FormAlert message={formError} testId="staple-error" />
       <p>The one-tap shortcut goes away. Anything already on a pickup list, and anything a dinner needs, stays. You can restore it later from “Removed usual items”.</p>
       <div className="row">
-        <button type="button" className="btn line" data-autofocus="" onClick={onClose}>Keep it</button>
-        <button type="button" className="btn danger" disabled={!s || !s.active || conflict} onClick={async () => {
+        <Button type="button" variant="outline" data-autofocus="" onClick={onClose}>Keep it</Button>
+        <Button type="button" variant="destructive" disabled={!s || !s.active || conflict} onClick={async () => {
           const r = await command("SetStapleActive", { ingredientKey: itemKey, expectedRevision: seen, active: false });
           if (r.status !== "accepted") return setFormError(r.message);
           announce(`${label} removed from your usual items. Lists already made are unchanged.`);
           onClose();
-        }}>Remove from usual items</button>
+        }}>Remove from usual items</Button>
       </div>
     </ModalSheet>
   );
