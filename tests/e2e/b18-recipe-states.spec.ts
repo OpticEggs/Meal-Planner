@@ -69,7 +69,7 @@ for (const scale of [150, 200]) {
     await p.addStyleTag({ content: `html { font-size: ${scale}% !important; }` });
     const base = await p.evaluate(() => parseFloat(getComputedStyle(document.body).fontSize));
     expect(base).toBeGreaterThanOrEqual(16 * (scale / 100) - 0.5); // the text really is larger
-    await p.getByRole("button", { name: "Edit (new version)" }).click();
+    await p.getByRole("button", { name: "Edit recipe" }).click();
     const d = p.getByRole("dialog", { name: `Edit ${CHILI} — new version` });
     await d.getByLabel("Steps", { exact: true }).fill("Jon's short method.");
     await d.getByLabel("Title", { exact: true }).fill("Jon's chili");
@@ -105,7 +105,7 @@ for (const scale of [150, 200]) {
     const id = await recipeIdOf(CHILI);
     await p.goto(`/recipes/${id}`);
     await p.addStyleTag({ content: `html { font-size: ${scale}% !important; }` });
-    await p.getByRole("button", { name: "Edit (new version)" }).click();
+    await p.getByRole("button", { name: "Edit recipe" }).click();
     const d = p.getByRole("dialog", { name: `Edit ${CHILI} — new version` });
     // Field errors: blank title and a bad amount.
     await d.getByLabel("Title", { exact: true }).fill("");

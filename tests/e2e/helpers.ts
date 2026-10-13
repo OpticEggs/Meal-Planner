@@ -26,11 +26,12 @@ export async function seed(opts?: Parameters<typeof seedFixture>[1]): Promise<Fi
 export async function member(
   browser: Browser,
   who: "jon" | "alex" | "other",
-  opts: { viewport?: { width: number; height: number }; reducedMotion?: "reduce" | "no-preference"; init?: () => void; start?: string } = {},
+  opts: { viewport?: { width: number; height: number }; reducedMotion?: "reduce" | "no-preference"; init?: () => void; start?: string; hasTouch?: boolean } = {},
 ) {
   const context = await browser.newContext({
     ...(opts.viewport ? { viewport: opts.viewport } : {}),
     ...(opts.reducedMotion ? { reducedMotion: opts.reducedMotion } : {}),
+    ...(opts.hasTouch ? { hasTouch: true, isMobile: true } : {}),
   });
   if (opts.init) await context.addInitScript(opts.init);
   const page = await context.newPage();
@@ -162,4 +163,11 @@ export async function useLine(review: Locator, raw: string, amount: string, unit
 export async function leaveOutLine(review: Locator, raw: string) {
   const row = await openLine(review, raw);
   await row.getByRole("button", { name: /^Leave out line/ }).click();
+}
+
+/** Opens Recipes' Add panel (+, D151): paste a link to import it, or write a recipe yourself. Idempotent. */
+export async function openAddRecipe(page: Page) {
+  const add = page.getByTestId("add-recipe");
+  if ((await add.getAttribute("aria-expanded")) !== "true") await add.click();
+  await expect(page.getByRole("textbox", { name: "Add a recipe from a link" })).toBeVisible();
 }

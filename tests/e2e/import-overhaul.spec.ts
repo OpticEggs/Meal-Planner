@@ -7,7 +7,7 @@
  */
 import { expect, test } from "@playwright/test";
 import { fileURLToPath } from "node:url";
-import { leaveOutLine, member, q, seed, useLine } from "./helpers";
+import { leaveOutLine, member, q, seed, useLine, openAddRecipe } from "./helpers";
 
 const PESTO = "https://pesto.example.com/weeknight-pesto-pasta/";
 const PHOTO = fileURLToPath(new URL("../fixtures/import-site/pesto-hero.jpg", import.meta.url));
@@ -16,6 +16,7 @@ test("IO-E1: the reported line reads cleanly; only uncertain lines ask; seasonin
   await seed();
   const { context, page: p } = await member(browser, "jon", { viewport: { width: 390, height: 844 } });
   await p.getByRole("link", { name: "Recipes", exact: true }).click();
+  await openAddRecipe(p);
   await p.getByRole("textbox", { name: "Add a recipe from a link" }).fill(PESTO);
   await p.getByTestId("add-from-link-submit").click();
   const review = p.getByRole("dialog", { name: "Review the import" });
@@ -70,9 +71,11 @@ test("IO-E1: the reported line reads cleanly; only uncertain lines ask; seasonin
   await p.getByRole("tab", { name: "All" }).click();
   await p.locator('[data-testid="recipe-row"][data-title="Weeknight Pesto Pasta"]').getByRole("link").click();
   await expect(p.getByTestId("recipe-title")).toHaveText("Weeknight Pesto Pasta");
-  await expect(p.getByTestId("recipe-hero").getByTestId("recipe-art")).toBeVisible(); // the designed fallback
-  await expect(p.getByTestId("recipe-ingredients")).toContainText("1/12 cup"); // ⅓ cup ÷ 4 servings, shown as a fraction
-  await expect(p.getByRole("link", { name: /Open the original recipe on Garden Table Kitchen/ })).toHaveAttribute("href", PESTO);
+  await expect(p.getByTestId("recipe-hero").getByTestId("hero-no-photo")).toHaveText("No photo yet"); // D151: never an illustration
+  // Amounts for the servings shown (the reviewed 4 by default): ⅓ cup ÷ 4 × 4, exact, as a kitchen fraction.
+  await expect(p.getByText("Ingredients for 4")).toBeVisible();
+  await expect(p.getByTestId("recipe-ingredients")).toContainText("⅓ cup");
+  await expect(p.getByRole("link", { name: /Open original — Garden Table Kitchen/ })).toHaveAttribute("href", PESTO);
 
   // The member's own photo: no publisher permission needed; credited to the member; removable.
   await p.getByTestId("photo-input").setInputFiles(PHOTO);
@@ -81,7 +84,7 @@ test("IO-E1: the reported line reads cleanly; only uncertain lines ask; seasonin
   const [img] = await q<any>("SELECT content_type, permission FROM recipe_images");
   expect(img).toEqual({ content_type: "image/jpeg", permission: "member-provided photo (added by Jon)" });
   await p.getByRole("button", { name: "Remove photo" }).click();
-  await expect(p.getByTestId("recipe-hero").getByTestId("recipe-art")).toBeVisible();
+  await expect(p.getByTestId("recipe-hero").getByTestId("hero-no-photo")).toBeVisible();
   const overflow = await p.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(0);
   await context.close();

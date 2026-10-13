@@ -251,7 +251,7 @@ test("T21: editing a recipe in the library keeps the accepted dinner on its pinn
   const fx = await seed();
   const jon = await member(browser, "jon");
   await jon.page.goto(`/recipes/${fx.recipes.salmon.recipeId}`);
-  await jon.page.getByRole("button", { name: "Edit (new version)" }).click();
+  await jon.page.getByRole("button", { name: "Edit recipe" }).click();
   await jon.page.getByTestId("recipe-editor").getByLabel("Title").fill("Salmon rice bowls (our version)");
   await jon.page.getByRole("button", { name: "Save new version" }).click();
   await expect(jon.page.getByTestId("recipe-title")).toHaveText("Salmon rice bowls (our version)");

@@ -19,7 +19,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { TEST_ENV } from "../../playwright.config";
 import { NIGHT } from "../fixtures/household";
-import { leaveOutLine, member, previewReplace, q, seed, useLine, openWeek, viaMore, weekGroceries } from "./helpers";
+import { leaveOutLine, member, previewReplace, q, seed, useLine, openWeek, viaMore, weekGroceries, openAddRecipe } from "./helpers";
 
 const PORT = 3105;
 const BASE = `http://127.0.0.1:${PORT}`;
@@ -113,6 +113,7 @@ test("JOURNEY: link → recipe → Saturday → groceries → Kroger products �
 
   // 2. Paste a recipe link; the review shows what was read; accept the suggestions, leave water out; create.
   await p.getByRole("link", { name: "Recipes", exact: true }).click();
+  await openAddRecipe(p);
   await p.getByRole("textbox", { name: "Add a recipe from a link" }).fill(WPRM);
   await p.getByTestId("add-from-link-submit").click();
   const review = p.getByRole("dialog", { name: "Review the import" });

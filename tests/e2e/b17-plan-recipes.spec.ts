@@ -4,7 +4,7 @@
  * outcomes are checked in the database.
  */
 import { expect, test, type Page } from "@playwright/test";
-import { member, q, seed, openWeek, viaMore } from "./helpers";
+import { member, q, seed, openWeek, viaMore, openAddRecipe } from "./helpers";
 
 async function focused(page: Page) {
   return page.evaluate(() => {
@@ -36,6 +36,7 @@ test("B17 new recipe: a dialog with focus inside, per-row names, attached errors
   noNativeDialogs(p);
   await p.getByRole("link", { name: "Recipes", exact: true }).click();
   const before = await recipeCount();
+  await openAddRecipe(p);
   const opener = p.getByTestId("new-recipe");
   await opener.focus();
   await p.keyboard.press("Enter");
@@ -119,7 +120,7 @@ for (const order of ["Jon saves first", "Alex saves first"] as const) {
     const recipeId = (await q<any>("SELECT r.id FROM recipes r JOIN recipe_versions v ON v.id=r.current_version_id WHERE v.title='Fixture: Turkey chili'"))[0].id;
     for (const m of [jon, alex]) {
       await m.page.goto(`/recipes/${recipeId}`);
-      await m.page.getByRole("button", { name: "Edit (new version)" }).click();
+      await m.page.getByRole("button", { name: "Edit recipe" }).click();
     }
     const [first, second] = order === "Jon saves first" ? [jon, alex] : [alex, jon];
     const firstName = order === "Jon saves first" ? "Jon" : "Alex";
@@ -157,18 +158,19 @@ test("B17 recipe lists: filter tabs are a real tablist; each row's controls are 
   const all = p.getByRole("tab", { name: "All" });
   await all.focus();
   await p.keyboard.press("ArrowRight");
-  await expect(p.getByRole("tab", { name: "My favorites" })).toHaveAttribute("aria-selected", "true");
-  expect((await focused(p)).name).toBe("My favorites");
-  await expect(p.getByRole("tabpanel", { name: "My favorites" })).toContainText("No favorites yet.");
+  await expect(p.getByRole("tab", { name: "Favorites" })).toHaveAttribute("aria-selected", "true");
+  expect((await focused(p)).name).toBe("Favorites");
+  await expect(p.getByRole("tabpanel", { name: "Favorites" })).toContainText("No favorites yet.");
   await p.keyboard.press("Home");
   await expect(all).toHaveAttribute("aria-selected", "true");
-  // Distinct, stateful names per row.
+  // Distinct names per row (D151: a tile's control is its + / ✓); favouriting is on the recipe, stateful and named.
+  await expect(p.getByRole("button", { name: "Add Fixture: Turkey chili to Selected Meals (2 servings)", exact: true })).toHaveCount(1);
+  await p.getByRole("link", { name: "Fixture: Turkey chili" }).click();
   const fav = p.getByRole("button", { name: "Favorite Fixture: Turkey chili", exact: true });
   await expect(fav).toHaveAttribute("aria-pressed", "false");
   await fav.click();
   await expect(fav).toHaveAttribute("aria-pressed", "true");
   // Notes: an empty note is an attached error, not a silent no-op.
-  await p.getByRole("link", { name: "Fixture: Turkey chili" }).click();
   await p.getByRole("button", { name: "Save note" }).click();
   await expect(p.getByLabel("New note")).toHaveAccessibleDescription("Write the note first");
   expect((await focused(p)).id).toBe("new-note");
@@ -214,6 +216,7 @@ for (const width of [320, 390]) {
     const p = jon.page;
     await p.getByRole("link", { name: "Recipes", exact: true }).click();
     await p.addStyleTag({ content: "html { font-size: 150% !important; }" });
+    await openAddRecipe(p);
     await p.getByTestId("new-recipe").click();
     const dialog = p.getByRole("dialog", { name: "New recipe" });
     const box = await dialog.evaluate((d) => ({ sw: d.scrollWidth, cw: d.clientWidth, right: d.getBoundingClientRect().right, vw: innerWidth, anim: getComputedStyle(d).animationName }));
@@ -237,7 +240,7 @@ test("B17 non-overlapping edits: the other member's added ingredient is brought 
   const recipeId = (await q<any>("SELECT r.id FROM recipes r JOIN recipe_versions v ON v.id=r.current_version_id WHERE v.title='Fixture: Turkey chili'"))[0].id;
   for (const m of [jon, alex]) {
     await m.page.goto(`/recipes/${recipeId}`);
-    await m.page.getByRole("button", { name: "Edit (new version)" }).click();
+    await m.page.getByRole("button", { name: "Edit recipe" }).click();
   }
   const dj = jon.page.getByRole("dialog", { name: "Edit Fixture: Turkey chili — new version" });
   const da = alex.page.getByRole("dialog", { name: "Edit Fixture: Turkey chili — new version" });

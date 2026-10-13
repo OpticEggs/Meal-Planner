@@ -6,7 +6,7 @@
  * default (nothing of a page's own method or photo is kept).
  */
 import { expect, test } from "@playwright/test";
-import { member, q, seed, viaMore } from "./helpers";
+import { member, q, seed, viaMore, openAddRecipe } from "./helpers";
 
 const count = async (t: string) => (await q<{ n: number }>(`SELECT count(*)::int AS n FROM ${t}`))[0].n;
 
@@ -15,6 +15,7 @@ test("U2C-E1: paste a link on Our Recipes → review with source and suggestions
   const jon = await member(browser, "jon");
   const p = jon.page;
   await p.getByRole("link", { name: "Recipes", exact: true }).click();
+  await openAddRecipe(p);
   await p.getByRole("textbox", { name: "Add a recipe from a link" }).fill("https://wprm.example.com/skillet-taco-rice/?utm_source=feed");
   await p.getByTestId("add-from-link-submit").click();
   const review = p.getByRole("dialog", { name: "Review the import" });
@@ -36,7 +37,7 @@ test("U2C-E1: paste a link on Our Recipes → review with source and suggestions
   await p.getByRole("tab", { name: "All" }).click();
   await p.locator('[data-testid="recipe-row"][data-title="Skillet Taco Rice"]').getByRole("link", { name: "Skillet Taco Rice" }).click();
   await expect(p.getByTestId("recipe-source")).toContainText("From Example Kitchen · by Sam Example");
-  await expect(p.getByRole("link", { name: /Open the original recipe on Example Kitchen/ })).toHaveAttribute("href", "https://wprm.example.com/skillet-taco-rice/");
+  await expect(p.getByRole("link", { name: /Open original — Example Kitchen/ })).toHaveAttribute("href", "https://wprm.example.com/skillet-taco-rice/");
   await expect(p.getByTestId("method-link")).toContainText("The method is on the original page.");
   const v = (await q<any>("SELECT source_url, source_author, source_site_name, image_id, instructions FROM recipe_versions WHERE title='Skillet Taco Rice'"))[0];
   expect(v).toEqual({ source_url: "https://wprm.example.com/skillet-taco-rice/", source_author: "Sam Example", source_site_name: "Example Kitchen", image_id: null, instructions: "" });
@@ -48,6 +49,7 @@ test("U2C-E2: a page that can't be read says why, keeps the link, and offers pas
   const jon = await member(browser, "jon");
   const p = jon.page;
   await p.getByRole("link", { name: "Recipes", exact: true }).click();
+  await openAddRecipe(p);
   await p.getByRole("textbox", { name: "Add a recipe from a link" }).fill("https://gone.example.com/recipe");
   await p.getByTestId("add-from-link-submit").click();
   const dialog = p.getByRole("dialog", { name: "Import ingredients" });
@@ -57,6 +59,7 @@ test("U2C-E2: a page that can't be read says why, keeps the link, and offers pas
   expect(await count("recipe_bookmarks")).toBe(1);
   // An invalid link is an error on the field; nothing is saved.
   await p.keyboard.press("Escape");
+  await openAddRecipe(p);
   await p.getByRole("textbox", { name: "Add a recipe from a link" }).fill("http://127.0.0.1/x");
   await p.getByTestId("add-from-link-submit").click();
   await expect(p.getByRole("textbox", { name: "Add a recipe from a link" })).toHaveAttribute("aria-invalid", "true");

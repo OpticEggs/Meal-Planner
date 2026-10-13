@@ -37,7 +37,7 @@ test("CF-E1: two members select meals without a date, adjust servings, and shop 
   await expect(tile(jon.page, SALMON).getByTestId("selected-mark")).toBeVisible();
   await settled(jon.page);
   await tile(jon.page, CHICKEN_RICE).getByRole("button", { name: `Add ${CHICKEN_RICE} to Selected Meals (2 servings)` }).click();
-  await expect(jon.page.getByTestId("selection-bar")).toContainText("2 selected");
+  await expect(jon.page.getByTestId("selection-bar")).toContainText("2 meals · 4 servings");
   await expect(jon.page.getByTestId("nav-selected")).toHaveAccessibleName(/Selected, 2/);
 
   // Alex sees the same list without reloading, and changes the salmon to 3 servings.
@@ -101,7 +101,7 @@ test("CF-E2: an ingredient without an amount stays visible as Needs a quantity u
   const jon = await member(browser, "jon", { start: `/recipes/${r.id}` });
   await expect(jon.page.getByTestId("recipe-unquantified")).toContainText("Needs a quantity");
   await jon.page.getByTestId("add-to-selected").getByRole("button", { name: "Add Brisket Tacos to Selected Meals" }).click();
-  await expect(jon.page.getByTestId("add-to-selected")).toContainText("Selected · 2 servings");
+  await expect(jon.page.getByTestId("add-to-selected")).toContainText("In your meals · 2 servings");
   await jon.page.getByTestId("nav-groceries").click();
   const nq = jon.page.getByTestId("nq-flour tortillas");
   await expect(nq).toContainText("for Brisket Tacos · 2 servings");

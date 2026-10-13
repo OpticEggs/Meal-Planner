@@ -381,17 +381,19 @@ for (const scale of SCALES) {
       await expect(page.getByTestId("unknown-group")).toBeVisible();
       await sweep(page, scale, "Explore sorted, with an unknown group");
 
-      await page.getByRole("link", { name: "Recipes", exact: true }).click();
-      await expect(page.getByTestId("recipe-row").first()).toBeVisible();
+      // D151: favouriting is on the recipe itself (the catalog tile carries only + / ✓).
+      await go(page, `/recipes/${longId}`);
       await page.getByRole("button", { name: `Favorite ${LONG_RECIPE}` }).click();
       await expect(page.getByRole("button", { name: `Favorite ${LONG_RECIPE}` })).toHaveAttribute("aria-pressed", "true");
-      await sweep(page, scale, "Our Recipes — All");
-      await page.getByRole("tab", { name: "My favorites" }).click();
+      await page.getByRole("link", { name: "Back to recipes" }).click();
+      await expect(page.getByTestId("recipe-row").first()).toBeVisible();
+      await sweep(page, scale, "Recipes — All");
+      await page.getByRole("tab", { name: "Favorites" }).click();
       await expect(page.getByTestId("recipe-row")).toHaveCount(1);
-      await sweep(page, scale, "Our Recipes — My favorites");
+      await sweep(page, scale, "Recipes — Favorites");
       await page.getByRole("tab", { name: "Sounds good" }).click();
       await expect(page.getByTestId("recipe-row")).toHaveCount(1);
-      await sweep(page, scale, "Our Recipes — Sounds good");
+      await sweep(page, scale, "Recipes — Sounds good");
 
       await go(page, `/recipes/${longId}`);
       await expect(page.getByTestId("recipe-title")).toHaveText(LONG_RECIPE);

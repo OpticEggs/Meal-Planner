@@ -394,6 +394,7 @@ ol.steps > li::before { content: counter(step); font-family: var(--font-display)
 .pf-recipe-title { margin: 0; font-family: var(--font-pf); font-size: 1.9rem; font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; }
 .pf-facts { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 12px; margin-top: 4px; }
 .pf-facts p { margin: 0; color: #a3a3a3; font-size: 0.9rem; }
+.pf-facts .pf-source { margin-top: 2px; color: #8f8f8f; font-size: 0.78rem; }
 .pf-original { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; color: #d4d4d4; font-size: 0.82rem; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #6b6b6b; }
 .pf-select { margin-top: 10px; }
 .pf-select .select-control { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }

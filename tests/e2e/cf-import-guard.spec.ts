@@ -7,7 +7,7 @@
  */
 import { expect, test, type Browser, type Locator, type Page } from "@playwright/test";
 import { USERS } from "../fixtures/household";
-import { leaveOutLine, member, q, seed } from "./helpers";
+import { leaveOutLine, member, q, seed, openAddRecipe } from "./helpers";
 
 const CHILI = "https://recipes.example.com/chili";
 const BB = "https://www.budgetbytes.com/one-pot-chicken-and-rice/";
@@ -32,6 +32,7 @@ const decisionOf = (d: any, raw: string) => d.lines.find((l: any) => l.raw === r
 /** Add (or re-open: an open draft of the same link comes back) the chili review from Our Recipes. */
 async function openChili(page: Page) {
   await page.getByTestId("nav-recipes").click();
+  await openAddRecipe(page);
   await page.getByRole("textbox", { name: "Add a recipe from a link" }).fill(CHILI);
   await page.getByTestId("add-from-link-submit").click();
   const review = page.getByRole("dialog", { name: "Review the import" });
@@ -178,6 +179,7 @@ test("CF-G5: the paste path — pasted lines or a changed name ask first (no Sav
   await seed();
   const { context, page } = await member(browser, "jon");
   await page.getByTestId("nav-recipes").click();
+  await openAddRecipe(page);
   await page.getByRole("textbox", { name: "Add a recipe from a link" }).fill(BB);
   await page.getByTestId("add-from-link-submit").click();
   const dialog = page.getByRole("dialog", { name: "Import ingredients" });
@@ -243,6 +245,7 @@ test("CF-G7: recipe editor — the backdrop and Close ask first with unsaved wor
   await page.getByTestId("nav-recipes").click();
   const recipes = async () => (await q("SELECT count(*)::int n FROM recipes"))[0].n;
   const before = await recipes();
+  await openAddRecipe(page);
   const opener = page.getByTestId("new-recipe");
   await opener.click();
   const dialog = page.getByRole("dialog", { name: "New recipe" });

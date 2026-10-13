@@ -37,7 +37,7 @@ test("EQR-E1: across a rebase onto the other member's version, an untouched row 
   const alex = await member(browser, "alex");
   for (const m of [jon, alex]) {
     await m.page.goto(`/recipes/${recipeId}`);
-    await m.page.getByRole("button", { name: "Edit (new version)" }).click();
+    await m.page.getByRole("button", { name: "Edit recipe" }).click();
   }
   const dj = jon.page.getByRole("dialog", { name: "Edit Old salad — new version" });
   const da = alex.page.getByRole("dialog", { name: "Edit Old salad — new version" });

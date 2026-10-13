@@ -5,7 +5,7 @@
  * has an unapplied change, the row is named and focused, and "Cancel" puts the row back as it was.
  */
 import { expect, test } from "@playwright/test";
-import { leaveOutLine, member, q, seed, useLine } from "./helpers";
+import { leaveOutLine, member, q, seed, useLine, openAddRecipe } from "./helpers";
 
 const PESTO = "https://pesto.example.com/weeknight-pesto-pasta/";
 const PESTO_LINE = "1/3 cup pesto (homemade (or store-bought))";
@@ -14,6 +14,7 @@ async function openReview(browser: any) {
   await seed();
   const m = await member(browser, "jon", { viewport: { width: 390, height: 844 } });
   await m.page.getByRole("link", { name: "Recipes", exact: true }).click();
+  await openAddRecipe(m.page);
   await m.page.getByRole("textbox", { name: "Add a recipe from a link" }).fill(PESTO);
   await m.page.getByTestId("add-from-link-submit").click();
   const review = m.page.getByRole("dialog", { name: "Review the import" });
@@ -151,6 +152,7 @@ test("RIO-03f: rows regrouping around an unapplied change keep it; after Use or 
   await seed();
   const m = await member(browser, "jon", { viewport: { width: 390, height: 844 } });
   await m.page.getByRole("link", { name: "Recipes", exact: true }).click();
+  await openAddRecipe(m.page);
   await m.page.getByRole("textbox", { name: "Add a recipe from a link" }).fill(PESTO);
   await m.page.getByTestId("add-from-link-submit").click();
   const review = m.page.getByRole("dialog", { name: "Review the import" });

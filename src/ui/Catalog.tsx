@@ -85,7 +85,8 @@ export function RecipeGallery({ list, sounds }: { list: any[]; sounds?: boolean 
         const imageId = r.photo?.imageId ?? r.version.imageId ?? null;
         return (
           <li key={r.recipeId} className={`pf-tile ${imageId ? "has-photo" : "no-photo"}`} data-testid="recipe-row" data-title={title} data-photo={pk.kind}>
-            <Link href={`/recipes/${r.recipeId}`} className="recipe-link pf-tile-link">
+            {/* Named by the title; the time, calories and cost line is its description. */}
+            <Link href={`/recipes/${r.recipeId}`} className="recipe-link pf-tile-link" aria-label={title} aria-describedby={`meta-${r.recipeId}`}>
               {imageId ? (
                 <img className="pf-tile-img" src={`/api/recipe-images/${imageId}`} alt="" loading="lazy" decoding="async" data-testid="recipe-photo" />
               ) : (
@@ -93,7 +94,7 @@ export function RecipeGallery({ list, sounds }: { list: any[]; sounds?: boolean 
               )}
               <span className="pf-tile-text">
                 <strong className="pf-tile-title">{title}</strong>
-                <span className="pf-tile-meta gallery-meta">{meta(r)}</span>
+                <span className="pf-tile-meta gallery-meta" id={`meta-${r.recipeId}`}>{meta(r)}</span>
                 {sounds && r.interest && <span className="pf-tile-meta">Sounds good ({r.interest.display_name ?? r.interest.by ?? ""})</span>}
               </span>
             </Link>

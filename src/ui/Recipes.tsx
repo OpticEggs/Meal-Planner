@@ -284,10 +284,17 @@ export function RecipeDetail({ recipeId }: { recipeId: string }) {
       <div className="pf-body">
         <h2 className="pf-recipe-title" data-testid="recipe-title">{v.title}</h2>
         <div className="pf-facts">
-          <p data-testid="recipe-make-stats">{facts}</p>
+          <div>
+            <p data-testid="recipe-make-stats">{facts}</p>
+            {v.sourceUrl && (
+              <p className="pf-source" data-testid="recipe-source">
+                From {v.sourceSiteName ?? v.sourceLabel ?? v.sourceDomain}{v.sourceAuthor ? ` · by ${v.sourceAuthor}` : ""}
+              </p>
+            )}
+          </div>
           {v.sourceUrl && (
             <a className="pf-original" href={v.sourceUrl} target="_blank" rel="noopener noreferrer nofollow" data-testid="recipe-source"
-              aria-label={`Open the original recipe${v.sourceSiteName ? ` on ${v.sourceSiteName}` : ""} (new tab)`}>Open original <ExternalIcon /></a>
+              aria-label={`Open original — ${v.sourceSiteName ?? v.sourceLabel ?? v.sourceDomain ?? "source page"} (new tab)`}>Open original <ExternalIcon /></a>
           )}
         </div>
         {!r.archived && <div className="pf-select" data-testid="add-to-selected"><SelectControl recipe={r} onServings={onServings} /></div>}

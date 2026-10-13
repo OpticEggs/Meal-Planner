@@ -9,7 +9,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { TEST_ENV } from "../../playwright.config";
-import { member, seed, weekGroceries } from "./helpers";
+import { member, seed, weekGroceries, openAddRecipe } from "./helpers";
 
 const PORT = 3106;
 const BASE = `http://127.0.0.1:${PORT}`;
@@ -76,6 +76,7 @@ for (const v of VIEWS) {
     await shot(page, "4-recipe");
 
     await page.getByRole("link", { name: /Recipes/ }).first().click();
+    await openAddRecipe(page);
     await page.getByRole("textbox", { name: "Add a recipe from a link" }).fill(PESTO);
     await page.getByTestId("add-from-link-submit").click();
     const review = page.getByRole("dialog", { name: "Review the import" });

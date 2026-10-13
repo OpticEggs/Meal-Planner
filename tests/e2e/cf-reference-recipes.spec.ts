@@ -4,7 +4,7 @@
  * the network). Outcomes are checked in the database.
  */
 import { expect, test, type Page } from "@playwright/test";
-import { member, q, seed } from "./helpers";
+import { member, q, seed, openAddRecipe } from "./helpers";
 
 const BB = "https://www.budgetbytes.com/one-pot-chicken-and-rice/";
 const PW = "https://www.thepioneerwoman.com/food-cooking/recipes/a42389030/brisket-tacos-recipe/";
@@ -13,6 +13,7 @@ const TOPPINGS = ["Flour tortillas, for serving", "Fresh cilantro, for serving",
 
 async function addLink(page: Page, url: string) {
   await page.getByTestId("nav-recipes").click();
+  await openAddRecipe(page);
   await page.getByRole("textbox", { name: "Add a recipe from a link" }).fill(url);
   await page.getByTestId("add-from-link-submit").click();
 }
@@ -43,10 +44,10 @@ test("CF-A-E: Budget Bytes — refused before reading, says why, paste (4 servin
   expect(v).toEqual({ source_url: BB, image_id: null, instructions: "" });
   expect(await q("SELECT 1 FROM recipe_import_drafts WHERE method <> 'user_pasted'")).toEqual([]); // the page was never read
   await openRecipe(page, "One pot chicken and rice");
-  await expect(page.getByRole("link", { name: /Open the original recipe on Budget Bytes/ })).toHaveAttribute("href", BB);
+  await expect(page.getByRole("link", { name: /Open original — Budget Bytes/ })).toHaveAttribute("href", BB);
   await expect(page.getByTestId("method-link").getByRole("link", { name: /Open the method/ })).toHaveAttribute("href", BB);
-  await expect(page.getByTestId("recipe-hero").getByTestId("recipe-art")).toBeVisible(); // no photo
-  await expect(page.getByRole("button", { name: "Add your own photo" })).toBeVisible();
+  await expect(page.getByTestId("recipe-hero").getByTestId("hero-no-photo")).toHaveText("No photo yet"); // no photo, no illustration
+  await expect(page.getByRole("button", { name: "Add a photo" })).toBeVisible();
   await context.close();
 });
 
@@ -80,7 +81,7 @@ test("CF-B-E1: Brisket tacos from the page — onions distinct, toppings Need a 
   await expect(items).toHaveCount(4);
   await expect(items.first()).toContainText("Flour tortillas, for serving");
   await expect(items.first()).toContainText("Needs a quantity (asked when shopping)");
-  await expect(page.getByTestId("recipe-make-stats")).toContainText("510 min");
+  await expect(page.getByTestId("recipe-make-stats")).toContainText("8 h 30 min"); // 510 min, as the recipe states it
   await context.close();
 });
 
@@ -128,7 +129,7 @@ test("CF-B-E2: the same recipe pasted with group headings → three groups; a he
   await expect(groups.nth(2)).toContainText("Toppings");
   await expect(groups.nth(2).getByTestId("recipe-unquantified")).toHaveCount(4);
   // The editor shows them read-only, and an edit keeps them.
-  await page.getByRole("button", { name: "Edit (new version)" }).click();
+  await page.getByRole("button", { name: "Edit recipe" }).click();
   const editor = page.getByRole("dialog", { name: /^Edit Brisket Tacos/ });
   await expect(editor.getByTestId("editor-unquantified")).toContainText("Needs a quantity when shopping: Flour tortillas (Toppings), Fresh cilantro (Toppings)");
   await expect(editor.getByRole("button", { name: /^Remove component 3 \(Toppings\)/ })).toBeDisabled();
