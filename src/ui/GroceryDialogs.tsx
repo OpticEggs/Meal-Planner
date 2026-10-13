@@ -245,7 +245,7 @@ export function sentLines(snapshot: any): OrderLine[] {
 }
 
 export function ConfirmOrderDialog({ onClose, returnFocus }: Common) {
-  const { snapshot, command, announce, writesAllowed } = useStore();
+  const { snapshot, command, announce, writesAllowed, currency } = useStore();
   const [lines, setLines] = useState<OrderLine[]>(() => sentLines(snapshot));
   const [unknown, setUnknown] = useState(false);
   const [pickup, setPickup] = useState("");
@@ -253,6 +253,9 @@ export function ConfirmOrderDialog({ onClose, returnFocus }: Common) {
   const [errors, setErrors] = useState<Errors>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  // B46: a press while the screen is not current (refreshing or offline) is refused here and said so — nothing is
+  // sent, nothing is queued for later, and the dialog keeps everything typed until the member presses again.
+  const [notRecorded, setNotRecorded] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const reviewRef = useRef<HTMLHeadingElement>(null);
   const already = !!snapshot.groceries?.order;
@@ -274,6 +277,8 @@ export function ConfirmOrderDialog({ onClose, returnFocus }: Common) {
   }
 
   async function record() {
+    if (!writesAllowed) return void setNotRecorded(true);
+    setNotRecorded(false);
     setBusy(true);
     const r = await command("ConfirmOrder", {
       weekId: snapshot.week.id, contentsKnown: !unknown,
@@ -330,9 +335,18 @@ export function ConfirmOrderDialog({ onClose, returnFocus }: Common) {
           )}
           <p>{pickup ? `Pickup ${new Date(pickup).toLocaleString()}.` : "Pickup time not recorded."} A confirmed order can’t be edited afterwards; differences at pickup are recorded as receipts.</p>
           <div className="row">
-            <Button type="button" variant="outline" onClick={() => setStep("edit")}>Back to edit</Button>
-            <Button type="button" variant="default" disabled={busy || already || !writesAllowed} onClick={record}>Yes, record this order</Button>
+            <Button type="button" variant="outline" onClick={() => { setNotRecorded(false); setStep("edit"); }}>Back to edit</Button>
+            {/* Not `disabled` while the screen is not current: a disabled button swallows the press without a word. */}
+            <Button type="button" variant="default" disabled={busy || already} aria-disabled={!writesAllowed || undefined}
+              className="aria-disabled:cursor-not-allowed aria-disabled:opacity-50" onClick={record}>Yes, record this order</Button>
           </div>
+          {notRecorded && !already && (
+            <p role="alert" className="warnbox" data-testid="confirm-order-not-recorded">
+              {writesAllowed
+                ? "Not recorded yet. Table is up to date now — check the order above, then press Yes, record this order."
+                : `Not recorded — nothing was sent. ${currency === "offline" ? "This device can’t reach Table right now" : "Table is checking for the latest changes"}; your order stays here. Press Yes, record this order again once it’s up to date.`}
+            </p>
+          )}
         </div>
       )}
     </ModalSheet>
