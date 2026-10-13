@@ -61,6 +61,7 @@ for (const order of ["Jon wins", "Alex wins"] as const) {
     const [winner, loser, winnerName] = order === "Jon wins" ? [jon, alex, "Jon"] : [alex, jon, "Alex"];
     for (const m of [winner, loser]) {
       await m.page.goto(`/recipes/${id}`);
+      await m.page.getByTestId("recipe-more").click(); // the "…" sheet (pilot fix)
       await m.page.getByRole("button", { name: "Edit recipe" }).click();
     }
     const dw = winner.page.getByRole("dialog", { name: dialogName(CHILI) });
@@ -96,6 +97,7 @@ test("RB17-01: fields the editor does not show (summary, source, ingredient form
   const alex = await member(browser, "alex");
   const id = await recipeIdOf(CHILI);
   await jon.page.goto(`/recipes/${id}`);
+  await jon.page.getByTestId("recipe-more").click(); // the "…" sheet (pilot fix)
   await jon.page.getByRole("button", { name: "Edit recipe" }).click();
   const dj = jon.page.getByRole("dialog", { name: dialogName(CHILI) });
   await dj.getByLabel("Title", { exact: true }).fill("Chili (Jon)");
@@ -127,6 +129,7 @@ for (const order of ["keep mine", "use theirs"] as const) {
     const alex = await member(browser, "alex");
     const id = await recipeIdOf(CHILI);
     await jon.page.goto(`/recipes/${id}`);
+    await jon.page.getByTestId("recipe-more").click(); // the "…" sheet (pilot fix)
     await jon.page.getByRole("button", { name: "Edit recipe" }).click();
     const dj = jon.page.getByRole("dialog", { name: dialogName(CHILI) });
     await dj.getByLabel("Steps", { exact: true }).fill("Jon's method: slow cooker 6 hours.");
@@ -156,6 +159,7 @@ test("RB17-01: a third version after the member's decision is brought in again b
   const alex = await member(browser, "alex");
   const id = await recipeIdOf(CHILI);
   await jon.page.goto(`/recipes/${id}`);
+  await jon.page.getByTestId("recipe-more").click(); // the "…" sheet (pilot fix)
   await jon.page.getByRole("button", { name: "Edit recipe" }).click();
   const dj = jon.page.getByRole("dialog", { name: dialogName(CHILI) });
   await dj.getByLabel("Title", { exact: true }).fill("Jon's chili");
@@ -190,6 +194,7 @@ test("RB17-02: two occurrences of one ingredient stay distinct; a change to the 
     d.ingredients = [{ ...t, quantity: "10", unit: "g", form: null, note: null }, { ...t, quantity: "100", unit: "g", form: null, note: null, sourceRowId: null }, ...d.ingredients.filter((i: any) => i !== t)];
   })).status).toBe("accepted");
   await alex.page.goto(`/recipes/${id}`);
+  await alex.page.getByTestId("recipe-more").click(); // the "…" sheet (pilot fix)
   await alex.page.getByRole("button", { name: "Edit recipe" }).click();
   const title = (await versionRow(id, 2)).title;
   const da = alex.page.getByRole("dialog", { name: dialogName(title) });
@@ -216,6 +221,7 @@ test("RB17-01: 'Start over' in a conflict replaces the whole draft with the curr
   const alex = await member(browser, "alex");
   const id = await recipeIdOf(CHILI);
   await jon.page.goto(`/recipes/${id}`);
+  await jon.page.getByTestId("recipe-more").click(); // the "…" sheet (pilot fix)
   await jon.page.getByRole("button", { name: "Edit recipe" }).click();
   const dj = jon.page.getByRole("dialog", { name: dialogName(CHILI) });
   await dj.getByLabel("Title", { exact: true }).fill("Jon's chili");
@@ -235,6 +241,7 @@ test("RB17-01: a field left undecided stays undecided when a later version chang
   const alex = await member(browser, "alex");
   const id = await recipeIdOf(CHILI);
   await jon.page.goto(`/recipes/${id}`);
+  await jon.page.getByTestId("recipe-more").click(); // the "…" sheet (pilot fix)
   await jon.page.getByRole("button", { name: "Edit recipe" }).click();
   const dj = jon.page.getByRole("dialog", { name: dialogName(CHILI) });
   await dj.getByLabel("Title", { exact: true }).fill("Jon's chili");
@@ -264,6 +271,7 @@ test("RB17-01/02: an ingredient conflict shows both full ingredient lists, inclu
   const alex = await member(browser, "alex");
   const id = await recipeIdOf(CHILI);
   await jon.page.goto(`/recipes/${id}`);
+  await jon.page.getByTestId("recipe-more").click(); // the "…" sheet (pilot fix)
   await jon.page.getByRole("button", { name: "Edit recipe" }).click();
   const dj = jon.page.getByRole("dialog", { name: dialogName(CHILI) });
   await dj.getByRole("textbox", { name: "Ingredient 1 amount" }).fill("150");
@@ -291,6 +299,7 @@ test("RB17-01: focus stays on the ingredient field the member is on when a newer
   const alex = await member(browser, "alex");
   const id = await recipeIdOf(CHILI);
   await jon.page.goto(`/recipes/${id}`);
+  await jon.page.getByTestId("recipe-more").click(); // the "…" sheet (pilot fix)
   await jon.page.getByRole("button", { name: "Edit recipe" }).click();
   const dj = jon.page.getByRole("dialog", { name: dialogName(CHILI) });
   await dj.getByLabel("Title", { exact: true }).fill("Jon's chili");
@@ -316,6 +325,7 @@ test("RB17-01: the member's own save is never reported as the other member's ver
     new MutationObserver(() => (window as any).__said.push(el.textContent)).observe(el, { childList: true, subtree: true, characterData: true });
     new MutationObserver(() => { if (document.querySelector('[data-testid="recipe-rebased"]')) (window as any).__said.push("REBASED-PANEL"); }).observe(document.body, { childList: true, subtree: true });
   });
+  await jon.page.getByTestId("recipe-more").click(); // the "…" sheet (pilot fix)
   await jon.page.getByRole("button", { name: "Edit recipe" }).click();
   const dj = jon.page.getByRole("dialog", { name: dialogName(CHILI) });
   await dj.getByLabel("Title", { exact: true }).fill("Jon's chili");

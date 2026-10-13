@@ -317,6 +317,16 @@ ol.steps > li::before { content: counter(step); font-family: var(--font-display)
 .meal-website { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
 .lines.checklist .line-buy { font-weight: 650; color: var(--text); font-size: 0.98rem; }
 .line-more > summary { cursor: pointer; color: var(--muted); padding: 6px 0; }
+/* Grocery checklist row (household pilot, 2026-10-13): name and total, Have it; details folded. */
+.check-main { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.check-text { min-width: 0; flex: 1; display: grid; gap: 2px; }
+.lines.checklist .line-buy.unknown { color: var(--warn); }
+.check-note { margin: 0; }
+.have-btn { flex: none; min-height: 44px; min-width: 44px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line-strong); background: transparent; color: var(--text); font: inherit; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.have-btn[aria-pressed="true"] { background: var(--sage); border-color: var(--sage); color: var(--page); }
+.check-line.is-have .line-name, .check-line.is-have .line-buy { color: var(--muted); }
+.check-sub { margin: 8px 0 2px; }
+.check-sources { margin: 0; padding-left: 18px; }
 .warn-card { border-color: var(--warn); }
 .nq-row { display: grid; gap: 4px; }
 

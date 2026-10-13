@@ -1,8 +1,9 @@
 "use client";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useStore } from "./store";
-import { focusFirst, tabKeyTarget } from "./a11y";
+import { ModalSheet, focusFirst, tabKeyTarget } from "./a11y";
 import { RecipeEditorDialog } from "./RecipeEditor";
 import { amountText } from "./ImportReview";
 import { AddFromLinkForm, SaveLinkForm, SavedLinksList } from "./SavedLinks";
@@ -167,18 +168,33 @@ function IngredientsPanel({ v, servings }: { v: any; servings: number }) {
  *  (cooking happens there). Editing and the photo are quiet; notes and feedback are folded away. Instructions, nutrition,
  *  cost and cooking history stay stored but are not shown here. */
 export function RecipeDetail({ recipeId }: { recipeId: string }) {
-  const { library, loadLibrary, me, command, announce } = useStore();
-  const [note, setNote] = useState("");
-  const [editing, setEditing] = useState<HTMLElement | null>(null);
-  const [msg, setMsg] = useState<string | null>(null);
-  const [servings, setServings] = useState<number | null>(null);
-  const onServings = useCallback((n: number) => setServings(n), []);
+  const { library, loadLibrary } = useStore();
   useEffect(() => {
     void loadLibrary();
   }, [loadLibrary]);
   if (!library) return <p className="muted">Loading…</p>;
   const r = library.recipes.find((x: any) => x.recipeId === recipeId);
   if (!r) return <p className="muted pf-pad">Recipe not found. <Link href="/recipes">Back</Link></p>;
+  return <RecipeOverview r={r} recipeId={recipeId} />;
+}
+
+function RecipeOverview({ r, recipeId }: { r: any; recipeId: string }) {
+  const { library, me, command, announce } = useStore();
+  const [note, setNote] = useState("");
+  const [editing, setEditing] = useState<HTMLElement | null>(null);
+  // The "…" sheet: the element that opened it (focus returns there), or null when closed.
+  const [more, setMore] = useState<HTMLElement | null>(null);
+  const [msg, setMsg] = useState<string | null>(null);
+  const [servings, setServings] = useState<number | null>(null);
+  const onServings = useCallback((n: number) => setServings(n), []);
+  const photo = usePhoto(r);
+  const title = () => document.querySelector<HTMLElement>('[data-testid="recipe-title"]');
+  // Back to "…" without scrolling: it sits under the page's scroll padding (for the header other screens show), so a
+  // plain focus() would move the page a little on every close.
+  const backTo = (el: HTMLElement | null) => () => {
+    if (el?.isConnected) el.focus({ preventScroll: true });
+    else focusFirst(title);
+  };
   const v = r.version;
   const fav = r.favoriteOf.includes(me.memberId);
   const imageId = r.photo?.imageId ?? null;
@@ -195,7 +211,8 @@ export function RecipeDetail({ recipeId }: { recipeId: string }) {
           <div className="pf-hero-actions">
             <button type="button" className={`pf-round ${fav ? "on" : ""}`} aria-label={`Favorite ${v.title}`} aria-pressed={fav}
               onClick={() => command("SetFavorite", { recipeId, favorite: !fav })}><span><StarIcon filled={fav} /></span></button>
-            <a href="#recipe-more" className="pf-round" aria-label="More: edit recipe, photo, notes and feedback"><span><MoreIcon /></span></a>
+            <button type="button" className="pf-round" aria-label="More: edit recipe or photo" aria-haspopup="dialog" aria-expanded={!!more}
+              data-testid="recipe-more" onClick={(e) => setMore(e.currentTarget)}><span><MoreIcon /></span></button>
           </div>
         </div>
         {imageId && credit && (
@@ -217,12 +234,20 @@ export function RecipeDetail({ recipeId }: { recipeId: string }) {
         {!r.archived && <div className="pf-select" data-testid="add-to-selected"><SelectControl recipe={r} onServings={onServings} /></div>}
         {r.constraint.status !== "ok" && <p className="warnbox">{r.constraint.reasons.join("; ")}</p>}
         <IngredientsPanel v={v} servings={n} />
-        <div id="recipe-more" className="pf-more" tabIndex={-1}>
-          <div className="pf-quiet-actions">
-            <button type="button" className="pf-textlink" aria-haspopup="dialog" onClick={(e) => setEditing(e.currentTarget)} data-testid="edit-recipe">Edit recipe</button>
-            <PhotoControls r={r} />
-          </div>
-          {editing && <RecipeEditorDialog recipeId={recipeId} onClose={() => setEditing(null)} returnFocus={() => focusFirst(editing, () => document.querySelector<HTMLElement>('[data-testid="recipe-title"]'))} />}
+        <div className="pf-more">
+          {photo.status}
+          {more && (
+            // A sheet, not a jump link: the page stays where it was, and closing returns focus to "…".
+            <ModalSheet title={v.title} subtitle="Recipe and photo" closeLabel="Close recipe actions" testId="recipe-actions"
+              onClose={() => setMore(null)} returnFocus={backTo(more)}>
+              <div className="stack small">
+                <Button variant="outline" aria-haspopup="dialog" data-testid="edit-recipe" onClick={() => { const opener = more; setMore(null); setEditing(opener); }}>Edit recipe</Button>
+                <Button variant="outline" disabled={photo.busy} onClick={() => { setMore(null); photo.pick(); }}>{r.photo ? "Replace photo" : "Add a photo"}</Button>
+                {photo.mine && <Button variant="outline" disabled={photo.busy} onClick={() => { setMore(null); void photo.remove(); }}>Remove photo</Button>}
+              </div>
+            </ModalSheet>
+          )}
+          {editing && <RecipeEditorDialog recipeId={recipeId} onClose={() => setEditing(null)} returnFocus={backTo(editing)} />}
           <details className="pf-extra" data-testid="notes-and-feedback">
             <summary>Notes and feedback</summary>
             <div className="pf-chips" role="group" aria-label="Your feedback">
@@ -277,9 +302,11 @@ export function Steps({ text, testId, sourceUrl }: { text: string | null | undef
   return <ol className="steps" data-testid={testId}>{lines.map((l, i) => <li key={i}>{numbered ? l.replace(/^\d+[.)]\s+/, "") : l}</li>)}</ol>;
 }
 
-/** The household's own photo of a dish: add, replace or remove it. A photo from a recipe page is shown only
- *  under a recorded permission; a photo you took needs none. */
-function PhotoControls({ r }: { r: any }) {
+/** The household's own photo of a dish: add, replace or remove it (the actions are in the "…" sheet). A photo from a
+ *  recipe page is shown only under a recorded permission; a photo you took needs none. The file input lives outside the
+ *  app (a portal on <body>): it stays mounted while the sheet opens and closes, and the sheet's inert background never
+ *  covers it. */
+function usePhoto(r: any) {
   const { loadLibrary, command, announce } = useStore();
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -300,21 +327,20 @@ function PhotoControls({ r }: { r: any }) {
     } else setErr(res.message ?? res.error ?? "The photo wasn't saved.");
     if (file.current) file.current.value = "";
   };
-  const mine = r.photo?.kind === "member";
-  return (
+  const remove = async () => {
+    const x = await command("SetRecipePhoto", { recipeId: r.recipeId, imageId: null, expectedRevision: r.photoRevision ?? 0 });
+    if (x.status === "accepted") { announce("Photo removed."); await loadLibrary(); } else setErr(x.message);
+  };
+  const input = (
+    <input ref={file} type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden tabIndex={-1} aria-hidden="true" disabled={busy} data-testid="photo-input"
+      onChange={(e) => { const f = e.target.files?.[0]; if (f) void upload(f); }} />
+  );
+  const status = (
     <div className="photo-controls" id="photo">
-      {/* A visible button opens the picker; the file input itself is never in the tab order. */}
-      <button type="button" className="pf-textlink" disabled={busy} onClick={() => file.current?.click()}>{r.photo ? "Replace photo" : "Add a photo"}</button>
-      <input ref={file} type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden tabIndex={-1} aria-hidden="true" disabled={busy} data-testid="photo-input"
-        onChange={(e) => { const f = e.target.files?.[0]; if (f) void upload(f); }} />
-      {mine && (
-        <button type="button" className="pf-textlink" disabled={busy} onClick={async () => {
-          const x = await command("SetRecipePhoto", { recipeId: r.recipeId, imageId: null, expectedRevision: r.photoRevision ?? 0 });
-          if (x.status === "accepted") { announce("Photo removed."); await loadLibrary(); } else setErr(x.message);
-        }}>Remove photo</button>
-      )}
+      {typeof document !== "undefined" && createPortal(input, document.body)}
       {busy && <span className="small muted" role="status">Saving photo…</span>}
       {err && <p className="field-error small" role="alert" data-testid="photo-error">{err}</p>}
     </div>
   );
+  return { busy, mine: r.photo?.kind === "member", pick: () => file.current?.click(), remove, status };
 }

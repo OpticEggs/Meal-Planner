@@ -48,7 +48,8 @@ test("CF-A-E: Budget Bytes — refused before reading, says why, paste (4 servin
   await expect(page.getByRole("link", { name: /Open recipe website — Budget Bytes/ })).toHaveAttribute("href", BB);
   await expect(page.getByTestId("recipe-yield")).toHaveText("Makes 4");
   await expect(page.getByTestId("recipe-hero").getByTestId("hero-no-photo")).toHaveText("No photo yet"); // no photo, no illustration
-  await expect(page.getByRole("button", { name: "Add a photo" })).toBeVisible();
+  await page.getByTestId("recipe-more").click(); // the "…" sheet holds the recipe and photo actions
+  await expect(page.getByTestId("recipe-actions").getByRole("button", { name: "Add a photo" })).toBeVisible();
   await context.close();
 });
 
@@ -131,6 +132,7 @@ test("CF-B-E2: the same recipe pasted with group headings → three groups; a he
   await expect(groups.nth(2)).toContainText("Toppings");
   await expect(groups.nth(2).getByTestId("recipe-unquantified")).toHaveCount(4);
   // The editor shows them read-only, and an edit keeps them.
+  await page.getByTestId("recipe-more").click(); // the "…" sheet (pilot fix)
   await page.getByRole("button", { name: "Edit recipe" }).click();
   const editor = page.getByRole("dialog", { name: /^Edit Brisket Tacos/ });
   await expect(editor.getByTestId("editor-unquantified")).toContainText("Needs a quantity when shopping: Flour tortillas (Toppings), Fresh cilantro (Toppings)");

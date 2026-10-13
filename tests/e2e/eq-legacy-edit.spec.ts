@@ -36,6 +36,7 @@ test("EQ-E1: a title-only edit of an old recipe keeps its rounded amounts labell
   const old = await legacyRecipe(fx);
   const jon = await member(browser, "jon");
   await jon.page.goto(`/recipes/${old.recipeId}`);
+  await jon.page.getByTestId("recipe-more").click(); // the "…" sheet (pilot fix)
   await jon.page.getByRole("button", { name: "Edit recipe" }).click();
   let d = jon.page.getByRole("dialog", { name: "Edit Old onion salad — new version" });
   await d.getByLabel("Title", { exact: true }).fill("Old onion salad (ours)");
@@ -46,6 +47,7 @@ test("EQ-E1: a title-only edit of an old recipe keeps its rounded amounts labell
     { key: "onion", q: "0.6667", basis: "legacy", amount: null, servings: null },
   ]);
   // Now the member changes one amount: that amount is theirs, exact; the untouched row stays legacy.
+  await jon.page.getByTestId("recipe-more").click(); // the "…" sheet (pilot fix)
   await jon.page.getByRole("button", { name: "Edit recipe" }).click();
   d = jon.page.getByRole("dialog", { name: "Edit Old onion salad (ours) — new version" });
   const onion = d.getByRole("group", { name: /^Ingredient \d+: onion$/ });

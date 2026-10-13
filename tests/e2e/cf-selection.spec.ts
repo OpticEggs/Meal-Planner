@@ -60,7 +60,7 @@ test("CF-E1: two members select meals without a date, adjust servings, and shop 
   await expect(salmon).toContainText("Salmon rice bowls");
   await expect(salmon).not.toHaveAttribute("data-to-send", "0");
   await settled(jon.page);
-  await salmon.getByRole("button", { name: /^Have enough Salmon/ }).click();
+  await salmon.getByRole("button", { name: "Have it: Salmon fillet" }).click(); // the checklist's Have it (= Have enough)
   await expect(salmon).toHaveAttribute("data-to-send", "0");
   // Rice is in both meals: one line whose sources name both.
   await expect(jon.page.getByTestId("line-rice")).toContainText(/Salmon rice bowls.*Sheet-pan chicken and rice|Sheet-pan chicken and rice.*Salmon rice bowls/);

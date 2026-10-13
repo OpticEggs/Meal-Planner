@@ -120,6 +120,7 @@ for (const order of ["Jon saves first", "Alex saves first"] as const) {
     const recipeId = (await q<any>("SELECT r.id FROM recipes r JOIN recipe_versions v ON v.id=r.current_version_id WHERE v.title='Fixture: Turkey chili'"))[0].id;
     for (const m of [jon, alex]) {
       await m.page.goto(`/recipes/${recipeId}`);
+      await m.page.getByTestId("recipe-more").click(); // the "…" sheet (pilot fix)
       await m.page.getByRole("button", { name: "Edit recipe" }).click();
     }
     const [first, second] = order === "Jon saves first" ? [jon, alex] : [alex, jon];
@@ -241,6 +242,7 @@ test("B17 non-overlapping edits: the other member's added ingredient is brought 
   const recipeId = (await q<any>("SELECT r.id FROM recipes r JOIN recipe_versions v ON v.id=r.current_version_id WHERE v.title='Fixture: Turkey chili'"))[0].id;
   for (const m of [jon, alex]) {
     await m.page.goto(`/recipes/${recipeId}`);
+    await m.page.getByTestId("recipe-more").click(); // the "…" sheet (pilot fix)
     await m.page.getByRole("button", { name: "Edit recipe" }).click();
   }
   const dj = jon.page.getByRole("dialog", { name: "Edit Fixture: Turkey chili — new version" });

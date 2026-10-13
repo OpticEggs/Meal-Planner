@@ -83,7 +83,8 @@ test("IO-E1: the reported line reads cleanly; only uncertain lines ask; seasonin
   await expect(p.getByTestId("photo-credit")).toHaveText("Photo by Jon");
   const [img] = await q<any>("SELECT content_type, permission FROM recipe_images");
   expect(img).toEqual({ content_type: "image/jpeg", permission: "member-provided photo (added by Jon)" });
-  await p.getByRole("button", { name: "Remove photo" }).click();
+  await p.getByTestId("recipe-more").click();
+  await p.getByTestId("recipe-actions").getByRole("button", { name: "Remove photo" }).click();
   await expect(p.getByTestId("recipe-hero").getByTestId("hero-no-photo")).toBeVisible();
   const overflow = await p.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(0);

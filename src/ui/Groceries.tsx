@@ -87,6 +87,9 @@ export function GroceriesScreen({ variant = "full" }: { variant?: "full" | "chec
   const { snapshot, command, writesAllowed, lastChange } = useStore();
   const [msg, setMsg] = useState<string | null>(null);
   const reviewBase = useRef<{ rev: number; lines: any[] } | null>(null);
+  // A checklist row's own on-hand answer (Have it, Have some, Need) is not news to the member who gave it: the next
+  // projection change is taken as the new base without the "changed since you started reviewing" box.
+  const ownChange = useRef(false);
   const [delta, setDelta] = useState<{ text: string | null; lines: string[] } | null>(null);
   const [dialog, setDialog] = useState<{ d: GroceryDialog; opener: HTMLElement | null } | null>(null);
   const g = snapshot?.groceries;
@@ -98,7 +101,8 @@ export function GroceriesScreen({ variant = "full" }: { variant?: "full" | "chec
     if (!reviewBase.current) reviewBase.current = { rev: g.projectionRevision, lines: g.lines };
     else if (g.projectionRevision !== reviewBase.current.rev) {
       const d = diffLines(reviewBase.current.lines, g.lines);
-      if (d.length) setDelta({ text: lastChange?.text ?? null, lines: d });
+      if (d.length && !ownChange.current) setDelta({ text: lastChange?.text ?? null, lines: d });
+      ownChange.current = false;
       reviewBase.current = { rev: g.projectionRevision, lines: g.lines };
     }
   }, [g, lastChange]);
@@ -214,12 +218,12 @@ export function GroceriesScreen({ variant = "full" }: { variant?: "full" | "chec
         {deltaBox}
         <NeedsQuantity />
         <h3 className="section-label" id="to-buy-h">To buy ({toBuy.length})</h3>
-        {toBuy.length ? <ul className="lines checklist" aria-labelledby="to-buy-h">{toBuy.map((l: any) => <Line key={l.key} l={l} open={open} compact />)}</ul>
+        {toBuy.length ? <ul className="lines checklist" aria-labelledby="to-buy-h">{toBuy.map((l: any) => <ChecklistLine key={l.key} l={l} open={open} onOwnChange={(v) => { ownChange.current = v; }} />)}</ul>
           : <p className="muted small">Nothing left to buy.</p>}
         {haveIt.length > 0 && (
           <>
             <h3 className="section-label" id="have-it-h">Have it or already bought ({haveIt.length})</h3>
-            <ul className="lines checklist" aria-labelledby="have-it-h">{haveIt.map((l: any) => <Line key={l.key} l={l} open={open} compact />)}</ul>
+            <ul className="lines checklist" aria-labelledby="have-it-h">{haveIt.map((l: any) => <ChecklistLine key={l.key} l={l} open={open} onOwnChange={(v) => { ownChange.current = v; }} />)}</ul>
           </>
         )}
         {seasoningsNote}
@@ -271,66 +275,58 @@ function DialogFor({ d, onClose, returnFocus }: { d: GroceryDialog; onClose: () 
   }
 }
 
-/** What to buy in one line (checklist): the combined amount and the packages it rounds to, or why it isn't known. */
-function buyText(l: any): string {
-  const amount = l.meal ? qty(l.meal.quantity, l.meal.unit) : null;
-  if (l.toSend === null) return `${amount ? `${amount} → ` : ""}amount to buy not known yet`;
-  if (l.toSend === 0) return `${amount ? `${amount} → ` : ""}nothing to buy`;
-  const pkg = l.product ? ` × ${l.product.name}` : " package(s)";
-  return `${amount ? `${amount} → ` : ""}${l.toSend}${pkg}`;
-}
+/** Unresolved messages about the store package, not about how much the meals need (projection.ts wording). */
+const PACKAGE_ISSUE = /^(No product chosen|Your usual product|Requests for this item name different products|Package size)/;
 
-/** The line's state in words, for the line heading: status, unresolved, product issue. */
-function lineState(l: any): string {
-  return [STATUS[l.status] ?? l.status, l.productIssue ? ISSUE[l.productIssue] : null, l.unresolved.length ? "Unresolved" : null, l.approval?.valid ? `approved ×${l.approval.packages}` : null]
-    .filter(Boolean)
-    .join(", ");
-}
-
-function Line({ l, open, compact = false }: { l: any; open: Opener; compact?: boolean }) {
+/** One checklist row (household pilot, 2026-10-13): the ingredient, the total the selected meals need, and Have it.
+ *  A problem with the amount itself stays in view; a store package not chosen yet is said once, quietly. The recipe
+ *  breakdown, a partial amount on hand and the store product and purchase controls are under Details. */
+function ChecklistLine({ l, open, onOwnChange }: { l: any; open: Opener; onOwnChange: (expected: boolean) => void }) {
   const { snapshot, command, writesAllowed, announce } = useStore();
   const [some, setSome] = useState("");
   const [msg, setMsg] = useState<{ text: string; field?: string } | null>(null);
   const staple = l.ingredientKey ? snapshot.staples?.find((st: any) => st.ingredientKey === l.ingredientKey && st.active) : null;
   async function run(name: string, payload: any, field?: string) {
+    if (name === "RecordAvailability") onOwnChange(true);
     const r = await command(name, payload);
+    if (name === "RecordAvailability" && r.status !== "accepted") onOwnChange(false); // nothing changed
     setMsg(r.status === "accepted" ? null : { text: r.message, field });
+    return r.status === "accepted";
   }
   const weekId = snapshot.week.id;
   const msgId = `line-msg-${l.key}`;
+  const amountProblems: string[] = l.unresolved.filter((u: string) => !PACKAGE_ISSUE.test(u));
+  const packageProblems: string[] = l.unresolved.filter((u: string) => PACKAGE_ISSUE.test(u));
+  const have = l.availability?.state === "enough";
+  const amount = l.meal
+    ? qty(l.meal.quantity, l.meal.unit)
+    : l.requests.length
+      ? l.requests.map((r: any) => (r.kind === "usual" ? "Usual amount" : `Extra ×${r.packages ?? 1}`)).join(" + ")
+      : "Amount unknown";
+  async function toggleHave() {
+    // Have it = the existing "Have enough", bound to the requirement as shown (amount, unit and fingerprint).
+    const ok = await run("RecordAvailability", have
+      ? { weekId, ingredientKey: l.key, state: "need" }
+      : { weekId, ingredientKey: l.key, state: "enough", reviewed: { quantity: l.meal.quantity, unit: l.meal.unit, fingerprint: l.fingerprint } });
+    if (ok) announce(have ? `${l.name} is back on the list to buy.` : `${l.name}: you have it.`);
+    // The row moves between "To buy" and "Have it"; keep focus on its control.
+    setTimeout(() => document.querySelector<HTMLElement>(`[data-testid="have-${l.key}"]`)?.focus(), 0);
+  }
   return (
-    <li className={`line st-${l.status}`} data-testid={`line-${l.key}`} data-status={l.status} data-to-send={l.toSend ?? ""}>
-      <div className="row between">
-        <h3 className="line-name" aria-label={`${l.name}: ${lineState(l)}`}>{l.name}</h3>
-        <span className="row" aria-hidden="true">
-          <span className={`badge st-${l.status}`}>{STATUS[l.status] ?? l.status}</span>
-          {l.productIssue && <span className="badge con-unknown">{ISSUE[l.productIssue]}</span>}
-          {l.unresolved.length > 0 && <span className="badge con-unknown">Unresolved</span>}
-        </span>
-      </div>
-      {compact ? (
-        <>
-          <div className="small">
-            <div className="line-buy" data-testid={`buy-${l.key}`}>{buyText(l)}</div>
-        {l.meal && (
-          <div>
-            Dinners: {qty(l.meal.quantity, l.meal.unit)} —{" "}
-            {l.meal.sources.map((s: any) => `${s.recipeTitle.replace("Fixture: ", "")}${s.cookNight ? ` (${s.cookNight.slice(5)})` : ""}${s.stated ? " (amount you gave)" : ""}`).join(", ")}
-          </div>
-        )}
-        {l.unresolved.map((u: string) => <div key={u} className="warn">{u}</div>)}
-        {l.availability && <div className="faint">{l.availability.memberName}: {{ enough: "Have enough", some: `Have some${l.availability.quantity ? ` (${l.availability.quantity} ${l.availability.unit})` : ""}`, need: "Need" }[l.availability.state as string]}</div>}
-          </div>
-      {l.ingredientKey && l.meal && (
-        <div className="row small">
-          <Input className="tiny" placeholder="amt" value={some} onChange={(e) => setSome(e.target.value)} aria-label={`Amount of ${l.name} on hand (${l.meal.unit})`}
-            aria-invalid={msg?.field === "some" ? true : undefined} aria-describedby={msg?.field === "some" ? msgId : undefined} />
-          <div className="seg" role="group" aria-label={`Availability for ${l.name}`}>
-            <Button variant="outline" size="sm" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "enough", reviewed: { quantity: l.meal.quantity, unit: l.meal.unit, fingerprint: l.fingerprint } })} aria-label={`Have enough ${l.name}`}>Have enough</Button>
-            <Button variant="outline" size="sm" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "some", quantity: some || null, unit: some ? l.meal.unit : null }, "some")} aria-label={`Have some ${l.name}`}>Have some</Button>
-            <Button variant="outline" size="sm" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "need" })} aria-label={`Need ${l.name}`}>Need</Button>
-          </div>
+    <li className={`line check-line ${have ? "is-have" : ""}`} data-testid={`line-${l.key}`} data-status={l.status} data-to-send={l.toSend ?? ""}>
+      <div className="check-main">
+        <div className="check-text">
+          <h4 className="line-name">{l.name}</h4>
+          <div className={`line-buy ${l.meal ? "" : "unknown"}`} data-testid={`buy-${l.key}`}>{amount}</div>
         </div>
+        {l.ingredientKey && l.meal && (
+          <button type="button" className="have-btn" aria-pressed={have} data-testid={`have-${l.key}`} onClick={toggleHave}
+            aria-label={`Have it: ${l.name}`}>{have ? "✓ Have it" : "Have it"}</button>
+        )}
+      </div>
+      {amountProblems.map((u) => <p key={u} className="warn small check-note" data-testid={`amount-problem-${l.key}`}>{u}</p>)}
+      {l.meal && packageProblems.length > 0 && amountProblems.length === 0 && (
+        <p className="faint small check-note" data-testid={`package-note-${l.key}`}>Recipe amount known · store package not chosen yet</p>
       )}
       {!l.ingredientKey && (
         <div className="row small">
@@ -340,8 +336,35 @@ function Line({ l, open, compact = false }: { l: any; open: Opener; compact?: bo
           </NativeSelect>
         </div>
       )}
-          <details className="small line-more">
-            <summary>Product &amp; purchase</summary>
+      <details className="small line-more" data-testid={`details-${l.key}`}>
+        <summary>Details</summary>
+        {l.meal && (
+          <div className="stack small">
+            <div className="section-label check-sub">From the selected meals</div>
+            <ul className="check-sources" data-testid={`sources-${l.key}`}>
+              {l.meal.sources.map((x: any, i: number) => (
+                <li key={i}>{x.recipeTitle.replace("Fixture: ", "")}: {qty(x.quantity, x.unit)}{x.stated ? " (amount you gave)" : ""}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {l.ingredientKey && l.meal && (
+          <div className="stack small">
+            <div className="section-label check-sub">On hand</div>
+            {l.availability && <div className="faint">{l.availability.memberName}: {{ enough: "Have it", some: `Have some${l.availability.quantity ? ` (${l.availability.quantity} ${l.availability.unit})` : ""}`, need: "Need" }[l.availability.state as string]}{l.netMeal && l.availability.state === "some" ? ` · still to buy ${qty(l.netMeal.quantity, l.netMeal.unit)}` : ""}</div>}
+            <div className="row small">
+              <Input className="tiny" placeholder="amt" value={some} onChange={(e) => setSome(e.target.value)} aria-label={`Amount of ${l.name} on hand (${l.meal.unit})`}
+                aria-invalid={msg?.field === "some" ? true : undefined} aria-describedby={msg?.field === "some" ? msgId : undefined} />
+              <div className="seg" role="group" aria-label={`Availability for ${l.name}`}>
+                <Button variant="outline" size="sm" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "some", quantity: some || null, unit: some ? l.meal.unit : null }, "some")} aria-label={`Have some ${l.name}`}>Have some</Button>
+                <Button variant="outline" size="sm" onClick={() => run("RecordAvailability", { weekId, ingredientKey: l.key, state: "need" })} aria-label={`Need ${l.name}`}>Need</Button>
+              </div>
+            </div>
+          </div>
+        )}
+        {packageProblems.map((u) => <div key={u} className="warn">{u}</div>)}
+        <div className="section-label check-sub">Product &amp; purchase</div>
+
             <div className="small">
         {l.requests.map((r: any) => (
           <div key={r.id}>
@@ -398,10 +421,40 @@ function Line({ l, open, compact = false }: { l: any; open: Opener; compact?: bo
           )}
         </div>
       )}
-          </details>
-        </>
-      ) : (
-        <>
+      </details>
+      {msg && <p role="alert" className="warnbox" id={msgId}>{msg.text}</p>}
+    </li>
+  );
+}
+
+/** The line's state in words, for the line heading: status, unresolved, product issue. */
+function lineState(l: any): string {
+  return [STATUS[l.status] ?? l.status, l.productIssue ? ISSUE[l.productIssue] : null, l.unresolved.length ? "Unresolved" : null, l.approval?.valid ? `approved ×${l.approval.packages}` : null]
+    .filter(Boolean)
+    .join(", ");
+}
+
+function Line({ l, open }: { l: any; open: Opener }) {
+  const { snapshot, command, writesAllowed, announce } = useStore();
+  const [some, setSome] = useState("");
+  const [msg, setMsg] = useState<{ text: string; field?: string } | null>(null);
+  const staple = l.ingredientKey ? snapshot.staples?.find((st: any) => st.ingredientKey === l.ingredientKey && st.active) : null;
+  async function run(name: string, payload: any, field?: string) {
+    const r = await command(name, payload);
+    setMsg(r.status === "accepted" ? null : { text: r.message, field });
+  }
+  const weekId = snapshot.week.id;
+  const msgId = `line-msg-${l.key}`;
+  return (
+    <li className={`line st-${l.status}`} data-testid={`line-${l.key}`} data-status={l.status} data-to-send={l.toSend ?? ""}>
+      <div className="row between">
+        <h3 className="line-name" aria-label={`${l.name}: ${lineState(l)}`}>{l.name}</h3>
+        <span className="row" aria-hidden="true">
+          <span className={`badge st-${l.status}`}>{STATUS[l.status] ?? l.status}</span>
+          {l.productIssue && <span className="badge con-unknown">{ISSUE[l.productIssue]}</span>}
+          {l.unresolved.length > 0 && <span className="badge con-unknown">Unresolved</span>}
+        </span>
+      </div>
           <div className="small">
         {l.meal && (
           <div>
@@ -484,8 +537,6 @@ function Line({ l, open, compact = false }: { l: any; open: Opener; compact?: bo
               : <Button variant="outline" size="sm" disabled={!writesAllowed} onClick={() => run("ApprovePurchaseLines", { weekId, lines: [{ key: l.key, fingerprint: l.fingerprint, packages: l.toSend }] })} aria-label={`Approve ${l.toSend} package${l.toSend === 1 ? "" : "s"} of ${l.name}`}>Approve ×{l.toSend}</Button>
           )}
         </div>
-      )}
-        </>
       )}
       {msg && <p role="alert" className="warnbox" id={msgId}>{msg.text}</p>}
     </li>
