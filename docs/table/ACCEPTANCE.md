@@ -877,3 +877,12 @@ owner's approval of `docs/table/DEPLOYMENT-CATALOG-FIRST.md`.
    test of its 1178 that fails on the new schema).
 6. No live site, Kroger, Instacart, FoodData Central, Render or Neon request was made; no household data was read or
    written; nothing was deployed; the Extraction Lab branch was not touched.
+
+### Pilot deployment of `e7e1a9e` — added 2026-10-13
+
+Owner-operated on the Render Free + Neon pilot after a fresh Neon recovery point (`before-catalog-first`); Claude guided
+and accessed nothing. Render deployed `e7e1a9e`; the start applied `017_meal_lists.sql` and became Live; health good;
+sign-in lands on Recipes with every saved recipe present; two meals selected without dates combined a shared ingredient
+into one line; the import-review outside-tap guard kept and then discarded a draft edit as chosen. Calendar/list
+separation was not observable (no calendar dinners). **Ready for household pilot.** Details, notes and the unchanged
+rollback limitation (rehearsal step 6 FAIL, 1 of 1178): `docs/table/DEPLOYMENT-CATALOG-FIRST.md` → "Pilot result".
