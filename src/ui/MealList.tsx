@@ -1,10 +1,11 @@
 "use client";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SnapshotScope, useStore } from "./store";
 import { GroceriesScreen } from "./Groceries";
 import { PlaceholderTile } from "./Tile";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { CheckIcon, PlusIcon } from "./icons";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -44,12 +45,18 @@ export function ListGroceriesScreen() {
 }
 
 /** − n + with a visible number; commits on each press (a server command bound to what was shown). */
-export function ServingsStepper({ value, onChange, label, disabled }: { value: number; onChange: (n: number) => void; label: string; disabled?: boolean }) {
+export function ServingsStepper({ value, onChange, label, disabled, unit }: { value: number; onChange: (n: number) => void; label: string; disabled?: boolean; unit?: string }) {
+  // With a unit (the photo-first recipe page, D151): round − and + over a 44 px target; without one: the list's stepper.
+  const step = (by: number, text: string) => {
+    const props = { type: "button" as const, disabled: disabled || (by < 0 ? value <= 1 : value >= MAX), "aria-label": `${by < 0 ? "Fewer" : "More"} servings (${label})`, onClick: () => onChange(value + by) };
+    return unit ? <button {...props} className="pf-step"><span aria-hidden="true">{text}</span></button> : <Button {...props} variant="outline" size="sm">{text}</Button>;
+  };
   return (
-    <div className="stepper" role="group" aria-label={label}>
-      <Button type="button" variant="outline" size="sm" disabled={disabled || value <= 1} aria-label={`Fewer servings (${label})`} onClick={() => onChange(value - 1)}>−</Button>
+    <div className={unit ? "stepper pf-stepper" : "stepper"} role="group" aria-label={label}>
+      {step(-1, "−")}
       <output aria-live="off" data-testid="servings-value">{value}</output>
-      <Button type="button" variant="outline" size="sm" disabled={disabled || value >= MAX} aria-label={`More servings (${label})`} onClick={() => onChange(value + 1)}>+</Button>
+      {unit && <span className="stepper-unit" aria-hidden="true">{unit}</span>}
+      {step(1, "+")}
     </div>
   );
 }
@@ -60,13 +67,19 @@ export function defaultServings(version: any): number {
   return s.size === 1 ? [...s][0] : 2;
 }
 
-/** Add a recipe to Selected Meals, or — when it is already there — change its servings (Q2: never a second copy). */
-export function SelectControl({ recipe, compact }: { recipe: any; compact?: boolean }) {
+/** Add a recipe to Selected Meals, or — when it is already there — change its servings (Q2: never a second copy).
+ *  `onServings` tells the page which servings are shown (the meal's when selected, else the stepper's), so the
+ *  ingredients beside it can say "for N". */
+export function SelectControl({ recipe, compact, onServings }: { recipe: any; compact?: boolean; onServings?: (n: number) => void }) {
   const { snapshot, command, writesAllowed, announce } = useStore();
   const selected = snapshot?.mealList?.meals?.find((m: any) => m.recipeId === recipe.recipeId) ?? null;
   const [servings, setServings] = useState<number>(() => defaultServings(recipe.version));
   const [msg, setMsg] = useState<string | null>(null);
   const title = recipe.version.title;
+  const shown = selected ? selected.servings : servings;
+  useEffect(() => {
+    onServings?.(shown);
+  }, [shown, onServings]);
   async function add() {
     const r = await command("AddSelectedMeal", { recipeId: recipe.recipeId, versionId: recipe.version.id, servings });
     if (r.status === "accepted") {
@@ -75,12 +88,16 @@ export function SelectControl({ recipe, compact }: { recipe: any; compact?: bool
     } else setMsg(r.message);
   }
   if (selected) return <SelectedServings meal={selected} compact={compact} />;
-  return (
-    <div className={compact ? "select-control compact" : "select-control"} data-testid="select-control">
-      {!compact && <ServingsStepper value={servings} onChange={setServings} label={`Servings of ${title}`} disabled={!writesAllowed} />}
-      <button className={compact ? "plus-btn" : buttonVariants({ variant: "brand" })} disabled={!writesAllowed} onClick={add} aria-label={`Add ${title} to Selected Meals${compact ? ` (${servings} servings)` : ""}`} data-testid="add-selected">
-        {compact ? <span aria-hidden="true">+</span> : "Add to Selected Meals"}
+  if (compact)
+    return (
+      <button className="plus-btn" disabled={!writesAllowed} onClick={add} aria-label={`Add ${title} to Selected Meals (${servings} servings)`} data-testid="add-selected">
+        <span className="plus-dot"><PlusIcon size={14} weight={2.4} /></span>
       </button>
+    );
+  return (
+    <div className="select-control" data-testid="select-control">
+      <ServingsStepper value={servings} onChange={setServings} label={`Servings of ${title}`} disabled={!writesAllowed} unit="servings" />
+      <button className="pf-add" disabled={!writesAllowed} onClick={add} aria-label={`Add ${title} to Selected Meals`} data-testid="add-selected">Add to meals</button>
       {msg && <p role="alert" className="warnbox small">{msg}</p>}
     </div>
   );
@@ -99,13 +116,13 @@ function SelectedServings({ meal, compact }: { meal: any; compact?: boolean }) {
   if (compact)
     return (
       <Link className="plus-btn on" href="/selected" aria-label={`${meal.title} is selected, ${meal.servings} servings — open Selected Meals`} data-testid="selected-mark">
-        <span aria-hidden="true">✓{meal.servings}</span>
+        <span className="plus-pill" aria-hidden="true"><CheckIcon />{meal.servings}</span>
       </Link>
     );
   return (
-    <div className="select-control" data-testid="select-control">
-      <p className="small" style={{ margin: 0 }}>Selected · {meal.servings} servings (added by {meal.addedBy})</p>
-      <ServingsStepper value={meal.servings} onChange={set} label={`Servings of ${meal.title}`} disabled={!writesAllowed} />
+    <div className="select-control is-selected" data-testid="select-control">
+      <p className="select-state" style={{ margin: 0 }}>In your meals · {meal.servings} servings <span className="select-by">added by {meal.addedBy}</span></p>
+      <ServingsStepper value={meal.servings} onChange={set} label={`Servings of ${meal.title}`} disabled={!writesAllowed} unit="servings" />
       {msg && <p role="alert" className="warnbox small">{msg}</p>}
     </div>
   );

@@ -3,16 +3,17 @@ import Link from "next/link";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { useStore } from "./store";
 import { money } from "./format";
-import { PlaceholderTile } from "./Tile";
 import { SelectControl } from "./MealList";
 import { Button } from "@/components/ui/button";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /**
- * Photo-first catalog (catalog-first, Q3/Q8). Every tile says what its picture is: the household's own photo, a source
- * photo kept under a recorded permission, or no photo (an illustration, never presented as a photograph). Essential
- * details are always visible under the title (nothing depends on hover). + adds the meal to Selected Meals.
+ * Photo-first catalog (owner-approved preview, 2026-10-13; D151). Food photography fills the tile edge to edge; a recipe
+ * without a photo says "No photo yet" on a plain tile — never an illustration that could pass for food. Under the title:
+ * cooking time, calories and the ingredient-cost estimate per serving when each is complete; otherwise the tile says
+ * what is not known yet (unknown is never zero). + adds the meal to Selected Meals; a selected meal shows ✓ and its
+ * servings and opens Selected Meals.
  */
 
 const SCROLL_KEY = "table.catalog.scroll";
@@ -23,18 +24,25 @@ export function photoKind(r: any): { kind: "member" | "source" | "none"; label: 
   return { kind: "none", label: "No photo yet" };
 }
 
-function meta(r: any): string[] {
-  const out: string[] = [];
-  out.push(r.version.effortMinutes ? `${r.version.effortMinutes} min` : "time unknown");
-  const c = r.servingCost;
-  out.push(c?.complete ? `${money(c.knownMinor)}/serving` : "cost unknown");
-  const kcal = r.nutritionPerPlate?.calories?.value;
-  if (kcal != null) out.push(`${Math.round(Number(kcal))} kcal/serving`);
-  return out;
+/** Cooking time as the recipe states it: "25 min", "3 h 30 min" (estimates say so). */
+export function timeText(minutes: number | null | undefined, estimate?: boolean): string | null {
+  if (!minutes) return null;
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  const t = h ? `${h} h${m ? ` ${m} min` : ""}` : `${m} min`;
+  return estimate ? `${t} (estimate)` : t;
 }
 
-function provenance(r: any): string {
-  return r.version.provenance === "fixture" ? "test recipe" : r.version.provenance === "imported" ? `imported${r.version.sourceSiteName ? ` from ${r.version.sourceSiteName}` : ""}` : "ours";
+function meta(r: any): string {
+  const out: string[] = [];
+  out.push(timeText(r.version.effortMinutes) ?? "time unknown");
+  const kcal = r.nutritionPerPlate?.calories?.value;
+  const cost = r.servingCost?.complete ? r.servingCost.knownMinor : null;
+  if (kcal != null) out.push(`${Math.round(Number(kcal))} kcal`);
+  if (cost != null) out.push(`est. ${money(cost)}/serving`);
+  const unknown = [kcal == null && "calories", cost == null && "cost"].filter(Boolean);
+  if (unknown.length) out.push(`${unknown.join(" and ")} not known yet`);
+  return out.join(" · ");
 }
 
 /** Keeps the reader's place: remembered when a recipe is opened, restored once the gallery is back (per tab only). */
@@ -68,35 +76,30 @@ export function useCatalogScroll(ready: boolean) {
 }
 
 export function RecipeGallery({ list, sounds }: { list: any[]; sounds?: boolean }) {
-  const { me, command } = useStore();
+  const { command } = useStore();
   return (
-    <ul className="gallery" data-testid="recipe-list">
+    <ul className="pf-grid" data-testid="recipe-list">
       {list.map((r: any) => {
         const pk = photoKind(r);
-        const fav = r.favoriteOf.includes(me.memberId);
         const title = r.version.title;
+        const imageId = r.photo?.imageId ?? r.version.imageId ?? null;
         return (
-          <li key={r.recipeId} className="gallery-tile" data-testid="recipe-row" data-title={title} data-photo={pk.kind}>
-            <div className="gallery-media">
-              <Link href={`/recipes/${r.recipeId}`} className="gallery-photo" tabIndex={-1} aria-hidden="true">
-                <PlaceholderTile title={title} large imageId={r.photo?.imageId ?? r.version.imageId} />
-              </Link>
-              <span className={`photo-kind pk-${pk.kind}`} data-testid="photo-kind">{pk.label}</span>
-              <div className="gallery-plus"><SelectControl recipe={r} compact /></div>
-              <div className="gallery-fav">
-                <button className={`icon-btn fav ${fav ? "on" : ""}`} aria-label={`Favorite ${title}`} aria-pressed={fav}
-                  onClick={() => command("SetFavorite", { recipeId: r.recipeId, favorite: !fav })}>
-                  <span aria-hidden="true">{fav ? "★" : "☆"}</span>
-                </button>
-              </div>
-            </div>
-            <Link href={`/recipes/${r.recipeId}`} className="recipe-link gallery-title"><strong>{title}</strong></Link>
-            <div className="faint small gallery-meta">
-              {meta(r).join(" · ")} · {provenance(r)}
-              {r.interest ? ` · Sounds good (${r.interest.display_name ?? r.interest.by ?? ""})` : ""}
-            </div>
+          <li key={r.recipeId} className={`pf-tile ${imageId ? "has-photo" : "no-photo"}`} data-testid="recipe-row" data-title={title} data-photo={pk.kind}>
+            <Link href={`/recipes/${r.recipeId}`} className="recipe-link pf-tile-link">
+              {imageId ? (
+                <img className="pf-tile-img" src={`/api/recipe-images/${imageId}`} alt="" loading="lazy" decoding="async" data-testid="recipe-photo" />
+              ) : (
+                <span className="pf-nophoto" data-testid="photo-kind">No photo yet</span>
+              )}
+              <span className="pf-tile-text">
+                <strong className="pf-tile-title">{title}</strong>
+                <span className="pf-tile-meta gallery-meta">{meta(r)}</span>
+                {sounds && r.interest && <span className="pf-tile-meta">Sounds good ({r.interest.display_name ?? r.interest.by ?? ""})</span>}
+              </span>
+            </Link>
+            <div className="pf-tile-select"><SelectControl recipe={r} compact /></div>
             {sounds && r.interest && (
-              <div className="row gallery-actions">
+              <div className="pf-tile-actions">
                 <Button variant="outline" size="sm" aria-label={`Clear the idea ${title}`} onClick={() => command("ArchiveInterest", { interestId: r.interest.id })}>Clear idea</Button>
               </div>
             )}

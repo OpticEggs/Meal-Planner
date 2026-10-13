@@ -16,10 +16,10 @@ const OUTSTANDING = new Set(["needs_review", "not_sent_yet", "uncertain", "missi
  * Saved links and Household live under More, so More is the active tab on those screens too.
  */
 const TABS = [
-  { href: "/recipes", label: "Recipes", icon: "recipes" },
-  { href: "/selected", label: "Selected", icon: "selected" },
-  { href: "/groceries", label: "Groceries", icon: "groceries" },
-  { href: "/more", label: "More", icon: "more" },
+  { href: "/recipes", label: "Recipes" },
+  { href: "/selected", label: "Selected" },
+  { href: "/groceries", label: "Groceries" },
+  { href: "/more", label: "More" },
 ] as const;
 
 /**
@@ -29,19 +29,6 @@ const TABS = [
 function useSelectedCount(): number | null {
   const { snapshot } = useStore();
   return snapshot?.mealList?.meals?.length ?? null;
-}
-
-/** Original line icons. Decorative: each tab's name is its text label. */
-function NavIcon({ name }: { name: (typeof TABS)[number]["icon"] }) {
-  const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      {name === "recipes" && (<g {...common}><rect x="3.5" y="3.5" width="7.5" height="7.5" rx="2" /><rect x="13" y="3.5" width="7.5" height="7.5" rx="2" /><rect x="3.5" y="13" width="7.5" height="7.5" rx="2" /><rect x="13" y="13" width="7.5" height="7.5" rx="2" /></g>)}
-      {name === "selected" && (<g {...common}><path d="M4 9h16M5.5 9l1 10a1.6 1.6 0 0 0 1.6 1.4h7.8a1.6 1.6 0 0 0 1.6-1.4l1-10" /><path d="M8.5 9a3.5 3.5 0 0 1 7 0M9.5 14.5l2 2 3.5-4" /></g>)}
-      {name === "groceries" && (<g {...common}><path d="M3.5 6h2l2 10h10.5l2-7.5H7" /><circle cx="9.5" cy="19.5" r="1.3" /><circle cx="17" cy="19.5" r="1.3" /></g>)}
-      {name === "more" && (<g {...common}><circle cx="5.5" cy="12" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="18.5" cy="12" r="1.5" /></g>)}
-    </svg>
-  );
 }
 
 /**
@@ -88,9 +75,12 @@ export function Shell({ children }: { children: React.ReactNode }) {
   // a quantity is one of them). The calendar week's pickup list is under More → Dinner calendar.
   const outstanding = (snapshot?.mealList?.groceries?.lines ?? []).filter((l: any) => OUTSTANDING.has(l.status)).length;
   const selected = useSelectedCount();
+  // The photo-first screens (owner-approved catalog and recipe, D151) carry no app header: food fills the screen. Sync
+  // status stays in the page and shows only when offline; identity and the retailer mode are on the other screens.
+  const photoFirst = path === "/recipes" || path.startsWith("/recipes/");
   return (
     <>
-    <div className="app">
+    <div className={photoFirst ? "app pf" : "app"}>
       <header className="top" ref={topRef}>
         <div className="brand">
           <div>
@@ -124,11 +114,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
           return (
             <Link key={t.href} href={t.href} className={on ? "on" : ""} aria-current={on ? "page" : undefined}
               aria-label={name} data-testid={`nav-${t.href.slice(1)}`}>
-              <span className="nav-icon">
-                <NavIcon name={t.icon} />
-                {count > 0 && <span className="nav-count" aria-hidden="true">{count}</span>}
-              </span>
               {t.label}
+              {count > 0 && <span className="nav-count" aria-hidden="true">{count}</span>}
             </Link>
           );
         })}

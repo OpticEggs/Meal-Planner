@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/fraunces";
+import "@fontsource-variable/instrument-sans";
 import { GeistSans } from "geist/font/sans";
 import "./tailwind.css";
 import "./globals.css";
