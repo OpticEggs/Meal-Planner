@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Upgrade rehearsal for migrations 015/016 (EQ/EQR, 2026-10-10) and 017 (catalog-first meal lists, 2026-10-11) on DISPOSABLE LOCAL databases only — never a household
+# Upgrade rehearsal for migrations 015/016 (EQ/EQR, 2026-10-10), 017 (catalog-first meal lists, 2026-10-11) and 018 (a recipe version's own yield, B51, 2026-10-14) on DISPOSABLE LOCAL databases only — never a household
 # database, never Neon. Usage: scripts/rehearse-upgrade.sh [previous-release-commit] [--old-suite]
 #
 #  1. A database is migrated and POPULATED by the previous release's own code (imported and manual recipes, a
@@ -15,6 +15,9 @@
 #  5. Export/restore: this release's export round-trips; the previous release's export (taken before the
 #     upgrade) restores into the new schema as legacy rows.
 #  6. With --old-suite, the previous release's whole vitest suite runs against a database carrying the new schema.
+#  7. Migration 018 (B51): nothing is backfilled; this release records a yield on a recipe the previous release wrote
+#     without changing a row; the previous release still saves that recipe (rollback) — its new version carries no
+#     yield (the known rollback limit), every row unchanged — and the version that recorded it keeps it.
 # Writes everything to $OUT (default /tmp/table-upgrade-rehearsal-<prev>-<time>/) and exits non-zero on any FAIL.
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -80,6 +83,14 @@ in_new env DATABASE_URL="$DB" npx tsx scripts/rehearsal/data.mts basis > "$OUT/2
 # Rows the previous release wrote keep the basis they had; before migration 015 there was none, so all read legacy.
 if node -e 'const f=require("fs"); const a=JSON.parse(f.readFileSync(process.argv[1],"utf8")); const b=JSON.parse(f.readFileSync(process.argv[2],"utf8")); const want=a.column==="absent" ? {legacy:Object.values(b).reduce((x,y)=>x+y,0)} : a; process.exit(JSON.stringify(want)===JSON.stringify(b) ? 0 : 1)' "$OUT/1-basis.json" "$OUT/2-basis.json"; then pass "2 every existing recipe row keeps its basis (before: $(tr -d '\n ' < "$OUT/1-basis.json"); after: $(tr -d '\n ' < "$OUT/2-basis.json"))"; else fail "2 basis changed by the upgrade: $(tr -d '\n ' < "$OUT/1-basis.json") → $(tr -d '\n ' < "$OUT/2-basis.json")"; fi
 
+# 2b. Migration 018 backfills nothing: no version has a recorded yield until this release writes one.
+if [ -f "$NEW/scripts/rehearsal/yield.mts" ]; then
+  in_new env DATABASE_URL="$DB" npx tsx scripts/rehearsal/yield.mts > "$OUT/2b-yield.json"
+  if node -e 'const j=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")); process.exit(j.column==="present" && j.versionsWithYield===0 ? 0 : 1)' "$OUT/2b-yield.json"; then
+    pass "2b migration 018 added recipe_versions.servings and backfilled nothing: $(tr -d '\n' < "$OUT/2b-yield.json")"
+  else fail "2b migration 018 state (2b-yield.json)"; fi
+fi
+
 # 3. Same projection from both releases on the migrated database.
 in_new env DATABASE_URL="$DB" TABLE_FIXED_NOW=2026-10-12T19:00:00Z TABLE_RETAILER=simulated TABLE_ENV=test npx tsx scripts/rehearsal/snapshot.mts > "$OUT/3-projection-new.json"
 if in_new npx tsx scripts/rehearsal/compare.mts "$OUT/1-projection-prev.json" "$OUT/3-projection-new.json" > "$OUT/3-compare.json"; then
@@ -139,6 +150,23 @@ else
   left="$("$PGBIN/psql" -h 127.0.0.1 -p "$PORT" -U table -d table_restore_check -tAc "SELECT (SELECT count(*) FROM households) + (SELECT count(*) FROM recipe_ingredients)")"
   if [ "$left" = "0" ]; then pass "5 known limit confirmed: an export containing exact rows needs this release (or later) to restore; $PREV_SHA's schema refuses it and nothing was half-restored"
   else fail "5 a refused restore left $left rows behind"; fi
+fi
+
+# 7. Migration 018 (B51), on the upgraded database (before step 6, which replaces it).
+if [ -f "$NEW/scripts/rehearsal/yield.mts" ]; then
+  in_new env DATABASE_URL="$DB" npx tsx scripts/rehearsal/yield.mts > "$OUT/7-after-migration.json"
+  in_new env DATABASE_URL="$DB" MODE=record npx tsx scripts/rehearsal/yield.mts > "$OUT/7-record.json" 2> "$OUT/7-record.log" || true
+  if node -e 'const j=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")); process.exit(j.servings===6 && j.rowsUnchanged && j.rows>0 ? 0 : 1)' "$OUT/7-record.json" 2>/dev/null; then
+    pass "7 this release recorded 'makes 6' on a recipe $PREV_SHA wrote (all legacy rows): $(tr -d '\n' < "$OUT/7-record.json")"
+  else fail "7 recording a yield on a previous-release recipe (7-record.json / 7-record.log)"; fi
+  if in_prev env DATABASE_URL="$DB" MODE=prev-title npx tsx "$NEW/scripts/rehearsal/yield.mts" > "$OUT/7-prev-title.json" 2> "$OUT/7-prev-title.log" \
+     && node -e 'process.exit(JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")).rowsUnchanged ? 0 : 1)' "$OUT/7-prev-title.json"; then
+    pass "7 rollback: $PREV_SHA still saves that recipe on the upgraded schema, every row unchanged: $(tr -d '\n' < "$OUT/7-prev-title.json")"
+  else fail "7 $PREV_SHA could not save on the upgraded schema (7-prev-title.log)"; fi
+  in_new env DATABASE_URL="$DB" npx tsx scripts/rehearsal/yield.mts > "$OUT/7-after-rollback.json"
+  if node -e 'const j=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")); const v=j.rehearsalRecipe; const last=v[v.length-1]; const rec=v.find(x=>x.servings===6); process.exit(last.servings===null && rec ? 0 : 1)' "$OUT/7-after-rollback.json"; then
+    pass "7 known rollback limit confirmed: the version $PREV_SHA wrote has no recorded yield (it does not know the column); the version that recorded it still has 6: $(tr -d '\n' < "$OUT/7-after-rollback.json")"
+  else fail "7 unexpected yields after the rollback save (7-after-rollback.json)"; fi
 fi
 
 # 6. The previous release's own suite against the new schema.
