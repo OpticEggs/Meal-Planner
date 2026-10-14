@@ -1,0 +1,74 @@
+[
+  {
+    "scenario": "1 Brisket Tacos: import from link",
+    "interactions": 4,
+    "decisions": [],
+    "notes": [
+      "servings prefilled: 8"
+    ]
+  },
+  {
+    "scenario": "2 Garlic Chicken Pasta: import from link (yield 4 · 6)",
+    "interactions": 4,
+    "decisions": [
+      "yield: 4 or 6"
+    ],
+    "notes": [
+      "servings prefilled: \"\""
+    ]
+  },
+  {
+    "scenario": "3 One Pot Chicken and Rice: paste fallback",
+    "interactions": 6,
+    "decisions": [
+      "yield (none given by a paste)"
+    ],
+    "notes": []
+  },
+  {
+    "scenario": "4 Owner example lines: paste",
+    "interactions": 13,
+    "decisions": [
+      "yield (none given by a paste)",
+      "Juice of 1/2 lemon",
+      "5 to 6 Campari tomatoes"
+    ],
+    "notes": [
+      "Save recipe with a typed, unapplied row edit: button disabled; the screen says: \"2 ingredient lines need a quick check: give an amount, or leave it out. | Use at least one ingredient.\""
+    ]
+  },
+  {
+    "scenario": "5a Edit Brisket Tacos: beef broth → 2 cups for the recipe",
+    "interactions": 4,
+    "decisions": [
+      "per-serving arithmetic: 2 cups ÷ 8 = 0.25"
+    ],
+    "notes": [
+      "editor shows the broth as \"0.125\" cup (the recipe page: 1 cup for 8)"
+    ]
+  },
+  {
+    "scenario": "5b Write a recipe by hand (owner's two lines, makes 4)",
+    "interactions": 11,
+    "decisions": [
+      "per-serving arithmetic: ½ ÷ 4 and 5 ÷ 4; no place to say it makes 4"
+    ],
+    "notes": [
+      "new row's unit starts as \"g\""
+    ]
+  },
+  {
+    "scenario": "6 Select servings and read groceries",
+    "interactions": 5,
+    "decisions": [],
+    "notes": [
+      "Brisket Tacos overview: Original yield not recorded",
+      "Brisket Tacos servings stepper starts at 2",
+      "selected: Brisket Tacos ×4, Garlic Chicken Pasta ×4",
+      "beef_brisket: 24.0 oz (680 g)",
+      "beef_broth: 8.0 fl oz",
+      "garlic_clove: 8.5",
+      "olive_oil: 1.5 fl oz"
+    ]
+  }
+]

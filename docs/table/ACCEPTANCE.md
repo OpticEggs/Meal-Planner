@@ -986,3 +986,32 @@ Verified at `37e2b8a`: `scripts/verify-all.sh` → `docs/table/evidence/2026-10-
 | No cart request reaches the (simulated) Kroger | KM-E6 |
 
 Not live-verified: no Kroger host has been contacted. Going live is owner-operated — `docs/table/KROGER-GO-LIVE.md`.
+
+## Whole-recipe entry (D157) and faster import review (D158) — added 2026-10-14
+
+**Verified:**
+
+- At `a30f1cf`: `scripts/verify-all.sh`. Typecheck, vitest 1234/1234, build and Playwright 186/186 PASS. 2 mutation
+  anchors errored, and no mutation survived.
+- At `11fa4b5` (harness only): the full mutation pass, 135 killed, 0 survived, 0 error.
+- Evidence: `docs/table/evidence/2026-10-14-import-edit/`.
+
+| Check | Evidence |
+|---|---|
+| A new recipe is typed as written: makes 4, ½ lemon, 5 tomatoes. Stored exact for 4 (0.125 and 1.25 a serving); reopened as typed | WR-01, D157-E1, cookbook 5b |
+| A new row's unit starts empty; Save asks for it and for the servings, attached to their fields | D157-E1, b17-plan-recipes |
+| Editing one amount keeps the recipe's yield and its other rows exactly | WR-02, D157-E1, cookbook 5a/6 |
+| An untouched legacy row stays legacy and is shown as "about (older amount)" when rounded; a changed one is exact | WR-03, EQ-E1, EQR-E1 |
+| A yield wrongly recorded as "makes 1" is corrected by stating the servings | WR-04 |
+| Rows saved for different servings are named; the stated yield applies with no per-serving change | WR-05, WR-08, D157-E2 |
+| The earlier per-serving save contract still works; title-only edits of yield-less recipes ask for nothing | WR-06, RB17 browser tests |
+| "Juice of 1/2 lemon" is read as ½ lemon with the note "juice"; "juice of a lemon" still asks | unit D158 |
+| "5 to 6 Campari tomatoes" stays a range: two choices, nothing picked; one tap uses the line | unit D158, D158-R1, cookbook 4 |
+| Save recipe and Save review for later save complete typed changes; an unusable change or an unchosen line is named and its field focused; Save is not silently disabled | RIO-03a–g, D158-R1, CF-G3, IO-E1, CF-C-E |
+| Dismissal protection, draft saving, the two-member import conflict and focus behaviour are unchanged | CF-G1..G4, RIO-03f/g |
+| A trailing parenthetical no longer hides a yield; 4 · 6 still gives no prefill | unit D158 yield |
+| Groceries for Brisket ×4 and Pasta ×4 are identical before and after | cookbook 6 |
+
+**Not covered:** the five real family recipes (B52), and the household's own recipes. No household data was read or
+changed.
+
