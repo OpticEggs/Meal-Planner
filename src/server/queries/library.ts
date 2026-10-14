@@ -108,6 +108,7 @@ export async function librarySnapshot(actor: Actor) {
         version: {
           id: rv.id, versionNo: rv.versionNo, title: rv.title, cuisine: rv.cuisine, summary: rv.summary, effortMinutes: rv.effortMinutes, effortLevel: rv.effortLevel,
           leftoverFriendly: rv.leftoverFriendly, instructions: rv.instructions, reheatInstructions: rv.reheatInstructions, provenance: rv.provenance,
+          servings: rv.servings ?? null, // B51: the version's recorded yield (null: not recorded)
           sourceLabel: rv.sourceLabel, sourceUrl: rv.sourceUrl ?? null, sourceDomain: domainOf(rv.sourceUrl), estimate: rv.estimate, components: rv.components,
           sourceAuthor: rv.sourceAuthor ?? null, sourceSiteName: rv.sourceSiteName ?? null, imageId: rv.imageId ?? null,
           ingredients: rv.ingredients.map((i) => ({ ...i, name: ingredients.get(i.ingredientKey)?.name ?? i.ingredientKey })),

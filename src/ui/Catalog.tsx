@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { recipeYield } from "@/domain/recipes/whole-amount";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { useStore } from "./store";
 import { SelectControl } from "./MealList";
@@ -31,11 +32,8 @@ export function timeText(minutes: number | null | undefined, estimate?: boolean)
   return estimate ? `${t} (estimate)` : t;
 }
 
-/** The original yield, when the recipe's amounts were reviewed for one (exact rows agreeing); else null. */
-function yieldOf(r: any): number | null {
-  const s = new Set<number>((r.version.ingredients ?? []).map((i: any) => i.exactServings).filter((x: any) => typeof x === "number"));
-  return s.size === 1 ? [...s][0] : null;
-}
+/** The original yield (B51: recorded on the version, else what its exact rows agree on); else null. */
+const yieldOf = (r: any): number | null => recipeYield(r.version);
 
 /** Under the title: cooking time and the original yield, each only when known (D152: nothing else is required). */
 function meta(r: any): string {

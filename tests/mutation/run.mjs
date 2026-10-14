@@ -53,6 +53,7 @@ const QTY = "tests/unit/quantity.test.ts";
 const LA = "tests/integration/legacy-audit.test.ts";
 const EQR = "tests/integration/eqr-corrections.test.ts";
 const WR = "tests/integration/whole-recipe.test.ts";
+const VY = "tests/integration/version-yield.test.ts";
 const PARSE = "tests/unit/recipe-import-ingredient-line.test.ts";
 const SEASON = "tests/unit/seasonings.test.ts";
 const CP = "tests/unit/u2c-content-policy.test.ts";
@@ -365,6 +366,11 @@ MUTATIONS.push(
     edits: [["        : { basis: \"legacy\", quantity: source.q };", "        : { basis: \"exact\", amount: ing.amountFraction!, servings, quantity: source.q };"]] },
   { name: "D157_untouched_rederived", file: "src/server/commands/library.ts", suite: WR, pattern: "WR-0", expect: [/WR-03/],
     edits: [["    if (shown.text === ing.amountText || (a && b && a.n * b.d === b.n * a.d)) {", "    if (false) {"]] },
+  // B51 (D159): the version's yield. An earlier client that omits it never erases it; an import keeps its reviewed one.
+  { name: "B51_omitted_yield_erased", file: "src/server/commands/library.ts", suite: VY, pattern: "VY-02", expect: [/VY-02/],
+    edits: [[" : (prev?.servings ?? null);", " : null;"]] },
+  { name: "B51_import_yield_dropped", file: "src/server/commands/imports.ts", suite: VY, pattern: "VY-03", expect: [/VY-03/],
+    edits: [["        servings: d.servings, // B51: the reviewed yield is the version's", ""]] },
   { name: "D157_servings_ignored", file: "src/server/commands/library.ts", suite: WR, pattern: "WR-01", expect: [/WR-01/],
     edits: [["        const w = wholeBasisOf(ing, source, p.servings as number);", "        const w = wholeBasisOf(ing, source, 1);"]] },
   { name: "EQR_lineage_not_verified", file: "src/server/commands/library.ts", suite: EQR, pattern: "EQR-01e", expect: [/EQR-01e/],

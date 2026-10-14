@@ -291,6 +291,7 @@ export function confirmImportDraftCommand(actor: Actor, operationId: string, p: 
       {
         provenance: "imported", sourceUrl: source.url, importDraftId: d.id, imageId: d.image_id ?? null, sourceAuthor: d.source_author ?? null, sourceSiteName: d.site_name ?? null,
         unquantified,
+        servings: d.servings, // B51: the reviewed yield is the version's
       },
     );
     const { recipeId, versionId } = outcome.result as { recipeId: string; versionId: string };

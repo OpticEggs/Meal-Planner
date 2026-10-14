@@ -52,6 +52,9 @@ export interface RecipeVersion {
   memberPhotoBy?: string | null;
   photoRevision?: number;
   estimate: boolean;
+  /** B51 (migration 018): the servings this version's amounts make, recorded on the version; null = not recorded
+   *  (read the yield from the exact rows then — `recipeYield` in domain/recipes/whole-amount.ts). */
+  servings?: number | null;
   components: RecipeComponent[];
   ingredients: RecipeIngredient[];
   /** Ingredients the recipe names without an amount ("Needs a quantity", migration 017). Never given an

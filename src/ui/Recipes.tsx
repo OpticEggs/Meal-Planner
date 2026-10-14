@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { recipeYield } from "@/domain/recipes/whole-amount";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useStore } from "./store";
@@ -130,11 +131,8 @@ export function RecipesScreen({ initialFilter = "all" }: { initialFilter?: (type
   );
 }
 
-/** The servings the recipe's amounts were reviewed for, when its exact rows agree; null when not known (legacy rows). */
-function reviewedServings(v: any): number | null {
-  const s = new Set<number>((v.ingredients ?? []).map((i: any) => i.exactServings).filter((x: any) => typeof x === "number"));
-  return s.size === 1 ? defaultServings(v) : null;
-}
+/** The recipe's original yield (B51: recorded on the version, else what its exact rows agree on); null when not known. */
+const reviewedServings = (v: any): number | null => recipeYield(v);
 
 /** Ingredients for the servings shown beside them (exact per-serving amounts × servings, displayed as kitchen
  *  fractions); a named ingredient without an amount says so. Grouped by part when the recipe has several. */

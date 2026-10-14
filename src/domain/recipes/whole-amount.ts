@@ -27,6 +27,17 @@ export function storedYield(rows: StoredAmount[]): { servings: number | null; co
   return { servings: s.length === 1 ? s[0] : null, conflict: s.length > 1 ? s : [] };
 }
 
+/**
+ * B51 (D159): a version's original yield — recorded on the version (migration 018), else what its exact rows agree
+ * on (versions written before 018, or by an earlier client), else null ("not recorded"). The one reading used by the
+ * editor, the recipe overview, the catalog and the selection default.
+ */
+export function recipeYield(v: { servings?: number | null; ingredients?: StoredAmount[] | null } | null | undefined): number | null {
+  if (!v) return null;
+  if (typeof v.servings === "number" && v.servings >= 1) return v.servings;
+  return storedYield(v.ingredients ?? []).servings;
+}
+
 /** A stored per-serving decimal ("0.333333333333", "75") as an exact rational; null if it is not one. */
 function storedDecimal(t: string): Rat | null {
   const m = /^(\d+)(?:\.(\d+))?$/.exec(t.trim());

@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { recipeYield } from "@/domain/recipes/whole-amount";
 import { useEffect, useMemo, useState } from "react";
 import { SnapshotScope, useStore } from "./store";
 import { GroceriesScreen } from "./Groceries";
@@ -61,10 +62,10 @@ export function ServingsStepper({ value, onChange, label, disabled, unit }: { va
   );
 }
 
-/** The reviewed servings of a recipe version when its exact rows agree, else 2 (D141). */
+/** The servings a new selection starts at: the recipe's original yield (B51: recorded on the version, else what its
+ *  exact rows agree on), else 2 (D141). Only a starting value — a meal already selected keeps its own servings. */
 export function defaultServings(version: any): number {
-  const s = new Set<number>((version?.ingredients ?? []).map((i: any) => i.exactServings).filter((x: any) => typeof x === "number"));
-  return s.size === 1 ? [...s][0] : 2;
+  return recipeYield(version) ?? 2;
 }
 
 /** Add a recipe to Selected Meals, or — when it is already there — change its servings (Q2: never a second copy).

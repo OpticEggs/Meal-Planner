@@ -4,7 +4,7 @@ import { useStore } from "./store";
 import { ModalSheet } from "./a11y";
 import { FieldError, FormAlert, fieldProps, focusFirstInvalid, type Errors } from "./forms";
 import { parseAmount } from "@/domain/quantity";
-import { storedYield, wholeAmountText, type StoredAmount } from "@/domain/recipes/whole-amount";
+import { recipeYield, storedYield, wholeAmountText, type StoredAmount } from "@/domain/recipes/whole-amount";
 import { FIELD_LABEL, compareKey, display, editorInit, editorReducer, isDirty, type EditorAction, type EditorState, type FieldKey, type RecipeFields } from "@/domain/recipes/rebase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,8 +28,10 @@ type Comp = { id: number; key: string; name: string };
 // quantity basis when its number is unchanged; null for a row added here.
 // D157: `quantity` is the amount for the WHOLE recipe, as shown and typed. `stored` is the saved row's amount; while
 // `follows` is set (not typed here) the shown amount is that saved amount at the servings in the form, so it follows a
-// change of the servings — for an older (legacy) per-serving amount always, for an exact one when the recipe's yield
-// was not known (a yield that was known and is changed is a correction: the exact amounts stay as written).
+// change of the servings. B51 (D159): rows follow only while the recipe's yield is NOT known — stating it then RECORDS
+// it, and every per-serving amount stays as it was. When the yield is known (recorded on the version, or agreed by the
+// exact rows) every row shows its whole amount for it and keeps it: changing the servings CORRECTS the yield, and the
+// amounts stay as written — nothing is silently scaled.
 // `older`: a legacy amount whose whole-recipe figure is rounded (shown as about that much).
 type Row = {
   id: number; componentKey: string; ingredientName: string; ingredientKey: string | null; quantity: string; unit: string; form: string | null; note: string | null;
@@ -60,7 +62,7 @@ function shownAt(r: Row, servings: number | null): Row {
 }
 function fieldsOfVersion(v: any): Fields {
   const stored: StoredAmount[] = (v?.ingredients ?? []).map((i: any) => ({ quantity: i.quantity, exactAmount: i.exactAmount ?? null, exactServings: i.exactServings ?? null }));
-  const { servings } = storedYield(stored);
+  const servings = recipeYield(v ? { servings: v.servings ?? null, ingredients: stored } : null);
   return {
     title: v?.title ?? "", cuisine: v?.cuisine ?? "", minutes: v?.effortMinutes?.toString() ?? "", level: v?.effortLevel ?? "",
     leftovers: !!v?.leftoverFriendly, instructions: v?.instructions ?? "", reheat: v?.reheatInstructions ?? "",
@@ -69,7 +71,7 @@ function fieldsOfVersion(v: any): Fields {
     rows: v?.ingredients?.map((i: any, n: number) => shownAt({
       id: nextId(), componentKey: i.componentKey, ingredientName: i.name, ingredientKey: i.ingredientKey, quantity: "", unit: i.unit, form: i.form ?? null, note: i.note ?? null,
       sourceRowId: i.rowId ?? null, stored: stored[n], follows: true,
-    }, servings)).map((r: Row) => ({ ...r, follows: !servings || !r.stored?.exactAmount })) ?? [blankRow("main")],
+    }, servings)).map((r: Row) => ({ ...r, follows: !servings })) ?? [blankRow("main")],
   };
 }
 
@@ -143,7 +145,12 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
   const edit = (fn: (d: Fields) => Fields) => dispatch({ type: "edit", fn });
   const set = (patch: Partial<Fields>) => edit((d) => ({ ...d, ...patch }));
   const setServings = (servings: string) => edit((d) => ({ ...d, servings, rows: d.rows.map((r) => shownAt(r, servingsOf(servings))) }));
-  const yieldInfo = storedYield((live?.version.ingredients ?? []).map((i: any) => ({ quantity: i.quantity, exactAmount: i.exactAmount ?? null, exactServings: i.exactServings ?? null })));
+  const yieldInfo = live?.version && recipeYield(live.version) === null
+    ? storedYield((live.version.ingredients ?? []).map((i: any) => ({ quantity: i.quantity, exactAmount: i.exactAmount ?? null, exactServings: i.exactServings ?? null })))
+    : { servings: null, conflict: [] as number[] };
+  // B51: a yield the recipe already had, changed here — a correction (the amounts stay as written).
+  const knownYield = servingsOf(base.servings);
+  const corrected = knownYield !== null && servingsOf(f.servings) !== null && servingsOf(f.servings) !== knownYield;
   const setRow = (id: number, patch: Partial<Row>) => edit((d) => ({ ...d, rows: d.rows.map((r) => (r.id === id ? { ...r, ...patch } : r)) }));
   const compLabel = (key: string) => f.components.find((c) => c.key === key)?.name || key;
 
@@ -319,6 +326,11 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
           <label htmlFor="re-servings">Servings the whole recipe makes</label>
           <Input {...fieldProps("re-servings", errors)} className="tiny" inputMode="numeric" value={f.servings} onChange={(e) => setServings(e.target.value)} />
           <FieldError id="re-servings" errors={errors} />
+          {corrected && (
+            <p className="small muted" data-testid="editor-yield-correction">
+              The recipe made {knownYield}. The amounts below stay as written for the whole recipe; each serving gets {servingsOf(f.servings)! > knownYield! ? "less" : "more"}.
+            </p>
+          )}
           {!servingsOf(f.servings) && f.rows.some((r) => r.follows && r.stored) && (
             <p className="small muted" data-testid="editor-yield-unknown">
               These amounts were saved per serving. Say how many servings the whole recipe makes to see and change them as the recipe gives them.

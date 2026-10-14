@@ -201,6 +201,8 @@ export async function writeRecipeVersion(
     /** SERVER-INTERNAL (a confirmed import, CF Q6): ingredients the recipe names without an amount. Never accepted
      *  from a client. A later version (an edit) carries the base version's items forward unchanged instead. */
     unquantified?: { componentKey: string; name: string; note: string | null; raw: string | null }[];
+    /** SERVER-INTERNAL (a confirmed import, B51): the reviewed servings the recipe makes — the version's yield. */
+    servings?: number | null;
   } = { provenance: "manual" },
 ): Promise<HandlerOutcome> {
   {
@@ -327,8 +329,14 @@ export async function writeRecipeVersion(
     let imageId = origin.imageId ?? null;
     let sourceAuthor = origin.sourceAuthor ?? null;
     let sourceSiteName = origin.sourceSiteName ?? null;
+    const prev = versionNo > 1
+      ? (await c.query("SELECT source_url, image_id, source_author, source_site_name, servings FROM recipe_versions WHERE recipe_id=$1 AND version_no=$2", [recipeId, versionNo - 1])).rows[0]
+      : undefined;
+    // B51 (D159): the version's yield. Stated with the amounts (whole-recipe entry) → that; a confirmed import → the
+    // reviewed servings; otherwise (an earlier client, or an edit that leaves the ingredients as saved) the yield the
+    // version being edited recorded — an omitted field never erases a recorded yield. A new recipe without one: none.
+    const yieldServings: number | null = whole ? (p.servings as number) : origin.servings !== undefined ? origin.servings : (prev?.servings ?? null);
     if (versionNo > 1 && origin.provenance === "manual") {
-      const prev = (await c.query("SELECT source_url, image_id, source_author, source_site_name FROM recipe_versions WHERE recipe_id=$1 AND version_no=$2", [recipeId, versionNo - 1])).rows[0];
       sourceUrl ??= prev?.source_url ?? null;
       imageId ??= prev?.image_id ?? null;
       sourceAuthor ??= prev?.source_author ?? null;
@@ -336,12 +344,12 @@ export async function writeRecipeVersion(
     }
     await c.query(
       `INSERT INTO recipe_versions(id, recipe_id, household_id, version_no, title, cuisine, summary, effort_minutes, effort_level, leftover_friendly,
-         instructions, reheat_instructions, provenance, source_label, estimate, created_by, source_url, import_draft_id, image_id, source_author, source_site_name)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,true,$15,$16,$17,$18,$19,$20)`,
+         instructions, reheat_instructions, provenance, source_label, estimate, created_by, source_url, import_draft_id, image_id, source_author, source_site_name, servings)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,true,$15,$16,$17,$18,$19,$20,$21)`,
       [
         vid, recipeId, actor.householdId, versionNo, title, p.cuisine ?? null, p.summary ?? null, p.effortMinutes ?? null, p.effortLevel ?? null,
         !!p.leftoverFriendly, String(p.instructions ?? "").slice(0, 10000), String(p.reheatInstructions ?? "").slice(0, 4000), origin.provenance, p.sourceLabel ?? null, actor.memberId,
-        sourceUrl, origin.importDraftId ?? null, imageId, sourceAuthor?.slice(0, 200) ?? null, sourceSiteName?.slice(0, 120) ?? null,
+        sourceUrl, origin.importDraftId ?? null, imageId, sourceAuthor?.slice(0, 200) ?? null, sourceSiteName?.slice(0, 120) ?? null, yieldServings,
       ],
     );
     for (const cmp of components) {
