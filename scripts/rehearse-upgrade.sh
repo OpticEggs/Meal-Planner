@@ -120,12 +120,16 @@ if [ -f "$NEW/scripts/rehearsal/meal-list.mts" ]; then
     pass "4b $PREV_SHA recomputes every week and loads a member's snapshot with an open meal list present (it shows: $(tr -d '\n ' < "$OUT/4b-member-snapshot-prev.json"))"
   else fail "4b $PREV_SHA fails with a meal list present (4b-prev.log)"; fi
   in_new env DATABASE_URL="$DB" npx tsx scripts/rehearsal/meal-list.mts > "$OUT/4b-list-after-prev.json"
-  if node -e 'const j=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")); process.exit(j.calendarLinesNamingSelectedMeals===0 && j.listLinesNamingSelectedMeals===0 && j.approvals.every(a=>a.state!=="active") ? 0 : 1)' "$OUT/4b-list-after-prev.json"; then
+  if cmp -s "$OUT/4b-list-new.json" "$OUT/4b-list-after-prev.json"; then
+    pass "4b $PREV_SHA already knows meal lists (migration 017): after it recomputed, the list is exactly as this release left it; no calendar line names a selected meal"
+  elif node -e 'const j=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")); process.exit(j.calendarLinesNamingSelectedMeals===0 && j.listLinesNamingSelectedMeals===0 && j.approvals.every(a=>a.state!=="active") ? 0 : 1)' "$OUT/4b-list-after-prev.json"; then
     pass "4b while $PREV_SHA ran, the list's stored lines lost their selected meals (it does not know them) and its approval went stale — the safe direction; no calendar line names a selected meal"
   else fail "4b unexpected list state after $PREV_SHA recomputed (4b-list-after-prev.json)"; fi
   in_new env DATABASE_URL="$DB" TABLE_FIXED_NOW=2026-10-12T19:00:00Z TABLE_RETAILER=simulated TABLE_ENV=test npx tsx scripts/rehearsal/snapshot.mts > /dev/null
   in_new env DATABASE_URL="$DB" npx tsx scripts/rehearsal/meal-list.mts > "$OUT/4b-list-restored.json"
-  if node -e 'const f=require("fs"); const a=JSON.parse(f.readFileSync(process.argv[1],"utf8")); const b=JSON.parse(f.readFileSync(process.argv[2],"utf8")); process.exit(b.listLinesNamingSelectedMeals===a.listLinesNamingSelectedMeals && b.listLines===a.listLines && b.needsQuantityUnknown===1 && b.calendarLinesNamingSelectedMeals===0 && !b.approvals.some(x=>x.state==="active") ? 0 : 1)' "$OUT/4b-list-new.json" "$OUT/4b-list-restored.json"; then
+  if cmp -s "$OUT/4b-list-new.json" "$OUT/4b-list-after-prev.json" && cmp -s "$OUT/4b-list-new.json" "$OUT/4b-list-restored.json"; then
+    pass "4b back on this release, the list is unchanged (lines, selected meals, needs-a-quantity item and approval as before)"
+  elif node -e 'const f=require("fs"); const a=JSON.parse(f.readFileSync(process.argv[1],"utf8")); const b=JSON.parse(f.readFileSync(process.argv[2],"utf8")); process.exit(b.listLinesNamingSelectedMeals===a.listLinesNamingSelectedMeals && b.listLines===a.listLines && b.needsQuantityUnknown===1 && b.calendarLinesNamingSelectedMeals===0 && !b.approvals.some(x=>x.state==="active") ? 0 : 1)' "$OUT/4b-list-new.json" "$OUT/4b-list-restored.json"; then
     pass "4b back on this release, one recompute restores the list exactly ($(node -e 'const j=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")); console.log(`${j.listLines} lines, ${j.listLinesNamingSelectedMeals} from selected meals`)' "$OUT/4b-list-restored.json")); the stale approval is not revived (approve again)"
   else fail "4b the list did not come back as it was (4b-list-restored.json)"; fi
 fi
@@ -148,7 +152,7 @@ if in_prev env DATABASE_URL="$BASE/table_restore_check" npx tsx "$NEW/scripts/re
   fail "5 expected: an export made after exact recipes exist does not restore into $PREV_SHA's schema — it did"
 else
   left="$("$PGBIN/psql" -h 127.0.0.1 -p "$PORT" -U table -d table_restore_check -tAc "SELECT (SELECT count(*) FROM households) + (SELECT count(*) FROM recipe_ingredients)")"
-  if [ "$left" = "0" ]; then pass "5 known limit confirmed: an export containing exact rows needs this release (or later) to restore; $PREV_SHA's schema refuses it and nothing was half-restored"
+  if [ "$left" = "0" ]; then pass "5 known limit confirmed: an export taken from the upgraded database (exact rows; from migration 018 on, every export, as it carries recipe_versions.servings) needs this release (or later) to restore; $PREV_SHA's schema refuses it and nothing was half-restored"
   else fail "5 a refused restore left $left rows behind"; fi
 fi
 
@@ -156,12 +160,12 @@ fi
 if [ -f "$NEW/scripts/rehearsal/yield.mts" ]; then
   in_new env DATABASE_URL="$DB" npx tsx scripts/rehearsal/yield.mts > "$OUT/7-after-migration.json"
   in_new env DATABASE_URL="$DB" MODE=record npx tsx scripts/rehearsal/yield.mts > "$OUT/7-record.json" 2> "$OUT/7-record.log" || true
-  if node -e 'const j=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")); process.exit(j.servings===6 && j.rowsUnchanged && j.rows>0 ? 0 : 1)' "$OUT/7-record.json" 2>/dev/null; then
-    pass "7 this release recorded 'makes 6' on a recipe $PREV_SHA wrote (all legacy rows): $(tr -d '\n' < "$OUT/7-record.json")"
+  if node -e 'const j=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8").trim().split("\n").pop()); process.exit(j.servings===6 && j.rowsUnchanged && j.rows>0 ? 0 : 1)' "$OUT/7-record.json" 2>/dev/null; then
+    pass "7 this release recorded 'makes 6' on a recipe $PREV_SHA wrote (all legacy rows): $(tail -1 "$OUT/7-record.json")"
   else fail "7 recording a yield on a previous-release recipe (7-record.json / 7-record.log)"; fi
   if in_prev env DATABASE_URL="$DB" MODE=prev-title npx tsx "$NEW/scripts/rehearsal/yield.mts" > "$OUT/7-prev-title.json" 2> "$OUT/7-prev-title.log" \
-     && node -e 'process.exit(JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")).rowsUnchanged ? 0 : 1)' "$OUT/7-prev-title.json"; then
-    pass "7 rollback: $PREV_SHA still saves that recipe on the upgraded schema, every row unchanged: $(tr -d '\n' < "$OUT/7-prev-title.json")"
+     && node -e 'process.exit(JSON.parse(require("fs").readFileSync(process.argv[1],"utf8").trim().split("\n").pop()).rowsUnchanged ? 0 : 1)' "$OUT/7-prev-title.json"; then
+    pass "7 rollback: $PREV_SHA still saves that recipe on the upgraded schema, every row unchanged: $(tail -1 "$OUT/7-prev-title.json")"
   else fail "7 $PREV_SHA could not save on the upgraded schema (7-prev-title.log)"; fi
   in_new env DATABASE_URL="$DB" npx tsx scripts/rehearsal/yield.mts > "$OUT/7-after-rollback.json"
   if node -e 'const j=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")); const v=j.rehearsalRecipe; const last=v[v.length-1]; const rec=v.find(x=>x.servings===6); process.exit(last.servings===null && rec ? 0 : 1)' "$OUT/7-after-rollback.json"; then
@@ -173,6 +177,10 @@ fi
 if [ "$OLD_SUITE" = 1 ]; then
   fresh_db table_test
   in_new env DATABASE_URL="$BASE/table_test" npx tsx scripts/migrate.ts > /dev/null
+  # Its export/restore tests restore into table_restore_check: in a rollback that database carries the new schema too.
+  # (Restoring an export taken after migration 018 into a pre-018 schema is the known limit checked in step 5.)
+  fresh_db table_restore_check
+  in_new env DATABASE_URL="$BASE/table_restore_check" npx tsx scripts/migrate.ts > /dev/null
   if in_prev env TEST_DATABASE_URL="$BASE/table_test" npx vitest run > "$OUT/6-prev-suite.log" 2>&1; then
     pass "6 $PREV_SHA's vitest suite passes on the upgraded database (all migrations of this release): $(grep -E '^ +Tests ' "$OUT/6-prev-suite.log" | tr -s ' ')"
   else fail "6 $PREV_SHA's vitest suite on the new schema: $(grep -E '^ +Tests ' "$OUT/6-prev-suite.log" | tr -s ' ')"; fi
