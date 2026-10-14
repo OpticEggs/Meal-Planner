@@ -52,6 +52,7 @@ const EQ = "tests/integration/exact-quantities.test.ts";
 const QTY = "tests/unit/quantity.test.ts";
 const LA = "tests/integration/legacy-audit.test.ts";
 const EQR = "tests/integration/eqr-corrections.test.ts";
+const WR = "tests/integration/whole-recipe.test.ts";
 const PARSE = "tests/unit/recipe-import-ingredient-line.test.ts";
 const SEASON = "tests/unit/seasonings.test.ts";
 const CP = "tests/unit/u2c-content-policy.test.ts";
@@ -152,7 +153,7 @@ const MUTATIONS = [
   { name: "RB17_01_older_version_rebased", file: "src/domain/recipes/rebase.ts", suite: REBASE, pattern: "RB17", expect: [/not newer than the draft/],
     edits: [["if (s.seen === null || a.version <= s.seen) return s;", "if (s.seen === null || a.version === s.seen) return s;"]] },
   { name: "RB17_02_compared_by_display_name", file: "src/domain/recipes/rebase.ts", suite: REBASE, pattern: "RB17", expect: [/shared-list rename/],
-    edits: [["  if (k === \"ingredients\") return JSON.stringify({ c:", "  if (k === \"ingredients\") return display(f, k) || JSON.stringify({ c:"]] },
+    edits: [["  if (k === \"ingredients\") return JSON.stringify({ s: servingsKey(f.servings), c:", "  if (k === \"ingredients\") return display(f, k) || JSON.stringify({ s: servingsKey(f.servings), c:"]] },
   { name: "RB17_01_compared_unlike_stored", file: "src/domain/recipes/rebase.ts", suite: REBASE, pattern: "RB17", expect: [/store identically|comes back to the stored value/],
     edits: [["r.ingredientKey || slug(r.ingredientName.trim()), decimalKey(r.quantity), normalizeUnit(r.unit)", "r.ingredientKey ?? r.ingredientName, r.quantity, r.unit"]] },
   { name: "B15_stale_product_choice_applied", file: "src/server/commands/groceries.ts", suite: B16, pattern: "Scenario B/E", expect: [/two product choices for the same pickup line/],
@@ -357,7 +358,15 @@ MUTATIONS.push(
 // EQR (2026-10-10): row lineage, exact "Have enough" binding, exact review identity, audit ambiguity.
 MUTATIONS.push(
   { name: "EQR_basis_by_equal_number", file: "src/server/commands/library.ts", suite: EQR, pattern: "EQR-01", expect: [/EQR-01a/],
-    edits: [["      const b = basisOf(ing, ing.sourceRowId ? sources.get(ing.sourceRowId) : undefined);", "      const b = basisOf(ing, [...sources.values()].find((x) => Q.of(x.q).eq(Q.of(ing.quantity))));"]] },
+    edits: [["      const source = ing.sourceRowId ? sources.get(ing.sourceRowId) : undefined;", "      const source = [...sources.values()].find((x) => Q.of(x.q).eq(Q.of(ing.quantity)));"]] },
+  // D157 (2026-10-14): whole-recipe entry. An untouched legacy row is never relabelled exact; an unchanged amount keeps
+  // its stored per-serving quantity; the yield the member states is the one applied to a typed amount.
+  { name: "D157_legacy_relabelled_exact", file: "src/server/commands/library.ts", suite: WR, pattern: "WR-03", expect: [/WR-03/],
+    edits: [["        : { basis: \"legacy\", quantity: source.q };", "        : { basis: \"exact\", amount: ing.amountFraction!, servings, quantity: source.q };"]] },
+  { name: "D157_untouched_rederived", file: "src/server/commands/library.ts", suite: WR, pattern: "WR-0", expect: [/WR-03/],
+    edits: [["    if (shown.text === ing.amountText || (a && b && a.n * b.d === b.n * a.d)) {", "    if (false) {"]] },
+  { name: "D157_servings_ignored", file: "src/server/commands/library.ts", suite: WR, pattern: "WR-01", expect: [/WR-01/],
+    edits: [["        const w = wholeBasisOf(ing, source, p.servings as number);", "        const w = wholeBasisOf(ing, source, 1);"]] },
   { name: "EQR_lineage_not_verified", file: "src/server/commands/library.ts", suite: EQR, pattern: "EQR-01e", expect: [/EQR-01e/],
     edits: [["        if (found.rowCount !== ids.length) throw invalidLineage();", ""]] },
   // "Deduplicate, then verify": a reused source row passes both guards (removing only one is an equivalent mutant).
