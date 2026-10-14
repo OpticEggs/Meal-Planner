@@ -316,11 +316,8 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
 
         <fieldset className="stack" id="re-rows" tabIndex={-1} aria-describedby={errors["re-rows"] ? "re-rows-error" : undefined}>
           <legend>Ingredients</legend>
-          <span className="row">
-            <label htmlFor="re-servings">Recipe makes</label>
-            <Input {...fieldProps("re-servings", errors)} className="tiny" inputMode="numeric" aria-label="Servings the whole recipe makes" value={f.servings} onChange={(e) => setServings(e.target.value)} />
-            <span aria-hidden="true">servings</span>
-          </span>
+          <label htmlFor="re-servings">Servings the whole recipe makes</label>
+          <Input {...fieldProps("re-servings", errors)} className="tiny" inputMode="numeric" value={f.servings} onChange={(e) => setServings(e.target.value)} />
           <FieldError id="re-servings" errors={errors} />
           {!servingsOf(f.servings) && f.rows.some((r) => r.follows && r.stored) && (
             <p className="small muted" data-testid="editor-yield-unknown">
