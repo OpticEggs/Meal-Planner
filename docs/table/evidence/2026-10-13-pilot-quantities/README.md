@@ -67,17 +67,49 @@ These reproduce **the shapes** "6 g" and "128.0 oz (3629 g)". They do not show t
 this way: 8 lb of brisket may be a genuine requirement (for example a 4 lb recipe that makes 6, selected for 12), and
 "6 g" may be a stated answer in grams. **Cilantro (≈ 20,865 g) is not explained by any evidence so far.**
 
-## 3. The smallest record needed
+## 3. The smallest record needed — the read-only trace (revised 2026-10-14: one household, one list)
 
-`read-only-trace.sql` — for the owner to run (it is a `READ ONLY` transaction ending in `ROLLBACK`). It returns only
-the rows that feed these three lines on the open meal list: recipe title, provenance (`imported` / `manual`), version,
-**selected servings**, ingredient, **saved per-serving amount and unit**, **serving basis** (`exact_amount` /
-`exact_servings`, or legacy), and for an imported row **the original line** (`From: …`, stored on the row). It also
-returns any member answer for a "Needs a quantity" item with those names. Tested on the disposable database (it
-returns the two rows of the reproduction above). No other household data is needed.
+`read-only-trace.sql`, run by the owner in the Neon SQL editor. Both steps are `READ ONLY` transactions ending in
+`ROLLBACK`. Tested on the disposable database (its result reproduces the screen: brisket 3628.739 g ↔ "128.0 oz
+(3629 g)", eggs 12 g ↔ "12 g").
 
-The new checklist's **Details** shows each recipe's share of a line ("QD written recipe: 128.0 oz (3629 g)"), so the
-household can also see which recipe contributes the amount without running anything.
+- **Step A** lists each household with an open selected-meals list: `household_id`, `household` (name), `fixture`
+  (true only for test households), `list_id`, `list_opened`, `selected_meals` (count). Pick your household's row; its
+  two ids go into Step B. Nothing from Step A needs to be shared.
+- **Step B** returns, for that household and list only, one row per recipe row (or member answer) that feeds the
+  cilantro, egg or brisket lines:
 
-With those rows each line is traced arithmetically, end to end, and the cause stated per line. Correcting a recipe is
-then a reviewed new version; changing the editor (A or B) is a separate decision, not made here.
+| Column | Meaning |
+|---|---|
+| `recipe`, `provenance`, `version_no`, `version_saved` | the selected recipe version; `imported` (from a link) or `manual` (written or edited in Table), or `stated amount` for a member's answer |
+| `selected_servings` | servings chosen on Selected now |
+| `ingredient`, `unit` | the ingredient and the saved unit (`g`, `oz`, `lb`, `cup`, `each`, …) |
+| `saved_per_serving` | the stored per-serving amount (for an answer: the amount given) |
+| `quantity_basis`, `exact_amount`, `exact_servings` | `exact`: whole-recipe amount ÷ servings it was written for; `legacy`: the stored decimal only; for an answer: which servings it was given for |
+| `requirement_now` | per-serving × selected servings, in `unit` (an answer counts only when given for the servings selected now; else empty) |
+| `grams_if_mass` | `requirement_now` in grams when the unit is a mass (g, kg, oz, lb) — per ingredient, these add up to the grams on the screen |
+| `original_line` | for an imported row, the recipe line as it was read (`From: …`); empty for a written or edited row; for an answer, the recipe's line without an amount |
+
+Share only Step B's rows.
+
+## 4. How the rows will be classified (no recipe is changed by this)
+
+Each of the three lines gets one of these, stated per row:
+
+- **Established — editor default unit (A):** `provenance = manual` (or an edited version), `unit = g` on a count
+  ingredient (eggs), `exact_servings = 1`, empty `original_line`.
+- **Established — per-portion amount (B):** a written/edited row with `exact_servings = 1` whose `saved_per_serving`
+  matches a whole-recipe amount, multiplied by `selected_servings > 1`. "Matches a whole-recipe amount" needs the
+  recipe's own amount (from its website or your knowledge); without it this stays **consistent with B, not established**.
+- **Established — imported as read:** `provenance = imported` and `original_line` says the same amount and unit; the
+  requirement is then simply that line × servings ÷ yield, and any surprise is in the source or the servings chosen.
+- **Established — import mis-read or review correction:** `provenance = imported` and `exact_amount` / `unit` differ
+  from what `original_line` says.
+- **Established — imported, then edited (B):** `provenance = manual`, `version_no > 1`, an `original_line` from the
+  import kept on the row, and `exact_servings = 1` with a changed amount: the edit's number was saved per portion.
+- **Established — stated answer:** a `stated amount` row in grams or a large amount.
+- **Several recipes:** more than one row for the ingredient; the total is their sum (`grams_if_mass`).
+- **Not established:** anything the rows don't decide; then the next smallest record is named, not guessed.
+
+A correction to an existing recipe is a separately reviewed new version, made by a member in the editor; it is
+proposed per row with the evidence, never applied from here.

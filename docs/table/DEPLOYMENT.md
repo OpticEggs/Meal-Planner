@@ -19,6 +19,31 @@ services, private services, and background workers"), **no shell, no one-off job
 15 minutes without traffic and takes about a minute to wake. So the database is updated by the **Start Command**
 itself, before the server starts. The health check answers 503 while a migration this code knows about is pending.
 
+### Deploy `6d52c87` (2026-10-14) — no migration, environment unchanged, Kroger stays off
+
+You run it; Claude does not deploy. From `aea3124` (deployed, pilot check passed) to `6d52c87`: presentation changes
+only (`Recipes.tsx`, `Groceries.tsx`, `globals.css`) — no migration, no server, API, script or dependency change
+(`git diff --stat aea3124 6d52c87 -- migrations src/server src/app/api scripts package.json` is empty). Verified at
+`a2cdff9` and `37e2b8a` (verify-all PASS; the later commits on `main` are docs only).
+
+1. **Look, don't change.** Render → the service → **Environment**: leave every variable as it is. Confirm (by reading)
+   that `KROGER_ACTIVATE` is absent and `TABLE_RETAILER` is absent or `simulated` — this deployment activates nothing.
+   **Settings → Build & Deploy**: Auto-Deploy stays **Off**; the Start Command stays as it is (it already runs
+   `npm run db:migrate && …` since the 72cf615 upgrade).
+2. **Recovery point (optional here).** No schema change, so going back is a redeploy of `aea3124`; a Neon branch as in
+   step 1 below costs nothing if you want one anyway.
+3. **Manual Deploy → Deploy a specific commit → `6d52c87` → Deploy.**
+4. **Log** (Events → the deploy → Logs): `schema up to date`, then `✓ Ready`. Anything about applying a migration, or an
+   error, is unexpected: stop and copy that line (it holds no password).
+5. **Health:** `https://meal-planner-eq58.onrender.com/api/health` → `{"ok":true,"problems":[]}`.
+6. **In the app** (signed in):
+   - the header still says **Simulated retailer** (Kroger not active);
+   - a recipe's **…** opens a sheet (Edit recipe, photo) and the page does not move; closing returns to **…**;
+   - **Groceries** rows show the ingredient, the total and **Have it**; Details holds the per-recipe amounts, the
+     partial amount and the product controls; **Match products at Kroger…** does **not** appear (simulated store);
+   - Buy it shows readiness and Approve/Send, with "Store, estimate and list" folded.
+7. **Going back:** Manual Deploy → `aea3124`. Nothing to undo in the database.
+
 ### Upgrade from your phone — `72cf615` (verified commit); you run it, Claude does not deploy
 
 **Pilot-upgrade checklist for `72cf615` (exact quantities: migrations 015 and 016).** What is new in this upgrade and
