@@ -344,7 +344,9 @@ function ingredientsOf(node: Obj, problems: string[]): string[] {
   return out;
 }
 
-const SERVING = /^(?:(?:serves|servings|serving|yield|yields|makes)\s*:?\s*)?(\d{1,3})(?:\s*(?:servings?|people|persons?|portions?))?$/i;
+const SERVING_TEXT = /^(?:(?:serves|servings|serving|yield|yields|makes)\s*:?\s*)?(\d{1,3})(?:\s*(?:servings?|people|persons?|portions?))?$/i;
+// D158: a trailing remark in parentheses ("4 servings (about 1 cup each)") does not hide the count it follows.
+const SERVING = { exec: (e: string) => SERVING_TEXT.exec(e.replace(/\s*\([^()]*\)\s*$/, "").trim()) };
 
 function yieldOf(node: Obj): { text: string | null; servings: number | null } {
   const v = node.recipeYield ?? node.yield;

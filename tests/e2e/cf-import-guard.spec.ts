@@ -126,24 +126,33 @@ test("CF-G2: Save for later from the confirmation saves through the review save 
   await context.close();
 });
 
-test("CF-G3: an unapplied row edit counts as unsaved; Save for later shows the row instead of dropping it; Save failure keeps the sheet open", async ({ browser }) => {
+test("CF-G3: an unapplied row edit counts as unsaved; Save for later saves it, or shows the row when it can't be used; Save failure keeps the sheet open", async ({ browser }) => {
   await seed();
   const { context, page } = await member(browser, "jon");
-  const review = await openChili(page);
-  const beans = review.locator('[data-testid="draft-line"][data-raw="1 1/2 cups dried black beans"]');
+  const BEANS = "1 1/2 cups dried black beans";
+  let review = await openChili(page);
+  let beans = review.locator(`[data-testid="draft-line"][data-raw="${BEANS}"]`);
   await beans.locator(".row-main").click();
-  await beans.getByRole("textbox", { name: /Amount for the whole recipe/ }).fill("2"); // typed, not applied
+  await beans.getByRole("textbox", { name: /Amount for the whole recipe/ }).fill("two"); // typed, not usable
   await review.getByTestId("close-sheet").click();
   const confirm = review.getByTestId("discard-confirm");
   await expect(confirm).toBeVisible();
   await confirm.getByRole("button", { name: "Save for later" }).click();
   await expect(confirm).toHaveCount(0);
   await expect(review).toBeVisible();
-  await expect(review.getByTestId("draft-problems")).toContainText("has a change you haven't applied");
-  await expect(beans.getByRole("textbox", { name: /Amount for the whole recipe/ })).toHaveValue("2");
+  await expect(review.getByTestId("draft-problems")).toContainText("the amount isn't a number");
+  await expect(beans.getByRole("textbox", { name: /Amount for the whole recipe/ })).toHaveValue("two");
+  await expect(beans.getByRole("textbox", { name: /Amount for the whole recipe/ })).toBeFocused();
   expect((await draft()).revision).toBe(1); // nothing saved with the old amount
+  // D158: corrected, Save for later saves the typed change (no separate Use) and closes.
+  await beans.getByRole("textbox", { name: /Amount for the whole recipe/ }).fill("2");
+  await review.getByTestId("close-sheet").click();
+  await confirm.getByRole("button", { name: "Save for later" }).click();
+  await expect(review).toHaveCount(0);
+  expect(decisionOf(await draft(), BEANS)).toMatchObject({ use: true, quantity: "2", unit: "cup" });
+  review = await openChili(page);
+  beans = review.locator(`[data-testid="draft-line"][data-raw="${BEANS}"]`);
   // A save the server refuses (the other member changed the draft meanwhile): the sheet stays open with the edits.
-  await beans.getByRole("button", { name: /^Cancel changes/ }).click();
   await review.getByLabel("Recipe name").fill("Mine");
   await q("UPDATE recipe_import_drafts SET revision = revision + 1, title = 'Theirs'");
   await page.keyboard.press("Escape");

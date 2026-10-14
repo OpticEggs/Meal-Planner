@@ -209,3 +209,18 @@ describe("form and robustness", () => {
     expect(parseIngredientLine(null as unknown as string).status).toBe("requires_review");
   });
 });
+
+describe("D158 owner examples (2026-10-14)", () => {
+  const pick = (l: ReturnType<typeof parseIngredientLine>) => ({ quantity: l.quantity, unit: l.unit, name: l.name, note: l.note, status: l.status, range: l.range });
+  it("'Juice of 1/2 lemon' counts the fruit and keeps 'juice' as the note — no weight or volume invented", () => {
+    expect(pick(parseIngredientLine("Juice of 1/2 lemon"))).toEqual({ quantity: "1/2", unit: "each", name: "lemon", note: "juice", status: "parsed", range: null });
+    expect(pick(parseIngredientLine("zest and juice of 2 limes"))).toEqual({ quantity: "2", unit: "each", name: "limes", note: "zest and juice", status: "parsed", range: null });
+    expect(pick(parseIngredientLine("Juice of one orange, freshly squeezed"))).toMatchObject({ quantity: "1", unit: "each", name: "orange", note: "juice; freshly squeezed", status: "parsed" });
+    // No amount after "of": left for the person, as before.
+    expect(parseIngredientLine("juice of a lemon").status).toBe("requires_review");
+  });
+  it("'5 to 6 Campari tomatoes' stays a range — no endpoint is chosen", () => {
+    const l = parseIngredientLine("5 to 6 Campari tomatoes");
+    expect(pick(l)).toEqual({ quantity: null, unit: "each", name: "Campari tomatoes", note: null, status: "requires_review", range: ["5", "6"] });
+  });
+});

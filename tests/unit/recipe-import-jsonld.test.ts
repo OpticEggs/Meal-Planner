@@ -268,3 +268,15 @@ describe("durations and text cleaning", () => {
     expect(cleanText({})).toBeNull();
   });
 });
+
+describe("D158 yield prefill (2026-10-14)", () => {
+  const one = (y: unknown) => extractRecipes(ld(JSON.stringify({ "@type": "Recipe", name: "Synthetic", recipeIngredient: ["1 onion"], recipeYield: y }))).candidates[0];
+  it("a trailing remark in parentheses does not hide an unambiguous count", () => {
+    expect(one("4 servings (about 1 cup each)").servings).toBe(4);
+    expect(one("Serves 6 (as a side)").servings).toBe(6);
+  });
+  it("real conflicts and non-serving yields still give no servings", () => {
+    expect(one(["4", "6 servings"]).servings).toBeNull();
+    expect(one("1 loaf (12 slices)").servings).toBeNull();
+  });
+});

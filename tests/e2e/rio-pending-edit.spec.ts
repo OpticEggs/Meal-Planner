@@ -1,8 +1,11 @@
 /**
  * RIO-03 (reconstructed: the owner's correction package did not reach this session) — a change typed into an
  * open ingredient row of the import review, but not applied with "Use", was silently dropped by "Save
- * recipe": the recipe was created with the old amount and nothing said so. Now saving is held while any row
- * has an unapplied change, the row is named and focused, and "Cancel" puts the row back as it was.
+ * recipe": the recipe was created with the old amount and nothing said so. RIO-03 then held saving while any row had
+ * an unapplied change ("use it or cancel it"). D158 (owner, 2026-10-14): Save recipe and Save review for later SAVE
+ * the latest visible edits — every complete typed change is applied as "Use" would — and only a change that can't be
+ * used (no amount, an amount that isn't a number, no unit, no name) holds the save, with that row's exact field named
+ * and focused. Nothing typed is ever dropped or saved with the older value; "Cancel" still puts a row back.
  */
 import { expect, test } from "@playwright/test";
 import { leaveOutLine, member, q, seed, useLine, openAddRecipe } from "./helpers";
@@ -26,21 +29,14 @@ async function openReview(browser: any) {
 const pestoPerServing = async () =>
   (await q<any>("SELECT ri.quantity::text AS q FROM recipe_ingredients ri JOIN recipe_versions v ON v.id=ri.recipe_version_id WHERE v.title='Weeknight Pesto Pasta' AND ri.ingredient_key='pesto'"))[0]?.q ?? null;
 
-test("RIO-03a: an unapplied change in an open row holds Save, names the row, and is kept when applied", async ({ browser }) => {
+test("RIO-03a (D158): a complete change typed in an open row is what Save recipe saves — no separate Use needed", async ({ browser }) => {
   const { context, review } = await openReview(browser);
   const row = review.locator(`[data-testid="draft-line"][data-raw="${PESTO_LINE}"]`);
   await row.locator(".row-main").click();
   await row.getByRole("textbox", { name: "Amount for the whole recipe, line 2" }).fill("1/2");
   await review.getByTestId("import-confirm").click();
-  await expect(review).toBeVisible();
-  await expect(review.getByTestId("draft-problems")).toContainText("Line 2 (pesto) has a change you haven't applied");
-  await expect(row.getByRole("button", { name: /^Use line 2/ })).toBeFocused();
-  expect(await pestoPerServing()).toBeNull(); // nothing was saved with the old amount
-  await row.getByRole("button", { name: /^Use line 2/ }).click();
-  await expect(row.locator(".row-main")).toContainText("½ cup pesto");
-  await review.getByTestId("import-confirm").click();
   await expect(review).toBeHidden();
-  expect(await pestoPerServing()).toBe("0.125"); // ½ cup ÷ 4 servings
+  expect(await pestoPerServing()).toBe("0.125"); // ½ cup ÷ 4 servings — the typed amount, never the older ⅓
   await context.close();
 });
 
@@ -70,7 +66,7 @@ const saved = async () =>
   q<any>("SELECT ri.ingredient_key AS key, ri.quantity::text AS q, ri.unit FROM recipe_ingredients ri JOIN recipe_versions v ON v.id=ri.recipe_version_id WHERE v.title='Weeknight Pesto Pasta' ORDER BY 1");
 const draftLines = async () => (await q<any>("SELECT lines, revision FROM recipe_import_drafts ORDER BY created_at DESC LIMIT 1"))[0];
 
-test("RIO-03c: two rows with unapplied changes (name, unit and amount) — each is named and focused in turn; both changes are saved", async ({ browser }) => {
+test("RIO-03c (D158): two rows with unapplied changes (name, unit and amount) — one Save recipe saves both", async ({ browser }) => {
   const { context, review } = await openReview(browser);
   const pesto = row(review, PESTO_LINE);
   await pesto.locator(".row-main").click();
@@ -80,17 +76,7 @@ test("RIO-03c: two rows with unapplied changes (name, unit and amount) — each 
   const peas = row(review, PEAS);
   await peas.locator(".row-main").click();
   await peas.getByRole("textbox", { name: "Amount for the whole recipe, line 3" }).fill("2");
-  await review.getByTestId("import-confirm").click();
-  await expect(review.getByTestId("draft-problems")).toContainText("Line 2 (basil pesto) has a change you haven't applied");
-  await expect(review.getByTestId("draft-problems")).toContainText("Line 3 (frozen peas) has a change you haven't applied");
-  await expect(pesto.getByRole("button", { name: /^Use line 2/ })).toBeFocused();
-  expect(await saved()).toEqual([]);
-  await pesto.getByRole("button", { name: /^Use line 2/ }).click();
-  await review.getByTestId("import-confirm").click();
-  await expect(review.getByTestId("draft-problems")).not.toContainText("Line 2");
-  await expect(peas.getByRole("button", { name: /^Use line 3/ })).toBeFocused();
-  expect(await saved()).toEqual([]);
-  await peas.getByRole("button", { name: /^Use line 3/ }).click();
+  // D158: one Save recipe applies both rows' changes.
   await review.getByTestId("import-confirm").click();
   await expect(review).toBeHidden();
   const rows = await saved();
@@ -110,29 +96,26 @@ test("RIO-03d: an invalid pending amount holds saving and focuses the amount; it
   await expect(pesto.getByText("Use a number or fraction")).toBeVisible();
   await expect(pesto.getByRole("button", { name: /^Use line 2/ })).toBeDisabled();
   await review.getByTestId("import-confirm").click();
-  await expect(review.getByTestId("draft-problems")).toContainText("Line 2 (pesto) has a change you haven't applied");
+  await expect(review.getByTestId("draft-problems")).toContainText("Line 2 (pesto): the amount isn't a number");
   await expect(amount).toBeFocused();
   await review.getByRole("button", { name: "Save review for later" }).click();
   expect(await saved()).toEqual([]);
   expect((await draftLines()).revision).toBe(before); // Save review for later was held as well
+  await expect(amount).toBeFocused();
+  // Corrected in place: Save recipe now saves it (D158 — no separate Use).
   await amount.fill("1/2");
-  await pesto.getByRole("button", { name: /^Use line 2/ }).click();
   await review.getByTestId("import-confirm").click();
   await expect(review).toBeHidden();
   expect(await pestoPerServing()).toBe("0.125");
   await context.close();
 });
 
-test("RIO-03e: Save review for later is held too; once applied it is kept, survives a reload, and the reopened review saves it", async ({ browser }) => {
+test("RIO-03e (D158): Save review for later saves a typed change; it is kept, survives a reload, and the reopened review saves it", async ({ browser }) => {
   const { context, page, review } = await openReview(browser);
   const pesto = row(review, PESTO_LINE);
   await pesto.locator(".row-main").click();
   await pesto.getByRole("textbox", { name: "Amount for the whole recipe, line 2" }).fill("1/2");
   const before = (await draftLines()).revision;
-  await review.getByRole("button", { name: "Save review for later" }).click();
-  await expect(review.getByTestId("draft-problems")).toContainText("Line 2 (pesto) has a change you haven't applied");
-  expect((await draftLines()).revision).toBe(before);
-  await pesto.getByRole("button", { name: /^Use line 2/ }).click();
   await review.getByRole("button", { name: "Save review for later" }).click();
   await expect.poll(async () => (await draftLines()).revision).toBe(before + 1);
   expect((await draftLines()).lines[1].decision).toMatchObject({ use: true, name: "pesto", quantity: "1/2", unit: "cup" });
@@ -171,12 +154,8 @@ test("RIO-03f: rows regrouping around an unapplied change keep it; after Use or 
   await row(review, BASIL).locator(".row-main").click();
   await row(review, BASIL).getByRole("button", { name: /^Leave out line 12/ }).click();
   await expect(review.getByTestId("draft-left-out").locator(`[data-raw="${BASIL}"] .row-main`)).toBeFocused();
-  // Through both regroupings the pesto row kept its typed change, and it still holds Save.
+  // Through both regroupings the pesto row kept its typed change.
   await expect(pesto.getByRole("textbox", { name: "Amount for the whole recipe, line 2" })).toHaveValue("1/2");
-  await review.getByTestId("import-confirm").click();
-  await expect(review.getByTestId("draft-problems")).toContainText("Line 2 (pesto) has a change you haven't applied");
-  await expect(pesto.getByRole("button", { name: /^Use line 2/ })).toBeFocused();
-  expect(await saved()).toEqual([]);
   // Cancel puts it back and returns focus to the row.
   await pesto.getByRole("button", { name: /^Cancel changes to line 2/ }).click();
   await expect(pesto.locator(".row-main")).toBeFocused();
@@ -188,7 +167,7 @@ test("RIO-03f: rows regrouping around an unapplied change keep it; after Use or 
   await m.context.close();
 });
 
-test("RIO-03g: the other member saves the review meanwhile — nothing stale is saved, and the unapplied change is still held after loading theirs", async ({ browser }) => {
+test("RIO-03g: the other member saves the review meanwhile — nothing stale is saved, and the unapplied change survives loading theirs and is saved", async ({ browser }) => {
   const { context, page, review } = await openReview(browser);
   const pesto = row(review, PESTO_LINE);
   await pesto.locator(".row-main").click();
@@ -212,11 +191,8 @@ test("RIO-03g: the other member saves the review meanwhile — nothing stale is 
   await expect(row(review, GARLIC)).toHaveAttribute("data-state", "check");
   await useLine(review, GARLIC, "3");
   await leaveOutLine(review, BASIL);
-  // His typed pesto change was not applied, so it is still held — not dropped, not silently saved.
-  await review.getByTestId("import-confirm").click();
-  await expect(review.getByTestId("draft-problems")).toContainText("Line 2 (pesto) has a change you haven't applied");
-  expect(await saved()).toEqual([]);
-  await pesto.getByRole("button", { name: /^Use line 2/ }).click();
+  // His typed pesto change is still on screen — not dropped by loading hers — and Save recipe saves it (D158).
+  await expect(pesto.getByRole("textbox", { name: "Amount for the whole recipe, line 2" })).toHaveValue("1/2");
   await review.getByTestId("import-confirm").click();
   await expect(review).toBeHidden();
   const rows = await saved();
@@ -224,4 +200,46 @@ test("RIO-03g: the other member saves the review meanwhile — nothing stale is 
   expect(rows).toContainEqual({ key: "frozen_peas", q: "0.5", unit: "cup" });
   await alex.context.close();
   await context.close();
+});
+
+test("D158-R1: a range is two choices and never picked for the member; Save recipe names and focuses exactly what is missing", async ({ browser }) => {
+  await seed();
+  const m = await member(browser, "jon", { viewport: { width: 390, height: 844 } });
+  await m.page.getByRole("link", { name: "Recipes", exact: true }).click();
+  await openAddRecipe(m.page);
+  await m.page.getByRole("textbox", { name: "Add a recipe from a link" }).fill(PESTO);
+  await m.page.getByTestId("add-from-link-submit").click();
+  const review = m.page.getByRole("dialog", { name: "Review the import" });
+  await expect(review.getByTestId("import-review")).toBeVisible();
+  await leaveOutLine(review, BASIL);
+  // Save recipe is not silently disabled: it names the range line and focuses its first choice.
+  const confirm = review.getByTestId("import-confirm");
+  await expect(confirm).toBeEnabled();
+  await confirm.click();
+  await expect(review.getByTestId("draft-problems")).toContainText("Line 5 (garlic (clove)): choose how much — the recipe says 2 to 3.");
+  const garlic = row(review, GARLIC);
+  const choices = garlic.getByRole("group", { name: /^Line 5: how much — the recipe says 2 to 3$/ });
+  await expect(choices.getByRole("button").first()).toBeFocused();
+  expect(await saved()).toEqual([]);
+  // One tap on "3" uses the line (its unit and name were read); the range stays in the original line.
+  await choices.getByRole("button", { name: "3", exact: true }).click();
+  await expect(review.getByTestId("draft-lines").locator(`[data-raw="${GARLIC}"]`)).toHaveAttribute("data-state", "use");
+  // A typed change missing its unit: Save names the unit and focuses it; the older value is never saved.
+  const peas = row(review, PEAS);
+  await peas.locator(".row-main").click();
+  await peas.getByRole("textbox", { name: "Amount for the whole recipe, line 3" }).fill("2");
+  await peas.getByRole("combobox", { name: "Unit, line 3" }).selectOption("");
+  await confirm.click();
+  await expect(review.getByTestId("draft-problems")).toContainText("Line 3 (frozen peas): choose a unit.");
+  await expect(peas.getByRole("combobox", { name: "Unit, line 3" })).toBeFocused();
+  expect(await saved()).toEqual([]);
+  await peas.getByRole("combobox", { name: "Unit, line 3" }).selectOption("cup");
+  await confirm.click();
+  await expect(review).toBeHidden();
+  const rows = await saved();
+  expect(rows).toContainEqual({ key: "garlic_clove", q: "0.75", unit: "each" }); // 3 ÷ 4 — the member's choice
+  expect(rows).toContainEqual({ key: "frozen_peas", q: "0.5", unit: "cup" });
+  const raw = (await q<any>("SELECT ri.note FROM recipe_ingredients ri JOIN recipe_versions v ON v.id=ri.recipe_version_id WHERE v.title='Weeknight Pesto Pasta' AND ri.ingredient_key='garlic_clove'"))[0].note;
+  expect(raw).toContain(GARLIC); // the stated range is kept with the original line
+  await m.context.close();
 });

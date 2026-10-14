@@ -201,6 +201,16 @@ export function parseIngredientLine(raw: string): IngredientLine {
     preNotes.push("optional");
     s = s.replace(/^optional:?\s+/i, "");
   }
+  // D158: "Juice of 1/2 lemon", "Zest and juice of 2 limes" — the amount counts the fruit; what is used of it stays
+  // in the note. Only when an amount follows ("juice of a lemon" is left for the person, as before).
+  const part = /^(?:the\s+)?((?:zest|juice)(?:\s+and\s+(?:zest|juice))?)\s+(?:of|from)\s+/i.exec(s);
+  if (part) {
+    const rest = s.slice(part[0].length);
+    if (readLeadingAmount(rest) || NUMBER_WORDS[(/^[A-Za-z]+/.exec(rest)?.[0] ?? "").toLowerCase()] !== undefined) {
+      preNotes.push(part[1].toLowerCase());
+      s = rest;
+    }
+  }
   const step = /^\d{1,2}[.)]\s+(?=[A-Za-z])/.exec(s);
   if (step) return out({ name: trimPunct(s.slice(step[0].length)).slice(0, 200), reasons: ["Looks like a recipe step, not an ingredient"] });
   const word = /^([A-Za-z]+)\s+/.exec(s);

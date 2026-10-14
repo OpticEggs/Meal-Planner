@@ -115,7 +115,7 @@ for (const scale of [150, 200]) {
     await d.getByRole("button", { name: "Save new version" }).click();
     await expect(d.getByLabel("Title", { exact: true })).toBeFocused();
     await expect(d.getByLabel("Title", { exact: true })).toHaveAccessibleDescription(/Give the recipe a title/);
-    await expect(d.getByRole("textbox", { name: "Ingredient 1 amount" })).toHaveAccessibleDescription(/positive number/);
+    await expect(d.getByRole("textbox", { name: "Ingredient 1 amount" })).toHaveAccessibleDescription(/number or fraction/);
     await fits(p, d);
     // A newer version with long text arrives while the errors are showing: brought in, readable.
     expect((await saveVia(alex.page, id, (x: any) => { x.reheatInstructions = "Alex's reheat: covered, low heat, stir once halfway, add a splash of stock if it has thickened overnight."; })).status).toBe("accepted");
@@ -124,6 +124,7 @@ for (const scale of [150, 200]) {
     // A form-level error (the save cannot reach the server) is shown in full; nothing is written.
     await d.getByLabel("Title", { exact: true }).fill("A very long recipe title that a member might actually type when they are being descriptive about it");
     await d.getByRole("textbox", { name: "Ingredient 1 amount" }).fill("1");
+    await d.getByRole("textbox", { name: "Servings the whole recipe makes" }).fill("4"); // D157: an amount is for the whole recipe
     const before = (await q<any>("SELECT count(*)::int AS n FROM recipe_versions WHERE recipe_id=$1", [id]))[0].n;
     await p.route("**/api/commands/SaveRecipeVersion", (r) => r.abort());
     await d.getByRole("button", { name: "Save new version" }).click();

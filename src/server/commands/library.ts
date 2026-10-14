@@ -5,6 +5,7 @@ import { normalizeUnit } from "@/domain/units";
 import { slug } from "@/domain/recipes/rebase";
 import { Q } from "@/domain/exact";
 import { parseAmount, perServing } from "@/domain/quantity";
+import { wholeAmountText } from "@/domain/recipes/whole-amount";
 
 // Preferences, interests, notes and recipe versions. None of these touch accepted
 // assignments, portions or requirements: they emit change events (so the other member
@@ -85,8 +86,14 @@ export interface RecipeDraft {
   reheatInstructions?: string;
   sourceLabel?: string | null;
   components: { key: string; name: string }[];
+  /** D157 (whole-recipe entry): the servings the recipe makes. When present, every ingredient gives `amount` (its
+   *  amount for the WHOLE recipe, as typed: "2", "1/2", "1 1/2") instead of a per-serving `quantity`, and the server
+   *  derives the per-serving quantity. Absent: the earlier contract (per-serving `quantity`) applies unchanged. */
+  servings?: number | null;
   ingredients: {
-    componentKey: string; ingredientKey?: string | null; ingredientName: string; quantity: string; unit: string; form?: string; note?: string | null;
+    componentKey: string; ingredientKey?: string | null; ingredientName: string; quantity?: string; unit: string; form?: string; note?: string | null;
+    /** D157: the amount for the whole recipe (with `servings`). */
+    amount?: string | null;
     /** SERVER-INTERNAL (a confirmed import): the exact whole-recipe amount and its servings this row came
      *  from. Never accepted from a client — SaveRecipeVersion strips them (EQ, D134). */
     exactAmount?: string | null; exactServings?: number | null;
@@ -151,6 +158,39 @@ function basisOf(
   return { basis: "exact", amount: typed, servings: 1 };
 }
 
+/**
+ * D157 — the basis of one row saved as a whole-recipe amount with the servings the recipe makes:
+ *  - a row from a stored row whose whole-recipe amount at these servings is what the member left in the field keeps
+ *    THAT row's stored per-serving quantity exactly (exact stays exact — recorded for these servings — and a legacy
+ *    approximation stays legacy);
+ *  - otherwise the typed amount is exact for these servings, and the per-serving quantity follows from it.
+ */
+function wholeBasisOf(
+  ing: { ingredientName: string; amountText: string | null; amountFraction: string | null },
+  source: SourceRow | undefined,
+  servings: number,
+): Basis & { quantity: string } {
+  if (source) {
+    const shown = wholeAmountText({ quantity: source.q, exactAmount: source.exact_amount, exactServings: source.exact_servings }, servings);
+    // The same text, or (when the shown text is not a rounding) the same value written differently ("0.5" for "1/2").
+    const a = shown.approx ? null : parseAmount(shown.text);
+    const b = parseAmount(ing.amountFraction ?? "");
+    if (shown.text === ing.amountText || (a && b && a.n * b.d === b.n * a.d)) {
+      // An exact row is recorded for the servings now stated: the same per-serving value exactly (a row an earlier
+      // editor saved "per 1 serving" joins the recipe's yield; nothing about the amount changes). A legacy row stays
+      // legacy — its approximation is never relabelled exact.
+      return source.quantity_basis === "exact"
+        ? { basis: "exact", amount: source.exact_servings === servings ? source.exact_amount! : ing.amountFraction!, servings, quantity: source.q }
+        : { basis: "legacy", quantity: source.q };
+    }
+  }
+  const amount = ing.amountFraction!;
+  if (!FITS.test(amount)) throw new Reject("invalid", `Amount for ${ing.ingredientName} has too many digits`);
+  const per = perServing(amount, servings);
+  if (!per || !/^\d+(\.\d+)?$/.test(per.value) || Number(per.value) <= 0) throw new Reject("invalid", `Amount for ${ing.ingredientName} is too small for ${servings} servings`);
+  return { basis: "exact", amount, servings, quantity: per.value };
+}
+
 /** Writes one new immutable recipe version (the only path: manual saves and confirmed imports).
  *  An imported version records its source page and draft; later manual versions keep the source page. */
 export async function writeRecipeVersion(
@@ -168,6 +208,11 @@ export async function writeRecipeVersion(
     if (!title) throw new Reject("invalid", "Title required");
     if (!Array.isArray(p.components) || p.components.length === 0) throw new Reject("invalid", "At least one component (for example: main) is required");
     if (!Array.isArray(p.ingredients) || p.ingredients.length === 0) throw new Reject("invalid", "At least one ingredient is required");
+    // D157: whole-recipe entry when the servings the recipe makes are given.
+    const whole = p.servings !== undefined && p.servings !== null;
+    if (whole && (!Number.isInteger(p.servings) || (p.servings as number) < 1 || (p.servings as number) > 1000)) {
+      throw new Reject("invalid", "Say how many servings the recipe makes (a whole number from 1 to 1000)", { field: "servings" });
+    }
     const compKeys = new Set<string>();
     const components = p.components.map((cmp, i) => {
       const key = slug(cmp.key || cmp.name) || `c${i}`;
@@ -178,14 +223,17 @@ export async function writeRecipeVersion(
     const ings = p.ingredients.map((ing, i) => {
       const componentKey = slug(ing.componentKey);
       if (!compKeys.has(componentKey)) throw new Reject("invalid", `Ingredient ${ing.ingredientName} names an unknown component`);
-      if (!/^\d+(\.\d+)?$/.test(String(ing.quantity)) || Number(ing.quantity) <= 0) throw new Reject("invalid", `Quantity for ${ing.ingredientName} must be a positive number`);
+      const amount = whole ? parseAmount(String(ing.amount ?? "")) : null;
+      if (whole && !amount) throw new Reject("invalid", `Amount for ${ing.ingredientName} must be a number or fraction, like 2, 1/3 or 1 1/2`);
+      if (!whole && (!/^\d+(\.\d+)?$/.test(String(ing.quantity)) || Number(ing.quantity) <= 0)) throw new Reject("invalid", `Quantity for ${ing.ingredientName} must be a positive number`);
       const unit = normalizeUnit(String(ing.unit ?? ""));
       if (!unit) throw new Reject("invalid", `Unit for ${ing.ingredientName} is required`);
       const name = String(ing.ingredientName ?? "").trim().slice(0, 80);
       const key = ing.ingredientKey ? String(ing.ingredientKey) : slug(name);
       if (!key) throw new Reject("invalid", "Ingredient name required");
       return {
-        componentKey, ingredientKey: key, name, quantity: String(ing.quantity), unit, form: ing.form ?? "raw", note: ing.note ? String(ing.note).slice(0, 200) : null, sort: i,
+        componentKey, ingredientKey: key, name, quantity: String(ing.quantity ?? ""), unit, form: ing.form ?? "raw", note: ing.note ? String(ing.note).slice(0, 200) : null, sort: i,
+        amountText: whole ? String(ing.amount).trim() : null, amountFraction: amount ? fractionText(Q.frac(amount.n, amount.d)) : null,
         ingredientName: String(ing.ingredientName ?? key), exactAmount: ing.exactAmount, exactServings: ing.exactServings,
         sourceRowId: ing.sourceRowId,
       };
@@ -300,7 +348,13 @@ export async function writeRecipeVersion(
       await c.query("INSERT INTO recipe_components(recipe_version_id, key, name, sort) VALUES ($1,$2,$3,$4)", [vid, cmp.key, cmp.name, cmp.sort]);
     }
     for (const ing of ings) {
-      const b = basisOf(ing, ing.sourceRowId ? sources.get(ing.sourceRowId) : undefined);
+      const source = ing.sourceRowId ? sources.get(ing.sourceRowId) : undefined;
+      let b: Basis;
+      if (whole) {
+        const w = wholeBasisOf(ing, source, p.servings as number);
+        ing.quantity = w.quantity;
+        b = w;
+      } else b = basisOf(ing, source);
       await c.query(
         `INSERT INTO recipe_ingredients(recipe_version_id, component_key, ingredient_key, quantity, unit, form, note, sort, quantity_basis, exact_amount, exact_servings, source_row_id)
          VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,

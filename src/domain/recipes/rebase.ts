@@ -13,6 +13,7 @@
  */
 
 import { normalizeUnit } from "@/domain/units";
+import { parseAmount } from "@/domain/quantity";
 
 export interface DraftComponent {
   key: string;
@@ -37,6 +38,8 @@ export interface RecipeFields<C extends DraftComponent = DraftComponent, R exten
   reheat: string;
   summary: string | null;
   sourceLabel: string | null;
+  /** D157: the servings the recipe makes, as typed. Part of the ingredients field: the rows' amounts are for it. */
+  servings: string;
   components: C[];
   rows: R[];
 }
@@ -82,7 +85,7 @@ export function rowKey(r: DraftRow): string {
 /** Compared as a save would store it (trimmed text, slugged keys, normalised units and numbers),
  *  so a value that would be stored identically is never a change or a conflict. */
 export function compareKey(f: RecipeFields, k: FieldKey): string {
-  if (k === "ingredients") return JSON.stringify({ c: f.components.map((c) => [slug(c.key || c.name), c.name.trim()]), r: filledRows(f.rows).map(rowKey) });
+  if (k === "ingredients") return JSON.stringify({ s: servingsKey(f.servings), c: f.components.map((c) => [slug(c.key || c.name), c.name.trim()]), r: filledRows(f.rows).map(rowKey) });
   if (k === "title" || k === "cuisine") return f[k].trim();
   if (k === "minutes") return /^\d+$/.test(f.minutes.trim()) ? String(Number(f.minutes.trim())) : f.minutes.trim();
   return display(f, k);
@@ -92,9 +95,12 @@ export function compareKey(f: RecipeFields, k: FieldKey): string {
 export function slug(s: string): string {
   return s.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "").slice(0, 60);
 }
-/** "075.50" and "75.5" store the same decimal. */
+const servingsKey = (s: string | undefined) => (/^\d+$/.test((s ?? "").trim()) ? String(Number(s!.trim())) : (s ?? "").trim());
+/** "075.50", "75.5" and "75 1/2" store the same amount. */
 function decimalKey(q: string): string {
   const t = q.trim();
+  const r = parseAmount(t);
+  if (r) return `${r.n}/${r.d}`;
   if (!/^\d+(\.\d+)?$/.test(t)) return t;
   const [i, d = ""] = t.split(".");
   const frac = d.replace(/0+$/, "");
@@ -103,7 +109,7 @@ function decimalKey(q: string): string {
 
 /** The value of a field as the member would read it. */
 export function display(f: RecipeFields, k: FieldKey): string {
-  if (k === "ingredients") return filledRows(f.rows).map((r) => describeRow(f, r)).join("\n") + `\ncomponents: ${f.components.map((c) => c.name.trim()).join(", ")}`;
+  if (k === "ingredients") return `makes ${f.servings.trim() || "?"} servings\n` + filledRows(f.rows).map((r) => describeRow(f, r)).join("\n") + `\ncomponents: ${f.components.map((c) => c.name.trim()).join(", ")}`;
   if (k === "leftovers") return f.leftovers ? "yes" : "no";
   const v = f[k];
   return v === null || v === undefined ? "" : String(v);
@@ -123,9 +129,10 @@ export function ingredientChanges(from: RecipeFields, to: RecipeFields): string[
   const ca = count(a);
   const cb = count(b);
   const out: string[] = [];
+  if (servingsKey(from.servings) !== servingsKey(to.servings)) out.push(`Makes: ${from.servings.trim() || "?"} → ${to.servings.trim() || "?"} servings`);
   for (const [x, n] of ca) for (let i = (cb.get(x) ?? 0); i < n; i++) out.push(`Removed ${text.get(x)}`);
   for (const [x, n] of cb) for (let i = (ca.get(x) ?? 0); i < n; i++) out.push(`Added ${text.get(x)}`);
-  if (!out.length && a.map((x) => x.key).join("\n") !== b.map((x) => x.key).join("\n")) out.push("Order of ingredients changed");
+  if (out.length === (servingsKey(from.servings) !== servingsKey(to.servings) ? 1 : 0) && a.map((x) => x.key).join("\n") !== b.map((x) => x.key).join("\n")) out.push("Order of ingredients changed");
   const comps = (f: RecipeFields) => JSON.stringify(f.components.map((c) => [c.key, c.name.trim()]));
   const names = (f: RecipeFields) => f.components.map((c) => c.name.trim()).join(", ");
   if (comps(from) !== comps(to)) out.push(`Components: ${names(from)} → ${names(to)}`);
@@ -143,7 +150,7 @@ export function fieldChanges(from: RecipeFields, to: RecipeFields): { key: Field
 }
 
 function take<C extends DraftComponent, R extends DraftRow>(into: RecipeFields<C, R>, from: RecipeFields<C, R>, k: FieldKey): RecipeFields<C, R> {
-  if (k === "ingredients") return { ...into, components: from.components, rows: from.rows };
+  if (k === "ingredients") return { ...into, servings: from.servings, components: from.components, rows: from.rows };
   return { ...into, [k]: from[k] } as RecipeFields<C, R>;
 }
 

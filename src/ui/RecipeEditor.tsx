@@ -2,8 +2,10 @@
 import { useEffect, useReducer, useRef, useState } from "react";
 import { useStore } from "./store";
 import { ModalSheet } from "./a11y";
-import { FieldError, FormAlert, fieldProps, focusFirstInvalid, isDecimal, type Errors } from "./forms";
-import { FIELD_LABEL, display, editorInit, editorReducer, isDirty, type EditorAction, type EditorState, type FieldKey, type RecipeFields } from "@/domain/recipes/rebase";
+import { FieldError, FormAlert, fieldProps, focusFirstInvalid, type Errors } from "./forms";
+import { parseAmount } from "@/domain/quantity";
+import { storedYield, wholeAmountText, type StoredAmount } from "@/domain/recipes/whole-amount";
+import { FIELD_LABEL, compareKey, display, editorInit, editorReducer, isDirty, type EditorAction, type EditorState, type FieldKey, type RecipeFields } from "@/domain/recipes/rebase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
@@ -24,11 +26,21 @@ import { Textarea } from "@/components/ui/textarea";
 type Comp = { id: number; key: string; name: string };
 // sourceRowId (EQR): the stored row this row came from — sent with a save so the server can keep that row's own
 // quantity basis when its number is unchanged; null for a row added here.
-type Row = { id: number; componentKey: string; ingredientName: string; ingredientKey: string | null; quantity: string; unit: string; form: string | null; note: string | null; sourceRowId: string | null };
+// D157: `quantity` is the amount for the WHOLE recipe, as shown and typed. `stored` is the saved row's amount; while
+// `follows` is set (not typed here) the shown amount is that saved amount at the servings in the form, so it follows a
+// change of the servings — for an older (legacy) per-serving amount always, for an exact one when the recipe's yield
+// was not known (a yield that was known and is changed is a correction: the exact amounts stay as written).
+// `older`: a legacy amount whose whole-recipe figure is rounded (shown as about that much).
+type Row = {
+  id: number; componentKey: string; ingredientName: string; ingredientKey: string | null; quantity: string; unit: string; form: string | null; note: string | null;
+  sourceRowId: string | null; stored?: StoredAmount | null; follows?: boolean; older?: boolean;
+};
 type Fields = RecipeFields<Comp, Row>;
 
 let seq = 0;
 const nextId = () => ++seq;
+// No unit is assumed for a new row (D157): a unit is typed, or the row cannot be saved.
+const blankRow = (componentKey: string, id = nextId()): Row => ({ id, componentKey, ingredientName: "", ingredientKey: null, quantity: "", unit: "", form: null, note: null, sourceRowId: null });
 
 /** Editable fields from a stored version (fields the form doesn't show — summary, source label,
  *  ingredient form and note — are carried through unchanged). Row and component ids are UI-only;
@@ -38,16 +50,26 @@ function fieldsOf(v: any, prev?: Fields): Fields {
   if (!prev) return f;
   return { ...f, components: f.components.map((c, i) => ({ ...c, id: prev.components[i]?.id ?? c.id })), rows: f.rows.map((r, i) => ({ ...r, id: prev.rows[i]?.id ?? r.id })) };
 }
+const servingsOf = (t: string) => (/^\d+$/.test(t.trim()) && Number(t) >= 1 && Number(t) <= 1000 ? Number(t) : null);
+/** A row's shown amount at `servings` (empty while the servings are not given). */
+function shownAt(r: Row, servings: number | null): Row {
+  if (!r.follows || !r.stored) return r;
+  if (!servings) return { ...r, quantity: "", older: false };
+  const w = wholeAmountText(r.stored, servings);
+  return { ...r, quantity: w.text, older: w.legacy && w.approx };
+}
 function fieldsOfVersion(v: any): Fields {
+  const stored: StoredAmount[] = (v?.ingredients ?? []).map((i: any) => ({ quantity: i.quantity, exactAmount: i.exactAmount ?? null, exactServings: i.exactServings ?? null }));
+  const { servings } = storedYield(stored);
   return {
     title: v?.title ?? "", cuisine: v?.cuisine ?? "", minutes: v?.effortMinutes?.toString() ?? "", level: v?.effortLevel ?? "",
     leftovers: !!v?.leftoverFriendly, instructions: v?.instructions ?? "", reheat: v?.reheatInstructions ?? "",
-    summary: v?.summary ?? null, sourceLabel: v?.sourceLabel ?? null,
+    summary: v?.summary ?? null, sourceLabel: v?.sourceLabel ?? null, servings: servings ? String(servings) : "",
     components: v?.components?.map((c: any) => ({ id: nextId(), key: c.key, name: c.name })) ?? [{ id: nextId(), key: "main", name: "Main" }],
-    rows: v?.ingredients?.map((i: any) => ({
-      id: nextId(), componentKey: i.componentKey, ingredientName: i.name, ingredientKey: i.ingredientKey, quantity: i.quantity, unit: i.unit, form: i.form ?? null, note: i.note ?? null,
-      sourceRowId: i.rowId ?? null,
-    })) ?? [{ id: nextId(), componentKey: "main", ingredientName: "", ingredientKey: null, quantity: "", unit: "g", form: null, note: null, sourceRowId: null }],
+    rows: v?.ingredients?.map((i: any, n: number) => shownAt({
+      id: nextId(), componentKey: i.componentKey, ingredientName: i.name, ingredientKey: i.ingredientKey, quantity: "", unit: i.unit, form: i.form ?? null, note: i.note ?? null,
+      sourceRowId: i.rowId ?? null, stored: stored[n], follows: true,
+    }, servings)).map((r: Row) => ({ ...r, follows: !servings || !r.stored?.exactAmount })) ?? [blankRow("main")],
   };
 }
 
@@ -120,12 +142,14 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
   // Every edit is a function of the latest draft, never of the one this render saw.
   const edit = (fn: (d: Fields) => Fields) => dispatch({ type: "edit", fn });
   const set = (patch: Partial<Fields>) => edit((d) => ({ ...d, ...patch }));
+  const setServings = (servings: string) => edit((d) => ({ ...d, servings, rows: d.rows.map((r) => shownAt(r, servingsOf(servings))) }));
+  const yieldInfo = storedYield((live?.version.ingredients ?? []).map((i: any) => ({ quantity: i.quantity, exactAmount: i.exactAmount ?? null, exactServings: i.exactServings ?? null })));
   const setRow = (id: number, patch: Partial<Row>) => edit((d) => ({ ...d, rows: d.rows.map((r) => (r.id === id ? { ...r, ...patch } : r)) }));
   const compLabel = (key: string) => f.components.find((c) => c.key === key)?.name || key;
 
   function addRow() {
     const id = nextId();
-    edit((d) => ({ ...d, rows: [...d.rows, { id, componentKey: d.components[0]?.key ?? "main", ingredientName: "", ingredientKey: null, quantity: "", unit: "g", form: null, note: null, sourceRowId: null }] }));
+    edit((d) => ({ ...d, rows: [...d.rows, blankRow(d.components[0]?.key ?? "main", id)] }));
     setFocusId(`re-n-${id}`);
   }
   function removeRow(i: number) {
@@ -174,11 +198,17 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
       else if (names.has(n)) errs[`re-c-${c.id}`] = "Another component already has this name";
       names.add(n);
     });
+    const servings = servingsOf(f.servings);
+    // An older recipe whose yield was never recorded, with its ingredients exactly as saved (a title or steps edit):
+    // saved as before, every row keeping its stored amount and basis — nothing asks for, or invents, a yield.
+    const asSaved = !!recipeId && !servings && !f.servings.trim() && compareKey(base, "ingredients") === compareKey(f, "ingredients")
+      && f.rows.every((r) => !r.ingredientName.trim() || (r.follows && r.stored));
+    if (!servings && !asSaved) errs["re-servings"] = "Say how many servings the whole recipe makes (a whole number from 1 to 1000)";
     const used = f.rows.filter((r) => r.ingredientName.trim() || r.quantity.trim());
     if (!used.length) errs["re-rows"] = "Add at least one ingredient";
     for (const r of used) {
       if (!r.ingredientName.trim()) errs[`re-n-${r.id}`] = "Name the ingredient";
-      if (!isDecimal(r.quantity) || Number(r.quantity) <= 0) errs[`re-q-${r.id}`] = "Amount must be a positive number";
+      if (!asSaved && !parseAmount(r.quantity)) errs[`re-q-${r.id}`] = servings || r.quantity.trim() ? "Amount for the whole recipe: a number or fraction, like 2, 1/2 or 1 1/2" : "Say how many servings the recipe makes first";
       if (!r.unit.trim()) errs[`re-u-${r.id}`] = "Give a unit (for example g, oz, cup, each)";
     }
     setErrors(errs);
@@ -189,8 +219,12 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
       recipeId, title: f.title.trim(), cuisine: f.cuisine.trim() || null, effortMinutes: f.minutes.trim() ? Number(f.minutes) : null, effortLevel: f.level || null,
       leftoverFriendly: f.leftovers, instructions: f.instructions, reheatInstructions: f.reheat, summary: f.summary, sourceLabel: f.sourceLabel,
       components: f.components.map((c) => ({ key: c.key || c.name.toLowerCase().replace(/\W+/g, "_"), name: c.name.trim() })),
+      // D157: amounts are for the whole recipe, which makes this many servings (`asSaved`: the stored per-serving
+      // amounts, unchanged, on the earlier contract).
+      ...(asSaved ? {} : { servings }),
       ingredients: used.map((x) => ({
-        componentKey: x.componentKey, ingredientName: x.ingredientName.trim(), ingredientKey: x.ingredientKey, quantity: x.quantity.trim(), unit: x.unit.trim(),
+        componentKey: x.componentKey, ingredientName: x.ingredientName.trim(), ingredientKey: x.ingredientKey, unit: x.unit.trim(),
+        ...(asSaved ? { quantity: String(x.stored!.quantity) } : { amount: x.quantity.trim() }),
         ...(x.form ? { form: x.form } : {}), ...(x.note ? { note: x.note } : {}),
         ...(recipeId ? { sourceRowId: x.sourceRowId } : {}),
       })),
@@ -240,7 +274,7 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
       )}
       <FormAlert message={formError} testId="recipe-error" />
       <form ref={formRef} className="stack" noValidate onSubmit={save}>
-        <p className="faint small">Structured entry: amounts are per ONE portion of their component, so plates can scale components independently. Text is stored as plain text.</p>
+        <p className="faint small">Type amounts as the recipe gives them, for the whole recipe. Servings for a meal are chosen when you select it.</p>
         <label htmlFor="re-title">Title</label>
         <Input {...fieldProps("re-title", errors)} data-autofocus="" value={f.title} onChange={(e) => set({ title: e.target.value })} />
         <FieldError id="re-title" errors={errors} />
@@ -282,6 +316,22 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
 
         <fieldset className="stack" id="re-rows" tabIndex={-1} aria-describedby={errors["re-rows"] ? "re-rows-error" : undefined}>
           <legend>Ingredients</legend>
+          <span className="row">
+            <label htmlFor="re-servings">Recipe makes</label>
+            <Input {...fieldProps("re-servings", errors)} className="tiny" inputMode="numeric" aria-label="Servings the whole recipe makes" value={f.servings} onChange={(e) => setServings(e.target.value)} />
+            <span aria-hidden="true">servings</span>
+          </span>
+          <FieldError id="re-servings" errors={errors} />
+          {!servingsOf(f.servings) && f.rows.some((r) => r.follows && r.stored) && (
+            <p className="small muted" data-testid="editor-yield-unknown">
+              These amounts were saved per serving. Say how many servings the whole recipe makes to see and change them as the recipe gives them.
+            </p>
+          )}
+          {yieldInfo.conflict.length > 0 && (
+            <p className="small warn" data-testid="editor-yield-conflict">
+              The saved amounts were written for different servings ({yieldInfo.conflict.join(" and ")}). Say what the whole recipe makes; amounts below are shown for that.
+            </p>
+          )}
           {f.rows.map((row, i) => {
             const n = `Ingredient ${i + 1}`;
             return (
@@ -291,7 +341,9 @@ export function RecipeEditorDialog({ recipeId, onClose, returnFocus }: { recipeI
                   <FieldError id={`re-n-${row.id}`} errors={errors} />
                 </span>
                 <span className="stack">
-                  <Input {...fieldProps(`re-q-${row.id}`, errors)} className="tiny" inputMode="decimal" aria-label={`${n} amount`} value={row.quantity} onChange={(e) => setRow(row.id, { quantity: e.target.value })} />
+                  <Input {...fieldProps(`re-q-${row.id}`, errors)} className="tiny" inputMode="text" aria-label={`${n} amount for the whole recipe`} value={row.quantity}
+                    placeholder={row.follows && !servingsOf(f.servings) ? "?" : undefined} onChange={(e) => setRow(row.id, { quantity: e.target.value, follows: false, older: false })} />
+                  {row.older && <span className="faint small" data-testid={`re-older-${row.id}`}>about (older amount)</span>}
                   <FieldError id={`re-q-${row.id}`} errors={errors} />
                 </span>
                 <span className="stack">

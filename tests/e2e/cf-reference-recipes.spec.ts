@@ -155,8 +155,11 @@ test("CF-C-E: Garlic chicken pasta — every stated yield shown, servings requir
   await expect(review.getByTestId("draft-kept")).toContainText("The page says it makes: 4 · 6 servings.");
   await expect(review.getByTestId("draft-kept")).toContainText("The page's nutrition claims are not used.");
   await expect(review.getByTestId("draft-servings")).toHaveValue("");
-  await expect(review.getByTestId("import-confirm")).toBeDisabled();
   await expect(review.getByTestId("draft-problems")).toContainText("Enter how many servings the ingredient amounts make.");
+  // D158: Save recipe is not silently disabled — pressing it saves nothing and puts the member on the servings.
+  await review.getByTestId("import-confirm").click();
+  await expect(review.getByTestId("draft-servings")).toBeFocused();
+  expect(await q<any>("SELECT id FROM recipe_versions WHERE title='Garlic Chicken Pasta'")).toEqual([]);
   await expect(review.getByTestId("draft-line").filter({ hasText: "garlic" })).toHaveCount(2); // both lines kept as rows
   await review.getByTestId("draft-servings").fill("4");
   await review.getByTestId("import-confirm").click();

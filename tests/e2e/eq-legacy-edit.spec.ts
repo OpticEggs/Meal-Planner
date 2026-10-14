@@ -47,16 +47,24 @@ test("EQ-E1: a title-only edit of an old recipe keeps its rounded amounts labell
     { key: "onion", q: "0.6667", basis: "legacy", amount: null, servings: null },
   ]);
   // Now the member changes one amount: that amount is theirs, exact; the untouched row stays legacy.
+  // D157: amounts are for the whole recipe, so the member says what it makes (3) first; the older per-serving
+  // amounts are then shown for 3 servings and marked as rounded ("about").
   await jon.page.getByTestId("recipe-more").click(); // the "…" sheet (pilot fix)
   await jon.page.getByRole("button", { name: "Edit recipe" }).click();
   d = jon.page.getByRole("dialog", { name: "Edit Old onion salad (ours) — new version" });
+  await expect(d.getByTestId("editor-yield-unknown")).toBeVisible();
+  await d.getByRole("textbox", { name: "Servings the whole recipe makes" }).fill("3");
+  const peas = d.getByRole("group", { name: /^Ingredient \d+: frozen peas$/ });
+  await expect(peas.getByRole("textbox", { name: /amount for the whole recipe$/ })).toHaveValue("1"); // 0.3333 × 3 = 0.9999
+  await expect(peas.getByText("about (older amount)")).toBeVisible();
   const onion = d.getByRole("group", { name: /^Ingredient \d+: onion$/ });
-  await onion.getByRole("textbox", { name: /amount$/ }).fill("0.5");
+  await expect(onion.getByRole("textbox", { name: /amount for the whole recipe$/ })).toHaveValue("2"); // 0.6667 × 3 = 2.0001
+  await onion.getByRole("textbox", { name: /amount for the whole recipe$/ }).fill("1 1/2");
   await d.getByRole("button", { name: "Save new version" }).click();
   await expect(d).toHaveCount(0);
   expect(await rows(old.recipeId, 3)).toEqual([
     { key: "frozen_peas", q: "0.3333", basis: "legacy", amount: null, servings: null },
-    { key: "onion", q: "0.5", basis: "exact", amount: "1/2", servings: 1 },
+    { key: "onion", q: "0.5", basis: "exact", amount: "3/2", servings: 3 },
   ]);
   expect(await rows(old.recipeId, 1)).toEqual([
     { key: "frozen_peas", q: "0.3333", basis: "legacy", amount: null, servings: null },

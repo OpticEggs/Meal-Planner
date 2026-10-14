@@ -10,7 +10,7 @@ const row = (name: string, quantity: string, unit = "g", extra: Partial<DraftRow
 });
 const recipe = (patch: Partial<RecipeFields> = {}): RecipeFields => ({
   title: "Rice bowl", cuisine: "", minutes: "", level: "", leftovers: false, instructions: "Cook the rice.", reheat: "Microwave 2 min.",
-  summary: "Weeknight bowl", sourceLabel: "Family card", components: [{ key: "main", name: "Main" }],
+  summary: "Weeknight bowl", sourceLabel: "Family card", servings: "4", components: [{ key: "main", name: "Main" }],
   rows: [row("Rice", "75")], ...patch,
 });
 
@@ -182,5 +182,21 @@ describe("compared as a save would store it (RB17-01)", () => {
     expect(isDirty(s)).toBe(false);
     s = editorReducer(s, { type: "rebase", cur: recipe({ rows: [row("Rice", "90")] }), version: 2, by: "Alex", title: "Rice bowl" });
     expect([s.pending, s.f.rows[0].quantity]).toEqual([[], "90"]);
+  });
+});
+
+describe("D157 servings in the ingredients field", () => {
+  it("the servings the recipe makes are part of the ingredients: a change is reported, taken when untouched, a conflict when both changed", () => {
+    const base = recipe();
+    expect(ingredientChanges(base, recipe({ servings: "6" }))).toEqual(["Makes: 4 → 6 servings"]);
+    expect(rebase(base, recipe({ servings: "6" }), base)).toMatchObject({ taken: ["ingredients"], conflicts: [] });
+    expect(rebase(base, recipe({ servings: "6" }), base).merged.servings).toBe("6");
+    expect(rebase(base, recipe({ servings: "6" }), recipe({ servings: "8" }))).toMatchObject({ conflicts: ["ingredients"] });
+    expect(display(base, "ingredients")).toMatch(/^makes 4 servings\n/);
+  });
+  it("an amount written as a fraction, a mixed number or a decimal of the same value is not a change", () => {
+    expect(fieldChanges(recipe({ rows: [row("Lemon", "1/2", "each")] }), recipe({ rows: [row("Lemon", "0.5", "each")] }))).toEqual([]);
+    expect(fieldChanges(recipe({ rows: [row("Flour", "1 1/2", "cup")] }), recipe({ rows: [row("Flour", "1.5", "cup")] }))).toEqual([]);
+    expect(fieldChanges(recipe({ servings: "04" }), recipe())).toEqual([]);
   });
 });

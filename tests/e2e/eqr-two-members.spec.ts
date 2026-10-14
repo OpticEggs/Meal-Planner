@@ -42,8 +42,11 @@ test("EQR-E1: across a rebase onto the other member's version, an untouched row 
   }
   const dj = jon.page.getByRole("dialog", { name: "Edit Old salad — new version" });
   const da = alex.page.getByRole("dialog", { name: "Edit Old salad — new version" });
-  // Jon changes the cucumber to 0.5 — the same number the onion already has.
-  await dj.getByRole("group", { name: /^Ingredient \d+: cucumber$/i }).getByRole("textbox", { name: /amount$/ }).fill("0.5");
+  // D157: Jon says the salad makes 2 (the older amounts show for 2: cucumber 2, onion 1) and changes the cucumber to 1
+  // — the same number the onion now shows.
+  await dj.getByRole("textbox", { name: "Servings the whole recipe makes" }).fill("2");
+  await expect(dj.getByRole("group", { name: /^Ingredient \d+: onion$/i }).getByRole("textbox", { name: /amount for the whole recipe$/ })).toHaveValue("1");
+  await dj.getByRole("group", { name: /^Ingredient \d+: cucumber$/i }).getByRole("textbox", { name: /amount for the whole recipe$/ }).fill("1");
   // Alex renames the recipe and saves version 2 first.
   await da.getByLabel("Title", { exact: true }).fill("Old salad (Alex)");
   await da.getByRole("button", { name: "Save new version" }).click();
@@ -58,7 +61,7 @@ test("EQR-E1: across a rebase onto the other member's version, an untouched row 
     [recipeId],
   );
   expect(v3).toEqual([
-    { key: "cucumber", q: "0.5", basis: "exact", amount: "1/2", title: "Old salad (Alex)" },
+    { key: "cucumber", q: "0.5", basis: "exact", amount: "1", title: "Old salad (Alex)" },
     { key: "onion", q: "0.5", basis: "legacy", amount: null, title: "Old salad (Alex)" },
   ]);
   await jon.context.close();

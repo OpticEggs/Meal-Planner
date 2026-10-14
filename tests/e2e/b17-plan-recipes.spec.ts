@@ -53,13 +53,14 @@ test("B17 new recipe: a dialog with focus inside, per-row names, attached errors
   await dialog.getByRole("button", { name: "Save recipe" }).click();
   await expect.poll(async () => (await focused(p)).id).toBe("re-title");
   await expect(dialog.getByLabel("Title", { exact: true })).toHaveAccessibleDescription("Give the recipe a title");
-  await expect(dialog.getByRole("textbox", { name: "Ingredient 1 amount" })).toHaveAccessibleDescription("Amount must be a positive number");
+  await expect(dialog.getByRole("textbox", { name: "Ingredient 1 amount" })).toHaveAccessibleDescription(/number or fraction, like 2, 1\/2 or 1 1\/2/);
   expect(await recipeCount()).toEqual(before);
   // Adding a row moves focus into it; its controls are named by position.
   await dialog.getByRole("button", { name: "add ingredient" }).click();
   expect((await focused(p)).name).toBe("Ingredient 2 name");
   await p.keyboard.type("Broccoli");
   await dialog.getByRole("textbox", { name: "Ingredient 2 amount" }).fill("100");
+  await expect(dialog.getByRole("textbox", { name: "Ingredient 2 unit" })).toHaveValue(""); // D157: no unit is assumed
   // Removing a row moves focus to a survivor, never <body> (the lone survivor's own remove
   // button is disabled, so focus goes to its name field).
   await dialog.getByRole("button", { name: "add ingredient" }).click();
@@ -90,7 +91,9 @@ test("B17 new recipe: a dialog with focus inside, per-row names, attached errors
   await dialog.getByRole("button", { name: "Remove component 2 (Sauce)" }).click();
   await expect(dialog.getByRole("combobox", { name: "Ingredient 2 component" })).toHaveValue("main");
   await dialog.getByRole("button", { name: "Remove ingredient 2" }).click();
-  // Save works and returns focus to the opener.
+  // Save works and returns focus to the opener (D157: a unit and the servings the recipe makes are given).
+  await dialog.getByRole("textbox", { name: "Ingredient 1 unit" }).fill("g");
+  await dialog.getByRole("textbox", { name: "Servings the whole recipe makes" }).fill("2");
   await dialog.getByLabel("Title", { exact: true }).fill("Broccoli rice");
   await dialog.getByRole("button", { name: "Save recipe" }).click();
   await expect(dialog).toHaveCount(0);
@@ -254,6 +257,7 @@ test("B17 non-overlapping edits: the other member's added ingredient is brought 
   const idx = n!.match(/Ingredient (\d+)/)![1];
   await da.getByRole("textbox", { name: `Ingredient ${idx} amount` }).fill("1");
   await da.getByRole("textbox", { name: `Ingredient ${idx} unit` }).fill("tsp");
+  await da.getByRole("textbox", { name: "Servings the whole recipe makes" }).fill("4"); // D157: the cumin is for the whole recipe
   await dj.getByLabel("Title", { exact: true }).fill("Jon's chili");
   await da.getByRole("button", { name: "Save new version" }).click();
   await expect(da).toHaveCount(0);

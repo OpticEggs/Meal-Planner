@@ -50,8 +50,11 @@ test("IO-E1: the reported line reads cleanly; only uncertain lines ask; seasonin
   await expect(basil).toHaveAttribute("data-state", "needs_quantity");
   await expect(basil).toContainText("Needs a quantity — you'll give an amount when shopping");
   await expect(review.getByTestId("draft-progress")).toContainText("1 needs a quantity");
-  await expect(review.getByTestId("import-confirm")).toBeDisabled();
   await expect(review.getByTestId("draft-problems")).toContainText("1 ingredient line needs a quick check");
+  // D158: Save recipe is enabled; pressing it names the line and what it needs, and saves nothing.
+  await review.getByTestId("import-confirm").click();
+  await expect(review.getByTestId("draft-problems")).toContainText("choose how much — the recipe says 2 to 3");
+  await expect(review).toBeVisible();
   await expect(review.getByText(/suggestion/i)).toHaveCount(0);
 
   await useLine(review, "2-3 cloves garlic, minced", "3");
