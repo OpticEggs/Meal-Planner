@@ -1,0 +1,10 @@
+$ npx vitest run tests/integration/cf-meal-lists.test.ts -t "CF-C1"
+exit 1 signal 
+--- stdout
+JSON report written to /tmp/table-verify-37e2b8a-20261013T235557Z/mutation/mutation-CF_stale_selection_accepted.json
+
+--- stderr
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+

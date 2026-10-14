@@ -973,3 +973,16 @@ build a tap on "…" changed the URL to `#recipe-more` and scrolled the page fro
 
 Quantities (cilantro 736 oz, eggs 6 g, brisket 128 oz): **cause for the household not established** — see
 `docs/table/evidence/2026-10-13-pilot-quantities/README.md`. No quantity or recipe was changed.
+
+## Checklist: Match products at Kroger; Buy it trimmed (D156) — added 2026-10-14
+
+Verified at `37e2b8a`: `scripts/verify-all.sh` → `docs/table/evidence/2026-10-14-verify-37e2b8a/`.
+
+| Check | Evidence |
+|---|---|
+| With the store set to Kroger, the checklist offers "Match products at Kroger…" and counts the items without a Kroger product | KM-E6 |
+| Choosing a Kroger product once: the row keeps its total, packages follow (150 g → one 2 lb bag), the count drops by one, focus returns to the action | KM-E6 |
+| Buy it: readiness and Approve/Send in view; store, estimate and list folded and openable; Send stays off while not ready | KM-E6 |
+| No cart request reaches the (simulated) Kroger | KM-E6 |
+
+Not live-verified: no Kroger host has been contacted. Going live is owner-operated — `docs/table/KROGER-GO-LIVE.md`.
