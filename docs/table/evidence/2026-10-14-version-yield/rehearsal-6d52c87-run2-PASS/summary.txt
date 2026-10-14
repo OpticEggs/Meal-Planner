@@ -1,0 +1,21 @@
+Upgrade rehearsal: previous release 6d52c87 → this release 8bd6954 (2026-10-14T14:03:55Z)
+PASS  1 populated by 6d52c87: 13 grocery lines; export taken by 6d52c87
+applied: 018_recipe_version_yield.sql
+PASS  2 every pre-existing column of every table is unchanged by the migration
+PASS  2 every existing recipe row keeps its basis (before: {"exact":8,"legacy":26}; after: {"exact":8,"legacy":26})
+PASS  2b migration 018 added recipe_versions.servings and backfilled nothing: {"column":"present","versionsWithYield":0,"rehearsalRecipe":[]}
+PASS  3 this release projects the upgraded week as 6d52c87 did: amounts, packages, to send and status on every line; review identity changed only where exact rows are behind a line: none
+PASS  3 6d52c87 still projects the same amounts, packages and to-send on the upgraded schema (an approval this release marked stale stays stale: none)
+PASS  4 after this release saved an exact recipe ({"exact":9,"legacy":26}), 6d52c87 still recomputes every week
+PASS  4b this release opened a meal list: 4 list lines, 3 naming selected meals, 1 unknown (needs a quantity), approvals [{"ingredient_key":"salmon","state":"active"}], undated week [["meal_list",null]]
+PASS  4b 6d52c87 recomputes every week and loads a member's snapshot with an open meal list present (it shows: {"weekId":"842175fa-0bad-44b0-ac39-8abdce732c43","weekStart":"2026-10-12","groceryLines":13,"mealList":{"meals":2,"lines":4}})
+PASS  4b 6d52c87 already knows meal lists (migration 017): after it recomputed, the list is exactly as this release left it; no calendar line names a selected meal
+PASS  4b back on this release, the list is unchanged (lines, selected meals, needs-a-quantity item and approval as before)
+PASS  5 this release's export (legacy and exact rows) restores and re-exports identically
+PASS  5 6d52c87's pre-upgrade export restores into the new schema with every row's basis as it was ({"exact":8,"legacy":26})
+PASS  5 known limit confirmed: an export taken from the upgraded database (exact rows; from migration 018 on, every export, as it carries recipe_versions.servings) needs this release (or later) to restore; 6d52c87's schema refuses it and nothing was half-restored
+PASS  7 this release recorded 'makes 6' on a recipe 6d52c87 wrote (all legacy rows): {"recipeId":"77e90441-2b6e-4edd-8cce-6448501ec64b","from":1,"version":2,"servings":6,"rows":3,"rowsUnchanged":true}
+PASS  7 rollback: 6d52c87 still saves that recipe on the upgraded schema, every row unchanged: {"version":3,"rowsUnchanged":true}
+PASS  7 known rollback limit confirmed: the version 6d52c87 wrote has no recorded yield (it does not know the column); the version that recorded it still has 6: {"column":"present","versionsWithYield":1,"rehearsalRecipe":[{"version_no":1,"servings":null},{"version_no":2,"servings":6},{"version_no":3,"servings":null}]}
+PASS  6 6d52c87's vitest suite passes on the upgraded database (all migrations of this release):  Tests 1220 passed (1220)
+Result: PASS — /tmp/table-upgrade-rehearsal-6d52c87-20261014T140353Z

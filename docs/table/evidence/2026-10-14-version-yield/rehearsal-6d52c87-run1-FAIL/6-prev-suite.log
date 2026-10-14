@@ -1,0 +1,35 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:5:41). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.3 /tmp/tmp.jTocEJgoKH/prev
+
+ ❯ tests/integration/cf-reference-recipes.test.ts (8 tests | 1 failed) 9327ms
+   ❯ CF-B Brisket tacos (5)
+     × CF-B5: export → restore keeps the Needs-a-quantity items 1243ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/cf-reference-recipes.test.ts > CF-B Brisket tacos > CF-B5: export → restore keeps the Needs-a-quantity items
+error: column "servings" of relation "recipe_versions" does not exist
+ ❯ ../../../home/user/table-shadcn/node_modules/pg/lib/client.js:694:17
+ ❯ restoreHousehold src/server/export.ts:144:9
+    142|             : types.get(k) === "bytea" && typeof o[k] === "string" ? B…
+    143|               : o[k]);
+    144|         await c.query(
+       |         ^
+    145|           `INSERT INTO ${s.table} (${cols.map((k) => `"${k}"`).join(",…
+    146|           vals,
+ ❯ tests/integration/cf-reference-recipes.test.ts:266:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 61 passed (62)
+      Tests  1 failed | 1219 passed (1220)
+   Start at  13:54:53
+   Duration  469.83s (tests 94%, import 5%, transform 1%)
+
+    Isolate  62 workers spawned · ~196ms startup each (spawn + environment, per file)
+             at least ~11.94s faster with isolate: false — reuses workers across files instead of one per file
+

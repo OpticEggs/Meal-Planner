@@ -1,0 +1,2 @@
+{"t":"2026-10-14T13:54:47.349Z","at":"command","command":"SaveRecipeVersion","operationId":"rehearsal-b51-record","status":"accepted","seq":27,"replayed":false}
+{"recipeId":"faa5449b-783a-4348-8d89-32cb35e392c7","from":1,"version":2,"servings":6,"rows":3,"rowsUnchanged":true}

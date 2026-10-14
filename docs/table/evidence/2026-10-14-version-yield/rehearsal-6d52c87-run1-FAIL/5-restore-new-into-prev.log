@@ -1,0 +1,29 @@
+/home/user/table-shadcn/node_modules/pg/lib/client.js:694
+          Error.captureStackTrace(err)
+                ^
+
+error: column "servings" of relation "recipe_versions" does not exist
+    at /home/user/table-shadcn/node_modules/pg/lib/client.js:694:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async restoreHousehold (/tmp/tmp.jTocEJgoKH/prev/src/server/export.ts:144:9)
+    at async <anonymous> (/home/user/table-shadcn/scripts/rehearsal/data.mts:39:9) {
+  length: 137,
+  severity: 'ERROR',
+  code: '42703',
+  detail: undefined,
+  hint: undefined,
+  position: '334',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_target.c',
+  line: '1066',
+  routine: 'checkInsertTargets'
+}
+
+Node.js v22.22.0

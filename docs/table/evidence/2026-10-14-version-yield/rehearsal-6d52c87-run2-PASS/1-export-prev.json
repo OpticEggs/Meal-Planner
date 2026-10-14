@@ -1,0 +1,4565 @@
+{
+ "format": "table-household-export",
+ "version": 1,
+ "exportedAt": "(rehearsal)",
+ "note": "Contains household recipes, versions, preferences, plans and grocery records. No credentials, sessions or account data.",
+ "tables": {
+  "households": [
+   {
+    "id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "name": "Fixture household (test only)",
+    "timezone": "America/New_York",
+    "update_seq": "22",
+    "fixture": true,
+    "created_at": "2026-10-14T14:04:06.165Z",
+    "purchasing_revision": "0",
+    "preferred_destination": "retailer_cart"
+   }
+  ],
+  "members": [
+   {
+    "id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "display_name": "Jon",
+    "created_at": "2026-10-14T14:04:06.340Z"
+   },
+   {
+    "id": "b20009e1-ffc4-40d5-a21d-6c297f5d0c9f",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "display_name": "Alex",
+    "created_at": "2026-10-14T14:04:06.473Z"
+   }
+  ],
+  "household_settings": [
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "store_label": null,
+    "location_id": null,
+    "budget_scope": null,
+    "budget_limit_minor": null,
+    "budget_currency": "USD",
+    "budget_firm": false,
+    "equipment": [],
+    "cooking_sessions": null,
+    "variety": null,
+    "max_new_recipes": null,
+    "max_effort": null,
+    "revision": 1,
+    "updated_at": "2026-10-14T14:04:06.169Z"
+   }
+  ],
+  "member_targets": [],
+  "exclusions": [],
+  "ingredients": [
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "key": "black_beans",
+    "name": "Black beans (canned)",
+    "tags": [
+     "legume"
+    ],
+    "allergen_info_known": true,
+    "fixture": true
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "key": "broccoli",
+    "name": "Broccoli",
+    "tags": [
+     "vegetable"
+    ],
+    "allergen_info_known": true,
+    "fixture": true
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "key": "cheese",
+    "name": "Cheddar cheese",
+    "tags": [
+     "dairy"
+    ],
+    "allergen_info_known": true,
+    "fixture": true
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "key": "chicken_thigh",
+    "name": "Chicken thighs",
+    "tags": [
+     "poultry"
+    ],
+    "allergen_info_known": true,
+    "fixture": true
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "key": "cucumber",
+    "name": "Cucumber",
+    "tags": [
+     "vegetable"
+    ],
+    "allergen_info_known": true,
+    "fixture": true
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "key": "greek_yogurt",
+    "name": "Plain Greek yogurt",
+    "tags": [
+     "dairy"
+    ],
+    "allergen_info_known": true,
+    "fixture": true
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "key": "ground_turkey",
+    "name": "Ground turkey",
+    "tags": [
+     "poultry"
+    ],
+    "allergen_info_known": true,
+    "fixture": true
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "key": "kidney_beans",
+    "name": "Kidney beans (canned)",
+    "tags": [
+     "legume"
+    ],
+    "allergen_info_known": true,
+    "fixture": true
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "key": "olive_oil",
+    "name": "Olive oil",
+    "tags": [
+     "oil"
+    ],
+    "allergen_info_known": true,
+    "fixture": true
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "key": "pasta",
+    "name": "Penne pasta",
+    "tags": [
+     "wheat"
+    ],
+    "allergen_info_known": true,
+    "fixture": true
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "key": "pesto",
+    "name": "Basil pesto (store-bought)",
+    "tags": [],
+    "allergen_info_known": false,
+    "fixture": true
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "key": "pita",
+    "name": "Pita bread",
+    "tags": [
+     "wheat"
+    ],
+    "allergen_info_known": true,
+    "fixture": true
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "key": "rice",
+    "name": "Jasmine rice",
+    "tags": [
+     "grain"
+    ],
+    "allergen_info_known": true,
+    "fixture": true
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "key": "salmon",
+    "name": "Salmon fillet",
+    "tags": [
+     "fish"
+    ],
+    "allergen_info_known": true,
+    "fixture": true
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "key": "soy_sauce",
+    "name": "Soy sauce",
+    "tags": [
+     "soy",
+     "wheat"
+    ],
+    "allergen_info_known": true,
+    "fixture": true
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "key": "tofu",
+    "name": "Firm tofu",
+    "tags": [
+     "soy"
+    ],
+    "allergen_info_known": true,
+    "fixture": true
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "key": "tomato_sauce",
+    "name": "Tomato sauce",
+    "tags": [],
+    "allergen_info_known": true,
+    "fixture": true
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "key": "tortillas",
+    "name": "Corn tortillas",
+    "tags": [
+     "grain"
+    ],
+    "allergen_info_known": true,
+    "fixture": true
+   }
+  ],
+  "nutrition_matches": [],
+  "ingredient_nutrition": [
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "broccoli",
+    "basis_qty": "100",
+    "basis_unit": "g",
+    "form": "raw",
+    "calories": "34",
+    "protein_g": "2.8",
+    "carbs_g": "6.6",
+    "fat_g": "0.4",
+    "source": "FIXTURE — synthetic test values, not nutrition data",
+    "synthetic": true,
+    "match_id": null,
+    "provenance_kind": "fixture_synthetic",
+    "fdc_id": null,
+    "data_type": null,
+    "retrieved_at": null
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "chicken_thigh",
+    "basis_qty": "100",
+    "basis_unit": "g",
+    "form": "raw",
+    "calories": "177",
+    "protein_g": "24.2",
+    "carbs_g": "0",
+    "fat_g": "8.2",
+    "source": "FIXTURE — synthetic test values, not nutrition data",
+    "synthetic": true,
+    "match_id": null,
+    "provenance_kind": "fixture_synthetic",
+    "fdc_id": null,
+    "data_type": null,
+    "retrieved_at": null
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "cucumber",
+    "basis_qty": "1",
+    "basis_unit": "each",
+    "form": "raw",
+    "calories": "45",
+    "protein_g": "2",
+    "carbs_g": "11",
+    "fat_g": "0.3",
+    "source": "FIXTURE — synthetic test values, not nutrition data",
+    "synthetic": true,
+    "match_id": null,
+    "provenance_kind": "fixture_synthetic",
+    "fdc_id": null,
+    "data_type": null,
+    "retrieved_at": null
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "olive_oil",
+    "basis_qty": "15",
+    "basis_unit": "ml",
+    "form": "raw",
+    "calories": "120",
+    "protein_g": "0",
+    "carbs_g": "0",
+    "fat_g": "13.5",
+    "source": "FIXTURE — synthetic test values, not nutrition data",
+    "synthetic": true,
+    "match_id": null,
+    "provenance_kind": "fixture_synthetic",
+    "fdc_id": null,
+    "data_type": null,
+    "retrieved_at": null
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "rice",
+    "basis_qty": "100",
+    "basis_unit": "g",
+    "form": "raw",
+    "calories": "365",
+    "protein_g": "7.1",
+    "carbs_g": "80",
+    "fat_g": "0.7",
+    "source": "FIXTURE — synthetic test values, not nutrition data",
+    "synthetic": true,
+    "match_id": null,
+    "provenance_kind": "fixture_synthetic",
+    "fdc_id": null,
+    "data_type": null,
+    "retrieved_at": null
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "salmon",
+    "basis_qty": "100",
+    "basis_unit": "g",
+    "form": "raw",
+    "calories": "208",
+    "protein_g": "20",
+    "carbs_g": "0",
+    "fat_g": "13",
+    "source": "FIXTURE — synthetic test values, not nutrition data",
+    "synthetic": true,
+    "match_id": null,
+    "provenance_kind": "fixture_synthetic",
+    "fdc_id": null,
+    "data_type": null,
+    "retrieved_at": null
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "tofu",
+    "basis_qty": "100",
+    "basis_unit": "g",
+    "form": "raw",
+    "calories": "144",
+    "protein_g": "17",
+    "carbs_g": "3",
+    "fat_g": "9",
+    "source": "FIXTURE — synthetic test values, not nutrition data",
+    "synthetic": true,
+    "match_id": null,
+    "provenance_kind": "fixture_synthetic",
+    "fdc_id": null,
+    "data_type": null,
+    "retrieved_at": null
+   }
+  ],
+  "recipe_images": [],
+  "recipes": [
+   {
+    "id": "0c9e0e67-980e-424a-95de-d8339067f07e",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "current_version_id": "365888dc-5a3c-4d2b-b702-e30d2042e8b4",
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:06.612Z",
+    "archived_at": null,
+    "member_photo_id": null,
+    "photo_revision": 0
+   },
+   {
+    "id": "349454e7-a006-4e3b-9ea5-f1eee055ad25",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "current_version_id": "f77080cf-a8d1-4db8-a92a-3400e93d2945",
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:06.907Z",
+    "archived_at": null,
+    "member_photo_id": null,
+    "photo_revision": 0
+   },
+   {
+    "id": "40830de7-a0ea-4e02-aa2e-da751c07cec0",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "current_version_id": "198d4bed-49c1-4856-b0f3-f3df1f9d4bb9",
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:06.612Z",
+    "archived_at": null,
+    "member_photo_id": null,
+    "photo_revision": 0
+   },
+   {
+    "id": "42571bc6-1438-4c3b-a5e1-b11375a46b79",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "current_version_id": "f1769ea5-0013-43db-a683-b403d197e854",
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:06.932Z",
+    "archived_at": null,
+    "member_photo_id": null,
+    "photo_revision": 0
+   },
+   {
+    "id": "77e90441-2b6e-4edd-8cce-6448501ec64b",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "current_version_id": "7c524f33-5208-485b-92b2-7c80677c83d4",
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:06.612Z",
+    "archived_at": null,
+    "member_photo_id": null,
+    "photo_revision": 0
+   },
+   {
+    "id": "9df0ce45-0bf1-4c93-a6ce-7abb27dd43be",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "current_version_id": "3c53f659-a3da-48e1-a306-b74cd188e5b9",
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:06.612Z",
+    "archived_at": null,
+    "member_photo_id": null,
+    "photo_revision": 0
+   },
+   {
+    "id": "a8a00f12-3440-41da-876a-1da6cf92cd0b",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "current_version_id": "f4507735-a9df-4508-bbee-b1da36730e8a",
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:06.612Z",
+    "archived_at": null,
+    "member_photo_id": null,
+    "photo_revision": 0
+   },
+   {
+    "id": "b179aa16-01b2-4409-8542-e954ff8fb57f",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "current_version_id": "f630e76d-0a52-4baf-9000-cca1dbf4d585",
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:06.612Z",
+    "archived_at": null,
+    "member_photo_id": null,
+    "photo_revision": 0
+   },
+   {
+    "id": "bed953b9-84ec-49dc-a335-c429ba73b0b0",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "current_version_id": "38a438ba-a013-40f6-896e-48b3186e6c23",
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:06.612Z",
+    "archived_at": null,
+    "member_photo_id": null,
+    "photo_revision": 0
+   },
+   {
+    "id": "d74c78eb-f39f-40d7-9351-52f4dbf5a4e1",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "current_version_id": "1b75a428-aa29-4e67-90c4-df219f4ce08b",
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:07.298Z",
+    "archived_at": null,
+    "member_photo_id": null,
+    "photo_revision": 0
+   },
+   {
+    "id": "e874867d-4ad1-4ce5-bacb-da73326b192a",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "current_version_id": "10c12707-93c7-4948-b98c-418ce5814f30",
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:06.612Z",
+    "archived_at": null,
+    "member_photo_id": null,
+    "photo_revision": 0
+   }
+  ],
+  "recipe_versions": [
+   {
+    "id": "10c12707-93c7-4948-b98c-418ce5814f30",
+    "recipe_id": "e874867d-4ad1-4ce5-bacb-da73326b192a",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "version_no": 1,
+    "title": "Fixture: Chicken penne",
+    "cuisine": "Italian-American",
+    "summary": "Test fixture recipe (penne).",
+    "effort_minutes": 30,
+    "effort_level": "easy",
+    "leftover_friendly": true,
+    "instructions": "1. Prepare the components.\n2. Cook Chicken penne.\n3. Plate each person's portions.",
+    "reheat_instructions": "Reheat covered at 350°F for 15 minutes, or microwave 2–3 minutes, until hot throughout.",
+    "provenance": "fixture",
+    "source_label": "Test fixture — not a verified recipe",
+    "estimate": true,
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:06.612Z",
+    "source_url": null,
+    "import_draft_id": null,
+    "source_author": null,
+    "source_site_name": null,
+    "image_id": null
+   },
+   {
+    "id": "198d4bed-49c1-4856-b0f3-f3df1f9d4bb9",
+    "recipe_id": "40830de7-a0ea-4e02-aa2e-da751c07cec0",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "version_no": 1,
+    "title": "Fixture: Turkey chili",
+    "cuisine": "American",
+    "summary": "Test fixture recipe (chili).",
+    "effort_minutes": 50,
+    "effort_level": "medium",
+    "leftover_friendly": true,
+    "instructions": "1. Prepare the components.\n2. Cook Turkey chili.\n3. Plate each person's portions.",
+    "reheat_instructions": "Reheat covered at 350°F for 15 minutes, or microwave 2–3 minutes, until hot throughout.",
+    "provenance": "fixture",
+    "source_label": "Test fixture — not a verified recipe",
+    "estimate": true,
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:06.612Z",
+    "source_url": null,
+    "import_draft_id": null,
+    "source_author": null,
+    "source_site_name": null,
+    "image_id": null
+   },
+   {
+    "id": "1b75a428-aa29-4e67-90c4-df219f4ce08b",
+    "recipe_id": "d74c78eb-f39f-40d7-9351-52f4dbf5a4e1",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "version_no": 3,
+    "title": "Cucumber two ways (ours)",
+    "cuisine": null,
+    "summary": null,
+    "effort_minutes": null,
+    "effort_level": null,
+    "leftover_friendly": false,
+    "instructions": "",
+    "reheat_instructions": "",
+    "provenance": "manual",
+    "source_label": null,
+    "estimate": true,
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:07.367Z",
+    "source_url": "https://example.org/rehearsal-twice",
+    "import_draft_id": null,
+    "source_author": null,
+    "source_site_name": null,
+    "image_id": null
+   },
+   {
+    "id": "365888dc-5a3c-4d2b-b702-e30d2042e8b4",
+    "recipe_id": "0c9e0e67-980e-424a-95de-d8339067f07e",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "version_no": 1,
+    "title": "Fixture: Chicken shawarma bowls",
+    "cuisine": "Middle Eastern",
+    "summary": "Test fixture recipe (shawarma).",
+    "effort_minutes": 45,
+    "effort_level": "medium",
+    "leftover_friendly": true,
+    "instructions": "1. Prepare the components.\n2. Cook Chicken shawarma bowls.\n3. Plate each person's portions.",
+    "reheat_instructions": "Reheat covered at 350°F for 15 minutes, or microwave 2–3 minutes, until hot throughout.",
+    "provenance": "fixture",
+    "source_label": "Test fixture — not a verified recipe",
+    "estimate": true,
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:06.612Z",
+    "source_url": null,
+    "import_draft_id": null,
+    "source_author": null,
+    "source_site_name": null,
+    "image_id": null
+   },
+   {
+    "id": "38a438ba-a013-40f6-896e-48b3186e6c23",
+    "recipe_id": "bed953b9-84ec-49dc-a335-c429ba73b0b0",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "version_no": 1,
+    "title": "Fixture: Salmon rice bowls",
+    "cuisine": "Japanese-inspired",
+    "summary": "Test fixture recipe (salmon).",
+    "effort_minutes": 25,
+    "effort_level": "easy",
+    "leftover_friendly": false,
+    "instructions": "1. Prepare the components.\n2. Cook Salmon rice bowls.\n3. Plate each person's portions.",
+    "reheat_instructions": "",
+    "provenance": "fixture",
+    "source_label": "Test fixture — not a verified recipe",
+    "estimate": true,
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:06.612Z",
+    "source_url": null,
+    "import_draft_id": null,
+    "source_author": null,
+    "source_site_name": null,
+    "image_id": null
+   },
+   {
+    "id": "3c53f659-a3da-48e1-a306-b74cd188e5b9",
+    "recipe_id": "9df0ce45-0bf1-4c93-a6ce-7abb27dd43be",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "version_no": 1,
+    "title": "Fixture: Pesto pasta",
+    "cuisine": "Italian",
+    "summary": "Test fixture recipe (pesto).",
+    "effort_minutes": 15,
+    "effort_level": "easy",
+    "leftover_friendly": false,
+    "instructions": "1. Prepare the components.\n2. Cook Pesto pasta.\n3. Plate each person's portions.",
+    "reheat_instructions": "",
+    "provenance": "fixture",
+    "source_label": "Test fixture — not a verified recipe",
+    "estimate": true,
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:06.612Z",
+    "source_url": null,
+    "import_draft_id": null,
+    "source_author": null,
+    "source_site_name": null,
+    "image_id": null
+   },
+   {
+    "id": "4b40b730-da77-462b-ab0a-9d6f629bf39f",
+    "recipe_id": "d74c78eb-f39f-40d7-9351-52f4dbf5a4e1",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "version_no": 2,
+    "title": "Cucumber two ways",
+    "cuisine": null,
+    "summary": null,
+    "effort_minutes": null,
+    "effort_level": null,
+    "leftover_friendly": false,
+    "instructions": "",
+    "reheat_instructions": "",
+    "provenance": "manual",
+    "source_label": null,
+    "estimate": true,
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:07.341Z",
+    "source_url": "https://example.org/rehearsal-twice",
+    "import_draft_id": null,
+    "source_author": null,
+    "source_site_name": null,
+    "image_id": null
+   },
+   {
+    "id": "719a9ec5-e27d-4b49-bfa7-3db985c2816e",
+    "recipe_id": "d74c78eb-f39f-40d7-9351-52f4dbf5a4e1",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "version_no": 1,
+    "title": "Cucumber two ways",
+    "cuisine": null,
+    "summary": null,
+    "effort_minutes": null,
+    "effort_level": null,
+    "leftover_friendly": false,
+    "instructions": "",
+    "reheat_instructions": "",
+    "provenance": "imported",
+    "source_label": "example.org",
+    "estimate": true,
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:07.298Z",
+    "source_url": "https://example.org/rehearsal-twice",
+    "import_draft_id": "b6763146-9f1a-45e1-a4d5-9df2db5c623f",
+    "source_author": null,
+    "source_site_name": null,
+    "image_id": null
+   },
+   {
+    "id": "7c524f33-5208-485b-92b2-7c80677c83d4",
+    "recipe_id": "77e90441-2b6e-4edd-8cce-6448501ec64b",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "version_no": 1,
+    "title": "Fixture: Black bean tacos",
+    "cuisine": "Mexican",
+    "summary": "Test fixture recipe (tacos).",
+    "effort_minutes": 20,
+    "effort_level": "easy",
+    "leftover_friendly": false,
+    "instructions": "1. Prepare the components.\n2. Cook Black bean tacos.\n3. Plate each person's portions.",
+    "reheat_instructions": "",
+    "provenance": "fixture",
+    "source_label": "Test fixture — not a verified recipe",
+    "estimate": true,
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:06.612Z",
+    "source_url": null,
+    "import_draft_id": null,
+    "source_author": null,
+    "source_site_name": null,
+    "image_id": null
+   },
+   {
+    "id": "f1769ea5-0013-43db-a683-b403d197e854",
+    "recipe_id": "42571bc6-1438-4c3b-a5e1-b11375a46b79",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "version_no": 1,
+    "title": "Rehearsal rice",
+    "cuisine": null,
+    "summary": null,
+    "effort_minutes": null,
+    "effort_level": null,
+    "leftover_friendly": false,
+    "instructions": "",
+    "reheat_instructions": "",
+    "provenance": "manual",
+    "source_label": null,
+    "estimate": true,
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:06.932Z",
+    "source_url": null,
+    "import_draft_id": null,
+    "source_author": null,
+    "source_site_name": null,
+    "image_id": null
+   },
+   {
+    "id": "f4507735-a9df-4508-bbee-b1da36730e8a",
+    "recipe_id": "a8a00f12-3440-41da-876a-1da6cf92cd0b",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "version_no": 1,
+    "title": "Fixture: Sheet-pan chicken and rice",
+    "cuisine": "American",
+    "summary": "Test fixture recipe (chicken_rice).",
+    "effort_minutes": 40,
+    "effort_level": "medium",
+    "leftover_friendly": true,
+    "instructions": "1. Prepare the components.\n2. Cook Sheet-pan chicken and rice.\n3. Plate each person's portions.",
+    "reheat_instructions": "Reheat covered at 350°F for 15 minutes, or microwave 2–3 minutes, until hot throughout.",
+    "provenance": "fixture",
+    "source_label": "Test fixture — not a verified recipe",
+    "estimate": true,
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:06.612Z",
+    "source_url": null,
+    "import_draft_id": null,
+    "source_author": null,
+    "source_site_name": null,
+    "image_id": null
+   },
+   {
+    "id": "f630e76d-0a52-4baf-9000-cca1dbf4d585",
+    "recipe_id": "b179aa16-01b2-4409-8542-e954ff8fb57f",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "version_no": 1,
+    "title": "Fixture: Tofu veggie stir-fry",
+    "cuisine": "Chinese-American",
+    "summary": "Test fixture recipe (stirfry).",
+    "effort_minutes": 25,
+    "effort_level": "easy",
+    "leftover_friendly": false,
+    "instructions": "1. Prepare the components.\n2. Cook Tofu veggie stir-fry.\n3. Plate each person's portions.",
+    "reheat_instructions": "",
+    "provenance": "fixture",
+    "source_label": "Test fixture — not a verified recipe",
+    "estimate": true,
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:06.612Z",
+    "source_url": null,
+    "import_draft_id": null,
+    "source_author": null,
+    "source_site_name": null,
+    "image_id": null
+   },
+   {
+    "id": "f77080cf-a8d1-4db8-a92a-3400e93d2945",
+    "recipe_id": "349454e7-a006-4e3b-9ea5-f1eee055ad25",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "version_no": 1,
+    "title": "Cucumber salad",
+    "cuisine": null,
+    "summary": "Not counted in groceries: 1 tsp kosher salt",
+    "effort_minutes": null,
+    "effort_level": null,
+    "leftover_friendly": false,
+    "instructions": "",
+    "reheat_instructions": "",
+    "provenance": "imported",
+    "source_label": "example.org",
+    "estimate": true,
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:06.907Z",
+    "source_url": "https://example.org/rehearsal-salad",
+    "import_draft_id": "95d3e70e-784a-494c-84eb-2f365b686d5b",
+    "source_author": null,
+    "source_site_name": null,
+    "image_id": null
+   }
+  ],
+  "recipe_components": [
+   {
+    "recipe_version_id": "10c12707-93c7-4948-b98c-418ce5814f30",
+    "key": "base",
+    "name": "Penne in sauce",
+    "sort": 2
+   },
+   {
+    "recipe_version_id": "10c12707-93c7-4948-b98c-418ce5814f30",
+    "key": "protein",
+    "name": "Chicken",
+    "sort": 0
+   },
+   {
+    "recipe_version_id": "198d4bed-49c1-4856-b0f3-f3df1f9d4bb9",
+    "key": "main",
+    "name": "Chili",
+    "sort": 0
+   },
+   {
+    "recipe_version_id": "1b75a428-aa29-4e67-90c4-df219f4ce08b",
+    "key": "main",
+    "name": "Main",
+    "sort": 0
+   },
+   {
+    "recipe_version_id": "365888dc-5a3c-4d2b-b702-e30d2042e8b4",
+    "key": "protein",
+    "name": "Chicken",
+    "sort": 0
+   },
+   {
+    "recipe_version_id": "365888dc-5a3c-4d2b-b702-e30d2042e8b4",
+    "key": "sauce",
+    "name": "Yogurt sauce",
+    "sort": 2
+   },
+   {
+    "recipe_version_id": "365888dc-5a3c-4d2b-b702-e30d2042e8b4",
+    "key": "side",
+    "name": "Pita and cucumber",
+    "sort": 4
+   },
+   {
+    "recipe_version_id": "38a438ba-a013-40f6-896e-48b3186e6c23",
+    "key": "base",
+    "name": "Rice",
+    "sort": 2
+   },
+   {
+    "recipe_version_id": "38a438ba-a013-40f6-896e-48b3186e6c23",
+    "key": "protein",
+    "name": "Salmon",
+    "sort": 0
+   },
+   {
+    "recipe_version_id": "38a438ba-a013-40f6-896e-48b3186e6c23",
+    "key": "veg",
+    "name": "Cucumber",
+    "sort": 4
+   },
+   {
+    "recipe_version_id": "3c53f659-a3da-48e1-a306-b74cd188e5b9",
+    "key": "main",
+    "name": "Pesto pasta",
+    "sort": 0
+   },
+   {
+    "recipe_version_id": "4b40b730-da77-462b-ab0a-9d6f629bf39f",
+    "key": "main",
+    "name": "Main",
+    "sort": 0
+   },
+   {
+    "recipe_version_id": "719a9ec5-e27d-4b49-bfa7-3db985c2816e",
+    "key": "main",
+    "name": "Main",
+    "sort": 0
+   },
+   {
+    "recipe_version_id": "7c524f33-5208-485b-92b2-7c80677c83d4",
+    "key": "filling",
+    "name": "Beans and cheese",
+    "sort": 0
+   },
+   {
+    "recipe_version_id": "7c524f33-5208-485b-92b2-7c80677c83d4",
+    "key": "shell",
+    "name": "Tortillas",
+    "sort": 3
+   },
+   {
+    "recipe_version_id": "f1769ea5-0013-43db-a683-b403d197e854",
+    "key": "main",
+    "name": "Main",
+    "sort": 0
+   },
+   {
+    "recipe_version_id": "f4507735-a9df-4508-bbee-b1da36730e8a",
+    "key": "base",
+    "name": "Rice",
+    "sort": 2
+   },
+   {
+    "recipe_version_id": "f4507735-a9df-4508-bbee-b1da36730e8a",
+    "key": "protein",
+    "name": "Chicken",
+    "sort": 0
+   },
+   {
+    "recipe_version_id": "f4507735-a9df-4508-bbee-b1da36730e8a",
+    "key": "veg",
+    "name": "Roasted broccoli",
+    "sort": 4
+   },
+   {
+    "recipe_version_id": "f630e76d-0a52-4baf-9000-cca1dbf4d585",
+    "key": "base",
+    "name": "Rice",
+    "sort": 3
+   },
+   {
+    "recipe_version_id": "f630e76d-0a52-4baf-9000-cca1dbf4d585",
+    "key": "main",
+    "name": "Tofu",
+    "sort": 0
+   },
+   {
+    "recipe_version_id": "f630e76d-0a52-4baf-9000-cca1dbf4d585",
+    "key": "veg",
+    "name": "Broccoli",
+    "sort": 5
+   },
+   {
+    "recipe_version_id": "f77080cf-a8d1-4db8-a92a-3400e93d2945",
+    "key": "main",
+    "name": "Main",
+    "sort": 0
+   }
+  ],
+  "recipe_ingredients": [
+   {
+    "id": "0cfa1d78-7599-4765-b020-bac345a4060f",
+    "recipe_version_id": "7c524f33-5208-485b-92b2-7c80677c83d4",
+    "component_key": "shell",
+    "ingredient_key": "tortillas",
+    "quantity": "3",
+    "unit": "each",
+    "form": "raw",
+    "note": null,
+    "sort": 4,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "145b6389-3653-4363-94c2-e41d21faa985",
+    "recipe_version_id": "198d4bed-49c1-4856-b0f3-f3df1f9d4bb9",
+    "component_key": "main",
+    "ingredient_key": "ground_turkey",
+    "quantity": "4",
+    "unit": "oz",
+    "form": "raw",
+    "note": null,
+    "sort": 1,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "1a0a524b-85ae-48a9-8b2c-c9e3b84a6ad5",
+    "recipe_version_id": "f1769ea5-0013-43db-a683-b403d197e854",
+    "component_key": "main",
+    "ingredient_key": "rice",
+    "quantity": "0.6667",
+    "unit": "cup",
+    "form": "raw",
+    "note": null,
+    "sort": 0,
+    "quantity_basis": "exact",
+    "exact_amount": "6667/10000",
+    "exact_servings": 1,
+    "source_row_id": null
+   },
+   {
+    "id": "1d932bdc-9155-4323-bf02-ed7dd8ae4376",
+    "recipe_version_id": "365888dc-5a3c-4d2b-b702-e30d2042e8b4",
+    "component_key": "side",
+    "ingredient_key": "pita",
+    "quantity": "1",
+    "unit": "each",
+    "form": "raw",
+    "note": null,
+    "sort": 5,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "21df1352-5fa0-44ee-8533-e10e5cf283e2",
+    "recipe_version_id": "10c12707-93c7-4948-b98c-418ce5814f30",
+    "component_key": "protein",
+    "ingredient_key": "chicken_thigh",
+    "quantity": "5",
+    "unit": "oz",
+    "form": "raw",
+    "note": null,
+    "sort": 1,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "227fa967-6755-4d81-b66e-634ad1e526a0",
+    "recipe_version_id": "1b75a428-aa29-4e67-90c4-df219f4ce08b",
+    "component_key": "main",
+    "ingredient_key": "cucumber",
+    "quantity": "0.666666666666",
+    "unit": "each",
+    "form": "raw",
+    "note": null,
+    "sort": 0,
+    "quantity_basis": "exact",
+    "exact_amount": "2",
+    "exact_servings": 3,
+    "source_row_id": "cbcf5561-3f02-4856-9ce9-ebe2b7c4b4f8"
+   },
+   {
+    "id": "2dad0ca7-78cd-4b5b-ba7d-7b5afbfd4815",
+    "recipe_version_id": "f4507735-a9df-4508-bbee-b1da36730e8a",
+    "component_key": "veg",
+    "ingredient_key": "olive_oil",
+    "quantity": "1",
+    "unit": "tbsp",
+    "form": "raw",
+    "note": null,
+    "sort": 6,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "32b0aa9d-ec41-4b79-b533-c8c0c4e7b473",
+    "recipe_version_id": "38a438ba-a013-40f6-896e-48b3186e6c23",
+    "component_key": "base",
+    "ingredient_key": "rice",
+    "quantity": "75",
+    "unit": "g",
+    "form": "raw",
+    "note": null,
+    "sort": 3,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "44e269e1-0723-4f9e-9727-f18ff9e75d45",
+    "recipe_version_id": "365888dc-5a3c-4d2b-b702-e30d2042e8b4",
+    "component_key": "protein",
+    "ingredient_key": "chicken_thigh",
+    "quantity": "5",
+    "unit": "oz",
+    "form": "raw",
+    "note": null,
+    "sort": 1,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "480c7ded-9b1b-42b0-a1c4-bc56010dcb31",
+    "recipe_version_id": "198d4bed-49c1-4856-b0f3-f3df1f9d4bb9",
+    "component_key": "main",
+    "ingredient_key": "kidney_beans",
+    "quantity": "0.5",
+    "unit": "can",
+    "form": "raw",
+    "note": null,
+    "sort": 2,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "5372f713-5e43-4718-a07b-c5ff07e66f14",
+    "recipe_version_id": "3c53f659-a3da-48e1-a306-b74cd188e5b9",
+    "component_key": "main",
+    "ingredient_key": "pasta",
+    "quantity": "3",
+    "unit": "oz",
+    "form": "raw",
+    "note": null,
+    "sort": 1,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "59672ddc-b7f3-4cf4-86dc-b3a7c8b713a3",
+    "recipe_version_id": "365888dc-5a3c-4d2b-b702-e30d2042e8b4",
+    "component_key": "sauce",
+    "ingredient_key": "greek_yogurt",
+    "quantity": "4",
+    "unit": "oz",
+    "form": "raw",
+    "note": null,
+    "sort": 3,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "6984402b-0ac5-483c-a43f-b69a139f2be1",
+    "recipe_version_id": "f630e76d-0a52-4baf-9000-cca1dbf4d585",
+    "component_key": "base",
+    "ingredient_key": "rice",
+    "quantity": "75",
+    "unit": "g",
+    "form": "raw",
+    "note": null,
+    "sort": 4,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "72fcc4f6-9564-450e-83a3-ace0e44e32a1",
+    "recipe_version_id": "38a438ba-a013-40f6-896e-48b3186e6c23",
+    "component_key": "protein",
+    "ingredient_key": "salmon",
+    "quantity": "6",
+    "unit": "oz",
+    "form": "raw",
+    "note": null,
+    "sort": 1,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "745c5115-ece5-4373-8ef9-b686cb2cd745",
+    "recipe_version_id": "10c12707-93c7-4948-b98c-418ce5814f30",
+    "component_key": "base",
+    "ingredient_key": "tomato_sauce",
+    "quantity": "0.5",
+    "unit": "cup",
+    "form": "raw",
+    "note": null,
+    "sort": 4,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "7b2114be-6afc-451b-b574-06f1a0413349",
+    "recipe_version_id": "f4507735-a9df-4508-bbee-b1da36730e8a",
+    "component_key": "protein",
+    "ingredient_key": "chicken_thigh",
+    "quantity": "6",
+    "unit": "oz",
+    "form": "raw",
+    "note": null,
+    "sort": 1,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "7d57faf7-c195-4463-b862-0e5ebd716d02",
+    "recipe_version_id": "f4507735-a9df-4508-bbee-b1da36730e8a",
+    "component_key": "veg",
+    "ingredient_key": "broccoli",
+    "quantity": "100",
+    "unit": "g",
+    "form": "raw",
+    "note": null,
+    "sort": 5,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "84b7239f-1437-4353-bb25-4cfa592dfba3",
+    "recipe_version_id": "38a438ba-a013-40f6-896e-48b3186e6c23",
+    "component_key": "veg",
+    "ingredient_key": "cucumber",
+    "quantity": "0.5",
+    "unit": "each",
+    "form": "raw",
+    "note": null,
+    "sort": 5,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "8f540084-e252-495e-84fa-6638276b237a",
+    "recipe_version_id": "1b75a428-aa29-4e67-90c4-df219f4ce08b",
+    "component_key": "main",
+    "ingredient_key": "cucumber",
+    "quantity": "0.666666666666",
+    "unit": "each",
+    "form": "raw",
+    "note": null,
+    "sort": 1,
+    "quantity_basis": "exact",
+    "exact_amount": "333333333333/500000000000",
+    "exact_servings": 1,
+    "source_row_id": "facad476-c971-48b1-9395-883214cc2f79"
+   },
+   {
+    "id": "946e1d5c-3130-49b2-bf3f-71a6301a9d38",
+    "recipe_version_id": "198d4bed-49c1-4856-b0f3-f3df1f9d4bb9",
+    "component_key": "main",
+    "ingredient_key": "tomato_sauce",
+    "quantity": "0.5",
+    "unit": "cup",
+    "form": "raw",
+    "note": null,
+    "sort": 3,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "b14fcfd5-adb4-48e2-868b-2a5576165d08",
+    "recipe_version_id": "3c53f659-a3da-48e1-a306-b74cd188e5b9",
+    "component_key": "main",
+    "ingredient_key": "pesto",
+    "quantity": "2",
+    "unit": "tbsp",
+    "form": "raw",
+    "note": null,
+    "sort": 2,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "b182ad31-7ab4-4059-ab21-9d5c390594c1",
+    "recipe_version_id": "f630e76d-0a52-4baf-9000-cca1dbf4d585",
+    "component_key": "main",
+    "ingredient_key": "soy_sauce",
+    "quantity": "1",
+    "unit": "tbsp",
+    "form": "raw",
+    "note": null,
+    "sort": 2,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "b7ad7131-d51c-4a43-aaa9-0609a048f5fe",
+    "recipe_version_id": "f77080cf-a8d1-4db8-a92a-3400e93d2945",
+    "component_key": "main",
+    "ingredient_key": "soy_sauce",
+    "quantity": "0.111111111111",
+    "unit": "cup",
+    "form": "raw",
+    "note": "From: 1/3 cup soy sauce",
+    "sort": 1,
+    "quantity_basis": "exact",
+    "exact_amount": "1/3",
+    "exact_servings": 3,
+    "source_row_id": null
+   },
+   {
+    "id": "b8eeb3f3-3862-4468-96da-0be30d590c2a",
+    "recipe_version_id": "7c524f33-5208-485b-92b2-7c80677c83d4",
+    "component_key": "filling",
+    "ingredient_key": "black_beans",
+    "quantity": "0.5",
+    "unit": "can",
+    "form": "raw",
+    "note": null,
+    "sort": 1,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "b8f77479-4341-4074-aa57-716a12828b24",
+    "recipe_version_id": "719a9ec5-e27d-4b49-bfa7-3db985c2816e",
+    "component_key": "main",
+    "ingredient_key": "cucumber",
+    "quantity": "0.666666666666",
+    "unit": "each",
+    "form": "raw",
+    "note": "From: 2 each cucumber",
+    "sort": 0,
+    "quantity_basis": "exact",
+    "exact_amount": "2",
+    "exact_servings": 3,
+    "source_row_id": null
+   },
+   {
+    "id": "c7db621e-41c7-4b8d-ad58-ac466b0795e9",
+    "recipe_version_id": "f630e76d-0a52-4baf-9000-cca1dbf4d585",
+    "component_key": "main",
+    "ingredient_key": "tofu",
+    "quantity": "120",
+    "unit": "g",
+    "form": "raw",
+    "note": null,
+    "sort": 1,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "c93eace8-b2e7-45cb-974d-b7a88215f24e",
+    "recipe_version_id": "365888dc-5a3c-4d2b-b702-e30d2042e8b4",
+    "component_key": "side",
+    "ingredient_key": "cucumber",
+    "quantity": "0.5",
+    "unit": "each",
+    "form": "raw",
+    "note": null,
+    "sort": 6,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "cbcf5561-3f02-4856-9ce9-ebe2b7c4b4f8",
+    "recipe_version_id": "4b40b730-da77-462b-ab0a-9d6f629bf39f",
+    "component_key": "main",
+    "ingredient_key": "cucumber",
+    "quantity": "0.666666666666",
+    "unit": "each",
+    "form": "raw",
+    "note": null,
+    "sort": 0,
+    "quantity_basis": "exact",
+    "exact_amount": "2",
+    "exact_servings": 3,
+    "source_row_id": "b8f77479-4341-4074-aa57-716a12828b24"
+   },
+   {
+    "id": "dbaddf6a-3343-4bf0-ab21-f13270095168",
+    "recipe_version_id": "f4507735-a9df-4508-bbee-b1da36730e8a",
+    "component_key": "base",
+    "ingredient_key": "rice",
+    "quantity": "75",
+    "unit": "g",
+    "form": "raw",
+    "note": null,
+    "sort": 3,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "e3c49b2f-b581-4f58-aeae-1a7d0be671fb",
+    "recipe_version_id": "7c524f33-5208-485b-92b2-7c80677c83d4",
+    "component_key": "filling",
+    "ingredient_key": "cheese",
+    "quantity": "1",
+    "unit": "oz",
+    "form": "raw",
+    "note": null,
+    "sort": 2,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "ebd55d46-6295-476d-8554-1db8d87d97b4",
+    "recipe_version_id": "10c12707-93c7-4948-b98c-418ce5814f30",
+    "component_key": "base",
+    "ingredient_key": "pasta",
+    "quantity": "3",
+    "unit": "oz",
+    "form": "raw",
+    "note": null,
+    "sort": 3,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   },
+   {
+    "id": "fa54e2fc-3c4e-4540-8d4b-e0dc0a6f0b6e",
+    "recipe_version_id": "f77080cf-a8d1-4db8-a92a-3400e93d2945",
+    "component_key": "main",
+    "ingredient_key": "cucumber",
+    "quantity": "0.666666666666",
+    "unit": "each",
+    "form": "raw",
+    "note": "From: 2 each cucumber",
+    "sort": 0,
+    "quantity_basis": "exact",
+    "exact_amount": "2",
+    "exact_servings": 3,
+    "source_row_id": null
+   },
+   {
+    "id": "facad476-c971-48b1-9395-883214cc2f79",
+    "recipe_version_id": "4b40b730-da77-462b-ab0a-9d6f629bf39f",
+    "component_key": "main",
+    "ingredient_key": "cucumber",
+    "quantity": "0.666666666666",
+    "unit": "each",
+    "form": "raw",
+    "note": null,
+    "sort": 1,
+    "quantity_basis": "exact",
+    "exact_amount": "333333333333/500000000000",
+    "exact_servings": 1,
+    "source_row_id": null
+   },
+   {
+    "id": "ff644dec-f4cf-4810-b03c-2f9e8e2095c4",
+    "recipe_version_id": "f630e76d-0a52-4baf-9000-cca1dbf4d585",
+    "component_key": "veg",
+    "ingredient_key": "broccoli",
+    "quantity": "100",
+    "unit": "g",
+    "form": "raw",
+    "note": null,
+    "sort": 6,
+    "quantity_basis": "legacy",
+    "exact_amount": null,
+    "exact_servings": null,
+    "source_row_id": null
+   }
+  ],
+  "recipe_unquantified_items": [],
+  "recipe_bookmarks": [
+   {
+    "id": "8e039b6d-ca77-4008-95c1-f0a077dcccf6",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "url_key": "example.org/rehearsal-twice",
+    "url": "https://example.org/rehearsal-twice",
+    "domain": "example.org",
+    "source_label": "example.org",
+    "title": null,
+    "status": "imported",
+    "status_detail": null,
+    "recipe_id": "d74c78eb-f39f-40d7-9351-52f4dbf5a4e1",
+    "revision": 3,
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:07.269Z",
+    "last_checked_at": "2026-10-14T14:04:07.274Z",
+    "archived_at": null,
+    "archived_by": null
+   },
+   {
+    "id": "d4457428-6e5c-466d-a130-b4329c154ded",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "url_key": "example.org/rehearsal-salad",
+    "url": "https://example.org/rehearsal-salad",
+    "domain": "example.org",
+    "source_label": "example.org",
+    "title": null,
+    "status": "imported",
+    "status_detail": null,
+    "recipe_id": "349454e7-a006-4e3b-9ea5-f1eee055ad25",
+    "revision": 3,
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:06.864Z",
+    "last_checked_at": "2026-10-14T14:04:06.871Z",
+    "archived_at": null,
+    "archived_by": null
+   }
+  ],
+  "recipe_bookmark_saves": [
+   {
+    "id": "09170bda-82c3-4acf-8844-89734dc9cf6f",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "bookmark_id": "8e039b6d-ca77-4008-95c1-f0a077dcccf6",
+    "member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "submitted_url": "https://example.org/rehearsal-twice",
+    "note": null,
+    "saved_at": "2026-10-14T14:04:07.270Z"
+   },
+   {
+    "id": "282040df-8eb7-4f5b-8c53-524fd8f75122",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "bookmark_id": "d4457428-6e5c-466d-a130-b4329c154ded",
+    "member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "submitted_url": "https://example.org/rehearsal-salad",
+    "note": null,
+    "saved_at": "2026-10-14T14:04:06.865Z"
+   }
+  ],
+  "recipe_import_drafts": [
+   {
+    "id": "95d3e70e-784a-494c-84eb-2f365b686d5b",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "bookmark_id": "d4457428-6e5c-466d-a130-b4329c154ded",
+    "status": "confirmed",
+    "method": "user_pasted",
+    "extractor_version": "table-import-3",
+    "source_url": "https://example.org/rehearsal-salad",
+    "fetched_url": null,
+    "title": "Cucumber salad",
+    "yield_text": null,
+    "servings": 3,
+    "effort_minutes": null,
+    "source_has_instructions": false,
+    "source_has_nutrition": false,
+    "lines": [
+     {
+      "raw": "2 each cucumber",
+      "parsed": {
+       "form": null,
+       "name": "cucumber",
+       "note": null,
+       "unit": "each",
+       "range": null,
+       "status": "parsed",
+       "reasons": [],
+       "quantity": "2",
+       "alternatives": null
+      },
+      "decision": {
+       "use": true,
+       "form": "raw",
+       "name": "cucumber",
+       "unit": "each",
+       "quantity": "2"
+      }
+     },
+     {
+      "raw": "1/3 cup soy sauce",
+      "parsed": {
+       "form": null,
+       "name": "soy sauce",
+       "note": null,
+       "unit": "cup",
+       "range": null,
+       "status": "parsed",
+       "reasons": [],
+       "quantity": "1/3",
+       "alternatives": null
+      },
+      "decision": {
+       "use": true,
+       "form": "raw",
+       "name": "soy sauce",
+       "unit": "cup",
+       "quantity": "1/3"
+      }
+     },
+     {
+      "raw": "1 tsp kosher salt",
+      "parsed": {
+       "form": null,
+       "name": "kosher salt",
+       "note": null,
+       "unit": "tsp",
+       "range": null,
+       "status": "omitted",
+       "reasons": [
+        "Household seasoning — not added to groceries"
+       ],
+       "quantity": "1",
+       "alternatives": null
+      },
+      "decision": {
+       "use": false
+      }
+     }
+    ],
+    "problems": [],
+    "household_instructions": "",
+    "revision": 3,
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:06.887Z",
+    "updated_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "updated_at": "2026-10-14T14:04:06.907Z",
+    "confirmed_version_id": "f77080cf-a8d1-4db8-a92a-3400e93d2945",
+    "description": null,
+    "source_author": null,
+    "site_name": null,
+    "source_step_count": 0,
+    "source_image_count": 0,
+    "source_steps": null,
+    "image_id": null,
+    "content_policy": {
+     "kind": "none",
+     "basis": null,
+     "photos": false,
+     "source": null,
+     "instructions": false
+    }
+   },
+   {
+    "id": "b6763146-9f1a-45e1-a4d5-9df2db5c623f",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "bookmark_id": "8e039b6d-ca77-4008-95c1-f0a077dcccf6",
+    "status": "confirmed",
+    "method": "user_pasted",
+    "extractor_version": "table-import-3",
+    "source_url": "https://example.org/rehearsal-twice",
+    "fetched_url": null,
+    "title": "Cucumber two ways",
+    "yield_text": null,
+    "servings": 3,
+    "effort_minutes": null,
+    "source_has_instructions": false,
+    "source_has_nutrition": false,
+    "lines": [
+     {
+      "raw": "2 each cucumber",
+      "parsed": {
+       "form": null,
+       "name": "cucumber",
+       "note": null,
+       "unit": "each",
+       "range": null,
+       "status": "parsed",
+       "reasons": [],
+       "quantity": "2",
+       "alternatives": null
+      },
+      "decision": {
+       "use": true,
+       "form": "raw",
+       "name": "cucumber",
+       "unit": "each",
+       "quantity": "2"
+      }
+     }
+    ],
+    "problems": [],
+    "household_instructions": "",
+    "revision": 3,
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "created_at": "2026-10-14T14:04:07.278Z",
+    "updated_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "updated_at": "2026-10-14T14:04:07.298Z",
+    "confirmed_version_id": "719a9ec5-e27d-4b49-bfa7-3db985c2816e",
+    "description": null,
+    "source_author": null,
+    "site_name": null,
+    "source_step_count": 0,
+    "source_image_count": 0,
+    "source_steps": null,
+    "image_id": null,
+    "content_policy": {
+     "kind": "none",
+     "basis": null,
+     "photos": false,
+     "source": null,
+     "instructions": false
+    }
+   }
+  ],
+  "weeks": [
+   {
+    "id": "842175fa-0bad-44b0-ac39-8abdce732c43",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "week_start": "2026-10-12T00:00:00.000Z",
+    "accepted_choice_revision": 5,
+    "adopted_proposal_id": null,
+    "adopted_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "adopted_at": "2026-10-11T20:00:00.000Z",
+    "kind": "calendar"
+   }
+  ],
+  "cooking_events": [
+   {
+    "id": "321abfe8-f5c9-41ed-bad4-62680b54be3c",
+    "week_id": "842175fa-0bad-44b0-ac39-8abdce732c43",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "recipe_version_id": "f630e76d-0a52-4baf-9000-cca1dbf4d585",
+    "status": "scheduled",
+    "cook_night": "2026-10-12T00:00:00.000Z",
+    "revision": 1,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "6df01b41-f29f-42d2-b446-e580c3e37e91",
+    "week_id": "842175fa-0bad-44b0-ac39-8abdce732c43",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "recipe_version_id": "f4507735-a9df-4508-bbee-b1da36730e8a",
+    "status": "scheduled",
+    "cook_night": "2026-10-14T00:00:00.000Z",
+    "revision": 2,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "76318eab-a40c-4a27-a151-14b0b334f500",
+    "week_id": "842175fa-0bad-44b0-ac39-8abdce732c43",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "recipe_version_id": "7c524f33-5208-485b-92b2-7c80677c83d4",
+    "status": "scheduled",
+    "cook_night": "2026-10-17T00:00:00.000Z",
+    "revision": 1,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "8a323699-7209-4c39-aa79-1c2b81f918ab",
+    "week_id": "842175fa-0bad-44b0-ac39-8abdce732c43",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "recipe_version_id": "1b75a428-aa29-4e67-90c4-df219f4ce08b",
+    "status": "scheduled",
+    "cook_night": "2026-10-15T00:00:00.000Z",
+    "revision": 1,
+    "created_at": "2026-10-14T14:04:07.417Z"
+   },
+   {
+    "id": "af048c2c-de28-4c26-9342-9b44b06b7629",
+    "week_id": "842175fa-0bad-44b0-ac39-8abdce732c43",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "recipe_version_id": "f77080cf-a8d1-4db8-a92a-3400e93d2945",
+    "status": "scheduled",
+    "cook_night": "2026-10-16T00:00:00.000Z",
+    "revision": 3,
+    "created_at": "2026-10-14T14:04:07.018Z"
+   },
+   {
+    "id": "e6185766-1592-4906-aa16-7a14af18f882",
+    "week_id": "842175fa-0bad-44b0-ac39-8abdce732c43",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "recipe_version_id": "38a438ba-a013-40f6-896e-48b3186e6c23",
+    "status": "retired",
+    "cook_night": "2026-10-16T00:00:00.000Z",
+    "revision": 2,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "e7cacea8-26aa-4d61-8ceb-991e873e486e",
+    "week_id": "842175fa-0bad-44b0-ac39-8abdce732c43",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "recipe_version_id": "365888dc-5a3c-4d2b-b702-e30d2042e8b4",
+    "status": "scheduled",
+    "cook_night": "2026-10-18T00:00:00.000Z",
+    "revision": 1,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   }
+  ],
+  "assignments": [
+   {
+    "id": "52df00b1-1cc2-4a06-b7de-14a1ddcbcd88",
+    "week_id": "842175fa-0bad-44b0-ac39-8abdce732c43",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "night": "2026-10-16T00:00:00.000Z",
+    "kind": "cook",
+    "cooking_event_id": "af048c2c-de28-4c26-9342-9b44b06b7629",
+    "locked": false,
+    "reason": "Changed deliberately",
+    "revision": 2,
+    "updated_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "updated_at": "2026-10-14T14:04:07.018Z"
+   },
+   {
+    "id": "690857fb-d467-41ce-b855-29fd7c90a41e",
+    "week_id": "842175fa-0bad-44b0-ac39-8abdce732c43",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "night": "2026-10-15T00:00:00.000Z",
+    "kind": "cook",
+    "cooking_event_id": "8a323699-7209-4c39-aa79-1c2b81f918ab",
+    "locked": false,
+    "reason": "Changed deliberately",
+    "revision": 2,
+    "updated_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "updated_at": "2026-10-14T14:04:07.417Z"
+   },
+   {
+    "id": "6ccb7cc0-381d-4e8f-96b2-594bdb9bb5ee",
+    "week_id": "842175fa-0bad-44b0-ac39-8abdce732c43",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "night": "2026-10-17T00:00:00.000Z",
+    "kind": "cook",
+    "cooking_event_id": "76318eab-a40c-4a27-a151-14b0b334f500",
+    "locked": false,
+    "reason": "Fixture",
+    "revision": 1,
+    "updated_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "updated_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "6f37058d-c8d7-41ba-b6a8-c1e4830dcd7c",
+    "week_id": "842175fa-0bad-44b0-ac39-8abdce732c43",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "night": "2026-10-18T00:00:00.000Z",
+    "kind": "cook",
+    "cooking_event_id": "e7cacea8-26aa-4d61-8ceb-991e873e486e",
+    "locked": false,
+    "reason": "Fixture",
+    "revision": 1,
+    "updated_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "updated_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "837d49bf-b804-4cd7-afa9-9d89af27554e",
+    "week_id": "842175fa-0bad-44b0-ac39-8abdce732c43",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "night": "2026-10-12T00:00:00.000Z",
+    "kind": "cook",
+    "cooking_event_id": "321abfe8-f5c9-41ed-bad4-62680b54be3c",
+    "locked": false,
+    "reason": "Fixture",
+    "revision": 1,
+    "updated_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "updated_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "a478032c-3bc0-43d7-b91a-69c152abcf39",
+    "week_id": "842175fa-0bad-44b0-ac39-8abdce732c43",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "night": "2026-10-13T00:00:00.000Z",
+    "kind": "out",
+    "cooking_event_id": null,
+    "locked": false,
+    "reason": "Fixture",
+    "revision": 1,
+    "updated_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "updated_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "f3139977-3771-43f2-b84e-e88891f70afe",
+    "week_id": "842175fa-0bad-44b0-ac39-8abdce732c43",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "night": "2026-10-14T00:00:00.000Z",
+    "kind": "cook",
+    "cooking_event_id": "6df01b41-f29f-42d2-b446-e580c3e37e91",
+    "locked": false,
+    "reason": "Fixture",
+    "revision": 1,
+    "updated_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "updated_at": "2026-10-14T14:04:06.612Z"
+   }
+  ],
+  "allocations": [
+   {
+    "id": "08a2e6bb-a54d-44b9-8725-2d151983e620",
+    "cooking_event_id": "8a323699-7209-4c39-aa79-1c2b81f918ab",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "kind": "dinner",
+    "night": "2026-10-15T00:00:00.000Z",
+    "component_portions": {
+     "main": "1"
+    }
+   },
+   {
+    "id": "144e444c-1926-4056-9658-8b39a42d4a50",
+    "cooking_event_id": "321abfe8-f5c9-41ed-bad4-62680b54be3c",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "kind": "dinner",
+    "night": "2026-10-12T00:00:00.000Z",
+    "component_portions": {
+     "veg": "1",
+     "base": "1",
+     "main": "1"
+    }
+   },
+   {
+    "id": "1cc6906a-3bd5-491a-a772-99769924d581",
+    "cooking_event_id": "e7cacea8-26aa-4d61-8ceb-991e873e486e",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "member_id": "b20009e1-ffc4-40d5-a21d-6c297f5d0c9f",
+    "kind": "dinner",
+    "night": "2026-10-18T00:00:00.000Z",
+    "component_portions": {
+     "side": "1",
+     "sauce": "1",
+     "protein": "1"
+    }
+   },
+   {
+    "id": "3d77f946-4eb8-4f61-8753-14746466d064",
+    "cooking_event_id": "321abfe8-f5c9-41ed-bad4-62680b54be3c",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "member_id": "b20009e1-ffc4-40d5-a21d-6c297f5d0c9f",
+    "kind": "dinner",
+    "night": "2026-10-12T00:00:00.000Z",
+    "component_portions": {
+     "veg": "1",
+     "base": "1",
+     "main": "1"
+    }
+   },
+   {
+    "id": "4f55b8e6-1960-4cf5-90ec-051f7bb1ff8b",
+    "cooking_event_id": "af048c2c-de28-4c26-9342-9b44b06b7629",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "member_id": "b20009e1-ffc4-40d5-a21d-6c297f5d0c9f",
+    "kind": "dinner",
+    "night": "2026-10-16T00:00:00.000Z",
+    "component_portions": {
+     "main": "1"
+    }
+   },
+   {
+    "id": "76ad2652-00db-4ccc-9b84-d9aa3abf9f92",
+    "cooking_event_id": "76318eab-a40c-4a27-a151-14b0b334f500",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "kind": "dinner",
+    "night": "2026-10-17T00:00:00.000Z",
+    "component_portions": {
+     "shell": "1",
+     "filling": "1"
+    }
+   },
+   {
+    "id": "9b54d671-18bc-42fa-a3ce-642408f4fe48",
+    "cooking_event_id": "6df01b41-f29f-42d2-b446-e580c3e37e91",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "member_id": "b20009e1-ffc4-40d5-a21d-6c297f5d0c9f",
+    "kind": "dinner",
+    "night": "2026-10-14T00:00:00.000Z",
+    "component_portions": {
+     "veg": "1",
+     "base": "1",
+     "protein": "1"
+    }
+   },
+   {
+    "id": "a141c8e9-ffd4-4ece-9686-9572e392168b",
+    "cooking_event_id": "8a323699-7209-4c39-aa79-1c2b81f918ab",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "member_id": "b20009e1-ffc4-40d5-a21d-6c297f5d0c9f",
+    "kind": "dinner",
+    "night": "2026-10-15T00:00:00.000Z",
+    "component_portions": {
+     "main": "1"
+    }
+   },
+   {
+    "id": "d387d137-b225-448e-ac66-4dcf49dc2460",
+    "cooking_event_id": "af048c2c-de28-4c26-9342-9b44b06b7629",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "kind": "dinner",
+    "night": "2026-10-16T00:00:00.000Z",
+    "component_portions": {
+     "main": "2"
+    }
+   },
+   {
+    "id": "df8a3d91-a9b7-47de-af97-259e1c28120b",
+    "cooking_event_id": "e7cacea8-26aa-4d61-8ceb-991e873e486e",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "kind": "dinner",
+    "night": "2026-10-18T00:00:00.000Z",
+    "component_portions": {
+     "side": "1",
+     "sauce": "1",
+     "protein": "1"
+    }
+   },
+   {
+    "id": "e2cf87ec-eed6-459a-b328-79a3bd2bee59",
+    "cooking_event_id": "6df01b41-f29f-42d2-b446-e580c3e37e91",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "kind": "dinner",
+    "night": "2026-10-14T00:00:00.000Z",
+    "component_portions": {
+     "veg": "1",
+     "base": "1",
+     "protein": "1.5"
+    }
+   },
+   {
+    "id": "fc81b4a8-fec5-4131-9ee9-3db0896c0a3b",
+    "cooking_event_id": "76318eab-a40c-4a27-a151-14b0b334f500",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "member_id": "b20009e1-ffc4-40d5-a21d-6c297f5d0c9f",
+    "kind": "dinner",
+    "night": "2026-10-17T00:00:00.000Z",
+    "component_portions": {
+     "shell": "1",
+     "filling": "1"
+    }
+   }
+  ],
+  "leftover_observations": [],
+  "cook_records": [],
+  "cook_record_corrections": [],
+  "proposals": [],
+  "previews": [
+   {
+    "id": "a4f0c219-3937-49dd-a09e-4080b952eb08",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "week_id": "842175fa-0bad-44b0-ac39-8abdce732c43",
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "operation": {
+     "type": "replace",
+     "assignmentId": "52df00b1-1cc2-4a06-b7de-14a1ddcbcd88",
+     "recipeVersionId": "f77080cf-a8d1-4db8-a92a-3400e93d2945"
+    },
+    "base": {
+     "events": {
+      "e6185766-1592-4906-aa16-7a14af18f882": 1
+     },
+     "assignments": {
+      "52df00b1-1cc2-4a06-b7de-14a1ddcbcd88": 1
+     },
+     "acceptedChoiceRevision": 1
+    },
+    "consequence": {
+     "lines": [
+      "Friday: Fixture: Salmon rice bowls → Cucumber salad."
+     ],
+     "baseline": "current accepted week",
+     "blockers": [],
+     "nextBudget": {
+      "firm": false,
+      "scope": null,
+      "status": "unset",
+      "limitMinor": null
+     },
+     "budgetBlock": null,
+     "groceryDelta": [
+      {
+       "name": "Cucumber",
+       "after": "2.333 each",
+       "before": "2 each",
+       "change": "dinner amount changes"
+      },
+      {
+       "name": "Jasmine rice",
+       "after": "525 g",
+       "before": "675 g",
+       "change": "dinner amount changes"
+      },
+      {
+       "name": "Salmon fillet",
+       "after": null,
+       "before": "340.194 g",
+       "change": "no longer needed for dinner"
+      },
+      {
+       "name": "Soy sauce",
+       "after": "82.149 ml",
+       "before": "29.574 ml",
+       "change": "dinner amount changes"
+      }
+     ],
+     "additionalBasketCost": {
+      "known": true,
+      "minor": 79
+     }
+    },
+    "content_hash": "8f8deddba6189193cb6ea12590a1de667043858819d513b12dde9b99cfa620fa",
+    "status": "applied",
+    "created_at": "2026-10-14T14:04:06.943Z",
+    "resolved_at": "2026-10-14T14:04:07.018Z"
+   },
+   {
+    "id": "eada4382-c24a-462a-90a1-de4513a0b62f",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "week_id": "842175fa-0bad-44b0-ac39-8abdce732c43",
+    "created_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "operation": {
+     "type": "replace",
+     "assignmentId": "690857fb-d467-41ce-b855-29fd7c90a41e",
+     "recipeVersionId": "1b75a428-aa29-4e67-90c4-df219f4ce08b"
+    },
+    "base": {
+     "events": {
+      "6df01b41-f29f-42d2-b446-e580c3e37e91": 1
+     },
+     "assignments": {
+      "690857fb-d467-41ce-b855-29fd7c90a41e": 1
+     },
+     "acceptedChoiceRevision": 4
+    },
+    "consequence": {
+     "lines": [
+      "Thursday: Fixture: Sheet-pan chicken and rice → Cucumber two ways (ours).",
+      "Fixture: Sheet-pan chicken and rice no longer needs to cover Thursday; its batch shrinks accordingly.",
+      "Alex's reserved lunch on Thursday is released — it can no longer come from this cooking."
+     ],
+     "baseline": "current accepted week",
+     "blockers": [],
+     "nextBudget": {
+      "firm": false,
+      "scope": null,
+      "status": "unset",
+      "limitMinor": null
+     },
+     "budgetBlock": null,
+     "groceryDelta": [
+      {
+       "name": "Broccoli",
+       "after": "400 g",
+       "before": "700 g",
+       "change": "dinner amount changes"
+      },
+      {
+       "name": "Chicken thighs",
+       "after": "708.738 g",
+       "before": "1219.029 g",
+       "change": "dinner amount changes"
+      },
+      {
+       "name": "Cucumber",
+       "after": "5.667 each",
+       "before": "3 each",
+       "change": "dinner amount changes"
+      },
+      {
+       "name": "Olive oil",
+       "after": "29.574 ml",
+       "before": "73.934 ml",
+       "change": "dinner amount changes"
+      },
+      {
+       "name": "Jasmine rice",
+       "after": "300 g",
+       "before": "525 g",
+       "change": "dinner amount changes"
+      }
+     ],
+     "additionalBasketCost": {
+      "known": true,
+      "minor": -12
+     }
+    },
+    "content_hash": "8614a3c16e44f2a53a1bfbad5e1a06c38f86e71df7e07e1789c382d85f662279",
+    "status": "applied",
+    "created_at": "2026-10-14T14:04:07.381Z",
+    "resolved_at": "2026-10-14T14:04:07.417Z"
+   }
+  ],
+  "meal_lists": [],
+  "selected_meals": [],
+  "selected_meal_quantity_decisions": [],
+  "interests": [],
+  "recipe_preferences": [],
+  "favorites": [],
+  "recipe_notes": [],
+  "grocery_cycles": [
+   {
+    "id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "week_id": "842175fa-0bad-44b0-ac39-8abdce732c43",
+    "projection_revision": 12,
+    "projection_accepted_revision": 5,
+    "projection_summary": {
+     "ready": false,
+     "budget": {
+      "firm": false,
+      "scope": null,
+      "status": "unset",
+      "limitMinor": null
+     },
+     "payload": [
+      {
+       "packages": 1,
+       "productRef": "SIM-BLACK_BEANS",
+       "ingredientKey": "black_beans"
+      },
+      {
+       "packages": 1,
+       "productRef": "SIM-CHEESE",
+       "ingredientKey": "cheese"
+      },
+      {
+       "packages": 2,
+       "productRef": "SIM-CHICKEN_THIGH",
+       "ingredientKey": "chicken_thigh"
+      },
+      {
+       "packages": 1,
+       "productRef": "SIM-GREEK_YOGURT",
+       "ingredientKey": "greek_yogurt"
+      },
+      {
+       "packages": 1,
+       "productRef": "SIM-OLIVE_OIL",
+       "ingredientKey": "olive_oil"
+      },
+      {
+       "packages": 1,
+       "productRef": "SIM-PITA",
+       "ingredientKey": "pita"
+      },
+      {
+       "packages": 1,
+       "productRef": "SIM-SALMON",
+       "ingredientKey": "salmon"
+      },
+      {
+       "packages": 1,
+       "productRef": "SIM-SOY_SAUCE",
+       "ingredientKey": "soy_sauce"
+      },
+      {
+       "packages": 1,
+       "productRef": "SIM-TOFU",
+       "ingredientKey": "tofu"
+      },
+      {
+       "packages": 1,
+       "productRef": "SIM-TORTILLAS",
+       "ingredientKey": "tortillas"
+      }
+     ],
+     "notBuying": [],
+     "payloadHash": "a911bf38a261d9b34a06b2e7dbb42a19df85bc7cdf2e4c590f066172ae94b89f",
+     "needsQuantity": [],
+     "readyBlockers": [
+      "Cheddar cheese: purchase not approved for 1 package(s)",
+      "Chicken thighs: purchase not approved for 2 package(s)",
+      "Plain Greek yogurt: purchase not approved for 1 package(s)",
+      "Olive oil: purchase not approved for 1 package(s)",
+      "Pita bread: purchase not approved for 1 package(s)",
+      "Salmon fillet: purchase not approved for 1 package(s)",
+      "Firm tofu: purchase not approved for 1 package(s)",
+      "Corn tortillas: purchase not approved for 1 package(s)"
+     ],
+     "pickupSpending": {
+      "complete": true,
+      "currency": "USD",
+      "knownMinor": 6432,
+      "unknownCount": 0
+     },
+     "reviewFingerprint": "06df0c03f3bb29a5a16047c7494bd7bb72dbda4462df6b198836243783e5c090",
+     "householdSeasonings": [],
+     "outstandingPurchase": {
+      "complete": true,
+      "currency": "USD",
+      "knownMinor": 5559,
+      "unknownCount": 0
+     },
+     "dinnerIngredientCost": {
+      "complete": true,
+      "currency": "USD",
+      "knownMinor": 2468,
+      "unknownCount": 0
+     }
+    },
+    "created_at": "2026-10-14T14:04:06.612Z",
+    "projection_inputs_revision": "0",
+    "destination": "retailer_cart",
+    "destination_revision": 1,
+    "destination_store_label": null,
+    "destination_set_by": null,
+    "destination_set_at": null
+   }
+  ],
+  "products": [
+   {
+    "id": "03471c4a-2791-4da8-80e4-b189a2579299",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "retailer": "simulated",
+    "product_ref": "SIM-KIDNEY_BEANS",
+    "name": "Kidney beans 15 oz can",
+    "ingredient_key": "kidney_beans",
+    "package_qty": "1",
+    "package_unit": "can",
+    "variable_weight": false,
+    "fixture": true,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "07c72715-8c22-4d80-9b10-fea1f00222ce",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "retailer": "simulated",
+    "product_ref": "SIM-PESTO",
+    "name": "Basil pesto 6 oz jar",
+    "ingredient_key": "pesto",
+    "package_qty": "6",
+    "package_unit": "oz",
+    "variable_weight": false,
+    "fixture": true,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "1e92de8b-635d-49ef-a909-ee07c08c9d2f",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "retailer": "simulated",
+    "product_ref": "SIM-TOFU",
+    "name": "Firm tofu 14 oz",
+    "ingredient_key": "tofu",
+    "package_qty": "14",
+    "package_unit": "oz",
+    "variable_weight": false,
+    "fixture": true,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "1eb69279-8af6-43f2-8f12-7a839bca596e",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "retailer": "simulated",
+    "product_ref": "SIM-CHICKEN_THIGH",
+    "name": "Chicken thighs tray (about 1.5 lb)",
+    "ingredient_key": "chicken_thigh",
+    "package_qty": "24",
+    "package_unit": "oz",
+    "variable_weight": true,
+    "fixture": true,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "23e5c58f-c617-4585-a289-841466295269",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "retailer": "simulated",
+    "product_ref": "SIM-GROUND_TURKEY",
+    "name": "Ground turkey 1 lb",
+    "ingredient_key": "ground_turkey",
+    "package_qty": "1",
+    "package_unit": "lb",
+    "variable_weight": false,
+    "fixture": true,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "2d11e21a-4ee7-441f-b6a5-548022c5464a",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "retailer": "simulated",
+    "product_ref": "SIM-PASTA",
+    "name": "Penne 16 oz",
+    "ingredient_key": "pasta",
+    "package_qty": "16",
+    "package_unit": "oz",
+    "variable_weight": false,
+    "fixture": true,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "37d08fa8-c05a-47aa-b9df-a7e36a77121b",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "retailer": "simulated",
+    "product_ref": "SIM-SOY_SAUCE",
+    "name": "Soy sauce 10 fl oz",
+    "ingredient_key": "soy_sauce",
+    "package_qty": "10",
+    "package_unit": "fl_oz",
+    "variable_weight": false,
+    "fixture": true,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "49a235e0-ee97-43c4-b046-e5bf9b731f1d",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "retailer": "simulated",
+    "product_ref": "SIM-OLIVE_OIL",
+    "name": "Olive oil 500 ml",
+    "ingredient_key": "olive_oil",
+    "package_qty": "500",
+    "package_unit": "ml",
+    "variable_weight": false,
+    "fixture": true,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "647447c7-31ef-4810-b493-c950876d9024",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "retailer": "simulated",
+    "product_ref": "SIM-GREEK_YOGURT",
+    "name": "Plain Greek yogurt 32 oz tub",
+    "ingredient_key": "greek_yogurt",
+    "package_qty": "32",
+    "package_unit": "oz",
+    "variable_weight": false,
+    "fixture": true,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "798aa653-4d1b-4194-b5c2-4f1e02679d41",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "retailer": "simulated",
+    "product_ref": "SIM-TOMATO_SAUCE",
+    "name": "Tomato sauce 24 fl oz jar",
+    "ingredient_key": "tomato_sauce",
+    "package_qty": "24",
+    "package_unit": "fl_oz",
+    "variable_weight": false,
+    "fixture": true,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "7fa64edb-b2c2-461a-bab7-6f6d814bdc80",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "retailer": "simulated",
+    "product_ref": "SIM-BLACK_BEANS",
+    "name": "Black beans 15 oz can",
+    "ingredient_key": "black_beans",
+    "package_qty": "1",
+    "package_unit": "can",
+    "variable_weight": false,
+    "fixture": true,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "87e000e4-4efc-4dbf-b7c4-ecb6aa624bda",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "retailer": "simulated",
+    "product_ref": "SIM-CUCUMBER",
+    "name": "Cucumber",
+    "ingredient_key": "cucumber",
+    "package_qty": "1",
+    "package_unit": "each",
+    "variable_weight": false,
+    "fixture": true,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "8991e65f-d304-4ddb-8220-0b2e9967da57",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "retailer": "simulated",
+    "product_ref": "SIM-CHEESE",
+    "name": "Cheddar 8 oz block",
+    "ingredient_key": "cheese",
+    "package_qty": "8",
+    "package_unit": "oz",
+    "variable_weight": false,
+    "fixture": true,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "9ef2cbfd-46f9-4156-add4-3251c0587c79",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "retailer": "simulated",
+    "product_ref": "SIM-RICE",
+    "name": "Jasmine rice 2 lb bag",
+    "ingredient_key": "rice",
+    "package_qty": "2",
+    "package_unit": "lb",
+    "variable_weight": false,
+    "fixture": true,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "c002dd1e-9d87-4ddb-affc-5f8dbae56bbc",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "retailer": "simulated",
+    "product_ref": "SIM-PITA",
+    "name": "Pita 6 ct",
+    "ingredient_key": "pita",
+    "package_qty": "6",
+    "package_unit": "each",
+    "variable_weight": false,
+    "fixture": true,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "d68cf835-d3c8-4202-ad44-cc670ac32658",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "retailer": "simulated",
+    "product_ref": "SIM-TORTILLAS",
+    "name": "Corn tortillas 10 ct",
+    "ingredient_key": "tortillas",
+    "package_qty": "10",
+    "package_unit": "each",
+    "variable_weight": false,
+    "fixture": true,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "e2d19807-0903-4413-bce7-61593ee51f69",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "retailer": "simulated",
+    "product_ref": "SIM-SALMON",
+    "name": "Salmon fillets 12 oz",
+    "ingredient_key": "salmon",
+    "package_qty": "12",
+    "package_unit": "oz",
+    "variable_weight": false,
+    "fixture": true,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "id": "fed32fdc-3b32-4b4e-a193-26c8f4be12ee",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "retailer": "simulated",
+    "product_ref": "SIM-BROCCOLI",
+    "name": "Broccoli crowns 1 lb",
+    "ingredient_key": "broccoli",
+    "package_qty": "1",
+    "package_unit": "lb",
+    "variable_weight": false,
+    "fixture": true,
+    "created_at": "2026-10-14T14:04:06.612Z"
+   }
+  ],
+  "product_mappings": [
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "black_beans",
+    "product_id": "7fa64edb-b2c2-461a-bab7-6f6d814bdc80",
+    "suitable": true,
+    "decided_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "decided_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "broccoli",
+    "product_id": "fed32fdc-3b32-4b4e-a193-26c8f4be12ee",
+    "suitable": true,
+    "decided_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "decided_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "cheese",
+    "product_id": "8991e65f-d304-4ddb-8220-0b2e9967da57",
+    "suitable": true,
+    "decided_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "decided_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "chicken_thigh",
+    "product_id": "1eb69279-8af6-43f2-8f12-7a839bca596e",
+    "suitable": true,
+    "decided_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "decided_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "cucumber",
+    "product_id": "87e000e4-4efc-4dbf-b7c4-ecb6aa624bda",
+    "suitable": true,
+    "decided_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "decided_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "greek_yogurt",
+    "product_id": "647447c7-31ef-4810-b493-c950876d9024",
+    "suitable": true,
+    "decided_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "decided_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "ground_turkey",
+    "product_id": "23e5c58f-c617-4585-a289-841466295269",
+    "suitable": true,
+    "decided_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "decided_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "kidney_beans",
+    "product_id": "03471c4a-2791-4da8-80e4-b189a2579299",
+    "suitable": true,
+    "decided_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "decided_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "olive_oil",
+    "product_id": "49a235e0-ee97-43c4-b046-e5bf9b731f1d",
+    "suitable": true,
+    "decided_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "decided_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "pasta",
+    "product_id": "2d11e21a-4ee7-441f-b6a5-548022c5464a",
+    "suitable": true,
+    "decided_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "decided_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "pesto",
+    "product_id": "07c72715-8c22-4d80-9b10-fea1f00222ce",
+    "suitable": true,
+    "decided_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "decided_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "pita",
+    "product_id": "c002dd1e-9d87-4ddb-affc-5f8dbae56bbc",
+    "suitable": true,
+    "decided_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "decided_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "rice",
+    "product_id": "9ef2cbfd-46f9-4156-add4-3251c0587c79",
+    "suitable": true,
+    "decided_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "decided_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "salmon",
+    "product_id": "e2d19807-0903-4413-bce7-61593ee51f69",
+    "suitable": true,
+    "decided_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "decided_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "soy_sauce",
+    "product_id": "37d08fa8-c05a-47aa-b9df-a7e36a77121b",
+    "suitable": true,
+    "decided_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "decided_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "tofu",
+    "product_id": "1e92de8b-635d-49ef-a909-ee07c08c9d2f",
+    "suitable": true,
+    "decided_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "decided_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "tomato_sauce",
+    "product_id": "798aa653-4d1b-4194-b5c2-4f1e02679d41",
+    "suitable": true,
+    "decided_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "decided_at": "2026-10-14T14:04:06.612Z"
+   },
+   {
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "tortillas",
+    "product_id": "d68cf835-d3c8-4202-ad44-cc670ac32658",
+    "suitable": true,
+    "decided_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "decided_at": "2026-10-14T14:04:06.612Z"
+   }
+  ],
+  "price_observations": [
+   {
+    "id": "0168c29a-3c74-43db-b736-9fedaa9613b8",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "product_id": "9ef2cbfd-46f9-4156-add4-3251c0587c79",
+    "store_label": "Simulated store",
+    "currency": "USD",
+    "amount_minor": 399,
+    "price_kind": "regular",
+    "source": "fixture",
+    "observed_at": "2026-10-11T12:00:00.000Z"
+   },
+   {
+    "id": "18117728-fc40-4925-a55e-08b2ae2e5c72",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "product_id": "c002dd1e-9d87-4ddb-affc-5f8dbae56bbc",
+    "store_label": "Simulated store",
+    "currency": "USD",
+    "amount_minor": 249,
+    "price_kind": "regular",
+    "source": "fixture",
+    "observed_at": "2026-10-11T12:00:00.000Z"
+   },
+   {
+    "id": "190308e9-295d-44a8-a9d0-5b7906226ed0",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "product_id": "798aa653-4d1b-4194-b5c2-4f1e02679d41",
+    "store_label": "Simulated store",
+    "currency": "USD",
+    "amount_minor": 329,
+    "price_kind": "regular",
+    "source": "fixture",
+    "observed_at": "2026-10-11T12:00:00.000Z"
+   },
+   {
+    "id": "48420892-1508-4a90-9f04-96cb2f5b508c",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "product_id": "647447c7-31ef-4810-b493-c950876d9024",
+    "store_label": "Simulated store",
+    "currency": "USD",
+    "amount_minor": 549,
+    "price_kind": "regular",
+    "source": "fixture",
+    "observed_at": "2026-10-11T12:00:00.000Z"
+   },
+   {
+    "id": "536644ee-c71f-46ef-b7dd-ec891151d87b",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "product_id": "03471c4a-2791-4da8-80e4-b189a2579299",
+    "store_label": "Simulated store",
+    "currency": "USD",
+    "amount_minor": 109,
+    "price_kind": "regular",
+    "source": "fixture",
+    "observed_at": "2026-10-11T12:00:00.000Z"
+   },
+   {
+    "id": "560d54e1-0d8d-463a-a8c5-0a751c8386d9",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "product_id": "87e000e4-4efc-4dbf-b7c4-ecb6aa624bda",
+    "store_label": "Simulated store",
+    "currency": "USD",
+    "amount_minor": 79,
+    "price_kind": "regular",
+    "source": "fixture",
+    "observed_at": "2026-10-11T12:00:00.000Z"
+   },
+   {
+    "id": "6524b84e-707a-4561-a3a7-37731578aed8",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "product_id": "1eb69279-8af6-43f2-8f12-7a839bca596e",
+    "store_label": "Simulated store",
+    "currency": "USD",
+    "amount_minor": 749,
+    "price_kind": "regular",
+    "source": "fixture",
+    "observed_at": "2026-10-11T12:00:00.000Z"
+   },
+   {
+    "id": "9e2c5609-62ee-40a4-a21d-aa62073487e7",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "product_id": "8991e65f-d304-4ddb-8220-0b2e9967da57",
+    "store_label": "Simulated store",
+    "currency": "USD",
+    "amount_minor": 349,
+    "price_kind": "regular",
+    "source": "fixture",
+    "observed_at": "2026-10-11T12:00:00.000Z"
+   },
+   {
+    "id": "b94fe522-7bfb-41a0-9785-5aea790605cb",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "product_id": "7fa64edb-b2c2-461a-bab7-6f6d814bdc80",
+    "store_label": "Simulated store",
+    "currency": "USD",
+    "amount_minor": 109,
+    "price_kind": "regular",
+    "source": "fixture",
+    "observed_at": "2026-10-11T12:00:00.000Z"
+   },
+   {
+    "id": "caf09a02-3300-4b3e-a2bc-fa3db883b7ac",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "product_id": "d68cf835-d3c8-4202-ad44-cc670ac32658",
+    "store_label": "Simulated store",
+    "currency": "USD",
+    "amount_minor": 299,
+    "price_kind": "regular",
+    "source": "fixture",
+    "observed_at": "2026-10-11T12:00:00.000Z"
+   },
+   {
+    "id": "d16f3e59-5dbd-4813-9489-dd531d7591ac",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "product_id": "37d08fa8-c05a-47aa-b9df-a7e36a77121b",
+    "store_label": "Simulated store",
+    "currency": "USD",
+    "amount_minor": 279,
+    "price_kind": "regular",
+    "source": "fixture",
+    "observed_at": "2026-10-11T12:00:00.000Z"
+   },
+   {
+    "id": "d7de599e-a96d-4e88-8462-5baf082900c7",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "product_id": "2d11e21a-4ee7-441f-b6a5-548022c5464a",
+    "store_label": "Simulated store",
+    "currency": "USD",
+    "amount_minor": 179,
+    "price_kind": "regular",
+    "source": "fixture",
+    "observed_at": "2026-10-11T12:00:00.000Z"
+   },
+   {
+    "id": "d7f3cafa-d6f2-4980-aaec-e4068e559f73",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "product_id": "1e92de8b-635d-49ef-a909-ee07c08c9d2f",
+    "store_label": "Simulated store",
+    "currency": "USD",
+    "amount_minor": 229,
+    "price_kind": "regular",
+    "source": "fixture",
+    "observed_at": "2026-10-11T12:00:00.000Z"
+   },
+   {
+    "id": "de115f1b-fc87-43d5-9988-adefd430c6db",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "product_id": "49a235e0-ee97-43c4-b046-e5bf9b731f1d",
+    "store_label": "Simulated store",
+    "currency": "USD",
+    "amount_minor": 899,
+    "price_kind": "regular",
+    "source": "fixture",
+    "observed_at": "2026-10-11T12:00:00.000Z"
+   },
+   {
+    "id": "ede12d1f-97ac-41b1-afcf-85be462e1704",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "product_id": "07c72715-8c22-4d80-9b10-fea1f00222ce",
+    "store_label": "Simulated store",
+    "currency": "USD",
+    "amount_minor": 449,
+    "price_kind": "regular",
+    "source": "fixture",
+    "observed_at": "2026-10-11T12:00:00.000Z"
+   },
+   {
+    "id": "f4070382-1f89-42ba-af92-6c10fc99fa12",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "product_id": "e2d19807-0903-4413-bce7-61593ee51f69",
+    "store_label": "Simulated store",
+    "currency": "USD",
+    "amount_minor": 1099,
+    "price_kind": "regular",
+    "source": "fixture",
+    "observed_at": "2026-10-11T12:00:00.000Z"
+   },
+   {
+    "id": "f95d9113-2790-46f6-93ba-31dcd1665848",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "product_id": "23e5c58f-c617-4585-a289-841466295269",
+    "store_label": "Simulated store",
+    "currency": "USD",
+    "amount_minor": 599,
+    "price_kind": "regular",
+    "source": "fixture",
+    "observed_at": "2026-10-11T12:00:00.000Z"
+   },
+   {
+    "id": "feb31c41-ac02-4e7d-9187-a1142a34ae54",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "product_id": "fed32fdc-3b32-4b4e-a193-26c8f4be12ee",
+    "store_label": "Simulated store",
+    "currency": "USD",
+    "amount_minor": 249,
+    "price_kind": "regular",
+    "source": "fixture",
+    "observed_at": "2026-10-11T12:00:00.000Z"
+   }
+  ],
+  "household_staples": [],
+  "staple_product_decisions": [],
+  "staple_changes": [],
+  "household_requests": [
+   {
+    "id": "eb99c049-ec23-4184-a982-604b2944441f",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "cycle_id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "ingredient_key": "salmon",
+    "text": "Salmon",
+    "kind": "usual",
+    "packages": null,
+    "captured_from": "groceries",
+    "state": "active",
+    "created_at": "2026-10-14T14:04:06.612Z",
+    "resolved_at": null,
+    "product_id": null
+   }
+  ],
+  "request_contributors": [
+   {
+    "request_id": "eb99c049-ec23-4184-a982-604b2944441f",
+    "member_id": "b20009e1-ffc4-40d5-a21d-6c297f5d0c9f",
+    "taps": 1,
+    "first_at": "2026-10-14T14:04:06.612Z"
+   }
+  ],
+  "availability_observations": [
+   {
+    "id": "5ba9c8ad-c2bf-4019-817e-bc3df9a91a77",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "cycle_id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "ingredient_key": "soy_sauce",
+    "state": "some",
+    "quantity": "2",
+    "unit": "tbsp",
+    "reviewed_demand": null,
+    "reviewed_unit": null,
+    "member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "observed_at": "2026-10-14T14:04:07.491Z",
+    "reviewed_exact": null,
+    "reviewed_binding": null
+   },
+   {
+    "id": "79dc3798-f7a1-4e4e-bb79-053bd32db6cd",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "cycle_id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "ingredient_key": "broccoli",
+    "state": "enough",
+    "quantity": null,
+    "unit": null,
+    "reviewed_demand": "400",
+    "reviewed_unit": "g",
+    "member_id": "b20009e1-ffc4-40d5-a21d-6c297f5d0c9f",
+    "observed_at": "2026-10-14T14:04:07.755Z",
+    "reviewed_exact": "400",
+    "reviewed_binding": "current_requirement"
+   }
+  ],
+  "requirement_lines": [
+   {
+    "cycle_id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "black_beans",
+    "projection_revision": 12,
+    "line": {
+     "key": "black_beans",
+     "meal": {
+      "unit": "can",
+      "exact": false,
+      "sources": [
+       {
+        "unit": "can",
+        "exact": false,
+        "eventId": "76318eab-a40c-4a27-a151-14b0b334f500",
+        "quantity": "1",
+        "rational": "1",
+        "cookNight": "2026-10-17",
+        "recipeTitle": "Fixture: Black bean tacos"
+       }
+      ],
+      "quantity": "1",
+      "rational": "1"
+     },
+     "name": "Black beans (canned)",
+     "sent": 0,
+     "price": {
+      "id": "b94fe522-7bfb-41a0-9785-5aea790605cb",
+      "kind": "regular",
+      "source": "fixture",
+      "currency": "USD",
+      "observedAt": "2026-10-11T12:00:00.000Z",
+      "amountMinor": 109
+     },
+     "status": "approved",
+     "toSend": 1,
+     "missing": 0,
+     "netMeal": {
+      "unit": "can",
+      "quantity": "1",
+      "rational": "1"
+     },
+     "ordered": 0,
+     "product": {
+      "id": "7fa64edb-b2c2-461a-bab7-6f6d814bdc80",
+      "ref": "SIM-BLACK_BEANS",
+      "name": "Black beans 15 oz can",
+      "fixture": true,
+      "retailer": "simulated",
+      "packageQty": "1",
+      "packageUnit": "can",
+      "ingredientKey": "black_beans",
+      "variableWeight": false
+     },
+     "approval": {
+      "id": "3afc321d-c725-40c6-96f7-226816f1a11f",
+      "valid": true,
+      "packages": 1
+     },
+     "estimate": false,
+     "received": 0,
+     "requests": [],
+     "uncertain": 0,
+     "homeSupply": null,
+     "unresolved": [],
+     "fingerprint": "b5bbbaffd45320c5cfa34368ea3f5a3b5c1d312260b99508d06683f4027de88e",
+     "availability": null,
+     "productIssue": null,
+     "ingredientKey": "black_beans",
+     "leftAfterMeal": null,
+     "packagesExtra": 0,
+     "packagesUsual": 0,
+     "packagesNeeded": 1,
+     "usageCostMinor": 109,
+     "packagesForMeal": 1,
+     "pickupCostMinor": 109,
+     "receivedSurplus": null,
+     "mealUnitConflict": null,
+     "outstandingCostMinor": 109
+    },
+    "line_fingerprint": "b5bbbaffd45320c5cfa34368ea3f5a3b5c1d312260b99508d06683f4027de88e"
+   },
+   {
+    "cycle_id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "broccoli",
+    "projection_revision": 12,
+    "line": {
+     "key": "broccoli",
+     "meal": {
+      "unit": "g",
+      "exact": false,
+      "sources": [
+       {
+        "unit": "g",
+        "exact": false,
+        "eventId": "321abfe8-f5c9-41ed-bad4-62680b54be3c",
+        "quantity": "200",
+        "rational": "200",
+        "cookNight": "2026-10-12",
+        "recipeTitle": "Fixture: Tofu veggie stir-fry"
+       },
+       {
+        "unit": "g",
+        "exact": false,
+        "eventId": "6df01b41-f29f-42d2-b446-e580c3e37e91",
+        "quantity": "200",
+        "rational": "200",
+        "cookNight": "2026-10-14",
+        "recipeTitle": "Fixture: Sheet-pan chicken and rice"
+       }
+      ],
+      "quantity": "400",
+      "rational": "400"
+     },
+     "name": "Broccoli",
+     "sent": 0,
+     "price": {
+      "id": "feb31c41-ac02-4e7d-9187-a1142a34ae54",
+      "kind": "regular",
+      "source": "fixture",
+      "currency": "USD",
+      "observedAt": "2026-10-11T12:00:00.000Z",
+      "amountMinor": 249
+     },
+     "status": "nothing_needed",
+     "toSend": 0,
+     "missing": 0,
+     "netMeal": {
+      "unit": "g",
+      "quantity": "0",
+      "rational": "0"
+     },
+     "ordered": 0,
+     "product": {
+      "id": "fed32fdc-3b32-4b4e-a193-26c8f4be12ee",
+      "ref": "SIM-BROCCOLI",
+      "name": "Broccoli crowns 1 lb",
+      "fixture": true,
+      "retailer": "simulated",
+      "packageQty": "1",
+      "packageUnit": "lb",
+      "ingredientKey": "broccoli",
+      "variableWeight": false
+     },
+     "approval": null,
+     "estimate": false,
+     "received": 0,
+     "requests": [],
+     "uncertain": 0,
+     "homeSupply": "400",
+     "unresolved": [],
+     "fingerprint": "3def6c7ae4edc602acab441348228dab9a958d73e7ff824ae2e46c1ea2e4f1b7",
+     "availability": {
+      "id": "79dc3798-f7a1-4e4e-bb79-053bd32db6cd",
+      "unit": null,
+      "state": "enough",
+      "quantity": null,
+      "memberName": "Alex",
+      "reviewedUnit": "g",
+      "ingredientKey": "broccoli",
+      "reviewedExact": "400",
+      "reviewedDemand": "400"
+     },
+     "productIssue": null,
+     "ingredientKey": "broccoli",
+     "leftAfterMeal": null,
+     "packagesExtra": 0,
+     "packagesUsual": 0,
+     "packagesNeeded": 0,
+     "usageCostMinor": 220,
+     "packagesForMeal": 0,
+     "pickupCostMinor": 0,
+     "receivedSurplus": null,
+     "mealUnitConflict": null,
+     "outstandingCostMinor": 0
+    },
+    "line_fingerprint": "3def6c7ae4edc602acab441348228dab9a958d73e7ff824ae2e46c1ea2e4f1b7"
+   },
+   {
+    "cycle_id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "cheese",
+    "projection_revision": 12,
+    "line": {
+     "key": "cheese",
+     "meal": {
+      "unit": "g",
+      "exact": false,
+      "sources": [
+       {
+        "unit": "g",
+        "exact": false,
+        "eventId": "76318eab-a40c-4a27-a151-14b0b334f500",
+        "quantity": "56.699",
+        "rational": "45359237/800000",
+        "cookNight": "2026-10-17",
+        "recipeTitle": "Fixture: Black bean tacos"
+       }
+      ],
+      "quantity": "56.699",
+      "rational": "45359237/800000"
+     },
+     "name": "Cheddar cheese",
+     "sent": 0,
+     "price": {
+      "id": "9e2c5609-62ee-40a4-a21d-aa62073487e7",
+      "kind": "regular",
+      "source": "fixture",
+      "currency": "USD",
+      "observedAt": "2026-10-11T12:00:00.000Z",
+      "amountMinor": 349
+     },
+     "status": "needs_review",
+     "toSend": 1,
+     "missing": 0,
+     "netMeal": {
+      "unit": "g",
+      "quantity": "56.699",
+      "rational": "45359237/800000"
+     },
+     "ordered": 0,
+     "product": {
+      "id": "8991e65f-d304-4ddb-8220-0b2e9967da57",
+      "ref": "SIM-CHEESE",
+      "name": "Cheddar 8 oz block",
+      "fixture": true,
+      "retailer": "simulated",
+      "packageQty": "8",
+      "packageUnit": "oz",
+      "ingredientKey": "cheese",
+      "variableWeight": false
+     },
+     "approval": null,
+     "estimate": false,
+     "received": 0,
+     "requests": [],
+     "uncertain": 0,
+     "homeSupply": null,
+     "unresolved": [],
+     "fingerprint": "6355ae6ed423c0439ed590b999cc6cd126dbe75db9be79b4e18e498cfaaae1fb",
+     "availability": null,
+     "productIssue": null,
+     "ingredientKey": "cheese",
+     "leftAfterMeal": null,
+     "packagesExtra": 0,
+     "packagesUsual": 0,
+     "packagesNeeded": 1,
+     "usageCostMinor": 87,
+     "packagesForMeal": 1,
+     "pickupCostMinor": 349,
+     "receivedSurplus": null,
+     "mealUnitConflict": null,
+     "outstandingCostMinor": 349
+    },
+    "line_fingerprint": "6355ae6ed423c0439ed590b999cc6cd126dbe75db9be79b4e18e498cfaaae1fb"
+   },
+   {
+    "cycle_id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "chicken_thigh",
+    "projection_revision": 12,
+    "line": {
+     "key": "chicken_thigh",
+     "meal": {
+      "unit": "g",
+      "exact": false,
+      "sources": [
+       {
+        "unit": "g",
+        "exact": false,
+        "eventId": "6df01b41-f29f-42d2-b446-e580c3e37e91",
+        "quantity": "425.243",
+        "rational": "136077711/320000",
+        "cookNight": "2026-10-14",
+        "recipeTitle": "Fixture: Sheet-pan chicken and rice"
+       },
+       {
+        "unit": "g",
+        "exact": false,
+        "eventId": "e7cacea8-26aa-4d61-8ceb-991e873e486e",
+        "quantity": "283.495",
+        "rational": "45359237/160000",
+        "cookNight": "2026-10-18",
+        "recipeTitle": "Fixture: Chicken shawarma bowls"
+       }
+      ],
+      "quantity": "708.738",
+      "rational": "45359237/64000"
+     },
+     "name": "Chicken thighs",
+     "sent": 0,
+     "price": {
+      "id": "6524b84e-707a-4561-a3a7-37731578aed8",
+      "kind": "regular",
+      "source": "fixture",
+      "currency": "USD",
+      "observedAt": "2026-10-11T12:00:00.000Z",
+      "amountMinor": 749
+     },
+     "status": "needs_review",
+     "toSend": 2,
+     "missing": 0,
+     "netMeal": {
+      "unit": "g",
+      "quantity": "708.738",
+      "rational": "45359237/64000"
+     },
+     "ordered": 0,
+     "product": {
+      "id": "1eb69279-8af6-43f2-8f12-7a839bca596e",
+      "ref": "SIM-CHICKEN_THIGH",
+      "name": "Chicken thighs tray (about 1.5 lb)",
+      "fixture": true,
+      "retailer": "simulated",
+      "packageQty": "24",
+      "packageUnit": "oz",
+      "ingredientKey": "chicken_thigh",
+      "variableWeight": true
+     },
+     "approval": null,
+     "estimate": true,
+     "received": 0,
+     "requests": [],
+     "uncertain": 0,
+     "homeSupply": null,
+     "unresolved": [],
+     "fingerprint": "e687c75ed738dc9ebe4c35e544142d0d197720583694e2aead4b83a9d441dc8f",
+     "availability": null,
+     "productIssue": null,
+     "ingredientKey": "chicken_thigh",
+     "leftAfterMeal": null,
+     "packagesExtra": 0,
+     "packagesUsual": 0,
+     "packagesNeeded": 2,
+     "usageCostMinor": 780,
+     "packagesForMeal": 2,
+     "pickupCostMinor": 1498,
+     "receivedSurplus": null,
+     "mealUnitConflict": null,
+     "outstandingCostMinor": 1498
+    },
+    "line_fingerprint": "e687c75ed738dc9ebe4c35e544142d0d197720583694e2aead4b83a9d441dc8f"
+   },
+   {
+    "cycle_id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "cucumber",
+    "projection_revision": 12,
+    "line": {
+     "key": "cucumber",
+     "meal": {
+      "unit": "each",
+      "exact": false,
+      "sources": [
+       {
+        "unit": "each",
+        "exact": false,
+        "eventId": "e7cacea8-26aa-4d61-8ceb-991e873e486e",
+        "quantity": "1",
+        "rational": "1",
+        "cookNight": "2026-10-18",
+        "recipeTitle": "Fixture: Chicken shawarma bowls"
+       },
+       {
+        "unit": "each",
+        "exact": true,
+        "eventId": "af048c2c-de28-4c26-9342-9b44b06b7629",
+        "quantity": "2",
+        "rational": "2",
+        "cookNight": "2026-10-16",
+        "recipeTitle": "Cucumber salad"
+       },
+       {
+        "unit": "each",
+        "exact": true,
+        "eventId": "8a323699-7209-4c39-aa79-1c2b81f918ab",
+        "quantity": "2.667",
+        "rational": "1999999999999/750000000000",
+        "cookNight": "2026-10-15",
+        "recipeTitle": "Cucumber two ways (ours)"
+       }
+      ],
+      "quantity": "5.667",
+      "rational": "4249999999999/750000000000"
+     },
+     "name": "Cucumber",
+     "sent": 6,
+     "price": {
+      "id": "560d54e1-0d8d-463a-a8c5-0a751c8386d9",
+      "kind": "regular",
+      "source": "fixture",
+      "currency": "USD",
+      "observedAt": "2026-10-11T12:00:00.000Z",
+      "amountMinor": 79
+     },
+     "status": "in_cart_transfer",
+     "toSend": 0,
+     "missing": 0,
+     "netMeal": {
+      "unit": "each",
+      "quantity": "5.667",
+      "rational": "4249999999999/750000000000"
+     },
+     "ordered": 0,
+     "product": {
+      "id": "87e000e4-4efc-4dbf-b7c4-ecb6aa624bda",
+      "ref": "SIM-CUCUMBER",
+      "name": "Cucumber",
+      "fixture": true,
+      "retailer": "simulated",
+      "packageQty": "1",
+      "packageUnit": "each",
+      "ingredientKey": "cucumber",
+      "variableWeight": false
+     },
+     "approval": null,
+     "estimate": false,
+     "received": 0,
+     "requests": [],
+     "uncertain": 0,
+     "homeSupply": null,
+     "unresolved": [],
+     "fingerprint": "1bd079a7a472dc4fa03ae3bb380820d81c198be0daf5f05dc98767a16da7e95b",
+     "availability": null,
+     "productIssue": null,
+     "ingredientKey": "cucumber",
+     "leftAfterMeal": null,
+     "packagesExtra": 0,
+     "packagesUsual": 0,
+     "packagesNeeded": 6,
+     "usageCostMinor": 448,
+     "packagesForMeal": 6,
+     "pickupCostMinor": 474,
+     "receivedSurplus": null,
+     "mealUnitConflict": null,
+     "outstandingCostMinor": 0
+    },
+    "line_fingerprint": "1bd079a7a472dc4fa03ae3bb380820d81c198be0daf5f05dc98767a16da7e95b"
+   },
+   {
+    "cycle_id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "greek_yogurt",
+    "projection_revision": 12,
+    "line": {
+     "key": "greek_yogurt",
+     "meal": {
+      "unit": "g",
+      "exact": false,
+      "sources": [
+       {
+        "unit": "g",
+        "exact": false,
+        "eventId": "e7cacea8-26aa-4d61-8ceb-991e873e486e",
+        "quantity": "226.796",
+        "rational": "45359237/200000",
+        "cookNight": "2026-10-18",
+        "recipeTitle": "Fixture: Chicken shawarma bowls"
+       }
+      ],
+      "quantity": "226.796",
+      "rational": "45359237/200000"
+     },
+     "name": "Plain Greek yogurt",
+     "sent": 0,
+     "price": {
+      "id": "48420892-1508-4a90-9f04-96cb2f5b508c",
+      "kind": "regular",
+      "source": "fixture",
+      "currency": "USD",
+      "observedAt": "2026-10-11T12:00:00.000Z",
+      "amountMinor": 549
+     },
+     "status": "needs_review",
+     "toSend": 1,
+     "missing": 0,
+     "netMeal": {
+      "unit": "g",
+      "quantity": "226.796",
+      "rational": "45359237/200000"
+     },
+     "ordered": 0,
+     "product": {
+      "id": "647447c7-31ef-4810-b493-c950876d9024",
+      "ref": "SIM-GREEK_YOGURT",
+      "name": "Plain Greek yogurt 32 oz tub",
+      "fixture": true,
+      "retailer": "simulated",
+      "packageQty": "32",
+      "packageUnit": "oz",
+      "ingredientKey": "greek_yogurt",
+      "variableWeight": false
+     },
+     "approval": null,
+     "estimate": false,
+     "received": 0,
+     "requests": [],
+     "uncertain": 0,
+     "homeSupply": null,
+     "unresolved": [],
+     "fingerprint": "f5f4904049eb7a49756795197b848850829fc4a582584eba1b65bfe6af123da4",
+     "availability": null,
+     "productIssue": null,
+     "ingredientKey": "greek_yogurt",
+     "leftAfterMeal": null,
+     "packagesExtra": 0,
+     "packagesUsual": 0,
+     "packagesNeeded": 1,
+     "usageCostMinor": 137,
+     "packagesForMeal": 1,
+     "pickupCostMinor": 549,
+     "receivedSurplus": null,
+     "mealUnitConflict": null,
+     "outstandingCostMinor": 549
+    },
+    "line_fingerprint": "f5f4904049eb7a49756795197b848850829fc4a582584eba1b65bfe6af123da4"
+   },
+   {
+    "cycle_id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "olive_oil",
+    "projection_revision": 12,
+    "line": {
+     "key": "olive_oil",
+     "meal": {
+      "unit": "ml",
+      "exact": false,
+      "sources": [
+       {
+        "unit": "ml",
+        "exact": false,
+        "eventId": "6df01b41-f29f-42d2-b446-e580c3e37e91",
+        "quantity": "29.574",
+        "rational": "473176473/16000000",
+        "cookNight": "2026-10-14",
+        "recipeTitle": "Fixture: Sheet-pan chicken and rice"
+       }
+      ],
+      "quantity": "29.574",
+      "rational": "473176473/16000000"
+     },
+     "name": "Olive oil",
+     "sent": 0,
+     "price": {
+      "id": "de115f1b-fc87-43d5-9988-adefd430c6db",
+      "kind": "regular",
+      "source": "fixture",
+      "currency": "USD",
+      "observedAt": "2026-10-11T12:00:00.000Z",
+      "amountMinor": 899
+     },
+     "status": "needs_review",
+     "toSend": 1,
+     "missing": 0,
+     "netMeal": {
+      "unit": "ml",
+      "quantity": "29.574",
+      "rational": "473176473/16000000"
+     },
+     "ordered": 0,
+     "product": {
+      "id": "49a235e0-ee97-43c4-b046-e5bf9b731f1d",
+      "ref": "SIM-OLIVE_OIL",
+      "name": "Olive oil 500 ml",
+      "fixture": true,
+      "retailer": "simulated",
+      "packageQty": "500",
+      "packageUnit": "ml",
+      "ingredientKey": "olive_oil",
+      "variableWeight": false
+     },
+     "approval": null,
+     "estimate": false,
+     "received": 0,
+     "requests": [],
+     "uncertain": 0,
+     "homeSupply": null,
+     "unresolved": [],
+     "fingerprint": "9a982117c01c648d432a16c89fd1439448030a7161516201eac12b9b524e3838",
+     "availability": null,
+     "productIssue": null,
+     "ingredientKey": "olive_oil",
+     "leftAfterMeal": null,
+     "packagesExtra": 0,
+     "packagesUsual": 0,
+     "packagesNeeded": 1,
+     "usageCostMinor": 53,
+     "packagesForMeal": 1,
+     "pickupCostMinor": 899,
+     "receivedSurplus": null,
+     "mealUnitConflict": null,
+     "outstandingCostMinor": 899
+    },
+    "line_fingerprint": "9a982117c01c648d432a16c89fd1439448030a7161516201eac12b9b524e3838"
+   },
+   {
+    "cycle_id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "pita",
+    "projection_revision": 12,
+    "line": {
+     "key": "pita",
+     "meal": {
+      "unit": "each",
+      "exact": false,
+      "sources": [
+       {
+        "unit": "each",
+        "exact": false,
+        "eventId": "e7cacea8-26aa-4d61-8ceb-991e873e486e",
+        "quantity": "2",
+        "rational": "2",
+        "cookNight": "2026-10-18",
+        "recipeTitle": "Fixture: Chicken shawarma bowls"
+       }
+      ],
+      "quantity": "2",
+      "rational": "2"
+     },
+     "name": "Pita bread",
+     "sent": 0,
+     "price": {
+      "id": "18117728-fc40-4925-a55e-08b2ae2e5c72",
+      "kind": "regular",
+      "source": "fixture",
+      "currency": "USD",
+      "observedAt": "2026-10-11T12:00:00.000Z",
+      "amountMinor": 249
+     },
+     "status": "needs_review",
+     "toSend": 1,
+     "missing": 0,
+     "netMeal": {
+      "unit": "each",
+      "quantity": "2",
+      "rational": "2"
+     },
+     "ordered": 0,
+     "product": {
+      "id": "c002dd1e-9d87-4ddb-affc-5f8dbae56bbc",
+      "ref": "SIM-PITA",
+      "name": "Pita 6 ct",
+      "fixture": true,
+      "retailer": "simulated",
+      "packageQty": "6",
+      "packageUnit": "each",
+      "ingredientKey": "pita",
+      "variableWeight": false
+     },
+     "approval": null,
+     "estimate": false,
+     "received": 0,
+     "requests": [],
+     "uncertain": 0,
+     "homeSupply": null,
+     "unresolved": [],
+     "fingerprint": "231a3eb4154d96fb524a0eea27ffb6f4c04287b6cc48efc673744ed236d2b6c0",
+     "availability": null,
+     "productIssue": null,
+     "ingredientKey": "pita",
+     "leftAfterMeal": null,
+     "packagesExtra": 0,
+     "packagesUsual": 0,
+     "packagesNeeded": 1,
+     "usageCostMinor": 83,
+     "packagesForMeal": 1,
+     "pickupCostMinor": 249,
+     "receivedSurplus": null,
+     "mealUnitConflict": null,
+     "outstandingCostMinor": 249
+    },
+    "line_fingerprint": "231a3eb4154d96fb524a0eea27ffb6f4c04287b6cc48efc673744ed236d2b6c0"
+   },
+   {
+    "cycle_id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "rice",
+    "projection_revision": 12,
+    "line": {
+     "key": "rice",
+     "meal": {
+      "unit": "g",
+      "exact": false,
+      "sources": [
+       {
+        "unit": "g",
+        "exact": false,
+        "eventId": "321abfe8-f5c9-41ed-bad4-62680b54be3c",
+        "quantity": "150",
+        "rational": "150",
+        "cookNight": "2026-10-12",
+        "recipeTitle": "Fixture: Tofu veggie stir-fry"
+       },
+       {
+        "unit": "g",
+        "exact": false,
+        "eventId": "6df01b41-f29f-42d2-b446-e580c3e37e91",
+        "quantity": "150",
+        "rational": "150",
+        "cookNight": "2026-10-14",
+        "recipeTitle": "Fixture: Sheet-pan chicken and rice"
+       }
+      ],
+      "quantity": "300",
+      "rational": "300"
+     },
+     "name": "Jasmine rice",
+     "sent": 1,
+     "price": {
+      "id": "0168c29a-3c74-43db-b736-9fedaa9613b8",
+      "kind": "regular",
+      "source": "fixture",
+      "currency": "USD",
+      "observedAt": "2026-10-11T12:00:00.000Z",
+      "amountMinor": 399
+     },
+     "status": "in_cart_transfer",
+     "toSend": 0,
+     "missing": 0,
+     "netMeal": {
+      "unit": "g",
+      "quantity": "300",
+      "rational": "300"
+     },
+     "ordered": 0,
+     "product": {
+      "id": "9ef2cbfd-46f9-4156-add4-3251c0587c79",
+      "ref": "SIM-RICE",
+      "name": "Jasmine rice 2 lb bag",
+      "fixture": true,
+      "retailer": "simulated",
+      "packageQty": "2",
+      "packageUnit": "lb",
+      "ingredientKey": "rice",
+      "variableWeight": false
+     },
+     "approval": null,
+     "estimate": false,
+     "received": 0,
+     "requests": [],
+     "uncertain": 0,
+     "homeSupply": null,
+     "unresolved": [],
+     "fingerprint": "975be8c9642a06404a939888366fc95bb0cf0aeea5a295c65dfc7ae7a25e61e0",
+     "availability": null,
+     "productIssue": null,
+     "ingredientKey": "rice",
+     "leftAfterMeal": null,
+     "packagesExtra": 0,
+     "packagesUsual": 0,
+     "packagesNeeded": 1,
+     "usageCostMinor": 132,
+     "packagesForMeal": 1,
+     "pickupCostMinor": 399,
+     "receivedSurplus": null,
+     "mealUnitConflict": null,
+     "outstandingCostMinor": 0
+    },
+    "line_fingerprint": "975be8c9642a06404a939888366fc95bb0cf0aeea5a295c65dfc7ae7a25e61e0"
+   },
+   {
+    "cycle_id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "salmon",
+    "projection_revision": 12,
+    "line": {
+     "key": "salmon",
+     "meal": null,
+     "name": "Salmon fillet",
+     "sent": 0,
+     "price": {
+      "id": "f4070382-1f89-42ba-af92-6c10fc99fa12",
+      "kind": "regular",
+      "source": "fixture",
+      "currency": "USD",
+      "observedAt": "2026-10-11T12:00:00.000Z",
+      "amountMinor": 1099
+     },
+     "status": "needs_review",
+     "toSend": 1,
+     "missing": 0,
+     "netMeal": null,
+     "ordered": 0,
+     "product": {
+      "id": "e2d19807-0903-4413-bce7-61593ee51f69",
+      "ref": "SIM-SALMON",
+      "name": "Salmon fillets 12 oz",
+      "fixture": true,
+      "retailer": "simulated",
+      "packageQty": "12",
+      "packageUnit": "oz",
+      "ingredientKey": "salmon",
+      "variableWeight": false
+     },
+     "approval": null,
+     "estimate": false,
+     "received": 0,
+     "requests": [
+      {
+       "id": "eb99c049-ec23-4184-a982-604b2944441f",
+       "kind": "usual",
+       "text": "Salmon",
+       "packages": null,
+       "productId": null,
+       "contributors": [
+        {
+         "name": "Alex",
+         "taps": 1,
+         "memberId": "b20009e1-ffc4-40d5-a21d-6c297f5d0c9f"
+        }
+       ]
+      }
+     ],
+     "uncertain": 0,
+     "homeSupply": null,
+     "unresolved": [],
+     "fingerprint": "ebb87c63cb9b3ec76f671434c9d7a1c85398b362a9e730b83a66007db74fc334",
+     "availability": null,
+     "productIssue": null,
+     "ingredientKey": "salmon",
+     "leftAfterMeal": null,
+     "packagesExtra": 0,
+     "packagesUsual": 1,
+     "packagesNeeded": 1,
+     "usageCostMinor": 0,
+     "packagesForMeal": 0,
+     "pickupCostMinor": 1099,
+     "receivedSurplus": null,
+     "mealUnitConflict": null,
+     "outstandingCostMinor": 1099
+    },
+    "line_fingerprint": "ebb87c63cb9b3ec76f671434c9d7a1c85398b362a9e730b83a66007db74fc334"
+   },
+   {
+    "cycle_id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "soy_sauce",
+    "projection_revision": 12,
+    "line": {
+     "key": "soy_sauce",
+     "meal": {
+      "unit": "ml",
+      "exact": false,
+      "sources": [
+       {
+        "unit": "ml",
+        "exact": false,
+        "eventId": "321abfe8-f5c9-41ed-bad4-62680b54be3c",
+        "quantity": "29.574",
+        "rational": "473176473/16000000",
+        "cookNight": "2026-10-12",
+        "recipeTitle": "Fixture: Tofu veggie stir-fry"
+       },
+       {
+        "unit": "ml",
+        "exact": true,
+        "eventId": "af048c2c-de28-4c26-9342-9b44b06b7629",
+        "quantity": "78.863",
+        "rational": "157725491/2000000",
+        "cookNight": "2026-10-16",
+        "recipeTitle": "Cucumber salad"
+       }
+      ],
+      "quantity": "108.436",
+      "rational": "1734980401/16000000"
+     },
+     "name": "Soy sauce",
+     "sent": 0,
+     "price": {
+      "id": "d16f3e59-5dbd-4813-9489-dd531d7591ac",
+      "kind": "regular",
+      "source": "fixture",
+      "currency": "USD",
+      "observedAt": "2026-10-11T12:00:00.000Z",
+      "amountMinor": 279
+     },
+     "status": "approved",
+     "toSend": 1,
+     "missing": 0,
+     "netMeal": {
+      "unit": "ml",
+      "quantity": "78.863",
+      "rational": "157725491/2000000"
+     },
+     "ordered": 0,
+     "product": {
+      "id": "37d08fa8-c05a-47aa-b9df-a7e36a77121b",
+      "ref": "SIM-SOY_SAUCE",
+      "name": "Soy sauce 10 fl oz",
+      "fixture": true,
+      "retailer": "simulated",
+      "packageQty": "10",
+      "packageUnit": "fl_oz",
+      "ingredientKey": "soy_sauce",
+      "variableWeight": false
+     },
+     "approval": {
+      "id": "160df80d-5671-4bc2-81f2-2517993c3a87",
+      "valid": true,
+      "packages": 1
+     },
+     "estimate": false,
+     "received": 0,
+     "requests": [],
+     "uncertain": 0,
+     "homeSupply": "29.574",
+     "unresolved": [],
+     "fingerprint": "0542278691e0ea9bb128b5dff4c0da4368c36b891e25a8faf56193794ace077d",
+     "availability": {
+      "id": "5ba9c8ad-c2bf-4019-817e-bc3df9a91a77",
+      "unit": "tbsp",
+      "state": "some",
+      "quantity": "2",
+      "memberName": "Jon",
+      "reviewedUnit": null,
+      "ingredientKey": "soy_sauce",
+      "reviewedExact": null,
+      "reviewedDemand": null
+     },
+     "productIssue": null,
+     "ingredientKey": "soy_sauce",
+     "leftAfterMeal": null,
+     "packagesExtra": 0,
+     "packagesUsual": 0,
+     "packagesNeeded": 1,
+     "usageCostMinor": 102,
+     "packagesForMeal": 1,
+     "pickupCostMinor": 279,
+     "receivedSurplus": null,
+     "mealUnitConflict": null,
+     "outstandingCostMinor": 279
+    },
+    "line_fingerprint": "0542278691e0ea9bb128b5dff4c0da4368c36b891e25a8faf56193794ace077d"
+   },
+   {
+    "cycle_id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "tofu",
+    "projection_revision": 12,
+    "line": {
+     "key": "tofu",
+     "meal": {
+      "unit": "g",
+      "exact": false,
+      "sources": [
+       {
+        "unit": "g",
+        "exact": false,
+        "eventId": "321abfe8-f5c9-41ed-bad4-62680b54be3c",
+        "quantity": "240",
+        "rational": "240",
+        "cookNight": "2026-10-12",
+        "recipeTitle": "Fixture: Tofu veggie stir-fry"
+       }
+      ],
+      "quantity": "240",
+      "rational": "240"
+     },
+     "name": "Firm tofu",
+     "sent": 0,
+     "price": {
+      "id": "d7f3cafa-d6f2-4980-aaec-e4068e559f73",
+      "kind": "regular",
+      "source": "fixture",
+      "currency": "USD",
+      "observedAt": "2026-10-11T12:00:00.000Z",
+      "amountMinor": 229
+     },
+     "status": "needs_review",
+     "toSend": 1,
+     "missing": 0,
+     "netMeal": {
+      "unit": "g",
+      "quantity": "240",
+      "rational": "240"
+     },
+     "ordered": 0,
+     "product": {
+      "id": "1e92de8b-635d-49ef-a909-ee07c08c9d2f",
+      "ref": "SIM-TOFU",
+      "name": "Firm tofu 14 oz",
+      "fixture": true,
+      "retailer": "simulated",
+      "packageQty": "14",
+      "packageUnit": "oz",
+      "ingredientKey": "tofu",
+      "variableWeight": false
+     },
+     "approval": null,
+     "estimate": false,
+     "received": 0,
+     "requests": [],
+     "uncertain": 0,
+     "homeSupply": null,
+     "unresolved": [],
+     "fingerprint": "a2e94480f89d5deb7c505aa3995502196474b2f44fe5d1b74dd66acf533b0608",
+     "availability": null,
+     "productIssue": null,
+     "ingredientKey": "tofu",
+     "leftAfterMeal": null,
+     "packagesExtra": 0,
+     "packagesUsual": 0,
+     "packagesNeeded": 1,
+     "usageCostMinor": 138,
+     "packagesForMeal": 1,
+     "pickupCostMinor": 229,
+     "receivedSurplus": null,
+     "mealUnitConflict": null,
+     "outstandingCostMinor": 229
+    },
+    "line_fingerprint": "a2e94480f89d5deb7c505aa3995502196474b2f44fe5d1b74dd66acf533b0608"
+   },
+   {
+    "cycle_id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "ingredient_key": "tortillas",
+    "projection_revision": 12,
+    "line": {
+     "key": "tortillas",
+     "meal": {
+      "unit": "each",
+      "exact": false,
+      "sources": [
+       {
+        "unit": "each",
+        "exact": false,
+        "eventId": "76318eab-a40c-4a27-a151-14b0b334f500",
+        "quantity": "6",
+        "rational": "6",
+        "cookNight": "2026-10-17",
+        "recipeTitle": "Fixture: Black bean tacos"
+       }
+      ],
+      "quantity": "6",
+      "rational": "6"
+     },
+     "name": "Corn tortillas",
+     "sent": 0,
+     "price": {
+      "id": "caf09a02-3300-4b3e-a2bc-fa3db883b7ac",
+      "kind": "regular",
+      "source": "fixture",
+      "currency": "USD",
+      "observedAt": "2026-10-11T12:00:00.000Z",
+      "amountMinor": 299
+     },
+     "status": "needs_review",
+     "toSend": 1,
+     "missing": 0,
+     "netMeal": {
+      "unit": "each",
+      "quantity": "6",
+      "rational": "6"
+     },
+     "ordered": 0,
+     "product": {
+      "id": "d68cf835-d3c8-4202-ad44-cc670ac32658",
+      "ref": "SIM-TORTILLAS",
+      "name": "Corn tortillas 10 ct",
+      "fixture": true,
+      "retailer": "simulated",
+      "packageQty": "10",
+      "packageUnit": "each",
+      "ingredientKey": "tortillas",
+      "variableWeight": false
+     },
+     "approval": null,
+     "estimate": false,
+     "received": 0,
+     "requests": [],
+     "uncertain": 0,
+     "homeSupply": null,
+     "unresolved": [],
+     "fingerprint": "f878bcb929e6a066c47f6393005d147ffa76ce628ac8cca4f8e9ba2125c5ea6b",
+     "availability": null,
+     "productIssue": null,
+     "ingredientKey": "tortillas",
+     "leftAfterMeal": null,
+     "packagesExtra": 0,
+     "packagesUsual": 0,
+     "packagesNeeded": 1,
+     "usageCostMinor": 179,
+     "packagesForMeal": 1,
+     "pickupCostMinor": 299,
+     "receivedSurplus": null,
+     "mealUnitConflict": null,
+     "outstandingCostMinor": 299
+    },
+    "line_fingerprint": "f878bcb929e6a066c47f6393005d147ffa76ce628ac8cca4f8e9ba2125c5ea6b"
+   }
+  ],
+  "purchase_approvals": [
+   {
+    "id": "02b7c431-2b22-48aa-b0d3-5f8a8070aa05",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "cycle_id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "ingredient_key": "cucumber",
+    "product_id": "87e000e4-4efc-4dbf-b7c4-ecb6aa624bda",
+    "packages": 6,
+    "line_fingerprint": "1bd079a7a472dc4fa03ae3bb380820d81c198be0daf5f05dc98767a16da7e95b",
+    "approved_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "approved_at": "2026-10-14T14:04:07.538Z",
+    "state": "consumed",
+    "state_changed_at": "2026-10-14T14:04:07.640Z",
+    "consumed_by_batch": "37db910e-dae8-454c-a73f-4d267bcb2691"
+   },
+   {
+    "id": "160df80d-5671-4bc2-81f2-2517993c3a87",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "cycle_id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "ingredient_key": "soy_sauce",
+    "product_id": "37d08fa8-c05a-47aa-b9df-a7e36a77121b",
+    "packages": 1,
+    "line_fingerprint": "0542278691e0ea9bb128b5dff4c0da4368c36b891e25a8faf56193794ace077d",
+    "approved_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "approved_at": "2026-10-14T14:04:07.813Z",
+    "state": "active",
+    "state_changed_at": null,
+    "consumed_by_batch": null
+   },
+   {
+    "id": "3afc321d-c725-40c6-96f7-226816f1a11f",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "cycle_id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "ingredient_key": "black_beans",
+    "product_id": "7fa64edb-b2c2-461a-bab7-6f6d814bdc80",
+    "packages": 1,
+    "line_fingerprint": "b5bbbaffd45320c5cfa34368ea3f5a3b5c1d312260b99508d06683f4027de88e",
+    "approved_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "approved_at": "2026-10-14T14:04:07.813Z",
+    "state": "active",
+    "state_changed_at": null,
+    "consumed_by_batch": null
+   },
+   {
+    "id": "860468c4-e7f7-49bc-afb5-d65d2bc6188e",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "cycle_id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "ingredient_key": "broccoli",
+    "product_id": "fed32fdc-3b32-4b4e-a193-26c8f4be12ee",
+    "packages": 1,
+    "line_fingerprint": "6427b2851e765b4ad4b51cac34f7bf5c8e4a605b1eaa94ee0f166a1db7376fd9",
+    "approved_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "approved_at": "2026-10-14T14:04:07.538Z",
+    "state": "stale",
+    "state_changed_at": "2026-10-14T14:04:07.755Z",
+    "consumed_by_batch": null
+   },
+   {
+    "id": "a540af23-5787-487d-9f4d-ddd15db860cd",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "cycle_id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "ingredient_key": "rice",
+    "product_id": "9ef2cbfd-46f9-4156-add4-3251c0587c79",
+    "packages": 1,
+    "line_fingerprint": "975be8c9642a06404a939888366fc95bb0cf0aeea5a295c65dfc7ae7a25e61e0",
+    "approved_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "approved_at": "2026-10-14T14:04:07.538Z",
+    "state": "consumed",
+    "state_changed_at": "2026-10-14T14:04:07.640Z",
+    "consumed_by_batch": "37db910e-dae8-454c-a73f-4d267bcb2691"
+   }
+  ],
+  "handoff_batches": [
+   {
+    "id": "37db910e-dae8-454c-a73f-4d267bcb2691",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "cycle_id": "a9293206-6a8f-4fc2-bb6d-1cbd72be8818",
+    "adapter": "simulated",
+    "review_fingerprint": "5bc7fb30b7c9a723dbe1b996d5290637346ff865b38c666586c3071be22bbbd7",
+    "payload": [
+     {
+      "packages": 6,
+      "productRef": "SIM-CUCUMBER",
+      "ingredientKey": "cucumber"
+     },
+     {
+      "packages": 1,
+      "productRef": "SIM-RICE",
+      "ingredientKey": "rice"
+     }
+    ],
+    "payload_hash": "78f41b488d91be2a76d364cd2175094fe37d096ff138eea41ea0da11f1203406",
+    "authorized_by": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "authorized_at": "2026-10-14T14:04:07.640Z",
+    "operation_id": "rehearsal-7afb3c89-9191-4b1d-92b2-6979e1117a09",
+    "scope": "partial",
+    "omissions": {
+     "omitted": [
+      {
+       "key": "black_beans",
+       "code": "not_approved",
+       "name": "Black beans (canned)",
+       "reason": "Not approved for 1 package(s)",
+       "toSend": 1
+      },
+      {
+       "key": "broccoli",
+       "code": "not_selected",
+       "name": "Broccoli",
+       "reason": "Left out by you",
+       "toSend": 1
+      },
+      {
+       "key": "cheese",
+       "code": "not_approved",
+       "name": "Cheddar cheese",
+       "reason": "Not approved for 1 package(s)",
+       "toSend": 1
+      },
+      {
+       "key": "chicken_thigh",
+       "code": "not_approved",
+       "name": "Chicken thighs",
+       "reason": "Not approved for 2 package(s)",
+       "toSend": 2
+      },
+      {
+       "key": "greek_yogurt",
+       "code": "not_approved",
+       "name": "Plain Greek yogurt",
+       "reason": "Not approved for 1 package(s)",
+       "toSend": 1
+      },
+      {
+       "key": "olive_oil",
+       "code": "not_approved",
+       "name": "Olive oil",
+       "reason": "Not approved for 1 package(s)",
+       "toSend": 1
+      },
+      {
+       "key": "pita",
+       "code": "not_approved",
+       "name": "Pita bread",
+       "reason": "Not approved for 1 package(s)",
+       "toSend": 1
+      },
+      {
+       "key": "salmon",
+       "code": "not_approved",
+       "name": "Salmon fillet",
+       "reason": "Not approved for 1 package(s)",
+       "toSend": 1
+      },
+      {
+       "key": "soy_sauce",
+       "code": "not_approved",
+       "name": "Soy sauce",
+       "reason": "Not approved for 1 package(s)",
+       "toSend": 1
+      },
+      {
+       "key": "tofu",
+       "code": "not_approved",
+       "name": "Firm tofu",
+       "reason": "Not approved for 1 package(s)",
+       "toSend": 1
+      },
+      {
+       "key": "tortillas",
+       "code": "not_approved",
+       "name": "Corn tortillas",
+       "reason": "Not approved for 1 package(s)",
+       "toSend": 1
+      }
+     ],
+     "partialFingerprint": "0d1d70e6db741f8886e993f11484134d38c56f50824d9b200ea8ac44c291fba2"
+    }
+   }
+  ],
+  "handoff_batch_lines": [
+   {
+    "batch_id": "37db910e-dae8-454c-a73f-4d267bcb2691",
+    "ingredient_key": "cucumber",
+    "product_id": "87e000e4-4efc-4dbf-b7c4-ecb6aa624bda",
+    "product_ref": "SIM-CUCUMBER",
+    "packages": 6,
+    "line_fingerprint": "1bd079a7a472dc4fa03ae3bb380820d81c198be0daf5f05dc98767a16da7e95b",
+    "approval_id": "02b7c431-2b22-48aa-b0d3-5f8a8070aa05"
+   },
+   {
+    "batch_id": "37db910e-dae8-454c-a73f-4d267bcb2691",
+    "ingredient_key": "rice",
+    "product_id": "9ef2cbfd-46f9-4156-add4-3251c0587c79",
+    "product_ref": "SIM-RICE",
+    "packages": 1,
+    "line_fingerprint": "975be8c9642a06404a939888366fc95bb0cf0aeea5a295c65dfc7ae7a25e61e0",
+    "approval_id": "a540af23-5787-487d-9f4d-ddd15db860cd"
+   }
+  ],
+  "handoff_status_events": [
+   {
+    "id": "1",
+    "batch_id": "37db910e-dae8-454c-a73f-4d267bcb2691",
+    "status": "authorized",
+    "evidence": {
+     "by": "Jon",
+     "scope": "partial",
+     "leftOut": 11
+    },
+    "at": "2026-10-14T14:04:07.650Z"
+   },
+   {
+    "id": "2",
+    "batch_id": "37db910e-dae8-454c-a73f-4d267bcb2691",
+    "status": "dispatch_started",
+    "evidence": {
+     "dispatchId": "37db910e-dae8-454c-a73f-4d267bcb2691:1"
+    },
+    "at": "2026-10-14T14:04:07.690Z"
+   },
+   {
+    "id": "3",
+    "batch_id": "37db910e-dae8-454c-a73f-4d267bcb2691",
+    "status": "acknowledged",
+    "evidence": {
+     "callId": 1,
+     "simulated": true,
+     "httpStatus": 204,
+     "granularity": "batch"
+    },
+    "at": "2026-10-14T14:04:07.705Z"
+   }
+  ],
+  "orders": [],
+  "order_lines": [],
+  "receipt_observations": [],
+  "substitution_validations": [],
+  "change_events": [
+   {
+    "id": "1",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "seq": "1",
+    "actor_member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "command": "SaveLink",
+    "summary": {
+     "text": "Jon saved a link (example.org)",
+     "type": "link",
+     "actor": "Jon",
+     "weekId": null
+    },
+    "accepted_choice_revision": null,
+    "created_at": "2026-10-14T14:04:06.859Z"
+   },
+   {
+    "id": "10",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "seq": "10",
+    "actor_member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "command": "PasteIngredients",
+    "summary": {
+     "text": "Jon started importing example.org",
+     "type": "link",
+     "actor": "Jon",
+     "weekId": null
+    },
+    "accepted_choice_revision": null,
+    "created_at": "2026-10-14T14:04:07.274Z"
+   },
+   {
+    "id": "11",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "seq": "11",
+    "actor_member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "command": "UpdateImportDraft",
+    "summary": {
+     "text": "Jon reviewed an import",
+     "type": "link",
+     "actor": "Jon",
+     "weekId": null
+    },
+    "accepted_choice_revision": null,
+    "created_at": "2026-10-14T14:04:07.283Z"
+   },
+   {
+    "id": "12",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "seq": "12",
+    "actor_member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "command": "ConfirmImportDraft",
+    "summary": {
+     "text": "Jon imported Cucumber two ways from example.org",
+     "type": "recipe",
+     "actor": "Jon",
+     "weekId": null
+    },
+    "accepted_choice_revision": null,
+    "created_at": "2026-10-14T14:04:07.298Z"
+   },
+   {
+    "id": "13",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "seq": "13",
+    "actor_member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "command": "SaveRecipeVersion",
+    "summary": {
+     "text": "Jon saved Cucumber two ways (version 2)",
+     "type": "recipe",
+     "actor": "Jon",
+     "weekId": null
+    },
+    "accepted_choice_revision": null,
+    "created_at": "2026-10-14T14:04:07.341Z"
+   },
+   {
+    "id": "14",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "seq": "14",
+    "actor_member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "command": "SaveRecipeVersion",
+    "summary": {
+     "text": "Jon saved Cucumber two ways (ours) (version 3)",
+     "type": "recipe",
+     "actor": "Jon",
+     "weekId": null
+    },
+    "accepted_choice_revision": null,
+    "created_at": "2026-10-14T14:04:07.367Z"
+   },
+   {
+    "id": "15",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "seq": "15",
+    "actor_member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "command": "ApplyPlanChange",
+    "summary": {
+     "text": "Jon: Thursday: Fixture: Sheet-pan chicken and rice → Cucumber two ways (ours).",
+     "type": "replace",
+     "actor": "Jon",
+     "nights": [
+      "690857fb-d467-41ce-b855-29fd7c90a41e"
+     ],
+     "weekId": "842175fa-0bad-44b0-ac39-8abdce732c43"
+    },
+    "accepted_choice_revision": 5,
+    "created_at": "2026-10-14T14:04:07.417Z"
+   },
+   {
+    "id": "16",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "seq": "16",
+    "actor_member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "command": "RecordAvailability",
+    "summary": {
+     "text": "Jon: Soy sauce — Have some",
+     "type": "availability",
+     "actor": "Jon",
+     "weekId": "842175fa-0bad-44b0-ac39-8abdce732c43"
+    },
+    "accepted_choice_revision": 5,
+    "created_at": "2026-10-14T14:04:07.491Z"
+   },
+   {
+    "id": "17",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "seq": "17",
+    "actor_member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "command": "ApprovePurchaseLines",
+    "summary": {
+     "text": "Jon approved 3 item(s)",
+     "type": "approval",
+     "actor": "Jon",
+     "weekId": "842175fa-0bad-44b0-ac39-8abdce732c43"
+    },
+    "accepted_choice_revision": 5,
+    "created_at": "2026-10-14T14:04:07.538Z"
+   },
+   {
+    "id": "18",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "seq": "18",
+    "actor_member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "command": "StartPartialHandoff",
+    "summary": {
+     "text": "Jon approved sending 2 item(s) to Simulated retailer — nothing is sent to a store — a partial transfer; 11 item(s) left out",
+     "type": "handoff",
+     "actor": "Jon",
+     "weekId": "842175fa-0bad-44b0-ac39-8abdce732c43"
+    },
+    "accepted_choice_revision": 5,
+    "created_at": "2026-10-14T14:04:07.640Z"
+   },
+   {
+    "id": "19",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "seq": "19",
+    "actor_member_id": null,
+    "command": "Dispatch",
+    "summary": {
+     "text": "Sending to the retailer…",
+     "type": "handoff",
+     "weekId": "842175fa-0bad-44b0-ac39-8abdce732c43"
+    },
+    "accepted_choice_revision": 5,
+    "created_at": "2026-10-14T14:04:07.685Z"
+   },
+   {
+    "id": "2",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "seq": "2",
+    "actor_member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "command": "PasteIngredients",
+    "summary": {
+     "text": "Jon started importing example.org",
+     "type": "link",
+     "actor": "Jon",
+     "weekId": null
+    },
+    "accepted_choice_revision": null,
+    "created_at": "2026-10-14T14:04:06.871Z"
+   },
+   {
+    "id": "20",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "seq": "20",
+    "actor_member_id": null,
+    "command": "Dispatch",
+    "summary": {
+     "text": "The retailer acknowledged the transfer (batch-level).",
+     "type": "handoff",
+     "weekId": "842175fa-0bad-44b0-ac39-8abdce732c43"
+    },
+    "accepted_choice_revision": 5,
+    "created_at": "2026-10-14T14:04:07.701Z"
+   },
+   {
+    "id": "21",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "seq": "21",
+    "actor_member_id": "b20009e1-ffc4-40d5-a21d-6c297f5d0c9f",
+    "command": "RecordAvailability",
+    "summary": {
+     "text": "Alex: Broccoli — Have enough",
+     "type": "availability",
+     "actor": "Alex",
+     "weekId": "842175fa-0bad-44b0-ac39-8abdce732c43"
+    },
+    "accepted_choice_revision": 5,
+    "created_at": "2026-10-14T14:04:07.755Z"
+   },
+   {
+    "id": "22",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "seq": "22",
+    "actor_member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "command": "ApprovePurchaseLines",
+    "summary": {
+     "text": "Jon approved 2 item(s)",
+     "type": "approval",
+     "actor": "Jon",
+     "weekId": "842175fa-0bad-44b0-ac39-8abdce732c43"
+    },
+    "accepted_choice_revision": 5,
+    "created_at": "2026-10-14T14:04:07.813Z"
+   },
+   {
+    "id": "3",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "seq": "3",
+    "actor_member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "command": "UpdateImportDraft",
+    "summary": {
+     "text": "Jon reviewed an import",
+     "type": "link",
+     "actor": "Jon",
+     "weekId": null
+    },
+    "accepted_choice_revision": null,
+    "created_at": "2026-10-14T14:04:06.896Z"
+   },
+   {
+    "id": "4",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "seq": "4",
+    "actor_member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "command": "ConfirmImportDraft",
+    "summary": {
+     "text": "Jon imported Cucumber salad from example.org",
+     "type": "recipe",
+     "actor": "Jon",
+     "weekId": null
+    },
+    "accepted_choice_revision": null,
+    "created_at": "2026-10-14T14:04:06.907Z"
+   },
+   {
+    "id": "5",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "seq": "5",
+    "actor_member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "command": "SaveRecipeVersion",
+    "summary": {
+     "text": "Jon saved Rehearsal rice (version 1)",
+     "type": "recipe",
+     "actor": "Jon",
+     "weekId": null
+    },
+    "accepted_choice_revision": null,
+    "created_at": "2026-10-14T14:04:06.932Z"
+   },
+   {
+    "id": "6",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "seq": "6",
+    "actor_member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "command": "ApplyPlanChange",
+    "summary": {
+     "text": "Jon: Friday: Fixture: Salmon rice bowls → Cucumber salad.",
+     "type": "replace",
+     "actor": "Jon",
+     "nights": [
+      "52df00b1-1cc2-4a06-b7de-14a1ddcbcd88"
+     ],
+     "weekId": "842175fa-0bad-44b0-ac39-8abdce732c43"
+    },
+    "accepted_choice_revision": 2,
+    "created_at": "2026-10-14T14:04:07.018Z"
+   },
+   {
+    "id": "7",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "seq": "7",
+    "actor_member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "command": "SetPlate",
+    "summary": {
+     "text": "Jon: Jon's dinner plate on Friday changes; only the changed components change quantities.",
+     "type": "plate",
+     "actor": "Jon",
+     "weekId": "842175fa-0bad-44b0-ac39-8abdce732c43"
+    },
+    "accepted_choice_revision": 3,
+    "created_at": "2026-10-14T14:04:07.135Z"
+   },
+   {
+    "id": "8",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "seq": "8",
+    "actor_member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "command": "SetPlate",
+    "summary": {
+     "text": "Jon: Alex's dinner plate on Friday changes; only the changed components change quantities.",
+     "type": "plate",
+     "actor": "Jon",
+     "weekId": "842175fa-0bad-44b0-ac39-8abdce732c43"
+    },
+    "accepted_choice_revision": 4,
+    "created_at": "2026-10-14T14:04:07.201Z"
+   },
+   {
+    "id": "9",
+    "household_id": "73509140-1ef0-476c-a59f-9f371c73e2fc",
+    "seq": "9",
+    "actor_member_id": "1adea0bd-7751-4520-b28a-ad6892a83c1f",
+    "command": "SaveLink",
+    "summary": {
+     "text": "Jon saved a link (example.org)",
+     "type": "link",
+     "actor": "Jon",
+     "weekId": null
+    },
+    "accepted_choice_revision": null,
+    "created_at": "2026-10-14T14:04:07.266Z"
+   }
+  ],
+  "kroger_connection_events": []
+ }
+}

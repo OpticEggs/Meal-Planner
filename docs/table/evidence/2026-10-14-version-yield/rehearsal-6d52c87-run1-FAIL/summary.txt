@@ -1,0 +1,21 @@
+Upgrade rehearsal: previous release 6d52c87 → this release 1f0ef5c (2026-10-14T13:53:41Z)
+PASS  1 populated by 6d52c87: 13 grocery lines; export taken by 6d52c87
+applied: 018_recipe_version_yield.sql
+PASS  2 every pre-existing column of every table is unchanged by the migration
+PASS  2 every existing recipe row keeps its basis (before: {"exact":8,"legacy":26}; after: {"exact":8,"legacy":26})
+PASS  2b migration 018 added recipe_versions.servings and backfilled nothing: {"column":"present","versionsWithYield":0,"rehearsalRecipe":[]}
+PASS  3 this release projects the upgraded week as 6d52c87 did: amounts, packages, to send and status on every line; review identity changed only where exact rows are behind a line: none
+PASS  3 6d52c87 still projects the same amounts, packages and to-send on the upgraded schema (an approval this release marked stale stays stale: none)
+PASS  4 after this release saved an exact recipe ({"exact":9,"legacy":26}), 6d52c87 still recomputes every week
+PASS  4b this release opened a meal list: 4 list lines, 3 naming selected meals, 1 unknown (needs a quantity), approvals [{"ingredient_key":"salmon","state":"active"}], undated week [["meal_list",null]]
+PASS  4b 6d52c87 recomputes every week and loads a member's snapshot with an open meal list present (it shows: {"weekId":"ab3063be-f4d8-4394-9441-fec6b9e87ae9","weekStart":"2026-10-12","groceryLines":13,"mealList":{"meals":2,"lines":4}})
+FAIL  4b unexpected list state after 6d52c87 recomputed (4b-list-after-prev.json)
+FAIL  4b the list did not come back as it was (4b-list-restored.json)
+PASS  5 this release's export (legacy and exact rows) restores and re-exports identically
+PASS  5 6d52c87's pre-upgrade export restores into the new schema with every row's basis as it was ({"exact":8,"legacy":26})
+PASS  5 known limit confirmed: an export containing exact rows needs this release (or later) to restore; 6d52c87's schema refuses it and nothing was half-restored
+FAIL  7 recording a yield on a previous-release recipe (7-record.json / 7-record.log)
+FAIL  7 6d52c87 could not save on the upgraded schema (7-prev-title.log)
+PASS  7 known rollback limit confirmed: the version 6d52c87 wrote has no recorded yield (it does not know the column); the version that recorded it still has 6: {"column":"present","versionsWithYield":1,"rehearsalRecipe":[{"version_no":1,"servings":null},{"version_no":2,"servings":6},{"version_no":3,"servings":null}]}
+FAIL  6 6d52c87's vitest suite on the new schema:  Tests 1 failed | 1219 passed (1220)
+Result: FAIL (5) — /tmp/table-upgrade-rehearsal-6d52c87-20261014T135340Z

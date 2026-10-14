@@ -19,6 +19,49 @@ services, private services, and background workers"), **no shell, no one-off job
 15 minutes without traffic and takes about a minute to wake. So the database is updated by the **Start Command**
 itself, before the server starts. The health check answers 503 while a migration this code knows about is pending.
 
+### Upgrade to `3dbac35` — import and editing release + recorded recipe yield (migration 018); not yet approved
+
+**Not approved for deployment.** This is the procedure for when you approve it separately. Claude does not deploy.
+Branch `claude/import-edit` (D157, D158, D159); verified at `3dbac35`
+(`docs/table/evidence/2026-10-14-version-yield/`).
+
+**The procedure is steps 1–7 below**, with these changes:
+
+- **Step 4:** deploy commit `3dbac35`, not `72cf615`.
+- **Step 5:** the log ends in `applied: 018_recipe_version_yield.sql`. That is the only file if the pilot runs
+  `6d52c87`; an older pilot applies earlier files first. Then `✓ Ready`.
+
+**Checklist:**
+
+- [ ] **Step 1 recovery point** (Neon branch) taken **before** deploying. A migration cannot be un-applied.
+- [ ] **Step 6:** health is `{"ok":true,"problems":[]}`. Sign in. An existing recipe shows the same amounts as before.
+      Its overview reads as it did: "Makes N" where its exact rows agree, otherwise "Original yield not recorded".
+      Nothing is backfilled.
+- [ ] **Groceries** for the open list show the same amounts, packages and to-send as before. **[tested]** in the
+      rehearsal from `6d52c87`.
+- [ ] **Reload** any recipe editor or import review that was open before the upgrade.
+- [ ] **To record a yield:** Edit recipe → "Servings the whole recipe makes" → Save new version. No amount changes.
+      Selected meals keep their servings.
+
+**What 018 does.** It adds one optional column, `recipe_versions.servings`. **[tested]** on a database populated by
+`6d52c87`: every pre-existing column of every table unchanged, every row's quantity basis unchanged, and 0 versions
+with a yield after migrating.
+
+**Going back to `6d52c87`** changes behaviour, not data. **[tested]** That code still:
+
+- projects the same groceries;
+- saves recipes on the upgraded schema (every row unchanged);
+- passes its own test suite there (1220/1220).
+
+But:
+
+- **Versions it saves record no yield.** It does not know the column. Record the yield again after upgrading again.
+  Earlier versions keep theirs.
+- **An export taken after this upgrade restores only into `3dbac35` or later.** It carries the new column. Exports
+  taken before the upgrade restore into either release.
+- **[not tested here]** that earlier code started as a web server on Render against this schema. Its `/api/health`
+  answers 200 there, because it checks only the migrations it knows.
+
 ### Upgrade from your phone — `72cf615` (verified commit); you run it, Claude does not deploy
 
 **Pilot-upgrade checklist for `72cf615` (exact quantities: migrations 015 and 016).** What is new in this upgrade and

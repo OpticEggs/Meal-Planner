@@ -1,0 +1,9 @@
+{
+ "weekId": "ab3063be-f4d8-4394-9441-fec6b9e87ae9",
+ "weekStart": "2026-10-12",
+ "groceryLines": 13,
+ "mealList": {
+  "meals": 2,
+  "lines": 4
+ }
+}

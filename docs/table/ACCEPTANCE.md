@@ -1015,3 +1015,29 @@ Not live-verified: no Kroger host has been contacted. Going live is owner-operat
 **Not covered:** the five real family recipes (B52), and the household's own recipes. No household data was read or
 changed.
 
+## A recipe version's original yield (B51, D159; migration 018) — added 2026-10-14
+
+**Verified:**
+
+- At `3dbac35`: `scripts/verify-all.sh` **PASS**. vitest 1242/1242, Playwright 189/189, mutations 137 killed /
+  0 survived / 0 error.
+- Upgrade rehearsal from `6d52c87`: run 1 **FAIL (5)**, kept; run 2 **PASS**.
+- Evidence: `docs/table/evidence/2026-10-14-version-yield/`.
+
+| Check | Evidence |
+|---|---|
+| "Makes 6" on an all-legacy recipe, no amount changed: recorded on the version; every row unchanged and still legacy; reopened as 6 | VY-01, B51-E1, rehearsal 7 |
+| Title-only saves keep the yield — the new editor, and an earlier client that omits the field | VY-02, B51-E3 |
+| A confirmed import records its reviewed yield | VY-03 |
+| Correcting a recorded yield keeps the whole-recipe amounts as written (no scaling) | VY-04, B51-E2 |
+| Mixed exact and legacy rows: recording a yield changes no per-serving amount | VY-05, WR-08, D157-E2 |
+| Overview, catalog and a new selection's default read the recorded yield; an existing selection keeps its servings and version | B51-E1, VY-06 |
+| The other member's yield is brought into a title-only draft; both changing it is decided explicitly | B51-E3 |
+| Out-of-range yields refused; a saved version's yield cannot change afterwards | VY-07 |
+| Export/restore carries the yield; a pre-018 export restores as "not recorded" | VY-08, rehearsal 5 |
+| No backfill; every pre-existing column unchanged; projections identical across releases | rehearsal 2, 2b, 3 |
+| Rollback: the previous release still saves on the upgraded schema (its versions record no yield); its suite passes on the new schema | rehearsal 4, 7, 6 |
+
+**Not covered:** Render or Neon (the migration has not been applied anywhere but disposable databases), and the
+household's own recipes.
+
